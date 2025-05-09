@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Animation System CSS Variables */
+:root {
+  /* Base animation durations */
+  --animation-duration-fast: 150ms;
+  --animation-duration-normal: 300ms;
+  --animation-duration-slow: 500ms;
+  
+  /* Current animation speed (set by JavaScript) */
+  --animation-speed-multiplier: 1;
+}
+
+/* Animation speed classes - applied to html element by AnimationContext */
+.animation-fast {
+  --animation-speed-multiplier: 0.6;
+}
+
+.animation-normal {
+  --animation-speed-multiplier: 1;
+}
+
+.animation-slow {
+  --animation-speed-multiplier: 1.5;
+}
+
+/* Reduced motion class - applied to html element by AnimationContext */
+.reduce-motion * {
+  transition-duration: 0.001ms !important;
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  scroll-behavior: auto !important;
+}
+
+/* Respect system preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Animation utility classes */
+.animate-fade-in {
+  animation: fadeIn calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
+}
+
+.animate-fade-out {
+  animation: fadeOut calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
+}
+
+.animate-slide-out {
+  animation: slideOut calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
+}
+
+.animate-bounce {
+  animation: bounce calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease infinite;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-20px); opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Custom transition classes */
+.transition-base {
+  transition-duration: calc(var(--animation-duration-normal) * var(--animation-speed-multiplier));
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-duration: calc(var(--animation-duration-normal) * var(--animation-speed-multiplier));
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-duration: calc(var(--animation-duration-normal) * var(--animation-speed-multiplier));
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Theme: Support both dark and light mode */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Scrollbar Styles */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+    background-color: rgb(209, 213, 219);
+    border-radius: 9999px;
+  }
+  
+  .scrollbar-thumb-gray-300 {
+    scrollbar-color: rgb(209, 213, 219) transparent;
+  }
+  
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: rgb(209, 213, 219);
+    border-radius: 20px;
+  }
+}
