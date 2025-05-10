@@ -1,7 +1,11 @@
+// src/lib/firebase/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getStorage, FirebaseStorage } from "firebase/storage";
+import { getAnalytics, Analytics, isSupported } from "firebase/analytics";
+import { getPerformance } from "firebase/performance";
+import { getRemoteConfig, RemoteConfig, fetchAndActivate } from "firebase/remote-config";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,15 +20,47 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
-// Initialize auth conditionally
+// Initialize services conditionally
 let auth: Auth | null = null;
 let db: Firestore | null = null;
 let storage: FirebaseStorage | null = null;
+let analytics: Analytics | null = null;
+let crashlytics: Crashlytics | null = null;
+let remoteConfig: RemoteConfig | null = null;
 
 try {
   auth = getAuth(app);
   db = getFirestore(app);
   storage = getStorage(app);
+  
+  // Initialize Analytics, Crashlytics, and Remote Config (client-side only)
+  if (typeof window !== 'undefined') {
+    // Check if analytics is supported
+    isSupported().then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app);
+      }
+    });
+    
+    // Initialize Crashlytics
+    crashlytics = getCrashlytics(app);
+    
+    // Initialize Remote Config
+    remoteConfig = getRemoteConfig(app);
+    
+    // Configure Remote Config settings
+    if (remoteConfig) {
+      remoteConfig.settings.minimumFetchIntervalMillis = 3600000; // 1 hour
+      
+      // Set default values
+      remoteConfig.defaultConfig = {
+        'maintenance_mode': false,
+        'show_new_feature': false,
+        'max_daily_prompts': 10,
+        'enable_analytics': true,
+      };
+    }
+  }
 } catch (error) {
   console.error("Error initializing Firebase services:", error);
   
@@ -33,7 +69,29 @@ try {
     auth = null;
     db = null;
     storage = null;
+    analytics = null;
+    crashlytics = null;
+    remoteConfig = null;
   }
 }
 
-export { app, auth, db, storage };
+// Helper function to set user ID for better error tracking
+export const setCrashlyticsUserId = (userId: string) => {
+  if (crashlytics) {
+    setUserIdCrashlytics(crashlytics, userId);
+  }
+};
+
+// Helper function to fetch and activate Remote Config
+export const refreshRemoteConfig = async () => {
+  if (!remoteConfig) return;
+  
+  try {
+    await fetchAndActivate(remoteConfig);
+    console.log('Remote config fetched and activated');
+  } catch (error) {
+    console.error('Failed to fetch remote config:', error);
+  }
+};
+
+export { app, auth, db, storage, analytics, crashlytics, remoteConfig };
