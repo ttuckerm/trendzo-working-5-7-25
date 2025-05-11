@@ -15,9 +15,56 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Check, TrendingUp, Zap, Video, BarChart2, Globe, Star } from 'lucide-react';
+import { PricingContainer } from '@/components/ui/PricingContainer';
+import { PricingPlan } from '@/lib/types/pricingTypes';
 
 export default function LandingPage() {
   const [videoHovered, setVideoHovered] = useState(false);
+  
+  // Define pricing plans
+  const pricingPlans: PricingPlan[] = [
+    {
+      name: 'Basic',
+      monthlyPrice: 0,
+      yearlyPrice: 0,
+      accent: 'bg-gradient-to-r from-gray-600 to-gray-800',
+      features: [
+        '10 template analyses per month',
+        'Basic analytics dashboard',
+        'Template library access'
+      ],
+      buttonText: 'Get Started'
+    },
+    {
+      name: 'Premium',
+      monthlyPrice: 29,
+      yearlyPrice: 23,
+      accent: 'bg-gradient-to-r from-blue-600 to-indigo-600',
+      features: [
+        'Unlimited template analyses',
+        'Advanced analytics and insights',
+        'Template remix engine',
+        'AI content suggestions',
+        'Priority support'
+      ],
+      isPopular: true,
+      buttonText: 'Get Premium'
+    },
+    {
+      name: 'Business',
+      monthlyPrice: 79,
+      yearlyPrice: 63,
+      accent: 'bg-gradient-to-r from-purple-600 to-indigo-600',
+      features: [
+        'Everything in Premium',
+        'Team collaboration',
+        'API access',
+        'Custom templates',
+        'Dedicated account manager'
+      ],
+      buttonText: 'Contact Sales'
+    }
+  ];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -166,129 +213,7 @@ export default function LandingPage() {
         {/* Pricing Section */}
         <section className="py-16 bg-gray-50" id="pricing">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-gray-900">Simple, Transparent Pricing</h2>
-              <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
-                Choose the plan that's right for you and start creating viral TikTok content today.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {/* Free Plan */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-200 hover:shadow-md transition-all">
-                <h3 className="text-xl font-bold mb-2">Basic</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">$0</span>
-                  <span className="text-gray-500">/month</span>
-                </div>
-                <p className="text-gray-600 mb-6">Perfect for individuals just getting started.</p>
-                
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>10 template analyses per month</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Basic analytics dashboard</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Template library access</span>
-                  </li>
-                </ul>
-                
-                <Link 
-                  href="/auth?signup=true&plan=free"
-                  className="block w-full py-2 px-4 bg-white border border-blue-600 text-blue-600 font-medium rounded-md text-center hover:bg-blue-50"
-                >
-                  Get Started
-                </Link>
-              </div>
-              
-              {/* Premium Plan */}
-              <div className="bg-white rounded-xl p-6 border-2 border-blue-500 shadow-lg relative">
-                <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 transform translate-x-2 -translate-y-2 rounded">
-                  POPULAR
-                </div>
-                <h3 className="text-xl font-bold mb-2">Premium</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">$29</span>
-                  <span className="text-gray-500">/month</span>
-                </div>
-                <p className="text-gray-600 mb-6">For content creators who need more power.</p>
-                
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Unlimited template analyses</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Advanced analytics and insights</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Template remix engine</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>AI content suggestions</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Priority support</span>
-                  </li>
-                </ul>
-                
-                <Link 
-                  href="/auth?signup=true&plan=premium"
-                  className="block w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-md text-center hover:bg-blue-700"
-                >
-                  Get Premium
-                </Link>
-              </div>
-              
-              {/* Business Plan */}
-              <div className="bg-white rounded-xl p-6 border border-gray-200 hover:border-blue-200 hover:shadow-md transition-all">
-                <h3 className="text-xl font-bold mb-2">Business</h3>
-                <div className="mb-4">
-                  <span className="text-3xl font-bold">$79</span>
-                  <span className="text-gray-500">/month</span>
-                </div>
-                <p className="text-gray-600 mb-6">For teams and businesses at scale.</p>
-                
-                <ul className="space-y-3 mb-8">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Everything in Premium</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Team collaboration</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>API access</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Custom templates</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                    <span>Dedicated account manager</span>
-                  </li>
-                </ul>
-                
-                <Link 
-                  href="/auth?signup=true&plan=business"
-                  className="block w-full py-2 px-4 bg-white border border-blue-600 text-blue-600 font-medium rounded-md text-center hover:bg-blue-50"
-                >
-                  Contact Sales
-                </Link>
-              </div>
-            </div>
+            <PricingContainer plans={pricingPlans} />
           </div>
         </section>
 
