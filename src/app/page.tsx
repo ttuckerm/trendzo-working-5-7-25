@@ -11,15 +11,26 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, Check, TrendingUp, Zap, Video, BarChart2, Globe, Star } from 'lucide-react';
 import { PricingContainer } from '@/components/ui/PricingContainer';
 import { PricingPlan } from '@/lib/types/pricingTypes';
+import { TextRotate, TextRotateRef } from '@/components/ui/TextRotate';
 
 export default function LandingPage() {
   const [videoHovered, setVideoHovered] = useState(false);
+  const textRotateRef = useRef<TextRotateRef>(null);
+  
+  // Define rotating texts for the hero section
+  const rotatingTexts = [
+    "actually trends",
+    "gets more views",
+    "goes viral",
+    "attracts followers",
+    "drives engagement"
+  ];
   
   // Define pricing plans
   const pricingPlans: PricingPlan[] = [
@@ -112,7 +123,22 @@ export default function LandingPage() {
             <div className="grid gap-12 lg:grid-cols-2 lg:gap-8 items-center">
               <div>
                 <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-                  Create TikTok content that <span className="text-blue-600">actually trends</span>
+                  Create TikTok content that{" "}
+                  <span className="inline-flex">
+                    <TextRotate 
+                      texts={rotatingTexts}
+                      mainClassName="text-blue-600 min-h-[1.25em]"
+                      staggerDuration={0.025}
+                      rotationInterval={3000}
+                      splitBy="characters"
+                      transition={{
+                        type: "spring",
+                        damping: 20,
+                        stiffness: 300
+                      }}
+                      ref={textRotateRef}
+                    />
+                  </span>
                 </h1>
                 <p className="mt-4 text-lg text-gray-600 leading-relaxed">
                   Trendzo helps you analyze viral TikTok templates, remix them for your niche, and track your content performance—all in one place.
