@@ -22,6 +22,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ErrorBoundary } from '@/components/debug/ErrorBoundary';
 import { RenderCounter } from '@/components/debug/RenderCounter';
 import { TemplateCard } from '@/components/templates/TemplateCard';
+import { TikTokCard } from '@/components/templates/TikTokCard';
 import { useStateContext } from '@/lib/contexts/StateContext';
 import { useUsabilityTest } from '@/lib/contexts/UsabilityTestContext';
 import { useDragDrop } from '@/lib/hooks/useDragDrop';
@@ -167,6 +168,9 @@ export default function TemplateLibraryPage() {
     const savedViewMode = getState<'grid' | 'list'>('templateLibrary.viewMode');
     if (savedViewMode) {
       setViewMode(savedViewMode);
+    } else {
+      // Default to grid view to showcase our TikTok cards
+      setViewMode('grid');
     }
     
     // Restore selected template
@@ -474,12 +478,34 @@ export default function TemplateLibraryPage() {
               <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-6`}>
                 {filteredTemplates.map(template => (
                   <ErrorBoundary key={template.id} componentName={`TemplateCard-${template.id}`}>
-                    <TemplateCard
-                      template={template as any}
-                      isSelected={selectedTemplateId === template.id}
-                      onClick={() => handleSelectTemplate(template.id, template)}
-                      viewMode={viewMode}
-                    />
+                    {viewMode === 'grid' ? (
+                      <TikTokCard
+                        template={{
+                          id: template.id,
+                          title: template.title,
+                          description: template.description,
+                          category: template.category,
+                          duration: parseInt(template.duration.replace(/[^0-9]/g, '')),
+                          thumbnailUrl: template.thumbnailUrl,
+                          views: typeof template.views === 'string' ? 
+                            parseInt(template.views.replace(/\D/g, '')) : template.views,
+                          stats: template.stats,
+                          soundId: template.soundId,
+                          soundTitle: template.soundTitle,
+                          soundAuthor: template.soundAuthor,
+                          soundCategory: template.soundCategory,
+                          analysisData: template.analysisData
+                        }}
+                        onClick={() => handleSelectTemplate(template.id, template)}
+                      />
+                    ) : (
+                      <TemplateCard
+                        template={template as any}
+                        isSelected={selectedTemplateId === template.id}
+                        onClick={() => handleSelectTemplate(template.id, template)}
+                        viewMode={viewMode}
+                      />
+                    )}
                   </ErrorBoundary>
                 ))}
               </div>
@@ -502,11 +528,24 @@ export default function TemplateLibraryPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredTemplates.slice(0, 3).map(template => (
                     <ErrorBoundary key={`featured-${template.id}`} componentName={`FeaturedCard-${template.id}`}>
-                      <TemplateCard
-                        template={template as any}
-                        isSelected={selectedTemplateId === template.id}
+                      <TikTokCard
+                        template={{
+                          id: template.id,
+                          title: template.title,
+                          description: template.description,
+                          category: template.category,
+                          duration: parseInt(template.duration.replace(/[^0-9]/g, '')),
+                          thumbnailUrl: template.thumbnailUrl,
+                          views: typeof template.views === 'string' ? 
+                            parseInt(template.views.replace(/\D/g, '')) : template.views,
+                          stats: template.stats,
+                          soundId: template.soundId,
+                          soundTitle: template.soundTitle,
+                          soundAuthor: template.soundAuthor,
+                          soundCategory: template.soundCategory,
+                          analysisData: template.analysisData
+                        }}
                         onClick={() => handleSelectTemplate(template.id, template)}
-                        viewMode="grid"
                       />
                     </ErrorBoundary>
                   ))}

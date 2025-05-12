@@ -1,25 +1,44 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
+  const router = useRouter();
+  
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 text-center">
-      <div className="max-w-md">
-        <h1 className="mb-2 text-6xl font-bold text-gray-900">404</h1>
-        <h2 className="mb-4 text-2xl font-medium text-gray-700">Page Not Found</h2>
-        <p className="mb-8 text-gray-500">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="space-y-4">
-          <Link href="/dashboard-view">
-            <Button className="inline-flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Button>
-          </Link>
+    <section className="bg-white font-serif min-h-screen flex items-center justify-center">
+      <div className="container mx-auto">
+        <div className="flex justify-center">
+          <div className="w-full sm:w-10/12 md:w-8/12 text-center">
+            <div
+              className="bg-[url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif)] h-[250px] sm:h-[350px] md:h-[400px] bg-center bg-no-repeat bg-contain"
+              aria-hidden="true"
+            >
+              <h1 className="text-center text-black text-6xl sm:text-7xl md:text-8xl pt-6 sm:pt-8">
+                404
+              </h1>
+            </div>
+
+            <div className="mt-[-50px]">
+              <h3 className="text-2xl text-black sm:text-3xl font-bold mb-4">
+                Look like you're lost
+              </h3>
+              <p className="mb-6 text-black sm:mb-5">
+                The page you are looking for is not available!
+              </p>
+
+              <Button
+                variant="default"
+                onClick={() => router.push("/")}
+                className="my-5 bg-green-600 hover:bg-green-700 "
+              >
+                Go to Home
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 } 
