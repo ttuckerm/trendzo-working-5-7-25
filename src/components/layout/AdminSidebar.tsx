@@ -338,6 +338,15 @@ export default function AdminSidebar({
                 isCollapsed={isCollapsed}
               />
               <NavItem
+                href="/admin/supabase-migration"
+                icon={<ServerCog size={18} />}
+                label="Supabase Migration"
+                isActive={pathname === '/admin/supabase-migration'}
+                isCollapsed={isCollapsed}
+                badge="New"
+                badgeColor="bg-green-100 text-green-700"
+              />
+              <NavItem
                 href="/admin/settings"
                 icon={<Settings size={18} />}
                 label="Settings"

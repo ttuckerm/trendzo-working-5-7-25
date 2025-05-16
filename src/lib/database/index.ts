@@ -3,7 +3,7 @@ import { createFirebaseClient } from './firebase';
 import { DatabaseClient } from './types';
 
 // This abstraction layer allows gradual migration from Firebase to Supabase
-export const db: DatabaseClient = process.env.NEXT_PUBLIC_USE_SUPABASE === 'true' 
+export const db: DatabaseClient = true  
   ? createSupabaseClient() 
   : createFirebaseClient();
 

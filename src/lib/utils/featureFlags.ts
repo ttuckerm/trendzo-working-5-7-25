@@ -1,6 +1,4 @@
 // src/lib/utils/featureFlags.ts
-import { remoteConfig, refreshRemoteConfig } from '@/lib/firebase/firebase';
-import { getValue } from 'firebase/remote-config';
 import { db } from '@/lib/database';
 
 export type FeatureFlag = 
@@ -9,16 +7,12 @@ export type FeatureFlag =
   | 'max_daily_prompts'
   | 'enable_analytics';
 
-interface FeatureFlagData {
-  key: string;
-  value: any;
-  enabled: boolean;
-}
-
 export class FeatureFlagManager {
   private static instance: FeatureFlagManager;
   private flags: Map<string, any> = new Map();
-  private useSupabase: boolean = process.env.NEXT_PUBLIC_USE_SUPABASE === 'true';
+  
+  // Always use Supabase - hardcoded for now
+  private useSupabase: boolean = true;
   
   private constructor() {}
   
@@ -30,54 +24,45 @@ export class FeatureFlagManager {
   }
   
   async initialize() {
-    if (this.useSupabase) {
-      // Supabase implementation
-      try {
-        const { data, error } = await db.from('feature_flags').select('*');
-        if (error) throw error;
-        
-        data?.forEach((flag: FeatureFlagData) => {
-          if (flag.enabled) {
-            this.flags.set(flag.key, flag.value);
+    try {
+      // Hardcoded to always use Supabase
+      // Get feature flags from Supabase
+      const { data, error } = await db.from('feature_flags').select('*');
+      
+      if (error) throw error;
+      
+      data?.forEach((flag: any) => {
+        if (flag.enabled) {
+          // Parse the value if it's stored as a string
+          let value = flag.value;
+          if (typeof value === 'string') {
+            if (value === 'true') value = true;
+            else if (value === 'false') value = false;
+            else if (!isNaN(value)) value = Number(value);
           }
-        });
-      } catch (error) {
-        console.error('Failed to initialize feature flags from Supabase:', error);
-      }
-    } else {
-      // Firebase Remote Config implementation
-      await refreshRemoteConfig();
+          this.flags.set(flag.key, value);
+        }
+      });
+      
+      console.log('Initialized feature flags:', this.flags);
+    } catch (error) {
+      console.error('Failed to initialize feature flags:', error);
     }
   }
   
   getBoolean(flag: FeatureFlag): boolean {
-    if (this.useSupabase) {
-      const value = this.flags.get(flag);
-      return typeof value === 'boolean' ? value : false;
-    } else {
-      if (!remoteConfig) return false;
-      return getValue(remoteConfig, flag).asBoolean();
-    }
+    const value = this.flags.get(flag);
+    return typeof value === 'boolean' ? value : false;
   }
   
   getNumber(flag: FeatureFlag): number {
-    if (this.useSupabase) {
-      const value = this.flags.get(flag);
-      return typeof value === 'number' ? value : 0;
-    } else {
-      if (!remoteConfig) return 0;
-      return getValue(remoteConfig, flag).asNumber();
-    }
+    const value = this.flags.get(flag);
+    return typeof value === 'number' ? value : 0;
   }
   
   getString(flag: FeatureFlag): string {
-    if (this.useSupabase) {
-      const value = this.flags.get(flag);
-      return typeof value === 'string' ? value : '';
-    } else {
-      if (!remoteConfig) return '';
-      return getValue(remoteConfig, flag).asString();
-    }
+    const value = this.flags.get(flag);
+    return typeof value === 'string' ? value : '';
   }
   
   // Convenience methods for specific flags

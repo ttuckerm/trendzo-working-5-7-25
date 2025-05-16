@@ -142,7 +142,7 @@ export default function TemplateLibraryPage() {
         setLoading(true);
         
         // Artificial delay to simulate network request
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 800));
         
         // Get mock templates
         const mockedTemplates = getMockTemplates();
@@ -164,6 +164,9 @@ export default function TemplateLibraryPage() {
   
   // Restore saved state from context
   useEffect(() => {
+    // Reset navigation state
+    setNavigating(false);
+    
     // Restore view mode
     const savedViewMode = getState<'grid' | 'list'>('templateLibrary.viewMode');
     if (savedViewMode) {
@@ -217,15 +220,20 @@ export default function TemplateLibraryPage() {
     
     // Store template data in session storage for the detail page
     try {
-      sessionStorage.setItem('selectedTemplateData', JSON.stringify(template));
+      // Use localStorage instead of sessionStorage to be more resilient
+      localStorage.setItem('selectedTemplateData', JSON.stringify(template));
+      localStorage.setItem('selectedTemplateId', id);
+      
+      // Also store in context state
       setState('templateLibrary.selectedTemplateData', template);
+      setState('templateLibrary.selectedTemplateId', id);
     } catch (err) {
       console.error('Error storing template data:', err);
     }
     
-    // Navigate to template detail page
-    router.push(`/dashboard-view/template-library/view/${id}`);
-  }, [router, trackInteractionStable, setState]);
+    // Use a safer navigation approach
+    window.location.href = `/dashboard-view/template-library/view/${id}`;
+  }, [trackInteractionStable, setState]);
   
   // Filter templates using useMemo to prevent expensive recalculations
   const filteredTemplates = useMemo(() => {
@@ -298,6 +306,19 @@ export default function TemplateLibraryPage() {
     setSortBy('popularity');
     trackInteractionStable('reset', 'filters');
   }, [trackInteractionStable]);
+  
+  // Check if returning from detail page to reset navigation state
+  useEffect(() => {
+    if (getState('templateLibrary.returnedFromDetail')) {
+      // Clear the flag
+      setState('templateLibrary.returnedFromDetail', false);
+      
+      // Reset any locks on template selection
+      setNavigating(false);
+      
+      console.log('[Template Library] User returned from detail page, navigation reset');
+    }
+  }, [getState, setState]);
   
   // Error state
   if (error) {
@@ -455,7 +476,7 @@ export default function TemplateLibraryPage() {
         
         {/* Loading state */}
         {loading ? (
-          <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-6`}>
+          <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-8`}>
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className={`${viewMode === 'grid' ? 'h-[280px]' : 'h-[120px]'} border rounded-lg overflow-hidden`}>
                 <Skeleton className="h-full w-full" />

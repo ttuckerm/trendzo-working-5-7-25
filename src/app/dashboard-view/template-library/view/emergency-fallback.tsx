@@ -2,11 +2,15 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, LayoutGrid, Home } from 'lucide-react';
+import { AlertTriangle, LayoutGrid, Home, RefreshCw } from 'lucide-react';
 
 // Ultra-simple emergency fallback for template library page
 // No complex state or context dependencies that could cause render loops
-export default function TemplateLibraryEmergencyFallback() {
+export default function TemplateLibraryEmergencyFallback({ error }: { error?: Error }) {
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
@@ -27,6 +31,11 @@ export default function TemplateLibraryEmergencyFallback() {
               We're currently fixing some technical issues with the template library. 
               Some features may be temporarily unavailable.
             </p>
+            {error && (
+              <div className="bg-amber-100 p-3 rounded mb-4 text-sm font-mono overflow-x-auto">
+                <p className="text-red-700">{error.message || 'Unknown error'}</p>
+              </div>
+            )}
             <div className="flex space-x-4">
               <Link href="/dashboard-view" passHref>
                 <Button variant="outline" className="flex items-center">
@@ -34,6 +43,10 @@ export default function TemplateLibraryEmergencyFallback() {
                   Dashboard Home
                 </Button>
               </Link>
+              <Button variant="outline" className="flex items-center" onClick={handleRefresh}>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh Page
+              </Button>
             </div>
           </div>
         </div>
@@ -41,7 +54,7 @@ export default function TemplateLibraryEmergencyFallback() {
       
       {/* Static template previews to show something useful */}
       <h2 className="text-xl font-semibold mb-4">Popular Templates</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Template 1 */}
         <div className="rounded-lg border overflow-hidden hover:shadow-md transition-shadow">
           <div className="bg-gray-100 aspect-video flex items-center justify-center">

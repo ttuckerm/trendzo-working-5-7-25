@@ -65,32 +65,32 @@ export default function TemplateDetailPage({
       try {
         setLoading(true);
         
-        // First try to get template data from sessionStorage (set by the template list page)
-        let templateFromSession = null;
+        // First try to get template data from localStorage (set by the template list page)
+        let templateFromStorage = null;
         
         try {
-          const sessionData = sessionStorage.getItem('selectedTemplateData');
-          if (sessionData) {
-            const parsedData = JSON.parse(sessionData);
+          const storageData = localStorage.getItem('selectedTemplateData');
+          if (storageData) {
+            const parsedData = JSON.parse(storageData);
             if (parsedData.id === templateId) {
-              templateFromSession = parsedData;
-              console.log('[Template Detail] Using template data from session storage');
+              templateFromStorage = parsedData;
+              console.log('[Template Detail] Using template data from localStorage');
             }
           }
         } catch (e) {
-          console.error('Error reading from sessionStorage:', e);
+          console.error('Error reading from localStorage:', e);
         }
         
-        // If we have the template from session storage, use it immediately
-        if (templateFromSession) {
-          setTemplate(templateFromSession as Template);
+        // If we have the template from localStorage, use it immediately
+        if (templateFromStorage) {
+          setTemplate(templateFromStorage as Template);
           setLoading(false);
           
           // Store the template ID for the editor to use
           try {
             window.localStorage.setItem('selectedTemplateId', templateId);
             setState('templateLibrary.selectedTemplateId', templateId);
-            setState('templateLibrary.selectedTemplateData', templateFromSession);
+            setState('templateLibrary.selectedTemplateData', templateFromStorage);
           } catch (e) {
             console.error('Error storing template data:', e);
           }
@@ -160,10 +160,25 @@ export default function TemplateDetailPage({
         <Button 
           variant="outline" 
           className="flex items-center gap-2"
-          onClick={() => router.push("/dashboard-view/template-library/view")}
+          onClick={() => {
+            // Reset any navigation state to ensure we can navigate to other templates
+            try {
+              // Clear navigation state
+              setState('templateLibrary.navigating', false);
+              
+              // Don't clear the selected template ID, as that would break "View" functionality
+              // Just note that we've returned from the detail page
+              setState('templateLibrary.returnedFromDetail', true);
+            } catch (err) {
+              console.error('Error clearing navigation state:', err);
+            }
+            
+            // Use regular navigation or direct URL change depending on what works best
+            window.location.href = "/dashboard-view/template-library/view";
+          }}
         >
           <ArrowLeft className="h-4 w-4" />
-          <span>Back to Templates</span>
+          Back to Templates
         </Button>
         <div className="flex gap-2">
           <Button variant="outline" size="icon">

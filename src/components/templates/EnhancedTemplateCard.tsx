@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { useFeatureEnabled } from '@/lib/contexts/FeatureContext';
 import { motion } from 'framer-motion';
@@ -17,10 +19,13 @@ import {
   Eye,
   Calendar,
   BarChart,
-  Lock
+  Lock,
+  ArrowRight
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { CardHoverReveal, CardHoverRevealMain, CardHoverRevealContent } from '@/components/ui/reveal-on-hover';
+import { cn, formatNumber } from '@/lib/utils';
 
 interface EnhancedTemplateCardProps {
   template: TrendingTemplate;
@@ -66,159 +71,100 @@ export const EnhancedTemplateCard: React.FC<EnhancedTemplateCardProps> = ({
   // Show expert badge when expertInput is true and the feature is enabled
   const showExpertBadge = expertInput && isExpertInputsEnabled;
 
+  const handleClick = () => {
+    if (onClick) onClick();
+    // Default action if no onClick provided
+  };
+
+  // Format popularity to appropriate class name
+  const getPopularityClass = (pop: string) => {
+    switch (pop.toLowerCase()) {
+      case 'high': return 'bg-blue-100 text-blue-800';
+      case 'medium': return 'bg-indigo-100 text-indigo-800';
+      case 'low': return 'bg-purple-100 text-purple-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  // Get category style based on name
+  const getCategoryStyle = (cat: string) => {
+    switch (cat.toLowerCase()) {
+      case 'e-commerce': return 'bg-zinc-800';
+      case 'education': return 'bg-zinc-800';
+      case 'entertainment': return 'bg-zinc-800';
+      case 'branding': return 'bg-zinc-800';
+      case 'marketing': return 'bg-zinc-800';
+      case 'social proof': return 'bg-zinc-800';
+      default: return 'bg-zinc-800';
+    }
+  };
+
   return (
-    <Card 
-      className={`overflow-hidden transition-all duration-300 hover:shadow-lg ${className}`}
-      onClick={onClick}
+    <CardHoverReveal 
+      className={`h-[350px] w-full rounded-xl border overflow-hidden shadow-sm transition-shadow hover:shadow-md ${className}`}
+      onClick={handleClick}
     >
-      <CardHeader className="p-0 relative">
-        <div className="relative h-48 w-full bg-slate-100">
-          {template.coverImage ? (
-            <Image
-              src={template.coverImage}
-              alt={template.title}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-slate-200">
-              <span className="text-slate-400">No image</span>
+      <CardHoverRevealMain>
+        <div className="relative w-full h-full">
+          <Image
+            src={template.coverImage || 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=2532&auto=format&fit=crop'}
+            alt={template.title}
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+        </div>
+      </CardHoverRevealMain>
+
+      {/* Category badge */}
+      <div className="absolute top-4 right-4 px-2 py-1 rounded-md bg-zinc-800 bg-opacity-75 text-white text-xs font-medium">
+        {template.category || 'Unknown'}
+      </div>
+
+      {/* Default content - always visible */}
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-white z-10">
+        <h3 className="text-lg font-medium line-clamp-1">{template.title}</h3>
+        <p className="text-white/80 text-sm line-clamp-1">{template.description}</p>
+      </div>
+
+      <CardHoverRevealContent className="space-y-4 rounded-2xl bg-zinc-900/75 text-zinc-50">
+        <div className="space-y-2">
+          <h3 className="text-sm text-opacity-60">Category</h3>
+          <div className="flex flex-wrap gap-2">
+            <div className={cn("rounded-full px-2 py-1", getCategoryStyle(template.category || 'Unknown'))}>
+              <p className="text-xs leading-normal">{template.category || 'Unknown'}</p>
             </div>
-          )}
-          
-          {/* Growth badge */}
-          {hasHighGrowth && (
-            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-orange-500">
-              <TrendingUp size={14} className="mr-1" /> Trending
-            </Badge>
-          )}
-          
-          {hasMediumGrowth && (
-            <Badge className="absolute top-2 left-2 bg-gradient-to-r from-blue-500 to-purple-500">
-              <TrendingUp size={14} className="mr-1" /> Rising
-            </Badge>
-          )}
-          
-          {/* Expert input badge */}
-          {showExpertBadge && (
-            <Badge className="absolute top-2 right-2 bg-gradient-to-r from-yellow-500 to-amber-500">
-              <Star size={14} className="mr-1" /> Expert
-            </Badge>
-          )}
-          
-          {/* Sound indicator - only shown if sound analysis is enabled */}
-          {sound && isSoundAnalysisEnabled && (
-            <div 
-              className="absolute bottom-2 left-2 flex items-center bg-black/70 text-white text-xs px-2 py-1 rounded-full cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation();
-                onPlaySound?.();
-              }}
-            >
-              <Music size={14} className="mr-1" />
-              <span className="truncate max-w-[140px]">{sound.title}</span>
-            </div>
-          )}
-          
-          {/* Duration indicator */}
-          <div className="absolute bottom-2 right-2 flex items-center bg-black/70 text-white text-xs px-2 py-1 rounded-full">
-            <Clock size={14} className="mr-1" />
-            <span>{template.duration ? `${template.duration}s` : 'N/A'}</span>
           </div>
         </div>
-      </CardHeader>
-      
-      <CardContent className="p-4">
-        <h3 className="font-semibold text-base line-clamp-1">{template.title}</h3>
-        
-        <div className="mt-2 flex items-center text-xs text-gray-500">
-          <Eye size={14} className="mr-1" />
-          <span className="mr-3">{formatNumber(template.stats?.viewCount || 0)} views</span>
-          
-          <BookOpen size={14} className="mr-1" />
-          <span>{template.category || 'Unknown'}</span>
-        </div>
-        
-        {/* Premium analytics preview - shown if enabled or with lock icon */}
-        <div className="mt-3 text-xs">
-          {isPremiumAnalyticsEnabled ? (
-            <div className="flex flex-wrap gap-1.5">
-              <Badge variant="outline" className="flex items-center">
-                <TrendingUp size={12} className="mr-1" /> 
-                {template.growthRate}% Growth
-              </Badge>
-              
-              <Badge variant="outline" className="flex items-center">
-                <Award size={12} className="mr-1" /> 
-                {template.engagementRate}% Engagement
-              </Badge>
+
+        <div className="space-y-2">
+          <h3 className="text-sm text-opacity-60">AI Suggestions</h3>
+          <div className="flex flex-wrap gap-2">
+            <div className="rounded-full bg-[hsl(18,56%,32%)] px-2 py-1">
+              <p className="text-xs leading-normal">{template.aiSuggestionCount} available</p>
             </div>
-          ) : (
-            <div className="flex items-center text-gray-400">
-              <Lock size={14} className="mr-1" />
-              <span>Premium analytics available</span>
+            <div className="rounded-full bg-[hsl(18,56%,32%)] px-2 py-1">
+              <p className="text-xs leading-normal">{template.duration ? `${template.duration}s` : 'N/A'}</p>
             </div>
-          )}
+          </div>
         </div>
-      </CardContent>
-      
-      <CardFooter className="p-4 pt-0 flex justify-between gap-2">
-        <Button 
-          variant="outline" 
-          size="sm"
-          className="flex-1"
-          onClick={(e) => {
-            e.stopPropagation();
-            onUseTemplate?.();
-          }}
-        >
-          Use Template
-        </Button>
-        
-        {/* Show these buttons only if the features are enabled */}
-        {isPremiumAnalyticsEnabled && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="flex-none"
-            title="View Analytics"
-            asChild
-          >
-            <Link href={`/analytics?templateId=${template.id}`}>
-              <BarChart size={18} />
-            </Link>
-          </Button>
-        )}
-        
-        {isTrendPredictionEnabled && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="flex-none"
-            title="View Predictions"
-            asChild
-          >
-            <Link href={`/trend-predictions?templateId=${template.id}`}>
-              <TrendingUp size={18} />
-            </Link>
-          </Button>
-        )}
-        
-        {isContentCalendarEnabled && (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="flex-none"
-            title="Add to Calendar"
-            asChild
-          >
-            <Link href={`/content-calendar?add=${template.id}`}>
-              <Calendar size={18} />
-            </Link>
-          </Button>
-        )}
-      </CardFooter>
-    </Card>
+
+        <div className="space-y-2">
+          <h3 className="text-sm text-opacity-60">Details</h3>
+          <div className="flex flex-wrap gap-2">
+            <p className="text-sm text-card">
+              {template.description}
+            </p>
+          </div>
+          <div className="flex justify-between items-center mt-2">
+            <span className="text-xs">{formatNumber(template.stats?.viewCount || 0)} views</span>
+            <Button size="sm" variant="secondary" className="h-8 px-2 py-1">
+              Remix <ArrowRight className="h-3 w-3 ml-1" />
+            </Button>
+          </div>
+        </div>
+      </CardHoverRevealContent>
+    </CardHoverReveal>
   );
 };
 

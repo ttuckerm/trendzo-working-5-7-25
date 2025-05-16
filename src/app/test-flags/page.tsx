@@ -18,9 +18,9 @@ export default function TestFlags() {
           show_new_feature: featureFlags.isNewFeatureEnabled(),
           max_daily_prompts: featureFlags.getMaxDailyPrompts(),
           enable_analytics: featureFlags.isAnalyticsEnabled(),
-          using_supabase: process.env.NEXT_PUBLIC_USE_SUPABASE === 'true',
-          actual_use_supabase: process.env.NEXT_PUBLIC_USE_SUPABASE,
-          actual_supabase_url: process.env.NEXT_PUBLIC_SUPABASE_URL ? 'Set' : 'Not set',
+          using_supabase: true, // Hardcode for now since we're forcing Supabase
+          actual_use_supabase: process.env.NEXT_PUBLIC_USE_SUPABASE || "true (hardcoded)",
+          actual_supabase_url: "Using hardcoded value"
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load flags');
@@ -44,6 +44,7 @@ export default function TestFlags() {
         <p><strong>Show New Feature:</strong> {flags.show_new_feature ? 'Yes' : 'No'}</p>
         <p><strong>Max Daily Prompts:</strong> {flags.max_daily_prompts}</p>
         <p><strong>Analytics Enabled:</strong> {flags.enable_analytics ? 'Yes' : 'No'}</p>
+        
         <hr />
         <p><strong>Actual USE_SUPABASE value:</strong> {flags.actual_use_supabase}</p>
         <p><strong>Actual SUPABASE_URL:</strong> {flags.actual_supabase_url}</p>

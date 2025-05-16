@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation'
 export default function Header({
   setIsSidebarOpen
 }: {
-  setIsSidebarOpen: (isOpen: boolean) => void
+  setIsSidebarOpen?: (isOpen: boolean) => void
 }) {
   const { user } = useAuth()
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
@@ -56,12 +56,14 @@ export default function Header({
     <header className="relative z-20 flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6">
       {/* Left side - Mobile menu button and logo */}
       <div className="flex items-center gap-4">
-        <button
-          onClick={() => setIsSidebarOpen(true)}
-          className="rounded-md p-2 text-gray-500 hover:bg-gray-100 lg:hidden"
-        >
-          <Menu size={20} />
-        </button>
+        {setIsSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="rounded-md p-2 text-gray-500 hover:bg-gray-100 lg:hidden"
+          >
+            <Menu size={20} />
+          </button>
+        )}
         <div className="lg:hidden">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Image 

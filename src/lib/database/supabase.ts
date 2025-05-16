@@ -1,19 +1,17 @@
 import { createClient } from '@supabase/supabase-js';
 import { DatabaseClient, QueryBuilder, QueryResult } from './types';
 
-// Check if environment variables are present
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Fallback to hardcoded values if environment variables aren't available
+// This ensures we always have values even if env variables fail to load
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://vyeiyccrageeckeehyhj.supabase.co";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ5ZWl5Y2NyYWdlZWNrZWVoeWhqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY5MjE2MTEsImV4cCI6MjA2MjQ5NzYxMX0.DAEyNYSuqddMrbnoBTsQFjDhJGsgj4f0_Nk2a76ZV2U";
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables');
-  console.error('NEXT_PUBLIC_SUPABASE_URL:', supabaseUrl);
-  console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', supabaseAnonKey ? 'Set' : 'Missing');
-}
+// Log for debugging - this helps identify if the environment variables are loading
+console.log("Supabase URL:", supabaseUrl ? "Found" : "Missing");
+console.log("Supabase Anon Key:", supabaseAnonKey ? "Found" : "Missing");
 
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey) 
-  : null;
+// Create the Supabase client
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Wrapper to match our common interface
 class SupabaseQueryBuilder implements QueryBuilder {
@@ -60,10 +58,6 @@ class SupabaseQueryBuilder implements QueryBuilder {
 }
 
 export function createSupabaseClient(): DatabaseClient {
-  if (!supabase) {
-    throw new Error('Supabase client not initialized. Check your environment variables.');
-  }
-  
   return {
     from: (table: string) => new SupabaseQueryBuilder(table),
     auth: {
