@@ -1,9 +1,13 @@
 import { TikTokVideo } from '../types/trendingTemplate';
 
 /**
+ * Test utilities for ETL processes
+ */
+
+/**
  * Creates a mock TikTok video for testing
  */
-export function createMockTikTokVideo(testId: string): TikTokVideo {
+export function createMockTikTokVideo(testId: string): any {
   return {
     id: `mock-video-${testId}`,
     text: `This is a test video for ETL testing - ${testId}`,

@@ -54,21 +54,6 @@ const UIComponents = resolveComponents({
   TooltipTrigger 
 });
 
-// Mock session hook for development mode
-const useMockSession = () => {
-  return {
-    data: {
-      user: {
-        id: 'dev-user-id',
-        name: 'Developer',
-        email: 'dev@example.com'
-      },
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-    },
-    status: 'authenticated'
-  };
-};
-
 export default function TrendPredictionsDashboardPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false); // Start with loading false to show content immediately
@@ -77,8 +62,7 @@ export default function TrendPredictionsDashboardPage() {
   const [filter, setFilter] = useState('all');
   const [userTier, setUserTier] = useState<'free' | 'pro' | 'enterprise'>('enterprise'); // Default to enterprise to show all features
   
-  // Use mock session in development
-  const session = useMockSession();
+  // Use auth hook instead of mock session
   const { user } = useAuth();
   const { toast } = useToast();
   
@@ -94,7 +78,7 @@ export default function TrendPredictionsDashboardPage() {
   
   // Add state for sound filter and trending sounds
   const [soundFilter, setSoundFilter] = useState('all');
-  const [trendingSounds, setTrendingSounds] = useState<any[]>([]);
+  const [trendingSounds, setTrendingSounds] = useState<any[]>(getMockTrendingSounds()); // Initialize with mock data
   const { toggle } = useAudio();
   
   // Destructure UI components for usage
