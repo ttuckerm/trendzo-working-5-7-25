@@ -274,6 +274,7 @@ export async function createSyncPointsFromBeats(
       // Determine element type based on ID naming convention (simplistic approach)
       let elementType: 'text' | 'image' | 'background' | 'transition' | 'animation' = 'animation';
       if (elementId.includes('text')) elementType = 'text';
+      else if (elementId.includes('image')) elementType = 'image';
       else if (elementId.includes('img')) elementType = 'image';
       else if (elementId.includes('bg')) elementType = 'background';
       else if (elementId.includes('transition')) elementType = 'transition';

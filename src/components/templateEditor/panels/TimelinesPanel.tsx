@@ -11,14 +11,17 @@ import {
   ChevronDown,
   GripVertical,
   Play,
-  Pause
+  Pause,
+  Plus
 } from 'lucide-react';
 import { useTemplateEditor } from '@/lib/contexts/TemplateEditorContext';
 import { Button } from '@/components/ui/button';
+import BeatSyncController from '@/components/editor/BeatSyncController';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Section } from '@/lib/types/templateEditor.types';
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ui/context-menu';
+import { useAudio } from '@/lib/contexts/AudioContext';
 
 /**
  * TimelinesPanel Component
@@ -41,6 +44,8 @@ const TimelinesPanel: React.FC = () => {
     togglePlayback,
     trackInteraction
   } = useTemplateEditor();
+  
+  const { state: audioState } = useAudio();
   
   // Function to handle section selection
   const handleSelectSection = (section: Section) => {
@@ -146,6 +151,9 @@ const TimelinesPanel: React.FC = () => {
         </div>
         
         <div className="flex items-center space-x-2">
+          {/* Beat Sync Controller - Always show but disabled when no audio */}
+          <BeatSyncController className="mr-2" showControls={true} />
+          
           <Tooltip>
             <TooltipTrigger asChild>
               <Button 

@@ -41,12 +41,12 @@ export function useTemplateIntegration() {
       type: 'navigation',
       target: 'editor',
       targetType: 'page',
-      path: `/editor?id=${templateId}&source=${source}`,
+      path: `/dashboard-view/template-editor?id=${templateId}&source=${source}`,
       metadata: { templateId, source }
     });
     
     // Navigate to editor
-    router.push(`/editor?id=${templateId}&source=${source}`);
+    router.push(`/dashboard-view/template-editor?id=${templateId}&source=${source}`);
   };
   
   // Navigate back to template library with tracking

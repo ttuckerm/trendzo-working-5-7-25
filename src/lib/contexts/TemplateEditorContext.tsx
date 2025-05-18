@@ -500,10 +500,34 @@ interface TemplateEditorContextProps {
 // Create context with a default value
 const TemplateEditorContext = createContext<TemplateEditorContextProps | undefined>(undefined);
 
-// Provider component
-export const TemplateEditorProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // Initialize state with reducer
+// Update interface to include optional initialTemplateId
+interface TemplateEditorProviderProps {
+  children: ReactNode;
+  initialTemplateId?: string;
+}
+
+export const TemplateEditorProvider: React.FC<TemplateEditorProviderProps> = ({ 
+  children, 
+  initialTemplateId 
+}) => {
+  // Initialize state with default template
   const [state, dispatch] = useReducer(editorReducer, createInitialEditorState());
+  const initialized = useRef(false);
+  
+  // Load template if initialTemplateId is provided
+  useEffect(() => {
+    if (initialTemplateId && !initialized.current) {
+      // Here you would fetch the template data using the ID
+      // For now, we'll just set the ID in the existing template
+      const templateToLoad = {
+        ...state.template,
+        id: initialTemplateId
+      };
+      
+      dispatch({ type: 'LOAD_TEMPLATE', payload: templateToLoad });
+      initialized.current = true;
+    }
+  }, [initialTemplateId, state.template]);
   
   // Debounce timer ref for localStorage updates
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);

@@ -97,15 +97,15 @@ export function SessionNavBar() {
               </li>
               <li>
                 <Link
-                  href="/editor"
+                  href="/dashboard-view/template-editor"
                   className={cn(
                     "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                    pathname === "/editor"
+                    pathname === "/editor" || pathname === "/dashboard-view/template-editor" || pathname.startsWith("/dashboard-view/template-editor/")
                       ? "bg-blue-50 text-blue-700"
                       : "text-gray-700 hover:bg-gray-100"
                   )}
                 >
-                  <span className={pathname === "/editor" ? "text-blue-600" : "text-gray-500"}>
+                  <span className={pathname === "/editor" || pathname === "/dashboard-view/template-editor" || pathname.startsWith("/dashboard-view/template-editor/") ? "text-blue-600" : "text-gray-500"}>
                     <Edit size={18} />
                   </span>
                   <span>Template Editor</span>

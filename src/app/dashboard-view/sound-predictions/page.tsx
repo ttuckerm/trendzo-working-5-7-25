@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Music, TrendingUp, Volume2, Filter, CheckCircle, X, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card-component';
 import { 
@@ -13,7 +13,7 @@ import {
   SelectContent, 
   SelectItem 
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { useAudio } from '@/lib/contexts/AudioContext';
 import Link from 'next/link';
 

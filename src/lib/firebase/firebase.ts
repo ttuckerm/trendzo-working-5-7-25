@@ -7,6 +7,11 @@ import { getAnalytics, Analytics, isSupported } from "firebase/analytics";
 import { getPerformance } from "firebase/performance";
 import { getRemoteConfig, RemoteConfig, fetchAndActivate } from "firebase/remote-config";
 
+// Add a mock Crashlytics interface since it's referenced but not imported
+interface Crashlytics {
+  setUserId?: (userId: string) => void;
+}
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDKH4Ku4nnYHxx1eh_peemEaMPSfB2fGDc",
@@ -27,6 +32,24 @@ let storage: FirebaseStorage | null = null;
 let analytics: Analytics | null = null;
 let crashlytics: Crashlytics | null = null;
 let remoteConfig: RemoteConfig | null = null;
+
+// Mock getCrashlytics function since it's not imported but referenced
+const getCrashlytics = (app: any): Crashlytics | null => {
+  // Return a mock implementation
+  console.warn("Crashlytics is not available, using mock implementation");
+  return {
+    setUserId: (userId: string) => {
+      console.log("Mock Crashlytics setUserId called with:", userId);
+    }
+  };
+};
+
+// Mock setUserIdCrashlytics function
+const setUserIdCrashlytics = (crashlytics: Crashlytics, userId: string) => {
+  if (crashlytics && crashlytics.setUserId) {
+    crashlytics.setUserId(userId);
+  }
+};
 
 try {
   auth = getAuth(app);

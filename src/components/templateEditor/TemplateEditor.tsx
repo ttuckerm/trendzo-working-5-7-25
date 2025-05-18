@@ -19,7 +19,9 @@ import {
   Upload,
   FileQuestion,
   Sparkles,
-  Music
+  Music,
+  Loader2,
+  Edit
 } from 'lucide-react';
 import { useTemplateEditor } from '@/lib/contexts/TemplateEditorContext';
 import EditorCanvas from './EditorCanvas';
@@ -40,6 +42,9 @@ import { RenderCounter } from '@/components/debug/RenderCounter';
 import { useTemplateSound } from '@/lib/hooks/useTemplateSound';
 import SoundAnalyticsCard from '@/components/audio/SoundAnalyticsCard';
 import EditorSoundPanel from '@/components/audio/EditorSoundPanel';
+import { useRouter } from 'next/navigation';
+import { Sound } from '@/lib/types/audio';
+import { TemplateSound } from '@/lib/types/templateEditor.types';
 
 /**
  * Main TemplateEditor component
@@ -51,7 +56,19 @@ import EditorSoundPanel from '@/components/audio/EditorSoundPanel';
  * - Progressive Disclosure: Complex options progressively revealed
  * - Sensory Harmony: Coordinated visual feedback
  */
-const TemplateEditorContent: React.FC = () => {
+
+// Add these properties to the component props
+interface TemplateEditorProps {
+  isEmbedded?: boolean;
+  returnPath?: string;
+  source?: string;
+}
+
+const TemplateEditorContent: React.FC<TemplateEditorProps> = ({ 
+  isEmbedded = false, 
+  returnPath = '/dashboard-view/template-library',
+  source = 'dashboard'
+}) => {
   const {
     state,
     dispatch,
@@ -64,6 +81,8 @@ const TemplateEditorContent: React.FC = () => {
     selectedSection,
     selectedElement
   } = useTemplateEditor();
+  
+  const router = useRouter();
   
   // Use useRef to persist panel state without causing re-renders
   const panelStateRef = useRef({
@@ -198,223 +217,251 @@ const TemplateEditorContent: React.FC = () => {
     [panelState.timelinePanelOpen]
   );
   
-  // Add sound-related state
-  const [currentSound, setCurrentSound] = useState(state.template.soundId ? {
-    id: state.template.soundId,
-    title: state.template.soundTitle || 'Template Sound',
-    artist: state.template.soundAuthor || 'Unknown',
-    url: state.template.soundUrl || '',
-    duration: 0
-  } : null);
+  // Update sound state initialization with proper type handling
+  const [currentSound, setCurrentSound] = useState<Sound | null>(() => {
+    if (state.template.sound) {
+      // Ensure all required fields are provided with fallbacks
+      return {
+        id: state.template.sound.id || 'default-id',
+        title: state.template.sound.name || 'Template Sound',
+        artist: state.template.sound.artist || 'Unknown Artist', // Non-optional in Sound type
+        url: state.template.sound.url || '', 
+        duration: state.template.sound.duration || 0
+      };
+    }
+    return null;
+  });
   
   // Add sound selection handler
-  const handleSoundChange = (sound) => {
-    if (state.ui.readOnly) return;
+  const handleSoundChange = (sound: Sound | null) => {
+    // If read-only mode is enabled, don't allow changes
+    if (state.ui.mode === 'preview') return;
     
     setCurrentSound(sound);
     
     // Update template data with sound info
     if (sound) {
       dispatch({
-        type: 'SET_TEMPLATE_DATA',
+        type: 'UPDATE_TEMPLATE',
         payload: {
           ...state.template,
-          soundId: sound.id,
-          soundTitle: sound.title,
-          soundAuthor: sound.artist || sound.authorName,
-          soundUrl: sound.url || sound.playUrl
+          sound: {
+            id: sound.id,
+            name: sound.title,
+            artist: sound.artist,
+            url: sound.url,
+            duration: sound.duration
+          } as TemplateSound
         }
       });
     } else {
       dispatch({
-        type: 'SET_TEMPLATE_DATA',
+        type: 'UPDATE_TEMPLATE',
         payload: {
           ...state.template,
-          soundId: undefined,
-          soundTitle: undefined,
-          soundAuthor: undefined,
-          soundUrl: undefined
+          sound: undefined
         }
       });
     }
   };
   
   return (
-    <div className="h-full w-full flex flex-col bg-gray-50 overflow-hidden">
+    <div className={`h-full w-full flex flex-col bg-gray-50 overflow-hidden ${isEmbedded ? 'embedded-editor' : ''}`}>
       {/* Render counter in development mode */}
       {process.env.NODE_ENV === 'development' && (
         <RenderCounter componentName="TemplateEditor" />
       )}
     
-      {/* Header toolbar */}
-      <header className="bg-white border-b px-4 py-2 flex items-center justify-between">
-        <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              window.history.back();
-              trackInteraction('navigation', 'back');
-            }}
-            className="mr-2"
-          >
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline-block">Back</span>
-          </Button>
+      {/* Header toolbar - conditionally rendered if not embedded */}
+      {!isEmbedded && (
+        <header className="bg-white border-b px-4 py-2 flex items-center justify-between">
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                // Use returnPath if provided, otherwise default to history.back()
+                if (returnPath) {
+                  router.push(returnPath);
+                } else {
+                  window.history.back();
+                }
+                trackInteraction('navigation', 'back');
+              }}
+              className="mr-2"
+            >
+              <ChevronLeft className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline-block">Back</span>
+            </Button>
+            
+            <h1 className="text-lg font-medium truncate">
+              {state.template.name || 'Untitled Template'}
+            </h1>
+          </div>
           
+          <div className="flex items-center space-x-1">
+            <TooltipProvider>
+              {/* Undo/Redo */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={undo}
+                    disabled={!canUndo}
+                    className={cn(!canUndo && "opacity-50")}
+                  >
+                    <Undo className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Undo</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={redo}
+                    disabled={!canRedo}
+                    className={cn(!canRedo && "opacity-50")}
+                  >
+                    <Redo className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Redo</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleEditMode}
+                  >
+                    {state.ui.mode === 'edit' ? (
+                      <Eye className="w-4 h-4" />
+                    ) : (
+                      <EyeOff className="w-4 h-4" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{state.ui.mode === 'edit' ? 'Preview Mode' : 'Edit Mode'}</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleDeviceView}
+                  >
+                    {state.ui.device === 'mobile' ? (
+                      <Monitor className="w-4 h-4" />
+                    ) : (
+                      <Smartphone className="w-4 h-4" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Toggle Device View</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              {/* Premium features - progressively disclosed based on expertise */}
+              {showAdvancedOptions && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="default"
+                      size="icon"
+                      disabled={true}
+                      onClick={() => {}}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      <Sparkles className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Premium feature: Get AI Suggestions (Coming Soon!)</p>
+                  </TooltipContent>
+                </Tooltip>
+              )}
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={saveTemplate}
+                    disabled={state.ui.isSaving}
+                  >
+                    <Save className={cn("w-4 h-4", state.ui.isSaving && "animate-pulse")} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Save Template</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={exportTemplate}
+                    disabled={state.ui.isExporting}
+                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                  >
+                    <Download className={cn("w-4 h-4 mr-1", state.ui.isExporting && "animate-pulse")} />
+                    <span>Export</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export for TikTok</p>
+                </TooltipContent>
+              </Tooltip>
+              
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleSoundChange(currentSound ? null : {
+                      id: 'new-sound',
+                      title: 'New Sound',
+                      artist: 'Unknown Artist', // Non-optional in Sound type
+                      url: '',
+                      duration: 0
+                    })}
+                    className={currentSound ? 'bg-indigo-50 text-indigo-600' : ''}
+                  >
+                    <Music className="w-5 h-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Sound settings</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </header>
+      )}
+      
+      {/* If embedded, add a title at the top */}
+      {isEmbedded && (
+        <div className="bg-white border-b px-4 py-3 flex items-center">
           <h1 className="text-lg font-medium truncate">
             {state.template.name || 'Untitled Template'}
           </h1>
         </div>
-        
-        <div className="flex items-center space-x-1">
-          <TooltipProvider>
-            {/* Undo/Redo */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={undo}
-                  disabled={!canUndo}
-                  className={cn(!canUndo && "opacity-50")}
-                >
-                  <Undo className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Undo</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={redo}
-                  disabled={!canRedo}
-                  className={cn(!canRedo && "opacity-50")}
-                >
-                  <Redo className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Redo</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleEditMode}
-                >
-                  {state.ui.mode === 'edit' ? (
-                    <Eye className="w-4 h-4" />
-                  ) : (
-                    <EyeOff className="w-4 h-4" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{state.ui.mode === 'edit' ? 'Preview Mode' : 'Edit Mode'}</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleDeviceView}
-                >
-                  {state.ui.device === 'mobile' ? (
-                    <Monitor className="w-4 h-4" />
-                  ) : (
-                    <Smartphone className="w-4 h-4" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Toggle Device View</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            {/* Premium features - progressively disclosed based on expertise */}
-            {showAdvancedOptions && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="default"
-                    size="icon"
-                    disabled={true}
-                    onClick={() => {}}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Premium feature: Get AI Suggestions (Coming Soon!)</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={saveTemplate}
-                  disabled={state.ui.isSaving}
-                >
-                  <Save className={cn("w-4 h-4", state.ui.isSaving && "animate-pulse")} />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Save Template</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={exportTemplate}
-                  disabled={state.ui.isExporting}
-                  className="bg-blue-500 hover:bg-blue-600 text-white"
-                >
-                  <Download className={cn("w-4 h-4 mr-1", state.ui.isExporting && "animate-pulse")} />
-                  <span>Export</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Export for TikTok</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip content="Sound settings">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleSoundChange(currentSound ? null : {
-                  id: 'new-sound',
-                  title: 'New Sound',
-                  artist: 'Unknown',
-                  url: '',
-                  duration: 0
-                })}
-                className={currentSound ? 'bg-indigo-50 text-indigo-600' : ''}
-              >
-                <Music className="w-5 h-5" />
-              </Button>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </header>
+      )}
       
       {/* Main content area with left panel, canvas, and right panel */}
       <div className="flex-1 flex overflow-hidden">
@@ -603,6 +650,61 @@ const TemplateEditorContent: React.FC = () => {
           </div>
         </div>
       )}
+      
+      {/* Conditional footer if embedded */}
+      {isEmbedded && (
+        <div className="bg-white border-t p-3 flex justify-between items-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              router.push(returnPath);
+            }}
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Back to Templates
+          </Button>
+          
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={saveTemplate}
+              disabled={state.ui.isSaving}
+            >
+              {state.ui.isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-1" />
+                  Save
+                </>
+              )}
+            </Button>
+            
+            <Button
+              variant="default"
+              size="sm"
+              onClick={toggleEditMode}
+            >
+              {state.ui.mode === 'edit' ? (
+                <>
+                  <Edit className="w-4 h-4 mr-1" />
+                  Edit
+                </>
+              ) : (
+                <>
+                  <Eye className="w-4 h-4 mr-1" />
+                  Preview
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -639,13 +741,21 @@ const EditorErrorFallback = () => {
 };
 
 // Wrap the main component with error boundary
-const TemplateEditor: React.FC = () => {
+const TemplateEditor: React.FC<TemplateEditorProps> = ({ 
+  isEmbedded = false, 
+  returnPath = '/dashboard-view/template-library',
+  source = 'dashboard'
+}) => {
   return (
     <ErrorBoundary 
       componentName="TemplateEditor"
       fallback={<EditorErrorFallback />}
     >
-      <TemplateEditorContent />
+      <TemplateEditorContent 
+        isEmbedded={isEmbedded}
+        returnPath={returnPath}
+        source={source}
+      />
     </ErrorBoundary>
   );
 };

@@ -24,11 +24,11 @@ import {
   Unlink,
   Palette
 } from "lucide-react";
-import { ColorPicker } from "../ui/ColorPicker";
-import { Slider } from "../ui/Slider";
-import { Input } from "../ui/Input";
-import { TextArea } from "../ui/TextArea";
-import { Button } from "../ui/Button";
+import { ColorPicker } from '@/components/ui/ColorPicker';
+import { Slider } from '@/components/ui/Slider';
+import { Input } from '@/components/ui/Input';
+import { TextArea } from '@/components/ui/TextArea';
+import { Button } from '@/components/ui/button';
 
 /**
  * PropertyEditor Component

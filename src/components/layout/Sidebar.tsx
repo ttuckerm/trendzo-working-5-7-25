@@ -204,10 +204,10 @@ export default function Sidebar({
                          pathname === '/(dashboard)/template-library' || pathname.startsWith('/(dashboard)/template-library/')}
               />
               <NavItem
-                href="/editor"
+                href="/dashboard-view/template-editor"
                 icon={<Edit size={18} />}
                 label="Template Editor"
-                isActive={pathname === '/editor'}
+                isActive={pathname === '/editor' || pathname === '/dashboard-view/template-editor' || pathname.startsWith('/dashboard-view/template-editor/')}
               />
               <NavItem
                 href="/dashboard-view/video-analyzer"
@@ -233,10 +233,10 @@ export default function Sidebar({
                 isActive={pathname === '/analytics/trend-insights' || pathname === '/dashboard-view/analytics/trend-insights'}
               />
               <NavItem
-                href="/sound-trends"
+                href="/dashboard-view/sound-trends"
                 icon={<Volume2 size={18} />}
                 label="Sound Trends"
-                isActive={pathname === '/sound-trends'}
+                isActive={pathname === '/sound-trends' || pathname === '/dashboard-view/sound-trends'}
               />
               <NavItem
                 href="/dashboard-view/analytics/performance"

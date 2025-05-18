@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { useEditor } from "@/lib/contexts/EditorContext";
 import { Clock, ChevronRight, ChevronLeft, Plus, Play, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
+import BeatSyncController from "./BeatSyncController";
+import { useAudio } from "@/lib/contexts/AudioContext";
 
 /**
  * EditorTimeline Component
@@ -32,6 +34,7 @@ export const EditorTimeline: React.FC<EditorTimelineProps> = ({
     togglePlayback
   } = useEditor();
   
+  const { state: audioState } = useAudio();
   const [isDragging, setIsDragging] = useState(false);
   const [playheadPosition, setPlayheadPosition] = useState(0);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -64,70 +67,51 @@ export const EditorTimeline: React.FC<EditorTimelineProps> = ({
     setPlayheadPosition(state.ui.currentTime / totalDuration);
   }, [state.ui.currentTime, totalDuration]);
 
-  // Get playhead position when clicking timeline
+  // Handle timeline click to set playhead position
   const handleTimelineClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!timelineRef.current || totalDuration === 0) return;
     
     const rect = timelineRef.current.getBoundingClientRect();
     const clickPosition = e.clientX - rect.left;
-    const percentage = clickPosition / rect.width;
+    const clickPercentage = clickPosition / rect.width;
     
-    setPlayheadPosition(percentage);
+    // Calculate time from percentage
+    const clickTime = totalDuration * clickPercentage;
     
-    // Set current time
-    const newTime = percentage * totalDuration;
-    setCurrentTime(newTime);
-    
-    // Calculate which section this time corresponds to and select it
-    let accumTime = 0;
-    for (const section of state.template.sections) {
-      accumTime += section.duration;
-      
-      if (newTime <= accumTime) {
-        selectSection(section.id);
-        break;
-      }
-    }
+    // Update current time
+    setCurrentTime(clickTime);
   };
 
-  // Set colors for different section types
-  const getSectionColor = (type: string) => {
+  // Function to add a new section
+  const handleAddSection = () => {
+    addSection('body'); // Pass section type directly
+  };
+
+  // Get section color based on type
+  const getSectionColor = (type: string): string => {
     switch (type) {
-      case "intro":
-        return "bg-blue-500";
-      case "hook":
-        return "bg-purple-500";
-      case "body":
-        return "bg-green-500";
-      case "callToAction":
-        return "bg-red-500";
-      case "outro":
-        return "bg-orange-500";
+      case 'intro':
+        return 'bg-blue-500';
+      case 'hook':
+        return 'bg-purple-500';
+      case 'body':
+        return 'bg-green-500';
+      case 'callToAction':
+        return 'bg-orange-500';
       default:
-        return "bg-gray-500";
+        return 'bg-gray-500';
     }
   };
 
-  // Get width percentage for a section
-  const getSectionWidth = (duration: number) => {
+  // Calculate section width as percentage of total duration
+  const getSectionWidth = (duration: number): number => {
     if (totalDuration === 0) return 0;
     return (duration / totalDuration) * 100;
-  };
-  
-  // Handle adding a new section with appropriate type
-  const handleAddSection = () => {
-    const sectionTypes = ["intro", "hook", "body", "callToAction", "outro"];
-    const existingSectionTypes = state.template.sections.map(s => s.type);
-    
-    // Find first missing section type or use default
-    const nextType = sectionTypes.find(type => !existingSectionTypes.includes(type as any)) || "body";
-    
-    addSection(nextType as any);
   };
 
   return (
     <div className={cn("bg-white border-t h-20 flex flex-col", className)}>
-      {/* Timeline section tabs */}
+      {/* Timeline section tabs and controls */}
       <div className="flex items-center px-4 h-8 border-b border-gray-100">
         {state.template.sections.map((section, index) => (
           <button
@@ -159,8 +143,12 @@ export const EditorTimeline: React.FC<EditorTimelineProps> = ({
           Add Section
         </button>
         
-        {/* Playback controls */}
-        <div className="ml-auto flex items-center">
+        {/* Control elements in the right side of the timeline header */}
+        <div className="ml-auto flex items-center gap-2">
+          {/* Beat sync controller - Make it visible all the time for now */}
+          <BeatSyncController className="mr-2" />
+          
+          {/* Playback control */}
           <button
             className="p-1 rounded-full hover:bg-gray-100 transition-colors duration-150"
             onClick={togglePlayback}
@@ -172,7 +160,7 @@ export const EditorTimeline: React.FC<EditorTimelineProps> = ({
       </div>
       
       {/* Timeline visualization */}
-      <div className="flex-1 flex items-center px-4">
+      <div className="flex-1 px-4 py-2 flex items-center">
         <button
           className="p-1 rounded-full hover:bg-gray-100 transition-colors duration-150 mr-2"
           title="Previous Section"

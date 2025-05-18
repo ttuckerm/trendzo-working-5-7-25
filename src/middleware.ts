@@ -4,12 +4,27 @@ import type { NextRequest } from 'next/server';
 // Define paths that should be tracked for newsletter analytics
 const TRACKED_PATHS = ['/template-redirect', '/template-preview'];
 
+// Define redirects for old routes to their new dashboard locations
+const REDIRECT_ROUTES: Record<string, string> = {
+  '/sound-trends': '/dashboard-view/sound-trends'
+};
+
+// Define routes that should be redirected
+const REDIRECTS = [
+  {
+    source: '/editor',
+    destination: '/dashboard-view/template-editor',
+    preserveQuery: true
+  }
+];
+
 export function middleware(request: NextRequest) {
-  const { pathname, searchParams } = request.nextUrl;
+  const { pathname, searchParams, search } = request.nextUrl;
   
-  // We need a cleaner way to handle the dashboard route
-  // For now, we'll remove the redirection that's causing issues
-  // and let the natural page resolution work
+  // Handle redirects for old routes
+  if (REDIRECT_ROUTES[pathname]) {
+    return NextResponse.redirect(new URL(REDIRECT_ROUTES[pathname], request.url));
+  }
   
   // Check if this is a path we want to track
   const shouldTrack = TRACKED_PATHS.some(path => pathname.startsWith(path));
@@ -40,6 +55,26 @@ export function middleware(request: NextRequest) {
     }
   }
   
+  // Check if current path matches any redirect rules
+  for (const redirect of REDIRECTS) {
+    if (pathname === redirect.source || pathname.startsWith(`${redirect.source}/`)) {
+      const targetUrl = new URL(redirect.destination, request.url);
+      
+      // Preserve query parameters if specified in the rule
+      if (redirect.preserveQuery && search) {
+        targetUrl.search = search;
+      }
+      
+      // Create redirection response
+      return NextResponse.redirect(targetUrl);
+    }
+  }
+  
   // Continue with the request
   return NextResponse.next();
-} 
+}
+
+// Only run middleware on specified paths
+export const config = {
+  matcher: ['/editor', '/editor/:path*']
+}; 

@@ -179,7 +179,17 @@ export function resolveComponents(components: Record<string, any>): Record<strin
     // If the component is undefined or not a valid component, use the compatibility version
     if (!component || typeof component !== 'function') {
       console.warn(`[ImportResolver] Component '${name}' is undefined or invalid, using compatibility version`);
-      resolvedComponents[name] = componentMap[name] || createFallbackComponent(name);
+      
+      // Try to find the component in a case-insensitive way
+      const resolvedComponent = getComponentByCaseInsensitiveName(name);
+      
+      if (resolvedComponent) {
+        console.log(`[ImportResolver] Successfully resolved component '${name}' using case-insensitive lookup`);
+        resolvedComponents[name] = resolvedComponent;
+      } else {
+        // Fall back to the compatibility component or create a fallback
+        resolvedComponents[name] = componentMap[name] || createFallbackComponent(name);
+      }
     } else {
       // Otherwise use the original component
       resolvedComponents[name] = component;
@@ -187,6 +197,54 @@ export function resolveComponents(components: Record<string, any>): Record<strin
   }
   
   return resolvedComponents;
+}
+
+/**
+ * Attempt to find a component by name in a case-insensitive way
+ * This helps resolve import issues related to case sensitivity
+ */
+function getComponentByCaseInsensitiveName(name: string): any {
+  try {
+    // Common case variations to check
+    const variations = [
+      name,                                   // Original
+      name.toLowerCase(),                     // all lowercase
+      name.toUpperCase(),                     // ALL UPPERCASE
+      name.charAt(0).toUpperCase() + name.slice(1), // Capitalized
+      name.charAt(0).toLowerCase() + name.slice(1)  // uncapitalized
+    ];
+    
+    // Try each variation
+    for (const variation of variations) {
+      // Check UI components directory first
+      try {
+        const directImport = require(`@/components/ui/${variation}`);
+        if (directImport && directImport[name]) {
+          return directImport[name];
+        }
+        if (directImport && directImport.default) {
+          return directImport.default;
+        }
+      } catch (e) {
+        // Continue to next variation
+      }
+    }
+    
+    // As a last resort, check for direct import of the component
+    try {
+      // This is a special case where the component might be the default export
+      const directNamedImport = require(`@/components/ui/${name.toLowerCase()}`);
+      if (directNamedImport) {
+        return directNamedImport.default || directNamedImport;
+      }
+    } catch (e) {
+      // Failed to resolve component
+    }
+  } catch (e) {
+    console.warn(`[ImportResolver] Error in case-insensitive component resolution for ${name}:`, e);
+  }
+  
+  return null;
 }
 
 /**
