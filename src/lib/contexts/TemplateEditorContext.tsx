@@ -225,22 +225,28 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
     }
     
     case 'ADD_SECTION': {
+      console.log('[Reducer ADD_SECTION] Received action:', JSON.stringify(action, null, 2)); // DEBUG LOG
       const newSectionId = uuidv4();
-      const newSection: TemplateSection = {
-        ...action.payload,
-        id: newSectionId
-      };
       
-      // Calculate startTime based on existing sections
-      const existingSections = [...state.template.sections];
+      // Calculate startTime first
+      let calculatedStartTime = 0;
+      const existingSections = state.template.sections;
       if (existingSections.length > 0) {
         const lastSection = existingSections[existingSections.length - 1];
-        newSection.startTime = lastSection.startTime + lastSection.duration;
-      } else {
-        newSection.startTime = 0;
-      }
+        calculatedStartTime = lastSection.startTime + lastSection.duration;
+      } 
+
+      // Create the new section object using the payload, new ID, and calculated startTime
+      const newSection: TemplateSection = {
+        ...action.payload, // Payload from the addSection convenience function
+        id: newSectionId,
+        startTime: calculatedStartTime // Add the calculated startTime here
+      };
+      console.log('[Reducer ADD_SECTION] Created newSection object:', JSON.stringify(newSection, null, 2)); // DEBUG LOG
       
       const updatedSections = [...existingSections, newSection];
+      console.log('[Reducer ADD_SECTION] About to calculate totalDuration. updatedSections:', JSON.stringify(updatedSections, null, 2)); // DEBUG LOG      
+      
       const updatedTemplate = {
         ...state.template,
         sections: updatedSections,
@@ -250,29 +256,33 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
         ),
         updatedAt: new Date()
       };
-      
-      // Update UI to select the newly added section
-      const updatedUI = {
-        ...state.ui,
-        selectedSectionId: newSectionId,
-        selectedElementId: null
-      };
+      console.log('[Reducer ADD_SECTION] Updated template totalDuration:', updatedTemplate.totalDuration); // DEBUG LOG
       
       const newHistoryEntry: HistoryEntry = {
-        templateState: updatedTemplate,
-        uiState: updatedUI,
+        templateState: deepCopy(updatedTemplate), // Ensure new template state is copied for history
+        uiState: deepCopy(state.ui),             // Copy current UI state for history
         timestamp: actionTimestamp,
         actionType: action.type
       };
       
+      const newPastHistory = state.history.current ? [...state.history.past, state.history.current] : [...state.history.past];
+
+      console.log('[Reducer ADD_SECTION] About to return. newSectionId:', newSectionId); // DEBUG LOG
+      console.log('[Reducer ADD_SECTION] About to return. updatedTemplate.sections:', JSON.stringify(updatedTemplate.sections, null, 2)); // DEBUG LOG
+
       return {
         ...state,
-        template: updatedTemplate,
-        ui: updatedUI,
+        template: updatedTemplate, // Use the fully updated template
         history: {
-          past: [...state.history.past, state.history.current!],
-          current: newHistoryEntry,
-          future: []
+          past: newPastHistory.map(entry => deepCopy(entry)), // Deep copy all past entries
+          current: newHistoryEntry, // This is already a deep copy from above
+          future: [] // Clear future on new action
+        },
+        ui: {
+          ...state.ui,
+          selectedSectionId: newSectionId, // Select the newly added section
+          selectedElementId: null,         // Deselect any element
+          // Potentially also set activePanel to 'styles' or 'elements' for the new section
         }
       };
     }
@@ -559,24 +569,27 @@ export const TemplateEditorProvider: React.FC<TemplateEditorProviderProps> = ({
   }, []);
   
   const addSection = useCallback((sectionType: TemplateSection['type']) => {
-    const newSection: Omit<TemplateSection, 'id'> = {
-      name: sectionType.charAt(0).toUpperCase() + sectionType.slice(1),
+    const payload = { 
+      name: `New ${sectionType.charAt(0).toUpperCase() + sectionType.slice(1)} Section`,
       type: sectionType,
-      startTime: 0, // Will be calculated in reducer
-      duration: sectionType === 'intro' ? 3 : sectionType === 'hook' ? 5 : sectionType === 'callToAction' ? 4 : 8,
       elements: [],
-      background: {
-        type: 'color',
-        value: '#000000',
+      duration: 5, 
+      background: { 
+        type: 'color' as const, // Ensure 'type' is literal
+        value: '#CCCCCC', 
         opacity: 1
       },
-      transition: {
-        type: 'fade',
+      transition: { 
+        type: 'fade' as const, // Ensure 'type' is literal
         duration: 0.5
       }
+      // startTime will be calculated in the reducer
     };
-    
-    dispatch({ type: 'ADD_SECTION', payload: newSection });
+    console.log('[Context addSection] Dispatching ADD_SECTION with payload:', JSON.stringify(payload, null, 2)); // DEBUG LOG
+    dispatch({
+      type: 'ADD_SECTION',
+      payload
+    });
   }, []);
   
   const addTextElement = useCallback((sectionId: string, text: string, position: Partial<Position>) => {

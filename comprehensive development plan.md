@@ -1422,6 +1422,66 @@ Please provide the complete implementation for this feature.
 - Ensure tier-gating correctly restricts access for non-Platinum users
 - Confirm that scheduling recommendations reflect combined automated and manual insights
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  entered 5/18/25 4:15am
+Step 8.5: Video Teleprompter Implementation (Days 24-25)
+I need to implement a Teleprompter feature that integrates with our script generation and template system, allowing users to record videos while reading generated scripts directly on screen. Please help me create:
+When implementing the teleprompter functionality:
+
+Design the interface with clear visual hierarchy to maintain user focus
+Create smooth text scrolling mechanics that minimize cognitive load
+Implement recording controls that don't distract from the reading experience
+Ensure the teleprompter adapts to different device orientations
+Build automatic script formatting that optimizes for on-screen reading
+
+The implementation should follow progressive disclosure principles where recording controls appear contextually, and teleprompter settings are accessible but not overwhelming. Special attention should be paid to performance optimization to ensure smooth scrolling even during video recording.
+
+Teleprompter interface components:
+
+Script display with customizable text size, color, and background
+Auto-scrolling mechanism with adjustable speed control
+Progress indicator showing script position
+Quick access recording controls
+Mirror text option for traditional teleprompter setup
+
+
+Recording studio integration:
+
+Webcam/device camera preview alongside teleprompter
+Audio level visualization during recording
+One-touch recording toggle with clear status indicators
+Countdown timer before recording begins
+Take management with quick playback options
+
+
+Script preparation tools:
+
+Automatic script formatting for optimal reading cadence
+Reading time estimation based on script length
+Emphasis markers for key points
+Pronunciation guides for challenging words
+Quick edit capabilities for last-minute adjustments
+
+
+Post-recording workflow:
+
+Immediate playback option for review
+Quick re-record functionality
+Direct export to editing tools
+Template application to recorded video
+Performance metrics for recorded content
+
+
+
+Please implement this teleprompter feature with seamless integration into our existing template and script generation systems, ensuring compatibility with both desktop and mobile environments.
+Testing Checkpoint:
+
+Verify smooth text scrolling during recording
+Test camera access across different browsers and devices
+Confirm script formatting is optimized for on-screen reading
+Ensure recording controls are accessible but unobtrusive
+Validate the complete workflow from script generation to recording
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 ## Week 4: Integration, Polish & Launch Preparation
 
 ### Step 9: Enhanced Integration & Comprehensive System Testing (Days 25-26)

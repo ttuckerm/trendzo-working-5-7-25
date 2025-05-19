@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutPanelLeft, 
   PanelRight, 
@@ -265,6 +265,12 @@ const TemplateEditorContent: React.FC<TemplateEditorProps> = ({
     }
   };
   
+  // Main canvas for editing, dynamically scaled
+  const canvasScale = useMemo(() => {
+    // Basic scaling logic, can be expanded
+    return Math.min(1, 1200 / (state.template.dimensions?.width || 1200));
+  }, [state.template.dimensions?.width]);
+  
   return (
     <div className={`h-full w-full flex flex-col bg-gray-50 overflow-hidden ${isEmbedded ? 'embedded-editor' : ''}`}>
       {/* Render counter in development mode */}
@@ -476,30 +482,54 @@ const TemplateEditorContent: React.FC<TemplateEditorProps> = ({
         </Button>
         
         {/* Left panel (Elements) */}
-        <motion.div
-          className="bg-white border-r w-64 overflow-y-auto"
-          initial={{ x: panelState.leftPanelOpen ? 0 : -256 }}
-          animate={{ x: panelState.leftPanelOpen ? 0 : -256 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          <ErrorBoundary componentName="ElementsPanel">
-            <ElementsPanel />
-          </ErrorBoundary>
-        </motion.div>
+        <AnimatePresence>
+          {panelState.leftPanelOpen && (
+            <motion.div
+              initial={{ x: '-100%', opacity: 0 }}
+              animate={{ x: '0%', opacity: 1 }}
+              exit={{ x: '-100%', opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="w-64 bg-white shadow-lg overflow-y-auto p-3 border-r border-gray-700"
+            >
+              <ErrorBoundary componentName="ElementsPanel">
+                <ElementsPanel />
+              </ErrorBoundary>
+            </motion.div>
+          )}
+        </AnimatePresence>
         
         {/* Main editor area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col relative bg-gray-850 overflow-y-auto">
           {/* Canvas */}
-          <div className="flex-1 overflow-hidden">
-            <ErrorBoundary componentName="EditorCanvas">
-              <EditorCanvas />
-            </ErrorBoundary>
+          <div className="flex-1 relative p-4 overflow-auto">
+            <motion.div 
+              className="mx-auto"
+              style={{ 
+                width: state.template.dimensions?.width || '100%', 
+                height: state.template.dimensions?.height || 'auto',
+                aspectRatio: (state.template.dimensions?.width && state.template.dimensions?.height) 
+                  ? `${state.template.dimensions.width}/${state.template.dimensions.height}` 
+                  : '16/9',
+                transform: `scale(${canvasScale})`,
+                transformOrigin: 'top center',
+                boxShadow: '0 0 20px rgba(0,0,0,0.5)',
+                backgroundColor: '#111', // Darker background for the canvas itself
+                borderRadius: '8px'
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <ErrorBoundary componentName="EditorCanvas">
+                <EditorCanvas />
+              </ErrorBoundary>
+            </motion.div>
           </div>
           
           {/* Timeline panel */}
           <motion.div
             className={cn(
-              "bg-white border-t overflow-hidden transition-all",
+              "bg-white border-t transition-all",
               timelineHeight
             )}
             initial={{ height: panelState.timelinePanelOpen ? 128 : 40 }}

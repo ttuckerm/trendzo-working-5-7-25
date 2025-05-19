@@ -277,7 +277,7 @@ export type EditorAction =
   | { type: 'SET_TEMPLATE_DESCRIPTION'; payload: string }
   
   // Section actions
-  | { type: 'ADD_SECTION'; payload: Omit<TemplateSection, 'id'> }
+  | { type: 'ADD_SECTION'; payload: Omit<TemplateSection, 'id' | 'startTime'> }
   | { type: 'UPDATE_SECTION'; payload: { sectionId: string; updates: Partial<TemplateSection> } }
   | { type: 'DELETE_SECTION'; payload: string }
   | { type: 'REORDER_SECTIONS'; payload: { sectionId: string; newIndex: number } }
