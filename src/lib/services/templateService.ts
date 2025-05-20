@@ -1,185 +1,125 @@
-import { 
-  doc, 
-  collection, 
-  getDoc, 
-  getDocs, 
-  setDoc, 
-  updateDoc, 
-  deleteDoc, 
-  query, 
-  where, 
-  orderBy, 
-  serverTimestamp, 
-  Timestamp
-} from 'firebase/firestore'
-import { db } from '@/lib/firebase/firebase'
+// import { 
+//   doc, 
+//   collection, 
+//   getDoc, 
+//   getDocs, 
+//   setDoc, 
+//   updateDoc, 
+//   deleteDoc, 
+//   query, 
+//   where, 
+//   orderBy, 
+//   serverTimestamp, 
+//   Timestamp
+// } from 'firebase/firestore' // Firebase SDK
+// import { db } from '@/lib/firebase/firebase' // Firebase db is null
 import { Template, TemplateSection } from '@/lib/types/template'
-import { v4 as uuidv4 } from 'uuid'
+// import { v4 as uuidv4 } from 'uuid' // Only needed if createTemplate generates actual ID
+
+const SERVICE_DISABLED_MSG = "templateService: Firebase backend has been removed. Method called but will not perform DB operations. TODO: Implement with Supabase.";
 
 // Collection reference
-const templatesCollection = 'templates'
+// const templatesCollection = 'templates' // No longer used directly
 
 // Service methods for managing templates
 export const templateService = {
   // Get template by ID
   async getTemplate(templateId: string): Promise<Template | null> {
-    try {
-      const templateDoc = await getDoc(doc(db, templatesCollection, templateId))
-      if (!templateDoc.exists()) return null
-      
-      return {
-        ...templateDoc.data() as Template,
-        id: templateDoc.id,
-        createdAt: (templateDoc.data().createdAt as Timestamp).toDate().toISOString(),
-        updatedAt: (templateDoc.data().updatedAt as Timestamp).toDate().toISOString()
-      }
-    } catch (error) {
-      console.error('Error fetching template:', error)
-      throw error
-    }
+    console.warn(`getTemplate(${templateId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve(null);
   },
 
   // Get templates for a user
   async getUserTemplates(userId: string): Promise<Template[]> {
-    try {
-      const q = query(
-        collection(db, templatesCollection),
-        where('userId', '==', userId),
-        orderBy('updatedAt', 'desc')
-      )
-      
-      const querySnapshot = await getDocs(q)
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data() as Template,
-        id: doc.id,
-        createdAt: (doc.data().createdAt as Timestamp).toDate().toISOString(),
-        updatedAt: (doc.data().updatedAt as Timestamp).toDate().toISOString()
-      }))
-    } catch (error) {
-      console.error('Error fetching user templates:', error)
-      throw error
-    }
+    console.warn(`getUserTemplates(${userId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
   },
 
   // Create new template
   async createTemplate(userId: string, templateData: Partial<Template>): Promise<Template> {
-    try {
-      const templateId = uuidv4()
-      const now = serverTimestamp()
-      
-      // Create a template with default values if not provided
-      const newTemplate: Partial<Template> = {
-        name: templateData.name || 'Untitled Template',
-        industry: templateData.industry || 'General',
-        category: templateData.category || 'Other',
-        sections: templateData.sections || [],
-        views: 0,
-        usageCount: 0,
-        isPublished: false,
-        userId,
-        createdAt: now,
-        updatedAt: now,
-        ...templateData
-      }
-      
-      await setDoc(doc(db, templatesCollection, templateId), newTemplate)
-      
-      // Return the created template (with a placeholder for the timestamps)
-      return {
-        ...newTemplate as Template,
-        id: templateId,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    } catch (error) {
-      console.error('Error creating template:', error)
-      throw error
-    }
+    console.warn(`createTemplate for user (${userId}): ${SERVICE_DISABLED_MSG}`);
+    const mockId = 'mock-' + Math.random().toString(36).substring(2, 9);
+    
+    // Construct a mock Template object ensuring all required fields are present
+    // and only including optional fields if provided in templateData or with a sensible mock default.
+    const newMockTemplate: Template = {
+      id: mockId,
+      userId: userId,
+      name: templateData.name || 'Mocked Template',
+      industry: templateData.industry || 'Mock Industry',
+      category: templateData.category || 'Mock Category',
+      sections: templateData.sections || [],
+      views: templateData.views || 0,
+      usageCount: templateData.usageCount || 0,
+      isPublished: templateData.isPublished || false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      // Optional fields from Template type
+      description: templateData.description || 'Mock description',
+      thumbnailUrl: templateData.thumbnailUrl || undefined,
+      totalDuration: templateData.totalDuration || 0,
+      soundId: templateData.soundId || undefined,
+      soundTitle: templateData.soundTitle || undefined,
+      soundAuthor: templateData.soundAuthor || undefined,
+      soundUrl: templateData.soundUrl || undefined,
+    };
+    return Promise.resolve(newMockTemplate);
   },
 
   // Update template
   async updateTemplate(templateId: string, templateData: Partial<Template>): Promise<Template> {
-    try {
-      const templateRef = doc(db, templatesCollection, templateId)
-      
-      // Get current template data
-      const templateDoc = await getDoc(templateRef)
-      if (!templateDoc.exists()) {
-        throw new Error('Template not found')
-      }
-      
-      // Update template with new data
-      const updatedTemplate = {
-        ...templateData,
-        updatedAt: serverTimestamp()
-      }
-      
-      await updateDoc(templateRef, updatedTemplate)
-      
-      // Return the updated template
-      return {
-        ...templateDoc.data() as Template,
-        ...templateData,
+    console.warn(`updateTemplate(${templateId}): ${SERVICE_DISABLED_MSG}`);
+    // For a mock, we'd typically fetch the existing, then apply updates.
+    // Here, we'll construct a mock base and apply templateData to it.
+    const baseMockTemplate: Template = {
         id: templateId,
-        updatedAt: new Date().toISOString()
-      }
-    } catch (error) {
-      console.error('Error updating template:', error)
-      throw error
-    }
+        userId: 'mock_user_id',
+        name: 'Mocked Base Template',
+        industry: 'Mock Industry',
+        category: 'Mock Category',
+        sections: [],
+        views: 0,
+        usageCount: 0,
+        isPublished: false,
+        createdAt: new Date(Date.now() - 100000).toISOString(), // Older date
+        updatedAt: new Date(Date.now() - 50000).toISOString(), // Older update date
+        description: 'Mock base description',
+        thumbnailUrl: undefined,
+        totalDuration: 0,
+        soundId: undefined,
+        soundTitle: undefined,
+        soundAuthor: undefined,
+        soundUrl: undefined,
+      };
+
+    const updatedMockTemplate: Template = {
+      ...baseMockTemplate,
+      ...templateData, // Apply partial updates from templateData
+      updatedAt: new Date().toISOString(), // Set new update time
+    };
+    return Promise.resolve(updatedMockTemplate);
   },
 
   // Delete template
   async deleteTemplate(templateId: string): Promise<boolean> {
-    try {
-      await deleteDoc(doc(db, templatesCollection, templateId))
-      return true
-    } catch (error) {
-      console.error('Error deleting template:', error)
-      throw error
-    }
+    console.warn(`deleteTemplate(${templateId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve(true);
   },
 
   // Track template views
   async incrementTemplateViews(templateId: string): Promise<void> {
-    try {
-      const templateRef = doc(db, templatesCollection, templateId)
-      const templateDoc = await getDoc(templateRef)
-      
-      if (templateDoc.exists()) {
-        const currentViews = templateDoc.data().views || 0
-        await updateDoc(templateRef, {
-          views: currentViews + 1,
-          updatedAt: serverTimestamp()
-        })
-      }
-    } catch (error) {
-      console.error('Error incrementing template views:', error)
-      throw error
-    }
+    console.warn(`incrementTemplateViews(${templateId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
   },
 
   // Track template usage
   async incrementTemplateUsage(templateId: string): Promise<void> {
-    try {
-      const templateRef = doc(db, templatesCollection, templateId)
-      const templateDoc = await getDoc(templateRef)
-      
-      if (templateDoc.exists()) {
-        const currentUsage = templateDoc.data().usageCount || 0
-        await updateDoc(templateRef, {
-          usageCount: currentUsage + 1,
-          updatedAt: serverTimestamp()
-        })
-      }
-    } catch (error) {
-      console.error('Error incrementing template usage:', error)
-      throw error
-    }
+    console.warn(`incrementTemplateUsage(${templateId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
   },
 
   // Calculate total duration of a template
   calculateTotalDuration(sections: TemplateSection[]): number {
-    return sections.reduce((sum, section) => sum + section.duration, 0)
+    return sections.reduce((sum, section) => sum + section.duration, 0);
   }
 } 

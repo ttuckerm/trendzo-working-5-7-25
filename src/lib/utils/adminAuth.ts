@@ -1,7 +1,8 @@
-import { NextRequest } from 'next/server';
-import { auth } from '@/lib/firebase/firebase';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, doc, getDoc } from 'firebase/firestore';
+// import { NextRequest } from 'next/server';
+// import { auth } from '@/lib/firebase/firebase'; // Firebase db is null, not used
+// import { getAuth, Auth } from 'firebase/auth'; // Not used
+// import { getFirestore, doc, getDoc } from 'firebase/firestore'; // Not used
+import { NextRequest } from 'next/server'; // Keep this one
 
 /**
  * Result of admin authentication verification

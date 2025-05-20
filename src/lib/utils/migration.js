@@ -1,12 +1,15 @@
 /**
  * Utility for migrating data from Firebase to Supabase
  * Focused on user migration for authentication
+ * SCRIPT DISABLED: Firebase is being removed.
  */
+const SCRIPT_DISABLED_MSG = "migration.js: Firebase is being removed. This migration script is now disabled for Firebase operations.";
+console.warn(SCRIPT_DISABLED_MSG);
 
 const { createClient } = require('@supabase/supabase-js');
 const { getEnvVariable } = require('./env');
-const { getAuth, getFirebaseApp } = require('../firebase/client');
-const { collection, getDocs, getFirestore } = require('firebase/firestore');
+// const { getAuth, getFirebaseApp } = require('../firebase/client'); // firebase/client also being neutralized
+// const { collection, getDocs, getFirestore } = require('firebase/firestore');
 
 /**
  * Get a Supabase client with admin privileges for user management
@@ -104,6 +107,8 @@ async function migrateUser(firebaseUser) {
  * @returns {Promise<Array>} Array of Firebase user objects
  */
 async function getFirebaseUsers() {
+  console.warn(SCRIPT_DISABLED_MSG);
+  console.warn("getFirebaseUsers: Firestore access is disabled. Returning mock/dev user data.");
   // For development, create a test user if no auth available
   if (process.env.NODE_ENV === 'development') {
     const timestamp = Date.now();
@@ -119,28 +124,28 @@ async function getFirebaseUsers() {
     return [testUser];
   }
   
-  try {
+  // try {
     // In a real production environment, you would use the Firebase Admin SDK
     // to list all users, but for this exercise, we're just using Firestore to get users
-    const db = getFirestore();
-    const usersCollection = collection(db, 'users');
-    const usersSnapshot = await getDocs(usersCollection);
+    // const db = getFirestore();
+    // const usersCollection = collection(db, 'users');
+    // const usersSnapshot = await getDocs(usersCollection);
     
-    const users = [];
-    usersSnapshot.forEach(doc => {
-      const userData = doc.data();
-      users.push({
-        uid: doc.id,
-        email: userData.email,
-        emailVerified: userData.emailVerified || false,
-        displayName: userData.displayName || '',
-        photoURL: userData.photoURL || null
-      });
-    });
+    // const users = [];
+    // usersSnapshot.forEach(doc => {
+    //   const userData = doc.data();
+    //   users.push({
+    //     uid: doc.id,
+    //     email: userData.email,
+    //     emailVerified: userData.emailVerified || false,
+    //     displayName: userData.displayName || '',
+    //     photoURL: userData.photoURL || null
+    //   });
+    // });
     
-    return users;
-  } catch (error) {
-    console.error('Error getting Firebase users:', error);
+    // return users;
+  // } catch (error) {
+    // console.error('Error getting Firebase users (call was disabled):', error);
     
     // Return a test user as a fallback for testing with random unique values
     const timestamp = Date.now();
@@ -154,7 +159,7 @@ async function getFirebaseUsers() {
     };
     
     return [fallbackUser];
-  }
+  // }
 }
 
 /**

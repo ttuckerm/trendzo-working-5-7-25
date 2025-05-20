@@ -1,38 +1,42 @@
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  setDoc, 
-  updateDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit as firestoreLimit,
-  Timestamp,
-  serverTimestamp,
-  increment,
-  DocumentReference,
-  Firestore,
-  runTransaction
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
+// import { 
+//   collection, 
+//   doc, 
+//   getDoc, 
+//   getDocs, 
+//   setDoc, 
+//   updateDoc, 
+//   query, 
+//   where, 
+//   orderBy, 
+//   limit as firestoreLimit,
+//   Timestamp,
+//   serverTimestamp,
+//   increment,
+//   DocumentReference,
+//   Firestore,
+//   runTransaction
+// } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
 import { TikTokSound, SoundTrendReport } from '@/lib/types/tiktok';
-import { soundService } from './soundService';
+import { soundService } from './soundService'; // Already neutralized
 import { v4 as uuidv4 } from 'uuid';
 
-// Collection names
-const SOUNDS_COLLECTION = 'sounds';
-const SOUND_ANALYSIS_COLLECTION = 'soundAnalysis';
-const TEMPLATES_COLLECTION = 'templates';
-const TREND_REPORTS_COLLECTION = 'soundTrendReports';
+const SERVICE_DISABLED_MSG = "soundAnalysisService: Firebase backend has been removed. Method called but will not perform DB operations. TODO: Implement with Supabase.";
+
+// Collection names (kept for context)
+// const SOUNDS_COLLECTION = 'sounds';
+// const SOUND_ANALYSIS_COLLECTION = 'soundAnalysis';
+// const TEMPLATES_COLLECTION = 'templates';
+// const TREND_REPORTS_COLLECTION = 'soundTrendReports';
 
 // Helper function to get a safe Firestore instance
-function getFirestore(): Firestore {
-  if (!db) {
-    throw new Error('Firestore is not initialized. This might happen in development mode.');
-  }
-  return db as Firestore;
+function getFirestore(): any { // Changed return type to any
+  // if (!db) {
+  //   throw new Error('Firestore is not initialized. This might happen in development mode.');
+  // }
+  // return db as Firestore;
+  console.warn(`getFirestore: ${SERVICE_DISABLED_MSG}. Returning null.`);
+  return null;
 }
 
 /**
@@ -50,19 +54,20 @@ export const soundAnalysisService = {
     try {
       console.log(`Analyzing sound: ${sound.title} by ${sound.authorName}`);
       
-      // Store the sound first if it doesn't exist
-      let soundData = await soundService.getSoundById(sound.id);
+      let soundData = await soundService.getSoundById(sound.id); // soundService is neutralized
       if (!soundData) {
-        soundData = await soundService.storeSound(sound);
+        soundData = await soundService.storeSound(sound); // soundService is neutralized
+        if (!soundData) { 
+            console.warn(`analyzeSoundData: Could not get or store sound ${sound.id} due to service neutralization. Returning input sound.`);
+            return sound;
+        }
       }
       
-      // Run various analysis algorithms
       const categorizedSound = await this.categorizeSoundByAudioFeatures(soundData);
       const withGrowthMetrics = await this.calculateSoundGrowthMetrics(categorizedSound);
       const withLifecycle = await this.determineLifecycleStage(withGrowthMetrics);
       
-      // Store the updated sound with analysis results
-      await soundService.updateSoundMetrics(withLifecycle.id, {
+      await soundService.updateSoundMetrics(withLifecycle.id, { // soundService is neutralized
         soundCategory: withLifecycle.soundCategory,
         categories: withLifecycle.categories,
         mood: withLifecycle.mood,
@@ -70,10 +75,10 @@ export const soundAnalysisService = {
         classification: withLifecycle.classification,
         lifecycle: withLifecycle.lifecycle,
         viralityScore: withLifecycle.viralityScore,
-        'stats.growthVelocity7d': withLifecycle.stats.growthVelocity7d,
-        'stats.growthVelocity14d': withLifecycle.stats.growthVelocity14d, 
-        'stats.growthVelocity30d': withLifecycle.stats.growthVelocity30d,
-        'stats.trend': withLifecycle.stats.trend
+        'stats.growthVelocity7d': withLifecycle.stats?.growthVelocity7d,
+        'stats.growthVelocity14d': withLifecycle.stats?.growthVelocity14d, 
+        'stats.growthVelocity30d': withLifecycle.stats?.growthVelocity30d,
+        'stats.trend': withLifecycle.stats?.trend
       });
       
       return withLifecycle;
@@ -90,10 +95,10 @@ export const soundAnalysisService = {
    */
   async categorizeSoundByAudioFeatures(sound: TikTokSound): Promise<TikTokSound> {
     try {
-      // This would ideally use an audio analysis API or ML model
-      // For now, using a simplified approach based on metadata
-      
-      // 1. Determine primary sound category
+      const currentStats = sound.stats || { 
+        usageCount: 0, usageChange7d: 0, usageChange14d: 0, usageChange30d: 0
+      };
+
       let soundCategory = sound.soundCategory || 'music';
       if (!sound.soundCategory) {
         if (sound.original) {
@@ -103,15 +108,11 @@ export const soundAnalysisService = {
         }
       }
       
-      // 2. Determine mood based on simple heuristics
-      // In a real implementation, this would use audio analysis or ML
       const possibleMoods = ['energetic', 'calm', 'happy', 'sad', 'intense', 'relaxed'];
       const mood = sound.mood || [possibleMoods[Math.floor(Math.random() * possibleMoods.length)]];
       
-      // 3. Determine tempo if not already set
       let tempo = sound.tempo;
       if (!tempo && sound.duration) {
-        // Simplified logic - would use real audio analysis in production
         if (sound.duration < 15) {
           tempo = 'fast';
         } else if (sound.duration < 30) {
@@ -120,10 +121,9 @@ export const soundAnalysisService = {
           tempo = 'slow';
         }
       } else if (!tempo) {
-        tempo = 'medium'; // Default
+        tempo = 'medium';
       }
       
-      // 4. Enhance classification
       const classification = sound.classification || {
         genre: sound.genre ? [sound.genre] : [],
         style: [],
@@ -133,7 +133,6 @@ export const soundAnalysisService = {
         explicit: false
       };
       
-      // Return enhanced sound object
       return {
         ...sound,
         soundCategory,
@@ -144,7 +143,7 @@ export const soundAnalysisService = {
       };
     } catch (error) {
       console.error('Error categorizing sound:', error);
-      return sound; // Return original sound if categorization fails
+      return sound;
     }
   },
   
@@ -155,16 +154,18 @@ export const soundAnalysisService = {
    */
   async calculateSoundGrowthMetrics(sound: TikTokSound): Promise<TikTokSound> {
     try {
-      // Get usage history for calculations
       const usageHistory = sound.usageHistory || {};
       const dates = Object.keys(usageHistory).sort();
       
+      const currentStats = sound.stats || { 
+        usageCount: 0, usageChange7d: 0, usageChange14d: 0, usageChange30d: 0
+      };
+
       if (dates.length < 2) {
-        // Not enough historical data for meaningful calculations
         return {
           ...sound,
           stats: {
-            ...sound.stats,
+            ...currentStats,
             growthVelocity7d: 0,
             growthVelocity14d: 0,
             growthVelocity30d: 0,
@@ -174,36 +175,29 @@ export const soundAnalysisService = {
         };
       }
       
-      // Current date and usage
       const currentDate = dates[dates.length - 1];
-      const currentUsage = usageHistory[currentDate];
+      const currentUsage = usageHistory[currentDate] ?? 0;
       
-      // Find reference dates for growth calculations
       const sevenDaysAgo = findClosestDateBefore(dates, currentDate, 7);
       const fourteenDaysAgo = findClosestDateBefore(dates, currentDate, 14);
       const thirtyDaysAgo = findClosestDateBefore(dates, currentDate, 30);
       
-      // Calculate growth velocities (change per day)
-      const growthVelocity7d = sevenDaysAgo ? 
-        (currentUsage - usageHistory[sevenDaysAgo]) / daysBetween(sevenDaysAgo, currentDate) : 0;
+      const growthVelocity7d = sevenDaysAgo && usageHistory[sevenDaysAgo] !== undefined ? 
+        (currentUsage - (usageHistory[sevenDaysAgo] ?? 0)) / daysBetween(sevenDaysAgo, currentDate) : 0;
       
-      const growthVelocity14d = fourteenDaysAgo ? 
-        (currentUsage - usageHistory[fourteenDaysAgo]) / daysBetween(fourteenDaysAgo, currentDate) : 0;
+      const growthVelocity14d = fourteenDaysAgo && usageHistory[fourteenDaysAgo] !== undefined ? 
+        (currentUsage - (usageHistory[fourteenDaysAgo] ?? 0)) / daysBetween(fourteenDaysAgo, currentDate) : 0;
       
-      const growthVelocity30d = thirtyDaysAgo ? 
-        (currentUsage - usageHistory[thirtyDaysAgo]) / daysBetween(thirtyDaysAgo, currentDate) : 0;
+      const growthVelocity30d = thirtyDaysAgo && usageHistory[thirtyDaysAgo] !== undefined ? 
+        (currentUsage - (usageHistory[thirtyDaysAgo] ?? 0)) / daysBetween(thirtyDaysAgo, currentDate) : 0;
       
-      // Calculate growth acceleration (change in velocity)
       const acceleration = sevenDaysAgo && fourteenDaysAgo ? 
         (growthVelocity7d - growthVelocity14d) : 0;
       
-      // Determine trend direction
       let trend: 'rising' | 'stable' | 'falling' = 'stable';
       if (growthVelocity7d > 5) trend = 'rising';
       else if (growthVelocity7d < -5) trend = 'falling';
       
-      // Calculate virality score (simplified algorithm)
-      // Real implementation would be more sophisticated
       const viralityScore = Math.min(
         100, 
         Math.max(
@@ -211,16 +205,15 @@ export const soundAnalysisService = {
           Math.round(
             (growthVelocity7d * 5) + 
             (acceleration * 10) + 
-            (sound.usageCount / 1000)
+            ((sound.usageCount || 0) / 1000)
           )
         )
       );
       
-      // Return sound with enhanced growth metrics
       return {
         ...sound,
         stats: {
-          ...sound.stats,
+          ...currentStats,
           growthVelocity7d,
           growthVelocity14d,
           growthVelocity30d,
@@ -230,7 +223,7 @@ export const soundAnalysisService = {
       };
     } catch (error) {
       console.error('Error calculating growth metrics:', error);
-      return sound; // Return original sound if calculation fails
+      return sound;
     }
   },
   
@@ -244,8 +237,12 @@ export const soundAnalysisService = {
       const usageHistory = sound.usageHistory || {};
       const dates = Object.keys(usageHistory).sort();
       
+      const currentStats = sound.stats || { 
+        usageCount: 0, usageChange7d: 0, usageChange14d: 0, usageChange30d: 0, trend: 'stable'
+      };
+      const growthVelocity7d = currentStats.growthVelocity7d || 0;
+
       if (dates.length < 2) {
-        // Not enough data to determine lifecycle
         return {
           ...sound,
           lifecycle: sound.lifecycle || {
@@ -256,18 +253,15 @@ export const soundAnalysisService = {
         };
       }
       
-      // Get current trend and growth data
-      const { trend } = sound.stats;
-      const growthVelocity = sound.stats.growthVelocity7d || 0;
+      const { trend } = currentStats;
+      const growthVelocity = growthVelocity7d;
       
-      // Current usage and max usage
-      const currentUsage = usageHistory[dates[dates.length - 1]];
-      const maxUsage = Math.max(...Object.values(usageHistory));
+      const currentUsage = dates.length > 0 ? (usageHistory[dates[dates.length - 1]] ?? 0) : 0;
+      const maxUsage = Math.max(...Object.values(usageHistory).map(val => val ?? 0));
       const maxUsageDate = Object.keys(usageHistory).find(
-        date => usageHistory[date] === maxUsage
-      ) || dates[dates.length - 1];
+        date => (usageHistory[date] ?? 0) === maxUsage
+      ) || (dates.length > 0 ? dates[dates.length - 1] : new Date().toISOString().split('T')[0]);
       
-      // Determine stage based on trend and usage patterns
       let stage: 'emerging' | 'growing' | 'peaking' | 'declining' | 'stable' = 'stable';
       
       if (trend === 'rising' && growthVelocity > 10) {
@@ -276,24 +270,20 @@ export const soundAnalysisService = {
         stage = 'emerging';
       } else if (trend === 'falling' && currentUsage < maxUsage * 0.8) {
         stage = 'declining';
-      } else if (currentUsage >= maxUsage * 0.9) {
+      } else if (currentUsage >= maxUsage * 0.9 && maxUsage > 0) { // Ensure maxUsage is not 0 to prevent peaking on new sounds
         stage = 'peaking';
       }
       
-      // Calculate estimated peak and decline dates
       let estimatedPeakDate: string | undefined;
       let estimatedDeclineDate: string | undefined;
       
-      // Only predict for emerging or growing sounds
       if (stage === 'emerging' || stage === 'growing') {
-        // Simplified prediction model - in production this would use regression
         const daysToProjectForPeak = 
           stage === 'emerging' ? 14 : (stage === 'growing' ? 7 : 3);
         
         const daysToProjectForDecline = 
           stage === 'emerging' ? 28 : (stage === 'growing' ? 14 : 7);
         
-        // Generate date strings in YYYY-MM-DD format
         const peakDate = new Date();
         peakDate.setDate(peakDate.getDate() + daysToProjectForPeak);
         estimatedPeakDate = peakDate.toISOString().split('T')[0];
@@ -302,34 +292,32 @@ export const soundAnalysisService = {
         declineDate.setDate(declineDate.getDate() + daysToProjectForDecline);
         estimatedDeclineDate = declineDate.toISOString().split('T')[0];
       } else if (stage === 'peaking') {
-        // If already peaking, estimate decline soon
         const declineDate = new Date();
         declineDate.setDate(declineDate.getDate() + 3);
         estimatedDeclineDate = declineDate.toISOString().split('T')[0];
-        estimatedPeakDate = new Date().toISOString().split('T')[0]; // Today
+        estimatedPeakDate = new Date().toISOString().split('T')[0];
       }
       
-      // Build lifecycle object
       const lifecycle = {
         stage,
         estimatedPeakDate,
         estimatedDeclineDate,
-        discoveryDate: sound.lifecycle?.discoveryDate || dates[0],
-        lastDetectedDate: dates[dates.length - 1]
+        discoveryDate: sound.lifecycle?.discoveryDate || (dates.length > 0 ? dates[0] : new Date().toISOString().split('T')[0]),
+        lastDetectedDate: dates.length > 0 ? dates[dates.length - 1] : new Date().toISOString().split('T')[0]
       };
       
       return {
         ...sound,
         lifecycle,
         stats: {
-          ...sound.stats,
+          ...currentStats,
           peakUsage: maxUsage,
           peakDate: maxUsageDate
         }
       };
     } catch (error) {
       console.error('Error determining lifecycle stage:', error);
-      return sound; // Return original sound if determination fails
+      return sound;
     }
   },
   
@@ -343,115 +331,8 @@ export const soundAnalysisService = {
     correlationScore: number;
     engagementLift: number;
   }>> {
-    try {
-      // Get the sound data
-      const sound = await soundService.getSoundById(soundId);
-      if (!sound) {
-        throw new Error(`Sound ${soundId} not found`);
-      }
-      
-      // Get templates that have used this sound
-      const currentTemplates = await soundService.getTemplatesUsingSound(soundId);
-      
-      // Calculate engagement for templates using this sound
-      const templateEngagements = new Map<string, number>();
-      for (const template of currentTemplates) {
-        // Calculate average engagement (simplified)
-        const avgEngagement = 
-          (template.stats.likes + template.stats.views + template.stats.shares) / 3;
-        templateEngagements.set(template.id, avgEngagement);
-      }
-      
-      // Get similar templates by category/style
-      const firestore = getFirestore();
-      const templatesQuery = query(
-        collection(firestore, TEMPLATES_COLLECTION),
-        where('category', 'in', sound.categories || ['music']),
-        firestoreLimit(50)
-      );
-      
-      const templatesSnapshot = await getDocs(templatesQuery);
-      
-      // Calculate correlation scores for all templates
-      const correlations: Array<{
-        templateId: string;
-        correlationScore: number;
-        engagementLift: number;
-      }> = [];
-      
-      templatesSnapshot.forEach(templateDoc => {
-        const template = templateDoc.data();
-        
-        // Skip if this template is already using the sound
-        if (currentTemplates.some(t => t.id === template.id)) {
-          return;
-        }
-        
-        // Calculate base correlation score based on template characteristics
-        let correlationScore = 0;
-        
-        // Calculate potential engagement lift
-        const baselineEngagement = template.stats.likes + template.stats.views + template.stats.shares;
-        const similarTemplatesWithSound = currentTemplates.filter(
-          t => t.category === template.category
-        );
-        
-        let engagementLift = 0;
-        if (similarTemplatesWithSound.length > 0) {
-          // Calculate average engagement lift for similar templates
-          const avgSimilarEngagement = similarTemplatesWithSound.reduce(
-            (sum, t) => sum + templateEngagements.get(t.id)!, 0
-          ) / similarTemplatesWithSound.length;
-          
-          // Calculate expected lift
-          engagementLift = Math.round(
-            ((avgSimilarEngagement - baselineEngagement) / baselineEngagement) * 100
-          );
-        } else {
-          // Use sound virality score as a proxy for engagement lift
-          engagementLift = Math.round(sound.viralityScore || 0);
-        }
-        
-        // Sound-specific bonuses
-        if (sound.stats.trend === 'rising') {
-          correlationScore += 20;
-        }
-        
-        if (sound.lifecycle?.stage === 'emerging') {
-          correlationScore += 15;
-        } else if (sound.lifecycle?.stage === 'growing') {
-          correlationScore += 25;
-        } else if (sound.lifecycle?.stage === 'peaking') {
-          correlationScore += 20;
-        }
-        
-        // Adjust based on virality score
-        correlationScore += Math.round((sound.viralityScore || 0) / 5);
-        
-        // Ensure correlation score is between 0-100
-        correlationScore = Math.min(100, Math.max(0, correlationScore));
-        
-        // Only include templates with positive correlation
-        if (correlationScore > 50) {
-          correlations.push({
-            templateId: template.id,
-            correlationScore,
-            engagementLift
-          });
-        }
-      });
-      
-      // Sort by correlation score, descending
-      correlations.sort((a, b) => b.correlationScore - a.correlationScore);
-      
-      // Update the sound with template correlations
-      await soundService.updateTemplateCorrelations(soundId, correlations);
-      
-      return correlations;
-    } catch (error) {
-      console.error(`Error finding template pairings for sound ${soundId}:`, error);
-      return [];
-    }
+    console.warn(`findOptimalTemplatePairings (soundId: ${soundId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
   },
   
   /**
@@ -461,80 +342,8 @@ export const soundAnalysisService = {
    * @returns Recommendation object with details
    */
   async buildPairingRecommendation(soundId: string, templateId: string): Promise<any> {
-    try {
-      const sound = await soundService.getSoundById(soundId);
-      if (!sound) {
-        throw new Error(`Sound ${soundId} not found`);
-      }
-      
-      // Find the correlation for this template
-      const correlation = sound.templateCorrelations?.find(
-        c => c.templateId === templateId
-      );
-      
-      if (!correlation) {
-        // Generate correlation on the fly if not found
-        const firestore = getFirestore();
-        const templateDoc = await getDoc(doc(firestore, TEMPLATES_COLLECTION, templateId));
-        
-        if (!templateDoc.exists()) {
-          throw new Error(`Template ${templateId} not found`);
-        }
-        
-        const template = templateDoc.data();
-        
-        // Simple correlation calculation
-        const correlationScore = 65; // Default score
-        const engagementLift = Math.round(sound.viralityScore || 0);
-        
-        return {
-          sound: {
-            id: sound.id,
-            title: sound.title,
-            authorName: sound.authorName,
-            soundCategory: sound.soundCategory,
-            viralityScore: sound.viralityScore,
-            lifecycle: sound.lifecycle
-          },
-          template: {
-            id: templateId,
-            title: template.title,
-            category: template.category
-          },
-          correlation: {
-            score: correlationScore,
-            engagementLift,
-            confidence: 'medium', // Default confidence
-            recommendation: correlationScore > 75 ? 'strong' : 'moderate'
-          }
-        };
-      }
-      
-      // Return detailed recommendation
-      return {
-        sound: {
-          id: sound.id,
-          title: sound.title,
-          authorName: sound.authorName,
-          soundCategory: sound.soundCategory,
-          viralityScore: sound.viralityScore,
-          lifecycle: sound.lifecycle
-        },
-        template: {
-          id: templateId,
-          // Would fetch more template details in a real implementation
-        },
-        correlation: {
-          score: correlation.correlationScore,
-          engagementLift: correlation.engagementLift,
-          confidence: correlation.correlationScore > 80 ? 'high' : 'medium',
-          recommendation: correlation.correlationScore > 75 ? 'strong' : 'moderate'
-        }
-      };
-    } catch (error) {
-      console.error(`Error building pairing recommendation for ${soundId}-${templateId}:`, error);
-      throw error;
-    }
+    console.warn(`buildPairingRecommendation (soundId: ${soundId}, templateId: ${templateId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve(null);
   },
   
   /**
@@ -542,48 +351,19 @@ export const soundAnalysisService = {
    * @returns The generated trend report
    */
   async generateSoundTrendReport(): Promise<SoundTrendReport> {
-    try {
-      // Create report ID
-      const reportId = uuidv4();
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Get trending sounds for different timeframes
-      const trendingDaily = await soundService.getTrendingSounds('7d', 10);
-      const trendingWeekly = await soundService.getTrendingSounds('14d', 10);
-      const trendingMonthly = await soundService.getTrendingSounds('30d', 10);
-      
-      // Get sounds by lifecycle stage
-      const emergingSounds = await soundService.getSoundsByLifecycleStage('emerging', 10);
-      const peakingSounds = await soundService.getSoundsByLifecycleStage('peaking', 10);
-      const decliningTrends = await soundService.getSoundsByLifecycleStage('declining', 10);
-      
-      // Get genre distribution
-      const genreDistribution = await soundService.getGenreDistribution();
-      
-      // Create the report object
-      const report: SoundTrendReport = {
-        id: reportId,
-        date: today,
-        topSounds: {
-          daily: trendingDaily.map(sound => sound.id),
-          weekly: trendingWeekly.map(sound => sound.id),
-          monthly: trendingMonthly.map(sound => sound.id)
-        },
-        emergingSounds: emergingSounds.map(sound => sound.id),
-        peakingSounds: peakingSounds.map(sound => sound.id),
-        decliningTrends: decliningTrends.map(sound => sound.id),
-        genreDistribution,
-        createdAt: serverTimestamp()
-      };
-      
-      // Store report in Firestore
-      await soundService.storeTrendReport(report);
-      
-      return report;
-    } catch (error) {
-      console.error('Error generating sound trend report:', error);
-      throw error;
-    }
+    console.warn(`generateSoundTrendReport: ${SERVICE_DISABLED_MSG}`);
+    const generationDate = new Date().toISOString();
+    const mockReport: SoundTrendReport = {
+      id: uuidv4(),
+      date: generationDate,
+      topSounds: { daily: [], weekly: [], monthly: [] },
+      emergingSounds: [], 
+      peakingSounds: [],
+      decliningTrends: [],
+      genreDistribution: {},
+      createdAt: generationDate as any, 
+    };
+    return Promise.resolve(mockReport);
   }
 };
 

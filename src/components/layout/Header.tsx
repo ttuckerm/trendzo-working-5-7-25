@@ -5,9 +5,12 @@ import Image from 'next/image'
 import { Menu, Bell, ChevronDown, BookOpen } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/lib/hooks/useAuth'
-import { db } from '@/lib/firebase/firebase'
-import { collection, query, where, getDocs, Firestore } from 'firebase/firestore'
+import { ThemeToggleButton } from '@/components/ui/ThemeToggleButton'
+// import { db } from '@/lib/firebase/firebase'; // db will be null
+// import { collection, query, where, getDocs, Firestore } from 'firebase/firestore';
 import { useRouter } from 'next/navigation'
+
+const COMPONENT_DISABLED_MSG = "Header: Firebase backend is removed. Unread notification count will default to 0.";
 
 export default function Header({
   setIsSidebarOpen
@@ -22,25 +25,31 @@ export default function Header({
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
-      if (!user?.email || !db) return;
-
-      try {
-        // Get unread notifications count
-        const notificationsQuery = query(
-          collection(db as Firestore, 'notifications'),
-          where('userId', '==', user.email),
-          where('isRead', '==', false)
-        );
-
-        const snapshot = await getDocs(notificationsQuery);
-        setUnreadCount(snapshot.size);
-      } catch (error) {
-        console.error('Error fetching unread notifications:', error);
+      console.warn(COMPONENT_DISABLED_MSG);
+      const db = null; // Explicitly null for clarity within this function scope that db is not available.
+      if (!user?.email || !db) {
+        setUnreadCount(0); // Ensure it defaults to 0 if we bail early
+        return;
       }
+
+      // try {
+      //   // Get unread notifications count
+      //   const notificationsQuery = query(
+      //     collection(db as Firestore, 'notifications'),
+      //     where('userId', '==', user.email),
+      //     where('isRead', '==', false)
+      //   );
+
+      //   const snapshot = await getDocs(notificationsQuery);
+      //   setUnreadCount(snapshot.size);
+      // } catch (error) {
+      //   console.error('Error fetching unread notifications (Firebase disabled):', error);
+      //   setUnreadCount(0); // Default to 0 on error too
+      // }
     };
 
     fetchUnreadCount();
-    // Set up real-time listener for new notifications here if needed
+    // Set up real-time listener for new notifications here if needed (would also be a no-op)
   }, [user?.email]);
 
   // Handler for reliable navigation
@@ -89,7 +98,10 @@ export default function Header({
       </div>
 
       {/* Right side - Notifications and profile */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3 md:gap-4">
+        {/* Theme Toggle Button */}
+        <ThemeToggleButton />
+
         {/* Documentation Quick Access */}
         <div className="hidden md:block">
           <a 

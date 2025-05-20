@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/firebase/firebase'
-import { collection, addDoc, serverTimestamp, Firestore } from 'firebase/firestore'
+// import { collection, addDoc, serverTimestamp, Firestore } from 'firebase/firestore'
+import type { Firestore } from 'firebase/firestore'; // Keep type if needed
 import { v4 as uuidv4 } from 'uuid'
+
+const ROUTE_DISABLED_MSG = "generate-link route: Firebase backend is removed. Link generation will be mocked and not persist.";
 
 /**
  * API Route to generate unique template links for newsletter emails
@@ -18,10 +21,11 @@ import { v4 as uuidv4 } from 'uuid'
  */
 
 // Ensure db is properly typed
-const firestore: Firestore = db as Firestore;
+// const firestore: Firestore = db as Firestore;
 
 export async function POST(request: Request) {
   try {
+    console.warn(ROUTE_DISABLED_MSG);
     // Parse request body
     const body = await request.json()
     const { templateId, campaignId, description } = body
@@ -43,23 +47,23 @@ export async function POST(request: Request) {
     // Generate a unique ID for this link
     const linkId = uuidv4()
     
-    // Store link in database (if Firebase is available)
-    try {
-      if (firestore) {
-        await addDoc(collection(firestore, 'newsletterLinks'), {
-          linkId,
-          templateId,
-          campaignId: campaignId || null,
-          description: description,
-          clicks: 0,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        })
-      }
-    } catch (error) {
-      console.error('Failed to store newsletter link in database:', error)
-      // Continue even if database storage fails
-    }
+    // Store link in database (if Firebase is available) - THIS IS NOW DISABLED
+    // try {
+      // if (firestore) { // firestore (db) will be null
+        // await addDoc(collection(firestore, 'newsletterLinks'), {
+        //   linkId,
+        //   templateId,
+        //   campaignId: campaignId || null,
+        //   description: description,
+        //   clicks: 0,
+        //   createdAt: serverTimestamp(), // serverTimestamp would also fail
+        //   updatedAt: serverTimestamp()
+        // })
+      // }
+    // } catch (error) {
+    //   console.error('Failed to store newsletter link in database:', error)
+    //   // Continue even if database storage fails
+    // }
     
     // Generate the URL that will be included in the newsletter
     // This URL includes the linkId and will redirect to the editor with the correct template

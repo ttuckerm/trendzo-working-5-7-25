@@ -5,14 +5,16 @@ import { ChevronLeft, UserX } from "lucide-react"
 import { motion } from "framer-motion"
 import { useAuth } from "@/lib/hooks/useAuth"
 import { useState, useEffect } from "react"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, AuthError, AuthErrorCodes } from "firebase/auth"
-import { auth } from "@/lib/firebase/firebase"
+// import { createUserWithEmailAndPassword, signInWithEmailAndPassword, AuthError, AuthErrorCodes } from "firebase/auth"
+// import { auth } from "@/lib/firebase/firebase"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
+const COMPONENT_DISABLED_MSG = "AuthForm: Email/Password sign-in/sign-up is disabled as Firebase is being removed. Google/Anonymous sign-in uses a neutralized AuthContext.";
+
 // Helper function to get user-friendly error messages
-const getErrorMessage = (error: AuthError): string => {
-  const errorCode = error.code;
+const getErrorMessage = (error: any): string => { // Changed AuthError to any for broader compatibility
+  const errorCode = error?.code;
   
   switch (errorCode) {
     case 'auth/email-already-in-use':
@@ -32,7 +34,7 @@ const getErrorMessage = (error: AuthError): string => {
     case 'auth/operation-not-allowed':
       return 'This sign-in method is not enabled. Please contact support or try a different method.';
     default:
-      return error.message || 'An unexpected error occurred.';
+      return error?.message || 'An unexpected error occurred.';
   }
 };
 
@@ -69,24 +71,26 @@ const AuthForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
+    console.warn(COMPONENT_DISABLED_MSG);
+    setError("Email/Password sign-up/sign-in has been temporarily disabled.");
     
-    try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password)
-      } else {
-        await signInWithEmailAndPassword(auth, email, password)
-      }
-      router.push("/dashboard")
-    } catch (err: any) {
-      // Handle the error appropriately
-      if (err.code === 'auth/email-already-in-use' && isSignUp) {
-        // Automatically switch to sign in mode if email already exists
-        setIsSignUp(false);
-        setError('This email is already registered. We switched to sign in mode for you.');
-      } else {
-        setError(getErrorMessage(err));
-      }
-    }
+    // try {
+    //   if (isSignUp) {
+    //     await createUserWithEmailAndPassword(auth, email, password) // auth is null
+    //   } else {
+    //     await signInWithEmailAndPassword(auth, email, password) // auth is null
+    //   }
+    //   router.push("/dashboard")
+    // } catch (err: any) {
+    //   // Handle the error appropriately
+    //   if (err.code === 'auth/email-already-in-use' && isSignUp) {
+    //     // Automatically switch to sign in mode if email already exists
+    //     setIsSignUp(false);
+    //     setError('This email is already registered. We switched to sign in mode for you.');
+    //   } else {
+    //     setError(getErrorMessage(err));
+    //   }
+    // }
   }
 
   return (

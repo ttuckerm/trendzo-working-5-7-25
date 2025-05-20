@@ -13,17 +13,18 @@ interface Crashlytics {
 }
 
 // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDKH4Ku4nnYHxx1eh_peemEaMPSfB2fGDc",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "trenzo-3.firebaseapp.com",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "trenzo-3",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "trenzo-3.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "178132579252",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:178132579252:web:a48e9be636ff17a196f8e1"
-};
+// const firebaseConfig = {
+//   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyDKH4Ku4nnYHxx1eh_peemEaMPSfB2fGDc",
+//   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "trenzo-3.firebaseapp.com",
+//   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "trenzo-3",
+//   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "trenzo-3.firebasestorage.app",
+//   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "178132579252",
+//   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:178132579252:web:a48e9be636ff17a196f8e1"
+// };
 
 // Initialize Firebase
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+// const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const app = null; // Explicitly nullify
 
 // Initialize services conditionally
 let auth: Auth | null = null;
@@ -34,23 +35,24 @@ let crashlytics: Crashlytics | null = null;
 let remoteConfig: RemoteConfig | null = null;
 
 // Mock getCrashlytics function since it's not imported but referenced
-const getCrashlytics = (app: any): Crashlytics | null => {
-  // Return a mock implementation
-  console.warn("Crashlytics is not available, using mock implementation");
-  return {
-    setUserId: (userId: string) => {
-      console.log("Mock Crashlytics setUserId called with:", userId);
-    }
-  };
-};
+// const getCrashlytics = (app: any): Crashlytics | null => {
+//   // Return a mock implementation
+//   console.warn("Crashlytics is not available, using mock implementation");
+//   return {
+//     setUserId: (userId: string) => {
+//       console.log("Mock Crashlytics setUserId called with:", userId);
+//     }
+//   };
+// };
 
 // Mock setUserIdCrashlytics function
-const setUserIdCrashlytics = (crashlytics: Crashlytics, userId: string) => {
-  if (crashlytics && crashlytics.setUserId) {
-    crashlytics.setUserId(userId);
-  }
-};
+// const setUserIdCrashlytics = (crashlytics: Crashlytics, userId: string) => {
+//   if (crashlytics && crashlytics.setUserId) {
+//     crashlytics.setUserId(userId);
+//   }
+// };
 
+/*
 try {
   auth = getAuth(app);
   db = getFirestore(app);
@@ -97,24 +99,36 @@ try {
     remoteConfig = null;
   }
 }
+*/
 
 // Helper function to set user ID for better error tracking
+// export const setCrashlyticsUserId = (userId: string) => {
+//   if (crashlytics) {
+//     setUserIdCrashlytics(crashlytics, userId);
+//   }
+// };
 export const setCrashlyticsUserId = (userId: string) => {
-  if (crashlytics) {
-    setUserIdCrashlytics(crashlytics, userId);
-  }
+    console.warn("setCrashlyticsUserId called, but Crashlytics is disabled. UserID:", userId);
 };
+
 
 // Helper function to fetch and activate Remote Config
-export const refreshRemoteConfig = async () => {
-  if (!remoteConfig) return;
+// export const refreshRemoteConfig = async () => {
+//   if (!remoteConfig) return;
   
-  try {
-    await fetchAndActivate(remoteConfig);
-    console.log('Remote config fetched and activated');
-  } catch (error) {
-    console.error('Failed to fetch remote config:', error);
-  }
+//   try {
+//     await fetchAndActivate(remoteConfig);
+//     console.log('Remote config fetched and activated');
+//   } catch (error) {
+//     console.error('Failed to fetch remote config:', error);
+//   }
+// };
+export const refreshRemoteConfig = async () => {
+    console.warn("refreshRemoteConfig called, but Remote Config is disabled.");
 };
 
+// export { app, auth, db, storage, analytics, crashlytics, remoteConfig };
+// Ensure existing exports are explicitly null or non-functional
+// to minimize immediate undefined errors in importing files.
+// Other files will still import these, but they will be null.
 export { app, auth, db, storage, analytics, crashlytics, remoteConfig };

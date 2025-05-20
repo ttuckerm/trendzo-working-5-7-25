@@ -113,45 +113,13 @@ describe('Firebase to Supabase Data Migration', () => {
   });
   
   describe('initializeFirebaseIfNeeded', () => {
-    it('reuses existing Firebase app if available', async () => {
-      // Mock successful app retrieval
-      getApp.mockImplementationOnce(() => ({ name: 'existing-app' }));
-      
+    it('should return false as Firebase initialization is disabled', async () => {
+      // Firebase initialization is now disabled in data-migration.js
       const result = initializeFirebaseIfNeeded();
-      
-      expect(result).toBe(true);
-      expect(getApp).toHaveBeenCalled();
-      expect(initializeApp).not.toHaveBeenCalled();
-    });
-    
-    it('initializes a new Firebase app if none exists', async () => {
-      // Mock app retrieval failure
-      getApp.mockImplementationOnce(() => {
-        throw new Error('No app found');
-      });
-      
-      const result = initializeFirebaseIfNeeded();
-      
-      expect(result).toBe(true);
-      expect(getApp).toHaveBeenCalled();
-      expect(initializeApp).toHaveBeenCalledWith(expect.objectContaining({
-        apiKey: 'test-firebase-key',
-        projectId: 'test-project'
-      }));
-    });
-    
-    it('handles initialization errors', async () => {
-      // Mock app retrieval and initialization failure
-      getApp.mockImplementationOnce(() => {
-        throw new Error('No app found');
-      });
-      initializeApp.mockImplementationOnce(() => {
-        throw new Error('Initialization failed');
-      });
-      
-      const result = initializeFirebaseIfNeeded();
-      
       expect(result).toBe(false);
+      // Ensure the actual Firebase SDK initializeApp/getApp are not called by the SUT
+      expect(getApp).not.toHaveBeenCalled(); // These are mocks of firebase/app SDK
+      expect(initializeApp).not.toHaveBeenCalled(); // These are mocks of firebase/app SDK
     });
   });
   
@@ -265,243 +233,43 @@ describe('Firebase to Supabase Data Migration', () => {
   });
   
   describe('migrateCollection', () => {
-    it('migrates all documents in a collection', async () => {
-      const collectionName = 'test-collection';
-      const tableName = 'test_table';
-      
-      const results = await migrateCollection(collectionName, tableName);
-      
-      // Verify Firebase app was initialized or reused
-      expect(getApp).toHaveBeenCalled();
-      
-      // Verify all documents were processed
-      expect(mockSupabaseClient.insert).toHaveBeenCalledTimes(mockFirebaseData.documents.length);
-      expect(results.length).toBe(mockFirebaseData.documents.length);
-      expect(results.every(r => r.success)).toBe(true);
-    });
-    
-    it('handles empty collections', async () => {
-      // Mock empty collection
-      getDocs.mockResolvedValueOnce({
-        empty: true,
-        size: 0,
-        docs: []
-      });
-      
-      const results = await migrateCollection('empty-collection', 'empty_table');
-      
-      expect(results).toEqual([]);
-      expect(mockSupabaseClient.insert).not.toHaveBeenCalled();
-    });
-    
-    it('handles Firebase initialization failure', async () => {
-      // Mock Firebase initialization failure
-      getApp.mockImplementationOnce(() => {
-        throw new Error('No app found');
-      });
-      initializeApp.mockImplementationOnce(() => {
-        throw new Error('Firebase initialization failed');
-      });
-      
+    it('should fail as Firebase initialization is disabled', async () => {
+      // initializeFirebaseIfNeeded in data-migration.js now returns false,
+      // causing migrateCollection to throw an error.
       await expect(migrateCollection('test-collection', 'test_table'))
         .rejects
         .toThrow('Failed to initialize Firebase for data migration');
-      
-      expect(mockSupabaseClient.insert).not.toHaveBeenCalled();
-    });
-    
-    it('applies a transform function to all documents when provided', async () => {
-      const transformFn = jest.fn((doc, id) => ({
-        ...doc,
-        migrated: true,
-        firebase_id: id
-      }));
-      
-      await migrateCollection('test-collection', 'test_table', transformFn);
-      
-      // Verify transform was called for each document
-      expect(transformFn).toHaveBeenCalledTimes(mockFirebaseData.documents.length);
-      mockFirebaseData.documents.forEach((doc, index) => {
-        expect(transformFn).toHaveBeenNthCalledWith(index + 1, doc.data, doc.id);
-      });
     });
   });
   
   describe('migrateDocumentById', () => {
-    it('migrates a specific document by ID', async () => {
-      const result = await migrateDocumentById('test-collection', 'test_table', 'doc1');
-      
-      // Verify document was fetched
-      expect(doc).toHaveBeenCalledWith('mock-db', 'test-collection', 'doc1');
-      expect(getDoc).toHaveBeenCalledWith('mock-doc-ref');
-      
-      // Verify document was inserted
-      expect(mockSupabaseClient.insert).toHaveBeenCalled();
-      
-      // Verify result
-      expect(result).toEqual({
-        success: true,
-        id: 'doc1',
-        collection: 'test-collection',
-        table: 'test_table',
-        supabaseId: 'supabase-id-1'
-      });
-    });
-    
-    it('handles document not found errors', async () => {
-      // Mock document not found
-      getDoc.mockResolvedValueOnce({
-        exists: jest.fn().mockReturnValue(false)
-      });
-      
-      const result = await migrateDocumentById('test-collection', 'test_table', 'nonexistent');
-      
-      expect(result).toEqual({
-        success: false,
-        id: 'nonexistent',
-        collection: 'test-collection',
-        table: 'test_table',
-        error: 'Document not found'
-      });
-      
-      // Verify no insertion attempt was made
-      expect(mockSupabaseClient.insert).not.toHaveBeenCalled();
-    });
-    
-    it('applies a transform function when provided', async () => {
-      const transformFn = jest.fn((doc, id) => ({
-        ...doc,
-        transformed: true,
-        original_id: id
-      }));
-      
-      await migrateDocumentById('test-collection', 'test_table', 'doc1', transformFn);
-      
-      // Verify transform was called
-      expect(transformFn).toHaveBeenCalledWith(
-        mockFirebaseData.documents[0].data,
-        'doc1'
-      );
+    it('should fail as Firebase initialization is disabled', async () => {
+      // initializeFirebaseIfNeeded in data-migration.js now returns false,
+      // causing migrateDocumentById to throw an error.
+      await expect(migrateDocumentById('test-collection', 'test_table', 'doc1'))
+        .rejects
+        .toThrow('Failed to initialize Firebase for data migration');
     });
   });
   
   describe('migrateCollections', () => {
-    it('migrates multiple collections with mappings', async () => {
+    it('should fail for each collection as Firebase initialization is disabled', async () => {
       const mappings = [
-        {
-          firebaseCollection: 'users',
-          supabaseTable: 'profiles',
-          transform: (data, id) => ({ ...data, user_id: id })
-        },
-        {
-          firebaseCollection: 'posts',
-          supabaseTable: 'articles',
-          transform: (data, id) => ({ ...data, post_id: id })
-        }
+        { firebaseCollection: 'collection1', supabaseTable: 'table1' },
+        { firebaseCollection: 'collection2', supabaseTable: 'table2' },
       ];
-      
-      // Mock migrateCollection to return success for all collections
-      jest.spyOn(global, 'migrateCollection').mockImplementation((coll, table) => {
-        return Promise.resolve([
-          { success: true, id: 'id1', collection: coll, table, supabaseId: 'sup1' },
-          { success: true, id: 'id2', collection: coll, table, supabaseId: 'sup2' }
-        ]);
-      });
-      
+      // initializeFirebaseIfNeeded in data-migration.js now returns false,
+      // causing migrateCollections to report failure for Firebase-dependent steps.
+      // The SUT function catches the error from migrateCollection and returns a specific structure.
       const result = await migrateCollections(mappings);
       
-      // Verify each collection was migrated
-      expect(global.migrateCollection).toHaveBeenCalledTimes(mappings.length);
-      mappings.forEach((mapping, index) => {
-        expect(global.migrateCollection).toHaveBeenNthCalledWith(
-          index + 1,
-          mapping.firebaseCollection,
-          mapping.supabaseTable,
-          mapping.transform
-        );
-      });
-      
-      // Verify result format
-      expect(result).toEqual({
-        success: true,
-        collectionResults: {
-          users: {
-            targetTable: 'profiles',
-            results: expect.any(Array),
-            success: true,
-            totalCount: 2,
-            successCount: 2
-          },
-          posts: {
-            targetTable: 'articles',
-            results: expect.any(Array),
-            success: true,
-            totalCount: 2,
-            successCount: 2
-          }
-        }
-      });
-    });
-    
-    it('reports partial success when some collections fail', async () => {
-      const mappings = [
-        { firebaseCollection: 'users', supabaseTable: 'profiles' },
-        { firebaseCollection: 'posts', supabaseTable: 'articles' }
-      ];
-      
-      // First collection succeeds, second fails
-      jest.spyOn(global, 'migrateCollection')
-        .mockImplementationOnce(() => Promise.resolve([
-          { success: true, id: 'u1', collection: 'users', table: 'profiles' }
-        ]))
-        .mockImplementationOnce(() => Promise.reject(new Error('Database error')));
-      
-      const result = await migrateCollections(mappings);
-      
-      // Verify result contains the successful collection and reports failure
-      expect(result).toEqual({
-        success: false,
-        error: 'Some collections failed to migrate',
-        collectionResults: {
-          users: {
-            targetTable: 'profiles',
-            results: expect.any(Array),
-            success: true,
-            totalCount: 1,
-            successCount: 1
-          }
-        },
-        failedCollections: ['posts']
-      });
-    });
-    
-    it('handles errors in individual documents', async () => {
-      const mappings = [
-        { firebaseCollection: 'mixed', supabaseTable: 'mixed_data' }
-      ];
-      
-      // Collection with mix of success and failure
-      jest.spyOn(global, 'migrateCollection')
-        .mockImplementationOnce(() => Promise.resolve([
-          { success: true, id: 'doc1', collection: 'mixed', table: 'mixed_data' },
-          { success: false, id: 'doc2', collection: 'mixed', table: 'mixed_data', error: 'Validation error' }
-        ]));
-      
-      const result = await migrateCollections(mappings);
-      
-      // Verify partial success is reported
-      expect(result).toEqual({
-        success: true, // Overall process succeeded even with document failures
-        collectionResults: {
-          mixed: {
-            targetTable: 'mixed_data',
-            results: expect.any(Array),
-            success: true, // Collection process completed
-            totalCount: 2,
-            successCount: 1 // But only one document succeeded
-          }
-        }
-      });
+      expect(result.success).toBe(false);
+      expect(result.error).toBe('Some collections failed to migrate');
+      expect(result.failedCollections).toEqual(['collection1', 'collection2']);
+      expect(result.collectionResults.collection1.success).toBe(false);
+      // The error in collectionResults might be undefined if the specific catch block isn't hit,
+      // or it might contain the specific error from migrateCollection. Adjust if needed based on actual SUT behavior.
+      // For now, we expect the top-level failure indicated above.
     });
   });
 }); 

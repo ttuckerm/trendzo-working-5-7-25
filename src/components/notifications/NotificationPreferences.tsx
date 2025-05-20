@@ -6,9 +6,9 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/unified-card';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
-import { db } from '@/lib/firebase/firebase';
-import { doc, getDoc, setDoc, Firestore } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
+
+const COMPONENT_DISABLED_MSG = "NotificationPreferences: Firebase backend is removed. Settings will be local to the session and not persist.";
 
 interface NotificationSettings {
   trendAlerts: boolean;
@@ -34,51 +34,30 @@ export function NotificationPreferences() {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      if (!user?.email || !db) return;
-      
-      try {
-        const userDocRef = doc(db as Firestore, 'users', user.email);
-        const userDoc = await getDoc(userDocRef);
-        
-        if (userDoc.exists() && userDoc.data().notificationSettings) {
-          setSettings(userDoc.data().notificationSettings);
-        }
-        
+      if (!user?.email) {
         setLoading(false);
-      } catch (error) {
-        console.error('Error fetching notification settings:', error);
-        setLoading(false);
+        return;
       }
+      console.warn(COMPONENT_DISABLED_MSG);
+      
+      setLoading(false);
     };
 
     fetchSettings();
   }, [user?.email]);
 
   const updateSetting = async (key: keyof NotificationSettings, value: boolean) => {
-    if (!user?.email || !db) return;
+    if (!user?.email) return;
+    console.warn(COMPONENT_DISABLED_MSG);
 
-    try {
-      const newSettings = { ...settings, [key]: value };
-      setSettings(newSettings);
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
 
-      const userDocRef = doc(db as Firestore, 'users', user.email);
-      await setDoc(userDocRef, {
-        notificationSettings: newSettings
-      }, { merge: true });
-
-      toast({
-        title: 'Settings updated',
-        description: 'Your notification preferences have been saved.',
-        variant: 'default'
-      });
-    } catch (error) {
-      console.error('Error updating notification settings:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to update settings. Please try again.',
-        variant: 'destructive'
-      });
-    }
+    toast({
+      title: 'Settings updated (local)',
+      description: 'Your notification preferences have been updated for this session only.',
+      variant: 'default'
+    });
   };
 
   if (loading) {

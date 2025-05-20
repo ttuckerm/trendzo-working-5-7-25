@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth, db } from '@/lib/firebase/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+// import { auth, db } from '@/lib/firebase/firebase'; // auth and db will be null
+// import { doc, getDoc } from 'firebase/firestore';
+
+const CONTEXT_DISABLED_MSG = "FeatureContext: Firebase backend is removed. Feature flags will be based on default/mocked tier and no dynamic flags will be fetched.";
 
 type FeatureFlags = {
   SOUND_ANALYSIS: boolean;
@@ -40,70 +42,71 @@ export const FeatureProvider: React.FC<{children: React.ReactNode}> = ({ childre
   // Fetch user's subscription tier and available features
   useEffect(() => {
     const fetchFeatures = async () => {
+      console.warn(CONTEXT_DISABLED_MSG);
       setLoading(true);
       
       try {
-        let tier = 'free';
+        let tier = 'free'; // Default tier, as Firebase user lookup is disabled
         
         // Get user subscription tier if logged in and auth is initialized
-        if (auth && auth.currentUser) {
-          // Check if db is initialized before accessing Firestore
-          if (db) {
-            try {
-              const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-              if (userDoc.exists()) {
-                const userData = userDoc.data();
-                tier = userData?.subscriptionTier || 'free';
-              }
-            } catch (error) {
-              console.error('Error fetching user data:', error);
-              // Continue with free tier on error
-            }
-          }
-        }
+        // if (auth && auth.currentUser) { // auth will be null
+        //   // Check if db is initialized before accessing Firestore
+        //   if (db) { // db will be null
+        //     try {
+        //       const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        //       if (userDoc.exists()) {
+        //         const userData = userDoc.data();
+        //         tier = userData?.subscriptionTier || 'free';
+        //       }
+        //     } catch (error) {
+        //       console.error('Error fetching user data (Firebase disabled):', error);
+        //       // Continue with free tier on error
+        //     }
+        //   }
+        // }
         
         setSubscription(tier);
         
         // Get feature flags from configuration if db is initialized
-        if (db) {
-          try {
-            const featureDoc = await getDoc(doc(db, 'configuration', 'featureFlags'));
-            const featureData = featureDoc.exists() 
-              ? featureDoc.data() as Record<string, boolean> 
-              : {};
+        // if (db) { // db will be null, this block will be skipped
+        //   try {
+        //     const featureDoc = await getDoc(doc(db, 'configuration', 'featureFlags'));
+        //     const featureData = featureDoc.exists() 
+        //       ? featureDoc.data() as Record<string, boolean> 
+        //       : {};
             
-            // Apply tier-based access
-            setFeatures({
-              SOUND_ANALYSIS: true, // Base feature available to all
-              EXPERT_INPUTS: true, // Base feature with tier-specific depth
-              PREMIUM_ANALYTICS: ['premium', 'platinum', 'admin'].includes(tier),
-              TEMPLATE_REMIX: ['premium', 'platinum', 'admin'].includes(tier),
-              TREND_PREDICTION: ['platinum', 'admin'].includes(tier),
-              CONTENT_CALENDAR: ['platinum', 'admin'].includes(tier),
-              CONVERSATIONAL_ADMIN: ['admin'].includes(tier),
-              // Override with dynamic flags from Firestore
-              ...Object.keys(featureData).reduce((acc, key) => {
-                if (key in defaultFeatures) {
-                  acc[key as keyof FeatureFlags] = featureData[key];
-                }
-                return acc;
-              }, {} as Partial<FeatureFlags>),
-            });
-          } catch (error) {
-            console.error('Error fetching feature flags:', error);
-            // Use default feature settings + tier based access
-            setFeatures({
-              SOUND_ANALYSIS: true,
-              EXPERT_INPUTS: true,
-              PREMIUM_ANALYTICS: ['premium', 'platinum', 'admin'].includes(tier),
-              TEMPLATE_REMIX: ['premium', 'platinum', 'admin'].includes(tier),
-              TREND_PREDICTION: ['platinum', 'admin'].includes(tier),
-              CONTENT_CALENDAR: ['platinum', 'admin'].includes(tier),
-              CONVERSATIONAL_ADMIN: ['admin'].includes(tier),
-            });
-          }
-        } else {
-          // If db is null, use default tier-based features
+        //     // Apply tier-based access
+        //     setFeatures({
+        //       SOUND_ANALYSIS: true, // Base feature available to all
+        //       EXPERT_INPUTS: true, // Base feature with tier-specific depth
+        //       PREMIUM_ANALYTICS: ['premium', 'platinum', 'admin'].includes(tier),
+        //       TEMPLATE_REMIX: ['premium', 'platinum', 'admin'].includes(tier),
+        //       TREND_PREDICTION: ['platinum', 'admin'].includes(tier),
+        //       CONTENT_CALENDAR: ['platinum', 'admin'].includes(tier),
+        //       CONVERSATIONAL_ADMIN: ['admin'].includes(tier),
+        //       // Override with dynamic flags from Firestore
+        //       ...Object.keys(featureData).reduce((acc, key) => {
+        //         if (key in defaultFeatures) {
+        //           acc[key as keyof FeatureFlags] = featureData[key];
+        //         }
+        //         return acc;
+        //       }, {} as Partial<FeatureFlags>),
+        //     });
+        //   } catch (error) {
+        //     console.error('Error fetching feature flags (Firebase disabled):', error);
+        //     // Use default feature settings + tier based access
+        //     setFeatures({
+        //       SOUND_ANALYSIS: true,
+        //       EXPERT_INPUTS: true,
+        //       PREMIUM_ANALYTICS: ['premium', 'platinum', 'admin'].includes(tier),
+        //       TEMPLATE_REMIX: ['premium', 'platinum', 'admin'].includes(tier),
+        //       TREND_PREDICTION: ['platinum', 'admin'].includes(tier),
+        //       CONTENT_CALENDAR: ['platinum', 'admin'].includes(tier),
+        //       CONVERSATIONAL_ADMIN: ['admin'].includes(tier),
+        //     });
+        //   }
+        // } else {
+          // If db is null, use default tier-based features (This block will now always run due to db being null)
           setFeatures({
             SOUND_ANALYSIS: true,
             EXPERT_INPUTS: true,
@@ -113,9 +116,9 @@ export const FeatureProvider: React.FC<{children: React.ReactNode}> = ({ childre
             CONTENT_CALENDAR: ['platinum', 'admin'].includes(tier),
             CONVERSATIONAL_ADMIN: ['admin'].includes(tier),
           });
-        }
+        // }
       } catch (error) {
-        console.error('Error in fetchFeatures:', error);
+        console.error('Error in fetchFeatures (Firebase disabled):', error);
         // Use default flags on error
         setFeatures(defaultFeatures);
       } finally {
@@ -126,11 +129,12 @@ export const FeatureProvider: React.FC<{children: React.ReactNode}> = ({ childre
     fetchFeatures();
     
     // Listen for auth state changes if auth is initialized
-    const unsubscribe = auth ? 
-      auth.onAuthStateChanged(() => {
-        fetchFeatures();
-      }) : 
-      () => {}; // No-op if auth is null
+    // const unsubscribe = auth ?  // auth will be null
+    //   auth.onAuthStateChanged(() => {
+    //     fetchFeatures();
+    //   }) : 
+    //   () => {}; // No-op if auth is null
+    const unsubscribe = () => {}; // auth is null, so always a no-op
     
     return () => unsubscribe();
   }, []);

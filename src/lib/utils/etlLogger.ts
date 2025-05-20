@@ -6,8 +6,8 @@
  * to console and/or a persistent store like Firebase.
  */
 
-import { db } from '@/lib/firebase/firebase';
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
+// import { collection, addDoc, Timestamp } from 'firebase/firestore'; // Firebase SDK
 
 // Define log levels for ETL processes
 export enum ETLLogLevel {
@@ -46,12 +46,12 @@ export class ETLError extends Error {
 let loggerConfig = {
   minLevel: ETLLogLevel.INFO,  // Minimum level to log
   logToConsole: true,          // Whether to log to console
-  logToFirebase: true,         // Whether to log to Firebase
+  logToFirebase: false,         // Whether to log to Firebase - CHANGED TO FALSE
   maxFirebaseLogs: 1000,       // Maximum number of logs to store in Firebase
 };
 
 // The Firebase collection for ETL logs
-const LOGS_COLLECTION = 'etlLogs';
+const LOGS_COLLECTION = 'etlLogs'; // Kept for context, but Firebase logging is disabled
 
 /**
  * Log an ETL event with structured data
@@ -165,21 +165,23 @@ function logToConsole(level: ETLLogLevel, message: string, data: Record<string, 
  * Log an entry to Firebase
  */
 async function logToFirebase(logEntry: Record<string, any>): Promise<void> {
-  try {
-    if (!db) {
-      console.warn('Firebase DB is not initialized, cannot log to Firebase');
-      return;
-    }
+  console.warn('logToFirebase: Firebase logging is disabled. Log entry not sent to Firebase.', logEntry);
+  // try {
+  //   if (!db) {
+  //     console.warn('Firebase DB is not initialized, cannot log to Firebase');
+  //     return;
+  //   }
     
-    // Add the log entry to the collection
-    await addDoc(collection(db, LOGS_COLLECTION), {
-      ...logEntry,
-      timestamp: Timestamp.fromDate(new Date(logEntry.timestamp))
-    });
-  } catch (error) {
-    console.error('Error writing log to Firebase:', error);
-    throw error;
-  }
+  //   // Add the log entry to the collection
+  //   await addDoc(collection(db, LOGS_COLLECTION), {
+  //     ...logEntry,
+  //     timestamp: Timestamp.fromDate(new Date(logEntry.timestamp))
+  //   });
+  // } catch (error) {
+  //   console.error('Error writing log to Firebase:', error);
+  //   throw error;
+  // }
+  return Promise.resolve();
 }
 
 /**

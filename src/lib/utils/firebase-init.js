@@ -1,8 +1,12 @@
 /**
  * Firebase initialization utilities for test environments
+ * SCRIPT DISABLED: Firebase is being removed.
  */
 
-const { initializeApp, getApp } = require('firebase/app');
+const SCRIPT_DISABLED_MSG = "firebase-init.js: Firebase is being removed. This initialization script is now disabled.";
+console.warn(SCRIPT_DISABLED_MSG);
+
+// const { initializeApp, getApp } = require('firebase/app');
 const { getEnvVariable } = require('./env');
 
 /**
@@ -16,7 +20,19 @@ const { getEnvVariable } = require('./env');
  */
 function initializeTestFirebase(options = {}) {
   const { debug = false, testConfig = null } = options;
-  
+  console.warn(SCRIPT_DISABLED_MSG);
+  console.warn("initializeTestFirebase: Firebase initialization skipped.");
+
+  if (debug) {
+    console.log('DEBUG: Firebase initialization options (script disabled):', options);
+  }
+
+  return {
+    success: true, // Reporting success to not break callers, but app is null
+    app: null,     // Firebase app is null
+    message: 'Firebase initialization skipped as Firebase is being removed.'
+  };
+  /*
   try {
     // Print debug info if requested
     if (debug) {
@@ -106,6 +122,7 @@ function initializeTestFirebase(options = {}) {
       details: error
     };
   }
+  */
 }
 
 /**
@@ -115,16 +132,23 @@ function initializeTestFirebase(options = {}) {
  * @returns {Object} Result of the initialization
  */
 function initializeTestFirebaseWithMockConfig() {
-  const mockConfig = {
-    apiKey: 'test-firebase-key',
-    authDomain: 'test-domain.firebaseapp.com',
-    projectId: 'test-project',
-    storageBucket: 'test-bucket.appspot.com',
-    messagingSenderId: '123456789',
-    appId: 'test-app-id'
-  };
+  console.warn(SCRIPT_DISABLED_MSG);
+  console.warn("initializeTestFirebaseWithMockConfig: Firebase initialization skipped.");
+  // const mockConfig = {
+  //   apiKey: 'test-firebase-key',
+  //   authDomain: 'test-domain.firebaseapp.com',
+  //   projectId: 'test-project',
+  //   storageBucket: 'test-bucket.appspot.com',
+  //   messagingSenderId: '123456789',
+  //   appId: 'test-app-id'
+  // };
   
-  return initializeTestFirebase({ testConfig: mockConfig });
+  // return initializeTestFirebase({ testConfig: mockConfig });
+  return {
+    success: true,
+    app: null,
+    message: 'Firebase mock initialization skipped as Firebase is being removed.'
+  };
 }
 
 module.exports = {

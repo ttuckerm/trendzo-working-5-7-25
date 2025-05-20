@@ -31,9 +31,16 @@ const mockAuth = {
   signOut: jest.fn(),
 } as unknown as Auth;
 
-describe('Firebase Authentication', () => {
+// Import the auth object from the module being effectively "tested" (or rather, its deprecated state)
+import { auth as appAuth } from '@/lib/firebase/firebase';
+
+describe('Firebase Authentication SDK features (DEPRECATED in this project)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  it('confirms that the appAuth object from @/lib/firebase/firebase is null', () => {
+    expect(appAuth).toBeNull();
   });
 
   it('signs in with email and password', async () => {

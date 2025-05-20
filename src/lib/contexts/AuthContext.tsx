@@ -1,14 +1,42 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import { signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut, signInAnonymously } from "firebase/auth";
-import { User } from "firebase/auth";
-import { auth } from "../firebase/firebase";
+// import { signInWithPopup, GoogleAuthProvider, signOut as firebaseSignOut, signInAnonymously } from "firebase/auth"; // Firebase SDK call
+// import { User } from "firebase/auth"; // Firebase User type
+// import type { User as FirebaseUserType } from "firebase/auth";
+// import { auth } from "../firebase/firebase"; // This is now null
 import { useRouter } from 'next/navigation';
 import { getCookie, deleteCookie } from 'cookies-next';
 
+const AUTH_DISABLED_MSG = "Firebase Auth is disabled.";
+
+// Placeholder for the FirebaseUserType, as the direct import is being removed.
+// This should ideally match the structure of firebase.User if specific fields are accessed.
+export interface FirebaseUserType {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  isAnonymous: boolean;
+  // Add other properties that are actually used from the original Firebase User type
+  // For example, if your mock user or other parts of the code expect these:
+  // phoneNumber: string | null;
+  // providerId: string;
+  // metadata: any; // Or a more specific type like UserMetadata
+  // providerData: any[]; // Or a more specific type like UserInfo[]
+  // refreshToken: string;
+  // tenantId: string | null;
+  // delete: () => Promise<void>;
+  // getIdToken: (forceRefresh?: boolean) => Promise<string>;
+  // getIdTokenResult: (forceRefresh?: boolean) => Promise<any>; // IdTokenResult
+  // reload: () => Promise<void>;
+  // toJSON: () => object;
+  [key: string]: any; // Allow other properties to exist
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: FirebaseUserType | null;
   loading: boolean;
   isAdmin: boolean;
   authError: Error | null;
@@ -22,13 +50,13 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   isAdmin: false,
   authError: null,
-  signInWithGoogle: async () => {},
-  signInAnonymously: async () => {},
-  signOut: async () => {},
+  signInWithGoogle: async () => { console.warn(`signInWithGoogle: ${AUTH_DISABLED_MSG}`); throw new Error(AUTH_DISABLED_MSG); },
+  signInAnonymously: async () => { console.warn(`signInAnonymously: ${AUTH_DISABLED_MSG}`); throw new Error(AUTH_DISABLED_MSG); },
+  signOut: async () => { console.warn(`signOut: ${AUTH_DISABLED_MSG}`); },
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<FirebaseUserType | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [authError, setAuthError] = useState<Error | null>(null);
@@ -36,15 +64,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Create a mock user for development
   useEffect(() => {
-    // Check if we're in development mode
     const isDev = process.env.NODE_ENV === 'development';
     const devBypassEnabled = typeof window !== 'undefined' ? 
       localStorage.getItem('trendzo_dev_bypass') === 'true' || true : false;
     
     if (isDev && devBypassEnabled && !user) {
       console.log('🧪 DEV MODE: Creating mock user for development');
-      
-      // Create a mock user for development testing
       const mockUser = {
         uid: 'dev-user-123',
         email: 'dev@example.com',
@@ -58,19 +83,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         providerData: [],
         refreshToken: 'mock-refresh-token',
         tenantId: null,
-        delete: async () => {},
+        delete: async () => { console.log("Mock user delete called"); },
         getIdToken: async () => 'mock-id-token',
         getIdTokenResult: async () => ({ token: 'mock-token' } as any),
-        reload: async () => {},
-        toJSON: () => ({})
-      };
+        reload: async () => { console.log("Mock user reload called"); },
+        toJSON: () => ({ uid: 'dev-user-123' })
+      } as unknown as FirebaseUserType; // Cast to FirebaseUserType, ensure structure is compatible enough
       
-      // Cast to any to bypass TypeScript strict checks for development
-      setUser(mockUser as any);
-      setIsAdmin(true); // Make the dev user an admin for testing all features
+      setUser(mockUser);
+      setIsAdmin(true); 
       setLoading(false);
-      
-      // Store in localStorage for persistence
       localStorage.setItem('trendzo_dev_bypass', 'true');
     }
   }, [user]);
@@ -153,94 +175,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let unsubscribe = () => {};
     
-    try {
-      // Only set up auth listener if auth is available
-      if (auth && typeof auth.onAuthStateChanged === 'function') {
-        unsubscribe = auth.onAuthStateChanged((user) => {
-          setUser(user);
-          // Check if user is admin
-          if (user && user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-            setIsAdmin(true);
-          } else {
-            setIsAdmin(false);
-          }
-          setLoading(false);
-          setAuthError(null); // Clear any previous errors
-          
-          // If user signed in, check for pending template redirect
-          if (user) {
-            handlePendingTemplateRedirect();
-          }
-        }, (error) => {
-          console.error("Auth state change error:", error);
-          setLoading(false);
-          setAuthError(error instanceof Error ? error : new Error(String(error)));
-        });
-      } else {
-        // If auth is not available, just set loading to false
-        console.warn("Firebase auth not available, proceeding in development mode");
-        setLoading(false);
-        if (!auth) {
-          setAuthError(new Error("Firebase auth not initialized"));
-        }
+    // try {
+      // Since auth from ../firebase/firebase is null, this block will effectively be skipped.
+      // The original code had checks for auth and auth.onAuthStateChanged.
+      // We will simplify this to reflect that Firebase auth is disabled.
+      // if (auth && typeof auth.onAuthStateChanged === 'function') { ... }
+
+      console.warn(`AuthContext Effect: Firebase auth listener setup skipped as Firebase is disabled.`);
+      // If not in dev bypass mode and relying on this for user state, user will remain null.
+      if (!(process.env.NODE_ENV === 'development' && localStorage.getItem('trendzo_dev_bypass') === 'true')) {
+        setUser(null);
+        setIsAdmin(false);
       }
-    } catch (error) {
-      console.error("Error setting up auth listener:", error);
       setLoading(false);
-      setAuthError(error instanceof Error ? error : new Error(String(error)));
-    }
+      setAuthError(new Error(AUTH_DISABLED_MSG + " Listener not attached."));
+    // } catch (error) { ... } // Error handling for listener setup can be simplified
 
     return () => {
-      try {
-        unsubscribe();
-      } catch (error) {
-        console.error("Error unsubscribing from auth listener:", error);
-      }
+      // try {
+      //   unsubscribe(); // Original unsubscribe call
+      // } catch (error) { ... }
     };
-  }, [router]);
+  }, [router]); // router dependency might still be relevant for handlePendingTemplateRedirect if it was called within onAuthStateChanged
 
   const signInWithGoogle = async () => {
-    if (!auth) {
-      console.error("Auth service not available");
-      return;
-    }
-    
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-    } catch (error: any) {
-      console.error("Error signing in with Google", error);
-      // Re-throw the error so it can be caught and handled by the UI
-      throw error;
-    }
+    // if (!auth) { ... } // auth is known to be null or non-functional
+    console.warn(`signInWithGoogle: ${AUTH_DISABLED_MSG}`);
+    setAuthError(new Error(AUTH_DISABLED_MSG));
+    throw new Error(AUTH_DISABLED_MSG); // Or handle UI by not throwing
+    // Original: const provider = new GoogleAuthProvider(); await signInWithPopup(auth, provider);
   };
 
   const anonymousSignIn = async () => {
-    if (!auth) {
-      console.error("Auth service not available");
-      return;
-    }
-    
-    try {
-      await signInAnonymously(auth);
-    } catch (error: any) {
-      console.error("Error signing in anonymously", error);
-      throw error;
-    }
+    // if (!auth) { ... }
+    console.warn(`anonymousSignIn: ${AUTH_DISABLED_MSG}`);
+    setAuthError(new Error(AUTH_DISABLED_MSG));
+    throw new Error(AUTH_DISABLED_MSG);
+    // Original: await signInAnonymously(auth);
   };
 
   const signOutUser = async () => {
-    if (!auth) {
-      console.error("Auth service not available");
-      return;
-    }
-    
-    try {
-      await firebaseSignOut(auth);
-    } catch (error: any) {
-      console.error("Error signing out", error);
-      throw error;
-    }
+    // if (!auth) { ... }
+    console.warn(`signOut: ${AUTH_DISABLED_MSG}`);
+    setUser(null);
+    setIsAdmin(false);
+    setAuthError(null);
+    // Original: await firebaseSignOut(auth);
+    // Clear dev bypass if you want sign out to fully clear mock user
+    // if (typeof window !== 'undefined') localStorage.removeItem('trendzo_dev_bypass');
   };
 
   return (

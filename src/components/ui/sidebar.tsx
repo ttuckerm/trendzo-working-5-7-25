@@ -70,7 +70,7 @@ export const Sidebar = ({
       <motion.div
         initial={false}
         animate={{
-          width: currentOpen ? "16rem" : (hovered ? "16rem" : "4.5rem"),
+          width: currentOpen ? "18rem" : (hovered ? "18rem" : "4.5rem"),
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}

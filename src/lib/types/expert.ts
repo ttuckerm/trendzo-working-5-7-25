@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+// import { Timestamp } from 'firebase/firestore'; // This import was unused
 
 /**
  * Expert profile interface with performance metrics

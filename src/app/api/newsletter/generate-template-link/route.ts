@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '@/lib/firebase/firebase';
-import { collection, doc, setDoc } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase';
+// import { collection, doc, setDoc } from 'firebase/firestore';
 import { CreateNewsletterLinkParams, NewsletterTemplateLink } from '@/lib/types/newsletter';
+
+const ROUTE_DISABLED_MSG = "generate-template-link route: Firebase backend is removed. Link generation will be mocked and not persist.";
 
 // Collection name in Firestore
 const LINKS_COLLECTION = 'newsletterLinks';
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
       description: body.description || '',
       createdAt: new Date().toISOString(),
       expiresAt: body.expiresAt,
-      createdBy: session.user.email || 'unknown',
+      createdBy: session?.user?.email || 'unknown',
       token,
       shortCode,
       fullUrl: `${BASE_URL}/nl/${shortCode}`,
@@ -98,13 +100,17 @@ export async function POST(request: NextRequest) {
     };
     
     // Save to Firestore
-    await setDoc(doc(db, LINKS_COLLECTION, id), newsletterLink);
+    // await setDoc(doc(db, LINKS_COLLECTION, id), newsletterLink);
+    console.warn(ROUTE_DISABLED_MSG);
     
     return NextResponse.json({
       success: true,
       linkId: id,
       shortCode,
-      fullUrl: newsletterLink.fullUrl
+      fullUrl: newsletterLink.fullUrl,
+      // For debugging, include the mock link data
+      // In a real scenario, you might not want to return the full object if it's large
+      mockLinkData: newsletterLink 
     });
     
   } catch (error) {

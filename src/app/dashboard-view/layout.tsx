@@ -12,6 +12,7 @@ import { fixStyles } from '@/lib/utils/style-fixer';
 import ErrorBoundary from '@/components/ui/ErrorBoundary';
 import { SubscriptionProvider } from '@/lib/contexts/SubscriptionContext';
 import GlobalSpinner from '@/components/ui/GlobalSpinner';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import "../globals.css" // Global CSS
 import "./global.css" // Dashboard-specific CSS
 
@@ -86,26 +87,28 @@ export default function DashboardViewLayout({
   return (
     <ErrorBoundary fallback={<DefaultErrorFallback />}>
       <SubscriptionProvider>
-        <TooltipProvider>
-          <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-neutral-950">
-            {/* Replace old Sidebar with NewAppSidebar */}
-            <NewAppSidebar /> 
-            
-            {/* The Header might need a way to toggle the sidebar for mobile if the new sidebar doesn't include a visible toggle for smallest screens */}
-            {/* Or, the NewAppSidebar itself could expose a toggle that the Header uses. */}
-            {/* For now, passing a handler for the Header to manage a mobile overlay state */}
-            <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-              <Header setIsSidebarOpen={setIsMobileNavActuallyOpen} /> {/* This prop might need to change based on NewAppSidebar's behavior */}
-              <main className="grow">
-                <Suspense fallback={<GlobalSpinner />}>
-                  <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-full mx-auto">
-                    {children}
-                  </div>
-                </Suspense>
-              </main>
+        <ThemeProvider>
+          <TooltipProvider>
+            <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-neutral-950">
+              {/* Replace old Sidebar with NewAppSidebar */}
+              <NewAppSidebar /> 
+              
+              {/* The Header might need a way to toggle the sidebar for mobile if the new sidebar doesn't include a visible toggle for smallest screens */}
+              {/* Or, the NewAppSidebar itself could expose a toggle that the Header uses. */}
+              {/* For now, passing a handler for the Header to manage a mobile overlay state */}
+              <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
+                <Header setIsSidebarOpen={setIsMobileNavActuallyOpen} /> {/* This prop might need to change based on NewAppSidebar's behavior */}
+                <main className="grow">
+                  <Suspense fallback={<GlobalSpinner />}>
+                    <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-full mx-auto">
+                      {children}
+                    </div>
+                  </Suspense>
+                </main>
+              </div>
             </div>
-          </div>
-        </TooltipProvider>
+          </TooltipProvider>
+        </ThemeProvider>
       </SubscriptionProvider>
     </ErrorBoundary>
   )

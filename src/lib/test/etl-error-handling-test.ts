@@ -22,19 +22,19 @@ const etlJobService = {
   failJob: async () => {}
 };
 
-const db = null;
+const db = null; // Firebase db is null
 
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  doc, 
-  getDoc, 
-  setDoc,
-  Firestore,
-  DocumentData
-} from 'firebase/firestore';
+// import { 
+//   collection, 
+//   query, 
+//   where, 
+//   getDocs, 
+//   doc, 
+//   getDoc, 
+//   setDoc,
+//   Firestore,
+//   DocumentData
+// } from 'firebase/firestore';
 
 import { createMockTikTokVideo } from '../etl/test-utils';
 

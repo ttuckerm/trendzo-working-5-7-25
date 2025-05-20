@@ -1,24 +1,24 @@
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  doc, 
-  collection,
-  getDoc, 
-  getDocs,
-  updateDoc, 
-  setDoc,
-  addDoc,
-  query,
-  where,
-  orderBy,
-  limit,
-  Timestamp,
-  serverTimestamp,
-  Firestore,
-  arrayUnion,
-  increment,
-  FieldValue
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
+// import { 
+//   doc, 
+//   collection,
+//   getDoc, 
+//   getDocs,
+//   updateDoc, 
+//   setDoc,
+//   addDoc,
+//   query,
+//   where,
+//   orderBy,
+//   limit,
+//   Timestamp,
+//   serverTimestamp,
+//   Firestore,
+//   arrayUnion,
+//   increment,
+//   FieldValue
+// } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // db will be null
 import { 
   Expert, 
   ExpertPerformanceMetrics, 
@@ -26,8 +26,21 @@ import {
   AdjustmentVerification,
   ExpertActivity 
 } from '@/lib/types/expert';
-import { ManualAdjustmentLog } from '@/lib/types/trendingTemplate';
-import { logETLEvent, ETLLogLevel } from '@/lib/utils/etlLogger';
+// import { ManualAdjustmentLog } from '@/lib/types/trendingTemplate'; // Not directly used in the neutralized logic for now
+import { logETLEvent, ETLLogLevel } from '@/lib/utils/etlLogger'; // etlLogger is already neutralized or will be
+
+const SERVICE_DISABLED_MSG = "expertPerformanceService: Firebase backend is removed. Method called but will not perform DB operations. TODO: Implement with Supabase.";
+
+const MOCK_INITIAL_METRICS: ExpertPerformanceMetrics = {
+  totalAdjustments: 0,
+  successfulAdjustments: 0,
+  reliabilityScore: 0,
+  averageImpactScore: 0,
+  categoryPerformance: {},
+  updatedAt: new Date().toISOString(),
+  reliabilityTrend: {},
+  lastActivity: undefined,
+};
 
 /**
  * Service for tracking and managing expert performance metrics
@@ -39,23 +52,25 @@ export const expertPerformanceService = {
    * @returns Expert profile with performance metrics or null if not found
    */
   async getExpertProfile(expertId: string): Promise<Expert | null> {
-    try {
-      const expertRef = doc(db as Firestore, 'experts', expertId);
-      const expertDoc = await getDoc(expertRef);
+    console.warn(`getExpertProfile for expert ${expertId}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const expertRef = doc(db as Firestore, 'experts', expertId);
+    //   const expertDoc = await getDoc(expertRef);
       
-      if (!expertDoc.exists()) {
-        return null;
-      }
+    //   if (!expertDoc.exists()) {
+    //     return null;
+    //   }
       
-      return expertDoc.data() as Expert;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error fetching expert profile', {
-        expertId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   return expertDoc.data() as Expert;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error fetching expert profile', {
+    //     expertId,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve(null);
   },
   
   /**
@@ -71,68 +86,97 @@ export const expertPerformanceService = {
     avatar?: string;
     specializations: string[];
   }): Promise<Expert> {
-    try {
-      const expertId = `expert-${uuidv4()}`;
-      const timestamp = new Date().toISOString();
-      
-      // Initialize empty performance metrics
-      const initialMetrics: ExpertPerformanceMetrics = {
-        totalAdjustments: 0,
-        successfulAdjustments: 0,
-        reliabilityScore: 0,
-        averageImpactScore: 0,
-        categoryPerformance: {},
-        updatedAt: timestamp
-      };
-      
-      // Initialize specialization areas from the provided specializations
-      const specializationAreas: ExpertSpecializationArea[] = expertData.specializations.map(spec => ({
-        id: `spec-${uuidv4()}`,
+    console.warn(`createExpertProfile for user ${expertData.userId}: ${SERVICE_DISABLED_MSG}`);
+    const expertId = `mock-expert-${uuidv4()}`;
+    const timestamp = new Date().toISOString();
+    const mockExpert: Expert = {
+      id: expertId,
+      userId: expertData.userId,
+      name: expertData.name,
+      email: expertData.email,
+      bio: expertData.bio || '',
+      avatar: expertData.avatar || '',
+      joinedAt: timestamp,
+      isActive: true,
+      specializations: expertData.specializations,
+      expertiseLevel: 'junior',
+      verificationStatus: 'pending',
+      metrics: { ...MOCK_INITIAL_METRICS, updatedAt: timestamp },
+      specializationAreas: expertData.specializations.map(spec => ({
+        id: `mock-spec-${uuidv4()}`,
         name: spec,
         reliabilityScore: 0,
         adjustmentCount: 0,
         tags: [spec],
-        confidenceLevel: 0.5, // Default confidence level
+        confidenceLevel: 0.5,
         createdAt: timestamp,
         updatedAt: timestamp
-      }));
+      })),
+      recentActivity: []
+    };
+    // try {
+    //   const expertId = `expert-${uuidv4()}`;
+    //   const timestamp = new Date().toISOString();
       
-      // Create expert document
-      const expert: Expert = {
-        id: expertId,
-        userId: expertData.userId,
-        name: expertData.name,
-        email: expertData.email,
-        bio: expertData.bio || '',
-        avatar: expertData.avatar || '',
-        joinedAt: timestamp,
-        isActive: true,
-        specializations: expertData.specializations,
-        expertiseLevel: 'junior', // Default level for new experts
-        verificationStatus: 'pending',
-        metrics: initialMetrics,
-        specializationAreas,
-        recentActivity: []
-      };
+    //   // Initialize empty performance metrics
+    //   const initialMetrics: ExpertPerformanceMetrics = {
+    //     totalAdjustments: 0,
+    //     successfulAdjustments: 0,
+    //     reliabilityScore: 0,
+    //     averageImpactScore: 0,
+    //     categoryPerformance: {},
+    //     updatedAt: timestamp
+    //   };
       
-      await setDoc(doc(db as Firestore, 'experts', expertId), expert);
+    //   // Initialize specialization areas from the provided specializations
+    //   const specializationAreas: ExpertSpecializationArea[] = expertData.specializations.map(spec => ({
+    //     id: `spec-${uuidv4()}`,
+    //     name: spec,
+    //     reliabilityScore: 0,
+    //     adjustmentCount: 0,
+    //     tags: [spec],
+    //     confidenceLevel: 0.5, // Default confidence level
+    //     createdAt: timestamp,
+    //     updatedAt: timestamp
+    //   }));
       
-      // Also set the user role to expert
-      await updateDoc(doc(db as Firestore, 'users', expertData.userId), {
-        isExpert: true,
-        expertId: expertId,
-        updatedAt: serverTimestamp()
-      });
+    //   // Create expert document
+    //   const expert: Expert = {
+    //     id: expertId,
+    //     userId: expertData.userId,
+    //     name: expertData.name,
+    //     email: expertData.email,
+    //     bio: expertData.bio || '',
+    //     avatar: expertData.avatar || '',
+    //     joinedAt: timestamp,
+    //     isActive: true,
+    //     specializations: expertData.specializations,
+    //     expertiseLevel: 'junior', // Default level for new experts
+    //     verificationStatus: 'pending',
+    //     metrics: initialMetrics,
+    //     specializationAreas,
+    //     recentActivity: []
+    //   };
       
-      return expert;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error creating expert profile', {
-        userId: expertData.userId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   await setDoc(doc(db as Firestore, 'experts', expertId), expert);
+      
+    //   // Also set the user role to expert
+    //   await updateDoc(doc(db as Firestore, 'users', expertData.userId), {
+    //     isExpert: true,
+    //     expertId: expertId,
+    //     updatedAt: serverTimestamp()
+    //   });
+      
+    //   return expert;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error creating expert profile', {
+    //     userId: expertData.userId,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve(mockExpert);
   },
   
   /**
@@ -141,32 +185,39 @@ export const expertPerformanceService = {
    * @returns Updated activity with ID
    */
   async recordActivity(activity: Omit<ExpertActivity, 'id'>): Promise<ExpertActivity> {
-    try {
-      const activityId = `activity-${uuidv4()}`;
-      const activityWithId: ExpertActivity = {
-        ...activity,
-        id: activityId
-      };
+    console.warn(`recordActivity for expert ${activity.expertId}: ${SERVICE_DISABLED_MSG}`);
+    const activityId = `mock-activity-${uuidv4()}`;
+    const mockActivityWithId: ExpertActivity = {
+      ...activity,
+      id: activityId
+    };
+    // try {
+    //   const activityId = `activity-${uuidv4()}`;
+    //   const activityWithId: ExpertActivity = {
+    //     ...activity,
+    //     id: activityId
+    //   };
       
-      // Add to activities collection
-      await addDoc(collection(db as Firestore, 'expertActivities'), activityWithId);
+    //   // Add to activities collection
+    //   await addDoc(collection(db as Firestore, 'expertActivities'), activityWithId);
       
-      // Update expert's recent activity list
-      await updateDoc(doc(db as Firestore, 'experts', activity.expertId), {
-        recentActivity: arrayUnion(activityWithId),
-        'metrics.lastActivity': activity.timestamp
-      });
+    //   // Update expert's recent activity list
+    //   await updateDoc(doc(db as Firestore, 'experts', activity.expertId), {
+    //     recentActivity: arrayUnion(activityWithId),
+    //     'metrics.lastActivity': activity.timestamp
+    //   });
       
-      return activityWithId;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error recording expert activity', {
-        expertId: activity.expertId,
-        type: activity.type,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   return activityWithId;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error recording expert activity', {
+    //     expertId: activity.expertId,
+    //     type: activity.type,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve(mockActivityWithId);
   },
   
   /**
@@ -175,406 +226,348 @@ export const expertPerformanceService = {
    * @returns Updated expert performance metrics
    */
   async recordAdjustmentVerification(verification: AdjustmentVerification): Promise<ExpertPerformanceMetrics> {
-    try {
-      const { expertId, adjustmentId, isAccurate, improvementPercent, category } = verification;
+    console.warn(`recordAdjustmentVerification for expert ${verification.expertId}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const { expertId, adjustmentId, isAccurate, improvementPercent, category } = verification;
       
-      // Add to verifications collection
-      await addDoc(collection(db as Firestore, 'adjustmentVerifications'), {
-        ...verification,
-        createdAt: serverTimestamp()
-      });
+    //   // Add to verifications collection
+    //   await addDoc(collection(db as Firestore, 'adjustmentVerifications'), {
+    //     ...verification,
+    //     createdAt: serverTimestamp()
+    //   });
       
-      // Get the expert document
-      const expertRef = doc(db as Firestore, 'experts', expertId);
-      const expertDoc = await getDoc(expertRef);
+    //   // Get the expert document
+    //   const expertRef = doc(db as Firestore, 'experts', expertId);
+    //   const expertDoc = await getDoc(expertRef);
       
-      if (!expertDoc.exists()) {
-        throw new Error(`Expert with ID ${expertId} not found`);
-      }
+    //   if (!expertDoc.exists()) {
+    //     throw new Error(`Expert with ID ${expertId} not found`);
+    //   }
       
-      const expert = expertDoc.data() as Expert;
-      const metrics = expert.metrics;
+    //   const expert = expertDoc.data() as Expert;
+    //   const metrics = expert.metrics;
       
-      // Update total and successful adjustments
-      metrics.totalAdjustments += 1;
-      if (isAccurate) {
-        metrics.successfulAdjustments += 1;
-      }
+    //   // Update total and successful adjustments
+    //   metrics.totalAdjustments += 1;
+    //   if (isAccurate) {
+    //     metrics.successfulAdjustments += 1;
+    //   }
       
-      // Calculate new reliability score (percentage of successful adjustments)
-      metrics.reliabilityScore = (metrics.successfulAdjustments / metrics.totalAdjustments) * 100;
+    //   // Calculate new reliability score (percentage of successful adjustments)
+    //   metrics.reliabilityScore = (metrics.successfulAdjustments / metrics.totalAdjustments) * 100;
       
-      // Update average impact score
-      const newTotalImpact = (metrics.averageImpactScore * (metrics.totalAdjustments - 1)) + improvementPercent;
-      metrics.averageImpactScore = newTotalImpact / metrics.totalAdjustments;
+    //   // Update average impact score
+    //   const newTotalImpact = (metrics.averageImpactScore * (metrics.totalAdjustments - 1)) + improvementPercent;
+    //   metrics.averageImpactScore = newTotalImpact / metrics.totalAdjustments;
       
-      // Update category performance
-      if (category) {
-        if (!metrics.categoryPerformance[category]) {
-          metrics.categoryPerformance[category] = {
-            totalAdjustments: 0,
-            successfulAdjustments: 0,
-            reliabilityScore: 0,
-            averageImpactScore: 0,
-            lastUpdated: new Date().toISOString()
-          };
-        }
+    //   // Update category performance
+    //   if (category) {
+    //     if (!metrics.categoryPerformance[category]) {
+    //       metrics.categoryPerformance[category] = {
+    //         totalAdjustments: 0,
+    //         successfulAdjustments: 0,
+    //         reliabilityScore: 0,
+    //         averageImpactScore: 0,
+    //         lastUpdated: new Date().toISOString()
+    //       };
+    //     }
         
-        const categoryPerf = metrics.categoryPerformance[category];
-        categoryPerf.totalAdjustments += 1;
-        if (isAccurate) {
-          categoryPerf.successfulAdjustments += 1;
-        }
+    //     const categoryPerf = metrics.categoryPerformance[category];
+    //     categoryPerf.totalAdjustments += 1;
+    //     if (isAccurate) {
+    //       categoryPerf.successfulAdjustments += 1;
+    //     }
         
-        categoryPerf.reliabilityScore = (categoryPerf.successfulAdjustments / categoryPerf.totalAdjustments) * 100;
+    //     categoryPerf.reliabilityScore = (categoryPerf.successfulAdjustments / categoryPerf.totalAdjustments) * 100;
         
-        const newCategoryTotalImpact = (categoryPerf.averageImpactScore * (categoryPerf.totalAdjustments - 1)) + improvementPercent;
-        categoryPerf.averageImpactScore = newCategoryTotalImpact / categoryPerf.totalAdjustments;
-        categoryPerf.lastUpdated = new Date().toISOString();
-      }
+    //     const newCategoryTotalImpact = (categoryPerf.averageImpactScore * (categoryPerf.totalAdjustments - 1)) + improvementPercent;
+    //     categoryPerf.averageImpactScore = newCategoryTotalImpact / categoryPerf.totalAdjustments;
+    //     categoryPerf.lastUpdated = new Date().toISOString();
+    //   }
       
-      // Update reliabilityTrend
-      const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-      if (!metrics.reliabilityTrend) {
-        metrics.reliabilityTrend = {};
-      }
-      metrics.reliabilityTrend[today] = metrics.reliabilityScore;
+    //   // Update reliabilityTrend
+    //   const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    //   if (!metrics.reliabilityTrend) {
+    //     metrics.reliabilityTrend = {};
+    //   }
+    //   metrics.reliabilityTrend[today] = metrics.reliabilityScore;
       
-      // Update timestamp
-      metrics.updatedAt = new Date().toISOString();
+    //   // Update timestamp
+    //   metrics.updatedAt = new Date().toISOString();
       
-      // Update expert document
-      await updateDoc(expertRef, {
-        metrics: metrics
-      });
+    //   // Update expert document
+    //   await updateDoc(expertRef, {
+    //     metrics: metrics
+    //   });
       
-      // Update specialization areas if category matches any
-      const matchingSpecIndex = expert.specializationAreas.findIndex(spec => 
-        spec.name === category || spec.tags.includes(category)
-      );
-      
-      if (matchingSpecIndex >= 0) {
-        const specializationAreas = [...expert.specializationAreas];
-        specializationAreas[matchingSpecIndex].adjustmentCount += 1;
-        specializationAreas[matchingSpecIndex].reliabilityScore = 
-          metrics.categoryPerformance[category].reliabilityScore;
-        specializationAreas[matchingSpecIndex].updatedAt = new Date().toISOString();
-        
-        await updateDoc(expertRef, {
-          specializationAreas: specializationAreas
-        });
-      }
-      
-      // Record the verification activity
-      await this.recordActivity({
-        expertId,
-        type: 'verification',
-        description: `Adjustment verification: ${isAccurate ? 'accurate' : 'inaccurate'} (${Math.round(improvementPercent)}% improvement)`,
-        timestamp: new Date().toISOString(),
-        category,
-        impactScore: improvementPercent,
-        metadata: {
-          verificationId: verification.id,
-          adjustmentId: verification.adjustmentId,
-          templateId: verification.templateId,
-          isAccurate
-        }
-      });
-      
-      return metrics;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error recording adjustment verification', {
-        expertId: verification.expertId,
-        adjustmentId: verification.adjustmentId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   return metrics;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error recording adjustment verification', {
+    //     expertId: verification.expertId,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve({ ...MOCK_INITIAL_METRICS });
   },
   
   /**
-   * Add a new specialization area for an expert
+   * Add a new specialization area to an expert profile
    * @param expertId Expert ID
    * @param specialization Specialization data
-   * @returns Updated list of specialization areas
+   * @returns Updated list of expert specialization areas
    */
   async addSpecializationArea(
     expertId: string,
     specialization: Omit<ExpertSpecializationArea, 'id' | 'createdAt' | 'updatedAt' | 'reliabilityScore' | 'adjustmentCount'>
   ): Promise<ExpertSpecializationArea[]> {
-    try {
-      const timestamp = new Date().toISOString();
+    console.warn(`addSpecializationArea for expert ${expertId}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const expertRef = doc(db as Firestore, 'experts', expertId);
+    //   const expertDoc = await getDoc(expertRef);
+
+    //   if (!expertDoc.exists()) {
+    //     throw new Error(`Expert with ID ${expertId} not found`);
+    //   }
+
+    //   const expert = expertDoc.data() as Expert;
+    //   const newSpecialization: ExpertSpecializationArea = {
+    //     id: `spec-${uuidv4()}`,
+    //     ...specialization,
+    //     createdAt: new Date().toISOString(),
+    //     updatedAt: new Date().toISOString(),
+    //     reliabilityScore: 0, // Initial score
+    //     adjustmentCount: 0   // Initial count
+    //   };
+
+    //   const updatedSpecializationAreas = [...(expert.specializationAreas || []), newSpecialization];
       
-      const newSpecialization: ExpertSpecializationArea = {
-        ...specialization,
-        id: `spec-${uuidv4()}`,
-        reliabilityScore: 0,
-        adjustmentCount: 0,
-        createdAt: timestamp,
-        updatedAt: timestamp
-      };
-      
-      const expertRef = doc(db as Firestore, 'experts', expertId);
-      const expertDoc = await getDoc(expertRef);
-      
-      if (!expertDoc.exists()) {
-        throw new Error(`Expert with ID ${expertId} not found`);
-      }
-      
-      const expert = expertDoc.data() as Expert;
-      
-      // Add to specialization areas
-      const specializationAreas = [...expert.specializationAreas, newSpecialization];
-      
-      // Update specializations list
-      const specializations = [...expert.specializations];
-      if (!specializations.includes(newSpecialization.name)) {
-        specializations.push(newSpecialization.name);
-      }
-      
-      await updateDoc(expertRef, {
-        specializationAreas,
-        specializations
-      });
-      
-      return specializationAreas;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error adding specialization area', {
-        expertId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   await updateDoc(expertRef, {
+    //     specializationAreas: updatedSpecializationAreas,
+    //     specializations: arrayUnion(specialization.name) // Also update the simple list of specializations
+    //   });
+
+    //   return updatedSpecializationAreas;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error adding specialization area', {
+    //     expertId,
+    //     specializationName: specialization.name,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve([]);
   },
   
   /**
-   * Calculate reliability score for an expert based on their adjustment history
+   * Calculate or retrieve the overall reliability score for an expert
    * @param expertId Expert ID
-   * @returns Updated reliability score
+   * @returns Expert's reliability score (0-100)
    */
   async calculateReliabilityScore(expertId: string): Promise<number> {
-    try {
-      // Get all verified adjustments for this expert
-      const verificationsQuery = query(
-        collection(db as Firestore, 'adjustmentVerifications'),
-        where('expertId', '==', expertId),
-        orderBy('verifiedAt', 'desc')
-      );
-      
-      const verificationsSnapshot = await getDocs(verificationsQuery);
-      const verifications = verificationsSnapshot.docs.map(doc => doc.data() as AdjustmentVerification);
-      
-      if (verifications.length === 0) {
-        return 0; // No verifications yet
-      }
-      
-      // Count accurate adjustments
-      const accurateCount = verifications.filter(v => v.isAccurate).length;
-      
-      // Calculate reliability score (percentage of accurate adjustments)
-      const reliabilityScore = (accurateCount / verifications.length) * 100;
-      
-      // Update expert document
-      await updateDoc(doc(db as Firestore, 'experts', expertId), {
-        'metrics.reliabilityScore': reliabilityScore,
-        'metrics.totalAdjustments': verifications.length,
-        'metrics.successfulAdjustments': accurateCount,
-        'metrics.updatedAt': new Date().toISOString()
-      });
-      
-      return reliabilityScore;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error calculating reliability score', {
-        expertId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    console.warn(`calculateReliabilityScore for expert ${expertId}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const expert = await this.getExpertProfile(expertId); // Already neutralized, will return null
+    //   if (!expert || !expert.metrics) {
+    //     return 0;
+    //   }
+    //   return expert.metrics.reliabilityScore || 0;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error calculating reliability score', {
+    //     expertId,
+    //     error: errorMsg
+    //   });
+    //   // In case of error, return 0 to avoid breaking flows, but log it.
+    //   return 0; 
+    // }
+    return Promise.resolve(0);
   },
   
   /**
-   * Detect and update expert specialization areas based on successful adjustments
+   * Update an expert's specialization areas based on their performance
+   * This would typically run periodically or after significant activity
    * @param expertId Expert ID
-   * @returns Updated specialization areas
+   * @returns Updated list of specialization areas
    */
   async updateSpecializationAreas(expertId: string): Promise<ExpertSpecializationArea[]> {
-    try {
-      // Get the expert document
-      const expertRef = doc(db as Firestore, 'experts', expertId);
-      const expertDoc = await getDoc(expertRef);
+    console.warn(`updateSpecializationAreas for expert ${expertId}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const expertRef = doc(db as Firestore, 'experts', expertId);
+    //   const expertDoc = await getDoc(expertRef);
+
+    //   if (!expertDoc.exists()) {
+    //     throw new Error(`Expert with ID ${expertId} not found`);
+    //   }
+    //   const expert = expertDoc.data() as Expert;
       
-      if (!expertDoc.exists()) {
-        throw new Error(`Expert with ID ${expertId} not found`);
-      }
+    //   // Fetch all verified adjustments for this expert
+    //   const verificationsQuery = query(
+    //     collection(db as Firestore, 'adjustmentVerifications'),
+    //     where('expertId', '==', expertId),
+    //     where('isAccurate', '==', true) // Consider only successful adjustments
+    //   );
+    //   const verificationsSnapshot = await getDocs(verificationsQuery);
+    //   const verifications = verificationsSnapshot.docs.map(d => d.data() as AdjustmentVerification);
+
+    //   if (!expert.specializationAreas) {
+    //     expert.specializationAreas = [];
+    //   }
+
+    //   // Group verifications by category/tag relevant to specializations
+    //   const performanceByCategory: { 
+    //     [category: string]: { total: number; successful: number; impactSum: number }
+    //   } = {};
+
+    //   for (const verification of verifications) {
+    //     const category = verification.category || 'general'; // Fallback to a general category
+    //     if (!performanceByCategory[category]) {
+    //       performanceByCategory[category] = { total: 0, successful: 0, impactSum: 0 };
+    //     }
+    //     performanceByCategory[category].total++;
+    //     if (verification.isAccurate) {
+    //       performanceByCategory[category].successful++;
+    //       performanceByCategory[category].impactSum += verification.improvementPercent || 0;
+    //     }
+    //   }
       
-      const expert = expertDoc.data() as Expert;
-      
-      // Get all verified adjustments for this expert
-      const verificationsQuery = query(
-        collection(db as Firestore, 'adjustmentVerifications'),
-        where('expertId', '==', expertId),
-        where('isAccurate', '==', true)
-      );
-      
-      const verificationsSnapshot = await getDocs(verificationsQuery);
-      const verifications = verificationsSnapshot.docs.map(doc => doc.data() as AdjustmentVerification);
-      
-      if (verifications.length === 0) {
-        return expert.specializationAreas; // No successful adjustments yet
-      }
-      
-      // Count adjustments by category
-      const categoryAdjustments: Record<string, {count: number, totalImpact: number}> = {};
-      
-      verifications.forEach(verification => {
-        const category = verification.category || 'other';
-        if (!categoryAdjustments[category]) {
-          categoryAdjustments[category] = { count: 0, totalImpact: 0 };
-        }
-        categoryAdjustments[category].count += 1;
-        categoryAdjustments[category].totalImpact += verification.improvementPercent;
-      });
-      
-      // Update existing specialization areas
-      const specializationAreas = [...expert.specializationAreas];
-      
-      Object.entries(categoryAdjustments).forEach(([category, data]) => {
-        const existingSpecIndex = specializationAreas.findIndex(spec => 
-          spec.name === category || spec.tags.includes(category)
-        );
-        
-        const avgImpact = data.totalImpact / data.count;
-        const reliabilityScore = (data.count / verifications.length) * 100;
-        
-        if (existingSpecIndex >= 0) {
-          // Update existing specialization
-          specializationAreas[existingSpecIndex].adjustmentCount = data.count;
-          specializationAreas[existingSpecIndex].reliabilityScore = reliabilityScore;
-          specializationAreas[existingSpecIndex].updatedAt = new Date().toISOString();
-        } else if (data.count >= 3) {
-          // Create new specialization if there are at least 3 successful adjustments
-          specializationAreas.push({
-            id: `spec-${uuidv4()}`,
-            name: category,
-            description: `Auto-detected specialization in ${category}`,
-            reliabilityScore: reliabilityScore,
-            adjustmentCount: data.count,
-            tags: [category],
-            confidenceLevel: 0.7,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          });
-          
-          // Also add to specializations list
-          if (!expert.specializations.includes(category)) {
-            expert.specializations.push(category);
-          }
-        }
-      });
-      
-      // Update expert document
-      await updateDoc(expertRef, {
-        specializationAreas,
-        specializations: expert.specializations
-      });
-      
-      return specializationAreas;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error updating specialization areas', {
-        expertId,
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   // Update existing specialization areas or add new ones
+    //   const updatedAreas = expert.specializationAreas.map(area => {
+    //     const categoryPerformance = performanceByCategory[area.name] || performanceByCategory[area.tags?.[0] || 'general'];
+    //     if (categoryPerformance) {
+    //       return {
+    //         ...area,
+    //         adjustmentCount: categoryPerformance.total,
+    //         reliabilityScore: categoryPerformance.total > 0 ? (categoryPerformance.successful / categoryPerformance.total) * 100 : 0,
+    //         // confidenceLevel could be updated based on reliability and number of adjustments
+    //         updatedAt: new Date().toISOString()
+    //       };
+    //     }
+    //     return area;
+    //   });
+
+    //   // Add new specializations if significant performance in a new category is detected
+    //   // This is a simplified logic; real system would need thresholds and more complex discovery
+    //   for (const categoryKey in performanceByCategory) {
+    //     if (!updatedAreas.some(area => area.name === categoryKey || area.tags?.includes(categoryKey))) {
+    //       const catData = performanceByCategory[categoryKey];
+    //       if (catData.total > 5) { // Example threshold: 5 adjustments in a new category
+    //         updatedAreas.push({
+    //           id: `spec-${uuidv4()}`,
+    //           name: categoryKey,
+    //           tags: [categoryKey],
+    //           adjustmentCount: catData.total,
+    //           reliabilityScore: (catData.successful / catData.total) * 100,
+    //           confidenceLevel: 0.6, // Initial confidence for a newly identified specialization
+    //           createdAt: new Date().toISOString(),
+    //           updatedAt: new Date().toISOString()
+    //         });
+    //       }
+    //     }
+    //   }
+
+    //   await updateDoc(expertRef, {
+    //     specializationAreas: updatedAreas,
+    //     // Update the main specializations list if new areas are formally added
+    //     specializations: Array.from(new Set(updatedAreas.map(a => a.name)))
+    //   });
+
+    //   return updatedAreas;
+
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error updating specialization areas', {
+    //     expertId,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve([]);
   },
   
   /**
-   * Get top performing experts by reliability score
-   * @param limit Maximum number of experts to return
-   * @returns List of top experts with their performance metrics
+   * Get top performing experts
+   * @param maxResults Max number of experts to return
+   * @returns List of top experts
    */
   async getTopExperts(maxResults: number = 10): Promise<Expert[]> {
-    try {
-      const expertsQuery = query(
-        collection(db as Firestore, 'experts'),
-        where('isActive', '==', true),
-        where('metrics.totalAdjustments', '>', 0),
-        orderBy('metrics.reliabilityScore', 'desc'),
-        limit(maxResults)
-      );
+    console.warn(`getTopExperts: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   const q = query(
+    //     collection(db as Firestore, 'experts'),
+    //     where('isActive', '==', true),
+    //     orderBy('metrics.reliabilityScore', 'desc'),
+    //     orderBy('metrics.totalAdjustments', 'desc'),
+    //     limit(maxResults)
+    //   );
       
-      const expertsSnapshot = await getDocs(expertsQuery);
-      return expertsSnapshot.docs.map(doc => doc.data() as Expert);
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error getting top experts', {
-        error: errorMsg
-      });
-      throw error;
-    }
+    //   const snapshot = await getDocs(q);
+    //   return snapshot.docs.map(doc => doc.data() as Expert);
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error fetching top experts', {
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve([]);
   },
   
   /**
-   * Get experts specialized in a specific category
-   * @param category Category to match against
-   * @param minReliability Minimum reliability score (0-100)
-   * @returns List of matching experts
+   * Get experts by specialization category
+   * @param category Specialization category
+   * @param minReliability Minimum reliability score to filter by
+   * @returns List of experts matching the criteria
    */
   async getExpertsBySpecialization(
     category: string, 
     minReliability: number = 0
   ): Promise<Expert[]> {
-    try {
-      const expertsQuery = query(
-        collection(db as Firestore, 'experts'),
-        where('specializations', 'array-contains', category),
-        where('isActive', '==', true)
-      );
+    console.warn(`getExpertsBySpecialization for category ${category}: ${SERVICE_DISABLED_MSG}`);
+    // try {
+    //   let q = query(
+    //     collection(db as Firestore, 'experts'),
+    //     where('isActive', '==', true),
+    //     where('specializations', 'array-contains', category)
+    //     // Cannot directly order by a nested field like categoryPerformance[category].reliabilityScore in Firestore
+    //     // So, we fetch and sort client-side, or use a more complex data model / Cloud Function for this.
+    //   );
       
-      const expertsSnapshot = await getDocs(expertsQuery);
-      let experts = expertsSnapshot.docs.map(doc => doc.data() as Expert);
+    //   const snapshot = await getDocs(q);
+    //   let experts = snapshot.docs.map(doc => doc.data() as Expert);
+
+    //   // Client-side filtering for reliability within a specific category if needed
+    //   // This requires the categoryPerformance structure to be reliable and up-to-date.
+    //   if (minReliability > 0) {
+    //     experts = experts.filter(expert => 
+    //       expert.metrics.categoryPerformance && 
+    //       expert.metrics.categoryPerformance[category] &&
+    //       expert.metrics.categoryPerformance[category].reliabilityScore >= minReliability
+    //     );
+    //   }
       
-      // Filter by reliability score if needed
-      if (minReliability > 0) {
-        experts = experts.filter(expert => {
-          // Check if they have a specialization area for this category
-          const specialization = expert.specializationAreas.find(spec => 
-            spec.name === category || spec.tags.includes(category)
-          );
-          
-          if (specialization) {
-            return specialization.reliabilityScore >= minReliability;
-          }
-          
-          // Fall back to overall reliability score
-          return expert.metrics.reliabilityScore >= minReliability;
-        });
-      }
-      
-      // Sort by reliability score (higher first)
-      experts.sort((a, b) => {
-        const getReliability = (expert: Expert) => {
-          const specialization = expert.specializationAreas.find(spec => 
-            spec.name === category || spec.tags.includes(category)
-          );
-          return specialization ? specialization.reliabilityScore : expert.metrics.reliabilityScore;
-        };
-        
-        return getReliability(b) - getReliability(a);
-      });
-      
-      return experts;
-    } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      logETLEvent(ETLLogLevel.ERROR, 'Error getting experts by specialization', {
-        category,
-        error: errorMsg
-      });
-      throw error;
-    }
-  }
+    //   // Client-side sorting by category-specific reliability
+    //   experts.sort((a, b) => {
+    //     const aRel = a.metrics.categoryPerformance?.[category]?.reliabilityScore || 0;
+    //     const bRel = b.metrics.categoryPerformance?.[category]?.reliabilityScore || 0;
+    //     return bRel - aRel; // Descending
+    //   });
+
+    //   return experts;
+    // } catch (error) {
+    //   const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+    //   logETLEvent(ETLLogLevel.ERROR, 'Error fetching experts by specialization', {
+    //     category,
+    //     error: errorMsg
+    //   });
+    //   throw error;
+    // }
+    return Promise.resolve([]);
+  },
+
+  // TODO: Add functions for updating expert profile details, managing expertise levels, etc.
+  // Example: logAdjustmentImpact was mentioned in trendPredictionService, this might be a candidate for neutralization if it was separate.
+  // For now, assuming it was part of recordActivity or recordAdjustmentVerification implicitly.
 }; 

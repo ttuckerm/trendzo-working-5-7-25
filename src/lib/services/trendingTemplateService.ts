@@ -1,86 +1,95 @@
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
-  setDoc, 
-  updateDoc, 
-  query, 
-  where, 
-  orderBy, 
-  limit,
-  Timestamp,
-  serverTimestamp,
-  increment
-} from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
-import { TrendingTemplate, TikTokVideo, TemplateSection, TemplateAnalysis } from '@/lib/types/trendingTemplate';
+// import { 
+//   collection, 
+//   doc, 
+//   getDoc, 
+//   getDocs, 
+//   setDoc, 
+//   updateDoc, 
+//   query, 
+//   where, 
+//   orderBy, 
+//   limit,
+//   Timestamp,
+//   serverTimestamp,
+//   increment
+// } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
+import { TrendingTemplate, TikTokVideo, TemplateSection, TemplateAnalysis, ExpertInsightTag, ManualAdjustmentLog } from '@/lib/types/trendingTemplate';
 import { v4 as uuidv4 } from 'uuid';
 
+const SERVICE_DISABLED_MSG = "trendingTemplateService: Firebase backend has been removed. Method called but will not perform DB operations. Returning mock/empty data. TODO: Implement with Supabase.";
+
+// Mock factory for TrendingTemplate
+const createMockTrendingTemplate = (id: string, overrides: Partial<TrendingTemplate> = {}): TrendingTemplate => ({
+  id,
+  title: `Mock Template ${id.substring(0,8)} (Firebase Disabled)`,
+  description: "This is a mock template because Firebase is disabled.",
+  thumbnailUrl: "https://via.placeholder.com/150?text=Mock+Template",
+  category: "Mock Category",
+  tags: ["mock", "disabled"],
+  authorName: "Mock Author",
+  stats: {
+    views: 0,
+    likes: 0,
+    usageCount: 0,
+    commentCount: 0,
+    shareCount: 0,
+  },
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  isPremium: false,
+  isVerified: false,
+  trendData: {
+    dailyViews: {},
+    growthRate: 0,
+    velocityScore: 0,
+  },
+  expertInsights: {
+    tags: [],
+    notes: "Expert insights disabled.",
+    recommendedUses: [],
+    performanceRating: 0,
+    audienceRecommendation: [],
+  },
+  manualAdjustments: [],
+  isActive: false, // Default to inactive for mocks from disabled service
+  sourceVideoId: `mock-video-${id}`,
+  authorInfo: {
+    id: "mock-author-id",
+    username: "mockusername",
+    isVerified: false,
+  },
+  metadata: {
+    duration: 0,
+    hashtags: [],
+  },
+  templateStructure: [],
+  ...overrides,
+});
+
 // Collection name for trending templates
-const COLLECTION_NAME = 'trendingTemplates';
+// const COLLECTION_NAME = 'trendingTemplates'; // No longer used
 
 // Service for managing trending templates
 export const trendingTemplateService = {
   // Get all trending templates
   async getAllTrendingTemplates(limitCount = 50): Promise<TrendingTemplate[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        orderBy('stats.engagementRate', 'desc'),
-        limit(limitCount)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data() as TrendingTemplate,
-        id: doc.id
-      }));
-    } catch (error) {
-      console.error('Error fetching trending templates:', error);
-      throw error;
-    }
+    console.warn(`getAllTrendingTemplates(${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
   },
   
   // Get trending templates by category
   async getTrendingTemplatesByCategory(category: string, limitCount = 20): Promise<TrendingTemplate[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('category', '==', category),
-        orderBy('stats.engagementRate', 'desc'),
-        limit(limitCount)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data() as TrendingTemplate,
-        id: doc.id
-      }));
-    } catch (error) {
-      console.error(`Error fetching trending templates for category ${category}:`, error);
-      throw error;
-    }
+    console.warn(`getTrendingTemplatesByCategory(${category}, ${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
   },
   
   // Get a single trending template by ID
   async getTrendingTemplateById(id: string): Promise<TrendingTemplate | null> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const docSnap = await getDoc(docRef);
-      
-      if (!docSnap.exists()) {
-        return null;
-      }
-      
-      return {
-        ...docSnap.data() as TrendingTemplate,
-        id: docSnap.id
-      };
-    } catch (error) {
-      console.error(`Error fetching trending template with ID ${id}:`, error);
-      throw error;
-    }
+    console.warn(`getTrendingTemplateById(${id}): ${SERVICE_DISABLED_MSG}`);
+    // Optionally, return a specific mock if needed for testing flows, otherwise null
+    // return Promise.resolve(createMockTrendingTemplate(id)); 
+    return Promise.resolve(null);
   },
   
   // Create trending template from TikTok video with analyzed template sections
@@ -89,307 +98,124 @@ export const trendingTemplateService = {
     templateSections: TemplateSection[],
     category: string
   ): Promise<TrendingTemplate> {
-    try {
-      // Generate a unique ID for the template
-      const templateId = uuidv4();
-      
-      // Calculate engagement rate
-      const totalViews = video.stats.playCount || 1;
-      const engagementRate = (
-        (video.stats.diggCount + video.stats.commentCount + video.stats.shareCount) / 
-        totalViews
-      ) * 100;
-      
-      // Create the trending template object
-      const template: TrendingTemplate = {
-        id: templateId,
-        sourceVideoId: video.id,
-        category,
-        title: video.text.substring(0, 100) || `Template ${templateId.substring(0, 8)}`,
-        description: video.text,
-        thumbnailUrl: '', // Would need to be generated
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        authorInfo: {
-          id: video.authorMeta.id,
-          username: video.authorMeta.nickname,
-          isVerified: video.authorMeta.verified
-        },
-        stats: {
-          views: video.stats.playCount,
-          likes: video.stats.diggCount,
-          comments: video.stats.commentCount,
-          shares: video.stats.shareCount,
-          engagementRate
-        },
-        metadata: {
-          duration: video.videoMeta.duration,
-          hashtags: video.hashtags
-        },
-        templateStructure: templateSections,
-        trendData: {
-          dailyViews: { 
-            [new Date().toISOString().split('T')[0]]: video.stats.playCount 
-          },
-          growthRate: 0,
-        },
-        isActive: true
-      };
-      
-      // Save to Firestore
-      await setDoc(doc(db, COLLECTION_NAME, templateId), template);
-      
-      return template;
-    } catch (error) {
-      console.error('Error creating trending template:', error);
-      throw error;
-    }
+    const mockId = uuidv4();
+    console.warn(`createTrendingTemplate for video ${video.id}: ${SERVICE_DISABLED_MSG} Returning mock template ${mockId}.`);
+    const engagementRate = video.stats.playCount > 0 ? 
+      ((video.stats.diggCount + video.stats.commentCount + video.stats.shareCount) / video.stats.playCount) * 100 
+      : 0;
+    return Promise.resolve(createMockTrendingTemplate(mockId, {
+      sourceVideoId: video.id,
+      category,
+      title: video.text.substring(0, 100) || `Mock Template ${mockId.substring(0, 8)}`,
+      description: video.text,
+      authorInfo: {
+        id: video.authorMeta.id,
+        username: video.authorMeta.nickname,
+        isVerified: video.authorMeta.verified
+      },
+      stats: {
+        views: video.stats.playCount,
+        likes: video.stats.diggCount,
+        comments: video.stats.commentCount,
+        shares: video.stats.shareCount,
+        usageCount: 0, // Not directly from TikTokVideo
+        // engagementRate - this is not part of TrendingTemplate.stats directly, but part of a sub-object in some legacy definitions. The main mock provides a default.
+      },
+      metadata: {
+        duration: video.videoMeta.duration,
+        hashtags: video.hashtags
+      },
+      templateStructure: templateSections,
+      isActive: true, // New creations might be active by default
+    }));
   },
   
   // Update trending template
   async updateTrendingTemplate(id: string, data: Partial<TrendingTemplate>): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      
-      // Add updated timestamp
-      const updateData = {
-        ...data,
-        updatedAt: new Date().toISOString()
-      };
-      
-      await updateDoc(docRef, updateData);
-    } catch (error) {
-      console.error(`Error updating trending template ${id}:`, error);
-      throw error;
-    }
+    console.warn(`updateTrendingTemplate(${id}): ${SERVICE_DISABLED_MSG} Data:`, data);
+    return Promise.resolve();
   },
   
   // Update template stats with new data from TikTok
   async updateTemplateStats(id: string, videoStats: TikTokVideo['stats']): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      const templateDoc = await getDoc(docRef);
-      
-      if (!templateDoc.exists()) {
-        throw new Error(`Template with ID ${id} not found`);
-      }
-      
-      const template = templateDoc.data() as TrendingTemplate;
-      const today = new Date().toISOString().split('T')[0];
-      
-      // Calculate engagement rate
-      const totalViews = videoStats.playCount || 1;
-      const engagementRate = (
-        (videoStats.diggCount + videoStats.commentCount + videoStats.shareCount) / 
-        totalViews
-      ) * 100;
-      
-      // Update daily views
-      const dailyViews = {
-        ...template.trendData.dailyViews,
-        [today]: videoStats.playCount
-      };
-      
-      // Calculate growth rate (last 7 days)
-      const dates = Object.keys(dailyViews).sort();
-      const lastWeekDates = dates.slice(-7);
-      
-      let growthRate = 0;
-      if (lastWeekDates.length > 1) {
-        const firstValue = dailyViews[lastWeekDates[0]] || 0;
-        const lastValue = dailyViews[lastWeekDates[lastWeekDates.length - 1]] || 0;
-        
-        if (firstValue > 0) {
-          growthRate = ((lastValue - firstValue) / firstValue) * 100;
-        }
-      }
-      
-      // Update the document
-      await updateDoc(docRef, {
-        'stats.views': videoStats.playCount,
-        'stats.likes': videoStats.diggCount,
-        'stats.comments': videoStats.commentCount,
-        'stats.shares': videoStats.shareCount,
-        'stats.engagementRate': engagementRate,
-        'trendData.dailyViews': dailyViews,
-        'trendData.growthRate': growthRate,
-        updatedAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error(`Error updating stats for template ${id}:`, error);
-      throw error;
-    }
+    console.warn(`updateTemplateStats(${id}): ${SERVICE_DISABLED_MSG} Video Stats:`, videoStats);
+    return Promise.resolve();
   },
   
   // Mark template as inactive
   async deactivateTemplate(id: string): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, id);
-      await updateDoc(docRef, {
-        isActive: false,
-        updatedAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error(`Error deactivating template ${id}:`, error);
-      throw error;
-    }
+    console.warn(`deactivateTemplate(${id}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
   },
   
   // Get trending templates with high growth rate
   async getFastGrowingTemplates(limitCount = 10): Promise<TrendingTemplate[]> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('isActive', '==', true),
-        orderBy('trendData.growthRate', 'desc'),
-        limit(limitCount)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({
-        ...doc.data() as TrendingTemplate,
-        id: doc.id
-      }));
-    } catch (error) {
-      console.error('Error fetching fast growing templates:', error);
-      throw error;
-    }
+    console.warn(`getFastGrowingTemplates(${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
   },
   
-  /**
-   * Create a trending template with analysis and support for expert input
-   * @param video The source TikTok video
-   * @param analysis The analysis results
-   * @param options Additional options for template creation
-   * @returns The created trending template
-   */
+  // Search trending templates
+  async searchTrendingTemplates(queryText: string, limitCount = 10): Promise<TrendingTemplate[]> {
+    console.warn(`searchTrendingTemplates("${queryText}", ${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
+  },
+
+  // Increment template usage count
+  async incrementTemplateUsage(templateId: string, userId?: string): Promise<void> {
+    console.warn(`incrementTemplateUsage(${templateId}, user: ${userId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
+  },
+
+  // Add template analysis data
+  async addTemplateAnalysis(templateId: string, analysis: TemplateAnalysis): Promise<void> {
+    console.warn(`addTemplateAnalysis(${templateId}): ${SERVICE_DISABLED_MSG} Analysis:`, analysis);
+    return Promise.resolve();
+  },
+
+  // Create a template with analysis data (combines creation and analysis storage)
   async createTemplateWithAnalysis(
     video: TikTokVideo,
-    analysis: any,
+    analysis: any, // Using any as the original type was complex and might vary
     options: {
       createdBy?: string;
       allowExpertInput?: boolean;
     } = {}
   ): Promise<TrendingTemplate> {
-    try {
-      // Generate a unique ID for the template
-      const templateId = uuidv4();
-      
-      // Default creator ID
-      const createdBy = options.createdBy || 'system';
-      
-      // Calculate engagement rate
-      const totalViews = video.stats.playCount || 1;
-      const engagementRate = (
-        (video.stats.diggCount + video.stats.commentCount + video.stats.shareCount) / 
-        totalViews
-      ) * 100;
-      
-      // Extract template sections from analysis
-      const templateSections: TemplateSection[] = analysis.templateStructure?.sections || [];
-      
-      // Create the trending template object with enhanced structure
-      const template: TrendingTemplate = {
-        id: templateId,
-        sourceVideoId: video.id,
-        category: analysis.templateCategory || 'uncategorized',
-        title: video.text.substring(0, 100) || `Template ${templateId.substring(0, 8)}`,
-        description: video.text,
-        thumbnailUrl: '', // Would need to be generated
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        authorInfo: {
-          id: video.authorMeta.id,
-          username: video.authorMeta.nickname,
-          isVerified: video.authorMeta.verified
-        },
-        stats: {
-          views: video.stats.playCount,
-          likes: video.stats.diggCount,
-          comments: video.stats.commentCount,
-          shares: video.stats.shareCount,
-          engagementRate
-        },
-        metadata: {
-          duration: video.videoMeta.duration,
-          hashtags: video.hashtags
-        },
-        templateStructure: templateSections,
-        analysisData: {
-          templateId,
-          videoId: video.id,
-          estimatedSections: templateSections,
-          detectedElements: analysis.detectedElements || {
-            hasCaption: true,
-            hasCTA: false,
-            hasProductDisplay: false,
-            hasTextOverlay: false,
-            hasVoiceover: false,
-            hasBgMusic: true
-          },
-          effectiveness: {
-            engagementRate,
-            conversionRate: analysis.keyMetrics?.conversionRate || 0,
-            averageViewDuration: analysis.keyMetrics?.averageViewDuration || 0
-          },
-          engagementInsights: Array.isArray(analysis.engagementInsights) 
-            ? analysis.engagementInsights 
-            : [String(analysis.engagementInsights || '')],
-          similarityPatterns: typeof analysis.similarityPatterns === 'string'
-            ? analysis.similarityPatterns
-            : JSON.stringify(analysis.similarityPatterns || {})
-        },
-        trendData: {
-          dailyViews: { 
-            [new Date().toISOString().split('T')[0]]: video.stats.playCount 
-          },
-          growthRate: 0,
-          velocityScore: analysis.velocityScore || 0,
-          dailyGrowth: 0,
-          weeklyGrowth: 0,
-          similarTemplates: analysis.similarTemplates || []
-        },
-        // Expert input fields
-        expertInsights: options.allowExpertInput ? {
-          tags: [],
-          notes: '',
-          recommendedUses: [],
-          performanceRating: 0,
-          audienceRecommendation: []
-        } : undefined,
-        // Audit trail for tracking modifications
-        auditTrail: {
-          createdBy,
-          lastModifiedBy: createdBy,
-          modificationHistory: [
-            {
-              timestamp: new Date().toISOString(),
-              user: createdBy,
-              action: 'create',
-              details: 'Template created from TikTok video'
-            }
-          ]
-        },
-        isActive: true
-      };
-      
-      // Save to Firestore
-      await setDoc(doc(db, COLLECTION_NAME, templateId), template);
-      
-      return template;
-    } catch (error) {
-      console.error('Error creating trending template with analysis:', error);
-      throw error;
-    }
+    const mockId = uuidv4();
+    console.warn(`createTemplateWithAnalysis for video ${video.id}: ${SERVICE_DISABLED_MSG} Returning mock template ${mockId}. Options:`, options);
+    // Re-use parts of createTrendingTemplate mock logic
+    const engagementRate = video.stats.playCount > 0 ? 
+      ((video.stats.diggCount + video.stats.commentCount + video.stats.shareCount) / video.stats.playCount) * 100 
+      : 0;
+    return Promise.resolve(createMockTrendingTemplate(mockId, {
+      sourceVideoId: video.id,
+      category: analysis?.category || "Mock Analysis Category",
+      title: video.text.substring(0, 100) || `Mock Template ${mockId.substring(0, 8)}`,
+      description: video.text,
+      authorInfo: {
+        id: video.authorMeta.id,
+        username: video.authorMeta.nickname,
+        isVerified: video.authorMeta.verified
+      },
+      stats: {
+        views: video.stats.playCount,
+        likes: video.stats.diggCount,
+        comments: video.stats.commentCount,
+        shares: video.stats.shareCount,
+        usageCount: 0,
+      },
+      metadata: {
+        duration: video.videoMeta.duration,
+        hashtags: video.hashtags,
+        aiDetectedCategory: analysis?.category,
+      },
+      templateStructure: analysis?.templateStructure?.sections || [], // Example access
+      analysisData: analysis, // Store the provided analysis as mock
+      isActive: true,
+    }));
   },
-  
-  /**
-   * Add expert insight tag to a template
-   * @param templateId The template ID
-   * @param tag The expert insight tag to add
-   * @param userId ID of the user adding the tag
-   * @returns The updated template
-   */
+
+  // Add expert insight tag to a template
   async addExpertInsightTag(
     templateId: string,
     tag: {
@@ -399,158 +225,107 @@ export const trendingTemplateService = {
     },
     userId: string
   ): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, templateId);
-      const templateDoc = await getDoc(docRef);
-      
-      if (!templateDoc.exists()) {
-        throw new Error(`Template with ID ${templateId} not found`);
-      }
-      
-      const template = templateDoc.data() as TrendingTemplate;
-      
-      // Create the tag object
-      const newTag = {
-        id: uuidv4(),
-        ...tag,
-        addedBy: userId,
-        addedAt: new Date().toISOString()
-      };
-      
-      // Initialize expertInsights if it doesn't exist
-      const expertInsights = template.expertInsights || {
-        tags: [],
-        notes: '',
-        recommendedUses: [],
-        performanceRating: 0,
-        audienceRecommendation: []
-      };
-      
-      // Add the tag
-      expertInsights.tags = [...expertInsights.tags, newTag];
-      
-      // Add audit trail entry
-      const auditTrail = template.auditTrail || {
-        createdBy: 'system',
-        lastModifiedBy: userId,
-        modificationHistory: []
-      };
-      
-      auditTrail.lastModifiedBy = userId;
-      auditTrail.modificationHistory.push({
-        timestamp: new Date().toISOString(),
-        user: userId,
-        action: 'add_expert_tag',
-        details: `Added expert tag: ${tag.tag}`
-      });
-      
-      // Update the document
-      await updateDoc(docRef, {
-        expertInsights,
-        auditTrail,
-        updatedAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error(`Error adding expert insight tag to template ${templateId}:`, error);
-      throw error;
-    }
+    console.warn(`addExpertInsightTag(${templateId}, userId: ${userId}): ${SERVICE_DISABLED_MSG} Tag:`, tag);
+    return Promise.resolve();
   },
-  
-  /**
-   * Update expert insights for a template
-   * @param templateId The template ID
-   * @param insights The expert insights to update
-   * @param userId ID of the user updating the insights
-   */
+
+  // Log manual adjustment to a template
+  async logManualAdjustment(
+    templateId: string,
+    adjustment: Omit<ManualAdjustmentLog, 'id' | 'adjustedAt'>
+  ): Promise<string> {
+    const mockAdjustmentId = uuidv4();
+    console.warn(`logManualAdjustment(${templateId}): ${SERVICE_DISABLED_MSG} Returning mock ID ${mockAdjustmentId}. Adjustment:`, adjustment);
+    return Promise.resolve(mockAdjustmentId);
+  },
+
+  // Update expert insights for a template
   async updateExpertInsights(
     templateId: string,
     insights: Partial<TrendingTemplate['expertInsights']>,
     userId: string
   ): Promise<void> {
-    try {
-      const docRef = doc(db, COLLECTION_NAME, templateId);
-      const templateDoc = await getDoc(docRef);
-      
-      if (!templateDoc.exists()) {
-        throw new Error(`Template with ID ${templateId} not found`);
-      }
-      
-      const template = templateDoc.data() as TrendingTemplate;
-      
-      // Initialize expertInsights if it doesn't exist
-      const currentInsights = template.expertInsights || {
-        tags: [],
-        notes: '',
-        recommendedUses: [],
-        performanceRating: 0,
-        audienceRecommendation: []
-      };
-      
-      // Merge the insights
-      const updatedInsights = {
-        ...currentInsights,
-        ...insights
-      };
-      
-      // Add audit trail entry
-      const auditTrail = template.auditTrail || {
-        createdBy: 'system',
-        lastModifiedBy: userId,
-        modificationHistory: []
-      };
-      
-      auditTrail.lastModifiedBy = userId;
-      auditTrail.modificationHistory.push({
-        timestamp: new Date().toISOString(),
-        user: userId,
-        action: 'update_expert_insights',
-        details: `Updated expert insights: ${Object.keys(insights).join(', ')}`
-      });
-      
-      // Update the document
-      await updateDoc(docRef, {
-        expertInsights: updatedInsights,
-        auditTrail,
-        updatedAt: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error(`Error updating expert insights for template ${templateId}:`, error);
-      throw error;
-    }
+    console.warn(`updateExpertInsights(${templateId}, userId: ${userId}): ${SERVICE_DISABLED_MSG} Insights:`, insights);
+    return Promise.resolve();
+  },
+
+  // Get templates requiring expert review
+  async getTemplatesForExpertReview(limitCount = 10): Promise<TrendingTemplate[]> {
+    console.warn(`getTemplatesForExpertReview(${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
+  },
+
+  // Link a sound to a template
+  async linkSoundToTemplate(templateId: string, soundId: string, soundName: string): Promise<void> {
+    console.warn(`linkSoundToTemplate(${templateId}, soundId: ${soundId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
+  },
+
+  // Unlink a sound from a template
+  async unlinkSoundFromTemplate(templateId: string, soundId: string): Promise<void> {
+    console.warn(`unlinkSoundFromTemplate(${templateId}, soundId: ${soundId}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve();
   },
   
-  /**
-   * Get average engagement for a template category
-   * @param category The category to get average engagement for
-   * @returns Average engagement (likes + shares) for the category
-   */
+  // Get average engagement for a category (example of a more complex query)
   async getCategoryAverageEngagement(category: string): Promise<number> {
-    try {
-      const q = query(
-        collection(db, COLLECTION_NAME),
-        where('category', '==', category),
-        limit(50)
-      );
-      
-      const querySnapshot = await getDocs(q);
-      const templates = querySnapshot.docs.map(doc => doc.data() as TrendingTemplate);
-      
-      if (templates.length === 0) {
-        return 0;
-      }
-      
-      // Calculate total engagement for each template (likes + shares)
-      const totalEngagement = templates.reduce((sum, template) => {
-        const likes = template.stats?.likes || 0;
-        const shares = template.stats?.shares || 0;
-        return sum + likes + shares;
-      }, 0);
-      
-      // Return average
-      return totalEngagement / templates.length;
-    } catch (error) {
-      console.error(`Error getting average engagement for category ${category}:`, error);
-      return 0;
-    }
+    console.warn(`getCategoryAverageEngagement(${category}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve(0); // Return a mock average
+  },
+
+  // Get templates by author ID
+  async getTemplatesByAuthor(authorId: string, limitCount = 10): Promise<TrendingTemplate[]> {
+    console.warn(`getTemplatesByAuthor(${authorId}, ${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
+  },
+
+  // Get a batch of templates by IDs
+  async getTemplatesByIds(ids: string[]): Promise<TrendingTemplate[]> {
+    console.warn(`getTemplatesByIds([${ids.join(',')} ]): ${SERVICE_DISABLED_MSG}`);
+    // For more realistic mock, could return a mix of found (mocked) and not found (nulls filtered out or handled by caller)
+    // For now, just an empty array or array of mocks based on input IDs
+    if (ids.length === 0) return Promise.resolve([]);
+    // return Promise.resolve(ids.map(id => createMockTrendingTemplate(id)));
+    return Promise.resolve([]); // simpler for now
+  },
+
+  // Get templates by multiple categories
+  async getTemplatesByCategories(categories: string[], limitCount = 20): Promise<TrendingTemplate[]> {
+    console.warn(`getTemplatesByCategories([${categories.join(',')}], ${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
+  },
+
+  // Example of a more complex update: update a field if a condition is met
+  async conditionallyUpdateTemplate(
+    templateId: string, 
+    conditionField: keyof TrendingTemplate, 
+    conditionValue: any, 
+    updateData: Partial<TrendingTemplate>
+  ): Promise<boolean> {
+    console.warn(`conditionallyUpdateTemplate(${templateId}) on field ${String(conditionField)}: ${SERVICE_DISABLED_MSG} Update:`, updateData);
+    return Promise.resolve(false); // Simulate condition not met or update failed
+  },
+
+  // Get templates created within a date range
+  async getTemplatesByDateRange(startDate: string, endDate: string, limitCount = 50): Promise<TrendingTemplate[]> {
+    console.warn(`getTemplatesByDateRange(${startDate} - ${endDate}, ${limitCount}): ${SERVICE_DISABLED_MSG}`);
+    return Promise.resolve([]);
+  },
+  
+  // This is a placeholder for any specific Firebase transaction logic that might have existed.
+  // Transactions are complex and their neutralization would depend on specific use cases.
+  // For now, any transactional function would just log a warning and do nothing or return mock.
+  async runTemplateUpdateTransaction(templateId: string, updateFunction: (currentData: TrendingTemplate | null) => Partial<TrendingTemplate> | null): Promise<boolean> {
+    console.warn(`runTemplateUpdateTransaction(${templateId}): ${SERVICE_DISABLED_MSG} Transaction logic skipped.`);
+    // Simulate a transaction failure or no-op by default
+    // In a real Supabase migration, this would be re-implemented with Supabase transaction mechanisms if needed.
+    // const mockCurrent = await this.getTrendingTemplateById(templateId); // Would get a mock or null
+    // const MOCK_currentData = null; // Simulate not found or pass a mock
+    // const MOCK_dataToUpdate = updateFunction(MOCK_currentData);
+    // if (MOCK_dataToUpdate) {
+    //    console.log("Mock transaction would attempt to apply: ", MOCK_dataToUpdate);
+    //    return Promise.resolve(true); // Simulate success if data would be updated
+    // }
+    return Promise.resolve(false); 
   }
 }; 

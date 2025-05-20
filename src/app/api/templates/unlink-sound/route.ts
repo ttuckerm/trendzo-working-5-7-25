@@ -36,41 +36,22 @@ export async function POST(request: NextRequest) {
         
         return NextResponse.json({ 
           success: true,
-          message: 'Sound unlinked from template successfully'
+          message: 'Sound unlinked from template successfully (DEV mode)'
         });
       }
       
-      // For production, we need to implement this function in soundService
-      // This function doesn't exist yet in the service, so we'd need to add it
-      // await soundService.unlinkSoundFromTemplate(soundId, templateId);
+      // PRODUCTION PATH: Firebase code was here. Now disabled/to be refactored for Supabase.
+      // Removed: const firestoreModule = await import('@/lib/firebase/firebaseUtils'); // This was unused
+      // Removed: const { getFirestore, doc, getDoc, updateDoc } = await import('firebase/firestore');
+      // Removed: Firebase direct SDK calls for unlinking sound.
+
+      console.warn("unlink-sound API: Firebase interaction has been removed. Needs Supabase implementation if feature is required.");
       
-      // As a workaround, let's use the existing firebase utils
-      const firestore = await import('@/lib/firebase/firebaseUtils');
-      const { getFirestore, doc, getDoc, updateDoc } = await import('firebase/firestore');
-      
-      const db = getFirestore();
-      const soundRef = doc(db, 'sounds', soundId);
-      const soundDoc = await getDoc(soundRef);
-      
-      if (soundDoc.exists()) {
-        const soundData = soundDoc.data();
-        const relatedTemplates = soundData.relatedTemplates || [];
-        
-        // Remove templateId from relatedTemplates array
-        const updatedTemplates = relatedTemplates.filter(
-          (id: string) => id !== templateId
-        );
-        
-        await updateDoc(soundRef, {
-          relatedTemplates: updatedTemplates,
-          updatedAt: new Date()
-        });
-      }
-      
-      return NextResponse.json({ 
-        success: true,
-        message: 'Sound unlinked from template successfully'
-      });
+      return NextResponse.json({
+        success: false,
+        error: 'Sound unlinking functionality is pending migration to Supabase.'
+      }, { status: 501 }); // 501 Not Implemented
+
     } catch (error) {
       console.error('Error unlinking sound from template:', error);
       

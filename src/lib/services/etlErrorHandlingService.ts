@@ -10,14 +10,16 @@
  * - Maintaining error statistics
  */
 
-import { db } from '@/lib/firebase/firebase';
-import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp, Firestore } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
+// import { collection, addDoc, query, where, orderBy, limit, getDocs, Timestamp, Firestore } from 'firebase/firestore'; // Firebase SDK
 import { ETLError, ETLLogLevel, logETLEvent } from '@/lib/utils/etlLogger';
 import { etlJobService } from './etlJobService';
 
+const SERVICE_DISABLED_MSG = "etlErrorHandlingService: Firebase backend has been removed. Method called but will not perform DB operations. TODO: Implement with Supabase.";
+
 // Constants for collections
-const ETL_ERRORS_COLLECTION = 'etlErrors';
-const ETL_RECOVERY_COLLECTION = 'etlRecovery';
+const ETL_ERRORS_COLLECTION = 'etlErrors'; // Kept for context
+const ETL_RECOVERY_COLLECTION = 'etlRecovery'; // Kept for context
 
 // Types of ETL process phases for error categorization
 export type ETLPhase = 'extraction' | 'transformation' | 'loading' | 'validation' | 'unknown';
@@ -137,26 +139,28 @@ export const etlErrorHandlingService = {
       ...context
     });
     
+    console.warn(`${SERVICE_DISABLED_MSG} (logError). Error details not stored in DB for job ${jobId}.`, error);
     // Store detailed error information in the ETL errors collection
-    try {
-      // Check if db is available before using it
-      if (db) {
-        await addDoc(collection(db as Firestore, ETL_ERRORS_COLLECTION), {
-          jobId,
-          type: error.type,
-          message: error.message,
-          stack: error.stack,
-          context,
-          timestamp: Timestamp.now(),
-          handled: false,
-        });
-      } else {
-        console.warn('Firebase db is not initialized, skipping error storage');
-      }
-    } catch (err) {
-      // If Firebase fails, just log to console but don't throw (avoid cascading errors)
-      console.error('Failed to store ETL error details in Firebase:', err);
-    }
+    // try {
+    //   // Check if db is available before using it
+    //   if (db) {
+    //     await addDoc(collection(db as Firestore, ETL_ERRORS_COLLECTION), {
+    //       jobId,
+    //       type: error.type,
+    //       message: error.message,
+    //       stack: error.stack,
+    //       context,
+    //       timestamp: Timestamp.now(), // Firebase Timestamp
+    //       handled: false,
+    //     });
+    //   } else {
+    //     console.warn('Firebase db is not initialized, skipping error storage');
+    //   }
+    // } catch (err) {
+    //   // If Firebase fails, just log to console but don't throw (avoid cascading errors)
+    //   console.error('Failed to store ETL error details in Firebase:', err);
+    // }
+    return Promise.resolve();
   },
   
   /**
@@ -346,17 +350,17 @@ export const etlErrorHandlingService = {
     
     // Store recovery action
     try {
-      if (db) {
-        await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
-          jobId,
-          strategy: 'skip',
-          itemId: context.itemId,
-          error: error.message,
-          timestamp: Timestamp.now()
-        });
-      } else {
-        console.warn('Firebase db is not initialized, skipping recovery action storage');
-      }
+      // if (db) {
+      //   await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
+      //     jobId,
+      //     strategy: 'skip',
+      //     itemId: context.itemId,
+      //     error: error.message,
+      //     timestamp: Timestamp.now()
+      //   });
+      // } else {
+      //   console.warn('Firebase db is not initialized, skipping recovery action storage');
+      // }
     } catch (storageError) {
       console.error('Failed to store recovery action:', storageError);
     }
@@ -401,15 +405,15 @@ export const etlErrorHandlingService = {
       await context.fallbackFn(error, context);
       
       // Store recovery action
-      if (db) {
-        await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
-          jobId,
-          strategy: 'fallback',
-          itemId: context.itemId,
-          error: error.message,
-          timestamp: Timestamp.now()
-        });
-      }
+      // if (db) {
+      //   await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
+      //     jobId,
+      //     strategy: 'fallback',
+      //     itemId: context.itemId,
+      //     error: error.message,
+      //     timestamp: Timestamp.now()
+      //   });
+      // }
       
       return {
         handled: true,
@@ -457,17 +461,17 @@ export const etlErrorHandlingService = {
     
     // Store checkpoint for recovery
     try {
-      if (db) {
-        await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
-          jobId,
-          strategy: 'checkpoint',
-          checkpointData: context.checkpointData,
-          error: error.message,
-          timestamp: Timestamp.now()
-        });
-      } else {
-        console.warn('Firebase db is not initialized, skipping checkpoint storage');
-      }
+      // if (db) {
+      //   await addDoc(collection(db as Firestore, ETL_RECOVERY_COLLECTION), {
+      //     jobId,
+      //     strategy: 'checkpoint',
+      //     checkpointData: context.checkpointData,
+      //     error: error.message,
+      //     timestamp: Timestamp.now()
+      //   });
+      // } else {
+      //   console.warn('Firebase db is not initialized, skipping checkpoint storage');
+      // }
       
       return {
         handled: true,
@@ -543,67 +547,65 @@ export const etlErrorHandlingService = {
     byType: Record<string, number>;
     byPhase: Record<string, number>;
   }> {
-    try {
-      if (!db) {
-        console.warn('Firebase db is not initialized, returning empty error stats');
-        return { totalErrors: 0, byType: {}, byPhase: {} };
-      }
-
-      const q = query(
-        collection(db as Firestore, ETL_ERRORS_COLLECTION),
-        where('jobId', '==', jobId)
-      );
+    console.warn(`${SERVICE_DISABLED_MSG} (getErrorStats) for job ${jobId}. Returning empty stats.`);
+    // try {
+    //   if (!db) {
+    //     console.warn('Firebase db is not initialized, cannot get error stats');
+    //     return { totalErrors: 0, byType: {}, byPhase: {} };
+    //   }
       
-      const errorsSnapshot = await getDocs(q);
-      const errors = errorsSnapshot.docs.map(doc => doc.data());
+    //   const q = query(
+    //     collection(db as Firestore, ETL_ERRORS_COLLECTION),
+    //     where('jobId', '==', jobId)
+    //   );
       
-      // Count errors by type and phase
-      const byType: Record<string, number> = {};
-      const byPhase: Record<string, number> = {};
+    //   const querySnapshot = await getDocs(q);
+    //   const stats = {
+    //     totalErrors: querySnapshot.size,
+    //     byType: {} as Record<string, number>,
+    //     byPhase: {} as Record<string, number>,
+    //   };
       
-      errors.forEach(error => {
-        const type = error.type || 'UNKNOWN_ERROR';
-        const phase = error.context?.phase || 'unknown';
-        
-        byType[type] = (byType[type] || 0) + 1;
-        byPhase[phase] = (byPhase[phase] || 0) + 1;
-      });
+    //   querySnapshot.forEach(doc => {
+    //     const errorData = doc.data();
+    //     stats.byType[errorData.type] = (stats.byType[errorData.type] || 0) + 1;
+    //     const phase = errorData.context?.phase || 'unknown';
+    //     stats.byPhase[phase] = (stats.byPhase[phase] || 0) + 1;
+    //   });
       
-      return {
-        totalErrors: errors.length,
-        byType,
-        byPhase
-      };
-    } catch (error) {
-      console.error('Failed to get error stats:', error);
-      throw error;
-    }
+    //   return stats;
+    // } catch (error) {
+    //   console.error(`Error getting error stats for job ${jobId}:`, error);
+    //   return { totalErrors: 0, byType: {}, byPhase: {} }; // Return default on error
+    // }
+    return Promise.resolve({ totalErrors: 0, byType: {}, byPhase: {} });
   },
   
   /**
-   * Get recovery actions for a specific job
+   * Get historical recovery actions for a job
+   * @param jobId - The ETL job ID
+   * @returns Array of recovery actions taken for the job
    */
   async getRecoveryActions(jobId: string): Promise<any[]> {
-    try {
-      if (!db) {
-        console.warn('Firebase db is not initialized, returning empty recovery actions');
-        return [];
-      }
-
-      const q = query(
-        collection(db as Firestore, ETL_RECOVERY_COLLECTION),
-        where('jobId', '==', jobId),
-        orderBy('timestamp', 'asc')
-      );
+    console.warn(`${SERVICE_DISABLED_MSG} (getRecoveryActions) for job ${jobId}. Returning empty array.`);
+    // try {
+    //   if (!db) {
+    //     console.warn('Firebase db is not initialized, cannot get recovery actions');
+    //     return [];
+    //   }
       
-      const actionsSnapshot = await getDocs(q);
-      return actionsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-    } catch (error) {
-      console.error('Failed to get recovery actions:', error);
-      throw error;
-    }
+    //   const q = query(
+    //     collection(db as Firestore, ETL_RECOVERY_COLLECTION),
+    //     where('jobId', '==', jobId),
+    //     orderBy('timestamp', 'desc')
+    //   );
+      
+    //   const querySnapshot = await getDocs(q);
+    //   return querySnapshot.docs.map(doc => doc.data());
+    // } catch (error) {
+    //   console.error(`Error getting recovery actions for job ${jobId}:`, error);
+    //   return []; // Return empty on error
+    // }
+    return Promise.resolve([]);
   }
 }; 

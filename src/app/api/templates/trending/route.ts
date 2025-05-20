@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase/firebase';
-import { collection, query, orderBy, limit, getDocs, where } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
+// import { collection, query, orderBy, limit, getDocs, where } from 'firebase/firestore'; // Firebase SDK
 import { TrendingTemplate } from '@/lib/types/trendingTemplate';
 
 /**
@@ -13,112 +13,35 @@ import { TrendingTemplate } from '@/lib/types/trendingTemplate';
  * - minVelocity: minimum velocity score (default: 5)
  */
 export async function GET(request: NextRequest) {
+  console.warn("Trending templates API: Firebase backend has been removed. Returning mock data for now. TODO: Implement with Supabase.");
+
+  const { searchParams } = new URL(request.url);
+  const timeWindow = searchParams.get('timeWindow') || '7d';
+  const minVelocity = parseFloat(searchParams.get('minVelocity') || '5');
+
+  // Always return mock data as Firebase is removed
+  // Original Firebase query logic has been removed.
   try {
-    // Parse query parameters
-    const { searchParams } = new URL(request.url);
-    const limitParam = parseInt(searchParams.get('limit') || '10');
-    const category = searchParams.get('category');
-    const timeWindow = searchParams.get('timeWindow') || '7d';
-    const minVelocity = parseFloat(searchParams.get('minVelocity') || '5');
-    
-    // Create base query
-    let q = query(
-      collection(db, 'templates'),
-      where('isActive', '==', true),
-      orderBy('trendData.velocityScore', 'desc'),
-      limit(limitParam)
-    );
-    
-    // Add category filter if specified
-    if (category && category !== 'All') {
-      q = query(
-        collection(db, 'templates'),
-        where('isActive', '==', true),
-        where('category', '==', category),
-        orderBy('trendData.velocityScore', 'desc'),
-        limit(limitParam)
-      );
-    }
-    
-    // Execute query
-    const querySnapshot = await getDocs(q);
-    
-    // Process results
-    const templates = querySnapshot.docs
-      .map(doc => ({ id: doc.id, ...doc.data() }) as TrendingTemplate)
-      .filter(template => {
-        // Filter by velocity score
-        const velocityScore = template.trendData.velocityScore || 0;
-        return velocityScore >= minVelocity;
-      })
-      .map(template => {
-        // Map to return format with additional information
-        return {
-          id: template.id,
-          title: template.title,
-          category: template.category,
-          description: template.description,
-          thumbnailUrl: template.thumbnailUrl || '/images/template-placeholder.jpg',
-          stats: {
-            views: template.stats.views,
-            likes: template.stats.likes,
-            comments: template.stats.comments,
-            shares: template.stats.shares,
-            engagementRate: template.stats.engagementRate
-          },
-          trendData: {
-            velocityScore: template.trendData.velocityScore || 0,
-            growthRate: template.trendData.growthRate || 0,
-            dailyGrowth: template.trendData.dailyGrowth || 0,
-            weeklyGrowth: template.trendData.weeklyGrowth || 0
-          },
-          metadata: {
-            duration: template.metadata.duration,
-            hashtags: template.metadata.hashtags || [],
-            aiDetectedCategory: template.metadata.aiDetectedCategory
-          },
-          templateStructure: template.templateStructure.map(section => ({
-            type: section.type,
-            startTime: section.startTime,
-            duration: section.duration,
-            purpose: section.purpose || ''
-          }))
-        };
-      });
-    
-    // Return with metadata
+    const mockTemplates = getMockTrendingTemplates(); // Assuming this function is defined below
     return NextResponse.json({
       success: true,
-      count: templates.length,
+      message: "Data is currently mocked as Firebase is disabled. TODO: Reimplement with Supabase.",
+      count: mockTemplates.length,
       timeWindow,
       minVelocity,
-      templates
+      templates: mockTemplates
     });
-    
   } catch (error: any) {
-    console.error('Error fetching trending templates:', error);
-    
-    // In development mode, return mock data
-    if (process.env.NODE_ENV === 'development') {
-      return NextResponse.json({
-        success: true,
-        count: 5,
-        timeWindow: '7d',
-        minVelocity: 5,
-        templates: getMockTrendingTemplates()
-      });
-    }
-    
-    // In production, return error
+    console.error('Error in mock trending templates (this should not happen if getMockTrendingTemplates is stable):', error);
     return NextResponse.json({
       success: false,
-      error: error.message || 'Error fetching trending templates'
+      error: 'Error generating mock trending templates'
     }, { status: 500 });
   }
 }
 
-// Mock data for development
-function getMockTrendingTemplates() {
+// Mock data for development ( 수정됨 )
+function getMockTrendingTemplates(): Partial<TrendingTemplate>[] { 
   return [
     {
       id: 'template-001',
@@ -126,12 +49,15 @@ function getMockTrendingTemplates() {
       category: 'Marketing',
       description: 'A highly effective template for showcasing products with clear benefit statements',
       thumbnailUrl: '/images/product-template.jpg',
+      authorName: 'Mock Creator A',
+      tags: ['product', 'marketing', 'showcase'],
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3).toISOString(), // 3 days ago
       stats: {
         views: 1250000,
         likes: 95000,
-        comments: 8500,
-        shares: 12000,
-        engagementRate: 9.2
+        usageCount: 7500,
+        commentCount: 8500, // Renamed from comments
+        shareCount: 12000,   // Renamed from shares
       },
       trendData: {
         velocityScore: 8.7,
@@ -141,16 +67,10 @@ function getMockTrendingTemplates() {
       },
       metadata: {
         duration: 25,
-        hashtags: ['#product', '#marketing', '#showcase'],
+        hashtags: ['#product', '#marketing', '#showcase'], // Kept for consistency with old mock, though TrendingTemplate.tags is primary
         aiDetectedCategory: 'Product'
       },
-      templateStructure: [
-        { type: 'Hook', startTime: 0, duration: 3, purpose: 'Attention grabbing opening with problem statement' },
-        { type: 'Introduction', startTime: 3, duration: 5, purpose: 'Product reveal with main benefit' },
-        { type: 'Feature 1', startTime: 8, duration: 5, purpose: 'Highlight first key feature' },
-        { type: 'Feature 2', startTime: 13, duration: 5, purpose: 'Highlight second key feature' },
-        { type: 'Call to Action', startTime: 18, duration: 7, purpose: 'Clear CTA with urgency element' }
-      ]
+      // templateStructure removed as it's not in TrendingTemplate type for this endpoint
     },
     {
       id: 'template-002',
@@ -158,12 +78,15 @@ function getMockTrendingTemplates() {
       category: 'Education',
       description: 'Clear step-by-step tutorial format that drives high completion rates',
       thumbnailUrl: '/images/tutorial-template.jpg',
+      authorName: 'Mock Educator B',
+      tags: ['tutorial', 'howto', 'learnontiktok'],
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(), // 5 days ago
       stats: {
         views: 980000,
         likes: 85000,
-        comments: 12000,
-        shares: 18000,
-        engagementRate: 11.8
+        usageCount: 11000,
+        commentCount: 12000,
+        shareCount: 18000,
       },
       trendData: {
         velocityScore: 9.2,
@@ -176,15 +99,6 @@ function getMockTrendingTemplates() {
         hashtags: ['#tutorial', '#howto', '#learnontiktok'],
         aiDetectedCategory: 'Tutorial'
       },
-      templateStructure: [
-        { type: 'Hook', startTime: 0, duration: 5, purpose: 'Promise of value with before/after glimpse' },
-        { type: 'Introduction', startTime: 5, duration: 8, purpose: 'Explain what viewers will learn' },
-        { type: 'Step 1', startTime: 13, duration: 8, purpose: 'First key action demonstrated' },
-        { type: 'Step 2', startTime: 21, duration: 8, purpose: 'Second key action demonstrated' },
-        { type: 'Step 3', startTime: 29, duration: 8, purpose: 'Third key action demonstrated' },
-        { type: 'Results', startTime: 37, duration: 5, purpose: 'Show completed result' },
-        { type: 'Call to Action', startTime: 42, duration: 3, purpose: 'Ask for engagement and suggest follow' }
-      ]
     },
     {
       id: 'template-003',
@@ -192,12 +106,15 @@ function getMockTrendingTemplates() {
       category: 'Dance',
       description: 'Multi-transition dance template that\'s easy to adapt and highly shareable',
       thumbnailUrl: '/images/dance-template.jpg',
+      authorName: 'Mock Dancer C',
+      tags: ['dance', 'transition', 'challenge'],
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 1).toISOString(), // 1 day ago
       stats: {
         views: 3500000,
         likes: 420000,
-        comments: 25000,
-        shares: 95000,
-        engagementRate: 15.4
+        usageCount: 25000,
+        commentCount: 25000,
+        shareCount: 95000,
       },
       trendData: {
         velocityScore: 9.8,
@@ -210,16 +127,6 @@ function getMockTrendingTemplates() {
         hashtags: ['#dance', '#transition', '#challenge'],
         aiDetectedCategory: 'Entertainment'
       },
-      templateStructure: [
-        { type: 'Starting Pose', startTime: 0, duration: 4, purpose: 'Eye-catching pose with beat anticipation' },
-        { type: 'First Transition', startTime: 4, duration: 2, purpose: 'Smooth visual effect transition' },
-        { type: 'First Sequence', startTime: 6, duration: 6, purpose: 'First dance sequence aligned with beat' },
-        { type: 'Second Transition', startTime: 12, duration: 2, purpose: 'Creative transition to new setting/outfit' },
-        { type: 'Second Sequence', startTime: 14, duration: 6, purpose: 'Second dance sequence with higher energy' },
-        { type: 'Third Transition', startTime: 20, duration: 2, purpose: 'Final dramatic transition' },
-        { type: 'Final Sequence', startTime: 22, duration: 6, purpose: 'Final sequence with most impressive moves' },
-        { type: 'Ending Pose', startTime: 28, duration: 2, purpose: 'Memorable ending pose on final beat' }
-      ]
     },
     {
       id: 'template-004',
@@ -227,12 +134,15 @@ function getMockTrendingTemplates() {
       category: 'Lifestyle',
       description: 'Powerful transformation reveal template with strong emotional impact',
       thumbnailUrl: '/images/transformation-template.jpg',
+      authorName: 'Mock Influencer D',
+      tags: ['transformation', 'beforeandafter', 'change'],
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 7 days ago
       stats: {
         views: 1850000,
         likes: 220000,
-        comments: 18500,
-        shares: 45000,
-        engagementRate: 15.3
+        usageCount: 15000,
+        commentCount: 18500,
+        shareCount: 45000,
       },
       trendData: {
         velocityScore: 8.5,
@@ -245,44 +155,34 @@ function getMockTrendingTemplates() {
         hashtags: ['#transformation', '#beforeandafter', '#change'],
         aiDetectedCategory: 'Lifestyle'
       },
-      templateStructure: [
-        { type: 'Before State', startTime: 0, duration: 6, purpose: 'Show the starting condition/situation' },
-        { type: 'Transition Effect', startTime: 6, duration: 3, purpose: 'Dramatic transition with music build-up' },
-        { type: 'After Reveal', startTime: 9, duration: 8, purpose: 'Dramatic reveal of transformation results' },
-        { type: 'Call to Action', startTime: 17, duration: 3, purpose: 'Inspirational message with engagement prompt' }
-      ]
     },
     {
       id: 'template-005',
-      title: 'Comedy Skit Format',
-      category: 'Comedy',
-      description: 'Short comedy format with twist ending that drives high completion rates',
-      thumbnailUrl: '/images/comedy-template.jpg',
+      title: 'Quick Tip Tutorial',
+      category: 'Education',
+      description: 'Short, impactful tutorial delivering a quick win for viewers.',
+      thumbnailUrl: '/images/quick-tip-template.jpg',
+      authorName: 'Mock Expert E',
+      tags: ['quicktip', 'tutorial', 'protip'],
+      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString(), // 2 days ago
       stats: {
-        views: 2750000,
-        likes: 380000,
-        comments: 42000,
-        shares: 125000,
-        engagementRate: 19.9
+        views: 750000,
+        likes: 65000,
+        usageCount: 9000,
+        commentCount: 7000,
+        shareCount: 10000,
       },
       trendData: {
-        velocityScore: 9.5,
-        growthRate: 210,
-        dailyGrowth: 18.7,
-        weeklyGrowth: 95.4
+        velocityScore: 7.9,
+        growthRate: 130,
+        dailyGrowth: 10.5,
+        weeklyGrowth: 70.2
       },
       metadata: {
-        duration: 35,
-        hashtags: ['#comedy', '#skit', '#funny'],
-        aiDetectedCategory: 'Comedy'
+        duration: 15,
+        hashtags: ['#quicktip', '#tutorial', '#protip'],
+        aiDetectedCategory: 'Education'
       },
-      templateStructure: [
-        { type: 'Setup', startTime: 0, duration: 8, purpose: 'Establish character/situation with clear premise' },
-        { type: 'Escalation', startTime: 8, duration: 12, purpose: 'Build tension through dialogue/action' },
-        { type: 'Twist', startTime: 20, duration: 5, purpose: 'Unexpected twist that subverts expectations' },
-        { type: 'Punchline', startTime: 25, duration: 5, purpose: 'Final punchline with comedic resolution' },
-        { type: 'Reaction', startTime: 30, duration: 5, purpose: 'Character reaction or callback for extra laugh' }
-      ]
     }
   ];
 } 

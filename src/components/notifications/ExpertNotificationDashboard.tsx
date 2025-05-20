@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { useToast } from '@/components/ui/use-toast';
-import { db } from '@/lib/firebase/firebase';
-import { collection, query, where, getDocs, orderBy, Firestore, limit } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase';
+// import { collection, query, where, getDocs, orderBy, Firestore, limit } from 'firebase/firestore';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
+
+const COMPONENT_DISABLED_MSG = "ExpertNotificationDashboard: Firebase backend is removed. Notifications will be empty.";
 
 interface ExpertNotification {
   id: string;
@@ -35,49 +37,56 @@ export function ExpertNotificationDashboard() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
 
   const fetchNotifications = async () => {
-    if (!user?.email || !db) return;
-
-    try {
-      setLoading(true);
-      
-      let notificationsQuery = query(
-        collection(db as Firestore, 'expertNotifications'),
-        where('assignedTo', '==', user.email),
-        orderBy('createdAt', 'desc'),
-        limit(50)
-      );
-
-      if (filter !== 'all') {
-        notificationsQuery = query(
-          notificationsQuery,
-          where('status', '==', filter)
-        );
-      }
-
-      if (typeFilter !== 'all') {
-        notificationsQuery = query(
-          notificationsQuery,
-          where('type', '==', typeFilter)
-        );
-      }
-
-      const snapshot = await getDocs(notificationsQuery);
-      const notificationData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as ExpertNotification[];
-
-      setNotifications(notificationData);
+    // if (!user?.email || !db) return; // db will be null
+    if (!user?.email) {
       setLoading(false);
-    } catch (error) {
-      console.error('Error fetching expert notifications:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch notifications. Please try again.',
-        variant: 'destructive'
-      });
-      setLoading(false);
+      return;
     }
+    console.warn(COMPONENT_DISABLED_MSG);
+    setLoading(true);
+
+    // try {
+      // setLoading(true);
+      
+      // let notificationsQuery = query(
+      //   collection(db as Firestore, 'expertNotifications'),
+      //   where('assignedTo', '==', user.email),
+      //   orderBy('createdAt', 'desc'),
+      //   limit(50)
+      // );
+
+      // if (filter !== 'all') {
+      //   notificationsQuery = query(
+      //     notificationsQuery,
+      //     where('status', '==', filter)
+      //   );
+      // }
+
+      // if (typeFilter !== 'all') {
+      //   notificationsQuery = query(
+      //     notificationsQuery,
+      //     where('type', '==', typeFilter)
+      //   );
+      // }
+
+      // const snapshot = await getDocs(notificationsQuery);
+      // const notificationData = snapshot.docs.map(doc => ({
+      //   id: doc.id,
+      //   ...doc.data()
+      // })) as ExpertNotification[];
+
+      // setNotifications(notificationData);
+      setNotifications([]); // Return empty array
+      setLoading(false);
+    // } catch (error) {
+    //   console.error('Error fetching expert notifications:', error);
+    //   toast({
+    //     title: 'Error',
+    //     description: 'Failed to fetch notifications. Please try again.',
+    //     variant: 'destructive'
+    //   });
+    //   setLoading(false);
+    // }
   };
 
   useEffect(() => {

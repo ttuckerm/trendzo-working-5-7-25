@@ -3,20 +3,24 @@
  * 
  * This script connects directly to Firebase and verifies the data integrity
  * of the sounds collection.
+ * SCRIPT DISABLED: Firebase is being removed.
  */
+
+const SCRIPT_DISABLED_MSG = "verifyFirebaseData.js: Firebase is being removed. This data verification script is now disabled.";
+console.warn(SCRIPT_DISABLED_MSG);
 
 // Use CommonJS require for Node.js script
 const fs = require('fs');
 const path = require('path');
-const { initializeApp } = require('firebase/app');
-const { 
-  getFirestore, 
-  collection, 
-  getDocs, 
-  query, 
-  where,
-  limit 
-} = require('firebase/firestore');
+// const { initializeApp } = require('firebase/app');
+// const { 
+//   getFirestore, 
+//   collection, 
+//   getDocs, 
+//   query, 
+//   where,
+//   limit 
+// } = require('firebase/firestore');
 
 // Load environment variables from .env.local if dotenv is available
 try {
@@ -54,11 +58,11 @@ console.log('- projectId:', firebaseConfig.projectId);
 console.log('- authDomain:', firebaseConfig.authDomain);
 
 // Initialize Firebase
-try {
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+// try {
+//   const app = initializeApp(firebaseConfig);
+//   const db = getFirestore(app);
   
-  console.log('Firebase initialized successfully');
+//   console.log('Firebase initialized successfully');
 
 // Test status tracking
 const testResults = {
@@ -144,8 +148,20 @@ function validateSoundDocument(sound) {
 
 // Main verification function
 async function verifyFirebaseData() {
-  console.log('Starting Firebase Data Integrity Verification...');
-  console.log('==============================================');
+  console.warn(SCRIPT_DISABLED_MSG);
+  console.warn("verifyFirebaseData: Function not executing as Firebase is being removed.");
+  
+  // Store empty/default results
+  testResults.summary.total = 0;
+  testResults.summary.passed = 0;
+  testResults.summary.failed = 0;
+  fs.writeFileSync(TEST_RESULTS_FILE, JSON.stringify(testResults, null, 2));
+  console.log(`Test results (script disabled) written to ${TEST_RESULTS_FILE}`);
+  return;
+
+  /* Original Script Logic Below */
+  // console.log('Starting Firebase Data Integrity Verification...');
+  // console.log('==============================================');
   
   try {
     // Test 1: Verify sounds collection exists and has documents
@@ -330,7 +346,10 @@ async function verifyFirebaseData() {
 
 // Run verification
 verifyFirebaseData();
-} catch (error) {
-  console.error('Error initializing Firebase:', error);
-  process.exit(1);
-} 
+// } catch (error) {
+//   console.error('Failed to initialize Firebase or run script:', error);
+//   recordTestResult('Firebase Initialization', false, { error: error.message });
+//   fs.writeFileSync(TEST_RESULTS_FILE, JSON.stringify(testResults, null, 2));
+//   console.log(`Test results (with initialization error) written to ${TEST_RESULTS_FILE}`);
+//   process.exit(1);
+// } 

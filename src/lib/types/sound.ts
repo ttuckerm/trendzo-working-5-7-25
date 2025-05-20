@@ -1,4 +1,7 @@
-import { Timestamp } from 'firebase/firestore';
+// import type { Timestamp as FirestoreTimestamp } from 'firebase/firestore';
+
+// Placeholder for Firestore Timestamp. Using string (ISO date string) for now.
+export type FirestoreTimestamp = string;
 
 // Basic sound metadata
 export interface Sound {
@@ -86,8 +89,8 @@ export interface SavedSound {
   isFavorite: boolean;
   customCategories: string[];
   notes?: string;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // Sound Usage History
@@ -97,7 +100,7 @@ export interface SoundUsageHistory {
   userId: string;
   templateId?: string;
   templateName?: string;
-  timestamp: Timestamp;
+  timestamp: FirestoreTimestamp;
   usageDuration?: number;
   actionType: 'played' | 'downloaded' | 'used_in_template' | 'shared';
 }
@@ -110,8 +113,8 @@ export interface SoundCategory {
   description?: string;
   color?: string;
   soundCount: number;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: FirestoreTimestamp;
+  updatedAt: FirestoreTimestamp;
 }
 
 // Request and Response Types

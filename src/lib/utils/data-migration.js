@@ -2,10 +2,13 @@
  * Utility for migrating non-auth data from Firebase to Supabase
  */
 
+const SCRIPT_DISABLED_MSG = "data-migration.js: Firebase is being removed. This migration script is now disabled for Firebase operations.";
+console.warn(SCRIPT_DISABLED_MSG);
+
 const { createClient } = require('@supabase/supabase-js');
 const { getEnvVariable } = require('./env');
-const { initializeApp, getApp } = require('firebase/app');
-const { getFirestore, collection, getDocs, doc, getDoc } = require('firebase/firestore');
+// const { initializeApp, getApp } = require('firebase/app');
+// const { getFirestore, collection, getDocs, doc, getDoc } = require('firebase/firestore');
 
 /**
  * Initialize Firebase if not already initialized
@@ -13,34 +16,36 @@ const { getFirestore, collection, getDocs, doc, getDoc } = require('firebase/fir
  * @returns {boolean} Whether initialization was successful
  */
 function initializeFirebaseIfNeeded() {
-  try {
-    // Try to get the default app, if it fails, initialize a new one
-    try {
-      getApp();
-      console.log('Firebase app already initialized, using existing app');
-    } catch (e) {
-      const firebaseConfig = {
-        apiKey: getEnvVariable('NEXT_PUBLIC_FIREBASE_API_KEY', ''),
-        authDomain: getEnvVariable('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', ''),
-        projectId: getEnvVariable('NEXT_PUBLIC_FIREBASE_PROJECT_ID', ''),
-        storageBucket: getEnvVariable('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', ''),
-        messagingSenderId: getEnvVariable('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', ''),
-        appId: getEnvVariable('NEXT_PUBLIC_FIREBASE_APP_ID', ''),
-      };
+  console.warn("initializeFirebaseIfNeeded called, but Firebase migration is disabled.");
+  return false; // Firebase is disabled
+  // try {
+  //   // Try to get the default app, if it fails, initialize a new one
+  //   try {
+  //     getApp();
+  //     console.log('Firebase app already initialized, using existing app');
+  //   } catch (e) {
+  //     const firebaseConfig = {
+  //       apiKey: getEnvVariable('NEXT_PUBLIC_FIREBASE_API_KEY', ''),
+  //       authDomain: getEnvVariable('NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN', ''),
+  //       projectId: getEnvVariable('NEXT_PUBLIC_FIREBASE_PROJECT_ID', ''),
+  //       storageBucket: getEnvVariable('NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET', ''),
+  //       messagingSenderId: getEnvVariable('NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID', ''),
+  //       appId: getEnvVariable('NEXT_PUBLIC_FIREBASE_APP_ID', ''),
+  //     };
       
-      // Validate required Firebase config values
-      if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
-        throw new Error('Required Firebase configuration missing');
-      }
+  //     // Validate required Firebase config values
+  //     if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+  //       throw new Error('Required Firebase configuration missing');
+  //     }
       
-      initializeApp(firebaseConfig);
-      console.log('Firebase app initialized for data migration');
-    }
-    return true;
-  } catch (error) {
-    console.error('Error initializing Firebase:', error);
-    return false;
-  }
+  //     initializeApp(firebaseConfig);
+  //     console.log('Firebase app initialized for data migration');
+  //   }
+  //   return true;
+  // } catch (error) {
+  //   console.error('Error initializing Firebase:', error);
+  //   return false;
+  // }
 }
 
 /**

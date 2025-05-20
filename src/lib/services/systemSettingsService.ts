@@ -1,5 +1,5 @@
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase/firebase';
+// import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
 
 // Analyzer settings types
 export interface FeatureSpecificWeights {
@@ -38,6 +38,8 @@ export const DEFAULT_ANALYZER_SETTINGS: AnalyzerSettings = {
   enableExpertOverride: true
 };
 
+const SERVICE_DISABLED_MSG_PREFIX = "systemSettingsService: Firebase backend is removed.";
+
 /**
  * Retrieves the analyzer settings from Firestore.
  * If settings don't exist, initializes them with default values.
@@ -46,27 +48,28 @@ export const DEFAULT_ANALYZER_SETTINGS: AnalyzerSettings = {
 export async function getAnalyzerSettings(): Promise<AnalyzerSettings> {
   try {
     // Check if Firebase is available
-    if (!db) {
-      console.warn('Firebase not initialized, using default settings');
+    if (true) { // Simulate !db condition permanently for migration
+      console.warn(`${SERVICE_DISABLED_MSG_PREFIX} getAnalyzerSettings: Firebase not initialized or explicitly disabled for migration. Using default settings.`);
       return DEFAULT_ANALYZER_SETTINGS;
     }
     
-    const settingsDoc = await getDoc(doc(db, 'system', 'analyzerSettings'));
+    // // Original Firebase logic (will not be reached due to the above)
+    // const settingsDoc = await getDoc(doc(db, 'system', 'analyzerSettings'));
     
-    if (!settingsDoc.exists()) {
-      // Initialize default settings if they don't exist
-      try {
-        await setDoc(doc(db, 'system', 'analyzerSettings'), DEFAULT_ANALYZER_SETTINGS);
-      } catch (initError) {
-        console.error('Error initializing settings:', initError);
-        // Continue with default settings even if initialization fails
-      }
-      return DEFAULT_ANALYZER_SETTINGS;
-    }
+    // if (!settingsDoc.exists()) {
+    //   // Initialize default settings if they don't exist
+    //   try {
+    //     await setDoc(doc(db, 'system', 'analyzerSettings'), DEFAULT_ANALYZER_SETTINGS);
+    //   } catch (initError) {
+    //     console.error('Error initializing settings during get (should not happen if db is null):', initError);
+    //     // Continue with default settings even if initialization fails
+    //   }
+    //   return DEFAULT_ANALYZER_SETTINGS;
+    // }
     
-    return settingsDoc.data() as AnalyzerSettings;
+    // return settingsDoc.data() as AnalyzerSettings;
   } catch (error) {
-    console.error('Error fetching analyzer settings:', error);
+    console.error(`${SERVICE_DISABLED_MSG_PREFIX} Error fetching analyzer settings (should not happen if db is null):`, error);
     return DEFAULT_ANALYZER_SETTINGS;
   }
 }
@@ -79,15 +82,16 @@ export async function getAnalyzerSettings(): Promise<AnalyzerSettings> {
 export async function updateAnalyzerSettings(settings: AnalyzerSettings): Promise<boolean> {
   try {
     // Check if Firebase is available
-    if (!db) {
-      console.warn('Firebase not initialized, cannot save settings');
+    if (true) { // Simulate !db condition permanently for migration
+      console.warn(`${SERVICE_DISABLED_MSG_PREFIX} updateAnalyzerSettings: Firebase not initialized or explicitly disabled for migration. Cannot save settings. Provided settings:`, settings);
       return false;
     }
     
-    await updateDoc(doc(db, 'system', 'analyzerSettings'), settings);
-    return true;
+    // // Original Firebase logic (will not be reached due to the above)
+    // await updateDoc(doc(db, 'system', 'analyzerSettings'), settings);
+    // return true;
   } catch (error) {
-    console.error('Error updating analyzer settings:', error);
+    console.error(`${SERVICE_DISABLED_MSG_PREFIX} Error updating analyzer settings (should not happen if db is null):`, error);
     return false;
   }
 }

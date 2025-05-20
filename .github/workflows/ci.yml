@@ -1,78 +1,105 @@
-name: CI - Suit of Armor
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ] # Or your primary development branches
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
-  e2e-tests:
+  build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        browser: [chromium, firefox, webkit]
-    steps:
-      - uses: actions/checkout@v4
+
+    # стратегия для параллельного запуска тестов если потребуется в будущем
+    # strategy:
+    #   matrix:
+    #     node-version: [18.x, 20.x] # Пример версий Node.js
+
+    env:
+      # Важно: Установите эти секреты в настройках вашего GitHub репозитория
+      # Settings > Secrets and variables > Actions > New repository secret
+      # NEXT_PUBLIC_FIREBASE_API_KEY: ${{ secrets.NEXT_PUBLIC_FIREBASE_API_KEY }} # Закомментировано, т.к. Firebase удаляется
+      # NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      # NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+      # NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      # NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      # NEXT_PUBLIC_FIREBASE_APP_ID: ${{ secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
       
-      - name: Setup Node.js
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      # Для тестов Playwright, которые могут выполнять действия администратора или требовать сервисный ключ:
+      # SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }} 
+      
+      # OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }} # Если будете использовать AI triage
+
+      # Переменные окружения для CI
+      CI: true
+
+    steps:
+      - name: 🛎️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🛠️ Setup Node.js and pnpm
+        uses: pnpm/action-setup@v3 # Обновлено до v3
+        with:
+          version: 8 # Укажите вашу версию pnpm, если отличается
+      - name: Use Node.js ${{ matrix.node-version || '20.x' }} # Используйте matrix или версию по умолчанию
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-        
-      - name: Build Next.js app
-        run: npm run build
-        env:
-          CI: true
-          
-      - name: Start Next.js server
-        run: npm start &
-        env:
-          CI: true
-          
-      - name: Wait for server
-        run: npx wait-on http://localhost:3000
-        
-      - name: Run Playwright tests on ${{ matrix.browser }}
-        run: npx playwright test --project=${{ matrix.browser }}
-        env:
-          CI: true
-          
-      - uses: actions/upload-artifact@v3
-        if: failure()
+          node-version: ${{ matrix.node-version || '20.x' }}
+          cache: 'pnpm'
+
+      - name: 📦 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🎨 Lint code
+        run: pnpm run lint # Убедитесь, что у вас есть скрипт "lint" в package.json
+
+      - name: ʦ Type check
+        run: pnpm run typecheck # Убедитесь, что у вас есть скрипт "typecheck" в package.json (обычно tsc --noEmit)
+      
+      - name: 🏗️ Build project
+        run: pnpm run build # Убедитесь, что у вас есть скрипт "build" в package.json
+
+      # Установка Playwright Browsers должна быть до запуска тестов
+      - name:  playwright browsers
+        run: pnpm exec playwright install --with-deps
+      
+      - name: 🧪 Run Playwright E2E tests
+        id: e2e_tests # дадим id для шага чтобы использовать его вывод
+        # Запускаем тесты и продолжаем даже если они упадут, чтобы обработать ошибку
+        run: pnpm exec playwright test || echo "::set-output name=PLAYWRIGHT_TESTS_FAILED::true" 
+        # Если вы хотите чтобы CI падал при ошибках тестов playwright test
+
+      # Опциональный шаг: AI Triage (если тесты упали)
+      # - name: 🤖 AI Triage & PR for failed tests
+      #   if: steps.e2e_tests.outputs.PLAYWRIGHT_TESTS_FAILED == 'true'
+      #   run: |
+      #     echo "Playwright tests failed. Initiating AI Triage..."
+      #     # node src/utils/aiTriage.ts # Предполагая что у вас есть такой скрипт
+      #     # Этот скрипт должен использовать OPENAI_API_KEY
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Для создания PR
+
+      # Пример загрузки артефактов сборки (если нужно)
+      # - name: 📤 Upload build artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: production-build
+      #     path: .next/ # или ваша папка сборки
+
+      # Пример загрузки отчетов Playwright (всегда, для анализа)
+      - name: 📤 Upload Playwright Test Report
+        if: always() # Загружаем отчет всегда, даже если тесты прошли успешно или упали
+        uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.browser }}
+          name: playwright-report
           path: playwright-report/
-          retention-days: 30
-          
-  ai-triage:
-    runs-on: ubuntu-latest
-    needs: e2e-tests
-    if: failure()
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Run AI Triage
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          retention-days: 7 # Хранить отчеты 7 дней
+
+      # Если тесты Playwright упали и вы хотите чтобы CI завершился с ошибкой:
+      - name: Check Playwright test results
+        if: steps.e2e_tests.outputs.PLAYWRIGHT_TESTS_FAILED == 'true'
         run: |
-          if [ -f scripts/ai-triage.js ]; then
-            node scripts/ai-triage.js
-          else
-            echo "AI triage script not found, skipping..."
-          fi
+          echo "Playwright tests failed. See uploaded report for details."
+          exit 1

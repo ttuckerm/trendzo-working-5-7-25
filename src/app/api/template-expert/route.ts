@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/firebase/firebase';
-import { doc, getDoc, Firestore } from 'firebase/firestore';
+// import { db } from '@/lib/firebase/firebase'; // Firebase db is null
+// import { doc, getDoc, Firestore } from 'firebase/firestore';
 import { advancedTemplateAnalysisService } from '@/lib/services/advancedTemplateAnalysisService';
-import { expertInsightService } from '@/lib/services/expertInsightService';
+import { expertInsightService } from '@/lib/services/expertInsightService'; // Already neutralized
+
+const ROUTE_DISABLED_MSG_PREFIX = "TemplateExpertRoute: Firebase backend is removed.";
 
 /**
  * GET endpoint for template data with expert insights
@@ -19,48 +21,51 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // First try to fetch template data from Firebase
-    if (db) {
-      try {
-        const templateRef = doc(db as Firestore, 'templates', templateId);
-        const templateDoc = await getDoc(templateRef);
+    console.warn(`${ROUTE_DISABLED_MSG_PREFIX} Firebase operations skipped. Using mock data and neutralized services.`);
+
+    // // First try to fetch template data from Firebase
+    // if (db) { // db is null, so this block would not execute anyway
+    //   try {
+    //     const templateRef = doc(db as Firestore, 'templates', templateId);
+    //     const templateDoc = await getDoc(templateRef);
         
-        if (templateDoc.exists()) {
-          const templateData = templateDoc.data();
+    //     if (templateDoc.exists()) {
+    //       const templateData = templateDoc.data();
           
-          // Try to fetch expert insights
-          const expertInsights = await expertInsightService.getExpertInsights(templateId);
-          const manualAdjustments = await expertInsightService.getManualAdjustments(templateId);
+    //       // Try to fetch expert insights
+    //       const expertInsights = await expertInsightService.getExpertInsights(templateId);
+    //       const manualAdjustments = await expertInsightService.getManualAdjustments(templateId);
           
-          // If we have analysis data and expert insights, enhance the analysis
-          if (templateData.analysisData && expertInsights) {
-            templateData.analysisData = await advancedTemplateAnalysisService.enhanceWithExpertInsights(
-              templateId,
-              templateData.analysisData,
-              expertInsights
-            );
-          }
+    //       // If we have analysis data and expert insights, enhance the analysis
+    //       if (templateData.analysisData && expertInsights) {
+    //         templateData.analysisData = await advancedTemplateAnalysisService.enhanceWithExpertInsights(
+    //           templateId,
+    //           templateData.analysisData,
+    //           expertInsights
+    //         );
+    //       }
           
-          // Add the expert insights and adjustments to the response
-          const responseData = {
-            ...templateData,
-            expertInsights,
-            manualAdjustments
-          };
+    //       // Add the expert insights and adjustments to the response
+    //       const responseData = {
+    //         ...templateData,
+    //         expertInsights,
+    //         manualAdjustments
+    //       };
           
-          return NextResponse.json({
-            success: true,
-            template: {
-              id: templateDoc.id,
-              ...responseData
-            }
-          });
-        }
-      } catch (firebaseError) {
-        console.error('Firebase error:', firebaseError);
-        // Continue to mock data if Firebase fails
-      }
-    }
+    //       return NextResponse.json({
+    //         success: true,
+    //         template: {
+    //           id: templateDoc.id,
+    //           ...responseData
+    //         }
+    //       });
+    //     }
+    //   } catch (firebaseError) {
+    //     console.error('Firebase error during template-expert GET:', firebaseError);
+    //     // Continue to mock data if Firebase fails
+    //     console.warn(`${ROUTE_DISABLED_MSG_PREFIX} Firebase fetch failed, falling back to mock data.`);
+    //   }
+    // }
     
     // Return mock data for development purposes
     const mockTemplate = getMockTemplateData(templateId);

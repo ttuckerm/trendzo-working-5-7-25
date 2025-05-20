@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/firebase/firebase';
-import { collection, query, where, getDocs, orderBy, limit, Firestore } from 'firebase/firestore';
+// import { collection, query, where, getDocs, orderBy, limit, Firestore } from 'firebase/firestore';
+import type { Firestore } from 'firebase/firestore'; // Keep type if needed
 import { checkSubscriptionAccess } from '@/middleware/checkSubscription';
 import { isDemoRequest, getSampleAdvancedMetrics } from '@/lib/utils/demoData';
+
+const ROUTE_DISABLED_MSG = "templates/analytics route: Firebase backend is removed. Analytics will be mocked.";
 
 // Type assertion for db (to avoid implicit any)
 const firestore = db as Firestore | null;
@@ -21,6 +24,7 @@ const firestore = db as Firestore | null;
  */
 export async function GET(request: NextRequest) {
   try {
+    console.warn(ROUTE_DISABLED_MSG);
     // Check subscription access with our middleware
     const subscriptionCheck = await checkSubscriptionAccess(request, {
       requiredTier: 'premium',
@@ -77,62 +81,62 @@ export async function GET(request: NextRequest) {
         startDate.setDate(now.getDate() - 30);
     }
     
-    // Try to get data from Firebase if available
-    try {
+    // Try to get data from Firebase if available - THIS IS NOW DISABLED
+    // try {
       // Check if db is properly initialized
-      if (!firestore) {
-        throw new Error('Firestore not initialized');
-      }
+      // if (!firestore) {
+      //   throw new Error('Firestore not initialized');
+      // }
       
       // Create base query
-      let q = query(
-        collection(firestore, 'templates'),
-        where('isActive', '==', true),
-        orderBy(`stats.${sort === 'engagement' ? 'engagementRate' : sort === 'growth' ? 'growthRate' : 'views'}`, 'desc'),
-        limit(templateLimit)
-      );
+      // let q = query(
+      //   collection(firestore, 'templates'),
+      //   where('isActive', '==', true),
+      //   orderBy(`stats.${sort === 'engagement' ? 'engagementRate' : sort === 'growth' ? 'growthRate' : 'views'}`, 'desc'),
+      //   limit(templateLimit)
+      // );
       
       // Add category filter if specified
-      if (category && category !== 'All') {
-        q = query(
-          collection(firestore, 'templates'),
-          where('isActive', '==', true),
-          where('category', '==', category),
-          orderBy(`stats.${sort === 'engagement' ? 'engagementRate' : sort === 'growth' ? 'growthRate' : 'views'}`, 'desc'),
-          limit(templateLimit)
-        );
-      }
+      // if (category && category !== 'All') {
+      //   q = query(
+      //     collection(firestore, 'templates'),
+      //     where('isActive', '==', true),
+      //     where('category', '==', category),
+      //     orderBy(`stats.${sort === 'engagement' ? 'engagementRate' : sort === 'growth' ? 'growthRate' : 'views'}`, 'desc'),
+      //     limit(templateLimit)
+      //   );
+      // }
       
       // Execute query
-      const querySnapshot = await getDocs(q);
+      // const querySnapshot = await getDocs(q);
       
       // Process results
-      const templates = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      // const templates = querySnapshot.docs.map(doc => ({
+      //   id: doc.id,
+      //   ...doc.data()
+      // }));
       
       // Return actual data with time range info
-      return NextResponse.json({
-        success: true,
-        timeRange,
-        category: category || 'All',
-        sort,
-        count: templates.length,
-        templates
-      });
-    } catch (error) {
-      console.error('Error fetching analytics from Firebase:', error);
+      // return NextResponse.json({
+      //   success: true,
+      //   timeRange,
+      //   category: category || 'All',
+      //   sort,
+      //   count: templates.length,
+      //   templates
+      // });
+    // } catch (error) {
+    //   console.error('Error fetching analytics from Firebase:', error);
       // Return mock data if Firebase isn't configured or encounters an error
       return NextResponse.json({
         success: true,
         timeRange,
         category: category || 'All',
         sort,
-        count: 10,
+        // count: 10, // getMockAnalyticsData returns 10 by default
         templates: getMockAnalyticsData(timeRange, category, sort)
       });
-    }
+    // }
   } catch (error: any) {
     console.error('Error in analytics API:', error);
     return NextResponse.json({

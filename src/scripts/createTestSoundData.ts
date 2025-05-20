@@ -1,22 +1,24 @@
-import { getFirestore, setDoc, doc } from 'firebase/firestore';
-import { initializeApp } from 'firebase/app';
-import { db as firebaseDb } from '../lib/firebase/firebase';
+// import { getFirestore, setDoc, doc } from 'firebase/firestore';
+// import { initializeApp } from 'firebase/app';
+// import { db as firebaseDb } from '../lib/firebase/firebase'; // firebaseDb will be null
 import { TikTokSound } from '../lib/types/tiktok';
 import { v4 as uuidv4 } from 'uuid';
+
+const SCRIPT_DISABLED_MSG_PREFIX = "createTestSoundData script: Firebase backend is removed.";
 
 // Collection names
 const SOUNDS_COLLECTION = 'sounds';
 const TREND_REPORTS_COLLECTION = 'soundTrendReports';
 
 // Use the imported database instance or create a fallback for testing
-const db = firebaseDb || getFirestore();
+const db = null; // firebaseDb is null, getFirestore is commented out. Explicitly null.
 
 /**
  * Generate random test sound data
  */
 async function createTestSoundData() {
   try {
-    console.log('Creating test sound data...');
+    console.log('Creating test sound data (Firebase operations will be skipped)...');
     
     // Generate sample sounds
     const testSounds = [
@@ -29,8 +31,9 @@ async function createTestSoundData() {
     
     // Store sounds
     for (const sound of testSounds) {
-      await setDoc(doc(db, SOUNDS_COLLECTION, sound.id), sound);
-      console.log(`Created test sound: ${sound.title}`);
+      // await setDoc(doc(db, SOUNDS_COLLECTION, sound.id), sound);
+      console.warn(`${SCRIPT_DISABLED_MSG_PREFIX} Skipping setDoc for sound: ${sound.title} (ID: ${sound.id}). Data:`, sound);
+      console.log(`Generated (but not stored) test sound: ${sound.title}`);
     }
     
     // Create a test trend report
@@ -54,10 +57,11 @@ async function createTestSoundData() {
       createdAt: new Date()
     };
     
-    await setDoc(doc(db, TREND_REPORTS_COLLECTION, trendReport.id), trendReport);
-    console.log(`Created test trend report: ${trendReport.id}`);
+    // await setDoc(doc(db, TREND_REPORTS_COLLECTION, trendReport.id), trendReport);
+    console.warn(`${SCRIPT_DISABLED_MSG_PREFIX} Skipping setDoc for trend report: ${trendReport.id}. Data:`, trendReport);
+    console.log(`Generated (but not stored) test trend report: ${trendReport.id}`);
     
-    console.log('Test data creation completed successfully!');
+    console.log('Test data generation completed (Firebase operations skipped).');
   } catch (error) {
     console.error('Error creating test data:', error);
   }
