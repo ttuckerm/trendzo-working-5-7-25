@@ -407,9 +407,9 @@ export function useResolveComponent(componentName: string) {
   
   try {
     // Try to import the component
-    if (useCompatibilityMode && CompatibilityComponents[componentName]) {
+    if (useCompatibilityMode && CompatibilityComponents[componentName as keyof typeof CompatibilityComponents]) {
       // Use the compatibility version
-      Component = CompatibilityComponents[componentName];
+      Component = CompatibilityComponents[componentName as keyof typeof CompatibilityComponents];
       console.log(`[ImportResolver] Using compatibility version for ${componentName}`);
     } else {
       // Use the standard version
@@ -527,10 +527,10 @@ export async function resolveComponentWithFallback<T>(
   while (retryCount <= retries) {
     try {
       // Always use the compatibility components to avoid dynamic imports with expressions
-      const module = await safeImport(componentName, isCompatibilityVersion);
+      const importedModule = await safeImport(componentName, isCompatibilityVersion);
       
       // Extract the specific component or return the whole module
-      const result = getComponentFromModule(module, componentName);
+      const result = getComponentFromModule(importedModule, componentName);
       
       if (result) {
         logComponentResolution(componentName, 'success', {
@@ -581,8 +581,12 @@ export async function resolveComponentWithFallback<T>(
 }
 
 // Fix type issues with indexing compatibility components
-const getComponentFromModule = (module: any, componentName: string) => {
-  return componentName in module ? module[componentName as keyof typeof module] : null;
+const getComponentFromModule = (mod: typeof CompatibilityComponents | Record<string, any>, componentName: string) => {
+  if (mod && typeof mod === 'object' && componentName in mod) {
+    // @ts-ignore Property ' एक्सिस' does not exist on type 'Window & typeof globalThis'.ts(2339)
+    return mod[componentName as keyof typeof mod];
+  }
+  return null;
 };
 
 /**
