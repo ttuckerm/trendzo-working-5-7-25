@@ -124,6 +124,7 @@ export default function NetworkDebug() {
               onChange={(e) => setProxyEnabled(e.target.checked)}
               className="mr-2"
             />
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
             Use server-side proxy (helps bypass CORS issues)
           </label>
         </div>
@@ -164,7 +165,7 @@ export default function NetworkDebug() {
           <li>CORS errors may indicate the browser is blocking cross-origin requests</li>
           <li>DNS issues might indicate network configuration problems</li>
           <li>Timeouts suggest firewall or connectivity issues</li>
-          <li>If server-side proxy works but direct doesn't, CORS is likely the issue</li>
+          <li>If server-side proxy works but direct doesn&apos;t, CORS is likely the issue</li>
           <li>Check for VPN, proxy settings, or firewall rules blocking connections</li>
         </ul>
       </div>

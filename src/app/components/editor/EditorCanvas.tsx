@@ -442,9 +442,16 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             )}
             
             {/* Elements */}
-            {activeSection && activeSection.elements && activeSection.elements.map((element) => (
-              renderElement(element)
-            ))}
+            {activeSection && activeSection.elements && activeSection.elements.map((element, index) => {
+              // Add a guard for undefined or null elements before attempting to render
+              if (!element) {
+                // Log an error to the console for easier debugging if this case is hit.
+                // This helps identify issues with data integrity in the elements array.
+                console.error(`EditorCanvas: Attempted to render an undefined or null element at index ${index} in section ${activeSection.id}. Skipping element.`);
+                return null; // Skip rendering this problematic element
+              }
+              return renderElement(element);
+            })}
           </div>
         </div>
       </div>
