@@ -416,7 +416,7 @@ export const apifyService = {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${APIFY_API_TOKEN}`,
-          },
+          }
         }
       );
       

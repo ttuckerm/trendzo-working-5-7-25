@@ -13,7 +13,15 @@ interface EditorCanvasProps {
 export const EditorCanvas: React.FC<EditorCanvasProps> = ({ 
   className = "" 
 }) => {
-  const { state, dispatch, updateElement, moveElement, resizeElement, addElement, deleteElement } = useEditor();
+  const { 
+    state, 
+    updateElement, 
+    moveElement, 
+    resizeElement, 
+    addElement, 
+    deleteElement,
+    selectElement
+  } = useEditor();
   const canvasRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const [aspectRatio, setAspectRatio] = useState<"9:16" | "1:1" | "4:5">("9:16");
@@ -47,29 +55,69 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
 
   // Handle element selection
   const handleElementSelect = (elementId: string) => {
-    dispatch({ type: "SET_SELECTED_ELEMENT", payload: elementId });
+    selectElement(elementId);
   };
 
   // Handle canvas click (deselect elements)
   const handleCanvasClick = (e: React.MouseEvent) => {
     // Only deselect if clicking directly on the canvas, not on an element
     if (e.currentTarget === e.target) {
-      dispatch({ type: "SET_SELECTED_ELEMENT", payload: null });
+      selectElement(null);
     }
   };
 
   // Handle element drag
   const handleElementDrag = (elementId: string, newX: number, newY: number) => {
-    moveElement(elementId, newX, newY);
+    if (activeSection) {
+      moveElement(activeSection.id, elementId, newX, newY);
+    }
   };
 
   // Handle element resize
   const handleElementResize = (elementId: string, newWidth: number, newHeight: number) => {
-    resizeElement(elementId, newWidth, newHeight);
+    if (activeSection) {
+      resizeElement(activeSection.id, elementId, newWidth, newHeight);
+    }
   };
 
   // Render an element based on its type
   const renderElement = (element: Element) => {
+    // NEW SAFER GUARD - Re-added
+    if (!element || typeof element.type !== 'string' || !element.type.trim()) {
+      console.error(`EditorCanvas: renderElement called with invalid element or element.type. Element data:`, element);
+      const elementId = element && element.id ? element.id : `invalid-element-${Math.random().toString(36).substring(7)}`;
+      const x = element && typeof element.x === 'number' ? element.x : 0;
+      const y = element && typeof element.y === 'number' ? element.y : 0;
+      const width = element && typeof element.width === 'number' ? element.width : 100;
+      const height = element && typeof element.height === 'number' ? element.height : 50;
+      
+      return (
+        <div 
+          key={elementId} 
+          style={{ 
+            position: 'absolute', 
+            left: `${x}px`, 
+            top: `${y}px`, 
+            width: `${width}px`, 
+            height: `${height}px`, 
+            border: '2px dashed red', 
+            backgroundColor: 'rgba(255,0,0,0.1)', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            fontSize: '12px',
+            color: 'red',
+            padding: '5px',
+            boxSizing: 'border-box',
+            zIndex: 9999 
+          }}
+          onClick={(e) => e.stopPropagation()} 
+        >
+          Error: Invalid Element (type: {element?.type ?? 'undefined'}, id: {element?.id ?? 'unknown'})
+        </div>
+      );
+    }
+
     const isSelected = state.ui.selectedElementId === element.id;
     
     const elementStyles: React.CSSProperties = {
@@ -175,7 +223,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="absolute -top-8 right-0 p-1 bg-white rounded-md shadow-sm"
             onClick={(e) => {
               e.stopPropagation();
-              updateElement(element.id, { ...element, locked: !element.locked });
+              if (activeSection) {
+                updateElement(activeSection.id, element.id, { ...element, locked: !element.locked });
+              }
             }}
           >
             {element.locked ? (
@@ -192,7 +242,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="absolute -top-8 left-0 p-1 bg-white rounded-md shadow-sm text-red-500 font-bold"
             onClick={(e) => {
               e.stopPropagation();
-              deleteElement(element.id);
+              if (activeSection) {
+                deleteElement(activeSection.id, element.id);
+              }
             }}
           >
             ×
@@ -222,10 +274,12 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
               contentEditable={isSelected && !element.locked}
               suppressContentEditableWarning={true}
               onBlur={(e) => {
-                updateElement(element.id, {
-                  ...element,
-                  content: e.currentTarget.textContent || ''
-                });
+                if (activeSection) {
+                  updateElement(activeSection.id, element.id, {
+                    ...element,
+                    content: e.currentTarget.textContent || ''
+                  });
+                }
               }}
             >
               {element.content}
@@ -443,12 +497,10 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             
             {/* Elements */}
             {activeSection && activeSection.elements && activeSection.elements.map((element, index) => {
-              // Add a guard for undefined or null elements before attempting to render
+              // Original guard for undefined or null elements
               if (!element) {
-                // Log an error to the console for easier debugging if this case is hit.
-                // This helps identify issues with data integrity in the elements array.
                 console.error(`EditorCanvas: Attempted to render an undefined or null element at index ${index} in section ${activeSection.id}. Skipping element.`);
-                return null; // Skip rendering this problematic element
+                return null;
               }
               return renderElement(element);
             })}
@@ -463,20 +515,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
             title="Add Text"
             onClick={() => {
-              addElement("text", {
-                x: canvasDimensions.width / 2 - 100,
-                y: canvasDimensions.height / 2 - 25,
-                width: 200,
-                height: 50,
-                content: "Double click to edit text",
-                color: "#000000",
-                fontSize: 16,
-                fontWeight: "normal",
-                fontFamily: "sans-serif",
-                textAlign: "center",
-                backgroundColor: "transparent",
-                locked: false,
-              });
+              if (activeSection) {
+                addElement(activeSection.id, "text");
+              }
             }}
           >
             <Type size={20} />
@@ -486,15 +527,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
             title="Add Image"
             onClick={() => {
-              addElement("image", {
-                x: canvasDimensions.width / 2 - 100,
-                y: canvasDimensions.height / 2 - 100,
-                width: 200,
-                height: 200,
-                src: "",
-                alt: "Image",
-                locked: false,
-              });
+              if (activeSection) {
+                addElement(activeSection.id, "image");
+              }
             }}
           >
             <Image size={20} />
@@ -504,16 +539,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
             title="Add Video"
             onClick={() => {
-              addElement("video", {
-                x: canvasDimensions.width / 2 - 150,
-                y: canvasDimensions.height / 2 - 100,
-                width: 300,
-                height: 200,
-                src: "",
-                muted: true,
-                loop: true,
-                locked: false,
-              });
+              if (activeSection) {
+                addElement(activeSection.id, "video");
+              }
             }}
           >
             <Video size={20} />
@@ -523,15 +551,9 @@ export const EditorCanvas: React.FC<EditorCanvasProps> = ({
             className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-150"
             title="Add Audio"
             onClick={() => {
-              addElement("audio", {
-                x: canvasDimensions.width / 2 - 150,
-                y: canvasDimensions.height / 2 - 25,
-                width: 300,
-                height: 50,
-                src: "",
-                volume: 1,
-                locked: false,
-              });
+              if (activeSection) {
+                addElement(activeSection.id, "audio");
+              }
             }}
           >
             <Music size={20} />

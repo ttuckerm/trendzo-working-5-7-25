@@ -15,9 +15,9 @@ import {
 import { useTemplateEditor } from '@/lib/contexts/TemplateEditorContext';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/label';
-import { Slider } from '@/components/ui/slider';
+import { Slider } from '@/components/ui/Slider';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { TextElement, MediaElement } from '@/lib/types/templateEditor.types';
@@ -169,6 +169,20 @@ const PropertiesPanel: React.FC = () => {
   const showingElementProperties = selectedSection && selectedElement;
   const showingSectionProperties = selectedSection && !selectedElement;
   const noSelection = !selectedSection;
+  
+  // Placeholder for renderElementStyleControls
+  const renderElementStyleControls = () => {
+    if (!selectedElement) return null;
+    // TODO: Implement actual style controls for the selected element
+    return <div className="p-4 bg-gray-50 rounded-md text-sm text-gray-600">Element Style Controls (Placeholder for {selectedElement.type})</div>;
+  };
+  
+  // Placeholder for renderAnimationControls
+  const renderAnimationControls = () => {
+    if (!selectedElement) return null;
+    // TODO: Implement actual animation controls
+    return <div className="p-4 bg-gray-50 rounded-md text-sm text-gray-600">Animation Controls (Placeholder for {selectedElement.type})</div>;
+  };
   
   // Text element specific controls
   const renderTextElementControls = () => {
@@ -544,71 +558,27 @@ const PropertiesPanel: React.FC = () => {
       </div>
       
       {/* Properties content */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {noSelection && renderEmptyState()}
         
-        {showingElementProperties && (
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full mb-4">
-              <TabsTrigger value="style" className="flex-1">
-                <Palette className="w-4 h-4 mr-1.5" />
-                Style
-              </TabsTrigger>
-              <TabsTrigger value="animation" className="flex-1">
-                <Clock className="w-4 h-4 mr-1.5" />
-                Animation
-              </TabsTrigger>
-              <TabsTrigger value="advanced" className="flex-1">
-                <Sliders className="w-4 h-4 mr-1.5" />
-                Advanced
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="style" className="mt-0">
-              {selectedElement.type === 'text' && renderTextElementControls()}
-              {selectedElement.type === 'media' && renderMediaElementControls()}
-            </TabsContent>
-            
-            <TabsContent value="animation" className="mt-0">
-              <div className="bg-amber-50 p-3 rounded-md text-center">
-                <p className="text-amber-800 text-sm">
-                  Animation features available in premium version.
-                </p>
-                <button className="text-xs text-amber-800 underline mt-1">
-                  Upgrade for animations
-                </button>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="advanced" className="mt-0">
-              <div className="bg-gray-50 p-4 rounded-md">
-                <h3 className="text-sm font-medium mb-2">Element Position</h3>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label className="text-xs text-gray-500 mb-1.5 block">X Position</Label>
-                    <Input type="number" value={Math.round(selectedElement.position.x)} className="text-sm" />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-gray-500 mb-1.5 block">Y Position</Label>
-                    <Input type="number" value={Math.round(selectedElement.position.y)} className="text-sm" />
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        )}
+        {showingSectionProperties && renderSectionControls()}
         
-        {showingSectionProperties && (
-          <Tabs value="section-props">
-            <TabsList className="w-full mb-4">
-              <TabsTrigger value="section-props" className="flex-1">
-                <Layers className="w-4 h-4 mr-1.5" />
-                Section Properties
-              </TabsTrigger>
+        {showingElementProperties && (
+          <Tabs defaultValue="style" className="w-full" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="grid w-full grid-cols-3 mb-4">
+              <TabsTrigger value="style">Style</TabsTrigger>
+              <TabsTrigger value="content">Content</TabsTrigger>
+              <TabsTrigger value="animation">Animation</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="section-props" className="mt-0">
-              {renderSectionControls()}
+            <TabsContent value="style">
+              {renderElementStyleControls()}
+            </TabsContent>
+            <TabsContent value="content">
+              {selectedElement?.type === 'text' && renderTextElementControls()}
+              {selectedElement?.type === 'media' && renderMediaElementControls()}
+            </TabsContent>
+            <TabsContent value="animation">
+              {renderAnimationControls()}
             </TabsContent>
           </Tabs>
         )}

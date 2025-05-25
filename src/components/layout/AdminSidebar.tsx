@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 // Import Lucide icons individually instead of using barrel imports
-import { TrendingUp } from 'lucide-react'
 import { LayoutDashboard } from 'lucide-react'
 import { Image } from 'lucide-react'
 import { Edit } from 'lucide-react'
@@ -162,7 +161,18 @@ export default function AdminSidebar({
         {/* Sidebar Header with Logo */}
         <div className="flex h-16 items-center justify-between border-b border-gray-200 px-4">
           <Link href="/dashboard" className="flex items-center gap-2">
-            <TrendingUp className="h-6 w-6 text-blue-600" />
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" className="h-6 w-6">
+              <circle cx="250" cy="250" r="200" fill="none" stroke="url(#circleGradient)" strokeWidth="20" />
+              <path d="M150,300 L200,250 L250,270 L300,200 L350,150" fill="none" stroke="#1E90FF" strokeWidth="15" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M330,150 L350,150 L350,170" fill="none" stroke="#1E90FF" strokeWidth="15" strokeLinecap="round" strokeLinejoin="round" />
+              <defs>
+                <linearGradient id="circleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#4169E1" />
+                  <stop offset="50%" stopColor="#1E90FF" />
+                  <stop offset="100%" stopColor="#9370DB" />
+                </linearGradient>
+              </defs>
+            </svg>
             {!isCollapsed && <span className="text-lg font-bold text-gray-800">Trendzo</span>}
           </Link>
         </div>
