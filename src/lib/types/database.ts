@@ -1,134 +1,437 @@
-// src/lib/types/database.ts
+// Database types for TRENDZO MVP with Smart Template Engine
+// Generated based on Supabase schema
 
-// User Profile Types
-export interface UserProfile {
-  id: string;
-  user_id: string;
-  email: string | null;
-  display_name: string | null;
-  avatar_url: string | null;
-  subscription_tier: 'free' | 'premium' | 'platinum';
-  max_daily_prompts: number;
-  created_at: string;
-  updated_at: string;
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export interface Database {
+  public: {
+    Tables: {
+      users: {
+        Row: {
+          id: string
+          email: string
+          created_at: string
+          last_active: string
+          conversion_source: 'landing_exit' | 'editor_exit' | 'direct' | null
+          entry_niche: string | null
+          entry_platform: string | null
+          attribution_given: number
+          total_templates_created: number
+          onboarding_completed: boolean
+        }
+        Insert: {
+          id: string
+          email: string
+          created_at?: string
+          last_active?: string
+          conversion_source?: 'landing_exit' | 'editor_exit' | 'direct' | null
+          entry_niche?: string | null
+          entry_platform?: string | null
+          attribution_given?: number
+          total_templates_created?: number
+          onboarding_completed?: boolean
+        }
+        Update: {
+          id?: string
+          email?: string
+          created_at?: string
+          last_active?: string
+          conversion_source?: 'landing_exit' | 'editor_exit' | 'direct' | null
+          entry_niche?: string | null
+          entry_platform?: string | null
+          attribution_given?: number
+          total_templates_created?: number
+          onboarding_completed?: boolean
+        }
+      }
+      templates: {
+        Row: {
+          id: string
+          name: string
+          category: string
+          niche: 'business' | 'creator' | 'fitness' | 'education' | 'general'
+          platform: string[]
+          viral_score: number
+          usage_count: number
+          original_creator: {
+            username: string
+            platform: string
+            videoUrl: string
+            profileUrl: string
+          } | null
+          structure: {
+            sections: string[]
+            duration: number
+            [key: string]: any
+          }
+          preview_url: string | null
+          thumbnail_url: string | null
+          duration_seconds: number | null
+          is_featured: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          category: string
+          niche: 'business' | 'creator' | 'fitness' | 'education' | 'general'
+          platform: string[]
+          viral_score?: number
+          usage_count?: number
+          original_creator?: {
+            username: string
+            platform: string
+            videoUrl: string
+            profileUrl: string
+          } | null
+          structure: {
+            sections: string[]
+            duration: number
+            [key: string]: any
+          }
+          preview_url?: string | null
+          thumbnail_url?: string | null
+          duration_seconds?: number | null
+          is_featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          category?: string
+          niche?: 'business' | 'creator' | 'fitness' | 'education' | 'general'
+          platform?: string[]
+          viral_score?: number
+          usage_count?: number
+          original_creator?: {
+            username: string
+            platform: string
+            videoUrl: string
+            profileUrl: string
+          } | null
+          structure?: {
+            sections: string[]
+            duration: number
+            [key: string]: any
+          }
+          preview_url?: string | null
+          thumbnail_url?: string | null
+          duration_seconds?: number | null
+          is_featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      landing_pages: {
+        Row: {
+          id: string
+          niche: 'business' | 'creator' | 'fitness' | 'education'
+          platform: 'linkedin' | 'twitter' | 'facebook' | 'instagram'
+          content: {
+            headline: string
+            subheadline: string
+            painPoints: string[]
+            benefits: string[]
+            ctaText: string
+            socialProof: string
+            templateShowcase: string
+            urgencyText: string
+          }
+          performance_data: {
+            visitors: number
+            conversions: number
+            conversionRate: number
+          }
+          ab_variant: string
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          niche: 'business' | 'creator' | 'fitness' | 'education'
+          platform: 'linkedin' | 'twitter' | 'facebook' | 'instagram'
+          content: {
+            headline: string
+            subheadline: string
+            painPoints: string[]
+            benefits: string[]
+            ctaText: string
+            socialProof: string
+            templateShowcase: string
+            urgencyText: string
+          }
+          performance_data?: {
+            visitors: number
+            conversions: number
+            conversionRate: number
+          }
+          ab_variant?: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          niche?: 'business' | 'creator' | 'fitness' | 'education'
+          platform?: 'linkedin' | 'twitter' | 'facebook' | 'instagram'
+          content?: {
+            headline: string
+            subheadline: string
+            painPoints: string[]
+            benefits: string[]
+            ctaText: string
+            socialProof: string
+            templateShowcase: string
+            urgencyText: string
+          }
+          performance_data?: {
+            visitors: number
+            conversions: number
+            conversionRate: number
+          }
+          ab_variant?: string
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      campaign_analytics: {
+        Row: {
+          id: string
+          landing_page_id: string | null
+          visitor_id: string
+          session_id: string
+          event_type: 'page_view' | 'exit_intent_trigger' | 'exit_intent_dismiss' | 'exit_intent_convert' | 'editor_entry' | 'template_select' | 'customization_start' | 'email_capture' | 'magic_link_sent' | 'magic_link_clicked' | 'template_complete' | 'attribution_shown' | 'attribution_given'
+          metadata: Json
+          utm_source: string | null
+          utm_medium: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          device_type: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          landing_page_id?: string | null
+          visitor_id: string
+          session_id: string
+          event_type: 'page_view' | 'exit_intent_trigger' | 'exit_intent_dismiss' | 'exit_intent_convert' | 'editor_entry' | 'template_select' | 'customization_start' | 'email_capture' | 'magic_link_sent' | 'magic_link_clicked' | 'template_complete' | 'attribution_shown' | 'attribution_given'
+          metadata?: Json
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          device_type?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          landing_page_id?: string | null
+          visitor_id?: string
+          session_id?: string
+          event_type?: 'page_view' | 'exit_intent_trigger' | 'exit_intent_dismiss' | 'exit_intent_convert' | 'editor_entry' | 'template_select' | 'customization_start' | 'email_capture' | 'magic_link_sent' | 'magic_link_clicked' | 'template_complete' | 'attribution_shown' | 'attribution_given'
+          metadata?: Json
+          utm_source?: string | null
+          utm_medium?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          device_type?: string | null
+          created_at?: string
+        }
+      }
+      user_templates: {
+        Row: {
+          id: string
+          user_id: string
+          template_id: string
+          customization: Json
+          completed: boolean
+          attribution_given: boolean
+          export_count: number
+          last_edited: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          template_id: string
+          customization: Json
+          completed?: boolean
+          attribution_given?: boolean
+          export_count?: number
+          last_edited?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          template_id?: string
+          customization?: Json
+          completed?: boolean
+          attribution_given?: boolean
+          export_count?: number
+          last_edited?: string
+          created_at?: string
+        }
+      }
+      creator_attributions: {
+        Row: {
+          id: string
+          user_id: string
+          template_id: string
+          creator_username: string
+          creator_platform: string
+          comment_text: string
+          comment_posted: boolean
+          engagement_result: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          template_id: string
+          creator_username: string
+          creator_platform: string
+          comment_text: string
+          comment_posted?: boolean
+          engagement_result?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          template_id?: string
+          creator_username?: string
+          creator_platform?: string
+          comment_text?: string
+          comment_posted?: boolean
+          engagement_result?: string | null
+          created_at?: string
+        }
+      }
+      email_captures: {
+        Row: {
+          id: string
+          email: string
+          capture_source: 'landing_exit' | 'editor_exit' | 'save_template'
+          niche: string | null
+          platform: string | null
+          template_id: string | null
+          magic_link_token: string
+          magic_link_used: boolean
+          created_at: string
+          used_at: string | null
+        }
+        Insert: {
+          id?: string
+          email: string
+          capture_source: 'landing_exit' | 'editor_exit' | 'save_template'
+          niche?: string | null
+          platform?: string | null
+          template_id?: string | null
+          magic_link_token?: string
+          magic_link_used?: boolean
+          created_at?: string
+          used_at?: string | null
+        }
+        Update: {
+          id?: string
+          email?: string
+          capture_source?: 'landing_exit' | 'editor_exit' | 'save_template'
+          niche?: string | null
+          platform?: string | null
+          template_id?: string | null
+          magic_link_token?: string
+          magic_link_used?: boolean
+          created_at?: string
+          used_at?: string | null
+        }
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+  }
 }
 
-// Template Types
-export interface Template {
-  id: number; // Changed to number since it's a bigint in the database
-  title: string;
-  description: string | null;
-  category: string | null;
-  duration: number | null;
-  thumbnail_url: string | null;
-  structure: any; // JSON structure of the template
-  engagement_metrics: {
-    views?: number;
-    likes?: number;
-    comments?: number;
-    shares?: number;
-  };
-  growth_data: {
-    velocity?: number;
-    acceleration?: number;
-    peak_date?: string;
-  };
-  is_trending: boolean;
-  created_at: string;
-  updated_at: string;
-  expert_insights: {
-    tags?: string[];
-    notes?: string;
-    manual_adjustment?: boolean;
-    adjustment_reason?: string;
-  };
+// Helper types for easier usage
+export type User = Database['public']['Tables']['users']['Row']
+export type Template = Database['public']['Tables']['templates']['Row']
+export type LandingPage = Database['public']['Tables']['landing_pages']['Row']
+export type CampaignAnalytics = Database['public']['Tables']['campaign_analytics']['Row']
+export type UserTemplate = Database['public']['Tables']['user_templates']['Row']
+export type CreatorAttribution = Database['public']['Tables']['creator_attributions']['Row']
+export type EmailCapture = Database['public']['Tables']['email_captures']['Row']
+
+// Landing page content type
+export interface LandingPageContent {
+  headline: string
+  subheadline: string
+  painPoints: string[]
+  benefits: string[]
+  ctaText: string
+  socialProof: string
+  templateShowcase: string
+  urgencyText: string
 }
 
-export interface TemplateTag {
-  id: number; // Changed to number
-  template_id: number; // Changed to number
-  tag: string;
+// Creator info type
+export interface CreatorInfo {
+  username: string
+  platform: 'tiktok' | 'instagram' | 'youtube' | 'linkedin'
+  videoUrl: string
+  profileUrl: string
 }
 
-// Sound Types
-export interface Sound {
-  id: number; // Changed to number
-  name: string;
-  artist: string | null;
-  duration: number | null;
-  is_original: boolean;
-  usage_count: number;
-  audio_url: string | null;
-  category: string | null;
-  genre: string | null;
-  growth_metrics: {
-    sevenDayGrowth?: number;
-    fourteenDayGrowth?: number;
-    thirtyDayGrowth?: number;
-    velocity?: number;
-  };
-  engagement_correlation: any;
-  expert_annotations: any;
-  created_at: string;
-  updated_at: string;
+// Template structure type
+export interface TemplateStructure {
+  sections: string[]
+  duration: number
+  transitions?: string[]
+  effects?: string[]
+  [key: string]: any
 }
 
-export interface SoundTemplateMapping {
-  id: number; // Changed to number
-  sound_id: number; // Changed to number
-  template_id: number; // Changed to number
-  correlation_score: number | null;
-  created_at: string;
+// Analytics event metadata types
+export interface AnalyticsMetadata {
+  templateId?: string
+  customizationStep?: string
+  exitIntentType?: string
+  errorMessage?: string
+  [key: string]: any
 }
 
-// User Saved Templates
-export interface UserSavedTemplate {
-  id: number; // Changed to number
-  user_id: string; // Still a UUID from auth
-  template_id: number; // Changed to number
-  created_at: string;
-}
+// Niche and Platform types
+export type Niche = 'business' | 'creator' | 'fitness' | 'education'
+export type Platform = 'linkedin' | 'twitter' | 'facebook' | 'instagram'
+export type TemplatePlatform = Platform | 'tiktok' | 'youtube'
 
-// Expert Insights
-export interface ExpertInsight {
-  id: number; // Changed to number
-  entity_type: 'template' | 'sound' | 'trend';
-  entity_id: number; // Changed to number
-  insight_text: string;
-  impact_score: number | null;
-  created_by: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-// Audit Trail
-export interface AuditTrail {
-  id: number; // Changed to number
-  action_type: string;
-  entity_type: string;
-  entity_id: number; // Changed to number
-  user_id: string | null; // Still a UUID from auth
-  previous_state: any;
-  new_state: any;
-  created_at: string;
-}
-
-// User Permissions
-export interface UserPermission {
-  id: number; // Changed to number
-  user_id: string; // Still a UUID from auth
-  permission_key: string;
-  permission_value: boolean;
-  created_at: string;
-}
-
-// Feature Flag
-export interface FeatureFlag {
-  id: number; // Changed to number
-  name: string;
-  description: string | null;
-  enabled: boolean;
-  required_tier: string;
-  created_at: string;
-  updated_at: string;
+// Campaign metrics type
+export interface CampaignMetrics {
+  landingPageId: string
+  niche: Niche
+  platform: Platform
+  visitors: number
+  conversions: number
+  conversionRate: number
+  exitIntentTriggers: number
+  exitIntentConversions: number
+  editorEntryRate: number
+  templateCompletionRate: number
+  socialSource: string
 }

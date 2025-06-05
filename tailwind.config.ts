@@ -105,13 +105,87 @@ const config: Config = {
             backgroundPosition: "0% 50%",
             transform: "rotate(-5deg) scale(0.9)"
           }
+        },
+        "gradient-x": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center"
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center"
+          }
+        },
+        "pulse-slow": {
+          "0%, 100%": {
+            opacity: "1"
+          },
+          "50%": {
+            opacity: "0.5"
+          }
+        },
+        "float": {
+          "0%, 100%": {
+            transform: "translateY(0px)"
+          },
+          "50%": {
+            transform: "translateY(-20px)"
+          }
+        },
+        "glow": {
+          "0%, 100%": {
+            boxShadow: "0 0 20px rgba(168, 85, 247, 0.3)"
+          },
+          "50%": {
+            boxShadow: "0 0 40px rgba(168, 85, 247, 0.6)"
+          }
+        },
+        "shimmer": {
+          "0%": {
+            transform: "translateX(-100%)"
+          },
+          "100%": {
+            transform: "translateX(100%)"
+          }
+        },
+        "morph": {
+          "0%, 100%": {
+            borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%"
+          },
+          "50%": {
+            borderRadius: "30% 60% 70% 40% / 50% 60% 30% 60%"
+          }
+        },
+        "breathe": {
+          "0%, 100%": {
+            transform: "scale(1)",
+            opacity: "0.8"
+          },
+          "50%": {
+            transform: "scale(1.05)",
+            opacity: "1"
+          }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "text-gradient": "text-gradient 3s linear infinite",
-        "aurora": "aurora 8s ease-in-out infinite alternate"
+        "aurora": "aurora 8s ease-in-out infinite alternate",
+        "gradient-x": "gradient-x 3s ease infinite",
+        "pulse-slow": "pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 3s ease-in-out infinite",
+        "glow": "glow 2s ease-in-out infinite alternate",
+        "shimmer": "shimmer 2s linear infinite",
+        "morph": "morph 8s ease-in-out infinite",
+        "breathe": "breathe 4s ease-in-out infinite"
+      },
+      transitionDuration: {
+        '400': '400ms',
+        '600': '600ms',
+      },
+      animationDelay: {
+        '2000': '2000ms',
       },
     },
   },

@@ -17,17 +17,17 @@ export default function EditorPage() {
   // Build the new URL with the parameters
   const id = searchParams?.get('id');
   const source = searchParams?.get('source');
-  let redirectUrl = '/dashboard-view/template-editor';
+  const restricted = searchParams?.get('restricted');
+  let redirectUrl = '/template-editor';
   
   // Add query params if they exist
-  if (id || source) {
-    redirectUrl += '?';
-    if (id) {
-      redirectUrl += `id=${id}`;
-    }
-    if (source) {
-      redirectUrl += `${id ? '&' : ''}source=${source}`;
-    }
+  const params = new URLSearchParams();
+  if (id) params.append('id', id);
+  if (source) params.append('source', source);
+  if (restricted) params.append('restricted', restricted);
+  
+  if (params.toString()) {
+    redirectUrl += '?' + params.toString();
   }
   
   return (

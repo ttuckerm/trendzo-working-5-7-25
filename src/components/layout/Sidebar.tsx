@@ -204,10 +204,10 @@ export default function Sidebar({
                          pathname === '/(dashboard)/template-library' || pathname.startsWith('/(dashboard)/template-library/')}
               />
               <NavItem
-                href="/dashboard-view/template-editor"
+                href="/template-editor"
                 icon={<Edit size={18} />}
                 label="Template Editor"
-                isActive={pathname === '/editor' || pathname === '/dashboard-view/template-editor' || pathname.startsWith('/dashboard-view/template-editor/')}
+                isActive={pathname === '/template-editor' || pathname === '/(dashboard)/template-editor' || pathname.includes('/template-editor')}
               />
               <NavItem
                 href="/dashboard-view/video-analyzer"

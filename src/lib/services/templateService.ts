@@ -25,8 +25,24 @@ const SERVICE_DISABLED_MSG = "templateService: Firebase backend has been removed
 export const templateService = {
   // Get template by ID
   async getTemplate(templateId: string): Promise<Template | null> {
-    console.warn(`getTemplate(${templateId}): ${SERVICE_DISABLED_MSG}`);
-    return Promise.resolve(null);
+    try {
+      const { supabaseClient } = await import('@/lib/supabase-client');
+      const { data, error } = await supabaseClient
+        .from('templates')
+        .select('*')
+        .eq('id', templateId)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching template:', error);
+        return null;
+      }
+      
+      return data as Template;
+    } catch (error) {
+      console.error('Template service error:', error);
+      return null;
+    }
   },
 
   // Get templates for a user
