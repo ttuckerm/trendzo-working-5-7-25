@@ -1,607 +1,401 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  Filter, 
-  Clock, 
-  TrendingUp,
-  LayoutGrid, 
-  List, 
-  Music, 
-  X,
-  RefreshCw,
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { ErrorBoundary } from '@/components/debug/ErrorBoundary';
-import { RenderCounter } from '@/components/debug/RenderCounter';
-import { TemplateCard } from '@/components/templates/TemplateCard';
-import { TikTokCard } from '@/components/templates/TikTokCard';
-import { useStateContext } from '@/lib/contexts/StateContext';
-import { useUsabilityTest } from '@/lib/contexts/UsabilityTestContext';
-import { useDragDrop } from '@/lib/hooks/useDragDrop';
-import Link from 'next/link';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import TemplateGrid from '../../../../components/templates/TemplateGrid';
+import { TrendingBadge } from '../../../../components/templates/TrendingBadge';
+
+import { LoadingIndicator } from '../../../../components/templates/LoadingIndicator';
+import { createClient } from '@/lib/supabase/client';
+import { useInView } from 'react-intersection-observer';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-// Define the Template type (based on the TemplateProps type from TemplateCard)
 interface Template {
   id: string;
   title: string;
   category: string;
   description?: string;
   thumbnailUrl?: string;
-  views: string | number;
+  videoUrl?: string;
+  views: number;
+  likes: number;
+  viral_score: number;
   duration: string;
-  stats?: {
-    views: number;
-    likes: number;
-    comments: number;
-    engagementRate: number;
-  };
-  analysisData?: {
-    expertEnhanced?: boolean;
-    expertConfidence?: number;
-  };
-  soundId?: string;
-  soundTitle?: string;
-  soundAuthor?: string;
-  soundCategory?: string;
+  sound_id?: string;
+  sound_title?: string;
+  sound_author?: string;
+  created_at: string;
+  updated_at: string;
 }
 
-// Stable mock data generator function (outside component to prevent recreation)
-const getMockTemplates = (): Template[] => {
-  return Array.from({ length: 20 }, (_, i) => ({
-    id: `template-${i + 1}`,
-    title: `Template ${i + 1}`,
-    category: ['Entertainment', 'Educational', 'Product', 'Tutorial'][i % 4],
-    description: `A great template for creating engaging content. Perfect for ${i % 2 === 0 ? 'beginners' : 'experienced users'}.`,
-    thumbnailUrl: `https://picsum.photos/seed/template${i + 1}/500/800`,
-    views: (Math.floor(Math.random() * 500) + 100) * 1000,
-    duration: `${Math.floor(Math.random() * 45) + 15}s`,
-    stats: {
-      views: (Math.floor(Math.random() * 500) + 100) * 1000,
-      likes: (Math.floor(Math.random() * 200) + 50) * 1000,
-      comments: (Math.floor(Math.random() * 50) + 10) * 100,
-      engagementRate: Math.floor(Math.random() * 15) + 5,
-    },
-    analysisData: {
-      expertEnhanced: i % 3 === 0,
-      expertConfidence: (Math.floor(Math.random() * 30) + 70) / 100,
-    },
-    soundId: i % 4 !== 0 ? `sound-${i}` : undefined,
-    soundTitle: i % 4 !== 0 ? `Trending Sound ${i}` : undefined,
-    soundAuthor: i % 4 !== 0 ? `Artist ${i}` : undefined,
-    soundCategory: i % 4 !== 0 ? ['Pop', 'Hip Hop', 'Trending', 'Original'][i % 4] : undefined,
-  }));
-};
-
-/**
- * Fixed Template Library Page Component
- * 
- * This implementation:
- * 1. Uses proper memoization and useCallback to prevent unnecessary re-renders
- * 2. Isolates state updates to prevent circular dependencies
- * 3. Implements error boundaries to catch and isolate errors
- * 4. Adds render counting to track performance
- */
-export default function TemplateLibraryPage() {
-  // Debug - Count renders to verify we've fixed the issue
-  const [showCounter, setShowCounter] = useState(true);
-  
-  // State for templates and UI
+export default function ViralTemplateFeedPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [error, setError] = useState<Error | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [trendingCount, setTrendingCount] = useState(247);
   
-  // Simple filter states - Using primitive values to avoid reference changes
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('popularity');
-  const [showFilters, setShowFilters] = useState(false);
-  
-  // Access state context using useCallback to prevent recreation
-  const { getState, setState } = useStateContext();
-  
-  // Track interaction with useCallback
-  const { trackInteraction } = useUsabilityTest();
-  const trackInteractionStable = useCallback((type: string, target: string) => {
-    // Wrap in try/catch to prevent tracking errors from breaking the app
-    try {
-      trackInteraction({ 
-        type: type as "click" | "hover" | "scroll" | "input" | "navigation" | "dwell" | 
-               "error" | "success" | "abandon" | "complete" | "drag" | "dragOver" | 
-               "drop" | "dragEnd", 
-        target 
-      });
-    } catch (err) {
-      console.error('Error tracking interaction:', err);
-    }
-  }, [trackInteraction]);
-  
-  // Load templates - only once on mount
+  // Simulate real-time trending count updates for that social media feel
   useEffect(() => {
-    const loadTemplates = async () => {
-      try {
-        // Try to load from state context first
-        const savedTemplates = getState<Template[]>('templateLibrary.templates');
-        if (savedTemplates && savedTemplates.length > 0) {
-          setTemplates(savedTemplates);
-          setLoading(false);
-          return;
+    const interval = setInterval(() => {
+      setTrendingCount(prev => {
+        // Randomly increase by 1-3 every 10-30 seconds
+        const shouldUpdate = Math.random() > 0.7;
+        if (shouldUpdate) {
+          return prev + Math.floor(Math.random() * 3) + 1;
         }
+        return prev;
+      });
+    }, Math.random() * 20000 + 10000); // 10-30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+  const supabase = createClient();
+  const router = useRouter();
+
+  // Intersection observer for infinite scroll
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0,
+    rootMargin: '100px',
+  });
+
+  // Fetch templates from Supabase
+  const fetchTemplates = useCallback(async (pageNum: number, append = false) => {
+    if (!append) setLoading(true);
+    else setLoadingMore(true);
+
+    try {
+      const from = (pageNum - 1) * 9;
+      const to = from + 8;
+
+      const { data, error, count } = await supabase
+        .from('templates')
+        .select('*', { count: 'exact' })
+        .order('viral_score', { ascending: false })
+        .order('views', { ascending: false })
+        .range(from, to);
+
+      if (error) throw error;
+
+      if (data) {
+        if (append) {
+          setTemplates(prev => [...prev, ...data]);
+        } else {
+          setTemplates(data);
+        }
+
+        // Check if there are more templates to load
+        if (count) {
+          setHasMore(from + data.length < count);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching templates:', error);
+      
+      // Fallback to mock data if database is not available
+      if (!append && templates.length === 0) {
+        const mockTemplates = generateMockTemplates(pageNum);
+        setTemplates(mockTemplates);
+        setHasMore(pageNum < 3); // Simulate 3 pages of mock data
+      }
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  }, [supabase, templates.length]);
+
+  // Generate infinite viral templates based on viral content framework
+  const generateMockTemplates = (page: number) => {
+    // Base viral template patterns from the framework
+    const viralPatterns = [
+      {
+        title: 'Transformation Reveal',
+        category: 'Entertainment',
+        description: 'The viral before/after format that gets millions of views',
+        hook_type: 'Authority Hook',
+        viral_score: 94,
+        sound_title: 'Oh No - Remix',
+        sound_author: 'Capone',
+      },
+      {
+        title: '5 Things List',
+        category: 'Educational', 
+        description: 'Countdown format with text overlays that hooks viewers',
+        hook_type: 'Education Hook',
+        viral_score: 89,
+        sound_title: 'Aesthetic Beat',
+        sound_author: 'prod.bypurps',
+      },
+      {
+        title: 'POV Experience',
+        category: 'Entertainment',
+        description: 'First-person storytelling that creates instant connection',
+        hook_type: 'Storytelling Hook',
+        viral_score: 97,
+        sound_title: 'Running Up That Hill',
+        sound_author: 'Kate Bush',
+      },
+      {
+        title: 'Story Time Hook',
+        category: 'Entertainment',
+        description: 'Personal narrative format that keeps viewers watching',
+        hook_type: 'Storytelling Hook',
+        viral_score: 91,
+        sound_title: 'Monkeys Spinning',
+        sound_author: 'Kevin MacLeod',
+      },
+      {
+        title: 'Day in Life',
+        category: 'Lifestyle',
+        description: 'AI-optimized template for maximum viral potential',
+        hook_type: 'Visual Hook',
+        viral_score: 93,
+        sound_title: 'Chill Vibes Mix',
+        sound_author: 'Lofi Fruits',
+      },
+      {
+        title: 'Quick Tutorial',
+        category: 'Educational',
+        description: 'Step-by-step format that delivers instant value',
+        hook_type: 'Education Hook',
+        viral_score: 90,
+        sound_title: 'Speed Up Sound',
+        sound_author: 'DJ Remix',
+      },
+      {
+        title: 'Trend Challenge',
+        category: 'Entertainment',
+        description: 'Viral challenge format with massive engagement potential',
+        hook_type: 'Shock Value Hook',
+        viral_score: 98,
+        sound_title: 'Viral Dance Beat',
+        sound_author: 'DJ Snake',
+      },
+      {
+        title: 'Reaction Reveal',
+        category: 'Entertainment',
+        description: 'Authentic reaction format that builds connection',
+        hook_type: 'Comparison Hook',
+        viral_score: 87,
+        sound_title: 'Original Audio',
+        sound_author: undefined,
+      },
+      {
+        title: 'This to This',
+        category: 'Transformation',
+        description: 'Before/after transformation that stops the scroll',
+        hook_type: 'This to This Hook',
+        viral_score: 95,
+        sound_title: 'Motivational Beat',
+        sound_author: 'Inspire Music',
+      },
+      {
+        title: 'Is It Possible',
+        category: 'Educational',
+        description: 'Question format that creates irresistible curiosity',
+        hook_type: 'Is It Possible Hook',
+        viral_score: 92,
+        sound_title: 'Suspense Track',
+        sound_author: 'Mystery Sounds',
+      },
+      {
+        title: 'Walk-up Q&A',
+        category: 'Entertainment',
+        description: 'Street interview format with authentic reactions',
+        hook_type: 'Visual Hook',
+        viral_score: 88,
+        sound_title: 'Urban Vibes',
+        sound_author: 'Street Beats',
+      },
+      {
+        title: 'Green Screen Hack',
+        category: 'Educational',
+        description: 'Visual format using props to demonstrate concepts',
+        hook_type: 'Visual Hook',
+        viral_score: 86,
+        sound_title: 'Tech Sounds',
+        sound_author: 'Digital Audio',
+      },
+      {
+        title: 'Myth Busting',
+        category: 'Educational',
+        description: 'Controversial takes that challenge common beliefs',
+        hook_type: 'Myth-Busting Hook',
+        viral_score: 89,
+        sound_title: 'Dramatic Reveal',
+        sound_author: 'Epic Music',
+      },
+      {
+        title: 'Authority Flex',
+        category: 'Business',
+        description: 'Credibility-building format that establishes expertise',
+        hook_type: 'Authority Hook',
+        viral_score: 85,
+        sound_title: 'Success Sound',
+        sound_author: 'Winner Music',
+      },
+      {
+        title: 'Transition Hook',
+        category: 'Entertainment',
+        description: 'Visual transition that creates seamless storytelling',
+        hook_type: 'Visual Hook',
+        viral_score: 91,
+        sound_title: 'Smooth Transition',
+        sound_author: 'Flow Beats',
+      }
+    ];
+
+    // Generate 9 templates per page with variation
+    const templates = [];
+    const startIndex = (page - 1) * 9;
+    
+    for (let i = 0; i < 9; i++) {
+      const patternIndex = (startIndex + i) % viralPatterns.length;
+      const pattern = viralPatterns[patternIndex];
+      const templateId = startIndex + i + 1;
+      
+      // Add variation to metrics for each instance
+      const viewsBase = Math.floor(Math.random() * 15000000) + 5000000;
+      const likesBase = Math.floor(viewsBase * (0.1 + Math.random() * 0.15));
+      const scoreVariation = Math.floor(Math.random() * 10) - 5;
+      
+      templates.push({
+        id: templateId.toString(),
+        title: pattern.title,
+        category: pattern.category,
+        description: pattern.description,
+        thumbnailUrl: `https://picsum.photos/seed/viral${templateId}/400/600`,
+        videoUrl: `https://sample-videos.com/zip/10/mp4/SampleVideo_360x240_1mb.mp4`, // Placeholder
+        views: viewsBase,
+        likes: likesBase,
+        viral_score: Math.max(70, Math.min(99, pattern.viral_score + scoreVariation)),
+        duration: ['15s', '30s', '45s', '60s'][Math.floor(Math.random() * 4)],
+        sound_title: pattern.sound_title,
+        sound_author: pattern.sound_author,
+        hook_type: pattern.hook_type,
+        created_at: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000).toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+    }
+
+    return templates;
+  };
+
+  // Initial load
+  useEffect(() => {
+    fetchTemplates(1);
+  }, [fetchTemplates]);
+
+  // Load more when scrolling
+  useEffect(() => {
+    if (inView && hasMore && !loadingMore) {
+      setPage(prev => prev + 1);
+      fetchTemplates(page + 1, true);
+    }
+  }, [inView, hasMore, loadingMore, page, fetchTemplates]);
+
+  // Set up real-time updates for trending count
+  useEffect(() => {
+    const fetchTrendingCount = async () => {
+      try {
+        const { count } = await supabase
+          .from('templates')
+          .select('*', { count: 'exact', head: true })
+          .gte('viral_score', 80);
         
-        // Simulate API call
-        setLoading(true);
-        
-        // Artificial delay to simulate network request
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // Get mock templates
-        const mockedTemplates = getMockTemplates();
-        
-        // Save to state and context
-        setTemplates(mockedTemplates);
-        setState('templateLibrary.templates', mockedTemplates);
-        
-        setLoading(false);
-      } catch (err) {
-        console.error('Error loading templates:', err);
-        setError(err instanceof Error ? err : new Error('Failed to load templates'));
-        setLoading(false);
+        if (count) setTrendingCount(count);
+      } catch (error) {
+        console.log('Error fetching trending count:', error);
+        // Fallback to static count if there's an error
+        setTrendingCount(247);
       }
     };
-    
-    loadTemplates();
-  }, [getState, setState]); // Stable dependencies
-  
-  // Restore saved state from context
-  useEffect(() => {
-    // Reset navigation state
-    setNavigating(false);
-    
-    // Restore view mode
-    const savedViewMode = getState<'grid' | 'list'>('templateLibrary.viewMode');
-    if (savedViewMode) {
-      setViewMode(savedViewMode);
-    } else {
-      // Default to grid view to showcase our TikTok cards
-      setViewMode('grid');
-    }
-    
-    // Restore selected template
-    const savedSelectedTemplate = getState<string>('templateLibrary.selectedTemplateId');
-    if (savedSelectedTemplate) {
-      setSelectedTemplateId(savedSelectedTemplate);
-    }
-    
-    // Restore search term
-    const savedSearchTerm = getState<string>('templateLibrary.searchTerm');
-    if (savedSearchTerm) {
-      setSearchTerm(savedSearchTerm);
-    }
-  }, [getState]); // Only on mount
-  
-  // Save state to context when changed - using individual useEffects to avoid unnecessary saves
-  useEffect(() => {
-    setState('templateLibrary.viewMode', viewMode);
-  }, [viewMode, setState]);
-  
-  useEffect(() => {
-    setState('templateLibrary.selectedTemplateId', selectedTemplateId);
-  }, [selectedTemplateId, setState]);
-  
-  useEffect(() => {
-    setState('templateLibrary.searchTerm', searchTerm);
-  }, [searchTerm, setState]);
-  
-  // Handle template selection - memoized to prevent recreation
-  const router = useRouter();
-  
-  // Add new state for navigation loading
-  const [navigating, setNavigating] = useState(false);
-  
-  const handleSelectTemplate = useCallback((id: string, template: Template) => {
-    // Set selected template in state
-    setSelectedTemplateId(id);
-    
-    // Show loading indicator
-    setNavigating(true);
-    
-    // Track the interaction
-    trackInteractionStable('select', `template:${id}`);
-    
-    // Store template data in session storage for the detail page
-    try {
-      // Use localStorage instead of sessionStorage to be more resilient
-      localStorage.setItem('selectedTemplateData', JSON.stringify(template));
-      localStorage.setItem('selectedTemplateId', id);
-      
-      // Also store in context state
-      setState('templateLibrary.selectedTemplateData', template);
-      setState('templateLibrary.selectedTemplateId', id);
-    } catch (err) {
-      console.error('Error storing template data:', err);
-    }
-    
-    // Use a safer navigation approach
-    window.location.href = `/dashboard-view/template-library/view/${id}`;
-  }, [trackInteractionStable, setState]);
-  
-  // Filter templates using useMemo to prevent expensive recalculations
-  const filteredTemplates = useMemo(() => {
-    return templates
-      .filter(template => 
-        // Search term filtering
-        searchTerm === '' || 
-        template.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (template.description && template.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        template.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (template.soundTitle && template.soundTitle.toLowerCase().includes(searchTerm.toLowerCase()))
-      )
-      .filter(template =>
-        // Category filtering
-        categoryFilter === 'all' || template.category === categoryFilter
-      )
-      .sort((a, b) => {
-        // Sort by selected method
-        if (sortBy === 'popularity') {
-          const aViews = typeof a.views === 'string' ? parseInt(a.views.replace(/\D/g, '')) : a.views;
-          const bViews = typeof b.views === 'string' ? parseInt(b.views.replace(/\D/g, '')) : b.views;
-          return bViews - aViews;
-        } else if (sortBy === 'duration') {
-          const aDuration = parseInt(a.duration.replace(/[^0-9]/g, ''));
-          const bDuration = parseInt(b.duration.replace(/[^0-9]/g, ''));
-          return aDuration - bDuration;
-        }
-        return 0;
-      });
-  }, [templates, searchTerm, categoryFilter, sortBy]);
-  
-  // Get unique categories for filtering - memoized
-  const categories = useMemo(() => {
-    return ['all', ...new Set(templates.map(t => t.category))];
-  }, [templates]);
-  
-  // Toggle functions - memoized with useCallback
-  const toggleViewMode = useCallback(() => {
-    setViewMode(prev => prev === 'grid' ? 'list' : 'grid');
-    trackInteractionStable('toggle', `viewMode:${viewMode === 'grid' ? 'list' : 'grid'}`);
-  }, [viewMode, trackInteractionStable]);
-  
-  const toggleFilters = useCallback(() => {
-    setShowFilters(prev => !prev);
-    trackInteractionStable('toggle', `filters:${showFilters ? 'hide' : 'show'}`);
-  }, [showFilters, trackInteractionStable]);
-  
-  // Handle search input change - memoized
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    trackInteractionStable('search', `term:${e.target.value}`);
-  }, [trackInteractionStable]);
-  
-  // Handle category change - memoized
-  const handleCategoryChange = useCallback((category: string) => {
-    setCategoryFilter(category);
-    trackInteractionStable('filter', `category:${category}`);
-  }, [trackInteractionStable]);
-  
-  // Handle sort change - memoized
-  const handleSortChange = useCallback((sort: string) => {
-    setSortBy(sort);
-    trackInteractionStable('sort', `by:${sort}`);
-  }, [trackInteractionStable]);
-  
-  // Reset filters - memoized
-  const resetFilters = useCallback(() => {
-    setSearchTerm('');
-    setCategoryFilter('all');
-    setSortBy('popularity');
-    trackInteractionStable('reset', 'filters');
-  }, [trackInteractionStable]);
-  
-  // Check if returning from detail page to reset navigation state
-  useEffect(() => {
-    if (getState('templateLibrary.returnedFromDetail')) {
-      // Clear the flag
-      setState('templateLibrary.returnedFromDetail', false);
-      
-      // Reset any locks on template selection
-      setNavigating(false);
-      
-      console.log('[Template Library] User returned from detail page, navigation reset');
-    }
-  }, [getState, setState]);
-  
-  // Error state
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center p-8 bg-gray-50 rounded-lg border border-gray-200">
-        <div className="bg-red-100 p-3 rounded-full mb-4">
-          <X className="h-6 w-6 text-red-500" />
-        </div>
-        <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
-        <p className="text-gray-600 mb-4">{error.message || 'Failed to load template library'}</p>
-        <Button 
-          onClick={() => window.location.reload()}
-          className="flex items-center gap-2"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Try Again
-        </Button>
-      </div>
-    );
-  }
-  
+
+    fetchTrendingCount();
+
+    // Skip real-time subscriptions for now to avoid WebSocket issues
+    // TODO: Re-enable when Supabase real-time is properly configured
+    // const subscription = supabase
+    //   .channel('trending-templates')
+    //   .on('postgres_changes', { 
+    //     event: '*', 
+    //     schema: 'public', 
+    //     table: 'templates' 
+    //   }, () => {
+    //     fetchTrendingCount();
+    //   })
+    //   .subscribe();
+
+    // return () => {
+    //   subscription.unsubscribe();
+    // };
+  }, [supabase]);
+
+  const handleTemplateClick = useCallback((template: Template) => {
+    // Navigate to template landing page (will be implemented)
+    // For now, we'll use a placeholder route that can be updated later
+    router.push(`/template/${template.id}`);
+  }, [router]);
+
   return (
-    <ErrorBoundary componentName="TemplateLibraryPage">
-      {showCounter && <RenderCounter componentName="TemplateLibraryPage" />}
-      
-      <div className="container mx-auto px-4 py-8">
-        {/* Header section */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold">Template Library</h1>
-            <p className="text-gray-500">Browse and use professionally designed templates</p>
-          </div>
-          
-          <div className="flex gap-2">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={toggleViewMode}
-              className="h-9 w-9"
+    <>
+      {/* Simple black background */}
+      <div className="fixed inset-0 bg-black -z-10" />
+
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 bg-gradient-to-b from-black/80 via-black/60 to-transparent backdrop-blur-xl border-b border-white/5 z-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-600 bg-clip-text text-transparent animate-gradient-x"
             >
-              {viewMode === 'grid' 
-                ? <List className="h-5 w-5" /> 
-                : <LayoutGrid className="h-5 w-5" />}
-            </Button>
-            
-            <Button 
-              variant={showFilters ? "secondary" : "outline"} 
-              onClick={toggleFilters}
-              className="flex items-center gap-2"
-              size="sm"
-            >
-              <Filter className="h-4 w-4" />
-              Filters
-              {(searchTerm || categoryFilter !== 'all' || sortBy !== 'popularity') && (
-                <Badge className="h-5 w-5 p-0 flex items-center justify-center rounded-full">
-                  <span className="text-[10px]">
-                    {(searchTerm ? 1 : 0) + (categoryFilter !== 'all' ? 1 : 0) + (sortBy !== 'popularity' ? 1 : 0)}
-                  </span>
-                </Badge>
-              )}
-            </Button>
-          </div>
-        </div>
-        
-        {/* Filter bar */}
-        <AnimatePresence>
-          {showFilters && (
-            <motion.div 
-              className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200"
-              initial={{ opacity: 0, height: 0, marginBottom: 0 }}
-              animate={{ opacity: 1, height: 'auto', marginBottom: 24 }}
-              exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
-                    Search
-                  </label>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Search templates..."
-                      className="pl-9"
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                    />
-                  </div>
-                </div>
-                
-                <div className="sm:w-48">
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
-                    Category
-                  </label>
-                  <select 
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2"
-                    value={categoryFilter}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category}>
-                        {category === 'all' ? 'All Categories' : category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                
-                <div className="sm:w-48">
-                  <label className="text-sm font-medium text-gray-700 mb-1 block">
-                    Sort By
-                  </label>
-                  <select 
-                    className="w-full h-10 rounded-md border border-input bg-background px-3 py-2"
-                    value={sortBy}
-                    onChange={(e) => handleSortChange(e.target.value)}
-                  >
-                    <option value="popularity">Most Popular</option>
-                    <option value="duration">Duration (Shortest)</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="flex justify-end mt-4">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={resetFilters}
-                  className="h-8"
-                >
-                  Reset Filters
-                </Button>
-              </div>
+              Viral DNA™
             </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Results info */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="text-sm text-gray-500">
-            {filteredTemplates.length} templates found
+            
+            <TrendingBadge count={trendingCount} />
           </div>
-          
-          {(searchTerm || categoryFilter !== 'all' || sortBy !== 'popularity') && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={resetFilters}
-              className="h-8 text-xs"
-            >
-              <X className="h-3 w-3 mr-1" />
-              Clear Filters
-            </Button>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="pt-32 pb-20 min-h-screen relative bg-black">
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {loading && templates.length === 0 ? (
+            <TemplateGrid templates={[]} loading={true} />
+          ) : (
+            <>
+              <TemplateGrid 
+                templates={templates} 
+                onTemplateClick={handleTemplateClick}
+              />
+              
+              {/* Load more trigger */}
+              {hasMore && (
+                <div ref={loadMoreRef} className="mt-16">
+                  {loadingMore && <LoadingIndicator />}
+                </div>
+              )}
+              
+              {!hasMore && templates.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center py-16"
+                >
+                  <div className="inline-block p-6 rounded-2xl bg-white/[0.02] backdrop-blur-sm border border-white/10">
+                    <p className="text-gray-400 text-lg">You've reached the end of the viral feed</p>
+                    <p className="text-gray-500 text-sm mt-2">More trending templates coming soon...</p>
+                  </div>
+                </motion.div>
+              )}
+            </>
           )}
         </div>
-        
-        {/* Loading state */}
-        {loading ? (
-          <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-8`}>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className={`${viewMode === 'grid' ? 'h-[280px]' : 'h-[120px]'} border rounded-lg overflow-hidden`}>
-                <Skeleton className="h-full w-full" />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <>
-            {/* Templates grid or list */}
-            {filteredTemplates.length === 0 ? (
-              <div className="py-16 text-center">
-                <div className="inline-block p-4 rounded-full bg-gray-100 mb-4">
-                  <Search className="h-6 w-6 text-gray-400" />
-                </div>
-                <h3 className="text-lg font-medium mb-2">No templates found</h3>
-                <p className="text-gray-500 mb-6">Try adjusting your filters or search term</p>
-                <Button onClick={resetFilters}>Clear Filters</Button>
-              </div>
-            ) : (
-              <div className={`grid ${viewMode === 'grid' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' : 'grid-cols-1'} gap-6`}>
-                {filteredTemplates.map(template => (
-                  <ErrorBoundary key={template.id} componentName={`TemplateCard-${template.id}`}>
-                    {viewMode === 'grid' ? (
-                      <TikTokCard
-                        template={{
-                          id: template.id,
-                          title: template.title,
-                          description: template.description,
-                          category: template.category,
-                          duration: parseInt(template.duration.replace(/[^0-9]/g, '')),
-                          thumbnailUrl: template.thumbnailUrl,
-                          views: typeof template.views === 'string' ? 
-                            parseInt(template.views.replace(/\D/g, '')) : template.views,
-                          stats: template.stats,
-                          soundId: template.soundId,
-                          soundTitle: template.soundTitle,
-                          soundAuthor: template.soundAuthor,
-                          soundCategory: template.soundCategory,
-                          analysisData: template.analysisData
-                        }}
-                        onClick={() => handleSelectTemplate(template.id, template)}
-                      />
-                    ) : (
-                      <TemplateCard
-                        template={template as any}
-                        isSelected={selectedTemplateId === template.id}
-                        onClick={() => handleSelectTemplate(template.id, template)}
-                        viewMode={viewMode}
-                      />
-                    )}
-                  </ErrorBoundary>
-                ))}
-              </div>
-            )}
-            
-            {/* Featured section */}
-            {filteredTemplates.length > 0 && (
-              <div className="mt-12 border-t pt-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold flex items-center">
-                    <Sparkles className="h-5 w-5 text-amber-500 mr-2" />
-                    Featured Templates
-                  </h2>
-                  <Link href="/dashboard-view/template-library/featured" className="text-sm text-blue-600 hover:text-blue-800 flex items-center">
-                    View all 
-                    <ArrowRight className="h-4 w-4 ml-1" />
-                  </Link>
-                </div>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredTemplates.slice(0, 3).map(template => (
-                    <ErrorBoundary key={`featured-${template.id}`} componentName={`FeaturedCard-${template.id}`}>
-                      <TikTokCard
-                        template={{
-                          id: template.id,
-                          title: template.title,
-                          description: template.description,
-                          category: template.category,
-                          duration: parseInt(template.duration.replace(/[^0-9]/g, '')),
-                          thumbnailUrl: template.thumbnailUrl,
-                          views: typeof template.views === 'string' ? 
-                            parseInt(template.views.replace(/\D/g, '')) : template.views,
-                          stats: template.stats,
-                          soundId: template.soundId,
-                          soundTitle: template.soundTitle,
-                          soundAuthor: template.soundAuthor,
-                          soundCategory: template.soundCategory,
-                          analysisData: template.analysisData
-                        }}
-                        onClick={() => handleSelectTemplate(template.id, template)}
-                      />
-                    </ErrorBoundary>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {!navigating && (
-              <p className="text-center text-sm text-gray-500 mt-4">
-                Click on a template to view details and options
-              </p>
-            )}
-            {navigating && (
-              <div className="flex justify-center mt-6">
-                <div className="flex items-center space-x-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-t-2 border-blue-600"></div>
-                  <span className="text-sm text-gray-600">Loading template...</span>
-                </div>
-              </div>
-            )}
-          </>
-        )}
-        
-        {/* Debug controls */}
-        <div className="fixed bottom-4 right-4 z-50">
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={() => setShowCounter(prev => !prev)}
-            className="text-xs"
-          >
-            {showCounter ? 'Hide Counter' : 'Show Counter'}
-          </Button>
-        </div>
-      </div>
-    </ErrorBoundary>
+      </main>
+    </>
   );
 } 

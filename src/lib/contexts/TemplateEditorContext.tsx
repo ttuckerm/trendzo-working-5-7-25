@@ -233,16 +233,30 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
       const existingSections = state.template.sections;
       if (existingSections.length > 0) {
         const lastSection = existingSections[existingSections.length - 1];
-        calculatedStartTime = lastSection.startTime + lastSection.duration;
+        // Ensure lastSection.duration is a number before using it in calculation
+        const lastDuration = typeof lastSection.duration === 'number' ? lastSection.duration : 0;
+        calculatedStartTime = (typeof lastSection.startTime === 'number' ? lastSection.startTime : 0) + lastDuration;
       } 
 
       // Create the new section object using the payload, new ID, and calculated startTime
       const newSection: TemplateSection = {
         ...action.payload, // Payload from the addSection convenience function
         id: newSectionId,
-        startTime: calculatedStartTime // Add the calculated startTime here
+        startTime: calculatedStartTime, 
+        // Ensure duration is set, defaulting to 5 if not in payload or not a number
+        duration: typeof action.payload.duration === 'number' ? action.payload.duration : 5, 
+        background: action.payload.background || {
+          type: 'color',
+          value: '#111827', // Default dark background
+          opacity: 1
+        },
+        elements: action.payload.elements || [],
+        transition: action.payload.transition || {
+          type: 'fade',
+          duration: 0.5
+        }
       };
-      console.log('[Reducer ADD_SECTION] Created newSection object:', JSON.stringify(newSection, null, 2)); // DEBUG LOG
+      console.log('[Reducer ADD_SECTION] Created newSection object (with guaranteed background and duration):', JSON.stringify(newSection, null, 2)); // DEBUG LOG
       
       const updatedSections = [...existingSections, newSection];
       console.log('[Reducer ADD_SECTION] About to calculate totalDuration. updatedSections:', JSON.stringify(updatedSections, null, 2)); // DEBUG LOG      
@@ -251,7 +265,7 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
         ...state.template,
         sections: updatedSections,
         totalDuration: updatedSections.reduce(
-          (total, section) => total + section.duration, 
+          (total, section) => total + (typeof section.duration === 'number' ? section.duration : 0), 
           0
         ),
         updatedAt: new Date()
@@ -309,7 +323,7 @@ const editorReducer = (state: EditorState, action: EditorAction): EditorState =>
         ...state.template,
         sections: updatedSections,
         totalDuration: updatedSections.reduce(
-          (total, section) => total + section.duration, 
+          (total, section) => total + (typeof section.duration === 'number' ? section.duration : 0), 
           0
         ),
         updatedAt: new Date()

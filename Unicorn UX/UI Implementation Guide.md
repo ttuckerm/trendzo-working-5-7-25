@@ -1,7 +1,3 @@
----
-description: This document serves as the foundational guide for ALL development in the TikTok Template Tracker project. These principles MUST be applied to every component, feature, and interaction throughout the application.
-globs: 
----
 # Unicorn UX/UI Implementation Guide
 
 This document serves as the foundational guide for ALL development in the TikTok Template Tracker project. These principles MUST be applied to every component, feature, and interaction throughout the application.

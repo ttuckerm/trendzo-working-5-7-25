@@ -28,11 +28,20 @@ const client = new ApifyClient({
   token: process.env.APIFY_API_TOKEN || '',
 });
 
-// Log API token status for debugging
-console.log('APIFY_API_TOKEN status:', process.env.APIFY_API_TOKEN ? 'Set' : 'Not set');
+// Get environment variables
+const APIFY_API_TOKEN = process.env.APIFY_API_TOKEN || '';
+const TIKTOK_SCRAPER_ACTOR_ID = process.env.TIKTOK_SCRAPER_ACTOR_ID || 'default-actor-id';
 
-if (!process.env.APIFY_API_TOKEN) {
+// Log API token status for debugging
+console.log('APIFY_API_TOKEN status:', APIFY_API_TOKEN ? 'Set' : 'Not set');
+console.log('TIKTOK_SCRAPER_ACTOR_ID status:', TIKTOK_SCRAPER_ACTOR_ID ? 'Set' : 'Not set');
+
+if (!APIFY_API_TOKEN) {
   console.warn('Warning: APIFY_API_TOKEN is not set. TikTok scraping will likely fail.');
+}
+
+if (!TIKTOK_SCRAPER_ACTOR_ID || TIKTOK_SCRAPER_ACTOR_ID === 'default-actor-id') {
+  console.warn('Warning: TIKTOK_SCRAPER_ACTOR_ID is not set. Using default value.');
 }
 
 // Default parameters for TikTok scraper
@@ -416,7 +425,7 @@ export const apifyService = {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${APIFY_API_TOKEN}`,
-          },
+          }
         }
       );
       

@@ -49,6 +49,92 @@
   animation: fadeIn calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
 }
 
+/* Landing Page Animations */
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes float-badge {
+  0%, 100% { 
+    opacity: 0.7; 
+    transform: translateY(0) scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: translateY(-5px) scale(1.05); 
+  }
+}
+
+@keyframes phone-float {
+  0%, 100% { 
+    transform: translateY(0) rotateY(-5deg) rotateX(2deg); 
+  }
+  50% { 
+    transform: translateY(-20px) rotateY(5deg) rotateX(-2deg); 
+  }
+}
+
+@keyframes light-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes geo-pulse {
+  0%, 100% { 
+    opacity: 0.7; 
+    transform: scale(1); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.03); 
+  }
+}
+
+@keyframes urgentPulse {
+  0%, 100% { 
+    opacity: 0.8; 
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); 
+  }
+  50% { 
+    opacity: 1; 
+    box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); 
+  }
+}
+
+/* Utility classes for landing page */
+.animate-scroll {
+  animation: scroll 20s linear infinite;
+}
+
+.animate-phone-float {
+  animation: phone-float 6s ease-in-out infinite;
+}
+
+.animate-light-sweep {
+  animation: light-sweep 8s ease-in-out infinite;
+}
+
+.animate-urgent-pulse {
+  animation: urgentPulse 2s infinite;
+}
+
+/* Template Editor Animations */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Scrollbar hide utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .animate-fade-out {
   animation: fadeOut calc(var(--animation-duration-normal) * var(--animation-speed-multiplier)) ease forwards;
 }
@@ -235,5 +321,44 @@
   100% {
     background-position: 0% 50%;
     transform: rotate(-5deg) scale(0.9);
+  }
+}
+
+/* Dashboard Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-down {
+  animation: slideDown 0.6s ease-out;
+}
+
+/* Gradient Background for radial effects */
+.bg-gradient-radial {
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(139, 92, 246, 0.3) 50%, rgba(139, 92, 246, 0.6) 100%);
+}
+
+/* Custom filter utilities */
+.filter-none {
+  filter: none;
+}
+
+/* Ensure Tailwind's gradient utilities work properly */
+@layer utilities {
+  .bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  
+  .text-transparent {
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
 }

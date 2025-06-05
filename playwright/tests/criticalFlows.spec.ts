@@ -33,6 +33,19 @@ test.describe('Mission-critical User Journeys', () => {
   });
 
   test('User Journey 2.2: Template Editor Loads', async ({ page }) => {
+    let unhandledError: Error | null = null;
+    page.on('pageerror', (error) => {
+      console.error('Page error:', error.message); // Log the error message for debugging
+      // Check specifically for the type error related to 'type' property
+      if (error.name === 'TypeError' && error.message.includes("Cannot read properties of undefined (reading 'type')")) {
+        unhandledError = error;
+      }
+      // It might be useful to capture other TypeErrors too, if they are relevant
+      // else if (error.name === 'TypeError') {
+      // unhandledError = error; // Broader TypeError catching
+      // }
+    });
+
     // This test assumes we can navigate to an editor page, even if it's for a new template
     // Or, if your flow requires selecting a template first:
     await page.goto(`${BASE_URL}/dashboard-view/template-library`);
@@ -42,8 +55,17 @@ test.describe('Mission-critical User Journeys', () => {
     // Example: await page.getByText('Create New Template').click();
     await page.goto(`${BASE_URL}/dashboard-view/template-editor`); // Adjust if ID is needed, e.g., /template-editor/new
     await expect(page.getByRole('heading', { name: 'Template Editor' })).toBeVisible({ timeout: 10000 });
-    // Check for a key element in the editor, e.g., the canvas or an elements panel
-    // await expect(page.locator('#editor-canvas')).toBeVisible();
+    
+    // Check for a key element in the editor, e.g., the canvas
+    // The main canvas area within EditorCanvas.tsx is a div with classes 'relative', 'bg-white', 'shadow-lg'
+    // and it contains the actual canvasRef div.
+    const editorCanvasContainer = page.locator('div.relative.bg-white.shadow-lg');
+    await expect(editorCanvasContainer).toBeVisible({ timeout: 10000 }); // Increased timeout for canvas rendering
+
+    // Assert that the specific TypeError did not occur
+    // Adding a small delay to ensure any async errors have a chance to propagate
+    await page.waitForTimeout(500); 
+    expect(unhandledError).toBeNull();
   });
 
   // test('User Journey 2.3: Save/Preview Template', async ({ page }) => {

@@ -21,8 +21,8 @@ let CardFooter: React.FC<React.HTMLAttributes<HTMLDivElement>>;
 
 try {
   // First try to load from card-component
-  const module = require('./card-component');
-  ({ Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } = module);
+  const cardModuleInstance = require('./card-component');
+  ({ Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } = cardModuleInstance);
 } catch (error) {
   // If that fails, create simple implementations
   Card = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
