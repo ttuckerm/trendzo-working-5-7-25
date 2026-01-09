@@ -11,6 +11,10 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+"test:smoke": "jest src/__tests__/unit/runPredictionPipeline.test.ts src/__tests__/api/ticket-a2-endpoints.test.ts",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "test:components": "jest --testPathPattern=src/components",
     "test-etl": "node scripts/test-etl.js",
     "schedule-etl": "node scripts/schedule-etl.js",
@@ -44,7 +48,9 @@
     "setup-supabase-schema": "node scripts/setup-supabase-schema.js",
     "test:tiktok-template-service": "node src/lib/test/tikTokTemplateService.test.js",
     "test:supabase-schema": "node src/lib/test/supabase-schema-test.js",
-    "test-supabase-connection": "node scripts/test-supabase-connection.js"
+    "test-supabase-connection": "node scripts/test-supabase-connection.js",
+    "extract-patterns": "ts-node src/scripts/extract-patterns.ts",
+    "generate-synthetic": "ts-node src/scripts/generate-synthetic-data.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.2.11",
@@ -102,7 +108,12 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@anthropic-ai/sdk": "^0.10.2",
+=======
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@axe-core/playwright": "^4.10.1",
+>>>>>>> 8052647 (feat: implement Boris Cherny Claude Code workflow patterns)
     "@playwright/test": "^1.52.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -123,6 +134,7 @@
     "node-fetch": "^2.7.0",
     "openai": "^4.96.0",
     "postcss": "^8",
+    "prettier": "^3.7.4",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "5.8.3",
