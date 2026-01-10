@@ -65,16 +65,16 @@ export default function TestGuidePage() {
             <li>
               <strong>Verify Template Cards:</strong>
               <p className="text-gray-600">Check that template cards display with thumbnails, title, view counts, and engagement percentages</p>
-              <p className="text-gray-600">Templates with expert insights should show an "Expert Enhanced" badge</p>
+              <p className="text-gray-600">Templates with expert insights should show an &quot;Expert Enhanced&quot; badge</p>
             </li>
             <li>
               <strong>Select a Template with Expert Data:</strong>
-              <p className="text-gray-600">Click on a template with the "Expert Enhanced" badge</p>
-              <p className="text-gray-600">Scroll down to the "Additional Insights" section to see expert insights and AI vs Expert comparison</p>
+              <p className="text-gray-600">Click on a template with the &quot;Expert Enhanced&quot; badge</p>
+              <p className="text-gray-600">Scroll down to the &quot;Additional Insights&quot; section to see expert insights and AI vs Expert comparison</p>
             </li>
             <li>
               <strong>Verify Performance Charts:</strong>
-              <p className="text-gray-600">Check that the "View Trends" and "Engagement Rate" charts are displaying correctly</p>
+              <p className="text-gray-600">Check that the &quot;View Trends&quot; and &quot;Engagement Rate&quot; charts are displaying correctly</p>
               <p className="text-gray-600">If a template has expert data, charts should show both AI-predicted line and expert-enhanced line</p>
             </li>
           </ol>
@@ -85,16 +85,16 @@ export default function TestGuidePage() {
           <ol className="list-decimal pl-6 space-y-4">
             <li>
               <strong>Set Subscription to Free Tier:</strong>
-              <p className="text-gray-600">Go to <Link href="/debug/subscription" className="text-blue-600 hover:underline">/debug/subscription</Link> and click "Free Tier"</p>
+              <p className="text-gray-600">Go to <Link href="/debug/subscription" className="text-blue-600 hover:underline">/debug/subscription</Link> and click &quot;Free Tier&quot;</p>
             </li>
             <li>
               <strong>Attempt to Access Analytics:</strong>
               <p className="text-gray-600">Visit <Link href="/analytics" className="text-blue-600 hover:underline">/analytics</Link></p>
-              <p className="text-gray-600">You should see an upgrade prompt with "Premium Feature" message</p>
+              <p className="text-gray-600">You should see an upgrade prompt with &quot;Premium Feature&quot; message</p>
             </li>
             <li>
               <strong>Switch to Premium Tier:</strong>
-              <p className="text-gray-600">Go back to <Link href="/debug/subscription" className="text-blue-600 hover:underline">/debug/subscription</Link> and click "Premium Tier"</p>
+              <p className="text-gray-600">Go back to <Link href="/debug/subscription" className="text-blue-600 hover:underline">/debug/subscription</Link> and click &quot;Premium Tier&quot;</p>
             </li>
             <li>
               <strong>Access Analytics Again:</strong>
@@ -111,11 +111,11 @@ export default function TestGuidePage() {
               <strong>Test Filter Controls:</strong>
               <p className="text-gray-600">Try changing the time range using the dropdown (7d, 30d, 90d, all)</p>
               <p className="text-gray-600">Filter by different categories and sort options</p>
-              <p className="text-gray-600">Toggle the "Include expert insights" checkbox to see changes in displayed data</p>
+              <p className="text-gray-600">Toggle the &quot;Include expert insights&quot; checkbox to see changes in displayed data</p>
             </li>
             <li>
               <strong>Test Template Comparison:</strong>
-              <p className="text-gray-600">Select a template, then click "Select another template to compare"</p>
+              <p className="text-gray-600">Select a template, then click &quot;Select another template to compare&quot;</p>
               <p className="text-gray-600">Select a second template to see the comparison chart</p>
               <p className="text-gray-600">Verify that the radar chart displays data for both templates</p>
             </li>
@@ -132,8 +132,8 @@ export default function TestGuidePage() {
           <ol className="list-decimal pl-6 space-y-4">
             <li>
               <strong>Toggle Expert Data:</strong>
-              <p className="text-gray-600">Check the "Include expert insights" checkbox at the top of the dashboard</p>
-              <p className="text-gray-600">Select a template with expert data (with the "Expert Enhanced" badge)</p>
+              <p className="text-gray-600">Check the &quot;Include expert insights&quot; checkbox at the top of the dashboard</p>
+              <p className="text-gray-600">Select a template with expert data (with the &quot;Expert Enhanced&quot; badge)</p>
             </li>
             <li>
               <strong>Verify Expert Insights Panel:</strong>
@@ -141,7 +141,7 @@ export default function TestGuidePage() {
             </li>
             <li>
               <strong>Verify AI vs Expert Comparison:</strong>
-              <p className="text-gray-600">Check the "AI vs Expert Comparison" section for: </p>
+              <p className="text-gray-600">Check the &quot;AI vs Expert Comparison&quot; section for: </p>
               <ul className="list-disc pl-6 text-gray-600">
                 <li>AI-Only Score value</li>
                 <li>Expert-Adjusted Score value</li>
@@ -162,26 +162,26 @@ export default function TestGuidePage() {
             <div>
               <h3 className="font-medium">Firebase Errors:</h3>
               <p className="text-gray-600">
-                If you see Firebase errors in the console, don't worry. The application falls back to mock data when Firebase has issues, 
+                If you see Firebase errors in the console, don&apos;t worry. The application falls back to mock data when Firebase has issues,
                 which is expected in this development environment.
               </p>
             </div>
             <div>
               <h3 className="font-medium">Data Not Displaying:</h3>
               <p className="text-gray-600">
-                If data isn't showing up, check the browser console for errors. You can also try the debug API endpoint to 
+                If data isn&apos;t showing up, check the browser console for errors. You can also try the debug API endpoint to
                 verify that data generation is working: <Link href="/api/debug/analytics" className="text-blue-600 hover:underline" target="_blank">/api/debug/analytics</Link>
               </p>
             </div>
             <div>
               <h3 className="font-medium">Tier-Gating Not Working:</h3>
               <p className="text-gray-600">
-                If tier-gating isn't working, check:
+                If tier-gating isn&apos;t working, check:
               </p>
               <ul className="list-disc pl-6 text-gray-600">
                 <li>Whether the mock subscription status is being correctly set</li>
                 <li>If the local storage values are being properly saved</li>
-                <li>That you're using the debug tools to switch between tiers</li>
+                <li>That you&apos;re using the debug tools to switch between tiers</li>
               </ul>
             </div>
           </div>

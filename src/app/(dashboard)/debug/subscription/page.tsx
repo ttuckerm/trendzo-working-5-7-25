@@ -104,9 +104,9 @@ export default function SubscriptionDebugPage() {
           <ol className="list-decimal pl-5 text-sm text-yellow-700">
             <li className="mb-1">First, set your desired subscription tier using the buttons above</li>
             <li className="mb-1">Then visit the Analytics Dashboard to test tier-gating</li>
-            <li className="mb-1">If you're in "Free" tier, you should see an upgrade prompt</li>
-            <li className="mb-1">If you're in "Premium" or "Business" tier, you should see the full dashboard</li>
-            <li className="mb-1">Use the "View Raw Analytics Data" to verify the data directly</li>
+            <li className="mb-1">If you&apos;re in &quot;Free&quot; tier, you should see an upgrade prompt</li>
+            <li className="mb-1">If you&apos;re in &quot;Premium&quot; or &quot;Business&quot; tier, you should see the full dashboard</li>
+            <li className="mb-1">Use the &quot;View Raw Analytics Data&quot; to verify the data directly</li>
           </ol>
         </div>
       </div>
@@ -114,7 +114,7 @@ export default function SubscriptionDebugPage() {
       <div className="bg-white rounded-lg border border-gray-200 p-6">
         <h2 className="text-lg font-semibold mb-4">Debug Features</h2>
         <p className="text-gray-600 mb-4">
-          If you don't see the premium content restrictions working, you need to uncomment the premium restriction code in:
+          If you don&apos;t see the premium content restrictions working, you need to uncomment the premium restriction code in:
         </p>
         <div className="bg-gray-100 p-2 rounded font-mono text-sm mb-4">
           src/app/(dashboard)/analytics/page.tsx
