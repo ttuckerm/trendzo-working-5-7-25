@@ -1,0 +1,26 @@
+{
+  "slug": "templates",
+  "tab": "templates",
+  "testIds": [
+    "kpi-chips",
+    "filters-bar",
+    "tpl-card-<id>",
+    "tpl-slide-tabs",
+    "discovery-readiness-pill",
+    "discovery-readiness-panel"
+  ],
+  "states": ["empty", "skeleton", "error", "success"],
+  "endpoints": [
+    { "method": "GET", "path": "/api/templates" },
+    { "method": "GET", "path": "/api/templates/:id" },
+    { "method": "GET", "path": "/api/templates/:id/examples" },
+    { "method": "GET", "path": "/api/discovery/metrics", "status": "to-implement" }
+  ],
+  "rbac": ["admin for POST actions only"],
+  "observability": {
+    "logs": ["templates_list_fetched", "template_detail_viewed"],
+    "metrics": ["templates.count", "templates.sections.hot", "templates.sections.cooling", "templates.sections.new"],
+    "alerts": ["discovery.stale_over_threshold"],
+    "audit": true
+  }
+}

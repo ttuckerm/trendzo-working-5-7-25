@@ -1,0 +1,151 @@
+{
+  "layout": [
+    {
+      "name": "window-open",
+      "timingMs": 180,
+      "easing": "ease-out",
+      "keyboard": ["Ctrl/Cmd+J"],
+      "parityDecision": "must-match",
+      "rationale": "Crisp window spawn aligns with observed OS-like feel; tokenized."
+    },
+    {
+      "name": "window-close",
+      "timingMs": 160,
+      "easing": "ease-in",
+      "keyboard": ["Esc"],
+      "parityDecision": "must-match",
+      "rationale": "Fast close; closure bias to ease-in for natural decay."
+    },
+    {
+      "name": "resize-settle",
+      "timingMs": 80,
+      "easing": "ease-out",
+      "keyboard": ["Alt+Shift+Arrows"],
+      "parityDecision": "must-match",
+      "rationale": "Immediate drag with short settle to avoid jank."
+    },
+    {
+      "name": "focus-ring-fade",
+      "timingMs": 100,
+      "easing": "ease-out",
+      "keyboard": [],
+      "parityDecision": "inspired",
+      "rationale": "Subtle focus feedback; keep minimal for accessibility."
+    }
+  ],
+  "keyboard": [
+    {
+      "name": "cycle-windows-next",
+      "keys": "Alt+`",
+      "parityDecision": "must-match",
+      "rationale": "OS-like task switching across open windows."
+    },
+    {
+      "name": "cycle-windows-prev",
+      "keys": "Alt+Shift+`",
+      "parityDecision": "must-match",
+      "rationale": "Reverse traversal for parity and ergonomics."
+    },
+    {
+      "name": "move-window",
+      "keys": "Alt+Arrow",
+      "parityDecision": "inspired",
+      "rationale": "Power-user control; 10px increments to avoid layout jitter."
+    },
+    {
+      "name": "resize-window",
+      "keys": "Alt+Shift+Arrow",
+      "parityDecision": "inspired",
+      "rationale": "Direct resize control with short settle."
+    },
+    {
+      "name": "toggle-recipe-book",
+      "keys": "Ctrl/Cmd+J",
+      "parityDecision": "inspired",
+      "rationale": "Quick access to a primary app window; consistent with our hotkeys."
+    }
+  ],
+  "motion": [
+    {
+      "name": "dock-pop",
+      "timingMs": 130,
+      "easing": "ease-out",
+      "parityDecision": "inspired",
+      "rationale": "Fast tooltip/popover appearance for responsiveness."
+    },
+    {
+      "name": "minimize-restore",
+      "timingMs": 200,
+      "easing": "ease-in-out",
+      "parityDecision": "inspired",
+      "rationale": "Slightly longer to signal state change without dragging focus."
+    },
+    {
+      "name": "context-menu",
+      "timingMs": 140,
+      "easing": "ease-out",
+      "parityDecision": "must-match",
+      "rationale": "Crisp, readable context open consistent with OS feel."
+    }
+  ],
+  "micro": [
+    {
+      "name": "hover-in",
+      "timingMs": 100,
+      "easing": "ease-out",
+      "parityDecision": "must-match",
+      "rationale": "Quick affordance feedback."
+    },
+    {
+      "name": "hover-out",
+      "timingMs": 80,
+      "easing": "ease-in",
+      "parityDecision": "must-match",
+      "rationale": "Snappy exit for responsiveness."
+    },
+    {
+      "name": "press-feedback",
+      "timingMs": 90,
+      "easing": "ease-out",
+      "parityDecision": "inspired",
+      "rationale": "Small scale/shadow change without layout shift."
+    }
+  ],
+  "a11y": [
+    {
+      "name": "reduced-motion",
+      "timingMs": 0,
+      "easing": "none",
+      "parityDecision": "must-match",
+      "rationale": "Respect user preference to reduce motion."
+    },
+    {
+      "name": "focus-trap-dialog",
+      "timingMs": 0,
+      "easing": "none",
+      "parityDecision": "must-match",
+      "rationale": "Dialog semantics and escape path."
+    },
+    {
+      "name": "roving-tabindex-dock",
+      "timingMs": 0,
+      "easing": "none",
+      "parityDecision": "inspired",
+      "rationale": "Keyboard navigation across dock icons."
+    }
+  ],
+  "plan": {
+    "touchFiles": [
+      "src/app/os-canvas/page.tsx",
+      "src/lib/state/windowStore.ts",
+      "src/components/canvas/Canvas.tsx",
+      "src/components/dock/Dock.tsx",
+      "src/components/windows/WindowShell.tsx",
+      "src/components/windows/RecipeBookWindow.tsx",
+      "src/styles/motion.css"
+    ],
+    "notes": "Introduce WindowShell and motion tokens; add keyboard focus cycling and persistence."
+  }
+}
+
+

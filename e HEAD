@@ -1,0 +1,23 @@
+[33mtag v0.5.0-verified[m
+Tagger:     CleanCopy Snapshot <snapshot@local>
+TaggerDate: Thu Aug 14 18:36:42 2025 -0400
+
+v0.5.0-verified — Seven changes PASS (real)
+
+- Baselines: weekly cohort recompute returns version (e.g., 2025W33) and validates table/view wiring via `recomputeCohortStats`
+- Incubation: unified engine persists `incubation_label` and `cohort_version` to `viral_predictions` and verifies the latest row
+- Metrics: nightly computation or on-demand run writes `accuracy_metrics` with fields `n`, `auroc`, `precision_at_100`, `ece`, and `heated_excluded_count`
+- Artifacts: training flow persists model artifacts under `storage/models/<platform>/<version>.json` and logs to `experiment_runs`
+- Heating: exclusion count tracked as `heated_excluded_count` in metrics
+- Thresholds centralized: engines import configuration from `src/config/viral-thresholds.ts`
+- Apify retry: all Apify calls wrapped by `withRetry(...)`
+
+All seven checks pass against the live system.
+
+[33mcommit bc47fb7362106963f60f81ead9dd41dbcc26ae36[m[33m ([m[1;33mtag: [m[1;33mv0.5.0-verified[m[33m)[m
+Author:     CleanCopy Snapshot <snapshot@local>
+AuthorDate: Thu Aug 14 18:23:28 2025 -0400
+Commit:     CleanCopy Snapshot <snapshot@local>
+CommitDate: Thu Aug 14 18:23:28 2025 -0400
+
+    chore(release): v0.5.0-verified — Seven changes PASS (real)

@@ -1,0 +1,95 @@
+/* Sidebar Styles */
+.sidebar {
+  width: 70px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.92) 100%);
+  backdrop-filter: blur(30px);
+  padding: 24px 0;
+  position: fixed;
+  height: 100vh;
+  z-index: 200;
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.sidebar:hover,
+.sidebar.expanded {
+  width: 260px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.logo {
+  padding: 0 24px 40px;
+  font-size: 18px;
+  font-weight: 900;
+  color: #e50914;
+  letter-spacing: -0.5px;
+  text-align: center;
+  transition: all 0.4s ease;
+  opacity: 0.9;
+}
+
+.sidebar:hover .logo,
+.sidebar.expanded .logo {
+  text-align: left;
+  font-size: 24px;
+  opacity: 1;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  padding: 18px 24px;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.navItem:hover,
+.navItem.active {
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(229, 9, 20, 0.15) 0%, transparent 100%);
+}
+
+.navItem.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #e50914, #ff1744);
+}
+
+.navIcon {
+  width: 22px;
+  height: 22px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 18px;
+  transition: transform 0.3s ease;
+}
+
+.navItem:hover .navIcon {
+  transform: scale(1.1);
+}
+
+.navText {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: all 0.4s ease;
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.sidebar:hover .navText,
+.sidebar.expanded .navText {
+  opacity: 1;
+  transform: translateX(0);
+} 

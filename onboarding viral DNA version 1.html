@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis - Viral DNA Detection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Analysis Phase Styles */
+        .analysis-container {
+            display: block;
+            min-height: 100vh;
+            background: #000;
+            color: #fff;
+            position: relative;
+        }
+
+        .analysis-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 40px;
+            background: linear-gradient(180deg, #000 0%, transparent 100%);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(-4px);
+        }
+
+        .connection-status {
+            padding: 12px 24px;
+            background: rgba(255, 97, 166, 0.1);
+            border: 1px solid rgba(255, 97, 166, 0.3);
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ff61a6;
+        }
+
+        .analysis-content {
+            padding: 120px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .phase-indicator {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .phase-icon {
+            font-size: 32px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .phase-title {
+            font-size: 36px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .analysis-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 60px;
+            margin-top: 40px;
+        }
+
+        .analysis-left {
+            animation: fadeInLeft 0.8s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .template-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .template-icon {
+            font-size: 24px;
+        }
+
+        .template-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .viral-dna-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            color: #fff;
+        }
+
+        .metric-item {
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metric-item:nth-child(2) { animation-delay: 0.1s; }
+        .metric-item:nth-child(3) { animation-delay: 0.2s; }
+        .metric-item:nth-child(4) { animation-delay: 0.3s; }
+        .metric-item:nth-child(5) { animation-delay: 0.4s; }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .metric-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .metric-score {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-timeline {
+            font-size: 14px;
+            color: #7b61ff;
+            margin-bottom: 4px;
+        }
+
+        .metric-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+        }
+
+        .metric-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            border-radius: 4px;
+            transition: width 1.5s ease;
+        }
+
+        .analysis-right {
+            animation: fadeInRight 0.8s ease;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .prediction-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 32px;
+        }
+
+        .prediction-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .viral-score-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 32px;
+        }
+
+        .viral-score-ring {
+            width: 100%;
+            height: 100%;
+            animation: rotateIn 1s ease;
+        }
+
+        @keyframes rotateIn {
+            from { transform: rotate(-90deg); opacity: 0; }
+            to { transform: rotate(0); opacity: 1; }
+        }
+
+        .viral-score-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .prediction-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .detail-value.highlight {
+            font-size: 20px;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .detail-value.confidence-high {
+            color: #00ff00;
+        }
+
+        .detail-value.platform-badge {
+            padding: 4px 12px;
+            background: rgba(123, 97, 255, 0.2);
+            border: 1px solid rgba(123, 97, 255, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .proceed-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff4458 0%, #ff1744 100%);
+            border: none;
+            border-radius: 16px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .proceed-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(255, 68, 88, 0.4);
+        }
+
+
+
+        /* Floating orbs */
+        .floating-orb {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-orb 20s ease-in-out infinite;
+        }
+
+        .floating-orb:nth-child(2) {
+            left: 80%;
+            top: 60%;
+            background: radial-gradient(circle, rgba(255, 97, 166, 0.2) 0%, transparent 70%);
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        @keyframes float-orb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(50px, -50px) scale(1.2);
+            }
+            66% {
+                transform: translate(-30px, 30px) scale(0.8);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .analysis-layout {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .viral-score-container {
+                margin: 0 auto 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .analysis-header {
+                padding: 16px 20px;
+            }
+
+            .analysis-content {
+                padding: 100px 20px 20px;
+            }
+
+            .phase-title {
+                font-size: 24px;
+            }
+
+            .lab-navigation {
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            .nav-tab {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating orbs -->
+    <div class="floating-orb" style="left: 10%; top: 20%;"></div>
+    <div class="floating-orb"></div>
+
+    <!-- Analysis Phase -->
+    <div class="analysis-container">
+        <header class="analysis-header">
+            <button class="back-btn">
+                ← Back to Discovery
+            </button>
+            <div class="connection-status">
+                Connected to DNA_Detective + Orchestrator
+            </div>
+        </header>
+
+        <div class="analysis-content">
+            <div class="phase-indicator">
+                <span class="phase-icon">🧬</span>
+                <h1 class="phase-title">Phase 2: Analysis - Viral DNA Detection</h1>
+            </div>
+
+            <div class="analysis-layout">
+                <div class="analysis-left">
+                    <div class="template-header">
+                        <span class="template-icon">🎯</span>
+                        <h2 class="template-name">Template: This Morning Routine Changed My Life</h2>
+                    </div>
+
+                    <div class="viral-dna-section">
+                        <h3 class="section-title">Viral DNA Analysis</h3>
+                        
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <h4 class="metric-name">Hook Strength</h4>
+                                <span class="metric-score">92%</span>
+                            </div>
+                            <div class="metric-timeline">0-3s</div>
+                            <div class="metric-description">Authority positioning captures attention</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <h4 class="metric-name">Story Arc</h4>
+                                <span class="metric-score">88%</span>
+                            </div>
+                            <div class="metric-timeline">3-15s</div>
+                            <div class="metric-description">Clear problem-solution structure</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 88%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <h4 class="metric-name">Visual Impact</h4>
+                                <span class="metric-score">85%</span>
+                            </div>
+                            <div class="metric-timeline">Throughout</div>
+                            <div class="metric-description">High-contrast visual elements</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div class="metric-item">
+                            <div class="metric-header">
+                                <h4 class="metric-name">Call to Action</h4>
+                                <span class="metric-score">90%</span>
+                            </div>
+                            <div class="metric-timeline">25-30s</div>
+                            <div class="metric-description">Strong engagement trigger</div>
+                            <div class="metric-bar">
+                                <div class="metric-fill" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analysis-right">
+                    <div class="prediction-section">
+                        <h3 class="prediction-title">📊 Live Viral Prediction</h3>
+                        
+                        <div class="viral-score-container">
+                            <svg class="viral-score-ring" viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="12"/>
+                                <circle class="score-progress" cx="100" cy="100" r="90" fill="none" stroke="url(#scoreGradient)" stroke-width="12" stroke-linecap="round" stroke-dasharray="565.48" stroke-dashoffset="50" transform="rotate(-90 100 100)"/>
+                                <defs>
+                                    <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#00ff00;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#00cc00;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="viral-score-text">
+                                <span class="score-value">91.7%</span>
+                            </div>
+                        </div>
+
+                        <div class="prediction-details">
+                            <div class="detail-row">
+                                <span class="detail-label">Framework:</span>
+                                <span class="detail-value">This Morning Routine Changed My Life</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Expected Views:</span>
+                                <span class="detail-value highlight">1.8M</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Confidence:</span>
+                                <span class="detail-value confidence-high">High</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Platform:</span>
+                                <span class="detail-value platform-badge">TIKTOK</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="proceed-btn">
+                        Proceed to Creation Phase →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>

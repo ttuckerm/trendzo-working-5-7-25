@@ -1,0 +1,225 @@
+# =============================================================================
+# PROMTAIL CONFIGURATION
+# Log shipping agent for Trendzo application logs
+# =============================================================================
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # ==========================================================================
+  # DOCKER CONTAINER LOGS
+  # ==========================================================================
+  - job_name: docker
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: docker
+          __path__: /var/lib/docker/containers/*/*log
+    
+    pipeline_stages:
+      # Parse Docker JSON logs
+      - json:
+          expressions:
+            output: log
+            stream: stream
+            attrs: attrs
+            tag: attrs.tag
+      
+      # Extract container information
+      - regex:
+          expression: '^/var/lib/docker/containers/(?P<container_id>[0-9a-f]{64})/[0-9a-f]{64}-json\.log$'
+          source: filename
+      
+      # Add labels based on container information
+      - labels:
+          stream:
+          container_id:
+          tag:
+      
+      # Parse application-specific logs
+      - match:
+          selector: '{tag=~"trendzo-.*"}'
+          stages:
+            # Parse JSON logs from Next.js application
+            - json:
+                expressions:
+                  timestamp: timestamp
+                  level: level
+                  message: message
+                  request_id: request_id
+                  user_id: user_id
+                  endpoint: endpoint
+                  duration: duration
+                  status_code: status_code
+            
+            # Add structured labels
+            - labels:
+                level:
+                endpoint:
+                status_code:
+            
+            # Convert timestamp
+            - timestamp:
+                source: timestamp
+                format: RFC3339
+      
+      # Filter out noise
+      - drop:
+          expression: '.*healthcheck.*'
+      
+      # Rate limiting to prevent log flooding
+      - limit:
+          rate: 1000
+          burst: 2000
+          drop: true
+
+  # ==========================================================================
+  # NGINX ACCESS LOGS
+  # ==========================================================================
+  - job_name: nginx-access
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx-access
+          __path__: /var/log/nginx/access.log
+    
+    pipeline_stages:
+      # Parse Nginx access log format
+      - regex:
+          expression: '^(?P<remote_addr>\S+) - (?P<remote_user>\S+) \[(?P<timestamp>[^\]]+)\] "(?P<method>\S+) (?P<path>\S+) (?P<protocol>\S+)" (?P<status>\d+) (?P<body_bytes_sent>\d+) "(?P<http_referer>[^"]*)" "(?P<http_user_agent>[^"]*)" "(?P<http_x_forwarded_for>[^"]*)" rt=(?P<request_time>\S+) uct="(?P<upstream_connect_time>\S+)" uht="(?P<upstream_header_time>\S+)" urt="(?P<upstream_response_time>\S+)"'
+      
+      # Add structured labels
+      - labels:
+          method:
+          status:
+          path:
+      
+      # Parse timestamp
+      - timestamp:
+          source: timestamp
+          format: '02/Jan/2006:15:04:05 -0700'
+      
+      # Filter out healthcheck requests
+      - drop:
+          expression: '.*GET /health.*'
+
+  # ==========================================================================
+  # NGINX ERROR LOGS
+  # ==========================================================================
+  - job_name: nginx-error
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: nginx-error
+          __path__: /var/log/nginx/error.log
+    
+    pipeline_stages:
+      # Parse Nginx error log format
+      - regex:
+          expression: '^(?P<timestamp>\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}) \[(?P<level>\w+)\] (?P<pid>\d+)#(?P<tid>\d+): (?P<message>.*)'
+      
+      # Add labels
+      - labels:
+          level:
+          pid:
+      
+      # Parse timestamp
+      - timestamp:
+          source: timestamp
+          format: '2006/01/02 15:04:05'
+
+  # ==========================================================================
+  # APPLICATION LOGS (from stdout/stderr)
+  # ==========================================================================
+  - job_name: trendzo-app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: trendzo-app
+          __path__: /var/lib/docker/containers/*/*log
+    
+    pipeline_stages:
+      # Parse Docker JSON logs
+      - json:
+          expressions:
+            output: log
+            stream: stream
+            tag: attrs.tag
+      
+      # Only process Trendzo application logs
+      - match:
+          selector: '{tag=~"trendzo-app-.*"}'
+          stages:
+            # Parse structured application logs
+            - json:
+                expressions:
+                  timestamp: timestamp
+                  level: level
+                  message: message
+                  module: module
+                  prediction_id: prediction_id
+                  user_id: user_id
+                  processing_time: processing_time
+                  viral_score: viral_score
+                  confidence: confidence
+                  error: error
+                  stack_trace: stack
+            
+            # Add labels for filtering
+            - labels:
+                level:
+                module:
+                stream:
+            
+            # Convert timestamp if present
+            - timestamp:
+                source: timestamp
+                format: RFC3339Nano
+            
+            # Drop debug logs in production
+            - drop:
+                expression: '.*"level":"debug".*'
+
+  # ==========================================================================
+  # SYSTEM LOGS (if available)
+  # ==========================================================================
+  - job_name: syslog
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: syslog
+          __path__: /var/log/syslog
+    
+    pipeline_stages:
+      # Parse syslog format
+      - regex:
+          expression: '^(?P<timestamp>\w{3} \d{1,2} \d{2}:\d{2}:\d{2}) (?P<hostname>\S+) (?P<process>\S+): (?P<message>.*)'
+      
+      # Add labels
+      - labels:
+          hostname:
+          process:
+      
+      # Parse timestamp
+      - timestamp:
+          source: timestamp
+          format: 'Jan 2 15:04:05'
+
+# =============================================================================
+# GLOBAL SETTINGS
+# =============================================================================
+target_config:
+  sync_period: 10s

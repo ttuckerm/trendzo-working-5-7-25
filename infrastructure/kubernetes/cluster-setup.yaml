@@ -1,0 +1,122 @@
+# Kubernetes Cluster Setup for Unicorn-Grade Viral Prediction
+# Target: ≥95% accuracy, ≤100ms latency, 99.95% uptime
+# Architecture: Microservices with Istio service mesh
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: viral-prediction
+  labels:
+    name: viral-prediction
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: viral-prediction-ml
+  labels:
+    name: viral-prediction-ml
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    name: monitoring
+    istio-injection: enabled
+---
+# Cluster Resource Quotas for Performance
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: viral-prediction-quota
+  namespace: viral-prediction
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: 40Gi
+    limits.cpu: "40"
+    limits.memory: 80Gi
+    persistentvolumeclaims: "10"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: viral-prediction-ml-quota
+  namespace: viral-prediction-ml
+spec:
+  hard:
+    requests.cpu: "30"
+    requests.memory: 60Gi
+    limits.cpu: "60"
+    limits.memory: 120Gi
+    persistentvolumeclaims: "20"
+    requests.nvidia.com/gpu: "4"
+---
+# Network Policies for Security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: viral-prediction-network-policy
+  namespace: viral-prediction
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: viral-prediction
+    - namespaceSelector:
+        matchLabels:
+          name: viral-prediction-ml
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: viral-prediction
+    - namespaceSelector:
+        matchLabels:
+          name: viral-prediction-ml
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 443
+---
+# Priority Classes for Workload Scheduling
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: viral-prediction-critical
+value: 1000
+globalDefault: false
+description: "Critical viral prediction services"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: viral-prediction-high
+value: 800
+globalDefault: false
+description: "High priority viral prediction services"
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: viral-prediction-normal
+value: 600
+globalDefault: true
+description: "Normal priority viral prediction services"

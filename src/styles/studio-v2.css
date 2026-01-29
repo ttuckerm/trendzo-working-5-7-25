@@ -1,0 +1,199 @@
+/* studio-v2.css */
+
+.studiocard-tile {
+    flex: 0 0 340px;
+    height: 190px;
+    background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
+}
+
+.studiocard-tile:hover {
+    transform: scale(1.15) translateY(-15px) !important;
+    box-shadow: 
+        0 32px 80px rgba(0, 0, 0, 0.95), 
+        0 0 60px rgba(229, 9, 20, 0.3),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+    border-color: rgba(229, 9, 20, 0.5);
+    z-index: 50;
+    animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 32px 80px rgba(0, 0, 0, 0.95), 0 0 60px rgba(229, 9, 20, 0.3); }
+    50% { box-shadow: 0 32px 80px rgba(0, 0, 0, 0.95), 0 0 80px rgba(229, 9, 20, 0.5); }
+}
+
+.studiocard-background {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: all 0.5s ease;
+    filter: brightness(0.8);
+}
+
+.studiocard-tile:hover .studiocard-background {
+    opacity: 0;
+}
+
+.studiocard-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.studiocard-tile:hover .studiocard-video {
+    opacity: 1;
+}
+
+.studiocard-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        transparent 10%,
+        rgba(0, 0, 0, 0.2) 50%,
+        rgba(0, 0, 0, 0.95) 100%
+    );
+    transition: all 0.5s ease;
+}
+
+.studiocard-tile:hover .studiocard-overlay {
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.5) 0%,
+        transparent 40%,
+        rgba(0, 0, 0, 0.9) 100%
+    );
+}
+
+.studiocard-content-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    z-index: 5;
+    transition: all 0.4s ease;
+}
+
+.studiocard-tile:hover .studiocard-content-bottom {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.studiocard-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+    margin: 0;
+}
+
+.studiocard-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(229, 9, 20, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(229, 9, 20, 0.4);
+    margin-top: 8px;
+}
+
+/* Hover Content */
+.studiocard-hover-content {
+    position: absolute;
+    inset: 0;
+    padding: 16px;
+    opacity: 0;
+    transition: all 0.4s ease 0.1s;
+    z-index: 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.studiocard-tile:hover .studiocard-hover-content {
+    opacity: 1;
+}
+
+.studiocard-top-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.studiocard-music-icon {
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.studiocard-score {
+    background: rgba(0, 255, 136, 0.15);
+    border: 1px solid rgba(0, 255, 136, 0.4);
+    color: #00ff88;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.studiocard-bottom-hover-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.studiocard-video-title-hover {
+    font-size: 18px;
+    font-weight: 800;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+.studiocard-creator-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #b3b3b3;
+}
+
+.studiocard-stats {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #888;
+    font-weight: 500;
+}
+
+.studiocard-stats span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}

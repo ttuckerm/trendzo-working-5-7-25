@@ -1,0 +1,283 @@
+# Feature Store Schema for Unicorn-Grade Viral Prediction System
+# Designed by: ml-feature-engineer + data-engineer + architect
+# Target: Support ≥95% accuracy with ≤100ms latency
+
+apiVersion: feast.dev/v1alpha1
+kind: FeatureSchema
+metadata:
+  name: viral-prediction-features
+  version: "1.0.0"
+  
+spec:
+  entities:
+    - name: video_id
+      description: "Unique identifier for each video"
+      value_type: STRING
+      
+    - name: creator_id  
+      description: "Unique identifier for content creator"
+      value_type: STRING
+      
+    - name: platform_id
+      description: "Platform identifier (tiktok, instagram, youtube)"
+      value_type: STRING
+
+  feature_views:
+    # ===== TEXT & CONTENT FEATURES =====
+    - name: text_features
+      description: "Advanced text analysis features for viral prediction"
+      entities: [video_id]
+      ttl: 86400  # 24 hours
+      online: true
+      batch_source: 
+        type: bigquery
+        table: "viral_prediction.text_features"
+      features:
+        - name: caption_sentiment_score
+          dtype: FLOAT
+          description: "Sentiment analysis score (-1 to 1)"
+        - name: caption_emotion_scores
+          dtype: ARRAY(FLOAT)
+          description: "Multi-emotion scores [joy, anger, fear, sadness, surprise]"
+        - name: viral_keywords_count
+          dtype: INT32
+          description: "Count of viral keywords in caption"
+        - name: call_to_action_strength
+          dtype: FLOAT
+          description: "Strength of call-to-action phrases (0-1)"
+        - name: readability_score
+          dtype: FLOAT
+          description: "Text readability score (Flesch-Kincaid)"
+        - name: urgency_indicators
+          dtype: INT32
+          description: "Count of urgency-creating words/phrases"
+        - name: caption_length_optimal
+          dtype: BOOLEAN
+          description: "Whether caption length is in optimal range"
+        - name: hashtag_viral_score
+          dtype: FLOAT
+          description: "Aggregate viral potential of hashtags (0-100)"
+        - name: text_embeddings_bert
+          dtype: ARRAY(FLOAT)
+          description: "BERT embeddings (768-dim) for semantic similarity"
+        - name: text_embeddings_viral_tuned
+          dtype: ARRAY(FLOAT)
+          description: "Domain-specific viral-tuned embeddings (512-dim)"
+          
+    # ===== VISUAL & PRODUCTION FEATURES =====
+    - name: visual_features
+      description: "Computer vision and production quality features"
+      entities: [video_id]
+      ttl: 86400
+      online: true
+      batch_source:
+        type: bigquery
+        table: "viral_prediction.visual_features"
+      features:
+        - name: production_quality_score
+          dtype: FLOAT
+          description: "Overall production quality (0-100)"
+        - name: visual_appeal_score
+          dtype: FLOAT
+          description: "Visual attractiveness score (0-100)"
+        - name: color_vibrancy_score
+          dtype: FLOAT
+          description: "Color vibrancy and saturation score"
+        - name: face_detection_count
+          dtype: INT32
+          description: "Number of faces detected in video"
+        - name: motion_intensity
+          dtype: FLOAT
+          description: "Video motion and dynamism score"
+        - name: lighting_quality
+          dtype: FLOAT
+          description: "Lighting quality assessment (0-100)"
+        - name: visual_composition_score
+          dtype: FLOAT
+          description: "Rule of thirds and composition quality"
+        - name: thumbnail_click_probability
+          dtype: FLOAT
+          description: "Predicted thumbnail click-through rate"
+        - name: visual_trend_alignment
+          dtype: FLOAT
+          description: "Alignment with current visual trends (0-1)"
+        - name: video_embeddings_clip
+          dtype: ARRAY(FLOAT)
+          description: "CLIP visual embeddings (512-dim)"
+          
+    # ===== AUDIO & SOUND FEATURES =====
+    - name: audio_features
+      description: "Audio analysis features for viral prediction"
+      entities: [video_id]
+      ttl: 86400
+      online: true
+      batch_source:
+        type: bigquery
+        table: "viral_prediction.audio_features"
+      features:
+        - name: audio_quality_score
+          dtype: FLOAT
+          description: "Audio clarity and quality (0-100)"
+        - name: music_viral_potential
+          dtype: FLOAT
+          description: "Viral potential of background music (0-100)"
+        - name: voice_energy_level
+          dtype: FLOAT
+          description: "Speaker voice energy and enthusiasm"
+        - name: audio_trend_alignment
+          dtype: FLOAT
+          description: "Alignment with trending audio (0-1)"
+        - name: sound_effects_count
+          dtype: INT32
+          description: "Number of viral sound effects used"
+        - name: speech_pace_optimal
+          dtype: BOOLEAN
+          description: "Whether speech pace is optimal for engagement"
+        - name: audio_hook_strength
+          dtype: FLOAT
+          description: "Strength of audio hook in first 3 seconds"
+        - name: audio_embeddings_whisper
+          dtype: ARRAY(FLOAT)
+          description: "Whisper audio embeddings (512-dim)"
+          
+    # ===== CREATOR & CONTEXTUAL FEATURES =====
+    - name: creator_features
+      description: "Creator-specific features and contextual data"
+      entities: [creator_id]
+      ttl: 3600  # 1 hour - more dynamic
+      online: true
+      batch_source:
+        type: bigquery
+        table: "viral_prediction.creator_features"
+      features:
+        - name: follower_count
+          dtype: INT64
+          description: "Current follower count"
+        - name: engagement_rate_30d
+          dtype: FLOAT
+          description: "30-day average engagement rate"
+        - name: viral_video_history_count
+          dtype: INT32
+          description: "Count of viral videos in last 90 days"
+        - name: creator_consistency_score
+          dtype: FLOAT
+          description: "Content consistency and quality score"
+        - name: niche_authority_score
+          dtype: FLOAT
+          description: "Authority score in creator's niche"
+        - name: audience_loyalty_score
+          dtype: FLOAT
+          description: "Audience loyalty and retention score"
+        - name: posting_frequency_optimal
+          dtype: BOOLEAN
+          description: "Whether posting frequency is optimal"
+        - name: creator_momentum_score
+          dtype: FLOAT
+          description: "Recent growth and momentum indicator"
+          
+    # ===== TEMPORAL & TIMING FEATURES =====
+    - name: timing_features
+      description: "Temporal and timing optimization features"
+      entities: [video_id]
+      ttl: 1800  # 30 minutes - highly dynamic
+      online: true
+      batch_source:
+        type: bigquery
+        table: "viral_prediction.timing_features"
+      features:
+        - name: posting_time_optimal_global
+          dtype: FLOAT
+          description: "Global optimal posting time score (0-1)"
+        - name: posting_time_optimal_audience
+          dtype: FLOAT
+          description: "Audience-specific optimal timing score (0-1)"
+        - name: day_of_week_viral_multiplier
+          dtype: FLOAT
+          description: "Day of week viral potential multiplier"
+        - name: seasonal_trend_alignment
+          dtype: FLOAT
+          description: "Alignment with seasonal trends (0-1)"
+        - name: real_time_trend_score
+          dtype: FLOAT
+          description: "Alignment with real-time trending topics"
+        - name: competition_level
+          dtype: FLOAT
+          description: "Content competition level at posting time"
+        - name: platform_algorithm_favorability
+          dtype: FLOAT
+          description: "Platform algorithm favorability score"
+          
+    # ===== VIRAL PATTERN FEATURES =====
+    - name: viral_pattern_features
+      description: "Advanced viral pattern detection features"
+      entities: [video_id]
+      ttl: 86400
+      online: true
+      batch_source:
+        type: bigquery
+        table: "viral_prediction.viral_patterns"
+      features:
+        - name: framework_match_scores
+          dtype: ARRAY(FLOAT)
+          description: "Scores for each of 40+ viral frameworks"
+        - name: psychological_trigger_count
+          dtype: INT32
+          description: "Count of psychological triggers detected"
+        - name: cultural_relevance_score
+          dtype: FLOAT
+          description: "Cultural relevance and timing score"
+        - name: meme_potential_score
+          dtype: FLOAT
+          description: "Potential for meme creation and sharing"
+        - name: challenge_participation_score
+          dtype: FLOAT
+          description: "Participation in viral challenges score"
+        - name: controversy_level
+          dtype: FLOAT
+          description: "Controlled controversy level (0-1)"
+        - name: shareability_indicators
+          dtype: ARRAY(FLOAT)
+          description: "Multiple shareability factor scores"
+        - name: viral_dna_signature
+          dtype: ARRAY(FLOAT)
+          description: "Viral DNA pattern signature (1024-dim)"
+
+  # ===== AGGREGATED FEATURES =====
+  feature_services:
+    - name: viral_prediction_online
+      description: "Real-time features for online viral prediction"
+      features:
+        - text_features:caption_sentiment_score
+        - text_features:viral_keywords_count
+        - text_features:call_to_action_strength
+        - text_features:hashtag_viral_score
+        - visual_features:production_quality_score
+        - visual_features:visual_appeal_score
+        - visual_features:thumbnail_click_probability
+        - audio_features:audio_quality_score
+        - audio_features:music_viral_potential
+        - audio_features:audio_hook_strength
+        - creator_features:follower_count
+        - creator_features:engagement_rate_30d
+        - creator_features:creator_momentum_score
+        - timing_features:posting_time_optimal_global
+        - timing_features:real_time_trend_score
+        - viral_pattern_features:framework_match_scores
+        - viral_pattern_features:psychological_trigger_count
+        - viral_pattern_features:viral_dna_signature
+        
+    - name: viral_prediction_batch
+      description: "Batch features for model training and evaluation"
+      features:
+        - text_features
+        - visual_features  
+        - audio_features
+        - creator_features
+        - timing_features
+        - viral_pattern_features
+
+# Performance Targets:
+# - Online feature retrieval: <10ms p95
+# - Batch feature generation: <30 seconds per video
+# - Feature freshness: <5 minutes for dynamic features
+# - Storage efficiency: <1MB per video feature set

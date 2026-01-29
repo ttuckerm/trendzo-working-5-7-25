@@ -1,0 +1,474 @@
+# ALERTMANAGER CONFIGURATION
+# Multi-channel alert routing and notification system
+# Part of BMAD Advanced Monitoring & Alerting implementation
+
+global:
+  # Global SMTP configuration
+  smtp_smarthost: '${SMTP_HOST}:${SMTP_PORT}'
+  smtp_from: '${SMTP_FROM}'
+  smtp_auth_username: '${SMTP_USER}'
+  smtp_auth_password: '${SMTP_PASSWORD}'
+  smtp_require_tls: true
+  
+  # Global Slack configuration
+  slack_api_url: '${SLACK_WEBHOOK_URL}'
+  
+  # Global PagerDuty configuration
+  pagerduty_url: 'https://events.pagerduty.com/v2/enqueue'
+  
+  # Resolve timeout
+  resolve_timeout: 5m
+
+# Templates for custom notifications
+templates:
+  - '/etc/alertmanager/templates/*.tmpl'
+
+# Route configuration
+route:
+  # Default receiver
+  receiver: 'default-notifications'
+  
+  # How long to wait before sending notification
+  group_wait: 30s
+  
+  # How long to wait before sending updated notification
+  group_interval: 5m
+  
+  # How long to wait before re-sending notification
+  repeat_interval: 4h
+  
+  # Group alerts by these labels
+  group_by:
+    - alertname
+    - severity
+    - service
+    - environment
+  
+  # Routing tree
+  routes:
+    # Critical alerts - immediate notification to multiple channels
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 30m
+      routes:
+        # Critical production alerts - escalate to PagerDuty
+        - match:
+            environment: production
+          receiver: 'critical-production'
+          group_wait: 5s
+          continue: true
+        
+        # Critical prediction accuracy issues
+        - match:
+            alertname: PredictionAccuracyDrop
+          receiver: 'ml-team'
+          continue: true
+        
+        # Critical security alerts
+        - match_re:
+            alertname: Security.*
+          receiver: 'security-team'
+          continue: true
+    
+    # Error alerts - standard notification flow
+    - match:
+        severity: error
+      receiver: 'error-alerts'
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 2h
+      routes:
+        # High error rate alerts
+        - match:
+            alertname: HighErrorRate
+          receiver: 'dev-team'
+          continue: true
+        
+        # Database error alerts
+        - match_re:
+            alertname: Database.*
+          receiver: 'dba-team'
+          continue: true
+    
+    # Warning alerts - less urgent notifications
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+      group_wait: 2m
+      group_interval: 10m
+      repeat_interval: 8h
+      routes:
+        # Performance warnings
+        - match_re:
+            alertname: (HighResponseTime|HighCPU|HighMemory)
+          receiver: 'performance-alerts'
+          continue: true
+        
+        # Business metric warnings
+        - match_re:
+            alertname: (LowUserEngagement|RevenueDecline)
+          receiver: 'business-team'
+          continue: true
+    
+    # Info alerts - low priority notifications
+    - match:
+        severity: info
+      receiver: 'info-alerts'
+      group_wait: 5m
+      group_interval: 30m
+      repeat_interval: 24h
+    
+    # Maintenance alerts - special handling
+    - match:
+        alertname: MaintenanceWindow
+      receiver: 'maintenance-notifications'
+      group_wait: 1m
+      group_interval: 10m
+      repeat_interval: 1h
+    
+    # Webhook alerts for external integrations
+    - match:
+        alertname: WebhookTest
+      receiver: 'webhook-integrations'
+      continue: true
+
+# Inhibit rules - suppress alerts when others are firing
+inhibit_rules:
+  # Inhibit warning/info when critical is firing
+  - source_match:
+      severity: critical
+    target_match_re:
+      severity: (warning|info)
+    equal:
+      - alertname
+      - service
+      - environment
+  
+  # Inhibit individual service alerts when entire cluster is down
+  - source_match:
+      alertname: ClusterDown
+    target_match_re:
+      alertname: Service.*Down
+    equal:
+      - environment
+  
+  # Inhibit disk space warnings when disk space critical is firing
+  - source_match:
+      alertname: DiskSpaceCritical
+    target_match:
+      alertname: DiskSpaceWarning
+    equal:
+      - instance
+      - device
+
+# Notification receivers
+receivers:
+  # =============================================================================
+  # DEFAULT NOTIFICATIONS
+  # =============================================================================
+  - name: 'default-notifications'
+    email_configs:
+      - to: '${DEFAULT_EMAIL_RECIPIENTS}'
+        subject: '[TRENDZO] {{ .GroupLabels.alertname }} - {{ .GroupLabels.severity | toUpper }}'
+        body: |
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity }}
+          Environment: {{ .Labels.environment }}
+          Service: {{ .Labels.service }}
+          Time: {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+          {{ if .GeneratorURL }}Source: {{ .GeneratorURL }}{{ end }}
+          {{ end }}
+        html: |
+          <h2>Trendzo Alert Notification</h2>
+          <table border="1" style="border-collapse: collapse;">
+          {{ range .Alerts }}
+          <tr><td><strong>Alert:</strong></td><td>{{ .Annotations.summary }}</td></tr>
+          <tr><td><strong>Description:</strong></td><td>{{ .Annotations.description }}</td></tr>
+          <tr><td><strong>Severity:</strong></td><td>{{ .Labels.severity | toUpper }}</td></tr>
+          <tr><td><strong>Environment:</strong></td><td>{{ .Labels.environment }}</td></tr>
+          <tr><td><strong>Service:</strong></td><td>{{ .Labels.service }}</td></tr>
+          <tr><td><strong>Time:</strong></td><td>{{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}</td></tr>
+          {{ if .GeneratorURL }}<tr><td><strong>Source:</strong></td><td><a href="{{ .GeneratorURL }}">View in Prometheus</a></td></tr>{{ end }}
+          {{ end }}
+          </table>
+
+  # =============================================================================
+  # CRITICAL ALERTS - MULTIPLE CHANNELS
+  # =============================================================================
+  - name: 'critical-alerts'
+    email_configs:
+      - to: '${CRITICAL_EMAIL_RECIPIENTS}'
+        subject: '🚨 CRITICAL ALERT: {{ .GroupLabels.alertname }}'
+        body: |
+          CRITICAL ALERT DETECTED
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Severity: {{ .Labels.severity | toUpper }}
+          Environment: {{ .Labels.environment }}
+          Service: {{ .Labels.service }}
+          Started: {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+          {{ if .Labels.runbook_url }}Runbook: {{ .Labels.runbook_url }}{{ end }}
+          {{ end }}
+          
+          IMMEDIATE ACTION REQUIRED
+        html: |
+          <div style="background-color: #dc3545; color: white; padding: 20px; border-radius: 5px;">
+            <h1>🚨 CRITICAL ALERT</h1>
+            <p><strong>Immediate attention required!</strong></p>
+          </div>
+          <table border="1" style="border-collapse: collapse; margin-top: 20px;">
+          {{ range .Alerts }}
+          <tr style="background-color: #f8d7da;"><td><strong>Alert:</strong></td><td>{{ .Annotations.summary }}</td></tr>
+          <tr><td><strong>Description:</strong></td><td>{{ .Annotations.description }}</td></tr>
+          <tr><td><strong>Severity:</strong></td><td><span style="color: #dc3545; font-weight: bold;">{{ .Labels.severity | toUpper }}</span></td></tr>
+          <tr><td><strong>Environment:</strong></td><td>{{ .Labels.environment }}</td></tr>
+          <tr><td><strong>Service:</strong></td><td>{{ .Labels.service }}</td></tr>
+          <tr><td><strong>Started:</strong></td><td>{{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}</td></tr>
+          {{ if .Labels.runbook_url }}<tr><td><strong>Runbook:</strong></td><td><a href="{{ .Labels.runbook_url }}">{{ .Labels.runbook_url }}</a></td></tr>{{ end }}
+          {{ end }}
+          </table>
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-critical'
+        title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+        text: |
+          <!channel> CRITICAL ALERT DETECTED
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Description:* {{ .Annotations.description }}
+          *Environment:* {{ .Labels.environment }}
+          *Service:* {{ .Labels.service }}
+          *Started:* {{ .StartsAt.Format "2006-01-02 15:04:05 UTC" }}
+          {{ if .GeneratorURL }}*Source:* <{{ .GeneratorURL }}|View in Prometheus>{{ end }}
+          {{ end }}
+        color: 'danger'
+        actions:
+          - type: button
+            text: 'View Dashboard'
+            url: '${GRAFANA_URL}/d/alerts'
+          - type: button
+            text: 'Acknowledge'
+            url: '${ALERTMANAGER_URL}/#/alerts'
+
+  # =============================================================================
+  # CRITICAL PRODUCTION - PAGERDUTY ESCALATION
+  # =============================================================================
+  - name: 'critical-production'
+    pagerduty_configs:
+      - routing_key: '${PAGERDUTY_INTEGRATION_KEY}'
+        description: 'Critical Production Alert: {{ .GroupLabels.alertname }}'
+        details:
+          summary: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+          environment: '{{ .GroupLabels.environment }}'
+          service: '{{ .GroupLabels.service }}'
+          severity: '{{ .GroupLabels.severity }}'
+        client: 'Trendzo Monitoring'
+        client_url: '${GRAFANA_URL}/d/alerts'
+        links:
+          - href: '${GRAFANA_URL}/d/alerts'
+            text: 'View Dashboard'
+          - href: '${PROMETHEUS_URL}/alerts'
+            text: 'View in Prometheus'
+
+  # =============================================================================
+  # TEAM-SPECIFIC NOTIFICATIONS
+  # =============================================================================
+  - name: 'ml-team'
+    email_configs:
+      - to: '${ML_TEAM_EMAIL}'
+        subject: '🧠 ML Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Machine Learning Team Alert
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Model: {{ .Labels.model }}
+          Accuracy: {{ .Labels.accuracy }}
+          Threshold: {{ .Labels.threshold }}
+          {{ end }}
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#ml-alerts'
+        title: '🧠 ML Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Model:* {{ .Labels.model }}
+          *Current Accuracy:* {{ .Labels.accuracy }}%
+          *Threshold:* {{ .Labels.threshold }}%
+          {{ end }}
+        color: 'warning'
+
+  - name: 'security-team'
+    email_configs:
+      - to: '${SECURITY_TEAM_EMAIL}'
+        subject: '🛡️ Security Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          SECURITY ALERT DETECTED
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Source IP: {{ .Labels.source_ip }}
+          Attack Type: {{ .Labels.attack_type }}
+          Blocked: {{ .Labels.blocked }}
+          {{ end }}
+          
+          Please investigate immediately.
+
+  - name: 'dev-team'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#dev-alerts'
+        title: '⚠️ Dev Alert: {{ .GroupLabels.alertname }}'
+        text: |
+          {{ range .Alerts }}
+          *Alert:* {{ .Annotations.summary }}
+          *Service:* {{ .Labels.service }}
+          *Environment:* {{ .Labels.environment }}
+          *Error Rate:* {{ .Labels.error_rate }}%
+          {{ end }}
+        color: 'warning'
+
+  - name: 'dba-team'
+    email_configs:
+      - to: '${DBA_TEAM_EMAIL}'
+        subject: '🗄️ Database Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Database Alert
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Database: {{ .Labels.database }}
+          Instance: {{ .Labels.instance }}
+          Query Time: {{ .Labels.query_time }}ms
+          Connection Pool: {{ .Labels.connection_pool }}%
+          {{ end }}
+
+  - name: 'business-team'
+    email_configs:
+      - to: '${BUSINESS_TEAM_EMAIL}'
+        subject: '📊 Business Metric Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Business Metrics Alert
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Metric: {{ .Labels.metric }}
+          Current Value: {{ .Labels.current_value }}
+          Expected Value: {{ .Labels.expected_value }}
+          Impact: {{ .Labels.impact }}
+          {{ end }}
+
+  # =============================================================================
+  # SEVERITY-BASED NOTIFICATIONS
+  # =============================================================================
+  - name: 'error-alerts'
+    email_configs:
+      - to: '${ERROR_EMAIL_RECIPIENTS}'
+        subject: '❌ Error Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Error Alert Notification
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Service: {{ .Labels.service }}
+          Environment: {{ .Labels.environment }}
+          Error Count: {{ .Labels.error_count }}
+          {{ end }}
+    
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-error'
+        title: '❌ Error: {{ .GroupLabels.alertname }}'
+        color: 'danger'
+
+  - name: 'warning-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-warning'
+        title: '⚠️ Warning: {{ .GroupLabels.alertname }}'
+        color: 'warning'
+
+  - name: 'info-alerts'
+    slack_configs:
+      - api_url: '${SLACK_WEBHOOK_URL}'
+        channel: '#alerts-info'
+        title: 'ℹ️ Info: {{ .GroupLabels.alertname }}'
+        color: 'good'
+
+  - name: 'performance-alerts'
+    email_configs:
+      - to: '${PERFORMANCE_TEAM_EMAIL}'
+        subject: '⚡ Performance Alert: {{ .GroupLabels.alertname }}'
+        body: |
+          Performance Alert
+          
+          {{ range .Alerts }}
+          Alert: {{ .Annotations.summary }}
+          Metric: {{ .Labels.metric }}
+          Current Value: {{ .Labels.current_value }}
+          Threshold: {{ .Labels.threshold }}
+          Trend: {{ .Labels.trend }}
+          {{ end }}
+
+  # =============================================================================
+  # SPECIAL PURPOSE NOTIFICATIONS
+  # =============================================================================
+  - name: 'maintenance-notifications'
+    email_configs:
+      - to: '${MAINTENANCE_EMAIL_RECIPIENTS}'
+        subject: '🔧 Maintenance: {{ .GroupLabels.alertname }}'
+        body: |
+          Maintenance Notification
+          
+          {{ range .Alerts }}
+          Event: {{ .Annotations.summary }}
+          Description: {{ .Annotations.description }}
+          Start Time: {{ .Labels.start_time }}
+          End Time: {{ .Labels.end_time }}
+          Affected Services: {{ .Labels.affected_services }}
+          {{ end }}
+
+  - name: 'webhook-integrations'
+    webhook_configs:
+      - url: '${WEBHOOK_URL}/alerts'
+        send_resolved: true
+        http_config:
+          bearer_token: '${WEBHOOK_TOKEN}'
+        max_alerts: 10
+
+# =============================================================================
+# TIME INTERVALS
+# =============================================================================
+time_intervals:
+  - name: 'business-hours'
+    time_intervals:
+      - times:
+          - start_time: '09:00'
+            end_time: '17:00'
+        weekdays: ['monday:friday']
+        location: 'UTC'
+  
+  - name: 'weekends'
+    time_intervals:
+      - weekdays: ['saturday', 'sunday']
+        location: 'UTC'
+  
+  - name: 'nights'
+    time_intervals:
+      - times:
+          - start_time: '22:00'
+            end_time: '06:00'
+        location: 'UTC'

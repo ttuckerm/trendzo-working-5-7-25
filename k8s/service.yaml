@@ -1,0 +1,55 @@
+# =============================================================================
+# KUBERNETES SERVICE
+# Load balancing service for Trendzo application
+# =============================================================================
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: trendzo-app-service
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "3000"
+    prometheus.io/path: "/api/metrics"
+spec:
+  type: ClusterIP
+  selector:
+    app: trendzo-app
+    environment: production
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  sessionAffinity: None
+
+---
+# =============================================================================
+# HEADLESS SERVICE (for direct pod access)
+# =============================================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: trendzo-app-headless
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+    service-type: headless
+spec:
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: trendzo-app
+    environment: production
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http
+      protocol: TCP

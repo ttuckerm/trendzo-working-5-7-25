@@ -1,0 +1,11 @@
+{
+  "name": "Export leaderboard → Sheets",
+  "module": "export.leaderboard",
+  "steps": [
+    { "op": "http.get", "url": "/api/templates/leaderboard?window=7d" },
+    { "op": "sheets.overwrite", "sheet": "Leaderboard", "fields": ["template_id","title","metric_value","rank"] }
+  ]
+}
+
+
+

@@ -1,0 +1,181 @@
+# =============================================================================
+# PROMETHEUS CONFIGURATION
+# Production monitoring for Trendzo viral prediction platform
+# =============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'trendzo-monitor'
+    environment: 'production'
+
+# Alertmanager configuration
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Rule files
+rule_files:
+  - "rules/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # ==========================================================================
+  # PROMETHEUS SELF-MONITORING
+  # ==========================================================================
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # ==========================================================================
+  # TRENDZO APPLICATION MONITORING
+  # ==========================================================================
+  - job_name: 'trendzo-app'
+    static_configs:
+      - targets: 
+          - 'app-1:3000'
+          - 'app-2:3000'
+    scrape_interval: 15s
+    metrics_path: /api/metrics
+    scrape_timeout: 10s
+    
+    # Health check parameters
+    params:
+      format: ['prometheus']
+    
+    # Relabeling for better metric organization
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'trendzo_(.+)'
+        target_label: __name__
+        replacement: '${1}'
+      - source_labels: [instance]
+        regex: 'app-([0-9]+):3000'
+        target_label: app_instance
+        replacement: '${1}'
+
+  # ==========================================================================
+  # APPLICATION HEALTH MONITORING
+  # ==========================================================================
+  - job_name: 'trendzo-health'
+    static_configs:
+      - targets:
+          - 'app-1:3000'
+          - 'app-2:3000'
+    scrape_interval: 30s
+    metrics_path: /api/health
+    scrape_timeout: 5s
+    
+    # Custom health check metrics
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'up'
+        target_label: service_type
+        replacement: 'application'
+
+  # ==========================================================================
+  # NGINX MONITORING
+  # ==========================================================================
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+    scrape_interval: 30s
+    metrics_path: /nginx_status
+    scrape_timeout: 10s
+
+  # ==========================================================================
+  # REDIS MONITORING
+  # ==========================================================================
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+  # ==========================================================================
+  # CONTAINER MONITORING (cAdvisor)
+  # ==========================================================================
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+    
+    # Resource usage metrics
+    metric_relabel_configs:
+      - source_labels: [container_label_com_docker_compose_service]
+        target_label: service_name
+      - source_labels: [container_label_com_docker_compose_project]
+        target_label: project_name
+
+  # ==========================================================================
+  # NODE EXPORTER (System Metrics)
+  # ==========================================================================
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+  # ==========================================================================
+  # BUSINESS METRICS (Custom Application Metrics)
+  # ==========================================================================
+  - job_name: 'trendzo-business-metrics'
+    static_configs:
+      - targets:
+          - 'app-1:3000'
+          - 'app-2:3000'
+    scrape_interval: 60s
+    metrics_path: /api/admin/metrics
+    scrape_timeout: 15s
+    
+    # Business metrics specific configuration
+    params:
+      type: ['business']
+    
+    # Relabel business metrics for better organization
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'trendzo_prediction_(.+)'
+        target_label: prediction_metric
+        replacement: '${1}'
+      - source_labels: [__name__]
+        regex: 'trendzo_user_(.+)'
+        target_label: user_metric
+        replacement: '${1}'
+      - source_labels: [__name__]
+        regex: 'trendzo_api_(.+)'
+        target_label: api_metric
+        replacement: '${1}'
+
+  # ==========================================================================
+  # EXTERNAL SERVICE MONITORING
+  # ==========================================================================
+  - job_name: 'external-services'
+    static_configs:
+      - targets: ['dummy:9999']  # Placeholder for external service checks
+    scrape_interval: 300s  # 5 minutes
+    metrics_path: /api/external/health
+    scrape_timeout: 30s
+    
+    # Monitor external dependencies
+    params:
+      services: ['supabase', 'openai', 'apify']
+
+# =============================================================================
+# REMOTE WRITE CONFIGURATION (for external monitoring services)
+# =============================================================================
+# Uncomment and configure for external monitoring services like Grafana Cloud
+# remote_write:
+#   - url: "https://prometheus-blocks-prod-us-central1.grafana.net/api/prom/push"
+#     basic_auth:
+#       username: "your_username"
+#       password: "your_api_key"

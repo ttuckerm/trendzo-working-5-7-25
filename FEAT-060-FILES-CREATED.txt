@@ -1,0 +1,54 @@
+FEAT-060: GPT Knowledge Extraction Pipeline [PATENT-009]
+Files Created: 2025-10-08
+
+DATABASE MIGRATION:
+  supabase/migrations/20251008_feat060_extracted_knowledge.sql
+    - Creates extracted_knowledge table
+    - Indexes for performance
+    - Views: high_quality_extractions, novel_pattern_candidates
+    - Audit triggers
+
+CORE ENGINE:
+  src/lib/services/gppt/knowledge-extraction-engine.ts
+    - Multi-LLM extraction (GPT-4, Claude, Gemini)
+    - Parallel API calls with timeout handling
+    - Weighted consensus voting (40/35/25)
+    - Agreement scoring (Jaccard similarity)
+    - Pattern matching stub
+    - Privacy: strips PII before LLM calls
+
+API ENDPOINT:
+  src/app/api/knowledge/extract/route.ts
+    - POST /api/knowledge/extract (main extraction)
+    - GET /api/knowledge/extract?video_id=X (retrieve cached)
+    - Validation & error handling
+    - Database storage with upsert
+
+BATCH PROCESSING:
+  scripts/batch-extract-knowledge.js
+    - CLI with flags: --limit, --classification, --min-dps, --force-refresh, --parallel
+    - Parallel processing (configurable, max 5)
+    - Rate limiting (2s delay between batches)
+    - Real-time progress tracking
+    - Final quality report
+
+DOCUMENTATION:
+  FEAT-060-IMPLEMENTATION-SUMMARY.md
+    - Complete feature documentation
+    - Performance & cost analysis
+    - Testing plan & acceptance criteria
+    - Monitoring queries
+    - Deployment checklist
+
+  FEAT-060-QUICKSTART.md
+    - Step-by-step setup guide
+    - Usage examples
+    - Troubleshooting
+    - SQL query examples
+
+  FEAT-060-FILES-CREATED.txt
+    - This file
+
+TOTAL FILES: 7
+LINES OF CODE: ~800
+IMPLEMENTATION TIME: ~2 hours

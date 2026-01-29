@@ -1,0 +1,173 @@
+
+{
+	"version": "wf-13",
+	"objectives": [
+		{
+			"id": "fully_automated_pipeline",
+			"title": "Fully Automated 24/7 Pipeline",
+			"route": "/admin/pipeline",
+			"anchor": "#overview",
+			"checks": {
+				"dom": [
+					{ "selector": "[data-testid='ingestion-status']", "exists": true },
+					{ "selector": "[data-testid='queue-depth']", "exists": true }
+				],
+				"metrics": [
+					{ "source": "api:/api/pipeline/health", "path": "errors_last_hour", "op": "<=", "value": 0 },
+					{ "source": "api:/api/pipeline/health", "path": "last_run_minutes_ago", "op": "<=", "value": 10 }
+				],
+				"timing": [ { "target": "page_interactive_ms", "op": "<=", "value": 2500 } ]
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "automated_template_discovery",
+			"title": "Automated Viral Template Discovery",
+			"route": "/admin/viral-recipe-book",
+			"anchor": "#discovery",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='template-leaderboard']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/recipes/summary", "path": "new_templates_24h", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "instant_content_analysis",
+			"title": "Instant Content Analysis Engine",
+			"route": "/admin/prediction-validation",
+			"anchor": "#instant",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='instant-analyzer']", "exists": true } ],
+				"metrics": [
+					{ "source": "api:/api/analysis/instant?sample=1", "path": "latency_ms", "op": "<=", "value": 5000 },
+					{ "source": "api:/api/analysis/instant?sample=1", "path": "recommendations.length", "op": ">=", "value": 1 }
+				],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "prediction_validation_90",
+			"title": "Prediction Validation (≥90% Accuracy)",
+			"route": "/admin/prediction-validation",
+			"anchor": "#accuracy",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='accuracy-dashboard']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/validation/summary", "path": "accuracy", "op": ">=", "value": 0.9 }, { "source": "api:/api/validation/summary", "path": "samples", "op": ">=", "value": 100 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "exponential_learning",
+			"title": "Exponential Learning System",
+			"route": "/admin/prediction-validation",
+			"anchor": "#learning",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='accuracy-trend-chart']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/validation/trend", "path": "slope_30d", "op": ">=", "value": 0 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "script_intelligence",
+			"title": "Script Intelligence Integration",
+			"route": "/admin/viral-recipe-book",
+			"anchor": "#scripts",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='script-patterns']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/scripts/patterns", "path": "top10.length", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "algorithm_adaptation",
+			"title": "Algorithm Adaptation Engine",
+			"route": "/admin/operations-center",
+			"anchor": "#algo-adaptation",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='algo-change-detector']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/adaptation/status", "path": "recalibrations_30d", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "cross_platform_intelligence",
+			"title": "Cross-Platform Intelligence",
+			"route": "/admin/pipeline",
+			"anchor": "#cross-platform",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='cross-platform-panel']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/cross/summary", "path": "tracked_videos", "op": ">=", "value": 50 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "ai_powered_rd_mcp",
+			"title": "AI-Powered R&D Layer (MCP)",
+			"route": "/admin/operations-center",
+			"anchor": "#rd-layer",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='rd-mcp-panel']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/rd/discoveries", "path": "count", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "process_intelligence_layer",
+			"title": "Process Intelligence Layer",
+			"route": "/admin/operations-center",
+			"anchor": "#process-intel",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='process-journeys']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/process/journeys", "path": "bottlenecks_found", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "marketing_inception",
+			"title": "Marketing Inception",
+			"route": "/admin/operations-center",
+			"anchor": "#marketing-inception",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='marketing-inception']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/marketing/summary", "path": "promo_videos", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "defensible_moat",
+			"title": "Defensible Moat",
+			"route": "/admin/operations-center",
+			"anchor": "#moat",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='moat-insights']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/moat/benchmarks", "path": "advantage_score", "op": ">=", "value": 1.0 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		},
+		{
+			"id": "scale_from_zero",
+			"title": "Scale from Zero",
+			"route": "/admin/operations-center",
+			"anchor": "#scale-zero",
+			"checks": {
+				"dom": [ { "selector": "[data-testid='scale-zero-panel']", "exists": true } ],
+				"metrics": [ { "source": "api:/api/scale/status", "path": "active_accounts", "op": ">=", "value": 1 } ],
+				"timing": []
+			},
+			"logic": "AND"
+		}
+	]
+}
+
+

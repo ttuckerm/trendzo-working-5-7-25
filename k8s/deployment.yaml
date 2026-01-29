@@ -1,0 +1,242 @@
+# =============================================================================
+# KUBERNETES DEPLOYMENT
+# Auto-scaling Trendzo application deployment with production configuration
+# =============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trendzo-app
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+    version: v1
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+    description: "Trendzo viral prediction application"
+spec:
+  replicas: 3  # Initial replica count, will be managed by HPA
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0  # Zero downtime deployments
+  selector:
+    matchLabels:
+      app: trendzo-app
+      environment: production
+  template:
+    metadata:
+      labels:
+        app: trendzo-app
+        environment: production
+        version: v1
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+        prometheus.io/path: "/api/metrics"
+    spec:
+      # =======================================================================
+      # SECURITY CONTEXT
+      # =======================================================================
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      
+      # =======================================================================
+      # SERVICE ACCOUNT
+      # =======================================================================
+      serviceAccountName: trendzo-app
+      
+      # =======================================================================
+      # CONTAINERS
+      # =======================================================================
+      containers:
+        - name: trendzo-app
+          image: trendzo/app:latest
+          imagePullPolicy: Always
+          
+          # ===================================================================
+          # PORTS
+          # ===================================================================
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          
+          # ===================================================================
+          # ENVIRONMENT VARIABLES
+          # ===================================================================
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "3000"
+            - name: HOSTNAME
+              value: "0.0.0.0"
+            - name: INSTANCE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+                  
+          # ===================================================================
+          # ENVIRONMENT FROM SECRETS AND CONFIGMAPS
+          # ===================================================================
+          envFrom:
+            - secretRef:
+                name: trendzo-secrets
+            - configMapRef:
+                name: trendzo-config
+          
+          # ===================================================================
+          # RESOURCE LIMITS
+          # ===================================================================
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+              ephemeral-storage: "2Gi"
+          
+          # ===================================================================
+          # HEALTH CHECKS
+          # ===================================================================
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 10
+          
+          # ===================================================================
+          # SECURITY CONTEXT
+          # ===================================================================
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          
+          # ===================================================================
+          # VOLUME MOUNTS
+          # ===================================================================
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-cache
+              mountPath: /var/cache
+            - name: next-cache
+              mountPath: /app/.next/cache
+            - name: logs
+              mountPath: /app/logs
+      
+      # =======================================================================
+      # VOLUMES
+      # =======================================================================
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: var-cache
+          emptyDir: {}
+        - name: next-cache
+          emptyDir: {}
+        - name: logs
+          emptyDir: {}
+      
+      # =======================================================================
+      # AFFINITY AND TOPOLOGY
+      # =======================================================================
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - trendzo-app
+                topologyKey: kubernetes.io/hostname
+      
+      # =======================================================================
+      # TOLERATIONS
+      # =======================================================================
+      tolerations:
+        - key: "node.kubernetes.io/not-ready"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 300
+        - key: "node.kubernetes.io/unreachable"
+          operator: "Exists"
+          effect: "NoExecute"
+          tolerationSeconds: 300
+      
+      # =======================================================================
+      # DNS CONFIGURATION
+      # =======================================================================
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+
+---
+# =============================================================================
+# SERVICE ACCOUNT
+# =============================================================================
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: trendzo-app
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+automountServiceAccountToken: false

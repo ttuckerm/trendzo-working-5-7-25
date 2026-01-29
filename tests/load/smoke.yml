@@ -1,0 +1,28 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 2
+  plugins:
+    expect: {}
+scenarios:
+  - name: Public score smoke
+    flow:
+      - post:
+          url: "/public/score"
+          headers:
+            Content-Type: "application/json"
+            x-api-key: "tk_tlm_DEMO_SANDBOX"
+          json:
+            features: { viewCount: 10000, likeCount: 800, shareCount: 90 }
+          expect:
+            - statusCode: 200
+
+
+
+
+
+
+
+
+
