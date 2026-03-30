@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trendzo.ai/schemas/template-kernel.schema.json",
+  "title": "Template Kernel",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "default": "v1" }
+  },
+  "required": ["version"],
+  "additionalProperties": false,
+  "$defs": {
+    "Id": { "type": "string", "pattern": "^[a-zA-Z0-9_.-]+$" },
+    "Timestamp": { "type": "string", "format": "date-time" },
+    "Platform": { "type": "string", "enum": ["tiktok", "instagram", "youtube", "all"] },
+    "Badge": { "type": "string", "enum": ["HOT", "COOLING", "NEW", "RECOMMENDED"] },
+    "BeatType": { "type": "string", "enum": ["Hook", "CTA", "Benefit", "Steps"] },
+
+    "Beat": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "type": { "$ref": "#/$defs/BeatType" },
+        "text": { "type": "string" },
+        "startSeconds": { "type": "number", "minimum": 0 },
+        "endSeconds": { "type": "number", "minimum": 0 }
+      },
+      "required": ["id", "type", "text"],
+      "additionalProperties": false
+    },
+
+    "Script": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "text": { "type": "string" },
+        "beats": { "type": "array", "items": { "$ref": "#/$defs/Beat" } }
+      },
+      "required": ["id", "text"],
+      "additionalProperties": false
+    },
+
+    "Stats": {
+      "type": "object",
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "uses": { "type": "integer", "minimum": 0 },
+        "examples": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["views", "uses", "examples"],
+      "additionalProperties": false
+    },
+
+    "Template": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "badges": { "type": "array", "items": { "$ref": "#/$defs/Badge" } },
+        "successRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "stats": { "$ref": "#/$defs/Stats" },
+        "platformBest": { "$ref": "#/$defs/Platform" },
+        "trendingTag": { "type": "string" },
+        "previewVideoUrl": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "niche": { "type": "string" }
+      },
+      "required": ["id", "title", "successRate", "stats"],
+      "additionalProperties": false
+    },
+
+    "FeatureVector": {
+      "type": "object",
+      "description": "Engineered features for prediction",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "number" },
+          { "type": "string" },
+          { "type": "boolean" }
+        ]
+      }
+    },
+
+    "Audio": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "title": { "type": "string" },
+        "artist": { "type": "string" },
+        "label": { "type": "string" }
+      },
+      "required": ["id", "title"],
+      "additionalProperties": false
+    },
+
+    "Variant": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "templateId": { "$ref": "#/$defs/Id" },
+        "version": { "type": "string" },
+        "script": { "$ref": "#/$defs/Script" },
+        "featureVector": { "$ref": "#/$defs/FeatureVector" },
+        "audio": { "$ref": "#/$defs/Audio" }
+      },
+      "required": ["id", "templateId"],
+      "additionalProperties": false
+    },
+
+    "FixSuggestion": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "impactPercent": { "type": "number", "minimum": 0 },
+        "confidencePercent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "timeEstimateMinutes": { "type": "integer", "minimum": 0 },
+        "severity": { "type": "string", "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW"] }
+      },
+      "required": ["id", "title", "impactPercent"],
+      "additionalProperties": false
+    },
+
+    "Prediction": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "templateId": { "$ref": "#/$defs/Id" },
+        "variantId": { "$ref": "#/$defs/Id" },
+        "viralScore": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "successRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "platformScores": {
+          "type": "object",
+          "properties": {
+            "tiktok": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "instagram": { "type": "integer", "minimum": 0, "maximum": 100 },
+            "youtube": { "type": "integer", "minimum": 0, "maximum": 100 }
+          },
+          "additionalProperties": false
+        },
+        "reasons": { "type": "array", "items": { "type": "string" } },
+        "fixes": { "type": "array", "items": { "$ref": "#/$defs/FixSuggestion" } }
+      },
+      "required": ["id", "viralScore", "successRate"],
+      "additionalProperties": false
+    },
+
+    "Experiment": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "templateId": { "$ref": "#/$defs/Id" },
+        "variantIds": { "type": "array", "items": { "$ref": "#/$defs/Id" }, "minItems": 2 },
+        "status": { "type": "string", "enum": ["draft", "active", "completed"] },
+        "winnerVariantId": { "$ref": "#/$defs/Id" }
+      },
+      "required": ["id", "templateId", "variantIds", "status"],
+      "additionalProperties": false
+    },
+
+    "Outcome": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "variantId": { "$ref": "#/$defs/Id" },
+        "postedAt": { "$ref": "#/$defs/Timestamp" },
+        "predictedReach": { "type": "integer", "minimum": 0 },
+        "actualReach": { "type": "integer", "minimum": 0 },
+        "completionRate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "engagement": {
+          "type": "object",
+          "properties": {
+            "ctr": { "type": "number", "minimum": 0, "maximum": 1 },
+            "saves": { "type": "integer", "minimum": 0 },
+            "shares": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": ["id", "variantId", "postedAt"],
+      "additionalProperties": false
+    },
+
+    "CalibrationRun": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/$defs/Id" },
+        "startedAt": { "$ref": "#/$defs/Timestamp" },
+        "endedAt": { "$ref": "#/$defs/Timestamp" },
+        "accuracyPercent": { "type": "number", "minimum": 0, "maximum": 100 },
+        "f1Score": { "type": "number", "minimum": 0, "maximum": 1 },
+        "meanError": { "type": "number", "minimum": 0 },
+        "calibrationPercent": { "type": "number", "minimum": 0, "maximum": 100 }
+      },
+      "required": ["id", "startedAt", "endedAt"],
+      "additionalProperties": false
+    },
+
+    "Event": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "TemplateSelected",
+            "VariantCreated",
+            "DraftUploaded",
+            "ScriptUpdated",
+            "FeaturesExtracted",
+            "PredictionScored",
+            "FixSuggested",
+            "OptimizationApplied",
+            "ABTestStarted",
+            "VariantScheduled",
+            "OutcomeIngested",
+            "ModelRecalibrated",
+            "ValidationRunCompleted"
+          ]
+        },
+        "timestamp": { "$ref": "#/$defs/Timestamp" },
+        "templateId": { "$ref": "#/$defs/Id" },
+        "variantId": { "$ref": "#/$defs/Id" },
+        "payload": { "type": "object" }
+      },
+      "required": ["type", "timestamp"],
+      "additionalProperties": false
+    }
+  }
+}
+
+
+
+
+
+
+
+
+

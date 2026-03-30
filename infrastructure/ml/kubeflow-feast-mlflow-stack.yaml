@@ -1,0 +1,432 @@
+# Complete ML Stack: Kubeflow + Feast + MLflow
+# Target: Production ML pipeline for ≥95% accuracy
+
+---
+# MLflow Tracking Server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking
+  namespace: viral-prediction-ml
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mlflow-tracking
+  template:
+    metadata:
+      labels:
+        app: mlflow-tracking
+    spec:
+      containers:
+      - name: mlflow
+        image: python:3.9-slim
+        command: ["/bin/bash"]
+        args:
+        - -c
+        - |
+          pip install mlflow psycopg2-binary boto3
+          mlflow server \
+            --backend-store-uri postgresql://mlflow:password@postgres-mlflow:5432/mlflow \
+            --default-artifact-root s3://mlflow-artifacts/ \
+            --host 0.0.0.0 \
+            --port 5000
+        ports:
+        - containerPort: 5000
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: ml-secrets
+              key: aws-access-key
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ml-secrets
+              key: aws-secret-key
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-tracking
+  namespace: viral-prediction-ml
+spec:
+  selector:
+    app: mlflow-tracking
+  ports:
+  - port: 5000
+    targetPort: 5000
+---
+# Feast Feature Store
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feast-feature-server
+  namespace: viral-prediction
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: feast-feature-server
+  template:
+    metadata:
+      labels:
+        app: feast-feature-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "6566"
+    spec:
+      containers:
+      - name: feast-server
+        image: feastdev/feature-server:latest
+        ports:
+        - containerPort: 6566
+        env:
+        - name: FEATURE_STORE_YAML_BASE64
+          valueFrom:
+            configMapKeyRef:
+              name: feast-config
+              key: feature_store.yaml
+        - name: FEAST_REDIS_HOST
+          value: "redis-cache.viral-prediction.svc.cluster.local"
+        - name: FEAST_REDIS_PORT
+          value: "6379"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 6566
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 6566
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feast-feature-server
+  namespace: viral-prediction
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "6566"
+spec:
+  selector:
+    app: feast-feature-server
+  ports:
+  - port: 6566
+    targetPort: 6566
+---
+# Feast Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: feast-config
+  namespace: viral-prediction
+data:
+  feature_store.yaml: |
+    project: viral_prediction
+    registry: s3://feast-registry/registry.db
+    provider: aws
+    online_store:
+      type: redis
+      connection_string: "redis-cache.viral-prediction.svc.cluster.local:6379"
+    offline_store:
+      type: bigquery
+      project_id: viral-prediction-ml
+      dataset: feast_offline_store
+    entity_key_serialization_version: 2
+---
+# Redis Cache for Feast Online Store
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+  namespace: viral-prediction
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-cache
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+    spec:
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        command: ["redis-server"]
+        args: ["--maxmemory", "2gb", "--maxmemory-policy", "allkeys-lru"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 2Gi
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-cache
+  namespace: viral-prediction
+spec:
+  selector:
+    app: redis-cache
+  ports:
+  - port: 6379
+    targetPort: 6379
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: viral-prediction
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Kubeflow Pipelines (Simplified)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-pipeline-api-server
+  namespace: viral-prediction-ml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-pipeline-api-server
+  template:
+    metadata:
+      labels:
+        app: ml-pipeline-api-server
+    spec:
+      containers:
+      - name: ml-pipeline-api-server
+        image: gcr.io/ml-pipeline/api-server:1.8.5
+        ports:
+        - containerPort: 8888
+        - containerPort: 8887
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: OBJECTSTORECONFIG_SECURE
+          value: "false"
+        - name: OBJECTSTORECONFIG_BUCKETNAME
+          value: "ml-pipeline"
+        - name: DBCONFIG_USER
+          value: "root"
+        - name: DBCONFIG_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        - name: DBCONFIG_DBNAME
+          value: "mlpipeline"
+        - name: DBCONFIG_HOST
+          value: "mysql"
+        - name: DBCONFIG_PORT
+          value: "3306"
+        resources:
+          requests:
+            cpu: 250m
+            memory: 500Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        livenessProbe:
+          httpGet:
+            path: /apis/v1beta1/healthz
+            port: 8888
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 2
+        readinessProbe:
+          httpGet:
+            path: /apis/v1beta1/healthz
+            port: 8888
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          timeoutSeconds: 2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-pipeline-api-server
+  namespace: viral-prediction-ml
+spec:
+  selector:
+    app: ml-pipeline-api-server
+  ports:
+  - name: http
+    port: 8888
+    targetPort: 8888
+  - name: grpc
+    port: 8887
+    targetPort: 8887
+---
+# ML Pipeline UI
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-pipeline-ui
+  namespace: viral-prediction-ml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ml-pipeline-ui
+  template:
+    metadata:
+      labels:
+        app: ml-pipeline-ui
+    spec:
+      containers:
+      - name: ml-pipeline-ui
+        image: gcr.io/ml-pipeline/frontend:1.8.5
+        ports:
+        - containerPort: 3000
+        env:
+        - name: ML_PIPELINE_SERVICE_HOST
+          value: "ml-pipeline-api-server"
+        - name: ML_PIPELINE_SERVICE_PORT
+          value: "8888"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ml-pipeline-ui
+  namespace: viral-prediction-ml
+spec:
+  selector:
+    app: ml-pipeline-ui
+  ports:
+  - port: 80
+    targetPort: 3000
+---
+# MySQL for Kubeflow Pipelines
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: viral-prediction-ml
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        - name: MYSQL_DATABASE
+          value: "mlpipeline"
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+      volumes:
+      - name: mysql-data
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: viral-prediction-ml
+spec:
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: viral-prediction-ml
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: viral-prediction-ml
+type: Opaque
+data:
+  password: bWxwaXBlbGluZQ== # mlpipeline (base64)
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ml-secrets
+  namespace: viral-prediction-ml
+type: Opaque
+data:
+  aws-access-key: ""    # Add your AWS access key (base64)
+  aws-secret-key: ""    # Add your AWS secret key (base64)

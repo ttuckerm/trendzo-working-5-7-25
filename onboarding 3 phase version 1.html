@@ -1,0 +1,1527 @@
+import React, { useState, useEffect } from 'react';
+
+export default function ViralLabV2() {
+  const [currentPhase, setCurrentPhase] = useState(1);
+  const [selectedNiche, setSelectedNiche] = useState('Personal Finance/Investing');
+  const [viralScore, setViralScore] = useState(85);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [nicheMenuOpen, setNicheMenuOpen] = useState(false);
+  const [videosAnalyzed, setVideosAnalyzed] = useState(24891);
+  const [systemAccuracy] = useState(91.3);
+
+  // Design System Colors
+  const colors = {
+    bgPrimary: '#0a0a0a',
+    bgSecondary: '#141414',
+    bgCard: 'rgba(255,255,255,0.04)',
+    accentPurple: '#8b5cf6',
+    accentBlue: '#448aff',
+    accentGreen: '#22c55e',
+    accentRed: '#FF3B30',
+    accentOrange: '#ff9500',
+    accentPink: '#FF3FA4',
+    textPrimary: '#ffffff',
+    textSecondary: 'rgba(255,255,255,0.7)',
+    textTertiary: 'rgba(255,255,255,0.5)'
+  };
+
+  const switchPhase = (phase) => {
+    setCurrentPhase(phase);
+    if (phase === 2) {
+      setTimeout(() => animateHookPower(), 100);
+    }
+    if (phase === 3) {
+      setTimeout(() => initializeLiveScore(), 100);
+    }
+  };
+
+  const toggleNicheMenu = () => {
+    setNicheMenuOpen(!nicheMenuOpen);
+  };
+
+  const selectNiche = (niche) => {
+    setSelectedNiche(niche);
+    setNicheMenuOpen(false);
+    updateNichePredictions(niche);
+  };
+
+  const updateNichePredictions = (niche) => {
+    const predictions = {
+      'Fitness & Health': { viral: 89, views: '1.25M', success: 89 },
+      'Personal Finance/Investing': { viral: 92, views: '1.8M', success: 91 },
+      'Business/Entrepreneurship': { viral: 87, views: '1.1M', success: 88 }
+    };
+    
+    const prediction = predictions[niche] || predictions['Fitness & Health'];
+    setViralScore(prediction.viral);
+  };
+
+  const selectTemplate = (template) => {
+    setSelectedTemplate(template);
+    
+    const templates = {
+      'authority': { viral: 94, views: '1.4M', framework: 'Authority Hook' },
+      'pov': { viral: 89, views: '1.2M', framework: 'POV Trending' },
+      'quick-tips': { viral: 92, views: '1.3M', framework: 'Quick Tips' },
+      'transformation': { viral: 87, views: '1.1M', framework: 'Transform Story' }
+    };
+    
+    const pred = templates[template];
+    if (pred) {
+      setViralScore(pred.viral);
+    }
+  };
+
+  const quickClone = () => {
+    setTimeout(() => {
+      switchPhase(2);
+    }, 3000);
+  };
+
+  const animateHookPower = () => {
+    const powerFill = document.getElementById('hook-power-fill');
+    const powerLabel = document.getElementById('hook-power-label');
+    
+    if (powerFill && powerLabel) {
+      let power = 0;
+      const targetPower = 85;
+      
+      const interval = setInterval(() => {
+        power += 2;
+        powerFill.style.width = power + '%';
+        powerLabel.textContent = power + '% Scroll-Stop Power';
+        
+        if (power >= targetPower) {
+          clearInterval(interval);
+        }
+      }, 50);
+    }
+  };
+
+  const updateAI = (field) => {
+    updateLiveViralScore();
+  };
+
+  const updateLiveViralScore = () => {
+    const inputs = document.querySelectorAll('#phase-3 .text-input');
+    let filledInputs = 0;
+    
+    inputs.forEach((input) => {
+      if (input.value.trim()) filledInputs++;
+    });
+    
+    const newScore = Math.min(60 + (filledInputs * 5), 95);
+    const scoreElement = document.getElementById('live-viral-score');
+    if (scoreElement) {
+      scoreElement.textContent = newScore.toString();
+    }
+    
+    const circle = document.getElementById('score-circle');
+    if (circle) {
+      const circumference = 2 * Math.PI * 80;
+      const offset = circumference - (newScore / 100 * circumference);
+      circle.style.strokeDashoffset = offset.toString();
+    }
+  };
+
+  const initializeLiveScore = () => {
+    updateLiveViralScore();
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVideosAnalyzed(prev => prev + Math.floor(Math.random() * 3) + 1);
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.niche-selection')) {
+        setNicheMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
+  // Enhanced Design System Styles
+  const containerStyle = {
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+    background: colors.bgPrimary,
+    color: colors.textPrimary,
+    height: '100vh',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column'
+  };
+
+  const bannerStyle = {
+    background: `linear-gradient(90deg, ${colors.accentGreen} 0%, ${colors.accentBlue} 50%, ${colors.accentPurple} 100%)`,
+    padding: '12px 24px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexShrink: 0
+  };
+
+  const navigationStyle = {
+    background: colors.bgSecondary,
+    padding: '20px 24px',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexShrink: 0
+  };
+
+  const mainGridStyle = {
+    flex: 1,
+    display: 'grid',
+    gridTemplateColumns: '420px 1fr 460px',
+    gap: '24px',
+    padding: '24px',
+    overflow: 'hidden'
+  };
+
+  const panelStyle = {
+    background: colors.bgCard,
+    borderRadius: '12px',
+    border: '1px solid rgba(255,255,255,0.1)',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    backdropFilter: 'blur(10px)'
+  };
+
+  const panelHeaderStyle = {
+    padding: '24px',
+    borderBottom: '1px solid rgba(255,255,255,0.1)',
+    background: 'rgba(255,255,255,0.02)'
+  };
+
+  const panelContentStyle = {
+    flex: 1,
+    overflowY: 'auto',
+    padding: '24px'
+  };
+
+  const heroPredictionStyle = {
+    background: `linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(68, 138, 255, 0.1) 100%)`,
+    border: `2px solid rgba(139, 92, 246, 0.3)`,
+    borderRadius: '12px',
+    padding: '32px',
+    textAlign: 'center'
+  };
+
+  const massiveNumberStyle = {
+    fontSize: '72px',
+    fontWeight: 900,
+    background: `linear-gradient(135deg, ${colors.accentPurple} 0%, ${colors.accentBlue} 100%)`,
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    lineHeight: 1
+  };
+
+  const largeMetricStyle = {
+    fontSize: '36px',
+    fontWeight: 900,
+    color: colors.accentGreen
+  };
+
+  const microLabelStyle = {
+    fontSize: '11px',
+    color: colors.textTertiary,
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px'
+  };
+
+  return (
+    <div style={containerStyle}>
+      {/* System Accuracy Banner */}
+      <div style={bannerStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '40px', fontWeight: 700, fontSize: '16px' }}>
+          <div style={{ fontSize: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{
+              width: '24px', height: '24px', background: 'rgba(255,255,255,0.2)',
+              borderRadius: '50%', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', fontSize: '14px'
+            }}>🎯</div>
+            <span>System Accuracy: {systemAccuracy}% (274/300 predictions)</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', opacity: 0.9 }}>
+            <div style={{
+              width: '8px', height: '8px', background: colors.accentGreen,
+              borderRadius: '50%', animation: 'pulse 2s infinite'
+            }}></div>
+            <span>Videos Analyzed Today: {videosAnalyzed.toLocaleString()}</span>
+          </div>
+          <div style={{ fontSize: '14px', opacity: 0.9 }}>
+            📈 Accuracy improving +0.3% daily
+          </div>
+        </div>
+        <div style={{ fontSize: '14px', opacity: 0.9 }}>
+          Last 10 predictions: 9/10 successful ✓
+        </div>
+      </div>
+
+      {/* Phase Navigation */}
+      <div style={navigationStyle}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '32px', flex: 1 }}>
+          {/* Niche Selection */}
+          <div className="niche-selection" style={{
+            display: 'flex', flexDirection: 'column', gap: '8px',
+            padding: '12px 20px', background: `rgba(139, 92, 246, 0.15)`,
+            border: `2px solid rgba(139, 92, 246, 0.4)`,
+            borderRadius: '12px', minWidth: '220px', position: 'relative'
+          }}>
+            <div style={{
+              fontSize: '11px', textTransform: 'uppercase',
+              letterSpacing: '0.5px', color: colors.accentPurple, fontWeight: 600
+            }}>TARGET NICHE</div>
+            <div onClick={toggleNicheMenu} style={{
+              padding: '12px 16px', background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px',
+              cursor: 'pointer', display: 'flex', alignItems: 'center',
+              justifyContent: 'space-between', gap: '8px',
+              fontSize: '14px', fontWeight: 600
+            }}>
+              <span>{selectedNiche}</span>
+              <span>▼</span>
+            </div>
+            {nicheMenuOpen && (
+              <div style={{
+                position: 'absolute', top: 'calc(100% + 8px)',
+                left: 0, right: 0, background: colors.bgSecondary,
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px', maxHeight: '400px',
+                overflowY: 'auto', zIndex: 1000,
+                boxShadow: '0 8px 32px rgba(0,0,0,0.5)'
+              }}>
+                {[
+                  'Personal Finance/Investing', 'Fitness/Weight Loss', 'Business/Entrepreneurship',
+                  'Food/Nutrition Comparisons', 'Beauty/Skincare', 'Real Estate/Property',
+                  'Self-Improvement/Productivity', 'Dating/Relationships', 'Education/Study Tips',
+                  'Career/Job Advice', 'Parenting/Family', 'Tech Reviews/Tutorials',
+                  'Fashion/Style', 'Health/Medical Education', 'Cooking/Recipes',
+                  'Psychology/Mental Health', 'Travel/Lifestyle', 'DIY/Home Improvement',
+                  'Language Learning', 'Side Hustles/Making Money Online'
+                ].map(niche => (
+                  <div key={niche} onClick={() => selectNiche(niche)} style={{
+                    padding: '12px 16px', cursor: 'pointer',
+                    fontSize: '14px', borderBottom: '1px solid rgba(255,255,255,0.05)',
+                    transition: 'all 0.2s ease'
+                  }} onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                    e.currentTarget.style.color = colors.accentPurple;
+                    e.currentTarget.style.paddingLeft = '20px';
+                  }} onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent';
+                    e.currentTarget.style.color = 'inherit';
+                    e.currentTarget.style.paddingLeft = '16px';
+                  }}>
+                    {niche}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Workflow Arrow */}
+          <div style={{
+            width: '40px', height: '2px',
+            background: `linear-gradient(90deg, ${colors.accentPurple} 0%, transparent 100%)`,
+            position: 'relative'
+          }}>
+            <div style={{
+              position: 'absolute', right: 0, top: '-4px',
+              width: 0, height: 0, borderLeft: `8px solid ${colors.accentPurple}`,
+              borderTop: '5px solid transparent',
+              borderBottom: '5px solid transparent'
+            }}></div>
+          </div>
+
+          {/* Phase Progress */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '24px' }}>
+            {[
+              { num: 1, title: 'Discover Your Viral Opportunity', subtitle: 'Future trends + success predictions' },
+              { num: 2, title: 'Validate Your Strategy', subtitle: 'Personal patterns + confidence scoring' },
+              { num: 3, title: 'Create with Certainty', subtitle: 'Guided creation + live predictions' }
+            ].map((phase, index) => (
+              <React.Fragment key={phase.num}>
+                <div onClick={() => switchPhase(phase.num)} style={{
+                  display: 'flex', alignItems: 'center', gap: '12px',
+                  cursor: 'pointer', padding: '10px 18px',
+                  borderRadius: '8px', transition: 'all 0.3s ease',
+                  background: currentPhase === phase.num ? 'rgba(255,255,255,0.1)' : 'transparent'
+                }}>
+                  <div style={{
+                    width: '36px', height: '36px', borderRadius: '50%',
+                    background: currentPhase === phase.num 
+                      ? `linear-gradient(135deg, ${colors.accentPurple} 0%, ${colors.accentBlue} 100%)`
+                      : currentPhase > phase.num 
+                      ? colors.accentGreen 
+                      : 'rgba(255,255,255,0.1)',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', fontWeight: 700,
+                    fontSize: '16px', transition: 'all 0.3s ease',
+                    boxShadow: currentPhase === phase.num ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'
+                  }}>
+                    {phase.num}
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ fontSize: '16px', fontWeight: 700 }}>{phase.title}</div>
+                    <div style={{ fontSize: '13px', color: colors.textSecondary }}>{phase.subtitle}</div>
+                  </div>
+                </div>
+                {index < 2 && (
+                  <div style={{
+                    width: '40px', height: '2px',
+                    background: 'rgba(255,255,255,0.1)',
+                    position: 'relative'
+                  }}>
+                    <div style={{
+                      position: 'absolute', left: 0, top: 0,
+                      height: '100%', width: currentPhase > phase.num ? '100%' : '0%',
+                      background: `linear-gradient(90deg, ${colors.accentPurple} 0%, ${colors.accentBlue} 100%)`,
+                      transition: 'width 0.3s ease'
+                    }}></div>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Laboratory */}
+      <div style={mainGridStyle}>
+        {/* PHASE 1: DISCOVER YOUR VIRAL OPPORTUNITY */}
+        {currentPhase === 1 && (
+          <>
+            {/* Left Panel: Future Viral Vault */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Future Viral Vault</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>14-day predictions proving system intelligence</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  ...heroPredictionStyle,
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: colors.accentPurple, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span>🔮</span>
+                      <span>Next 14 Days</span>
+                    </div>
+                    <div style={{
+                      background: colors.accentRed,
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      fontSize: '14px',
+                      fontWeight: 700
+                    }}>Updating in 2:47</div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <div style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '8px',
+                      padding: '20px'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                        <div style={{ fontSize: '16px', fontWeight: 700 }}>POV: Workout Routines</div>
+                        <div style={{
+                          background: colors.accentGreen,
+                          color: 'white',
+                          padding: '6px 12px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 700
+                        }}>↗ +340%</div>
+                      </div>
+                      <div style={{ fontSize: '14px', color: colors.textSecondary, marginBottom: '16px' }}>
+                        Algorithm shift detected. POV format exploding in fitness niche within 72 hours.
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{
+                            fontSize: '24px',
+                            fontWeight: 900,
+                            background: `linear-gradient(135deg, ${colors.accentGreen} 0%, ${colors.accentPurple} 100%)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                          }}>2.4M</div>
+                          <div style={microLabelStyle}>Predicted Views</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{
+                            fontSize: '24px',
+                            fontWeight: 900,
+                            background: `linear-gradient(135deg, ${colors.accentGreen} 0%, ${colors.accentPurple} 100%)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                          }}>94%</div>
+                          <div style={microLabelStyle}>Confidence</div>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{
+                            fontSize: '24px',
+                            fontWeight: 900,
+                            background: `linear-gradient(135deg, ${colors.accentGreen} 0%, ${colors.accentPurple} 100%)`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent'
+                          }}>72h</div>
+                          <div style={microLabelStyle}>Peak Window</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style={{
+                  background: `rgba(139, 92, 246, 0.1)`,
+                  border: `1px solid rgba(139, 92, 246, 0.3)`,
+                  borderRadius: '8px',
+                  padding: '20px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <div>
+                    <strong>Trend Alerts for YOUR niche</strong><br/>
+                    <small>Get notified 24h before trends spike</small>
+                  </div>
+                  <div style={{
+                    width: '52px',
+                    height: '28px',
+                    background: colors.accentPurple,
+                    borderRadius: '14px',
+                    position: 'relative',
+                    cursor: 'pointer'
+                  }}>
+                    <div style={{
+                      position: 'absolute',
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      background: 'white',
+                      top: '2px',
+                      right: '2px',
+                      transition: 'all 0.2s ease'
+                    }}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Center Panel: Proven Templates */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Proven Templates</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Streamlined templates that work for YOUR audience</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  border: '1px solid rgba(255,255,255,0.05)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '20px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span>⚡</span>
+                      <span>One-Click Success</span>
+                    </div>
+                    <div style={{
+                      background: colors.accentOrange,
+                      color: 'white',
+                      padding: '8px 16px',
+                      borderRadius: '20px',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      animation: 'pulse 2s infinite'
+                    }}>Expires in 4:23</div>
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '24px' }}>
+                    {[
+                      { icon: '🎯', name: 'Authority Hook', rate: '94% success rate for YOU', time: '15 second setup', id: 'authority' },
+                      { icon: '📱', name: 'POV Trending', rate: '89% success rate for YOU', time: '20 second setup', id: 'pov' },
+                      { icon: '💡', name: 'Quick Tips', rate: '92% success rate for YOU', time: '10 second setup', id: 'quick-tips' },
+                      { icon: '✨', name: 'Transform Story', rate: '87% success rate for YOU', time: '25 second setup', id: 'transformation' }
+                    ].map(template => (
+                      <div key={template.id} onClick={() => selectTemplate(template.id)} style={{
+                        background: selectedTemplate === template.id ? `rgba(139, 92, 246, 0.2)` : 'rgba(255,255,255,0.05)',
+                        border: selectedTemplate === template.id ? `1px solid ${colors.accentPurple}` : '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px',
+                        padding: '20px',
+                        cursor: 'pointer',
+                        textAlign: 'center',
+                        transition: 'all 0.2s ease'
+                      }} onMouseEnter={(e) => {
+                        if (selectedTemplate !== template.id) {
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.08)';
+                          e.currentTarget.style.borderColor = colors.accentPurple;
+                          e.currentTarget.style.transform = 'translateY(-3px)';
+                          e.currentTarget.style.boxShadow = '0 12px 24px rgba(139, 92, 246, 0.3)';
+                        }
+                      }} onMouseLeave={(e) => {
+                        if (selectedTemplate !== template.id) {
+                          e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }
+                      }}>
+                        <div style={{ fontSize: '40px', marginBottom: '12px' }}>{template.icon}</div>
+                        <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '8px' }}>{template.name}</div>
+                        <div style={{ fontSize: '14px', color: colors.accentGreen, fontWeight: 700, marginBottom: '6px' }}>{template.rate}</div>
+                        <div style={{ fontSize: '13px', color: colors.textSecondary }}>{template.time}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)`,
+                  border: `2px solid rgba(34, 197, 94, 0.3)`,
+                  borderRadius: '12px',
+                  padding: '20px',
+                  textAlign: 'center'
+                }}>
+                  <div style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px', color: colors.accentGreen }}>
+                    🚀 Quick Clone Selected Video
+                  </div>
+                  <div style={{ fontSize: '14px', color: colors.textSecondary, marginBottom: '20px' }}>
+                    Our AI has analyzed this video's viral DNA. One click to adapt it perfectly for YOUR niche.
+                  </div>
+                  <button onClick={quickClone} style={{
+                    width: '100%',
+                    padding: '18px',
+                    background: `linear-gradient(135deg, ${colors.accentGreen} 0%, #16a34a 100%)`,
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '8px',
+                    fontSize: '18px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '12px',
+                    transition: 'all 0.2s ease'
+                  }} onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(34, 197, 94, 0.4)';
+                  }} onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}>
+                    <span>📋</span>
+                    <span>Clone & Customize (30 seconds)</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Panel: Massive Viral Predictions */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>YOUR Success Predictions</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Concrete forecasts based on YOUR patterns</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                  <div style={{
+                    ...heroPredictionStyle,
+                    marginBottom: '24px'
+                  }}>
+                    <div style={{ fontSize: '16px', color: colors.textSecondary, marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      Viral Probability
+                    </div>
+                    <div style={massiveNumberStyle}>{viralScore}%</div>
+                    <div style={{ fontSize: '18px', color: colors.accentPurple, fontWeight: 700, marginTop: '12px' }}>
+                      This will go viral
+                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '24px', textAlign: 'center' }}>
+                      <div style={largeMetricStyle}>1.25M</div>
+                      <div style={{ fontSize: '13px', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Predicted Views</div>
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '24px', textAlign: 'center' }}>
+                      <div style={largeMetricStyle}>{viralScore}%</div>
+                      <div style={{ fontSize: '13px', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Success Chance</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
+                  {[
+                    { factor: 'YOUR Audience Match', score: '94%' },
+                    { factor: 'Trending Audio Sync', score: '91%' },
+                    { factor: 'Optimal Timing', score: '87%' },
+                    { factor: 'Hook Strength', score: '92%' }
+                  ].map((item, index) => (
+                    <div key={index} style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '12px 0',
+                      borderBottom: index < 3 ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                    }}>
+                      <span style={{ fontSize: '14px', fontWeight: 600 }}>{item.factor}</span>
+                      <span style={{ fontSize: '16px', fontWeight: 700, color: colors.accentGreen }}>{item.score}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{
+                padding: '24px',
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.02)',
+                display: 'flex',
+                gap: '16px'
+              }}>
+                <button style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.1)',
+                  color: colors.textPrimary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}>
+                  <span>💾</span>
+                  <span>Save Prediction</span>
+                </button>
+                <button onClick={() => switchPhase(2)} style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: `linear-gradient(135deg, ${colors.accentRed} 0%, #ff5147 100%)`,
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 59, 48, 0.4)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <span>🔬</span>
+                  <span>Validate Strategy</span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* PHASE 2: VALIDATE YOUR STRATEGY */}
+        {currentPhase === 2 && (
+          <>
+            {/* Left Panel: Hook Power Meter */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Performance Analysis</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>First 3 seconds + retention breakdown</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(255, 149, 0, 0.1) 0%, rgba(255, 59, 48, 0.1) 100%)`,
+                  border: `2px solid rgba(255, 149, 0, 0.3)`,
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ fontSize: '20px', fontWeight: 700, color: colors.accentOrange, marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span>🔥</span>
+                    <span>First 3 Seconds Power</span>
+                  </div>
+                  <div style={{
+                    width: '100%',
+                    height: '60px',
+                    background: 'rgba(255,255,255,0.05)',
+                    borderRadius: '30px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    marginBottom: '16px'
+                  }}>
+                    <div id="hook-power-fill" style={{
+                      height: '100%',
+                      width: '0%',
+                      background: `linear-gradient(90deg, ${colors.accentOrange} 0%, ${colors.accentRed} 100%)`,
+                      borderRadius: '30px',
+                      position: 'relative',
+                      transition: 'width 0.5s ease'
+                    }}></div>
+                    <div id="hook-power-label" style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: '18px',
+                      fontWeight: 700,
+                      color: 'white'
+                    }}>0% Scroll-Stop Power</div>
+                  </div>
+                  <div style={{ fontSize: '14px', color: colors.textSecondary, textAlign: 'center' }}>
+                    This hook has 85% probability of stopping scrollers in YOUR niche
+                  </div>
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 700, marginBottom: '16px', color: colors.textSecondary }}>
+                    Retention Graph with Critical Points
+                  </div>
+                  <div style={{
+                    height: '120px',
+                    position: 'relative',
+                    background: 'rgba(255,255,255,0.02)',
+                    borderRadius: '8px',
+                    overflow: 'hidden'
+                  }}>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: '70%',
+                      background: `linear-gradient(to top, rgba(68, 138, 255, 0.3), transparent)`,
+                      clipPath: 'polygon(0% 100%, 10% 30%, 20% 35%, 30% 25%, 40% 40%, 50% 35%, 60% 45%, 70% 40%, 80% 50%, 90% 45%, 100% 60%, 100% 100%)'
+                    }}></div>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '28px', fontWeight: 900, color: colors.accentGreen, marginBottom: '8px' }}>47</div>
+                    <div style={{ fontSize: '14px', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Videos Analyzed</div>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '28px', fontWeight: 900, color: colors.accentGreen, marginBottom: '8px' }}>98%</div>
+                    <div style={{ fontSize: '14px', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Pattern Confidence</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Center Panel: Creator Fingerprint */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>YOUR Creator Fingerprint</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Personalized success patterns detected</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(68, 138, 255, 0.15) 100%)`,
+                  border: `2px solid rgba(139, 92, 246, 0.4)`,
+                  borderRadius: '12px',
+                  padding: '32px',
+                  textAlign: 'center',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ fontSize: '24px', fontWeight: 900, marginBottom: '16px', color: colors.accentPurple }}>
+                    Best Framework for YOU
+                  </div>
+                  <div style={{
+                    fontSize: '48px',
+                    fontWeight: 900,
+                    background: `linear-gradient(135deg, ${colors.accentPurple} 0%, ${colors.accentBlue} 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    marginBottom: '16px'
+                  }}>Authority Hook</div>
+                  <div style={{ fontSize: '20px', color: colors.accentGreen, fontWeight: 700, marginBottom: '20px' }}>
+                    98% confidence for YOUR audience
+                  </div>
+                  <div style={{ fontSize: '16px', color: colors.textSecondary, lineHeight: 1.5 }}>
+                    Based on YOUR previous 15 videos, this framework performs 67% better than alternatives for YOUR specific audience demographics and engagement patterns.
+                  </div>
+                </div>
+                
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(68, 138, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)`,
+                  border: `2px solid rgba(68, 138, 255, 0.3)`,
+                  borderRadius: '12px',
+                  padding: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: colors.accentBlue }}>🤖 Real-Time AI Guidance</div>
+                    <div style={{
+                      background: colors.accentGreen,
+                      color: 'white',
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      animation: 'pulse 2s infinite'
+                    }}>LIVE</div>
+                  </div>
+                  <div style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    marginBottom: '16px'
+                  }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
+                      Add specific numbers to your opening line
+                    </div>
+                    <div style={{ fontSize: '14px', color: colors.accentGreen, fontWeight: 700 }}>
+                      +130% impact boost for YOUR niche
+                    </div>
+                  </div>
+                  <div style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '20px'
+                  }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
+                      YOUR audience responds best to visual demonstrations at 0:15
+                    </div>
+                    <div style={{ fontSize: '14px', color: colors.accentGreen, fontWeight: 700 }}>
+                      +45% retention improvement
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Panel: Success Rate */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Success Validation</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Confidence scoring + optimal timing</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)`,
+                  border: `2px solid rgba(34, 197, 94, 0.3)`,
+                  borderRadius: '12px',
+                  padding: '40px',
+                  textAlign: 'center',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ fontSize: '18px', color: colors.textSecondary, marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    Success Rate
+                  </div>
+                  <div style={{
+                    fontSize: '96px',
+                    fontWeight: 900,
+                    background: `linear-gradient(135deg, ${colors.accentGreen} 0%, ${colors.accentPurple} 100%)`,
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    lineHeight: 1,
+                    marginBottom: '16px'
+                  }}>{viralScore}%</div>
+                  <div style={{ fontSize: '20px', color: colors.accentGreen, fontWeight: 700 }}>
+                    Chance of Success
+                  </div>
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: colors.accentBlue, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>🎯</span>
+                    <span>Optimal Post Time</span>
+                  </div>
+                  <div style={{
+                    background: `rgba(68, 138, 255, 0.1)`,
+                    border: `1px solid rgba(68, 138, 255, 0.3)`,
+                    borderRadius: '8px',
+                    padding: '16px',
+                    textAlign: 'center'
+                  }}>
+                    <div style={{ fontSize: '24px', fontWeight: 900, color: colors.accentBlue, marginBottom: '8px' }}>
+                      Today 7:00 PM
+                    </div>
+                    <div style={{ fontSize: '14px', color: colors.accentGreen, fontWeight: 700 }}>
+                      +40% performance boost
+                    </div>
+                  </div>
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: colors.accentGreen, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>✨</span>
+                    <span>System Insights</span>
+                  </div>
+                  {[
+                    'Learning from YOUR previous videos: +15% retention with visual demos',
+                    'Momentum tracking shows YOUR niche is accelerating'
+                  ].map((text, index) => (
+                    <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 0', borderBottom: index < 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                      <div style={{
+                        width: '28px', height: '28px',
+                        background: `linear-gradient(135deg, ${colors.accentGreen} 0%, #16a34a 100%)`,
+                        borderRadius: '50%', display: 'flex', alignItems: 'center',
+                        justifyContent: 'center', fontSize: '14px',
+                        flexShrink: 0, color: 'white', fontWeight: 700
+                      }}>✓</div>
+                      <div style={{ fontSize: '14px', lineHeight: 1.5, fontWeight: 600 }}>{text}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{
+                padding: '24px',
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.02)',
+                display: 'flex',
+                gap: '16px'
+              }}>
+                <button onClick={() => switchPhase(1)} style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.1)',
+                  color: colors.textPrimary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}>
+                  <span>←</span>
+                  <span>Back</span>
+                </button>
+                <button onClick={() => switchPhase(3)} style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: `linear-gradient(135deg, ${colors.accentRed} 0%, #ff5147 100%)`,
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 59, 48, 0.4)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <span>🎨</span>
+                  <span>Create with Certainty</span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* PHASE 3: CREATE WITH CERTAINTY */}
+        {currentPhase === 3 && (
+          <>
+            {/* Left Panel: Structure Checklist */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Structure Checklist</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Ensure viral formula compliance</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', marginBottom: '24px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: colors.textSecondary, marginBottom: '16px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Match YOUR Success Pattern
+                  </div>
+                  {[
+                    'Hook (0-3s) - Authority statement',
+                    'Credibility signal',
+                    'Value delivery (3 points)',
+                    'Visual proof at 0:15',
+                    'Clear CTA'
+                  ].map((item, index) => (
+                    <div key={index} style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '12px 0',
+                      fontSize: '14px',
+                      borderBottom: index < 4 ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                    }}>
+                      <div style={{
+                        width: '24px', height: '24px', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '12px', fontWeight: 700,
+                        background: 'rgba(255,255,255,0.1)',
+                        color: colors.textTertiary
+                      }}>{index + 1}</div>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: colors.accentGreen, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span>💪</span>
+                    <span>Progress Tracker</span>
+                  </div>
+                  {[
+                    "You're on track for 89% viral probability!",
+                    'Average creation time: 12 minutes (vs 4 hours industry average)'
+                  ].map((text, index) => (
+                    <div key={index} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 0', borderBottom: index < 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                      <div style={{
+                        width: '28px', height: '28px',
+                        background: `linear-gradient(135deg, ${colors.accentGreen} 0%, #16a34a 100%)`,
+                        borderRadius: '50%', display: 'flex', alignItems: 'center',
+                        justifyContent: 'center', fontSize: '14px',
+                        flexShrink: 0, color: 'white', fontWeight: 700
+                      }}>✓</div>
+                      <div style={{ fontSize: '14px', lineHeight: 1.5, fontWeight: 600 }}>{text}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Center Panel: AI-Guided Creation */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>AI-Guided Creation</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Real-time guidance + live predictions</p>
+              </div>
+              <div id="phase-3" style={panelContentStyle}>
+                <div style={{
+                  background: `linear-gradient(135deg, rgba(68, 138, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%)`,
+                  border: `2px solid rgba(68, 138, 255, 0.3)`,
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '20px', fontWeight: 700, color: colors.accentBlue }}>🎯 Live AI Coach</div>
+                    <div style={{
+                      background: colors.accentGreen,
+                      color: 'white',
+                      padding: '4px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      animation: 'pulse 2s infinite'
+                    }}>ACTIVE</div>
+                  </div>
+                  <div style={{
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    borderRadius: '8px',
+                    padding: '20px'
+                  }}>
+                    <div style={{ fontSize: '16px', fontWeight: 600, marginBottom: '8px' }}>
+                      Start with "I helped 1000+ people..." for maximum authority
+                    </div>
+                    <div style={{ fontSize: '14px', color: colors.accentGreen, fontWeight: 700 }}>
+                      This opener gets +200% more engagement for YOUR niche
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Input Sections */}
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  padding: '24px',
+                  marginBottom: '20px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '18px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span>1</span>
+                      <span>Hook & Authority</span>
+                    </div>
+                    <div style={{
+                      background: `rgba(68, 138, 255, 0.2)`,
+                      color: colors.accentBlue,
+                      padding: '6px 12px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontWeight: 700
+                    }}>AI: Perfect opening</div>
+                  </div>
+                  
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      color: colors.accentBlue,
+                      marginBottom: '8px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>Authority Hook (First 3 seconds)</label>
+                    <input
+                      type="text"
+                      className="text-input"
+                      placeholder="I helped 1000+ people..."
+                      onChange={(e) => updateAI('hook')}
+                      style={{
+                        width: '100%',
+                        padding: '16px 20px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px',
+                        color: colors.textPrimary,
+                        fontSize: '15px',
+                        fontFamily: 'inherit',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = colors.accentBlue;
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(68, 138, 255, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      color: colors.accentBlue,
+                      marginBottom: '8px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>Credibility Signal</label>
+                    <input
+                      type="text"
+                      className="text-input"
+                      placeholder="As a certified expert with..."
+                      onChange={(e) => updateAI('authority')}
+                      style={{
+                        width: '100%',
+                        padding: '16px 20px',
+                        background: 'rgba(255,255,255,0.05)',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '8px',
+                        color: colors.textPrimary,
+                        fontSize: '15px',
+                        fontFamily: 'inherit',
+                        transition: 'all 0.2s ease',
+                        outline: 'none'
+                      }}
+                      onFocus={(e) => {
+                        e.currentTarget.style.borderColor = colors.accentBlue;
+                        e.currentTarget.style.boxShadow = '0 0 0 3px rgba(68, 138, 255, 0.1)';
+                      }}
+                      onBlur={(e) => {
+                        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                <div style={{
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                  borderRadius: '12px',
+                  padding: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '18px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span>2</span>
+                      <span>Value Points</span>
+                    </div>
+                    <div style={{
+                      background: `rgba(68, 138, 255, 0.2)`,
+                      color: colors.accentBlue,
+                      padding: '6px 12px',
+                      borderRadius: '12px',
+                      fontSize: '11px',
+                      fontWeight: 700
+                    }}>AI: Maximize retention</div>
+                  </div>
+                  
+                  {[1, 2, 3].map(num => (
+                    <div key={num} style={{ marginBottom: num < 3 ? '20px' : '0' }}>
+                      <label style={{
+                        display: 'block',
+                        fontSize: '13px',
+                        fontWeight: 700,
+                        color: colors.accentBlue,
+                        marginBottom: '8px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px'
+                      }}>Value Point {num}</label>
+                      <input
+                        type="text"
+                        className="text-input"
+                        placeholder={num === 1 ? "First game-changing tip..." : num === 2 ? "Second powerful insight..." : "Third proven method..."}
+                        onChange={(e) => updateAI('value')}
+                        style={{
+                          width: '100%',
+                          padding: '16px 20px',
+                          background: 'rgba(255,255,255,0.05)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '8px',
+                          color: colors.textPrimary,
+                          fontSize: '15px',
+                          fontFamily: 'inherit',
+                          transition: 'all 0.2s ease',
+                          outline: 'none'
+                        }}
+                        onFocus={(e) => {
+                          e.currentTarget.style.borderColor = colors.accentBlue;
+                          e.currentTarget.style.boxShadow = '0 0 0 3px rgba(68, 138, 255, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                          e.currentTarget.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Right Panel: Live Viral Score */}
+            <div style={panelStyle}>
+              <div style={panelHeaderStyle}>
+                <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '6px' }}>Live Success Prediction</h3>
+                <p style={{ fontSize: '14px', color: colors.textSecondary }}>Real-time viral scoring</p>
+              </div>
+              <div style={panelContentStyle}>
+                <div style={{
+                  textAlign: 'center',
+                  padding: '40px',
+                  background: `linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(68, 138, 255, 0.1) 100%)`,
+                  border: `2px solid rgba(139, 92, 246, 0.3)`,
+                  borderRadius: '12px',
+                  marginBottom: '32px'
+                }}>
+                  <div style={{ width: '180px', height: '180px', margin: '0 auto 24px', position: 'relative' }}>
+                    <svg width="180" height="180">
+                      <defs>
+                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style={{ stopColor: colors.accentGreen, stopOpacity: 1 }} />
+                          <stop offset="100%" style={{ stopColor: colors.accentPurple, stopOpacity: 1 }} />
+                        </linearGradient>
+                      </defs>
+                      <circle fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="12" cx="90" cy="90" r="80"/>
+                      <circle
+                        id="score-circle"
+                        fill="none"
+                        stroke="url(#scoreGradient)"
+                        strokeWidth="12"
+                        strokeLinecap="round"
+                        cx="90"
+                        cy="90"
+                        r="80"
+                        strokeDasharray="502.655"
+                        strokeDashoffset="75"
+                        style={{ transform: 'rotate(-90deg)', transformOrigin: 'center' }}
+                      />
+                    </svg>
+                    <div id="live-viral-score" style={{
+                      position: 'absolute',
+                      top: '50%',
+                      left: '50%',
+                      transform: 'translate(-50%, -50%)',
+                      fontSize: '64px',
+                      fontWeight: 900,
+                      background: `linear-gradient(135deg, ${colors.accentGreen} 0%, ${colors.accentPurple} 100%)`,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent'
+                    }}>85</div>
+                  </div>
+                  <div style={{ fontSize: '18px', color: colors.textSecondary, marginBottom: '16px' }}>
+                    Viral Score
+                  </div>
+                  <div style={{ fontSize: '16px', color: colors.accentGreen, fontWeight: 700 }}>
+                    This will succeed with 89% confidence
+                  </div>
+                </div>
+                
+                <div style={{
+                  background: `rgba(139, 92, 246, 0.1)`,
+                  border: `1px solid rgba(139, 92, 246, 0.3)`,
+                  borderRadius: '8px',
+                  padding: '24px',
+                  marginBottom: '24px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                    <div style={{ fontSize: '18px', fontWeight: 700, color: colors.accentPurple, display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span>🚀</span>
+                      <span>Launch Window</span>
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    {[
+                      { time: 'Today 7:00 PM', optimal: true },
+                      { time: 'Tomorrow 12:00 PM', optimal: false },
+                      { time: 'Tomorrow 7:00 PM', optimal: false },
+                      { time: 'Thursday 5:00 PM', optimal: false }
+                    ].map((slot, index) => (
+                      <div key={index} style={{
+                        background: slot.optimal ? `rgba(34, 197, 94, 0.2)` : 'rgba(255,255,255,0.05)',
+                        border: slot.optimal ? `1px solid rgba(34, 197, 94, 0.4)` : 'none',
+                        borderRadius: '8px',
+                        padding: '16px',
+                        textAlign: 'center',
+                        fontSize: '14px',
+                        color: slot.optimal ? colors.accentGreen : 'inherit',
+                        fontWeight: slot.optimal ? 700 : 'normal',
+                        transform: slot.optimal ? 'scale(1.05)' : 'none',
+                        transition: 'all 0.2s ease'
+                      }}>
+                        {slot.time}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '32px', fontWeight: 900, color: colors.accentPurple, marginBottom: '8px' }}>1.25M</div>
+                    <div style={{ fontSize: '12px', color: colors.textTertiary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Predicted Views</div>
+                  </div>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '20px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '32px', fontWeight: 900, color: colors.accentPurple, marginBottom: '8px' }}>13.2%</div>
+                    <div style={{ fontSize: '12px', color: colors.textTertiary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Engagement Rate</div>
+                  </div>
+                </div>
+              </div>
+              <div style={{
+                padding: '24px',
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(255,255,255,0.02)',
+                display: 'flex',
+                gap: '16px'
+              }}>
+                <button style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.1)',
+                  color: colors.textPrimary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}>
+                  <span>💾</span>
+                  <span>Save Draft</span>
+                </button>
+                <button style={{
+                  flex: 1,
+                  padding: '16px 24px',
+                  borderRadius: '8px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  border: 'none',
+                  background: `linear-gradient(135deg, ${colors.accentRed} 0%, #ff5147 100%)`,
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  transition: 'all 0.2s ease'
+                }} onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(255, 59, 48, 0.4)';
+                }} onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}>
+                  <span>🚀</span>
+                  <span>Publish Now</span>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <style jsx>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.2); }
+        }
+        
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.3);
+        }
+        
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+      `}</style>
+    </div>
+  );
+}

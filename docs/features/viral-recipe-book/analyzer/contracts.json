@@ -1,0 +1,21 @@
+{
+  "slug": "analyzer",
+  "tab": "analyzer",
+  "testIds": [
+    "analyze-dropzone",
+    "analyze-results",
+    "btn-export-to-studio",
+    "btn-open-script-intel"
+  ],
+  "states": ["empty", "skeleton", "error", "success"],
+  "endpoints": [
+    { "method": "POST", "path": "/api/drafts/analyze" }
+  ],
+  "rbac": ["admin for POST"],
+  "observability": {
+    "logs": ["analyze.started", "analyze.completed"],
+    "metrics": ["analyze.latency_ms", "analyze.success"],
+    "alerts": ["analyze.error_rate_high"],
+    "audit": true
+  }
+}

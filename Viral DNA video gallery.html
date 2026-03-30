@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Template Library - The Feed</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+
+        /* Custom cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: screen;
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(2);
+            background: radial-gradient(circle, rgba(255, 97, 166, 0.8) 0%, transparent 70%);
+        }
+
+        /* Background ambient */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(123, 97, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 97, 166, 0.05) 0%, transparent 50%);
+            animation: ambient-shift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes ambient-shift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #000 0%, transparent 100%);
+            padding: 24px 40px 60px;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: logo-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .trending-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            font-size: 14px;
+            animation: badge-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes badge-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(123, 97, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 97, 166, 0.4); }
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #ff4458;
+            border-radius: 50%;
+            animation: live-pulse 1s ease-out infinite;
+        }
+
+        @keyframes live-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Template feed */
+        .template-feed {
+            padding: 140px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 32px;
+            animation: feed-load 0.8s ease-out;
+        }
+
+        @keyframes feed-load {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Template card */
+        .template-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            animation: card-appear 0.6s ease-out backwards;
+        }
+
+        .template-card:nth-child(1) { animation-delay: 0.1s; }
+        .template-card:nth-child(2) { animation-delay: 0.2s; }
+        .template-card:nth-child(3) { animation-delay: 0.3s; }
+        .template-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes card-appear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(123, 97, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(123, 97, 255, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(123, 97, 255, 0.3),
+                0 0 80px rgba(123, 97, 255, 0.2);
+        }
+
+        .template-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Video preview */
+        .video-preview {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .template-card:hover .video-placeholder {
+            transform: scale(1.1);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .template-card:hover .play-overlay {
+            opacity: 0;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            transition: all 0.3s;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            background: rgba(123, 97, 255, 0.3);
+        }
+
+        /* Viral DNA indicator */
+        .viral-dna {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .dna-dot {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            border-radius: 50%;
+            animation: dna-pulse 2s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.2s);
+        }
+
+        @keyframes dna-pulse {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+        }
+
+        /* Template info */
+        .template-info {
+            padding: 24px;
+        }
+
+        .template-stats {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .stat-icon {
+            font-size: 18px;
+        }
+
+        .stat-number {
+            font-weight: 600;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .template-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .template-card:hover .template-title {
+            background: linear-gradient(135deg, #fff 0%, #7b61ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .template-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        /* Trending sound */
+        .trending-sound {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: rgba(123, 97, 255, 0.1);
+            border: 1px solid rgba(123, 97, 255, 0.2);
+            border-radius: 100px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .trending-sound:hover {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: rgba(123, 97, 255, 0.4);
+        }
+
+        .sound-icon {
+            font-size: 16px;
+            animation: sound-wave 1s ease-in-out infinite;
+        }
+
+        @keyframes sound-wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Use template button */
+        .use-template {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .template-card:hover .use-template {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .use-template:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(123, 97, 255, 0.4);
+        }
+
+        /* Floating elements */
+        .floating-orb {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float-orb 20s ease-in-out infinite;
+        }
+
+        .floating-orb:nth-child(2) {
+            left: 80%;
+            top: 60%;
+            background: radial-gradient(circle, rgba(255, 97, 166, 0.2) 0%, transparent 70%);
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        @keyframes float-orb {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(50px, -50px) scale(1.2);
+            }
+            66% {
+                transform: translate(-30px, 30px) scale(0.8);
+            }
+        }
+
+        /* Loading more indicator */
+        .loading-more {
+            text-align: center;
+            padding: 60px;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .loading-dots {
+            display: inline-flex;
+            gap: 8px;
+        }
+
+        .loading-dot {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            border-radius: 50%;
+            animation: loading-bounce 1.5s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.2s);
+        }
+
+        @keyframes loading-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .feed-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .header {
+                padding: 16px 20px 40px;
+            }
+
+            .template-feed {
+                padding: 100px 20px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Ambient background -->
+    <div class="ambient-bg"></div>
+
+    <!-- Floating orbs -->
+    <div class="floating-orb" style="left: 10%; top: 20%;"></div>
+    <div class="floating-orb"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Viral DNA™</div>
+            <div class="trending-badge">
+                <div class="live-indicator"></div>
+                <span>247 Templates Trending Now</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Template feed -->
+    <main class="template-feed">
+        <div class="feed-grid" id="feedGrid">
+            <!-- Template 1 -->
+            <article class="template-card" data-template-id="1">
+                <div class="viral-dna">
+                    <div class="dna-dot" style="--i: 0"></div>
+                    <div class="dna-dot" style="--i: 1"></div>
+                    <div class="dna-dot" style="--i: 2"></div>
+                </div>
+                
+                <div class="video-preview">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%237b61ff'/%3E%3Cstop offset='100%25' style='stop-color:%23ff61a6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='400' fill='url(%23g1)'/%3E%3Ctext x='150' y='200' text-anchor='middle' fill='white' font-size='24' font-family='Arial'%3EBefore/After%3C/text%3E%3C/svg%3E" alt="Template preview" class="video-placeholder">
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+                
+                <div class="template-info">
+                    <div class="template-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👁️</span>
+                            <span class="stat-number">12.4M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">❤️</span>
+                            <span class="stat-number">2.1M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-number">94%</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="template-title">Transformation Reveal</h3>
+                    <p class="template-description">The viral before/after format that gets millions of views</p>
+                    
+                    <div class="trending-sound">
+                        <span class="sound-icon">🎵</span>
+                        <span>Trending Sound: "Oh No" Remix</span>
+                    </div>
+                    
+                    <button class="use-template">Create with this template ✨</button>
+                </div>
+            </article>
+
+            <!-- Template 2 -->
+            <article class="template-card" data-template-id="2">
+                <div class="viral-dna">
+                    <div class="dna-dot" style="--i: 0"></div>
+                    <div class="dna-dot" style="--i: 1"></div>
+                    <div class="dna-dot" style="--i: 2"></div>
+                </div>
+                
+                <div class="video-preview">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff61a6'/%3E%3Cstop offset='100%25' style='stop-color:%237b61ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='400' fill='url(%23g2)'/%3E%3Ctext x='150' y='200' text-anchor='middle' fill='white' font-size='24' font-family='Arial'%3E5 Things%3C/text%3E%3C/svg%3E" alt="Template preview" class="video-placeholder">
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+                
+                <div class="template-info">
+                    <div class="template-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👁️</span>
+                            <span class="stat-number">8.7M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">❤️</span>
+                            <span class="stat-number">1.4M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-number">89%</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="template-title">5 Things List</h3>
+                    <p class="template-description">Countdown format with text overlays that hooks viewers</p>
+                    
+                    <div class="trending-sound">
+                        <span class="sound-icon">🎵</span>
+                        <span>Trending Sound: "Aesthetic" Beat</span>
+                    </div>
+                    
+                    <button class="use-template">Create with this template ✨</button>
+                </div>
+            </article>
+
+            <!-- Template 3 -->
+            <article class="template-card" data-template-id="3">
+                <div class="viral-dna">
+                    <div class="dna-dot" style="--i: 0"></div>
+                    <div class="dna-dot" style="--i: 1"></div>
+                    <div class="dna-dot" style="--i: 2"></div>
+                </div>
+                
+                <div class="video-preview">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffd93d'/%3E%3Cstop offset='100%25' style='stop-color:%23ff6bcb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='400' fill='url(%23g3)'/%3E%3Ctext x='150' y='200' text-anchor='middle' fill='white' font-size='24' font-family='Arial'%3EPOV%3C/text%3E%3C/svg%3E" alt="Template preview" class="video-placeholder">
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+                
+                <div class="template-info">
+                    <div class="template-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👁️</span>
+                            <span class="stat-number">15.2M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">❤️</span>
+                            <span class="stat-number">3.7M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-number">97%</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="template-title">POV Experience</h3>
+                    <p class="template-description">First-person storytelling that creates instant connection</p>
+                    
+                    <div class="trending-sound">
+                        <span class="sound-icon">🎵</span>
+                        <span>Trending Sound: "Running Up That Hill"</span>
+                    </div>
+                    
+                    <button class="use-template">Create with this template ✨</button>
+                </div>
+            </article>
+
+            <!-- Template 4 -->
+            <article class="template-card" data-template-id="4">
+                <div class="viral-dna">
+                    <div class="dna-dot" style="--i: 0"></div>
+                    <div class="dna-dot" style="--i: 1"></div>
+                    <div class="dna-dot" style="--i: 2"></div>
+                </div>
+                
+                <div class="video-preview">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cdefs%3E%3ClinearGradient id='g4' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%234ecdc4'/%3E%3Cstop offset='100%25' style='stop-color:%23ff6b6b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='400' fill='url(%23g4)'/%3E%3Ctext x='150' y='200' text-anchor='middle' fill='white' font-size='24' font-family='Arial'%3EStory Time%3C/text%3E%3C/svg%3E" alt="Template preview" class="video-placeholder">
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+                
+                <div class="template-info">
+                    <div class="template-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👁️</span>
+                            <span class="stat-number">9.8M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">❤️</span>
+                            <span class="stat-number">2.4M</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-number">91%</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="template-title">Story Time Hook</h3>
+                    <p class="template-description">Personal narrative format that keeps viewers watching</p>
+                    
+                    <div class="trending-sound">
+                        <span class="sound-icon">🎵</span>
+                        <span>Trending Sound: "Monkeys Spinning"</span>
+                    </div>
+                    
+                    <button class="use-template">Create with this template ✨</button>
+                </div>
+            </article>
+        </div>
+
+        <!-- Loading more -->
+        <div class="loading-more" id="loadingMore" style="display: none;">
+            <div class="loading-dots">
+                <div class="loading-dot" style="--i: 0"></div>
+                <div class="loading-dot" style="--i: 1"></div>
+                <div class="loading-dot" style="--i: 2"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Smooth cursor animation
+        function animateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            cursorX += dx * 0.1;
+            cursorY += dy * 0.1;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Cursor hover effects
+        document.querySelectorAll('.template-card, button, .trending-sound').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        // Auto-play preview on hover
+        const templates = document.querySelectorAll('.template-card');
+        
+        templates.forEach(template => {
+            const preview = template.querySelector('.video-preview');
+            const placeholder = template.querySelector('.video-placeholder');
+            let hoverTimeout;
+            
+            template.addEventListener('mouseenter', () => {
+                // Simulate video playback
+                hoverTimeout = setTimeout(() => {
+                    // Create fake video frames
+                    let frame = 0;
+                    const frames = [
+                        'linear-gradient(45deg, #7b61ff 0%, #ff61a6 100%)',
+                        'linear-gradient(135deg, #ff61a6 0%, #7b61ff 100%)',
+                        'linear-gradient(225deg, #7b61ff 0%, #ff61a6 100%)',
+                        'linear-gradient(315deg, #ff61a6 0%, #7b61ff 100%)'
+                    ];
+                    
+                    const playInterval = setInterval(() => {
+                        if (!template.matches(':hover')) {
+                            clearInterval(playInterval);
+                            return;
+                        }
+                        preview.style.background = frames[frame % frames.length];
+                        frame++;
+                    }, 500);
+                    
+                    template.dataset.playInterval = playInterval;
+                }, 200);
+            });
+            
+            template.addEventListener('mouseleave', () => {
+                clearTimeout(hoverTimeout);
+                const interval = template.dataset.playInterval;
+                if (interval) {
+                    clearInterval(interval);
+                    preview.style.background = '';
+                }
+            });
+        });
+
+        // Infinite scroll simulation
+        let loadingTemplates = false;
+        
+        window.addEventListener('scroll', () => {
+            if (loadingTemplates) return;
+            
+            const scrollHeight = document.documentElement.scrollHeight;
+            const scrollTop = document.documentElement.scrollTop;
+            const clientHeight = document.documentElement.clientHeight;
+            
+            if (scrollTop + clientHeight >= scrollHeight - 100) {
+                loadMoreTemplates();
+            }
+        });
+        
+        function loadMoreTemplates() {
+            loadingTemplates = true;
+            const loadingEl = document.getElementById('loadingMore');
+            loadingEl.style.display = 'block';
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                const feedGrid = document.getElementById('feedGrid');
+                
+                // Add new templates
+                for (let i = 0; i < 4; i++) {
+                    const newTemplate = createTemplateCard(i + 5);
+                    feedGrid.appendChild(newTemplate);
+                }
+                
+                loadingEl.style.display = 'none';
+                loadingTemplates = false;
+                
+                // Re-attach hover listeners to new cards
+                attachHoverListeners();
+            }, 1000);
+        }
+        
+        function createTemplateCard(id) {
+            const template = document.createElement('article');
+            template.className = 'template-card';
+            template.dataset.templateId = id;
+            template.style.animationDelay = '0.1s';
+            
+            const templates = [
+                { title: 'Reaction Reveal', views: '6.3M', likes: '1.1M', score: '87%', sound: 'Original Audio' },
+                { title: 'Day in Life', views: '11.2M', likes: '2.8M', score: '93%', sound: 'Chill Vibes Mix' },
+                { title: 'Quick Tutorial', views: '7.9M', likes: '1.7M', score: '90%', sound: 'Speed Up Sound' },
+                { title: 'Trend Challenge', views: '18.5M', likes: '4.2M', score: '98%', sound: 'Viral Dance Beat' }
+            ];
+            
+            const data = templates[id % templates.length];
+            
+            template.innerHTML = `
+                <div class="viral-dna">
+                    <div class="dna-dot" style="--i: 0"></div>
+                    <div class="dna-dot" style="--i: 1"></div>
+                    <div class="dna-dot" style="--i: 2"></div>
+                </div>
+                
+                <div class="video-preview">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cdefs%3E%3ClinearGradient id='g${id}' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23${Math.floor(Math.random()*16777215).toString(16)}'/%3E%3Cstop offset='100%25' style='stop-color:%23${Math.floor(Math.random()*16777215).toString(16)}'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='300' height='400' fill='url(%23g${id})'/%3E%3Ctext x='150' y='200' text-anchor='middle' fill='white' font-size='24' font-family='Arial'%3E${data.title}%3C/text%3E%3C/svg%3E" alt="Template preview" class="video-placeholder">
+                    <div class="play-overlay">
+                        <div class="play-button">▶️</div>
+                    </div>
+                </div>
+                
+                <div class="template-info">
+                    <div class="template-stats">
+                        <div class="stat">
+                            <span class="stat-icon">👁️</span>
+                            <span class="stat-number">${data.views}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">❤️</span>
+                            <span class="stat-number">${data.likes}</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-icon">🔥</span>
+                            <span class="stat-number">${data.score}</span>
+                        </div>
+                    </div>
+                    
+                    <h3 class="template-title">${data.title}</h3>
+                    <p class="template-description">AI-optimized template for maximum viral potential</p>
+                    
+                    <div class="trending-sound">
+                        <span class="sound-icon">🎵</span>
+                        <span>Trending Sound: "${data.sound}"</span>
+                    </div>
+                    
+                    <button class="use-template">Create with this template ✨</button>
+                </div>
+            `;
+            
+            return template;
+        }
+        
+        function attachHoverListeners() {
+            document.querySelectorAll('.template-card').forEach(el => {
+                el.removeEventListener('mouseenter', handleMouseEnter);
+                el.removeEventListener('mouseleave', handleMouseLeave);
+                el.addEventListener('mouseenter', handleMouseEnter);
+                el.addEventListener('mouseleave', handleMouseLeave);
+            });
+        }
+        
+        function handleMouseEnter(e) {
+            cursor.classList.add('hover');
+        }
+        
+        function handleMouseLeave(e) {
+            cursor.classList.remove('hover');
+        }
+        
+        // Click interactions
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('use-template')) {
+                // Create ripple effect
+                const button = e.target;
+                const rect = button.getBoundingClientRect();
+                const ripple = document.createElement('div');
+                
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.left = (e.clientX - rect.left) + 'px';
+                ripple.style.top = (e.clientY - rect.top) + 'px';
+                ripple.style.animation = 'ripple-out 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                
+                button.style.position = 'relative';
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+                
+                // Simulate navigation to editor
+                setTimeout(() => {
+                    console.log('Navigate to viral creation flow...');
+                }, 300);
+            }
+        });
+        
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple-out {
+                to {
+                    width: 300px;
+                    height: 300px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Parallax effect on scroll
+        let ticking = false;
+        function updateParallax() {
+            const scrolled = window.pageYOffset;
+            const orbs = document.querySelectorAll('.floating-orb');
+            
+            orbs.forEach((orb, index) => {
+                const speed = index === 0 ? 0.5 : 0.3;
+                orb.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+            
+            ticking = false;
+        }
+        
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+# =============================================================================
+# GRAFANA DATASOURCES CONFIGURATION
+# Automatically provisions datasources for Trendzo monitoring
+# =============================================================================
+
+apiVersion: 1
+
+datasources:
+  # ==========================================================================
+  # PROMETHEUS - METRICS DATASOURCE
+  # ==========================================================================
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    
+    # Connection settings
+    timeout: 60
+    
+    # Query settings
+    jsonData:
+      timeInterval: "5s"
+      queryTimeout: "60s"
+      httpMethod: "POST"
+      manageAlerts: true
+      prometheusType: "Prometheus"
+      prometheusVersion: "2.40.0"
+      cacheLevel: "Low"
+      disableMetricsLookup: false
+      customQueryParameters: ""
+      
+      # Exemplars configuration
+      exemplarTraceIdDestinations:
+        - name: traceID
+          datasourceUid: jaeger
+          
+    # Custom headers
+    httpHeaderName1: "X-Grafana-Org-Id"
+    
+    # Secure data (passwords, API keys, etc.)
+    secureJsonData:
+      httpHeaderValue1: "1"
+
+  # ==========================================================================
+  # LOKI - LOGS DATASOURCE  
+  # ==========================================================================
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: false
+    editable: true
+    
+    # Connection settings
+    timeout: 60
+    
+    # Loki specific configuration
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: jaeger
+          matcherRegex: "trace_id=(\\w+)"
+          name: TraceID
+          url: "$${__value.raw}"
+        - datasourceUid: prometheus
+          matcherRegex: "correlation_id=(\\w+)"
+          name: CorrelationID
+          url: "/explore?orgId=1&left=[\"now-1h\",\"now\",\"Prometheus\",{\"expr\":\"correlation_id=\\\"$${__value.raw}\\\"\"}]"
+
+  # ==========================================================================
+  # JAEGER - DISTRIBUTED TRACING
+  # ==========================================================================
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    uid: jaeger
+    isDefault: false
+    editable: true
+    
+    # Connection settings
+    timeout: 60
+    
+    # Jaeger specific configuration
+    jsonData:
+      tracesToLogs:
+        datasourceUid: "loki"
+        filterByTraceID: true
+        filterBySpanID: true
+        tags:
+          - key: "service.name"
+            value: "trendzo"
+        mappedTags:
+          - key: "http.status_code"
+            value: "status"
+      tracesToMetrics:
+        datasourceUid: "prometheus"
+        tags:
+          - key: "service.name"
+            value: "trendzo"
+        queries:
+          - name: "Request Rate"
+            query: "rate(http_requests_total{service=\"$${__tags}\"}[5m])"
+          - name: "Request Duration"
+            query: "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service=\"$${__tags}\"}[5m]))"
+
+  # ==========================================================================
+  # REDIS DATASOURCE (Optional)
+  # ==========================================================================
+  - name: Redis
+    type: redis-datasource
+    access: proxy
+    url: redis://redis:6379
+    isDefault: false
+    editable: true
+    
+    # Redis connection settings
+    jsonData:
+      client: "standalone"
+      poolSize: 5
+      timeout: 10
+      pingInterval: 0
+      pipelineWindow: 0
+      
+    # Secure connection data
+    secureJsonData:
+      password: ""  # Set via environment variable if needed
+
+  # ==========================================================================
+  # BUSINESS METRICS DATASOURCE (Custom)
+  # ==========================================================================
+  - name: Trendzo Business Metrics
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: false
+    editable: true
+    
+    # Business metrics specific configuration
+    jsonData:
+      timeInterval: "1m"
+      queryTimeout: "120s"
+      httpMethod: "POST"
+      customQueryParameters: "business_metrics=true"
+      
+    # Custom headers for business metrics
+    httpHeaderName1: "X-Metrics-Type"
+    secureJsonData:
+      httpHeaderValue1: "business"

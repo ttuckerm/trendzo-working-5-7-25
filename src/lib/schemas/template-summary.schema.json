@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "TemplateSummary",
+  "title": "TemplateSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["template_id", "name", "success_rate", "avg_views", "platform"],
+  "properties": {
+    "template_id": { "type": "string" },
+    "name": { "type": "string" },
+    "success_rate": { "type": "number", "minimum": 0 },
+    "avg_views": { "type": "integer", "minimum": 0 },
+    "platform": { "type": "string", "enum": ["tiktok", "youtube", "instagram", "linkedin"] },
+    "hook_time_sec": { "type": ["integer", "null"], "minimum": 0 },
+    "duration_range": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "min_sec": { "type": "integer", "minimum": 0 },
+        "max_sec": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "badges": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "exampleVideos": {
+      "type": "array",
+      "items": { "$ref": "../schemas/video-presentation-card.schema.json" }
+    },
+    "updated_at": { "type": ["string", "null"], "format": "date-time" }
+  }
+}
+
+
+
+
+
+
+
+
+

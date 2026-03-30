@@ -1,0 +1,120 @@
+# =============================================================================
+# HORIZONTAL POD AUTOSCALER (HPA)
+# Automatic scaling based on CPU, memory, and custom metrics
+# =============================================================================
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: trendzo-app-hpa
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+  annotations:
+    description: "Auto-scales Trendzo application based on CPU, memory, and prediction load"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: trendzo-app
+  
+  # =============================================================================
+  # SCALING CONFIGURATION
+  # =============================================================================
+  minReplicas: 2
+  maxReplicas: 20
+  
+  # =============================================================================
+  # SCALING BEHAVIOR
+  # =============================================================================
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300  # 5 minutes
+      policies:
+        - type: Percent
+          value: 50  # Scale down max 50% at a time
+          periodSeconds: 60
+        - type: Pods
+          value: 2   # Scale down max 2 pods at a time
+          periodSeconds: 60
+      selectPolicy: Min
+    scaleUp:
+      stabilizationWindowSeconds: 60   # 1 minute
+      policies:
+        - type: Percent
+          value: 100  # Scale up max 100% at a time
+          periodSeconds: 60
+        - type: Pods
+          value: 4    # Scale up max 4 pods at a time
+          periodSeconds: 60
+      selectPolicy: Max
+  
+  # =============================================================================
+  # METRICS
+  # =============================================================================
+  metrics:
+    # CPU utilization
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    
+    # Memory utilization
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+    
+    # Custom metric: Prediction requests per second
+    - type: Pods
+      pods:
+        metric:
+          name: trendzo_predictions_per_second
+        target:
+          type: AverageValue
+          averageValue: "10"
+    
+    # Custom metric: API response time
+    - type: Pods
+      pods:
+        metric:
+          name: trendzo_response_time_ms
+        target:
+          type: AverageValue
+          averageValue: "200"
+
+---
+# =============================================================================
+# VERTICAL POD AUTOSCALER (VPA) - Optional
+# Automatically adjusts resource requests and limits
+# =============================================================================
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: trendzo-app-vpa
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+spec:
+  targetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: trendzo-app
+  updatePolicy:
+    updateMode: "Auto"  # Options: Auto, Initial, Off
+  resourcePolicy:
+    containerPolicies:
+      - containerName: trendzo-app
+        minAllowed:
+          cpu: 100m
+          memory: 512Mi
+        maxAllowed:
+          cpu: 2000m
+          memory: 4Gi
+        controlledResources: ["cpu", "memory"]

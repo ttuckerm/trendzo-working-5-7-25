@@ -1,0 +1,419 @@
+# Grafana Dashboard Setup for Viral Prediction Platform
+# Target: Real-time monitoring of ≤100ms latency and 99.95% uptime
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: monitoring
+data:
+  prometheus.yaml: |-
+    {
+        "apiVersion": 1,
+        "datasources": [
+            {
+                "name": "Prometheus",
+                "type": "prometheus",
+                "url": "http://prometheus:9090",
+                "access": "proxy",
+                "isDefault": true,
+                "jsonData": {
+                    "timeInterval": "5s"
+                }
+            }
+        ]
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-providers
+  namespace: monitoring
+data:
+  dashboards.yaml: |-
+    {
+        "apiVersion": 1,
+        "providers": [
+            {
+                "name": "default",
+                "orgId": 1,
+                "folder": "",
+                "type": "file",
+                "disableDeletion": false,
+                "editable": true,
+                "options": {
+                    "path": "/var/lib/grafana/dashboards"
+                }
+            }
+        ]
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: viral-prediction-dashboard
+  namespace: monitoring
+data:
+  viral-prediction-overview.json: |-
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Viral Prediction Platform - Overview",
+        "tags": ["viral-prediction", "overview"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "SLA Metrics",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "(1 - (rate(http_requests_total{job=\"viral-prediction-api\",code=~\"5..\"}[5m]) / rate(http_requests_total{job=\"viral-prediction-api\"}[5m]))) * 100",
+                "legendFormat": "Uptime %"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 99},
+                    {"color": "green", "value": 99.95}
+                  ]
+                },
+                "min": 99,
+                "max": 100,
+                "unit": "percent"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "API Latency (p95)",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"viral-prediction-api\"}[5m])) * 1000",
+                "legendFormat": "P95 Latency"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {
+                  "steps": [
+                    {"color": "green", "value": 0},
+                    {"color": "yellow", "value": 80},
+                    {"color": "red", "value": 100}
+                  ]
+                },
+                "max": 200,
+                "unit": "ms"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 6, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Request Rate",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "rate(http_requests_total{job=\"viral-prediction-api\"}[5m])",
+                "legendFormat": "RPS"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 12, "y": 0}
+          },
+          {
+            "id": 4,
+            "title": "Model Accuracy",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "viral_prediction_accuracy",
+                "legendFormat": "Accuracy %"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "thresholds": {
+                  "steps": [
+                    {"color": "red", "value": 0},
+                    {"color": "yellow", "value": 90},
+                    {"color": "green", "value": 95}
+                  ]
+                },
+                "min": 90,
+                "max": 100,
+                "unit": "percent"
+              }
+            },
+            "gridPos": {"h": 8, "w": 6, "x": 18, "y": 0}
+          },
+          {
+            "id": 5,
+            "title": "API Response Times",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket{job=\"viral-prediction-api\"}[5m])) * 1000",
+                "legendFormat": "P50"
+              },
+              {
+                "expr": "histogram_quantile(0.90, rate(http_request_duration_seconds_bucket{job=\"viral-prediction-api\"}[5m])) * 1000",
+                "legendFormat": "P90"
+              },
+              {
+                "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{job=\"viral-prediction-api\"}[5m])) * 1000",
+                "legendFormat": "P95"
+              },
+              {
+                "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket{job=\"viral-prediction-api\"}[5m])) * 1000",
+                "legendFormat": "P99"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Response Time (ms)",
+                "max": 200,
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+          },
+          {
+            "id": 6,
+            "title": "Error Rate",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(http_requests_total{job=\"viral-prediction-api\",code=~\"4..\"}[5m])",
+                "legendFormat": "4xx Errors"
+              },
+              {
+                "expr": "rate(http_requests_total{job=\"viral-prediction-api\",code=~\"5..\"}[5m])",
+                "legendFormat": "5xx Errors"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Errors/sec",
+                "min": 0
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "5s"
+      }
+    }
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ml-metrics-dashboard
+  namespace: monitoring
+data:
+  ml-metrics.json: |-
+    {
+      "dashboard": {
+        "id": null,
+        "title": "ML Pipeline Metrics",
+        "tags": ["ml", "pipeline"],
+        "panels": [
+          {
+            "id": 1,
+            "title": "Model Training Accuracy",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "mlflow_training_accuracy",
+                "legendFormat": "Training Accuracy"
+              },
+              {
+                "expr": "mlflow_validation_accuracy",
+                "legendFormat": "Validation Accuracy"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Accuracy %",
+                "min": 90,
+                "max": 100
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+          },
+          {
+            "id": 2,
+            "title": "Feature Store Latency",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(feast_feature_serving_duration_seconds_bucket[5m])) * 1000",
+                "legendFormat": "Feature Serving P95"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Latency (ms)",
+                "max": 50
+              }
+            ],
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+          },
+          {
+            "id": 3,
+            "title": "Model Predictions per Second",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(viral_prediction_requests_total[5m])",
+                "legendFormat": "Predictions/sec"
+              }
+            ],
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 8}
+          }
+        ],
+        "time": {
+          "from": "now-6h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
+      containers:
+      - name: grafana
+        image: grafana/grafana:9.5.0
+        ports:
+        - containerPort: 3000
+          name: http-grafana
+          protocol: TCP
+        env:
+        - name: GF_SECURITY_ADMIN_USER
+          value: admin
+        - name: GF_SECURITY_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: grafana-secret
+              key: admin-password
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel,grafana-worldmap-panel"
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /robots.txt
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 3000
+          timeoutSeconds: 1
+        resources:
+          requests:
+            cpu: 250m
+            memory: 750Mi
+          limits:
+            cpu: 500m
+            memory: 1Gi
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-pv
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources
+          readOnly: false
+        - mountPath: /etc/grafana/provisioning/dashboards
+          name: grafana-dashboard-providers
+          readOnly: false
+        - mountPath: /var/lib/grafana/dashboards
+          name: grafana-dashboards
+          readOnly: false
+      volumes:
+      - name: grafana-pv
+        persistentVolumeClaim:
+          claimName: grafana-pvc
+      - name: grafana-datasources
+        configMap:
+          defaultMode: 420
+          name: grafana-datasources
+      - name: grafana-dashboard-providers
+        configMap:
+          defaultMode: 420
+          name: grafana-dashboard-providers
+      - name: grafana-dashboards
+        configMap:
+          defaultMode: 420
+          name: viral-prediction-dashboard
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-secret
+  namespace: monitoring
+type: Opaque
+data:
+  admin-password: YWRtaW4xMjM= # admin123 (base64)
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-pvc
+  namespace: monitoring
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: http-grafana
+  selector:
+    app: grafana
+  sessionAffinity: None
+  type: LoadBalancer

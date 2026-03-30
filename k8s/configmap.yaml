@@ -1,0 +1,154 @@
+# =============================================================================
+# KUBERNETES CONFIGMAP
+# Non-sensitive configuration for Trendzo application
+# =============================================================================
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trendzo-config
+  namespace: trendzo-production
+  labels:
+    app: trendzo-app
+    environment: production
+data:
+  # Application configuration
+  NODE_ENV: "production"
+  NEXT_TELEMETRY_DISABLED: "1"
+  PORT: "3000"
+  HOSTNAME: "0.0.0.0"
+  
+  # Feature flags
+  ENABLE_BATCH_PROCESSING: "true"
+  ENABLE_REAL_TIME_PREDICTIONS: "true"
+  ENABLE_ADMIN_PANEL: "true"
+  ENABLE_API_DOCS: "false"
+  
+  # Logging configuration
+  LOG_PREDICTIONS: "true"
+  LOG_LEVEL: "info"
+  
+  # Performance settings
+  RATE_LIMIT_WINDOW_MS: "60000"
+  RATE_LIMIT_MAX_REQUESTS: "100"
+  
+  # Health check configuration
+  HEALTH_CHECK_TIMEOUT: "30000"
+  HEALTH_CHECK_INTERVAL: "60000"
+  
+  # Cache configuration
+  CACHE_TTL_SECONDS: "300"
+  CACHE_MAX_SIZE: "100"
+  
+  # Prediction engine configuration
+  PREDICTION_TIMEOUT_MS: "30000"
+  MAX_CONCURRENT_PREDICTIONS: "10"
+  
+  # External service timeouts
+  EXTERNAL_API_TIMEOUT_MS: "15000"
+  
+  # Database configuration (non-sensitive)
+  DB_POOL_SIZE: "10"
+  DB_TIMEOUT_MS: "30000"
+  
+  # Monitoring configuration
+  METRICS_ENABLED: "true"
+  METRICS_INTERVAL_MS: "30000"
+  PROMETHEUS_METRICS_PATH: "/api/metrics"
+  
+  # CORS configuration
+  CORS_ORIGINS: "https://yourdomain.com,https://www.yourdomain.com,https://api.yourdomain.com"
+
+---
+# =============================================================================
+# NGINX CONFIGMAP
+# Configuration for nginx sidecar or ingress
+# =============================================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: trendzo-production
+  labels:
+    app: nginx
+    environment: production
+data:
+  nginx.conf: |
+    worker_processes auto;
+    events {
+        worker_connections 1024;
+    }
+    
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        
+        # Logging
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+        
+        access_log /var/log/nginx/access.log main;
+        error_log /var/log/nginx/error.log warn;
+        
+        # Performance
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        
+        # Gzip compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1000;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+        
+        # Rate limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=general:10m rate=30r/s;
+        
+        # Upstream configuration
+        upstream trendzo_backend {
+            least_conn;
+            server trendzo-app-service:80 max_fails=3 fail_timeout=30s;
+            keepalive 32;
+        }
+        
+        server {
+            listen 80;
+            server_name _;
+            
+            # Security headers
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header X-Content-Type-Options "nosniff" always;
+            add_header X-XSS-Protection "1; mode=block" always;
+            
+            # Health check endpoint
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+            
+            # API endpoints with rate limiting
+            location /api/ {
+                limit_req zone=api burst=20 nodelay;
+                proxy_pass http://trendzo_backend;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+            
+            # Main application
+            location / {
+                limit_req zone=general burst=30 nodelay;
+                proxy_pass http://trendzo_backend;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+        }
+    }

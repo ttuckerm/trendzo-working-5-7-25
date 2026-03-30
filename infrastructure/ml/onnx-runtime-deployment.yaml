@@ -1,0 +1,245 @@
+# ONNX Runtime Model Serving for <100ms Inference
+# Target: High-performance model serving with GPU acceleration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onnx-model-server
+  namespace: viral-prediction
+  labels:
+    app: onnx-model-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: onnx-model-server
+  template:
+    metadata:
+      labels:
+        app: onnx-model-server
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+    spec:
+      containers:
+      - name: onnx-runtime-server
+        image: mcr.microsoft.com/onnxruntime/server:latest
+        ports:
+        - containerPort: 8001
+          name: http
+        - containerPort: 8002
+          name: grpc
+        env:
+        - name: ONNX_MODEL_PATH
+          value: "/models"
+        - name: ONNX_LOG_LEVEL
+          value: "info"
+        - name: ONNX_NUM_THREADS
+          value: "4"
+        - name: ONNX_ENABLE_GPU
+          value: "true"
+        command: ["/opt/onnxruntime/bin/onnxruntime_server"]
+        args:
+        - "--http_port=8001"
+        - "--grpc_port=8002"
+        - "--model_path=/models/viral_prediction_ensemble.onnx"
+        - "--enable_batching=true"
+        - "--max_batch_size=32"
+        - "--batch_timeout_micros=50000"  # 50ms timeout for <100ms target
+        volumeMounts:
+        - name: models-volume
+          mountPath: /models
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+            nvidia.com/gpu: 1
+          limits:
+            cpu: 4000m
+            memory: 8Gi
+            nvidia.com/gpu: 1
+        livenessProbe:
+          httpGet:
+            path: /v1/models/viral_prediction_ensemble
+            port: 8001
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /v1/models/viral_prediction_ensemble
+            port: 8001
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+      volumes:
+      - name: models-volume
+        persistentVolumeClaim:
+          claimName: onnx-models-pvc
+      # GPU node selection
+      nodeSelector:
+        accelerator: nvidia-tesla-t4
+      tolerations:
+      - key: "nvidia.com/gpu"
+        operator: "Exists"
+        effect: "NoSchedule"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onnx-model-server
+  namespace: viral-prediction
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8001"
+spec:
+  selector:
+    app: onnx-model-server
+  ports:
+  - name: http
+    port: 8001
+    targetPort: 8001
+  - name: grpc
+    port: 8002
+    targetPort: 8002
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onnx-models-pvc
+  namespace: viral-prediction
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: fast-ssd
+---
+# Model Deployment Job (loads models into PVC)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onnx-model-loader
+  namespace: viral-prediction
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: model-loader
+        image: python:3.9-slim
+        command: ["/bin/bash"]
+        args:
+        - -c
+        - |
+          pip install onnx onnxruntime boto3
+          echo "Downloading ONNX models..."
+          # Download or generate ONNX models
+          mkdir -p /models
+          
+          # Placeholder for model conversion script
+          python3 << 'EOF'
+          import onnx
+          import numpy as np
+          from onnx import helper, TensorProto, mapping
+          
+          # Create a simple placeholder model for now
+          # TODO: Convert actual PyTorch/TensorFlow models to ONNX
+          
+          # Define model inputs (features from feature store)
+          input_features = helper.make_tensor_value_info(
+              'input_features', TensorProto.FLOAT, ['N', 128]
+          )
+          
+          # Define output (viral probability)
+          output = helper.make_tensor_value_info(
+              'viral_probability', TensorProto.FLOAT, ['N', 1]
+          )
+          
+          # Simple linear layer as placeholder
+          W = helper.make_tensor(
+              'W', TensorProto.FLOAT, [128, 1], np.random.randn(128, 1).flatten().tolist()
+          )
+          b = helper.make_tensor(
+              'b', TensorProto.FLOAT, [1], [0.0]
+          )
+          
+          matmul_node = helper.make_node(
+              'MatMul', ['input_features', 'W'], ['matmul_result']
+          )
+          add_node = helper.make_node(
+              'Add', ['matmul_result', 'b'], ['add_result']
+          )
+          sigmoid_node = helper.make_node(
+              'Sigmoid', ['add_result'], ['viral_probability']
+          )
+          
+          graph = helper.make_graph(
+              [matmul_node, add_node, sigmoid_node],
+              'viral_prediction_ensemble',
+              [input_features],
+              [output],
+              [W, b]
+          )
+          
+          model = helper.make_model(graph, producer_name='viral-prediction-team')
+          onnx.save(model, '/models/viral_prediction_ensemble.onnx')
+          print("Model saved successfully!")
+          EOF
+          
+          echo "Model loading complete"
+        volumeMounts:
+        - name: models-volume
+          mountPath: /models
+      volumes:
+      - name: models-volume
+        persistentVolumeClaim:
+          claimName: onnx-models-pvc
+---
+# HPA for ONNX Runtime
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: onnx-model-server-hpa
+  namespace: viral-prediction
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: onnx-model-server
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: nvidia.com/gpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: onnx_inference_latency_p95
+      target:
+        type: AverageValue
+        averageValue: "80m"  # 80ms target (20ms buffer for 100ms SLA)
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 25
+        periodSeconds: 60

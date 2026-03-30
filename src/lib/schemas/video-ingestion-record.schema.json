@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "VideoIngestionRecord",
+  "title": "VideoIngestionRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "platform",
+    "web_url",
+    "author_username",
+    "caption",
+    "duration_sec",
+    "created_at_platform",
+    "stats"
+  ],
+  "properties": {
+    "id": { "type": "string", "description": "Platform video id (tiktok_id)" },
+    "platform": { "type": "string", "enum": ["tiktok", "youtube", "instagram", "linkedin"] },
+    "web_url": { "type": "string", "format": "uri" },
+    "video_url": { "type": ["string", "null"], "format": "uri" },
+    "thumbnail_url": { "type": ["string", "null"], "format": "uri" },
+    "author_id": { "type": ["string", "null"] },
+    "author_username": { "type": "string" },
+    "caption": { "type": "string" },
+    "hashtags": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "sound_id": { "type": ["string", "null"] },
+    "duration_sec": { "type": "integer", "minimum": 0 },
+    "created_at_platform": { "type": "string", "format": "date-time" },
+    "niches": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "frameworks": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "template_id": { "type": ["string", "null"] },
+    "stats": { "$ref": "#/$defs/Stats" },
+    "rollup_48h": { "oneOf": [ { "$ref": "#/$defs/Stats" }, { "type": "null" } ] },
+    "derived": { "$ref": "#/$defs/Derived" },
+    "metadata": { "type": "object", "additionalProperties": true }
+  },
+  "$defs": {
+    "Stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["views", "likes", "comments", "shares"],
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "likes": { "type": "integer", "minimum": 0 },
+        "comments": { "type": "integer", "minimum": 0 },
+        "shares": { "type": "integer", "minimum": 0 },
+        "snapshot_at": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "Derived": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["engagement_rate", "velocity_score"],
+      "properties": {
+        "engagement_rate": { "type": "number", "minimum": 0 },
+        "velocity_score": { "type": "number", "minimum": 0 },
+        "viral_score": { "type": ["number", "null"], "minimum": 0 }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+

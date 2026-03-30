@@ -1,0 +1,221 @@
+{
+  "model_version": "v8",
+  "trained_at": "2026-03-14T18:19:01.161651",
+  "source": "supabase:training_features+scraped_videos",
+  "optimization": "Optuna 200 trials, 5-fold CV Spearman rho (TPE sampler)",
+  "changes_from_v7": "Removed 4 metadata features (not available at prediction time) and 16 zero-importance features. 48 content-only features remain. Optuna 200-trial optimization replaces RandomizedSearchCV.",
+  "features_removed": [
+    "audio_energy_variance",
+    "audio_music_ratio",
+    "audio_speech_ratio",
+    "audio_type_encoded",
+    "ffmpeg_has_audio",
+    "hook_audio_score",
+    "hook_pace_score",
+    "hook_tone_score",
+    "hook_visual_score",
+    "meta_creator_followers",
+    "meta_creator_followers_log",
+    "meta_has_viral_hashtag",
+    "meta_hashtag_count",
+    "speaking_rate_fast_segments",
+    "speaking_rate_slow_segments",
+    "speaking_rate_wpm_acceleration",
+    "speaking_rate_wpm_peak_count",
+    "speaking_rate_wpm_variance",
+    "text_positive_word_count",
+    "thumb_confidence"
+  ],
+  "feature_count": 48,
+  "feature_names": [
+    "ffmpeg_scene_changes",
+    "ffmpeg_cuts_per_second",
+    "ffmpeg_avg_motion",
+    "ffmpeg_color_variance",
+    "ffmpeg_brightness_avg",
+    "ffmpeg_contrast_score",
+    "ffmpeg_resolution_width",
+    "ffmpeg_resolution_height",
+    "ffmpeg_duration_seconds",
+    "ffmpeg_bitrate",
+    "ffmpeg_fps",
+    "audio_pitch_mean_hz",
+    "audio_pitch_variance",
+    "audio_pitch_range",
+    "audio_pitch_std_dev",
+    "audio_pitch_contour_slope",
+    "audio_loudness_mean_lufs",
+    "audio_loudness_range",
+    "audio_loudness_variance",
+    "audio_silence_ratio",
+    "audio_silence_count",
+    "speaking_rate_wpm",
+    "visual_scene_count",
+    "visual_avg_scene_duration",
+    "visual_score",
+    "thumb_brightness",
+    "thumb_contrast",
+    "thumb_colorfulness",
+    "thumb_overall_score",
+    "hook_score",
+    "hook_confidence",
+    "hook_text_score",
+    "hook_type_encoded",
+    "text_word_count",
+    "text_sentence_count",
+    "text_question_mark_count",
+    "text_exclamation_count",
+    "text_transcript_length",
+    "text_avg_sentence_length",
+    "text_unique_word_ratio",
+    "text_avg_word_length",
+    "text_syllable_count",
+    "text_flesch_reading_ease",
+    "text_has_cta",
+    "text_negative_word_count",
+    "text_emoji_count",
+    "meta_duration_seconds",
+    "meta_words_per_second"
+  ],
+  "dataset": {
+    "total_rows": 863,
+    "train_rows": 690,
+    "test_rows": 173,
+    "split": "stratified 80/20",
+    "niches": {
+      "side-hustles": 863
+    }
+  },
+  "target_stats": {
+    "min": 11.58,
+    "max": 91.72,
+    "mean": 49.87046349942062,
+    "std": 18.490382179855736,
+    "median": 49.06
+  },
+  "performance": {
+    "train": {
+      "spearman_rho": 0.9966633160044014,
+      "mae": 1.377395568239516,
+      "rmse": 1.9232865234830512,
+      "r2": 0.9889034335874598,
+      "within_5_dps_pct": 97.82608695652173,
+      "within_10_dps_pct": 100.0
+    },
+    "test": {
+      "spearman_rho": 0.6381372602995425,
+      "spearman_p_value": 3.620444508969664e-21,
+      "mae": 11.927966447510473,
+      "rmse": 14.893952074756255,
+      "r2": 0.409982539359921,
+      "within_5_dps_pct": 23.699421965317917,
+      "within_10_dps_pct": 49.13294797687861,
+      "tier_accuracy_pct": 46.82080924855491
+    },
+    "cv_5fold": {
+      "spearman_mean": 0.66846263323604,
+      "spearman_std": 0.033474164593391045,
+      "mae_mean": 10.828973638893903,
+      "mae_std": 0.4248727958074229,
+      "r2_mean": 0.4223308654387877,
+      "r2_std": 0.04981271851416298
+    },
+    "baseline_mean_predictor": {
+      "mae": 16.39355441065594
+    }
+  },
+  "hyperparameters": {
+    "n_estimators": 413,
+    "max_depth": 8,
+    "learning_rate": 0.025847050593221715,
+    "min_child_weight": 5,
+    "subsample": 0.7064306141071703,
+    "colsample_bytree": 0.716878246792974,
+    "reg_alpha": 0.6170624733980454,
+    "reg_lambda": 4.9455883361853195
+  },
+  "optuna_best_cv_spearman": 0.66846263323604,
+  "optuna_trials": 200,
+  "top_features": [
+    {
+      "feature": "ffmpeg_scene_changes",
+      "importance": 0.09718060493469238
+    },
+    {
+      "feature": "visual_scene_count",
+      "importance": 0.09417174756526947
+    },
+    {
+      "feature": "ffmpeg_resolution_height",
+      "importance": 0.07245627045631409
+    },
+    {
+      "feature": "ffmpeg_resolution_width",
+      "importance": 0.05693706125020981
+    },
+    {
+      "feature": "ffmpeg_avg_motion",
+      "importance": 0.044649600982666016
+    },
+    {
+      "feature": "ffmpeg_fps",
+      "importance": 0.0367402657866478
+    },
+    {
+      "feature": "text_exclamation_count",
+      "importance": 0.028680775314569473
+    },
+    {
+      "feature": "text_sentence_count",
+      "importance": 0.028088420629501343
+    },
+    {
+      "feature": "text_emoji_count",
+      "importance": 0.024554647505283356
+    },
+    {
+      "feature": "text_has_cta",
+      "importance": 0.024139849469065666
+    },
+    {
+      "feature": "text_negative_word_count",
+      "importance": 0.02388383261859417
+    },
+    {
+      "feature": "text_avg_word_length",
+      "importance": 0.0202947948127985
+    },
+    {
+      "feature": "meta_duration_seconds",
+      "importance": 0.020155539736151695
+    },
+    {
+      "feature": "text_transcript_length",
+      "importance": 0.01983739249408245
+    },
+    {
+      "feature": "ffmpeg_duration_seconds",
+      "importance": 0.019507315009832382
+    },
+    {
+      "feature": "meta_words_per_second",
+      "importance": 0.019442763179540634
+    },
+    {
+      "feature": "audio_pitch_mean_hz",
+      "importance": 0.016281630843877792
+    },
+    {
+      "feature": "speaking_rate_wpm",
+      "importance": 0.015640802681446075
+    },
+    {
+      "feature": "text_word_count",
+      "importance": 0.015534482896327972
+    },
+    {
+      "feature": "thumb_brightness",
+      "importance": 0.01532694324851036
+    }
+  ]
+}

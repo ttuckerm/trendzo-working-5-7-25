@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Base rules
+    match /{document=**} {
+      allow read: if request.auth != null;
+      allow write: if false; // Default deny, we'll specify exceptions
+    }
+    
+    // Sound collection rules
+    match /sounds/{soundId} {
+      // Anyone authenticated can read sounds
+      allow read: if request.auth != null;
+      
+      // Only admins and editors can create/update sounds
+      allow create, update: if request.auth != null && 
+        (request.auth.token.admin == true || request.auth.token.editor == true);
+      
+      // Expert annotations can only be modified by users with expert role
+      allow update: if request.auth != null && 
+        request.auth.token.expert == true &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['expertAnnotations', 'updatedAt']);
+    }
+    
+    // Sound trend reports rules
+    match /soundTrendReports/{reportId} {
+      // Anyone authenticated can read reports
+      allow read: if request.auth != null;
+      
+      // Only system and admins can create reports
+      allow create, update: if request.auth != null && 
+        (request.auth.token.admin == true || request.auth.token.system == true);
+    }
+    
+    // Template collection - reference for sound-template relationships
+    match /templates/{templateId} {
+      // Anyone authenticated can read templates
+      allow read: if request.auth != null;
+      
+      // Template-sound relationships can be updated by editors
+      allow update: if request.auth != null && 
+        (request.auth.token.admin == true || request.auth.token.editor == true) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasAny(['soundId', 'relatedSounds']);
+    }
+  }
+} 

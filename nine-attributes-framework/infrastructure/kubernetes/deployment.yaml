@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nine-attrs-extraction
+  labels:
+    app: nine-attrs-extraction
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nine-attrs-extraction
+  template:
+    metadata:
+      labels:
+        app: nine-attrs-extraction
+    spec:
+      containers:
+      - name: extraction
+        image: nine-attrs/extraction:v1.0.0
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+        env:
+        - name: REDIS_HOST
+          value: redis-service
+        - name: MODEL_PATH
+          value: /models
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 20
+          periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nine-attrs-ranker
+  labels:
+    app: nine-attrs-ranker
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: nine-attrs-ranker
+  template:
+    metadata:
+      labels:
+        app: nine-attrs-ranker
+    spec:
+      containers:
+      - name: ranker
+        image: nine-attrs/ranker:v1.0.0
+        ports:
+        - containerPort: 8001
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+        env:
+        - name: REDIS_HOST
+          value: redis-service
+        - name: CALIBRATION_PATH
+          value: /models/calibrations
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nine-attrs-extraction-service
+spec:
+  selector:
+    app: nine-attrs-extraction
+  ports:
+  - port: 8000
+    targetPort: 8000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nine-attrs-ranker-service
+spec:
+  selector:
+    app: nine-attrs-ranker
+  ports:
+  - port: 8001
+    targetPort: 8001
+  type: LoadBalancer
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nine-attrs-extraction-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nine-attrs-extraction
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+

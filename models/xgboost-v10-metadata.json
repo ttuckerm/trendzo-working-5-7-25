@@ -1,0 +1,255 @@
+{
+  "model_version": "v10",
+  "trained_at": "2026-03-20T12:46:25.005026",
+  "source": "supabase:training_features+scraped_videos",
+  "changes_from_v9": "Added 7 new features: creator_followers_log, post_hour_utc, post_day_of_week, specificity_score, instructional_density, has_step_structure, hedge_word_density. Same Optuna v8 hyperparameters.",
+  "new_features_added": [
+    "creator_followers_log",
+    "post_hour_utc",
+    "post_day_of_week",
+    "specificity_score",
+    "instructional_density",
+    "has_step_structure",
+    "hedge_word_density"
+  ],
+  "feature_count": 58,
+  "feature_names": [
+    "ffmpeg_scene_changes",
+    "ffmpeg_cuts_per_second",
+    "ffmpeg_avg_motion",
+    "ffmpeg_color_variance",
+    "ffmpeg_brightness_avg",
+    "ffmpeg_contrast_score",
+    "ffmpeg_resolution_width",
+    "ffmpeg_resolution_height",
+    "ffmpeg_duration_seconds",
+    "ffmpeg_bitrate",
+    "ffmpeg_fps",
+    "audio_pitch_mean_hz",
+    "audio_pitch_variance",
+    "audio_pitch_range",
+    "audio_pitch_std_dev",
+    "audio_pitch_contour_slope",
+    "audio_loudness_mean_lufs",
+    "audio_loudness_range",
+    "audio_loudness_variance",
+    "audio_silence_ratio",
+    "audio_silence_count",
+    "speaking_rate_wpm",
+    "visual_scene_count",
+    "visual_avg_scene_duration",
+    "visual_score",
+    "thumb_brightness",
+    "thumb_contrast",
+    "thumb_colorfulness",
+    "thumb_overall_score",
+    "hook_score",
+    "hook_confidence",
+    "hook_text_score",
+    "hook_type_encoded",
+    "text_word_count",
+    "text_sentence_count",
+    "text_question_mark_count",
+    "text_exclamation_count",
+    "text_transcript_length",
+    "text_avg_sentence_length",
+    "text_unique_word_ratio",
+    "text_avg_word_length",
+    "text_syllable_count",
+    "text_flesch_reading_ease",
+    "text_has_cta",
+    "text_negative_word_count",
+    "text_emoji_count",
+    "meta_duration_seconds",
+    "meta_words_per_second",
+    "text_overlay_density",
+    "visual_proof_ratio",
+    "vocal_confidence_composite",
+    "creator_followers_log",
+    "post_hour_utc",
+    "post_day_of_week",
+    "specificity_score",
+    "instructional_density",
+    "has_step_structure",
+    "hedge_word_density"
+  ],
+  "dataset": {
+    "total_rows": 863,
+    "train_rows": 813,
+    "holdout_rows": 50,
+    "holdout_method": "explicit ID list (stratified by tier: 10 per tier)",
+    "niches": {
+      "side-hustles": 863
+    }
+  },
+  "target_stats": {
+    "min": 11.58,
+    "max": 91.44,
+    "mean": 49.4580934809348,
+    "std": 18.052124192961344,
+    "median": 48.73
+  },
+  "performance": {
+    "train": {
+      "spearman_rho": 0.9969853329795864,
+      "spearman_p": 0.0,
+      "mae": 1.2495175731138108,
+      "rmse": 1.7909310108286869,
+      "r2": 0.9901575982607774,
+      "within_5_dps_pct": 98.0319803198032,
+      "within_10_dps_pct": 100.0,
+      "tier_accuracy_pct": 94.8339483394834,
+      "n": 813
+    },
+    "holdout": {
+      "spearman_rho": 0.7811284513805522,
+      "spearman_p": 2.1987455493156642e-11,
+      "mae": 13.132477957153322,
+      "rmse": 15.883132423074354,
+      "r2": 0.5451041103557712,
+      "within_5_dps_pct": 22.0,
+      "within_10_dps_pct": 38.0,
+      "tier_accuracy_pct": 54.0,
+      "n": 50
+    },
+    "cv_5fold": {
+      "spearman_mean": 0.7398594572860847,
+      "spearman_std": 0.026756400369296954,
+      "mae_mean": 9.519587797540956,
+      "mae_std": 0.4062051250587728,
+      "within_10_mean": 62.11694311898812
+    },
+    "baseline_mean_predictor": {
+      "mae": 21.559981303813043
+    }
+  },
+  "hyperparameters": {
+    "objective": "reg:squarederror",
+    "n_estimators": 413,
+    "max_depth": 8,
+    "learning_rate": 0.025847050593221715,
+    "min_child_weight": 5,
+    "subsample": 0.7064306141071703,
+    "colsample_bytree": 0.716878246792974,
+    "reg_alpha": 0.6170624733980454,
+    "reg_lambda": 4.9455883361853195
+  },
+  "delta_vs_v9": {
+    "cv_spearman": 0.08724300006036201,
+    "holdout_spearman": 0.010276110444177644,
+    "holdout_mae": -0.7242696929931611,
+    "holdout_within_10_pp": 0.0
+  },
+  "top_features": [
+    {
+      "feature": "creator_followers_log",
+      "importance": 0.15236541628837585
+    },
+    {
+      "feature": "visual_scene_count",
+      "importance": 0.10839147865772247
+    },
+    {
+      "feature": "ffmpeg_scene_changes",
+      "importance": 0.055373113602399826
+    },
+    {
+      "feature": "ffmpeg_resolution_height",
+      "importance": 0.054685063660144806
+    },
+    {
+      "feature": "ffmpeg_resolution_width",
+      "importance": 0.03501255810260773
+    },
+    {
+      "feature": "text_exclamation_count",
+      "importance": 0.02932475134730339
+    },
+    {
+      "feature": "text_negative_word_count",
+      "importance": 0.026618095114827156
+    },
+    {
+      "feature": "ffmpeg_fps",
+      "importance": 0.024051161482930183
+    },
+    {
+      "feature": "meta_duration_seconds",
+      "importance": 0.0221843458712101
+    },
+    {
+      "feature": "audio_pitch_mean_hz",
+      "importance": 0.02146691270172596
+    },
+    {
+      "feature": "visual_proof_ratio",
+      "importance": 0.019679822027683258
+    },
+    {
+      "feature": "ffmpeg_duration_seconds",
+      "importance": 0.01582706719636917
+    },
+    {
+      "feature": "text_sentence_count",
+      "importance": 0.0156152518466115
+    },
+    {
+      "feature": "specificity_score",
+      "importance": 0.015168318524956703
+    },
+    {
+      "feature": "meta_words_per_second",
+      "importance": 0.015019162558019161
+    },
+    {
+      "feature": "audio_pitch_std_dev",
+      "importance": 0.01439720205962658
+    },
+    {
+      "feature": "text_transcript_length",
+      "importance": 0.01356794685125351
+    },
+    {
+      "feature": "ffmpeg_avg_motion",
+      "importance": 0.013398419134318829
+    },
+    {
+      "feature": "hedge_word_density",
+      "importance": 0.013046137988567352
+    },
+    {
+      "feature": "ffmpeg_bitrate",
+      "importance": 0.01252422109246254
+    }
+  ],
+  "new_feature_importance": {
+    "creator_followers_log": {
+      "importance": 0.15236541628837585,
+      "rank": 1
+    },
+    "post_hour_utc": {
+      "importance": 0.010059362277388573,
+      "rank": 30
+    },
+    "post_day_of_week": {
+      "importance": 0.0058197383768856525,
+      "rank": 55
+    },
+    "specificity_score": {
+      "importance": 0.015168318524956703,
+      "rank": 14
+    },
+    "instructional_density": {
+      "importance": 0.011983223259449005,
+      "rank": 21
+    },
+    "has_step_structure": {
+      "importance": 0.0,
+      "rank": 58
+    },
+    "hedge_word_density": {
+      "importance": 0.013046137988567352,
+      "rank": 19
+    }
+  }
+}

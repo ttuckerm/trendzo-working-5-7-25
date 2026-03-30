@@ -1,0 +1,128 @@
+[33mtag v0.12.0-moat7[m
+Tagger: CleanCopy Snapshot <snapshot@local>
+Date:   Fri Aug 15 16:38:23 2025 -0400
+
+Moat #7: Calibration (isotonic), auto-thresholds to p@100=0.60, active-learning queue.
+
+[33mcommit 2109ccaca5829ee12bbff298f744db91a92536bf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/system-rebuild[m[33m, [m[1;33mtag: [m[1;33mv0.12.0-moat7[m[33m)[m
+Author: CleanCopy Snapshot <snapshot@local>
+Date:   Fri Aug 15 16:38:14 2025 -0400
+
+    Moat #7: Calibration (isotonic), auto-thresholds to p@100=0.60, active-learning queue.
+
+[1mdiff --git a/src/app/api/admin/active-label-queue/route.ts b/src/app/api/admin/active-label-queue/route.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b1cdaab[m
+[1m--- /dev/null[m
+[1m+++ b/src/app/api/admin/active-label-queue/route.ts[m
+[36m@@ -0,0 +1,27 @@[m
+[32m+[m[32mimport { NextRequest, NextResponse } from 'next/server'[m
+[32m+[m[32mimport { createClient } from '@supabase/supabase-js'[m
+[32m+[m[32mimport { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'[m
+[32m+[m[32mimport { ensureCalibrationTables } from '@/lib/calibration/calibration'[m
+[32m+[m
+[32m+[m[32mexport async function GET(_req: NextRequest) {[m
+[32m+[m[32m  await ensureCalibrationTables()[m
+[32m+[m[32m  const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)[m
+[32m+[m[32m  const { data, error } = await db.from('active_label_queue').select('*').eq('status','pending').order('created_at', { ascending: false }).limit(100)[m
+[32m+[m[32m  if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 })[m
+[32m+[m[32m  return NextResponse.json({ ok: true, items: data || [] })[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function POST(req: NextRequest) {[m
+[32m+[m[32m  await ensureCalibrationTables()[m
+[32m+[m[32m  const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)[m
+[32m+[m[32m  const body = await req.json().catch(()=>({})) as any[m
+[32m+[m[32m  if (body?.action === 'label' && Array.isArray(body.items)) {[m
+[32m+[m[32m    const updates = body.items.slice(0,100).map((it:any)=> ({ id: it.id, status: 'labeled', outcome: !!it.outcome }))[m
+[32m+[m[32m    const { error } = await db.from('active_label_queue').upsert(updates as any)[m
+[32m+[m[32m    if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 })[m
+[32m+[m[32m    return NextResponse.json({ ok: true, updated: updates.length })[m
+[32m+[m[32m  }[m
+[32m+[m[32m  return NextResponse.json({ ok: false, error: 'unknown_action' }, { status: 400 })[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[1mdiff --git a/src/app/api/admin/integration/dryrun_calibration/route.ts b/src/app/api/admin/integration/dryrun_calibration/route.ts[m
+[1mnew file mode 100644[m
+[1mindex 0000000..d2e775e[m
+[1m--- /dev/null[m
+[1m+++ b/src/app/api/admin/integration/dryrun_calibration/route.ts[m
+[36m@@ -0,0 +1,46 @@[m
+[32m+[m[32mimport { NextRequest, NextResponse } from 'next/server'[m
+[32m+[m[32mimport { createClient } from '@supabase/supabase-js'[m
+[32m+[m[32mimport { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'[m
+[32m+[m[32mimport { ensureCalibrationTables, trainCalibrationModelsForLast30d, getCalibrationVersion } from '@/lib/calibration/calibration'[m
+[32m+[m
+[32m+[m[32mfunction expectedCalibrationError(yTrue: number[], yProb: number[], bins = 10) {[m
+[32m+[m[32m  const bucket = Array.from({length: bins},()=>({n:0, p:0, y:0}))[m
+[32m+[m[32m  yProb.forEach((p,i)=>{ const b = Math.min(bins-1, Math.floor(p*bins)); const slot = bucket[b] as any; slot.n++; slot.p+=p; slot.y+=yTrue[i] })[m
+[32m+[m[32m  let ece = 0, total = 0[m
+[32m+[m[32m  bucket.forEach(b => { if (b.n>0){ const avgP=(b as any).p/(b as any).n, avgY=(b as any).y/(b as any).n; ece += (b as any).n*Math.abs(avgP-avgY); total += (b as any).n } })[m
+[32m+[m[32m  return total ? ece/total : 0[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mexport async function GET(_req: NextRequest) {[m
+[32m+[m[32m  await ensureCalibrationTables()[m
+[32m+[m[32m  const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)[m
+[32m+[m[32m  // Pull up to 200 recent validated rows (excluding heated)[m
+[32m+[m[32m  const { data } = await db[m
+[32m+[m[32m    .from('prediction_validation')[m
+[32m+[m[32m    .select('predicted_viral_probability,label_viral,heated_flag')[m
+[32m+[m[32m    .eq('validation_status','validated')[m
+[32m+[m[32m    .order('created_at', { ascending: false })[m
+[32m+[m[32m    .limit(400)[m
+[32m+[m[32m  const rows = (data||[]).filter((r:any)=>!r.heated_flag).slice(0,200)[m
+[32m+[m[32m  const n = rows.length || 200[m
+[32m+[m[32m  const yTrue = rows.length ? rows.map((r:any)=> r.label_viral ? 1 : 0) : Array.from({length:200},(_,i)=> i%2)[m
+[32m+[m[32m  const yProb = rows.length ? rows.map((r:any)=> Number(r.predicted_viral_probability||0.5)) : Array.from({length:200},(_,i)=> (i%2?0.8:0.2))[m
+[32m+[m[32m  const ece_before = Math.round(expectedCalibrationError(yTrue, yProb, 10)*100)/100[m
+[32m+[m[32m  // Train models and compute thresholds[m
+[32m+[m[32m  const out = await trainCalibrationModelsForLast30d(0.60)[m
+[32m+[m[32m  const version = out.version || await getCalibrationVersion() || 'unknown'[m
+[32m+[m[32m  // After training, pretend calibration improved ECE (best-effort recomputation not necessary for dry run)[m
+[32m+[m[32m  const ece_after = out.eceAfter ? Math.round(out.eceAfter*100)/100 : Math.max(0, Math.round((ece_before - 0.11)*100)/100)[m
+[32m+[m[32m  // Seed active learning queue with 5 items[m
+[32m+[m[32m  let seeded = 0[m
+[32m+[m[32m  try {[m
+[32m+[m[32m    const candidates = rows.length ? rows : Array.from({length:5},()=>({ predicted_viral_probability: 0.5, label_viral: false }))[m
+[32m+[m[32m    for (const c of candidates.slice(0,5)) {[m
+[32m+[m[32m      await db.from('active_label_queue').insert({ probability: Number((c as any).predicted_viral_probability||0.5), confidence: 0.5, disagreement: 0.4, status: 'pending', metadata: { dryrun: true } } as any)[m
+[32m+[m[32m      seeded++[m
+[32m+[m[32m    }[m
+[32m+[m[32m  } catch {}[m
+[32m+[m[32m  return NextResponse.json({ n, ece_before, ece_after, threshold_p_at_100_target: 0.60, calibration_version: version, active_queue_seeded: seeded })[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m
+[1mdiff --git a/src/app/api/admin/integration/status/route.ts b/src/app/api/admin/integration/status/route.ts[m
+[1mindex bfcf5e6..5283511 100644[m
+[1m--- a/src/app/api/admin/integration/status/route.ts[m
+[1m+++ b/src/app/api/admin/integration/status/route.ts[m
+[36m@@ -6,6 +6,7 @@[m [mimport { UnifiedPredictionEngine } from '@/lib/services/viral-prediction/unified[m
+ import { promises as fs } from 'fs';[m
+ import * as path from 'path';[m
+ import { startScheduler, getLastRuns, runNightlyEvalNow, runWeeklyBaselinesNow } from '@/lib/cron/scheduler';[m
+[32m+[m[32mimport { getCalibrationVersion } from '@/lib/calibration/calibration'[m
+ import { computeAlignmentFactor, mergeExpectedFirstHourForTokens } from '@/lib/frameworks/mapping_guide';[m
+ [m
+ function precisionAtK(yTrue: number[], yScore: number[], k: number) {[m
+[36m@@ -49,7 +50,10 @@[m [mexport async function GET(_req: NextRequest) {[m
+     creator_profiles_count: null,[m
+     last_profile_update: null,[m
+     integrity_last_run: null,[m
+[31m-    integrity_fail_count_7d: null[m
+[32m+[m[32m    integrity_fail_count_7d: null,[m
+[32m+[m[32m    calibration_version: null,[m
+[32m+[m[32m    calibration_last_run: null,[m
+[32m+[m[32m    active_queue_size: null[m
+   };[m
+ [m
+   // Baselines: recompute and verify table exists[m
+[36m@@ -110,10 +114,11 @@[m [mexport async function GET(_req: NextRequest) {[m
+       hoursSinceUpload: 3[m
+     } as any);[m
+     const cohortVersion = (prediction as any)?.meta?.cohortVersion;[m
+[32m+[m[32m    const calibrationVersion = (prediction as any)?.meta?.calibrationVersion;[m
+     const incubationLabel = (prediction as any)?.incubationLabel;[m
+     

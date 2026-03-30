@@ -1,0 +1,294 @@
+# Unicorn-Grade CI/CD Pipeline
+# Designed by: devops-troubleshooter + architect
+# Target: Support ≥95% accuracy, ≤100ms latency, 99.95% uptime
+
+name: Unicorn-Grade Viral Prediction CI/CD
+
+on:
+  push:
+    branches: [main, develop, feature/*]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: viral-prediction
+  NODE_VERSION: '18'
+  PYTHON_VERSION: '3.11'
+  
+jobs:
+  # ===== CODE QUALITY & SECURITY =====
+  quality-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      should-deploy: ${{ steps.quality-check.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript type checking
+        run: npm run type-check
+
+      - name: ESLint code quality
+        run: npm run lint
+
+      - name: Prettier code formatting
+        run: npm run format:check
+
+      - name: Security vulnerability scan
+        run: npm audit --audit-level high
+
+      - name: OWASP dependency check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'viral-prediction'
+          path: '.'
+          format: 'JSON'
+          
+      - name: Code quality gate
+        id: quality-check
+        run: |
+          # Quality gates for unicorn-grade standards
+          echo "Checking code quality gates..."
+          
+          # Check test coverage (target: ≥80%)
+          npm run test:coverage
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+            echo "✅ Test coverage: $COVERAGE% (≥80% required)"
+          else
+            echo "❌ Test coverage: $COVERAGE% (<80% required)"
+            exit 1
+          fi
+          
+          # Check for TODO/FIXME in production code
+          TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX\|HACK" src/ --exclude-dir=__tests__ | wc -l)
+          if [ $TODO_COUNT -gt 10 ]; then
+            echo "❌ Too many TODOs in production code: $TODO_COUNT (max 10)"
+            exit 1
+          fi
+          
+          echo "passed=true" >> $GITHUB_OUTPUT
+
+  # ===== ML MODEL VALIDATION =====
+  ml-validation:
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    strategy:
+      matrix:
+        test-type: [unit, integration, performance]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python for ML validation
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install ML dependencies
+        run: |
+          pip install -r requirements-ml.txt
+          pip install pytest pytest-cov pytest-xdist
+
+      - name: ML Unit Tests
+        if: matrix.test-type == 'unit'
+        run: |
+          pytest src/lib/services/ -v --cov=src/lib/services/ --cov-report=json
+          
+      - name: ML Integration Tests  
+        if: matrix.test-type == 'integration'
+        run: |
+          pytest tests/integration/ -v --timeout=300
+          
+      - name: ML Performance Tests
+        if: matrix.test-type == 'performance'
+        run: |
+          # Test inference latency (target: ≤100ms p95)
+          python tests/performance/test_inference_latency.py
+          
+          # Test accuracy on validation set (target: ≥95%)
+          python tests/performance/test_model_accuracy.py
+          
+          # Test throughput under load
+          python tests/performance/test_throughput.py
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: ml-test-results-${{ matrix.test-type }}
+          path: test-results/
+
+  # ===== CONTAINER BUILD & SECURITY SCAN =====
+  container-build:
+    runs-on: ubuntu-latest
+    needs: [quality-gate, ml-validation]
+    if: needs.quality-gate.outputs.should-deploy == 'true'
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=semver,pattern={{version}}
+
+      - name: Build and push container
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Container security scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ steps.meta.outputs.tags }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          
+      - name: Upload security scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ===== INFRASTRUCTURE DEPLOYMENT =====
+  infrastructure-deploy:
+    runs-on: ubuntu-latest
+    needs: container-build
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./infrastructure
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: ./infrastructure
+        env:
+          TF_VAR_image_tag: ${{ needs.container-build.outputs.image-tag }}
+
+      - name: Terraform Apply
+        run: terraform apply tfplan
+        working-directory: ./infrastructure
+
+  # ===== PERFORMANCE & ACCURACY VALIDATION =====
+  production-validation:
+    runs-on: ubuntu-latest
+    needs: infrastructure-deploy
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Production Health Check
+        run: |
+          # Wait for deployment to be ready
+          sleep 30
+          
+          # Health check
+          curl -f https://api.viral-prediction.com/health || exit 1
+          
+      - name: Performance Validation
+        run: |
+          # Latency test (target: ≤100ms p95)
+          python tests/production/test_latency.py
+          
+          # Throughput test (target: 1000 RPS)
+          python tests/production/test_throughput.py
+          
+          # Accuracy validation on live data
+          python tests/production/test_live_accuracy.py
+
+      - name: SLA Monitoring Setup
+        run: |
+          # Configure Prometheus alerts for SLAs
+          kubectl apply -f monitoring/prometheus-rules.yaml
+          
+          # Configure Grafana dashboards
+          kubectl apply -f monitoring/grafana-dashboards.yaml
+
+  # ===== SECURITY & COMPLIANCE =====
+  security-compliance:
+    runs-on: ubuntu-latest
+    needs: quality-gate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SAST Security Scan
+        uses: github/codeql-action/init@v3
+        with:
+          languages: typescript, python
+          
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+      - name: SOC2 Compliance Check
+        run: |
+          # Check for secrets in code
+          docker run --rm -v "$(pwd):/path" trufflesecurity/trufflehog:latest filesystem /path
+          
+          # Check for security misconfigurations
+          docker run --rm -v "$(pwd):/project" bridgecrew/checkov -d /project
+
+# ===== DEPLOYMENT GATES =====
+deployment-gates:
+  runs-on: ubuntu-latest
+  needs: [quality-gate, ml-validation, container-build]
+  if: always()
+  steps:
+    - name: Evaluate deployment readiness
+      run: |
+        echo "Deployment Gates Evaluation:"
+        echo "✅ Code Quality: ${{ needs.quality-gate.result }}"
+        echo "✅ ML Validation: ${{ needs.ml-validation.result }}"
+        echo "✅ Container Build: ${{ needs.container-build.result }}"
+        
+        if [[ "${{ needs.quality-gate.result }}" != "success" || 
+              "${{ needs.ml-validation.result }}" != "success" || 
+              "${{ needs.container-build.result }}" != "success" ]]; then
+          echo "❌ Deployment gates failed"
+          exit 1
+        fi
+        
+        echo "✅ All deployment gates passed - ready for production"

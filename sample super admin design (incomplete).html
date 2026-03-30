@@ -1,0 +1,3560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trendzo Super Admin - Mission Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Main Layout */
+        .app-container {
+            display: flex;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Master Navigation Sidebar */
+        .master-nav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 70px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.98) 0%, rgba(0, 0, 0, 0.92) 100%);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            z-index: 200;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+
+        .master-nav:hover {
+            width: 260px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.88) 100%);
+        }
+
+        .logo-container {
+            padding: 0 24px;
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #e50914, #ff1744);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 auto;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
+        }
+
+        .nav-items {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 18px 24px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: #ffffff;
+            background: linear-gradient(90deg, rgba(229, 9, 20, 0.15) 0%, transparent 100%);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #e50914, #ff1744);
+        }
+
+        .nav-icon {
+            width: 22px;
+            height: 22px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item:hover .nav-icon {
+            transform: scale(1.1);
+        }
+
+        .nav-label {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s ease;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 15px;
+        }
+
+        .master-nav:hover .nav-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Global Header */
+        .global-header {
+            position: fixed;
+            top: 0;
+            left: 70px;
+            right: 0;
+            height: 64px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 90;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .global-search {
+            position: relative;
+        }
+
+        .search-input {
+            width: 300px;
+            padding: 8px 16px 8px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(229, 9, 20, 0.5);
+            width: 400px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .notifications {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #e50914;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+            margin-top: 64px;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Studio View (Active) */
+        .studio-container {
+            height: 100%;
+            background: radial-gradient(ellipse at center top, #141414 0%, #0a0a0a 50%, #000000 100%);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Studio Header */
+        .studio-header {
+            padding: 32px 48px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+            position: sticky;
+            top: 0;
+            z-index: 20;
+        }
+
+        .studio-nav {
+            display: flex;
+            gap: 48px;
+            margin-bottom: 24px;
+        }
+
+        .studio-nav-item {
+            font-size: 24px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .studio-nav-item.active {
+            color: #fff;
+        }
+
+        .studio-nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e50914;
+            border-radius: 3px;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .filter-chip {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .filter-chip.active {
+            background: rgba(229, 9, 20, 0.2);
+            border-color: #e50914;
+            color: #fff;
+        }
+
+        /* Proving Grounds Content */
+        .proving-grounds-content {
+            padding: 0 40px 60px;
+        }
+
+        /* Analytics Dashboard Section */
+        .analytics-section {
+            margin-bottom: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            letter-spacing: -1px;
+        }
+
+        .system-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .overview-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overview-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, transparent, rgba(229, 9, 20, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+            border-color: rgba(229, 9, 20, 0.2);
+        }
+
+        .overview-card:hover::before {
+            opacity: 1;
+        }
+
+        .overview-number {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #ffffff, #cccccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .overview-label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .healthy { color: #667eea; }
+        .warning { color: #ffa726; }
+        .critical { color: #e50914; }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .module-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card:hover {
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(229, 9, 20, 0.2);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .module-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .module-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .module-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .status-healthy {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+        }
+
+        .status-warning {
+            background: rgba(255, 167, 38, 0.2);
+            color: #ffa726;
+        }
+
+        .module-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .metric-processed { color: #e50914; }
+        .metric-uptime { color: #667eea; }
+
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.6s ease;
+        }
+
+        .progress-healthy { background: linear-gradient(90deg, #667eea, #764ba2); }
+        .progress-warning { background: linear-gradient(90deg, #ffa726, #ff6b35); }
+
+        /* Template Discovery Engine Section */
+        .discovery-section {
+            margin-bottom: 80px;
+        }
+
+        .discovery-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .discovery-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(229, 9, 20, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .discovery-card:hover::before {
+            opacity: 1;
+        }
+
+        .discovery-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .discovery-icon {
+            font-size: 32px;
+        }
+
+        .discovery-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .discovery-description {
+            color: #aaa;
+            font-size: 16px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .discovery-button {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(45deg, #e50914, #ff1744);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(229, 9, 20, 0.4);
+        }
+
+        .discovery-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 48px rgba(229, 9, 20, 0.6);
+            background: linear-gradient(45deg, #ff1744, #ff3742);
+        }
+
+        /* Template Gallery Section */
+        .gallery-section {
+            margin-bottom: 80px;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        .template-showcase {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .showcase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .showcase-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .view-all-btn {
+            color: #e50914;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .view-all-btn:hover {
+            transform: translateX(4px);
+        }
+
+        /* Template Cards */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .template-tile {
+            height: 200px;
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        .template-tile:hover {
+            transform: scale(1.08) translateY(-8px);
+            box-shadow: 
+                0 32px 80px rgba(0, 0, 0, 0.9), 
+                0 0 60px rgba(229, 9, 20, 0.3),
+                inset 0 0 0 2px rgba(229, 9, 20, 0.4);
+            border-color: rgba(229, 9, 20, 0.6);
+            z-index: 50;
+        }
+
+        .tile-background {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            transition: all 0.5s ease;
+        }
+
+        .template-tile:hover .tile-background {
+            transform: scale(1.1);
+        }
+
+        .tile-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                transparent 0%,
+                rgba(0, 0, 0, 0.3) 40%,
+                rgba(0, 0, 0, 0.9) 100%
+            );
+        }
+
+        .tile-glow {
+            position: absolute;
+            inset: -20px;
+            background: radial-gradient(circle at center, rgba(229, 9, 20, 0.4) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: -1;
+        }
+
+        .template-tile:hover .tile-glow {
+            opacity: 1;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.4s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+
+        .template-tile:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ffffff, #f0f0f0);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: scale(0.7);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 16px 40px rgba(255, 255, 255, 0.3);
+        }
+
+        .template-tile:hover .play-button {
+            transform: scale(1);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 18px solid #000;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 6px;
+        }
+
+        .tile-stats {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
+        }
+
+        .template-tile:hover .tile-stats {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .viral-score {
+            background: rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 900;
+            color: #00ff88;
+        }
+
+        .tile-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px;
+            z-index: 5;
+        }
+
+        .tile-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+        }
+
+        .tile-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(229, 9, 20, 0.9);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 16px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Recipe Book (Template Gallery Sidebar) */
+        .recipe-book {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+        }
+
+        .recipe-header {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .recipe-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recipe-subtitle {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 16px;
+        }
+
+        .recipe-tabs {
+            display: flex;
+            gap: 4px;
+        }
+
+        .recipe-tab {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-tab.active {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .recipe-content {
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .recipe-row {
+            margin-bottom: 24px;
+        }
+
+        .recipe-row-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recipe-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .recipe-card {
+            background: linear-gradient(145deg, #222, #1a1a1a);
+            border-radius: 10px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .recipe-card:hover {
+            border-color: rgba(102, 126, 234, 0.3);
+            background: linear-gradient(145deg, #252525, #1d1d1d);
+            transform: translateX(4px);
+        }
+
+        .recipe-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .recipe-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .recipe-score {
+            font-size: 16px;
+            font-weight: 800;
+            color: #00ff88;
+        }
+
+        .recipe-description {
+            font-size: 12px;
+            color: #aaa;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .recipe-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .recipe-tag {
+            padding: 3px 8px;
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Proving Grounds Section */
+        .proving-section {
+            margin-bottom: 80px;
+        }
+
+        .controls-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 16px;
+        }
+
+        .filter-dropdown {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-dropdown:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-refresh {
+            padding: 14px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .btn-quick-predict {
+            padding: 14px 28px;
+            background: linear-gradient(45deg, #e50914, #ff1744);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+        }
+
+        .btn-quick-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+        }
+
+        /* Video Analysis Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .video-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .video-card:hover {
+            transform: scale(1.05) translateY(-8px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(229, 9, 20, 0.2);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .processing-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(229, 9, 20, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+
+        .video-content {
+            padding: 20px;
+        }
+
+        .video-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .video-creator {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .stat-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 48px;
+        }
+
+        .pagination-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(229, 9, 20, 0.3);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: #888;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* View Full Recipe Book Button */
+        .view-full-recipe {
+            margin-top: 24px;
+            padding: 14px;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-full-recipe:hover {
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-color: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .view-full-text {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Command Center Styles */
+        .command-center-container {
+            height: 100%;
+            background: radial-gradient(ellipse at center top, #141414 0%, #0a0a0a 50%, #000000 100%);
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .content-container {
+            padding: 40px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 48px;
+        }
+
+        .diagram-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .pillars-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .pillar-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 32px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .pillar-box:hover {
+            border-color: #e50914;
+            transform: translateY(-8px);
+            box-shadow: 0 24px 64px rgba(229, 9, 20, 0.3);
+        }
+
+        .pillar-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .pillar-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .pillar-components {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .component-category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-count {
+            background: rgba(229, 9, 20, 0.2);
+            color: #e50914;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* AI Brain Layer */
+        .ai-brain-layer {
+            position: relative;
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(229, 9, 20, 0.1) 100%);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 32px;
+        }
+
+        .ai-brain-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ai-capabilities {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .capability {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .capability-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .capability-desc {
+            font-size: 13px;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        /* Process Intelligence Flow */
+        .process-flow {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .flow-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .flow-step::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #e50914;
+        }
+
+        .flow-step:last-child::after {
+            display: none;
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(102, 126, 234, 0.2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 16px;
+        }
+
+        .flow-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .flow-desc {
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* Dashboard Widgets */
+        .dashboard-widgets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .widget {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .widget-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .widget-change {
+            font-size: 14px;
+            color: #00ff88;
+        }
+
+        .widget-change.negative {
+            color: #ff4757;
+        }
+
+        /* Component Section */
+        .component-section {
+            margin-bottom: 48px;
+        }
+
+        .component-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .component-title {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Settings Grid */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 32px;
+        }
+
+        .settings-sidebar {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: fit-content;
+        }
+
+        .settings-menu-item {
+            padding: 14px 18px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #888;
+        }
+
+        .settings-menu-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .settings-menu-item.active {
+            background: rgba(229, 9, 20, 0.2);
+            color: #fff;
+            border: 1px solid rgba(229, 9, 20, 0.3);
+        }
+
+        .settings-content {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Empty State Pattern */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #888;
+        }
+
+        .empty-desc {
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        .action-button {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .action-button.primary {
+            background: linear-gradient(45deg, #e50914, #ff1744);
+            border: none;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #666666;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888888;
+        }
+
+        /* Floating Action Buttons */
+        .floating-mic {
+            position: fixed;
+            bottom: 40px;
+            left: 40px;
+            width: 76px;
+            height: 76px;
+            background: linear-gradient(135deg, #e50914, #ff1744);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(229, 9, 20, 0.6);
+            z-index: 1000;
+            animation: pulse-mic 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-mic {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 8px 32px rgba(229, 9, 20, 0.6);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 12px 48px rgba(229, 9, 20, 0.8);
+            }
+        }
+
+        .floating-mic:hover {
+            transform: scale(1.1);
+            box-shadow: 0 16px 48px rgba(229, 9, 20, 0.8);
+        }
+
+        .mic-icon {
+            font-size: 32px;
+            color: white;
+        }
+
+        .floating-ai-brain {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 76px;
+            height: 76px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.6);
+            z-index: 1000;
+        }
+
+        .floating-ai-brain:hover {
+            transform: scale(1.1);
+            box-shadow: 0 16px 48px rgba(102, 126, 234, 0.8);
+        }
+
+        .brain-icon {
+            font-size: 32px;
+            color: white;
+        }
+
+        /* AI Brain Command Palette */
+        .ai-command-palette {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            width: 600px;
+            max-height: 400px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .ai-command-palette.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .command-input {
+            width: 100%;
+            padding: 20px 24px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 18px;
+            outline: none;
+        }
+
+        .command-input::placeholder {
+            color: #666;
+        }
+
+        .command-suggestions {
+            padding: 16px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .command-item {
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .command-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .command-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(229, 9, 20, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .command-text {
+            flex: 1;
+        }
+
+        .command-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .command-description {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .command-shortcut {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+        }
+
+        /* Overlay for command palette */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* The Armory Content (Hidden by default) */
+        .armory-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .armory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+        }
+
+        .armory-title-section h2 {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .armory-subtitle {
+            font-size: 16px;
+            color: #888;
+            font-weight: 500;
+        }
+
+        .armory-quick-stats {
+            display: flex;
+            gap: 48px;
+        }
+
+        .armory-stat {
+            text-align: center;
+        }
+
+        .armory-stat-number {
+            font-size: 36px;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .armory-stat-number.hot {
+            color: #e50914;
+        }
+
+        .armory-stat-number.new {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .armory-stat-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Category Filter Tabs */
+        .armory-filters {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 24px;
+        }
+
+        .category-tab {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-tab:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .category-tab.active {
+            background: rgba(229, 9, 20, 0.2);
+            border-color: #e50914;
+        }
+
+        .category-icon {
+            font-size: 20px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .category-count {
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .armory-view-options {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .armory-sort {
+            padding: 10px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .view-toggle {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            color: #666;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle.active {
+            background: rgba(229, 9, 20, 0.2);
+            border-color: #e50914;
+            color: #fff;
+        }
+
+        /* Arsenal Container */
+        .arsenal-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+        }
+
+        /* Framework Library Sidebar */
+        .framework-library {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 32px;
+            height: fit-content;
+        }
+
+        .library-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .library-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .framework-count {
+            font-size: 12px;
+            color: #666;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .framework-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .framework-category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .framework-category-header:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(4px);
+        }
+
+        .framework-icon {
+            font-size: 18px;
+        }
+
+        .framework-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .framework-badge {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Combo Section */
+        .combo-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 24px;
+        }
+
+        .combo-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .combo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .combo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .combo-item:hover {
+            background: rgba(229, 9, 20, 0.1);
+            transform: translateX(4px);
+        }
+
+        .combo-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .combo-success {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00ff88;
+        }
+
+        /* Weapons Grid */
+        .weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .weapon-card {
+            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+            border-radius: 16px;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .weapon-card:hover {
+            transform: scale(1.02) translateY(-4px);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(229, 9, 20, 0.2);
+        }
+
+        .hot-weapon:hover {
+            border-color: rgba(229, 9, 20, 0.5);
+        }
+
+        .cooling-weapon:hover {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .new-weapon:hover {
+            border-color: rgba(168, 85, 247, 0.5);
+        }
+
+        .weapon-status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .weapon-status-badge.cooling {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .weapon-status-badge.new {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+
+        .status-icon {
+            font-size: 14px;
+        }
+
+        .weapon-header {
+            margin-bottom: 24px;
+        }
+
+        .weapon-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .weapon-category {
+            font-size: 13px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .weapon-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .weapon-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-name {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .weapon-velocity {
+            margin-bottom: 20px;
+        }
+
+        .velocity-label {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .velocity-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .velocity-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d672);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .cooling-fill {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+
+        .new-fill {
+            background: linear-gradient(90deg, #a855f7, #9333ea);
+        }
+
+        .weapon-lifespan {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .lifespan-icon {
+            font-size: 16px;
+        }
+
+        .quick-deploy-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(45deg, #e50914, #ff1744);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        .quick-deploy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(229, 9, 20, 0.4);
+        }
+
+        .deploy-icon {
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Master Navigation - The Three Pillars -->
+        <nav class="master-nav">
+            <div class="logo-container">
+                <div class="logo">TZ</div>
+            </div>
+            
+            <div class="nav-items">
+                <div class="nav-item active">
+                    <span class="nav-icon">🎯</span>
+                    <span class="nav-label">COMMAND CENTER</span>
+                </div>
+                
+                <div class="nav-item">
+                    <span class="nav-icon">🎬</span>
+                    <span class="nav-label">THE STUDIO</span>
+                </div>
+                
+                <div class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-label">ENGINE ROOM</span>
+                </div>
+                
+                <div class="nav-item">
+                    <span class="nav-icon">🔧</span>
+                    <span class="nav-label">SETTINGS</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Floating Action Buttons -->
+        <div class="floating-mic">
+            <span class="mic-icon">🎤</span>
+        </div>
+
+        <div class="floating-ai-brain">
+            <span class="brain-icon">🧠</span>
+        </div>
+
+        <!-- Global Header -->
+        <header class="global-header">
+            <div class="header-left">
+                <h1 class="page-title">The Studio</h1>
+            </div>
+            
+            <div class="header-right">
+                <div class="global-search">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search videos, templates, analytics...">
+                </div>
+                
+                <div class="notifications">
+                    <span>🔔</span>
+                    <span class="notification-dot"></span>
+                </div>
+                
+                <div class="user-profile">
+                    <span>Admin User</span>
+                    <div class="user-avatar"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Studio View -->
+            <div class="studio-container" id="studioContainer" style="display: none;">
+                <!-- Studio Header with Navigation -->
+                <div class="studio-header">
+                    <nav class="studio-nav">
+                        <div class="studio-nav-item active" onclick="showProvingGrounds()">The Proving Grounds</div>
+                        <div class="studio-nav-item" onclick="showArmory()">The Armory</div>
+                    </nav>
+                </div>
+
+                <!-- Proving Grounds Content -->
+                <div class="proving-grounds-content" id="provingGroundsContent">
+                    <!-- Analytics Dashboard Section -->
+                    <section class="analytics-section">
+                        <div class="section-header">
+                            <h2 class="section-title">📊 System Analytics</h2>
+                        </div>
+
+                        <!-- System Overview Cards -->
+                        <div class="system-overview">
+                            <div class="overview-card">
+                                <div class="overview-number">1,142,757</div>
+                                <div class="overview-label">Total Processed</div>
+                            </div>
+                            <div class="overview-card">
+                                <div class="overview-number healthy">10</div>
+                                <div class="overview-label">Healthy</div>
+                            </div>
+                            <div class="overview-card">
+                                <div class="overview-number warning">1</div>
+                                <div class="overview-label">Warning</div>
+                            </div>
+                            <div class="overview-card">
+                                <div class="overview-number critical">0</div>
+                                <div class="overview-label">Critical</div>
+                            </div>
+                        </div>
+
+                        <!-- Modules Grid -->
+                        <div class="modules-grid">
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Dashboard Aggregator</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">24,891</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Draft Video Analyzer</h3>
+                                    <div class="module-status status-warning">⚠</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">156</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">85%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-warning" style="width: 85%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Marketing Content Creator</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">89</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Performance Validator</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">22,344</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Prediction Engine</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">24,891</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Recipe Book Generator</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">365</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Script Intelligence Module</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">18,993</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">System Health Monitor</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">999,999</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Template Discovery Engine</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">1,247</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">TikTok Scraper</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">24,891</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Viral Pattern Analyzer</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">24,891</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="module-card">
+                                <div class="module-header">
+                                    <h3 class="module-name">Process Intelligence</h3>
+                                    <div class="module-status status-healthy">✓</div>
+                                </div>
+                                <div class="module-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Processed</span>
+                                        <span class="metric-value metric-processed">12,456</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Uptime</span>
+                                        <span class="metric-value metric-uptime">100%</span>
+                                    </div>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill progress-healthy" style="width: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Template Discovery Engine Section -->
+                    <section class="discovery-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🔬 Template Discovery Engine</h2>
+                        </div>
+
+                        <div class="discovery-card">
+                            <div class="discovery-header">
+                                <span class="discovery-icon">🔬</span>
+                                <h3 class="discovery-title">Template Discovery Engine</h3>
+                            </div>
+                            <p class="discovery-description">
+                                Analyze viral videos to discover new patterns and templates
+                            </p>
+                            <button class="discovery-button">
+                                <span>🚀</span>
+                                <span>Run Template Discovery</span>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Template Gallery Section -->
+                    <section class="gallery-section">
+                        <div class="section-header">
+                            <h2 class="section-title">📚 Template Gallery</h2>
+                        </div>
+
+                        <div class="gallery-container">
+                            <!-- Main Template Showcase -->
+                            <div class="template-showcase">
+                                <div class="showcase-header">
+                                    <h3 class="showcase-title">🔥 Trending Templates</h3>
+                                    <span class="view-all-btn">Explore All →</span>
+                                </div>
+
+                                <div class="template-grid">
+                                    <div class="template-tile">
+                                        <div class="tile-background"></div>
+                                        <div class="tile-overlay"></div>
+                                        <div class="tile-glow"></div>
+                                        <div class="play-overlay">
+                                            <div class="play-button">
+                                                <div class="play-icon"></div>
+                                            </div>
+                                        </div>
+                                        <div class="tile-stats">
+                                            <span class="viral-score">97%</span>
+                                        </div>
+                                        <div class="tile-content">
+                                            <h4 class="tile-title">POV Experience</h4>
+                                            <span class="tile-tag">🎭 STORYTELLING</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="template-tile">
+                                        <div class="tile-background"></div>
+                                        <div class="tile-overlay"></div>
+                                        <div class="tile-glow"></div>
+                                        <div class="play-overlay">
+                                            <div class="play-button">
+                                                <div class="play-icon"></div>
+                                            </div>
+                                        </div>
+                                        <div class="tile-stats">
+                                            <span class="viral-score">94%</span>
+                                        </div>
+                                        <div class="tile-content">
+                                            <h4 class="tile-title">Transformation Reveal</h4>
+                                            <span class="tile-tag">🎵 TRENDING AUDIO</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="template-tile">
+                                        <div class="tile-background"></div>
+                                        <div class="tile-overlay"></div>
+                                        <div class="tile-glow"></div>
+                                        <div class="play-overlay">
+                                            <div class="play-button">
+                                                <div class="play-icon"></div>
+                                            </div>
+                                        </div>
+                                        <div class="tile-stats">
+                                            <span class="viral-score">91%</span>
+                                        </div>
+                                        <div class="tile-content">
+                                            <h4 class="tile-title">Quick Tutorial</h4>
+                                            <span class="tile-tag">📈 HIGH SAVES</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recipe Book Sidebar -->
+                            <div class="recipe-book">
+                                <div class="recipe-header">
+                                    <h3 class="recipe-title">
+                                        📚 Recipe Book
+                                    </h3>
+                                    <p class="recipe-subtitle">Discover and analyze viral templates</p>
+                                    
+                                    <div class="recipe-tabs">
+                                        <div class="recipe-tab active">Trending</div>
+                                        <div class="recipe-tab">New</div>
+                                        <div class="recipe-tab">Favorites</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="recipe-content">
+                                    <!-- Trending Templates Row -->
+                                    <div class="recipe-row">
+                                        <h4 class="recipe-row-title">🔥 Trending Templates</h4>
+                                        <div class="recipe-cards">
+                                            <div class="recipe-card">
+                                                <div class="recipe-card-header">
+                                                    <div class="recipe-name">POV Experience</div>
+                                                    <div class="recipe-score">97%</div>
+                                                </div>
+                                                <p class="recipe-description">First-person storytelling that creates instant connection</p>
+                                                <div class="recipe-tags">
+                                                    <span class="recipe-tag">Viral</span>
+                                                    <span class="recipe-tag">Storytelling</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="recipe-card">
+                                                <div class="recipe-card-header">
+                                                    <div class="recipe-name">Transformation Reveal</div>
+                                                    <div class="recipe-score">94%</div>
+                                                </div>
+                                                <p class="recipe-description">Before/after format driving massive engagement</p>
+                                                <div class="recipe-tags">
+                                                    <span class="recipe-tag">Transform</span>
+                                                    <span class="recipe-tag">Visual</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="recipe-card">
+                                                <div class="recipe-card-header">
+                                                    <div class="recipe-name">Quick Tutorial</div>
+                                                    <div class="recipe-score">91%</div>
+                                                </div>
+                                                <p class="recipe-description">60-second educational content with high saves</p>
+                                                <div class="recipe-tags">
+                                                    <span class="recipe-tag">Education</span>
+                                                    <span class="recipe-tag">Tutorial</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- New Discoveries Row -->
+                                    <div class="recipe-row">
+                                        <h4 class="recipe-row-title">✨ New Discoveries</h4>
+                                        <div class="recipe-cards">
+                                            <div class="recipe-card">
+                                                <div class="recipe-card-header">
+                                                    <div class="recipe-name">Comedy Sketch</div>
+                                                    <div class="recipe-score">96%</div>
+                                                </div>
+                                                <p class="recipe-description">Relatable humor with explosive share potential</p>
+                                                <div class="recipe-tags">
+                                                    <span class="recipe-tag">Comedy</span>
+                                                    <span class="recipe-tag">Relatable</span>
+                                                </div>
+                                            </div>
+
+                                            <div class="recipe-card">
+                                                <div class="recipe-card-header">
+                                                    <div class="recipe-name">Behind the Scenes</div>
+                                                    <div class="recipe-score">89%</div>
+                                                </div>
+                                                <p class="recipe-description">Exclusive content building authentic connections</p>
+                                                <div class="recipe-tags">
+                                                    <span class="recipe-tag">Authentic</span>
+                                                    <span class="recipe-tag">Exclusive</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- View Full Recipe Book Button -->
+                                    <div class="view-full-recipe">
+                                        <div class="view-full-text">
+                                            📖 View Full Recipe Book →
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Proving Grounds Section -->
+                    <section class="proving-section">
+                        <div class="section-header">
+                            <h2 class="section-title">🎯 Proving Grounds</h2>
+                        </div>
+
+                        <!-- Controls Bar -->
+                        <div class="controls-bar">
+                            <div class="filter-controls">
+                                <select class="filter-dropdown">
+                                    <option>Most Recent</option>
+                                    <option>Highest Score</option>
+                                    <option>Trending</option>
+                                </select>
+                                <select class="filter-dropdown">
+                                    <option>All Platforms</option>
+                                    <option>TikTok</option>
+                                    <option>Instagram</option>
+                                    <option>YouTube</option>
+                                </select>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button class="btn-refresh">
+                                    🔄 Refresh
+                                </button>
+                                <button class="btn-quick-predict">
+                                    Quick Predict
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Video Analysis Grid -->
+                        <div class="video-grid">
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <div class="video-placeholder">
+                                        Video content analysis in progress...
+                                    </div>
+                                    <div class="processing-indicator">%</div>
+                                </div>
+                                <div class="video-content">
+                                    <h3 class="video-title">POV Storytelling Analysis</h3>
+                                    <p class="video-creator">@Unknown Creator</p>
+                                    <div class="video-stats">
+                                        <div class="stat-group">
+                                            <span class="stat">👁️ 14.1K</span>
+                                            <span class="stat">❤️ 704</span>
+                                        </div>
+                                        <div class="stat-group">
+                                            <span class="stat">💬 140</span>
+                                            <span class="stat">📤 28</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <div class="video-placeholder">
+                                        Video content analysis in progress...
+                                    </div>
+                                    <div class="processing-indicator">%</div>
+                                </div>
+                                <div class="video-content">
+                                    <h3 class="video-title">Transformation Format</h3>
+                                    <p class="video-creator">@Unknown Creator</p>
+                                    <div class="video-stats">
+                                        <div class="stat-group">
+                                            <span class="stat">👁️ 75.6K</span>
+                                            <span class="stat">❤️ 3.8K</span>
+                                        </div>
+                                        <div class="stat-group">
+                                            <span class="stat">💬 756</span>
+                                            <span class="stat">📤 151</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <div class="video-placeholder">
+                                        Video content analysis in progress...
+                                    </div>
+                                    <div class="processing-indicator">%</div>
+                                </div>
+                                <div class="video-content">
+                                    <h3 class="video-title">Comedy Timing Analysis</h3>
+                                    <p class="video-creator">@Unknown Creator</p>
+                                    <div class="video-stats">
+                                        <div class="stat-group">
+                                            <span class="stat">👁️ 42.3K</span>
+                                            <span class="stat">❤️ 2.1K</span>
+                                        </div>
+                                        <div class="stat-group">
+                                            <span class="stat">💬 423</span>
+                                            <span class="stat">📤 84</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="video-card">
+                                <div class="video-thumbnail">
+                                    <div class="video-placeholder">
+                                        Video content analysis in progress...
+                                    </div>
+                                    <div class="processing-indicator">%</div>
+                                </div>
+                                <div class="video-content">
+                                    <h3 class="video-title">Tutorial Format Study</h3>
+                                    <p class="video-creator">@Unknown Creator</p>
+                                    <div class="video-stats">
+                                        <div class="stat-group">
+                                            <span class="stat">👁️ 28.9K</span>
+                                            <span class="stat">❤️ 1.4K</span>
+                                        </div>
+                                        <div class="stat-group">
+                                            <span class="stat">💬 289</span>
+                                            <span class="stat">📤 57</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="pagination">
+                            <button class="pagination-btn" disabled>← Previous</button>
+                            <span class="page-info">Page 1 of 10</span>
+                            <button class="pagination-btn">Next →</button>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- The Armory Content (Hidden) -->
+                <div class="armory-content" id="armoryContent">
+                    <!-- Armory Header -->
+                    <div class="armory-header">
+                        <div class="armory-title-section">
+                            <h2 class="section-title">🛡️ The Armory</h2>
+                            <p class="armory-subtitle">Your viral template weapons vault - Deploy battle-tested formats with confidence</p>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="armory-quick-stats">
+                            <div class="armory-stat">
+                                <span class="armory-stat-number">248</span>
+                                <span class="armory-stat-label">Total Weapons</span>
+                            </div>
+                            <div class="armory-stat">
+                                <span class="armory-stat-number hot">67</span>
+                                <span class="armory-stat-label">Hot Templates</span>
+                            </div>
+                            <div class="armory-stat">
+                                <span class="armory-stat-number new">12</span>
+                                <span class="armory-stat-label">New Discoveries</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Tabs -->
+                    <div class="armory-filters">
+                        <div class="category-tabs">
+                            <div class="category-tab active">
+                                <span class="category-icon">🔥</span>
+                                <span class="category-name">HOT</span>
+                                <span class="category-count">67</span>
+                            </div>
+                            <div class="category-tab">
+                                <span class="category-icon">🧊</span>
+                                <span class="category-name">COOLING</span>
+                                <span class="category-count">124</span>
+                            </div>
+                            <div class="category-tab">
+                                <span class="category-icon">✨</span>
+                                <span class="category-name">NEW</span>
+                                <span class="category-count">12</span>
+                            </div>
+                            <div class="category-tab">
+                                <span class="category-icon">💀</span>
+                                <span class="category-name">RETIRED</span>
+                                <span class="category-count">45</span>
+                            </div>
+                        </div>
+                        
+                        <div class="armory-view-options">
+                            <select class="armory-sort">
+                                <option>Sort by Success Rate</option>
+                                <option>Sort by Recent Use</option>
+                                <option>Sort by Viral Velocity</option>
+                                <option>Sort by Deployments</option>
+                            </select>
+                            <button class="view-toggle grid-view active">⊞</button>
+                            <button class="view-toggle list-view">☰</button>
+                        </div>
+                    </div>
+
+                    <!-- Main Arsenal Grid -->
+                    <div class="arsenal-container">
+                        <!-- Framework Library Sidebar -->
+                        <aside class="framework-library">
+                            <div class="library-header">
+                                <h3 class="library-title">
+                                    <span>📚</span>
+                                    Framework Library
+                                </h3>
+                                <span class="framework-count">48 Frameworks</span>
+                            </div>
+                            
+                            <div class="framework-categories">
+                                <div class="framework-category">
+                                    <div class="framework-category-header">
+                                        <span class="framework-icon">🎭</span>
+                                        <span class="framework-name">Storytelling</span>
+                                        <span class="framework-badge">12</span>
+                                    </div>
+                                </div>
+                                <div class="framework-category">
+                                    <div class="framework-category-header">
+                                        <span class="framework-icon">🎵</span>
+                                        <span class="framework-name">Music-Driven</span>
+                                        <span class="framework-badge">8</span>
+                                    </div>
+                                </div>
+                                <div class="framework-category">
+                                    <div class="framework-category-header">
+                                        <span class="framework-icon">😂</span>
+                                        <span class="framework-name">Comedy</span>
+                                        <span class="framework-badge">10</span>
+                                    </div>
+                                </div>
+                                <div class="framework-category">
+                                    <div class="framework-category-header">
+                                        <span class="framework-icon">🎓</span>
+                                        <span class="framework-name">Educational</span>
+                                        <span class="framework-badge">9</span>
+                                    </div>
+                                </div>
+                                <div class="framework-category">
+                                    <div class="framework-category-header">
+                                        <span class="framework-icon">💫</span>
+                                        <span class="framework-name">Transformation</span>
+                                        <span class="framework-badge">9</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="combo-section">
+                                <h4 class="combo-title">🎯 Battle-Tested Combos</h4>
+                                <div class="combo-list">
+                                    <div class="combo-item">
+                                        <span class="combo-name">POV + Trending Audio</span>
+                                        <span class="combo-success">94%</span>
+                                    </div>
+                                    <div class="combo-item">
+                                        <span class="combo-name">Tutorial + Quick Cuts</span>
+                                        <span class="combo-success">91%</span>
+                                    </div>
+                                    <div class="combo-item">
+                                        <span class="combo-name">Transformation + Reveal</span>
+                                        <span class="combo-success">89%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
+
+                        <!-- Weapon Cards Grid -->
+                        <div class="weapons-grid">
+                            <!-- Hot Template Card -->
+                            <div class="weapon-card hot-weapon">
+                                <div class="weapon-status-badge">
+                                    <span class="status-icon">🔥</span>
+                                    <span class="status-text">HOT</span>
+                                </div>
+                                
+                                <div class="weapon-header">
+                                    <h4 class="weapon-name">POV: You're the Main Character</h4>
+                                    <div class="weapon-category">Storytelling</div>
+                                </div>
+                                
+                                <div class="weapon-stats-grid">
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">92%</span>
+                                        <span class="stat-name">Success Rate</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">1.2M</span>
+                                        <span class="stat-name">Avg Views</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">847</span>
+                                        <span class="stat-name">Deployments</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">2h ago</span>
+                                        <span class="stat-name">Last Used</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-velocity">
+                                    <span class="velocity-label">Viral Velocity</span>
+                                    <div class="velocity-bar">
+                                        <div class="velocity-fill" style="width: 92%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-lifespan">
+                                    <span class="lifespan-icon">⏰</span>
+                                    <span class="lifespan-text">14 days remaining</span>
+                                </div>
+                                
+                                <button class="quick-deploy-btn">
+                                    <span class="deploy-icon">🚀</span>
+                                    <span>Quick Deploy</span>
+                                </button>
+                            </div>
+
+                            <!-- Cooling Template Card -->
+                            <div class="weapon-card cooling-weapon">
+                                <div class="weapon-status-badge cooling">
+                                    <span class="status-icon">🧊</span>
+                                    <span class="status-text">COOLING</span>
+                                </div>
+                                
+                                <div class="weapon-header">
+                                    <h4 class="weapon-name">Before & After Transformation</h4>
+                                    <div class="weapon-category">Visual Impact</div>
+                                </div>
+                                
+                                <div class="weapon-stats-grid">
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">78%</span>
+                                        <span class="stat-name">Success Rate</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">890K</span>
+                                        <span class="stat-name">Avg Views</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">1,234</span>
+                                        <span class="stat-name">Deployments</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">5h ago</span>
+                                        <span class="stat-name">Last Used</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-velocity">
+                                    <span class="velocity-label">Viral Velocity</span>
+                                    <div class="velocity-bar">
+                                        <div class="velocity-fill cooling-fill" style="width: 78%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-lifespan">
+                                    <span class="lifespan-icon">⏰</span>
+                                    <span class="lifespan-text">Starting to cool down</span>
+                                </div>
+                                
+                                <button class="quick-deploy-btn">
+                                    <span class="deploy-icon">🚀</span>
+                                    <span>Quick Deploy</span>
+                                </button>
+                            </div>
+
+                            <!-- New Template Card -->
+                            <div class="weapon-card new-weapon">
+                                <div class="weapon-status-badge new">
+                                    <span class="status-icon">✨</span>
+                                    <span class="status-text">NEW</span>
+                                </div>
+                                
+                                <div class="weapon-header">
+                                    <h4 class="weapon-name">Reverse Tutorial Reveal</h4>
+                                    <div class="weapon-category">Educational</div>
+                                </div>
+                                
+                                <div class="weapon-stats-grid">
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">94%</span>
+                                        <span class="stat-name">Success Rate</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">1.5M</span>
+                                        <span class="stat-name">Avg Views</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">8</span>
+                                        <span class="stat-name">Deployments</span>
+                                    </div>
+                                    <div class="weapon-stat">
+                                        <span class="stat-value">New</span>
+                                        <span class="stat-name">Last Used</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-velocity">
+                                    <span class="velocity-label">Viral Velocity</span>
+                                    <div class="velocity-bar">
+                                        <div class="velocity-fill new-fill" style="width: 94%;"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="weapon-lifespan">
+                                    <span class="lifespan-icon">🚨</span>
+                                    <span class="lifespan-text">High potential - Use now!</span>
+                                </div>
+                                
+                                <button class="quick-deploy-btn">
+                                    <span class="deploy-icon">🚀</span>
+                                    <span>Quick Deploy</span>
+                                </button>
+                            </div>
+
+                            <!-- More weapon cards would go here... -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Command Center View -->
+            <div class="command-center-container" id="commandContainer" style="display: block;">
+                <div class="content-container">
+                    <!-- Architecture Overview -->
+                    <div class="architecture-diagram">
+                        <h2 class="diagram-title">Trendzo Super Admin Architecture</h2>
+                        
+                        <!-- Three Pillars -->
+                        <div class="pillars-container">
+                            <!-- The Studio -->
+                            <div class="pillar-box">
+                                <div class="pillar-icon">🎬</div>
+                                <div class="pillar-name">The Studio</div>
+                                <div class="pillar-components">
+                                    <div class="component-category">
+                                        <span>Content Analysis</span>
+                                        <span class="category-count">15</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>Creation Tools</span>
+                                        <span class="category-count">18</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>Publishing</span>
+                                        <span class="category-count">12</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Command Center -->
+                            <div class="pillar-box">
+                                <div class="pillar-icon">🎯</div>
+                                <div class="pillar-name">Command Center</div>
+                                <div class="pillar-components">
+                                    <div class="component-category">
+                                        <span>Dashboards</span>
+                                        <span class="category-count">15</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>User Management</span>
+                                        <span class="category-count">12</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>Alerts & Monitoring</span>
+                                        <span class="category-count">11</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Engine Room -->
+                            <div class="pillar-box">
+                                <div class="pillar-icon">⚙️</div>
+                                <div class="pillar-name">Engine Room</div>
+                                <div class="pillar-components">
+                                    <div class="component-category">
+                                        <span>Data Processing</span>
+                                        <span class="category-count">14</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>API & Integrations</span>
+                                        <span class="category-count">15</span>
+                                    </div>
+                                    <div class="component-category">
+                                        <span>System Operations</span>
+                                        <span class="category-count">13</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Brain Layer -->
+                    <div class="ai-brain-layer">
+                        <h3 class="ai-brain-title">
+                            <span>🧠</span>
+                            AI Brain - Omniscient Intelligence Layer
+                        </h3>
+                        <div class="ai-capabilities">
+                            <div class="capability">
+                                <div class="capability-title">Predictive Analytics</div>
+                                <div class="capability-desc">Anticipates user needs and suggests optimal workflows</div>
+                            </div>
+                            <div class="capability">
+                                <div class="capability-title">Natural Language Processing</div>
+                                <div class="capability-desc">Voice commands and conversational UI across all pillars</div>
+                            </div>
+                            <div class="capability">
+                                <div class="capability-title">Pattern Recognition</div>
+                                <div class="capability-desc">Identifies viral trends before they peak</div>
+                            </div>
+                            <div class="capability">
+                                <div class="capability-title">Automated Optimization</div>
+                                <div class="capability-desc">Continuously improves content performance</div>
+                            </div>
+                            <div class="capability">
+                                <div class="capability-title">Smart Routing</div>
+                                <div class="capability-desc">Directs users to relevant tools based on intent</div>
+                            </div>
+                            <div class="capability">
+                                <div class="capability-title">Real-time Insights</div>
+                                <div class="capability-desc">Surfaces critical information proactively</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Process Intelligence Flow -->
+                    <div class="process-flow">
+                        <h3 class="flow-title">Process Intelligence Layer - Data Flow</h3>
+                        <div class="flow-diagram">
+                            <div class="flow-step">
+                                <div class="flow-icon">📥</div>
+                                <div class="flow-name">Input</div>
+                                <div class="flow-desc">Scraping & Collection</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-icon">🔄</div>
+                                <div class="flow-name">Processing</div>
+                                <div class="flow-desc">Analysis & ML</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-icon">🧠</div>
+                                <div class="flow-name">Intelligence</div>
+                                <div class="flow-desc">Pattern Recognition</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-icon">📊</div>
+                                <div class="flow-name">Insights</div>
+                                <div class="flow-desc">Actionable Data</div>
+                            </div>
+                            <div class="flow-step">
+                                <div class="flow-icon">🚀</div>
+                                <div class="flow-name">Action</div>
+                                <div class="flow-desc">Automated Response</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Dashboard Widgets -->
+                    <div class="component-section">
+                        <div class="component-header">
+                            <h3 class="component-title">
+                                <span>📊</span>
+                                Live System Metrics
+                            </h3>
+                        </div>
+                        
+                        <div class="dashboard-widgets">
+                            <div class="widget">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">
+                                        <span>🚀</span>
+                                        Viral Predictions
+                                    </h3>
+                                </div>
+                                <div class="widget-value">247</div>
+                                <div class="widget-change">+23 today</div>
+                            </div>
+
+                            <div class="widget">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">
+                                        <span>📈</span>
+                                        Accuracy Rate
+                                    </h3>
+                                </div>
+                                <div class="widget-value">94.2%</div>
+                                <div class="widget-change">+2.3% this week</div>
+                            </div>
+
+                            <div class="widget">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">
+                                        <span>⚡</span>
+                                        Videos Processed
+                                    </h3>
+                                </div>
+                                <div class="widget-value">1.14M</div>
+                                <div class="widget-change">24,891 today</div>
+                            </div>
+
+                            <div class="widget">
+                                <div class="widget-header">
+                                    <h3 class="widget-title">
+                                        <span>👥</span>
+                                        Active Users
+                                    </h3>
+                                </div>
+                                <div class="widget-value">1,247</div>
+                                <div class="widget-change">+127 new</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Engine Room View -->
+            <div class="engine-room-container" id="engineContainer" style="display: none;">
+                <div class="content-container">
+                    <div class="component-section">
+                        <div class="component-header">
+                            <h3 class="component-title">
+                                <span>⚙️</span>
+                                System Operations
+                            </h3>
+                        </div>
+                        
+                        <div class="empty-state">
+                            <div class="empty-icon">⚙️</div>
+                            <div class="empty-title">Engine Room</div>
+                            <div class="empty-desc">Technical infrastructure and system operations will appear here</div>
+                            <button class="action-button primary">View System Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings View -->
+            <div class="settings-container" id="settingsContainer" style="display: none;">
+                <div class="content-container">
+                    <div class="settings-grid">
+                        <div class="settings-sidebar">
+                            <div class="settings-menu-item active">
+                                <span>👤</span>
+                                <span>User Profile</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>🔐</span>
+                                <span>Security</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>🔔</span>
+                                <span>Notifications</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>🎨</span>
+                                <span>Appearance</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>🔌</span>
+                                <span>Integrations</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>📊</span>
+                                <span>Data & Privacy</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>💳</span>
+                                <span>Billing</span>
+                            </div>
+                            <div class="settings-menu-item">
+                                <span>🚀</span>
+                                <span>Advanced</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-content">
+                            <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 32px;">User Profile Settings</h3>
+                            <div class="empty-state">
+                                <div class="empty-icon">⚙️</div>
+                                <div class="empty-title">Settings Interface</div>
+                                <div class="empty-desc">Hierarchical settings with sidebar navigation</div>
+                                <button class="action-button primary">Configure Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- AI Brain Command Palette -->
+        <div class="overlay" id="overlay" onclick="closeCommandPalette()"></div>
+        
+        <div class="ai-command-palette" id="commandPalette">
+            <input type="text" class="command-input" placeholder="Ask me anything or type a command..." autofocus>
+            
+            <div class="command-suggestions">
+                <div class="command-item">
+                    <div class="command-icon">📊</div>
+                    <div class="command-text">
+                        <div class="command-title">Show me today's top predictions</div>
+                        <div class="command-description">View videos with highest viral probability</div>
+                    </div>
+                    <span class="command-shortcut">⌘1</span>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-icon">🔍</div>
+                    <div class="command-text">
+                        <div class="command-title">Analyze a video URL</div>
+                        <div class="command-description">Get instant viral prediction for any video</div>
+                    </div>
+                    <span class="command-shortcut">⌘A</span>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-icon">📈</div>
+                    <div class="command-text">
+                        <div class="command-title">Generate performance report</div>
+                        <div class="command-description">Weekly analytics and insights summary</div>
+                    </div>
+                    <span class="command-shortcut">⌘R</span>
+                </div>
+                
+                <div class="command-item">
+                    <div class="command-icon">🎯</div>
+                    <div class="command-text">
+                        <div class="command-title">Find trending templates</div>
+                        <div class="command-description">Discover what's working right now</div>
+                    </div>
+                    <span class="command-shortcut">⌘T</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function showProvingGrounds() {
+            document.getElementById('provingGroundsContent').style.display = 'block';
+            document.getElementById('armoryContent').style.display = 'none';
+            
+            // Update active states
+            document.querySelectorAll('.studio-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function showArmory() {
+            document.getElementById('provingGroundsContent').style.display = 'none';
+            document.getElementById('armoryContent').style.display = 'block';
+            
+            // Update active states
+            document.querySelectorAll('.studio-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Command Palette
+        function openCommandPalette() {
+            document.getElementById('overlay').classList.add('active');
+            document.getElementById('commandPalette').classList.add('active');
+            document.querySelector('.command-input').focus();
+        }
+
+        function closeCommandPalette() {
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('commandPalette').classList.remove('active');
+        }
+
+        // Keyboard shortcut for command palette
+        document.addEventListener('keydown', (e) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openCommandPalette();
+            }
+            if (e.key === 'Escape') {
+                closeCommandPalette();
+            }
+        });
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Get the clicked section
+                const label = this.querySelector('.nav-label').textContent;
+                
+                // Hide all main sections
+                document.getElementById('studioContainer').style.display = 'none';
+                document.getElementById('commandContainer').style.display = 'none';
+                document.getElementById('engineContainer').style.display = 'none';
+                document.getElementById('settingsContainer').style.display = 'none';
+                
+                // Show the selected section and update title
+                switch(label) {
+                    case 'THE STUDIO':
+                        document.getElementById('studioContainer').style.display = 'block';
+                        document.querySelector('.page-title').textContent = 'The Studio';
+                        break;
+                    case 'COMMAND CENTER':
+                        document.getElementById('commandContainer').style.display = 'block';
+                        document.querySelector('.page-title').textContent = 'Command Center';
+                        break;
+                    case 'ENGINE ROOM':
+                        document.getElementById('engineContainer').style.display = 'block';
+                        document.querySelector('.page-title').textContent = 'Engine Room';
+                        break;
+                    case 'SETTINGS':
+                        document.getElementById('settingsContainer').style.display = 'block';
+                        document.querySelector('.page-title').textContent = 'Settings';
+                        break;
+                }
+            });
+        });
+
+        // Recipe Book Tabs
+        document.querySelectorAll('.recipe-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.recipe-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

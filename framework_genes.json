@@ -1,0 +1,2311 @@
+[
+  {
+    "id": 0,
+    "name": "AuthorityHook",
+    "description": "Content creator establishes expertise or credentials",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(doctor|expert|coach|professional|certified|licensed|I'm a [a-z]+|my background|years of experience|specialist)"
+  },
+  {
+    "id": 1,
+    "name": "ControversyHook",
+    "description": "Provocative or contrarian opening statement",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(hot take|unpopular opinion|nobody talks about|controversial|they don't want you to know|truth is|shocking)"
+  },
+  {
+    "id": 2,
+    "name": "TransformationBeforeAfter",
+    "description": "Shows dramatic change or transformation",
+    "type": "visual_text",
+    "detection_method": "hybrid",
+    "text_pattern": "(?i)(before|after|transformation|changed|results|progress)",
+    "visual_check": "frame_comparison_8sec"
+  },
+  {
+    "id": 3,
+    "name": "WalkingWisdom",
+    "description": "Creator walking while sharing insights",
+    "type": "visual_text",
+    "detection_method": "hybrid",
+    "visual_check": "optical_flow_first_frames",
+    "text_condition": "transcript_length_under_20"
+  },
+  {
+    "id": 4,
+    "name": "GreenScreen",
+    "description": "Uses green screen or chroma key background",
+    "type": "visual",
+    "detection_method": "color_analysis",
+    "threshold": 0.25,
+    "frames_to_check": 5
+  },
+  {
+    "id": 5,
+    "name": "QuestionHook",
+    "description": "Opens with engaging question",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)^.{0,50}(what if|have you ever|did you know|why do|how many|what would)"
+  },
+  {
+    "id": 6,
+    "name": "NumbersHook",
+    "description": "Uses specific numbers or statistics",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(\\d+\\s*(percent|%|million|billion|times|ways|steps|reasons|secrets))"
+  },
+  {
+    "id": 7,
+    "name": "UrgencyHook",
+    "description": "Creates sense of urgency or scarcity",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(right now|immediately|urgent|limited time|act fast|don't wait|hurry)"
+  },
+  {
+    "id": 8,
+    "name": "PersonalStory",
+    "description": "Shares personal anecdote or experience",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(when I|my story|happened to me|I remember|personal experience|I used to)"
+  },
+  {
+    "id": 9,
+    "name": "CallToAction",
+    "description": "Clear instruction for viewer action",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(follow me|like this|subscribe|comment below|share this|try this|do this)"
+  },
+  {
+    "id": 10,
+    "name": "EmotionalTrigger",
+    "description": "Uses emotional language to engage",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(amazing|incredible|shocking|devastating|heartbreaking|inspiring|mind-blowing)"
+  },
+  {
+    "id": 11,
+    "name": "TrendingTopic",
+    "description": "References current events or trends",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(trending|viral|everyone's talking|latest news|breaking|just happened)"
+  },
+  {
+    "id": 12,
+    "name": "DualPersonality",
+    "description": "Shows contrasting personas or moods",
+    "type": "visual",
+    "detection_method": "face_analysis",
+    "frames_to_check": 10
+  },
+  {
+    "id": 13,
+    "name": "TextOverlay",
+    "description": "Heavy use of text overlays on video",
+    "type": "ocr",
+    "detection_method": "text_density",
+    "threshold": 50
+  },
+  {
+    "id": 14,
+    "name": "MusicSync",
+    "description": "Visual cuts synchronized with music beats",
+    "type": "audio_visual",
+    "detection_method": "beat_sync_analysis"
+  },
+  {
+    "id": 15,
+    "name": "CloseUpFace",
+    "description": "Predominantly close-up facial shots",
+    "type": "visual",
+    "detection_method": "face_detection",
+    "coverage_threshold": 0.6
+  },
+  {
+    "id": 16,
+    "name": "HandGestures",
+    "description": "Prominent use of hand movements",
+    "type": "visual",
+    "detection_method": "hand_detection"
+  },
+  {
+    "id": 17,
+    "name": "ProductShowcase",
+    "description": "Features or demonstrates a product",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(product|review|unboxing|purchase|buy|brand|sponsored)"
+  },
+  {
+    "id": 18,
+    "name": "LifeHack",
+    "description": "Shares practical tips or shortcuts",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(hack|tip|trick|shortcut|easier way|simple method|life changing)"
+  },
+  {
+    "id": 19,
+    "name": "Storytelling",
+    "description": "Narrative structure with beginning, middle, end",
+    "type": "text",
+    "detection_method": "story_structure",
+    "min_length": 100
+  },
+  {
+    "id": 20,
+    "name": "MultipleTakes",
+    "description": "Multiple quick cuts or takes within video",
+    "type": "visual",
+    "detection_method": "cut_frequency",
+    "threshold": 5
+  },
+  {
+    "id": 21,
+    "name": "BrandMention",
+    "description": "Mentions well-known brands or companies",
+    "type": "text",
+    "detection_method": "brand_recognition"
+  },
+  {
+    "id": 22,
+    "name": "LocationTag",
+    "description": "References specific locations or places",
+    "type": "text",
+    "detection_method": "location_detection"
+  },
+  {
+    "id": 23,
+    "name": "AgeTarget",
+    "description": "Content clearly targeting specific age group",
+    "type": "text",
+    "detection_method": "age_indicators"
+  },
+  {
+    "id": 24,
+    "name": "EducationalContent",
+    "description": "Teaching or explaining concepts",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(learn|teach|explain|understand|lesson|tutorial|how to)"
+  },
+  {
+    "id": 25,
+    "name": "Comedy",
+    "description": "Humorous content or jokes",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(funny|joke|laugh|hilarious|comedy|humor|lol)"
+  },
+  {
+    "id": 26,
+    "name": "Challenge",
+    "description": "Participates in or creates challenges",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(challenge|try this|attempt|test|experiment)"
+  },
+  {
+    "id": 27,
+    "name": "Reaction",
+    "description": "Reacting to other content",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(reaction|reacting|responds|watching|my thoughts)"
+  },
+  {
+    "id": 28,
+    "name": "POVContent",
+    "description": "Point of view or perspective content",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(pov|point of view|imagine if|you are|from your perspective)"
+  },
+  {
+    "id": 29,
+    "name": "Minimalist",
+    "description": "Clean, simple visual aesthetic",
+    "type": "visual",
+    "detection_method": "visual_complexity",
+    "threshold": 0.3
+  },
+  {
+    "id": 30,
+    "name": "MaximalEffects",
+    "description": "Heavy use of visual effects and filters",
+    "type": "visual",
+    "detection_method": "effect_detection"
+  },
+  {
+    "id": 31,
+    "name": "DanceContent",
+    "description": "Contains dancing or choreography",
+    "type": "visual",
+    "detection_method": "motion_analysis",
+    "pattern": "rhythmic_body_movement"
+  },
+  {
+    "id": 32,
+    "name": "FoodContent",
+    "description": "Features food, cooking, or eating",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(food|cooking|recipe|eat|delicious|taste|kitchen)"
+  },
+  {
+    "id": 33,
+    "name": "PetContent",
+    "description": "Features animals or pets",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(dog|cat|pet|animal|puppy|kitten|cute)"
+  },
+  {
+    "id": 34,
+    "name": "FitnessContent",
+    "description": "Exercise, health, or fitness related",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(workout|exercise|fitness|health|gym|training|muscle)"
+  },
+  {
+    "id": 35,
+    "name": "TechContent",
+    "description": "Technology, gadgets, or digital topics",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(tech|technology|gadget|app|software|digital|computer)"
+  },
+  {
+    "id": 36,
+    "name": "MotivationalContent",
+    "description": "Inspirational or motivational messaging",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(motivation|inspire|success|achieve|goals|dreams|believe)"
+  },
+  {
+    "id": 37,
+    "name": "FashionContent",
+    "description": "Style, fashion, or beauty related",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(fashion|style|outfit|beauty|makeup|clothes|trend)"
+  },
+  {
+    "id": 38,
+    "name": "TravelContent",
+    "description": "Travel, destinations, or adventure",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(travel|trip|vacation|adventure|destination|explore|visit)"
+  },
+  {
+    "id": 39,
+    "name": "RelationshipContent",
+    "description": "Dating, relationships, or social dynamics",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(relationship|dating|love|partner|marriage|couple|romance)"
+  },
+  {
+    "id": 40,
+    "name": "MoneyContent",
+    "description": "Finance, business, or money topics",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(money|business|finance|investment|profit|income|wealth|rich)"
+  },
+  {
+    "id": 41,
+    "name": "SpiritualContent",
+    "description": "Spiritual, religious, or philosophical themes",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(spiritual|faith|religion|god|prayer|meditation|philosophy|soul)"
+  },
+  {
+    "id": 42,
+    "name": "NewsContent",
+    "description": "Current events or news commentary",
+    "type": "text",
+    "detection_method": "regex",
+    "pattern": "(?i)(news|politics|government|election|policy|current events|breaking)"
+  },
+  {
+    "id": 43,
+    "name": "CelebrityContent",
+    "description": "Features or discusses celebrities",
+    "type": "text",
+    "detection_method": "celebrity_recognition"
+  },
+  {
+    "id": 44,
+    "name": "ControversialTopic",
+    "description": "Addresses sensitive or controversial subjects",
+    "type": "text",
+    "detection_method": "controversy_keywords"
+  },
+  {
+    "id": 45,
+    "name": "ViralMeme",
+    "description": "References or uses viral memes",
+    "type": "text",
+    "detection_method": "meme_detection"
+  },
+  {
+    "id": 46,
+    "name": "LowEffortContent",
+    "description": "Minimal production value or effort",
+    "type": "visual_audio",
+    "detection_method": "production_quality",
+    "threshold": 0.3
+  },
+  {
+    "id": 47,
+    "name": "HighProductionValue",
+    "description": "Professional quality production",
+    "type": "visual_audio",
+    "detection_method": "production_quality",
+    "threshold": 0.8
+  },
+  {
+    "id": 100000,
+    "name": "Dynamic Percentile System (DPS) Overview",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100001,
+    "name": "Frameworks 1-19: Core Viral Strategies",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100002,
+    "name": "Frameworks 20-61: Advanced Growth Systems",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100003,
+    "name": "Platform-Specific Metrics",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100004,
+    "name": "Platform Alignment Matrix",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100005,
+    "name": "Framework Taxonomy",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.2,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [
+      "5X rule.",
+      "Steal this genius viral strategy",
+      "Never post on instagram Again!"
+    ],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [
+      "rule",
+      "steal",
+      "genius",
+      "viral",
+      "strategy",
+      "never",
+      "post",
+      "instagram",
+      "again"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100006,
+    "name": "Steal This Genius Viral Strategy - Rating Trend",
+    "description": "Quick-fire rating format that leverages fast-paced judgment content for maximum engagement.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "[Expert title] rates [category] on scale of 1-10",
+      "Personal trainer rates weight loss advice",
+      "Detox teas: 0, Cold showers: 10",
+      "Dermatologist rates skincare trends"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "expert",
+      "title",
+      "rates",
+      "category",
+      "scale",
+      "personal",
+      "trainer",
+      "weight",
+      "loss",
+      "advice"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100007,
+    "name": "Create 70 Viral Content Ideas in 1 Hour",
+    "description": "Transform one proven concept into 70 unique video opportunities.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100008,
+    "name": "Big Creators Go Viral and Recreate",
+    "description": "When to Use: Scaling successful content; building on proven concepts; consistent growth; team content creation.",
+    "detection_method": "nlp",
+    "success_rate": 0.5,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [
+      "From this to this"
+    ],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100009,
+    "name": "TikTok Algorithm Secret",
+    "description": "Leverage platform-specific algorithm insights for maximum reach.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100010,
+    "name": "Secret TikTok Trick",
+    "description": "When to Use: Content ideation; platform-specific optimization; algorithm insights; performance improvement.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100011,
+    "name": "Never Make This Mistake",
+    "description": "Identify and avoid content creation errors that limit viral potential.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100012,
+    "name": "Same Topic Different Results",
+    "description": "When to Use: Educational content; execution optimization; strategy demonstration; teaching methodology.",
+    "detection_method": "nlp",
+    "success_rate": 0.35,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100013,
+    "name": "Content That Won't Get Followers",
+    "description": "Identify content types that generate views but fail to convert to followers or business results.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100014,
+    "name": "Two People Posting Exact Same Content",
+    "description": "When to Use: Execution optimization; strategy refinement; teaching content creation; performance analysis.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100015,
+    "name": "The 1-10 Rating Trend",
+    "description": "Leverage the viral rating format for expert positioning and engagement.",
+    "detection_method": "nlp",
+    "success_rate": 0.5,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "[Expert] rates [category] from 1-10",
+      "Personal trainer rates gym machines 1-10",
+      "Nutritionist rates diet trends 1-10",
+      "Business coach rates side hustles 1-10"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "expert",
+      "rates",
+      "category",
+      "personal",
+      "trainer",
+      "machines",
+      "nutritionist",
+      "diet",
+      "trends",
+      "business"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100016,
+    "name": "Create 1 Year of Content in 1 Hour",
+    "description": "When to Use: Content planning; SEO optimization; systematic content creation; long-term strategy development.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "content-series"
+    ],
+    "examples": [
+      "People Also Ask"
+    ],
+    "pattern_type": "content-series",
+    "trigger_words": [
+      "people",
+      "also"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100017,
+    "name": "When Big Creators Go Viral",
+    "description": "When to Use: Viral strategy learning; template development; consistent growth; proven concept scaling.",
+    "detection_method": "nlp",
+    "success_rate": 0.3,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100018,
+    "name": "Time to Find Top 5 Creators",
+    "description": "Systematic research methodology for identifying and learning from successful creators.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100019,
+    "name": "Don't Freestyle Your Videos",
+    "description": "When to Use: Content quality improvement; systematic creation; performance optimization; professional development.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100020,
+    "name": "Old vs New Instagram Profile Layout",
+    "description": "When to Use: Profile optimization; conversion improvement; professional branding; first impression enhancement.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100021,
+    "name": "Beginner's Guide to Hooks",
+    "description": "Master the fundamental differences between low and high-performing hooks.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100022,
+    "name": "Hook Performance Analysis",
+    "description": "When to Use: Performance analysis; hook optimization; educational content; strategy refinement.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100023,
+    "name": "Instagram Hack Most People Don't Know",
+    "description": "Leverage Instagram's search functionality for viral hook discovery.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100024,
+    "name": "How to Tell a Story in Under One Minute",
+    "description": "Master concise storytelling for short-form content platforms.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "100k view hook vs 1 million view hook 8/8/25",
+      "How to tell a story in under one minute 8/8/25"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "100k",
+      "view",
+      "hook",
+      "million",
+      "tell",
+      "story",
+      "minute"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100025,
+    "name": "100K View Hook vs 1 Million View Hook",
+    "description": "When to Use: Hook optimization education; performance analysis; content creation training; viral strategy development.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "3 foods to never give your dog",
+      "Morgan, what's one thing toxic to dogs?",
+      "Tips for stronger relationship",
+      "Love will never be enough to save your relationship"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "foods",
+      "never",
+      "give",
+      "morgan",
+      "what",
+      "thing",
+      "toxic",
+      "dogs",
+      "tips",
+      "stronger"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100026,
+    "name": "Two People Posting Exact Same Thing",
+    "description": "When to Use: Execution training; strategy optimization; educational content; performance troubleshooting.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "You need to see"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "need"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100027,
+    "name": "The 1-10 Rating Trend is Blowing Up",
+    "description": "Leverage the viral rating format for quick content creation and engagement.",
+    "detection_method": "nlp",
+    "success_rate": 0.5,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "[Expert] rates [category] 1-10",
+      "Fitness coach rates gym machines 1-10",
+      "Real estate agent rates neighborhoods 1-10"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "expert",
+      "rates",
+      "category",
+      "fitness",
+      "coach",
+      "machines",
+      "real",
+      "estate",
+      "agent",
+      "neighborhoods"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100028,
+    "name": "Create 1 Year of Content in 1 Hour",
+    "description": "When to Use: Content planning; SEO strategy; systematic creation; long-term planning.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [
+      "People Also Ask"
+    ],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [
+      "people",
+      "also"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100029,
+    "name": "Big Creators Get Viral Video and Recreate",
+    "description": "When to Use: Viral strategy learning; template development; consistent growth; proven concept scaling.",
+    "detection_method": "nlp",
+    "success_rate": 0.3,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100030,
+    "name": "TikTok Algorithm Secret",
+    "description": "Master platform-specific optimization for maximum algorithmic reach.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100031,
+    "name": "Secret TikTok Trick",
+    "description": "When to Use: Content optimization; platform tool utilization; performance improvement; systematic creation.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100032,
+    "name": "Never Make This Mistake",
+    "description": "Identify and avoid critical content creation errors.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100033,
+    "name": "Same Topic Different Results",
+    "description": "When to Use: Educational content; execution optimization; strategy demonstration; performance analysis.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100034,
+    "name": "Content That Won't Get Followers or Leads",
+    "description": "Identify content types that generate views without business results.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100035,
+    "name": "Two People Posting Exactly Same Content",
+    "description": "When to Use: Execution training; strategy optimization; educational demonstration; performance troubleshooting.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100036,
+    "name": "When a Big Creator Goes Viral",
+    "description": "When to Use: Viral strategy learning; template development; systematic growth; proven concept scaling.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100037,
+    "name": "Here's Your Next Week of Content",
+    "description": "When to Use: Content planning; systematic creation; format diversification; consistent posting.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100038,
+    "name": "Content Strategy for Finance Niche",
+    "description": "When to Use: Niche-specific planning; format optimization; audience targeting; authority building.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100039,
+    "name": "Don't Start Posting Again Until You Understand",
+    "description": "When to Use: Performance troubleshooting; strategy refinement; optimization focus; systematic improvement.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100040,
+    "name": "0 Followers to 10,000 With 1 Video",
+    "description": "Master the \"my story\" video format for maximum follower conversion.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [
+      "my story"
+    ],
+    "pattern_type": "visual-format",
+    "trigger_words": [
+      "story"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100041,
+    "name": "Best Experience ($1000 Steak Story)",
+    "description": "When to Use: Premium positioning; experience marketing; storytelling engagement; brand elevation.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100042,
+    "name": "Hook Genie New AI Tool",
+    "description": "Leverage AI tools for content optimization and feedback.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100043,
+    "name": "Power of Good Branding",
+    "description": "When to Use: Brand development; strategic positioning; business growth; perception management.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100044,
+    "name": "Visual Format Hooks",
+    "description": "Master visual formats dominating social media platforms.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100045,
+    "name": "How to Write CTAs",
+    "description": "Master call-to-action optimization for maximum conversion.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [
+      "link in bio"
+    ],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [
+      "link"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100046,
+    "name": "How to Grow on Instagram",
+    "description": "When to Use: Growth optimization; priority setting; resource allocation; strategy focus.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100047,
+    "name": "Storytelling Hook",
+    "description": "Master storytelling hooks for maximum emotional engagement.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100048,
+    "name": "Authority Hook",
+    "description": "When to Use: Expert positioning; credibility building; authority establishment; trust development.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100049,
+    "name": "How to Grow on Instagram (Authority Gap)",
+    "description": "When to Use: Credibility enhancement; expert positioning; trust building; growth acceleration.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100050,
+    "name": "Hook Secrets",
+    "description": "Master advanced hook techniques for viral content creation.",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "you need to see",
+      "you won't believe"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "need",
+      "believe"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100051,
+    "name": "Storytelling Hook Advanced",
+    "description": "Master various storytelling hook types for maximum emotional impact.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100052,
+    "name": "How to Stand Out on Social Media in 2025",
+    "description": "When to Use: Personal branding; differentiation; authenticity; unique positioning.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100053,
+    "name": "4 Visual Hooks Nobody's Talking About",
+    "description": "Master underutilized visual hook techniques for competitive advantage.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100054,
+    "name": "Small Creators vs Big Creators",
+    "description": "When to Use: Strategy optimization; level-appropriate tactics; growth progression; systematic improvement.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100055,
+    "name": "Old vs New Algorithm",
+    "description": "When to Use: Algorithm adaptation; strategy evolution; platform optimization; performance improvement.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100056,
+    "name": "How to Create Year's Worth of Content",
+    "description": "When to Use: Long-term planning; systematic creation; niche authority; content efficiency.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [
+      "People Also Ask"
+    ],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [
+      "people",
+      "also"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100057,
+    "name": "Outlier Reel",
+    "description": "Identify and leverage significantly outperforming content for viral insights.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100058,
+    "name": "If I Had to Create One Viral Reel",
+    "description": "When to Use: Viral content creation; systematic approach; personality-specific optimization; strategic development.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100059,
+    "name": "Dominate Creating Viral Videos",
+    "description": "Master systematic viral content creation through doubling down strategies.",
+    "detection_method": "nlp",
+    "success_rate": 0.05,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100060,
+    "name": "B-Roll to Storytelling",
+    "description": "When to Use: Cinematic content; storytelling enhancement; visual engagement; brand elevation.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100061,
+    "name": "What Makes the Difference in Going Viral",
+    "description": "When to Use: Performance analysis; viral optimization; content improvement; factor identification.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100062,
+    "name": "If Your Views Look Like This",
+    "description": "Systematic approach to transforming poor performance into viral success.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100063,
+    "name": "Are Hashtags Dead",
+    "description": "When to Use: SEO optimization; discovery improvement; hashtag strategy; algorithm adaptation.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100064,
+    "name": "The Ultimate CTA Hack",
+    "description": "Master advanced call-to-action strategies for maximum conversion.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [
+      "whenever you're ready",
+      "Whenever ready"
+    ],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [
+      "whenever",
+      "ready"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100065,
+    "name": "All These Viral Videos Same Hook",
+    "description": "Identify and leverage viral hook templates that work across niches.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "Is it possible,",
+      "I went from,"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "possible",
+      "went"
+    ],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100066,
+    "name": "Shock Value Hook",
+    "description": "Master shock value and other hook types for maximum engagement.",
+    "detection_method": "nlp",
+    "success_rate": 0.1,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100067,
+    "name": "Rating Trend\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100068,
+    "name": "70 Viral Ideas\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100069,
+    "name": "Viral Recreation\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100070,
+    "name": "TikTok Algorithm\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐\t⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100071,
+    "name": "TikTok Tricks\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐\t⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100072,
+    "name": "Avoid Mistakes\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100073,
+    "name": "Same Topic Results\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100074,
+    "name": "Non-Converting Content\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100075,
+    "name": "Same Content Analysis\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100076,
+    "name": "Rating System\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100077,
+    "name": "Year Content Plan\t⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100078,
+    "name": "Creator Recreation\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100079,
+    "name": "Creator Research\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100080,
+    "name": "Systematic Creation\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100081,
+    "name": "Profile Optimization\t⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100082,
+    "name": "Hook Fundamentals\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100083,
+    "name": "Hook Analysis\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100084,
+    "name": "Instagram Search\t⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100085,
+    "name": "Story Mastery\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100086,
+    "name": "Hook Comparison\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100087,
+    "name": "Execution Differences\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100088,
+    "name": "Rating Trend Advanced\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100089,
+    "name": "Content Planning\t⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100090,
+    "name": "Viral Understanding\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100091,
+    "name": "Algorithm Mastery\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐\t⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100092,
+    "name": "Platform Tools\t⭐⭐⭐⭐⭐\t⭐⭐\t⭐⭐\t⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100093,
+    "name": "Error Prevention\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100094,
+    "name": "Execution Impact\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100095,
+    "name": "Content Strategy\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100096,
+    "name": "Same Content Different\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100097,
+    "name": "Viral Recreation\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100098,
+    "name": "Weekly Content\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100099,
+    "name": "Finance Niche\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100100,
+    "name": "Understanding First\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100101,
+    "name": "0 to 10K\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100102,
+    "name": "Premium Experience\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100103,
+    "name": "AI Tool Usage\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100104,
+    "name": "Branding Power\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100105,
+    "name": "Visual Formats\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100106,
+    "name": "CTA Mastery\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100107,
+    "name": "Growth Priority\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100108,
+    "name": "Story Hooks\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100109,
+    "name": "Authority Hooks\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100110,
+    "name": "Authority Gap\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100111,
+    "name": "Hook Secrets\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100112,
+    "name": "Advanced Storytelling\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100113,
+    "name": "2025 Differentiation\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100114,
+    "name": "Unique Visual Hooks\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100115,
+    "name": "Creator Levels\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100116,
+    "name": "Algorithm Evolution\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100117,
+    "name": "Content Year Planning\t⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100118,
+    "name": "Outlier Analysis\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100119,
+    "name": "Viral Creation System\t⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100120,
+    "name": "Viral Dominance\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100121,
+    "name": "B-Roll Storytelling\t⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "visual-format"
+    ],
+    "examples": [],
+    "pattern_type": "visual-format",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100122,
+    "name": "Viral Factors\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100123,
+    "name": "Performance Recovery\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100124,
+    "name": "Hashtag SEO\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "algorithm-optimization"
+    ],
+    "examples": [],
+    "pattern_type": "algorithm-optimization",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100125,
+    "name": "Advanced CTA\t⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐\t⭐⭐⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "growth-research"
+    ],
+    "examples": [],
+    "pattern_type": "growth-research",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100126,
+    "name": "Universal Hooks\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐",
+    "description": "",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [],
+    "pattern_type": "hook-driven",
+    "trigger_words": [],
+    "viral_score_multiplier": 1
+  },
+  {
+    "id": 100127,
+    "name": "Shock Value Mastery\t⭐⭐⭐⭐⭐\t⭐⭐⭐⭐\t⭐⭐⭐\t⭐⭐",
+    "description": "│   │   ├── 19. Story Mastery",
+    "detection_method": "nlp",
+    "success_rate": 0.7,
+    "applicability": [
+      "hook-driven"
+    ],
+    "examples": [
+      "5X rule"
+    ],
+    "pattern_type": "hook-driven",
+    "trigger_words": [
+      "rule"
+    ],
+    "viral_score_multiplier": 1
+  }
+]

@@ -1,0 +1,2343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Laboratory v2.0 - Science, Not Art</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-card: rgba(255,255,255,0.04);
+            --bg-card-hover: rgba(255,255,255,0.06);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-tertiary: rgba(255,255,255,0.5);
+            --accent-red: #FF3B30;
+            --accent-green: #22c55e;
+            --accent-blue: #448aff;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #FF3FA4;
+            --accent-orange: #ff9500;
+            --border: rgba(255,255,255,0.1);
+            --border-hover: rgba(255,255,255,0.2);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Container for entire app */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* System Accuracy Banner */
+        .accuracy-banner {
+            background: linear-gradient(90deg, var(--accent-green) 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+            padding: 12px 24px;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .accuracy-stats {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .accuracy-primary {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accuracy-icon {
+            width: 24px;
+            height: 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .live-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Phase Navigation */
+        .phase-navigation {
+            background: var(--bg-secondary);
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .workflow-container {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            flex: 1;
+        }
+
+        /* Niche Selection */
+        .niche-selection {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: var(--radius);
+            min-width: 220px;
+            position: relative;
+        }
+
+        .niche-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .niche-dropdown {
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .niche-dropdown:hover {
+            background: rgba(255,255,255,0.12);
+            border-color: var(--accent-purple);
+        }
+
+        .niche-dropdown.active {
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.2);
+        }
+
+        /* Dropdown Menu */
+        .niche-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+        .niche-menu.open {
+            display: block;
+        }
+
+        .niche-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .niche-option:last-child {
+            border-bottom: none;
+        }
+
+        .niche-option:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent-purple);
+            padding-left: 20px;
+        }
+
+        /* Workflow Arrow */
+        .workflow-arrow {
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-purple) 0%, transparent 100%);
+            position: relative;
+        }
+
+        .workflow-arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid var(--accent-purple);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+
+        .phase-progress {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .phase-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 10px 18px;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .phase-item.active {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .phase-item.completed .phase-number {
+            background: var(--accent-green);
+        }
+
+        .phase-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .phase-item.active .phase-number {
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .phase-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phase-title {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .phase-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .phase-connector {
+            width: 40px;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .phase-connector::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+            transition: width 0.3s ease;
+        }
+
+        .phase-item.completed + .phase-connector::after {
+            width: 100%;
+        }
+
+        /* Main Laboratory Layout */
+        .laboratory {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 420px 1fr 460px;
+            gap: 24px;
+            padding: 24px;
+            overflow: hidden;
+        }
+
+        /* Panel Base Styles */
+        .panel {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .panel-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.2) transparent;
+        }
+
+        .panel-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .panel-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        /* PHASE 1 SPECIFIC STYLES */
+        
+        /* Future Viral Vault */
+        .viral-vault {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(68, 138, 255, 0.1) 100%);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .vault-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .vault-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-purple);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .countdown-timer {
+            background: var(--accent-red);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+        }
+
+        .future-trends {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .trend-prediction {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .trend-prediction:hover {
+            border-color: var(--accent-purple);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+        }
+
+        .trend-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .trend-format {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .momentum-arrow {
+            background: var(--accent-green);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-prediction-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .prediction-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .prediction-stat {
+            text-align: center;
+        }
+
+        .stat-value-large {
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label-small {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* Streamlined Templates */
+        .template-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .template-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .template-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .urgent-timer {
+            background: var(--accent-orange);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            animation: pulse 1.5s infinite;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .template-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent-purple);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .template-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .template-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .template-success-rate {
+            font-size: 14px;
+            color: var(--accent-green);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .template-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .quick-clone-section {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .clone-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--accent-green);
+        }
+
+        .clone-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .clone-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .clone-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(34, 197, 94, 0.4);
+        }
+
+        /* Massive Viral Predictions */
+        .viral-predictions {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .main-prediction {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(68, 138, 255, 0.1) 100%);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .prediction-label {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .prediction-massive {
+            font-size: 72px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .prediction-subtitle {
+            font-size: 18px;
+            color: var(--accent-purple);
+            font-weight: 700;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .prediction-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            text-align: center;
+        }
+
+        .prediction-value {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+        }
+
+        .prediction-label-small {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .confidence-breakdown {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .confidence-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .confidence-item:last-child {
+            border-bottom: none;
+        }
+
+        .confidence-factor {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .confidence-score {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        .notifications-setup {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notification-text {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .notification-toggle {
+            width: 52px;
+            height: 28px;
+            background: var(--accent-purple);
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-toggle::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            top: 2px;
+            right: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* PHASE 2 SPECIFIC STYLES */
+        
+        /* Hook Power Meter - Prominent */
+        .hook-power-section {
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.1) 0%, rgba(255, 59, 48, 0.1) 100%);
+            border: 2px solid rgba(255, 149, 0, 0.3);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .hook-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .power-meter-large {
+            width: 100%;
+            height: 60px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .power-fill-large {
+            height: 100%;
+            width: 85%;
+            background: linear-gradient(90deg, var(--accent-orange) 0%, var(--accent-red) 100%);
+            border-radius: 30px;
+            position: relative;
+            animation: pulse 2s ease infinite;
+        }
+
+        .power-label-large {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .power-explanation {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        /* Simplified Retention Graph */
+        .retention-section {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .retention-header {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        .graph-container {
+            height: 120px;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .retention-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+            background: linear-gradient(to top, rgba(68, 138, 255, 0.3), transparent);
+            clip-path: polygon(
+                0% 100%,
+                10% 30%,
+                20% 35%,
+                30% 25%,
+                40% 40%,
+                50% 35%,
+                60% 45%,
+                70% 40%,
+                80% 50%,
+                90% 45%,
+                100% 60%,
+                100% 100%
+            );
+        }
+
+        /* Creator Fingerprint Hero */
+        .creator-fingerprint {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(68, 138, 255, 0.15) 100%);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            border-radius: var(--radius);
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .fingerprint-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            color: var(--accent-purple);
+        }
+
+        .fingerprint-recommendation {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+        }
+
+        .fingerprint-confidence {
+            font-size: 20px;
+            color: var(--accent-green);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .fingerprint-explanation {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .pattern-analysis {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .pattern-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .pattern-score {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--accent-green);
+            margin-bottom: 8px;
+        }
+
+        .pattern-name {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Large Success Rate Display */
+        .success-rate-hero {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 2px solid rgba(34, 197, 94, 0.3);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .success-rate-label {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .success-rate-massive {
+            font-size: 96px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 16px;
+        }
+
+        .success-rate-subtitle {
+            font-size: 20px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .optimal-timing {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+        }
+
+        .timing-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timing-recommendation {
+            background: rgba(68, 138, 255, 0.1);
+            border: 1px solid rgba(68, 138, 255, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .timing-time {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .timing-boost {
+            font-size: 14px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* PHASE 3 SPECIFIC STYLES */
+        
+        /* Simple Structure Checklist */
+        .structure-checklist {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .checklist-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .checklist-item:hover {
+            padding-left: 8px;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.1);
+            color: var(--text-tertiary);
+            transition: all 0.3s ease;
+        }
+
+        .checklist-icon.completed {
+            background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        }
+
+        /* Enhanced AI Guidance */
+        .ai-guidance-section {
+            background: linear-gradient(135deg, rgba(68, 138, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 2px solid rgba(68, 138, 255, 0.3);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .ai-guidance-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ai-guidance-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .ai-guidance-live {
+            background: var(--accent-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .guidance-suggestion {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .suggestion-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .suggestion-impact {
+            font-size: 14px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        .input-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .guidance-chip {
+            background: rgba(68, 138, 255, 0.2);
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .input-field {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .text-input, .textarea-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .text-input:focus, .textarea-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 3px rgba(68, 138, 255, 0.1);
+        }
+
+        .textarea-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Massive Live Viral Score */
+        .live-score-hero {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(68, 138, 255, 0.1) 100%);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius);
+            margin-bottom: 32px;
+        }
+
+        .score-circle-large {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px;
+            position: relative;
+        }
+
+        .score-background {
+            fill: none;
+            stroke: rgba(255,255,255,0.1);
+            stroke-width: 12;
+        }
+
+        .score-progress {
+            fill: none;
+            stroke: url(#scoreGradient);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transform: rotate(-90deg);
+            transform-origin: center;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .score-text-massive {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 64px;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .score-label-large {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .score-confidence {
+            font-size: 16px;
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+
+        /* Encouraging Feedback */
+        .encouraging-feedback {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .feedback-header {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-green);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feedback-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .feedback-item:last-child {
+            border-bottom: none;
+        }
+
+        .feedback-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            color: white;
+            font-weight: 700;
+        }
+
+        .feedback-text {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        /* Launch Timing */
+        .launch-timing-hero {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .timing-header-large {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .timing-title-large {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-purple);
+        }
+
+        .timing-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .time-slot {
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .time-slot.optimal {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.4);
+            color: var(--accent-green);
+            font-weight: 700;
+            transform: scale(1.05);
+        }
+
+        .estimated-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .metric-card-large {
+            background: rgba(255,255,255,0.03);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .metric-value-large {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--accent-purple);
+            margin-bottom: 8px;
+        }
+
+        .metric-label-large {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Action Buttons */
+        .action-panel {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+            display: flex;
+            gap: 16px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .action-primary {
+            background: linear-gradient(135deg, var(--accent-red) 0%, #ff5147 100%);
+            color: white;
+        }
+
+        .action-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(255, 59, 48, 0.4);
+        }
+
+        .action-secondary {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .action-secondary:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-1px);
+        }
+
+        /* Phase Content Wrappers */
+        .phase-content-wrapper {
+            display: none;
+        }
+
+        .phase-content-wrapper.active {
+            display: contents;
+        }
+
+        /* Responsive */
+        @media (max-width: 1600px) {
+            .laboratory {
+                grid-template-columns: 380px 1fr 420px;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .prediction-massive {
+                font-size: 56px;
+            }
+            
+            .success-rate-massive {
+                font-size: 72px;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .template-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .prediction-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- System Accuracy Banner -->
+        <div class="accuracy-banner">
+            <div class="accuracy-stats">
+                <div class="accuracy-primary">
+                    <div class="accuracy-icon">🎯</div>
+                    <span>System Accuracy: 91.3% (274/300 predictions)</span>
+                </div>
+                <div class="live-counter">
+                    <div class="pulse-dot"></div>
+                    <span>Videos Analyzed Today: 24,891</span>
+                </div>
+                <div class="live-counter">
+                    <span>📈 Accuracy improving +0.3% daily</span>
+                </div>
+            </div>
+            <div class="accuracy-stats">
+                <span style="font-size: 14px; opacity: 0.9;">Last 10 predictions: 9/10 successful ✓</span>
+            </div>
+        </div>
+
+        <!-- Phase Navigation -->
+        <div class="phase-navigation">
+            <div class="workflow-container">
+                <!-- Niche Selection -->
+                <div class="niche-selection">
+                    <div class="niche-label">TARGET NICHE</div>
+                    <div class="niche-dropdown" onclick="toggleNicheMenu()">
+                        <span id="selected-niche">Fitness & Health</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="niche-menu" id="niche-menu">
+                        <div class="niche-option" onclick="selectNiche('Personal Finance/Investing')">Personal Finance/Investing</div>
+                        <div class="niche-option" onclick="selectNiche('Fitness/Weight Loss')">Fitness/Weight Loss</div>
+                        <div class="niche-option" onclick="selectNiche('Business/Entrepreneurship')">Business/Entrepreneurship</div>
+                        <div class="niche-option" onclick="selectNiche('Food/Nutrition Comparisons')">Food/Nutrition Comparisons</div>
+                        <div class="niche-option" onclick="selectNiche('Beauty/Skincare')">Beauty/Skincare</div>
+                        <div class="niche-option" onclick="selectNiche('Real Estate/Property')">Real Estate/Property</div>
+                        <div class="niche-option" onclick="selectNiche('Self-Improvement/Productivity')">Self-Improvement/Productivity</div>
+                        <div class="niche-option" onclick="selectNiche('Dating/Relationships')">Dating/Relationships</div>
+                        <div class="niche-option" onclick="selectNiche('Education/Study Tips')">Education/Study Tips</div>
+                        <div class="niche-option" onclick="selectNiche('Career/Job Advice')">Career/Job Advice</div>
+                        <div class="niche-option" onclick="selectNiche('Parenting/Family')">Parenting/Family</div>
+                        <div class="niche-option" onclick="selectNiche('Tech Reviews/Tutorials')">Tech Reviews/Tutorials</div>
+                        <div class="niche-option" onclick="selectNiche('Fashion/Style')">Fashion/Style</div>
+                        <div class="niche-option" onclick="selectNiche('Health/Medical Education')">Health/Medical Education</div>
+                        <div class="niche-option" onclick="selectNiche('Cooking/Recipes')">Cooking/Recipes</div>
+                        <div class="niche-option" onclick="selectNiche('Psychology/Mental Health')">Psychology/Mental Health</div>
+                        <div class="niche-option" onclick="selectNiche('Travel/Lifestyle')">Travel/Lifestyle</div>
+                        <div class="niche-option" onclick="selectNiche('DIY/Home Improvement')">DIY/Home Improvement</div>
+                        <div class="niche-option" onclick="selectNiche('Language Learning')">Language Learning</div>
+                        <div class="niche-option" onclick="selectNiche('Side Hustles/Making Money Online')">Side Hustles/Making Money Online</div>
+                    </div>
+                </div>
+
+                <!-- Workflow Arrow -->
+                <div class="workflow-arrow"></div>
+
+                <!-- Phase Progress -->
+                <div class="phase-progress">
+                    <div class="phase-item active" onclick="switchPhase(1)">
+                        <div class="phase-number">1</div>
+                        <div class="phase-content">
+                            <div class="phase-title">Discover Your Viral Opportunity</div>
+                            <div class="phase-subtitle">Future trends + success predictions</div>
+                        </div>
+                    </div>
+                    <div class="phase-connector"></div>
+                    <div class="phase-item" onclick="switchPhase(2)">
+                        <div class="phase-number">2</div>
+                        <div class="phase-content">
+                            <div class="phase-title">Validate Your Strategy</div>
+                            <div class="phase-subtitle">Personal patterns + confidence scoring</div>
+                        </div>
+                    </div>
+                    <div class="phase-connector"></div>
+                    <div class="phase-item" onclick="switchPhase(3)">
+                        <div class="phase-number">3</div>
+                        <div class="phase-content">
+                            <div class="phase-title">Create with Certainty</div>
+                            <div class="phase-subtitle">Guided creation + live predictions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Laboratory -->
+        <div class="laboratory">
+            <!-- PHASE 1: DISCOVER YOUR VIRAL OPPORTUNITY -->
+            <div class="phase-content-wrapper active" id="phase-1">
+                <!-- Left Panel: Future Viral Vault -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Future Viral Vault</h3>
+                        <p class="panel-subtitle">14-day predictions proving system intelligence</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="viral-vault">
+                            <div class="vault-header">
+                                <div class="vault-title">
+                                    <span>🔮</span>
+                                    <span>Next 14 Days</span>
+                                </div>
+                                <div class="countdown-timer" id="vault-timer">Updating in 2:47</div>
+                            </div>
+                            <div class="future-trends">
+                                <div class="trend-prediction">
+                                    <div class="trend-header">
+                                        <div class="trend-format">POV: Workout Routines</div>
+                                        <div class="momentum-arrow">↗ +340%</div>
+                                    </div>
+                                    <div class="trend-prediction-text">
+                                        Algorithm shift detected. POV format exploding in fitness niche within 72 hours.
+                                    </div>
+                                    <div class="prediction-stats">
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">2.4M</div>
+                                            <div class="stat-label-small">Predicted Views</div>
+                                        </div>
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">94%</div>
+                                            <div class="stat-label-small">Confidence</div>
+                                        </div>
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">72h</div>
+                                            <div class="stat-label-small">Peak Window</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="trend-prediction">
+                                    <div class="trend-header">
+                                        <div class="trend-format">Quick Tips Format</div>
+                                        <div class="momentum-arrow" style="background: var(--accent-orange);">↗ +180%</div>
+                                    </div>
+                                    <div class="trend-prediction-text">
+                                        Business niche showing strong uptick. 3-tip structure performing exceptionally.
+                                    </div>
+                                    <div class="prediction-stats">
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">1.8M</div>
+                                            <div class="stat-label-small">Predicted Views</div>
+                                        </div>
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">89%</div>
+                                            <div class="stat-label-small">Confidence</div>
+                                        </div>
+                                        <div class="prediction-stat">
+                                            <div class="stat-value-large">5d</div>
+                                            <div class="stat-label-small">Peak Window</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="notifications-setup">
+                            <div class="notification-text">
+                                <strong>Trend Alerts for YOUR niche</strong><br>
+                                <small>Get notified 24h before trends spike</small>
+                            </div>
+                            <div class="notification-toggle active" onclick="toggleNotifications(this)"></div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Center Panel: One-Click Templates with Urgency -->
+                <main class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Proven Templates</h3>
+                        <p class="panel-subtitle">Streamlined templates that work for YOUR audience</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="template-section">
+                            <div class="template-header">
+                                <div class="template-title">
+                                    <span>⚡</span>
+                                    <span>One-Click Success</span>
+                                </div>
+                                <div class="urgent-timer" id="template-timer">Expires in 4:23</div>
+                            </div>
+                            <div class="template-grid">
+                                <div class="template-card" onclick="selectTemplate('authority')">
+                                    <div class="template-icon">🎯</div>
+                                    <div class="template-name">Authority Hook</div>
+                                    <div class="template-success-rate">94% success rate for YOU</div>
+                                    <div class="template-time">15 second setup</div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('pov')">
+                                    <div class="template-icon">📱</div>
+                                    <div class="template-name">POV Trending</div>
+                                    <div class="template-success-rate">89% success rate for YOU</div>
+                                    <div class="template-time">20 second setup</div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('quick-tips')">
+                                    <div class="template-icon">💡</div>
+                                    <div class="template-name">Quick Tips</div>
+                                    <div class="template-success-rate">92% success rate for YOU</div>
+                                    <div class="template-time">10 second setup</div>
+                                </div>
+                                <div class="template-card" onclick="selectTemplate('transformation')">
+                                    <div class="template-icon">✨</div>
+                                    <div class="template-name">Transform Story</div>
+                                    <div class="template-success-rate">87% success rate for YOU</div>
+                                    <div class="template-time">25 second setup</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quick-clone-section">
+                            <div class="clone-title">🚀 Quick Clone Selected Video</div>
+                            <div class="clone-description">
+                                Our AI has analyzed this video's viral DNA. One click to adapt it perfectly for YOUR niche.
+                            </div>
+                            <button class="clone-button" onclick="quickClone()">
+                                <span>📋</span>
+                                <span>Clone & Customize (30 seconds)</span>
+                            </button>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Panel: Massive Viral Predictions -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">YOUR Success Predictions</h3>
+                        <p class="panel-subtitle">Concrete forecasts based on YOUR patterns</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="viral-predictions">
+                            <div class="main-prediction">
+                                <div class="prediction-label">Viral Probability</div>
+                                <div class="prediction-massive" id="main-viral-score">89%</div>
+                                <div class="prediction-subtitle">This will go viral</div>
+                            </div>
+                            
+                            <div class="prediction-grid">
+                                <div class="prediction-card">
+                                    <div class="prediction-value" id="estimated-views">1.25M</div>
+                                    <div class="prediction-label-small">Predicted Views</div>
+                                </div>
+                                <div class="prediction-card">
+                                    <div class="prediction-value" id="success-chance">89%</div>
+                                    <div class="prediction-label-small">Success Chance</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="confidence-breakdown">
+                            <div class="confidence-item">
+                                <span class="confidence-factor">YOUR Audience Match</span>
+                                <span class="confidence-score">94%</span>
+                            </div>
+                            <div class="confidence-item">
+                                <span class="confidence-factor">Trending Audio Sync</span>
+                                <span class="confidence-score">91%</span>
+                            </div>
+                            <div class="confidence-item">
+                                <span class="confidence-factor">Optimal Timing</span>
+                                <span class="confidence-score">87%</span>
+                            </div>
+                            <div class="confidence-item">
+                                <span class="confidence-factor">Hook Strength</span>
+                                <span class="confidence-score">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-panel">
+                        <button class="action-button action-secondary">
+                            <span>💾</span>
+                            <span>Save Prediction</span>
+                        </button>
+                        <button class="action-button action-primary" onclick="proceedToValidation()">
+                            <span>🔬</span>
+                            <span>Validate Strategy</span>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- PHASE 2: VALIDATE YOUR STRATEGY -->
+            <div class="phase-content-wrapper" id="phase-2">
+                <!-- Left Panel: Hook Power Meter + Simplified Retention -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Performance Analysis</h3>
+                        <p class="panel-subtitle">First 3 seconds + retention breakdown</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="hook-power-section">
+                            <div class="hook-title">
+                                <span>🔥</span>
+                                <span>First 3 Seconds Power</span>
+                            </div>
+                            <div class="power-meter-large">
+                                <div class="power-fill-large" id="hook-power-fill"></div>
+                                <div class="power-label-large" id="hook-power-label">85% Scroll-Stop Power</div>
+                            </div>
+                            <div class="power-explanation">
+                                This hook has 85% probability of stopping scrollers in YOUR niche
+                            </div>
+                        </div>
+                        
+                        <div class="retention-section">
+                            <div class="retention-header">Retention Graph with Critical Points</div>
+                            <div class="graph-container">
+                                <div class="retention-line"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pattern-analysis">
+                            <div class="pattern-card">
+                                <div class="pattern-score">47</div>
+                                <div class="pattern-name">Videos Analyzed</div>
+                            </div>
+                            <div class="pattern-card">
+                                <div class="pattern-score">98%</div>
+                                <div class="pattern-name">Pattern Confidence</div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Center Panel: Creator Fingerprint Hero -->
+                <main class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">YOUR Creator Fingerprint</h3>
+                        <p class="panel-subtitle">Personalized success patterns detected</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="creator-fingerprint">
+                            <div class="fingerprint-title">Best Framework for YOU</div>
+                            <div class="fingerprint-recommendation" id="best-framework">Authority Hook</div>
+                            <div class="fingerprint-confidence">98% confidence for YOUR audience</div>
+                            <div class="fingerprint-explanation">
+                                Based on YOUR previous 15 videos, this framework performs 67% better than alternatives for YOUR specific audience demographics and engagement patterns.
+                            </div>
+                        </div>
+                        
+                        <div class="ai-guidance-section">
+                            <div class="ai-guidance-header">
+                                <div class="ai-guidance-title">🤖 Real-Time AI Guidance</div>
+                                <div class="ai-guidance-live">LIVE</div>
+                            </div>
+                            <div class="guidance-suggestion">
+                                <div class="suggestion-text">Add specific numbers to your opening line</div>
+                                <div class="suggestion-impact">+130% impact boost for YOUR niche</div>
+                            </div>
+                            <div class="guidance-suggestion">
+                                <div class="suggestion-text">YOUR audience responds best to visual demonstrations at 0:15</div>
+                                <div class="suggestion-impact">+45% retention improvement</div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Panel: Large Success Rate + Optimal Timing -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Success Validation</h3>
+                        <p class="panel-subtitle">Confidence scoring + optimal timing</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="success-rate-hero">
+                            <div class="success-rate-label">Success Rate</div>
+                            <div class="success-rate-massive" id="success-rate-display">89%</div>
+                            <div class="success-rate-subtitle">Chance of Success</div>
+                        </div>
+                        
+                        <div class="optimal-timing">
+                            <div class="timing-header">
+                                <span>🎯</span>
+                                <span>Optimal Post Time</span>
+                            </div>
+                            <div class="timing-recommendation">
+                                <div class="timing-time">Today 7:00 PM</div>
+                                <div class="timing-boost">+40% performance boost</div>
+                            </div>
+                        </div>
+                        
+                        <div class="encouraging-feedback">
+                            <div class="feedback-header">
+                                <span>✨</span>
+                                <span>System Insights</span>
+                            </div>
+                            <div class="feedback-item">
+                                <div class="feedback-icon">✓</div>
+                                <div class="feedback-text">Learning from YOUR previous videos: +15% retention with visual demos</div>
+                            </div>
+                            <div class="feedback-item">
+                                <div class="feedback-icon">✓</div>
+                                <div class="feedback-text">Momentum tracking shows YOUR niche is accelerating</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-panel">
+                        <button class="action-button action-secondary" onclick="switchPhase(1)">
+                            <span>←</span>
+                            <span>Back</span>
+                        </button>
+                        <button class="action-button action-primary" onclick="switchPhase(3)">
+                            <span>🎨</span>
+                            <span>Create with Certainty</span>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- PHASE 3: CREATE WITH CERTAINTY -->
+            <div class="phase-content-wrapper" id="phase-3">
+                <!-- Left Panel: Simple Structure Checklist -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Structure Checklist</h3>
+                        <p class="panel-subtitle">Ensure viral formula compliance</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="structure-checklist">
+                            <div class="checklist-header">Match YOUR Success Pattern</div>
+                            <div class="checklist-item">
+                                <div class="checklist-icon" id="check-hook">1</div>
+                                <span>Hook (0-3s) - Authority statement</span>
+                            </div>
+                            <div class="checklist-item">
+                                <div class="checklist-icon" id="check-authority">2</div>
+                                <span>Credibility signal</span>
+                            </div>
+                            <div class="checklist-item">
+                                <div class="checklist-icon" id="check-value">3</div>
+                                <span>Value delivery (3 points)</span>
+                            </div>
+                            <div class="checklist-item">
+                                <div class="checklist-icon" id="check-proof">4</div>
+                                <span>Visual proof at 0:15</span>
+                            </div>
+                            <div class="checklist-item">
+                                <div class="checklist-icon" id="check-cta">5</div>
+                                <span>Clear CTA</span>
+                            </div>
+                        </div>
+                        
+                        <div class="encouraging-feedback">
+                            <div class="feedback-header">
+                                <span>💪</span>
+                                <span>Progress Tracker</span>
+                            </div>
+                            <div class="feedback-item">
+                                <div class="feedback-icon">✓</div>
+                                <div class="feedback-text">You're on track for 89% viral probability!</div>
+                            </div>
+                            <div class="feedback-item">
+                                <div class="feedback-icon">✓</div>
+                                <div class="feedback-text">Average creation time: 12 minutes (vs 4 hours industry average)</div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Center Panel: Enhanced AI Guidance Creation -->
+                <main class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">AI-Guided Creation</h3>
+                        <p class="panel-subtitle">Real-time guidance + live predictions</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="ai-guidance-section">
+                            <div class="ai-guidance-header">
+                                <div class="ai-guidance-title">🎯 Live AI Coach</div>
+                                <div class="ai-guidance-live">ACTIVE</div>
+                            </div>
+                            <div class="guidance-suggestion" id="live-suggestion">
+                                <div class="suggestion-text">Start with "I helped 1000+ people..." for maximum authority</div>
+                                <div class="suggestion-impact">This opener gets +200% more engagement for YOUR niche</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <span>1</span>
+                                    <span>Hook & Authority</span>
+                                </div>
+                                <div class="guidance-chip">AI: Perfect opening</div>
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Authority Hook (First 3 seconds)</label>
+                                <input type="text" class="text-input" id="hook-input" placeholder="I helped 1000+ people..." oninput="updateAI('hook')">
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Credibility Signal</label>
+                                <input type="text" class="text-input" id="authority-input" placeholder="As a certified expert with..." oninput="updateAI('authority')">
+                            </div>
+                        </div>
+                        
+                        <div class="input-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <span>2</span>
+                                    <span>Value Points</span>
+                                </div>
+                                <div class="guidance-chip">AI: Maximize retention</div>
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Value Point 1</label>
+                                <input type="text" class="text-input" placeholder="First game-changing tip..." oninput="updateAI('value')">
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Value Point 2</label>
+                                <input type="text" class="text-input" placeholder="Second powerful insight...">
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Value Point 3</label>
+                                <input type="text" class="text-input" placeholder="Third proven method...">
+                            </div>
+                        </div>
+                        
+                        <div class="input-section">
+                            <div class="section-header">
+                                <div class="section-title">
+                                    <span>3</span>
+                                    <span>Proof & CTA</span>
+                                </div>
+                                <div class="guidance-chip">AI: Drive action</div>
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Visual Proof (at 0:15)</label>
+                                <input type="text" class="text-input" placeholder="Show transformation/results..." oninput="updateAI('proof')">
+                            </div>
+                            
+                            <div class="input-field">
+                                <label class="input-label">Call to Action</label>
+                                <input type="text" class="text-input" placeholder="Follow for more secrets..." oninput="updateAI('cta')">
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Panel: Massive Live Viral Score -->
+                <aside class="panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Live Success Prediction</h3>
+                        <p class="panel-subtitle">Real-time viral scoring</p>
+                    </div>
+                    <div class="panel-content">
+                        <div class="live-score-hero">
+                            <div class="score-circle-large">
+                                <svg width="180" height="180">
+                                    <defs>
+                                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#22c55e;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="score-background" cx="90" cy="90" r="80"/>
+                                    <circle class="score-progress" cx="90" cy="90" r="80" 
+                                            stroke-dasharray="502.655" 
+                                            stroke-dashoffset="75" id="score-circle"/>
+                                </svg>
+                                <div class="score-text-massive" id="live-viral-score">85</div>
+                            </div>
+                            <div class="score-label-large">Viral Score</div>
+                            <div class="score-confidence">This will succeed with 89% confidence</div>
+                        </div>
+                        
+                        <div class="launch-timing-hero">
+                            <div class="timing-header-large">
+                                <div class="timing-title-large">
+                                    <span>🚀</span>
+                                    <span>Launch Window</span>
+                                </div>
+                            </div>
+                            <div class="timing-grid">
+                                <div class="time-slot optimal">Today 7:00 PM</div>
+                                <div class="time-slot">Tomorrow 12:00 PM</div>
+                                <div class="time-slot">Tomorrow 7:00 PM</div>
+                                <div class="time-slot">Thursday 5:00 PM</div>
+                            </div>
+                        </div>
+                        
+                        <div class="estimated-metrics">
+                            <div class="metric-card-large">
+                                <div class="metric-value-large" id="final-views">1.25M</div>
+                                <div class="metric-label-large">Predicted Views</div>
+                            </div>
+                            <div class="metric-card-large">
+                                <div class="metric-value-large" id="final-engagement">13.2%</div>
+                                <div class="metric-label-large">Engagement Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-panel">
+                        <button class="action-button action-secondary" onclick="saveDraft()">
+                            <span>💾</span>
+                            <span>Save Draft</span>
+                        </button>
+                        <button class="action-button action-primary" onclick="publishContent()">
+                            <span>🚀</span>
+                            <span>Publish Now</span>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Phase management
+        let currentPhase = 1;
+        let selectedNiche = 'Fitness & Health';
+        let viralScore = 85;
+        let selectedTemplate = null;
+
+        // Initialize counters and timers
+        let videosAnalyzed = 24891;
+        let systemAccuracy = 91.3;
+        
+        function switchPhase(phase) {
+            // Hide all phases
+            document.querySelectorAll('.phase-content-wrapper').forEach(wrapper => {
+                wrapper.classList.remove('active');
+            });
+            
+            // Show selected phase
+            document.getElementById(`phase-${phase}`).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.phase-item').forEach((item, index) => {
+                item.classList.remove('active');
+                if (index < phase - 1) {
+                    item.classList.add('completed');
+                }
+            });
+            document.querySelectorAll('.phase-item')[phase - 1].classList.add('active');
+            
+            currentPhase = phase;
+            
+            // Phase-specific initialization
+            if (phase === 2) {
+                animateHookPower();
+            }
+            if (phase === 3) {
+                initializeLiveScore();
+            }
+        }
+
+        // Niche selection
+        function toggleNicheMenu() {
+            const menu = document.getElementById('niche-menu');
+            const dropdown = document.querySelector('.niche-dropdown');
+            
+            if (menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                dropdown.classList.remove('active');
+            } else {
+                menu.classList.add('open');
+                dropdown.classList.add('active');
+            }
+            
+            event.stopPropagation();
+        }
+
+        function selectNiche(niche) {
+            selectedNiche = niche;
+            document.getElementById('selected-niche').textContent = niche;
+            document.getElementById('niche-menu').classList.remove('open');
+            document.querySelector('.niche-dropdown').classList.remove('active');
+            
+            // Update predictions based on niche
+            updateNichePredictions(niche);
+        }
+
+        function updateNichePredictions(niche) {
+            // Update viral predictions and success rates based on niche
+            const predictions = {
+                'Fitness & Health': { viral: 89, views: '1.25M', success: 89 },
+                'Personal Finance/Investing': { viral: 92, views: '1.8M', success: 91 },
+                'Business/Entrepreneurship': { viral: 87, views: '1.1M', success: 88 }
+            };
+            
+            const prediction = predictions[niche] || predictions['Fitness & Health'];
+            
+            document.getElementById('main-viral-score').textContent = prediction.viral + '%';
+            document.getElementById('estimated-views').textContent = prediction.views;
+            document.getElementById('success-chance').textContent = prediction.success + '%';
+            
+            viralScore = prediction.viral;
+        }
+
+        // Template selection
+        function selectTemplate(template) {
+            selectedTemplate = template;
+            
+            // Visual feedback
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.style.background = '';
+                card.style.borderColor = '';
+            });
+            
+            event.currentTarget.style.background = 'rgba(139, 92, 246, 0.2)';
+            event.currentTarget.style.borderColor = 'var(--accent-purple)';
+            
+            // Update predictions based on template
+            updateTemplatePredictions(template);
+        }
+
+        function updateTemplatePredictions(template) {
+            const templates = {
+                'authority': { viral: 94, views: '1.4M', framework: 'Authority Hook' },
+                'pov': { viral: 89, views: '1.2M', framework: 'POV Trending' },
+                'quick-tips': { viral: 92, views: '1.3M', framework: 'Quick Tips' },
+                'transformation': { viral: 87, views: '1.1M', framework: 'Transform Story' }
+            };
+            
+            const pred = templates[template];
+            if (pred) {
+                document.getElementById('main-viral-score').textContent = pred.viral + '%';
+                document.getElementById('estimated-views').textContent = pred.views;
+                document.getElementById('best-framework').textContent = pred.framework;
+                viralScore = pred.viral;
+            }
+        }
+
+        function quickClone() {
+            const button = event.target.closest('.clone-button');
+            button.innerHTML = '<span>✓</span><span>Cloning & Customizing...</span>';
+            button.style.background = 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)';
+            
+            setTimeout(() => {
+                button.innerHTML = '<span>🎯</span><span>Ready! Proceed to validation</span>';
+                setTimeout(() => {
+                    proceedToValidation();
+                }, 1000);
+            }, 2000);
+        }
+
+        function proceedToValidation() {
+            switchPhase(2);
+        }
+
+        // Phase 2: Animation functions
+        function animateHookPower() {
+            const powerFill = document.getElementById('hook-power-fill');
+            const powerLabel = document.getElementById('hook-power-label');
+            
+            let power = 0;
+            const targetPower = 85;
+            
+            const interval = setInterval(() => {
+                power += 2;
+                powerFill.style.width = power + '%';
+                powerLabel.textContent = power + '% Scroll-Stop Power';
+                
+                if (power >= targetPower) {
+                    clearInterval(interval);
+                }
+            }, 50);
+        }
+
+        // Phase 3: Live AI functions
+        function updateAI(field) {
+            const input = event.target;
+            const value = input.value;
+            
+            // Update checklist
+            const checkElement = document.getElementById(`check-${field}`);
+            if (checkElement && value.trim()) {
+                checkElement.textContent = '✓';
+                checkElement.classList.add('completed');
+            }
+            
+            // Update live suggestions
+            const suggestions = {
+                'hook': 'Perfect! Authority statements get +200% more engagement',
+                'authority': 'Great credibility signal. This builds trust immediately',
+                'value': 'Excellent value delivery. Keep going!',
+                'proof': 'Visual proof at 0:15 is optimal for retention',
+                'cta': 'Strong CTA! This drives action effectively'
+            };
+            
+            if (suggestions[field] && value.trim()) {
+                updateLiveSuggestion(suggestions[field], '+45% improvement');
+            }
+            
+            // Update viral score
+            updateLiveViralScore();
+        }
+
+        function updateLiveSuggestion(text, impact) {
+            const suggestion = document.getElementById('live-suggestion');
+            suggestion.querySelector('.suggestion-text').textContent = text;
+            suggestion.querySelector('.suggestion-impact').textContent = impact;
+        }
+
+        function updateLiveViralScore() {
+            // Calculate score based on filled inputs
+            const inputs = document.querySelectorAll('#phase-3 .text-input');
+            let filledInputs = 0;
+            
+            inputs.forEach(input => {
+                if (input.value.trim()) filledInputs++;
+            });
+            
+            const newScore = Math.min(60 + (filledInputs * 5), 95);
+            document.getElementById('live-viral-score').textContent = newScore;
+            
+            // Update circle progress
+            const circle = document.getElementById('score-circle');
+            const circumference = 2 * Math.PI * 80;
+            const offset = circumference - (newScore / 100 * circumference);
+            circle.style.strokeDashoffset = offset;
+            
+            // Update estimates
+            document.getElementById('final-views').textContent = (newScore * 15000).toLocaleString();
+            document.getElementById('final-engagement').textContent = (newScore * 0.15).toFixed(1) + '%';
+        }
+
+        function initializeLiveScore() {
+            updateLiveViralScore();
+        }
+
+        // Utility functions
+        function toggleNotifications(element) {
+            element.classList.toggle('active');
+        }
+
+        function saveDraft() {
+            const button = event.target.closest('.action-button');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span>✓</span><span>Saved!</span>';
+            button.style.background = 'linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%)';
+            
+            setTimeout(() => {
+                button.innerHTML = originalContent;
+                button.style.background = '';
+            }, 2000);
+        }
+
+        function publishContent() {
+            const button = event.target.closest('.action-button');
+            button.innerHTML = '<div style="width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite;"></div>';
+            
+            setTimeout(() => {
+                button.innerHTML = '<span>🚀</span><span>Published!</span>';
+                button.style.background = 'linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%)';
+                
+                // Show success message
+                alert('🎉 Content published! Predicted to reach ' + document.getElementById('final-views').textContent + ' views with ' + document.getElementById('live-viral-score').textContent + '% viral probability.');
+            }, 3000);
+        }
+
+        // Live counters and timers
+        function updateCounters() {
+            videosAnalyzed += Math.floor(Math.random() * 3) + 1;
+            document.querySelector('.live-counter span').textContent = `Videos Analyzed Today: ${videosAnalyzed.toLocaleString()}`;
+            
+            // Update vault timer
+            const vaultTimer = document.getElementById('vault-timer');
+            if (vaultTimer) {
+                const currentTime = vaultTimer.textContent.split(':');
+                let minutes = parseInt(currentTime[1]) || 2;
+                let seconds = parseInt(currentTime[2]) || 47;
+                
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                }
+                
+                if (minutes < 0) {
+                    minutes = 4;
+                    seconds = 59;
+                }
+                
+                vaultTimer.textContent = `Updating in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update template timer
+            const templateTimer = document.getElementById('template-timer');
+            if (templateTimer) {
+                const currentTime = templateTimer.textContent.split(' ')[2].split(':');
+                let minutes = parseInt(currentTime[0]) || 4;
+                let seconds = parseInt(currentTime[1]) || 23;
+                
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                }
+                
+                if (minutes < 0) {
+                    minutes = 5;
+                    seconds = 59;
+                }
+                
+                templateTimer.textContent = `Expires in ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const nicheSelection = document.querySelector('.niche-selection');
+            const menu = document.getElementById('niche-menu');
+            
+            if (!nicheSelection.contains(e.target) && menu.classList.contains('open')) {
+                menu.classList.remove('open');
+                document.querySelector('.niche-dropdown').classList.remove('active');
+            }
+        });
+
+        // Initialize
+        setInterval(updateCounters, 1000);
+        updateNichePredictions(selectedNiche);
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+{
+  "model_version": "v9",
+  "trained_at": "2026-03-19T10:01:14.075237",
+  "source": "supabase:training_features+scraped_videos",
+  "changes_from_v8": "Added 3 validated features: text_overlay_density, visual_proof_ratio, vocal_confidence_composite. Same Optuna v8 hyperparameters.",
+  "new_features_added": [
+    "text_overlay_density",
+    "visual_proof_ratio",
+    "vocal_confidence_composite"
+  ],
+  "feature_count": 51,
+  "feature_names": [
+    "ffmpeg_scene_changes",
+    "ffmpeg_cuts_per_second",
+    "ffmpeg_avg_motion",
+    "ffmpeg_color_variance",
+    "ffmpeg_brightness_avg",
+    "ffmpeg_contrast_score",
+    "ffmpeg_resolution_width",
+    "ffmpeg_resolution_height",
+    "ffmpeg_duration_seconds",
+    "ffmpeg_bitrate",
+    "ffmpeg_fps",
+    "audio_pitch_mean_hz",
+    "audio_pitch_variance",
+    "audio_pitch_range",
+    "audio_pitch_std_dev",
+    "audio_pitch_contour_slope",
+    "audio_loudness_mean_lufs",
+    "audio_loudness_range",
+    "audio_loudness_variance",
+    "audio_silence_ratio",
+    "audio_silence_count",
+    "speaking_rate_wpm",
+    "visual_scene_count",
+    "visual_avg_scene_duration",
+    "visual_score",
+    "thumb_brightness",
+    "thumb_contrast",
+    "thumb_colorfulness",
+    "thumb_overall_score",
+    "hook_score",
+    "hook_confidence",
+    "hook_text_score",
+    "hook_type_encoded",
+    "text_word_count",
+    "text_sentence_count",
+    "text_question_mark_count",
+    "text_exclamation_count",
+    "text_transcript_length",
+    "text_avg_sentence_length",
+    "text_unique_word_ratio",
+    "text_avg_word_length",
+    "text_syllable_count",
+    "text_flesch_reading_ease",
+    "text_has_cta",
+    "text_negative_word_count",
+    "text_emoji_count",
+    "meta_duration_seconds",
+    "meta_words_per_second",
+    "text_overlay_density",
+    "visual_proof_ratio",
+    "vocal_confidence_composite"
+  ],
+  "dataset": {
+    "total_rows": 863,
+    "train_rows": 813,
+    "holdout_rows": 50,
+    "holdout_method": "explicit ID list (stratified by tier: 10 per tier)",
+    "niches": {
+      "side-hustles": 863
+    }
+  },
+  "target_stats": {
+    "min": 11.58,
+    "max": 91.44,
+    "mean": 49.45809348093481,
+    "std": 18.05212419296134,
+    "median": 48.73
+  },
+  "performance": {
+    "train": {
+      "spearman_rho": 0.9962778385960013,
+      "spearman_p": 0.0,
+      "mae": 1.4907911877790498,
+      "rmse": 2.0658168245259096,
+      "r2": 0.9869043519462474,
+      "within_5_dps_pct": 97.17097170971711,
+      "within_10_dps_pct": 99.87699876998771,
+      "tier_accuracy_pct": 94.8339483394834,
+      "n": 813
+    },
+    "holdout": {
+      "spearman_rho": 0.8002400960384153,
+      "spearman_p": 3.0989468124966384e-12,
+      "mae": 13.225185083007812,
+      "rmse": 15.951925503771378,
+      "r2": 0.5411550833652936,
+      "within_5_dps_pct": 20.0,
+      "within_10_dps_pct": 42.0,
+      "tier_accuracy_pct": 40.0,
+      "n": 50
+    },
+    "cv_5fold": {
+      "spearman_mean": 0.649728356871097,
+      "spearman_std": 0.019709839235780544,
+      "mae_mean": 10.853808299389318,
+      "mae_std": 0.690103580436308,
+      "within_10_mean": 54.86480345376051
+    },
+    "baseline_mean_predictor": {
+      "mae": 21.55998130381304
+    }
+  },
+  "hyperparameters": {
+    "objective": "reg:squarederror",
+    "n_estimators": 413,
+    "max_depth": 8,
+    "learning_rate": 0.025847050593221715,
+    "min_child_weight": 5,
+    "subsample": 0.7064306141071703,
+    "colsample_bytree": 0.716878246792974,
+    "reg_alpha": 0.6170624733980454,
+    "reg_lambda": 4.9455883361853195
+  },
+  "delta_vs_v8": {
+    "cv_spearman": 0.010982204836758047,
+    "holdout_spearman": 0.012484993997598948,
+    "holdout_mae": -0.45549938964843584,
+    "holdout_within_10_pp": 0.0
+  },
+  "top_features": [
+    {
+      "feature": "ffmpeg_scene_changes",
+      "importance": 0.10442741960287094
+    },
+    {
+      "feature": "visual_scene_count",
+      "importance": 0.10239715129137039
+    },
+    {
+      "feature": "ffmpeg_resolution_height",
+      "importance": 0.06894420087337494
+    },
+    {
+      "feature": "ffmpeg_resolution_width",
+      "importance": 0.06445284932851791
+    },
+    {
+      "feature": "ffmpeg_fps",
+      "importance": 0.03508162498474121
+    },
+    {
+      "feature": "text_negative_word_count",
+      "importance": 0.03333429619669914
+    },
+    {
+      "feature": "text_exclamation_count",
+      "importance": 0.02692750096321106
+    },
+    {
+      "feature": "meta_duration_seconds",
+      "importance": 0.02593841776251793
+    },
+    {
+      "feature": "visual_proof_ratio",
+      "importance": 0.025838375091552734
+    },
+    {
+      "feature": "text_sentence_count",
+      "importance": 0.018646584823727608
+    },
+    {
+      "feature": "hook_text_score",
+      "importance": 0.0184549018740654
+    },
+    {
+      "feature": "text_emoji_count",
+      "importance": 0.018199549987912178
+    },
+    {
+      "feature": "ffmpeg_avg_motion",
+      "importance": 0.017417144030332565
+    },
+    {
+      "feature": "text_transcript_length",
+      "importance": 0.017026197165250778
+    },
+    {
+      "feature": "audio_pitch_mean_hz",
+      "importance": 0.01680765673518181
+    },
+    {
+      "feature": "speaking_rate_wpm",
+      "importance": 0.01571742072701454
+    },
+    {
+      "feature": "thumb_brightness",
+      "importance": 0.015585575252771378
+    },
+    {
+      "feature": "text_syllable_count",
+      "importance": 0.015448363497853279
+    },
+    {
+      "feature": "hook_confidence",
+      "importance": 0.015186301432549953
+    },
+    {
+      "feature": "audio_pitch_variance",
+      "importance": 0.014222482219338417
+    }
+  ],
+  "new_feature_importance": {
+    "text_overlay_density": {
+      "importance": 0.005367127712816,
+      "rank": 51
+    },
+    "visual_proof_ratio": {
+      "importance": 0.025838375091552734,
+      "rank": 9
+    },
+    "vocal_confidence_composite": {
+      "importance": 0.010781923308968544,
+      "rank": 34
+    }
+  }
+}

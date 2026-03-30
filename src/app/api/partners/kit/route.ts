@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
+
+function buildStoredZip(entries: { name: string; data: Buffer }[]): Buffer {
+  const localParts: Buffer[] = []
+  const centralParts: Buffer[] = []
+  let offset = 0
+  function crc32(buf: Buffer): number { let c = ~0; for (let i=0;i<buf.length;i++){ c ^= buf[i]; for (let k=0;k<8;k++){ c = (c>>>1) ^ (0xedb88320 & -(c & 1)) } } return ~c>>>0 }
+  for (const { name, data } of entries) {
+    const nameBuf = Buffer.from(name, 'utf8')
+    const crc = crc32(data)
+    const local = Buffer.alloc(30)
+    local.writeUInt32LE(0x04034b50, 0); local.writeUInt16LE(20, 4); local.writeUInt16LE(0, 6); local.writeUInt16LE(0, 8); local.writeUInt16LE(0, 10); local.writeUInt16LE(0, 12)
+    local.writeUInt32LE(crc>>>0, 14); local.writeUInt32LE(data.length, 18); local.writeUInt32LE(data.length, 22)
+    local.writeUInt16LE(nameBuf.length, 26); local.writeUInt16LE(0, 28)
+    const localHeader = Buffer.concat([local, nameBuf])
+    const localRecord = Buffer.concat([localHeader, data])
+    localParts.push(localRecord)
+    const central = Buffer.alloc(46)
+    central.writeUInt32LE(0x02014b50, 0); central.writeUInt16LE(20, 4); central.writeUInt16LE(20, 6); central.writeUInt16LE(0, 8); central.writeUInt16LE(0, 10); central.writeUInt16LE(0, 12)
+    central.writeUInt32LE(crc>>>0, 16); central.writeUInt32LE(data.length, 20); central.writeUInt32LE(data.length, 24)
+    central.writeUInt16LE(nameBuf.length, 28); central.writeUInt16LE(0, 30); central.writeUInt16LE(0, 32); central.writeUInt16LE(0, 34); central.writeUInt16LE(0, 36)
+    central.writeUInt32LE(0, 38); central.writeUInt32LE(offset, 42)
+    const centralHeader = Buffer.concat([central, nameBuf])
+    centralParts.push(centralHeader)
+    offset += localRecord.length
+  }
+  const centralDir = Buffer.concat(centralParts)
+  const end = Buffer.alloc(22)
+  end.writeUInt32LE(0x06054b50, 0); end.writeUInt16LE(0, 4); end.writeUInt16LE(0, 6); end.writeUInt16LE(entries.length, 8); end.writeUInt16LE(entries.length, 10)
+  end.writeUInt32LE(centralDir.length, 12); end.writeUInt32LE(offset, 16); end.writeUInt16LE(0, 20)
+  return Buffer.concat([...localParts, centralDir, end])
+}
+
+export async function GET(_req: NextRequest) {
+  const artifactsDir = path.join(process.cwd(), 'public', 'artifacts', 'partners')
+  fs.mkdirSync(artifactsDir, { recursive: true })
+  const entries: { name: string; data: Buffer }[] = []
+  // Zapier & Make
+  entries.push({ name: 'zapier/app.json', data: fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'integrations', 'zapier', 'app.json', 'route.ts')) })
+  entries.push({ name: 'make/app.json', data: fs.readFileSync(path.join(process.cwd(), 'src', 'app', 'integrations', 'make', 'app.json', 'route.ts')) })
+  const zDir = path.join(process.cwd(), 'integrations', 'zapier', 'templates')
+  const mDir = path.join(process.cwd(), 'integrations', 'make', 'blueprints')
+  for (const f of fs.readdirSync(zDir).filter(f=>f.endsWith('.json'))) entries.push({ name: `zapier/templates/${f}`, data: fs.readFileSync(path.join(zDir, f)) })
+  for (const f of fs.readdirSync(mDir).filter(f=>f.endsWith('.json'))) entries.push({ name: `make/blueprints/${f}`, data: fs.readFileSync(path.join(mDir, f)) })
+  // Sheets pack inside
+  const sheetsZip = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/partners/sheets/download`).then(r=>r.arrayBuffer()).catch(()=>null)
+  if (sheetsZip) entries.push({ name: 'sheets/partner-sheets.zip', data: Buffer.from(sheetsZip) })
+  // OpenAPI
+  const oas = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/openapi.json`).then(r=>r.text()).catch(()=>null)
+  if (oas) entries.push({ name: 'openapi.json', data: Buffer.from(oas) })
+  // Postman collection (basic)
+  const postman = { info: { name: 'Trendzo Partner APIs', schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json' }, item: [ { name: 'Score', request: { method:'POST', url:'/api/public/score' } } ] }
+  entries.push({ name: 'postman.json', data: Buffer.from(JSON.stringify(postman, null, 2)) })
+  // Sample webhook payloads
+  entries.push({ name: 'samples/telemetry.ingested.json', data: Buffer.from(JSON.stringify({ event:'telemetry.ingested', video_id:'vid1', ts:new Date().toISOString() }, null, 2)) })
+  entries.push({ name: 'samples/prediction.published.json', data: Buffer.from(JSON.stringify({ event:'prediction.published', id:'pred1', score:0.71, ts:new Date().toISOString() }, null, 2)) })
+  // One-pager
+  const onepager = `# Trendzo Partner Launch Kit\n\nUse the Zapier/Make apps, Sheets pack, and the OpenAPI to integrate. Auth via X-API-Key.`
+  entries.push({ name: 'one-pager.md', data: Buffer.from(onepager) })
+
+  const zip = buildStoredZip(entries)
+  const out = path.join(artifactsDir, 'partner-launch-kit.zip')
+  fs.writeFileSync(out, zip)
+  return new NextResponse(zip, { status: 200, headers: { 'content-type': 'application/zip' } })
+}
+
+
+

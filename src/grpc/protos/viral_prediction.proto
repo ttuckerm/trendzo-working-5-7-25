@@ -1,0 +1,342 @@
+// Protocol Buffer definitions for Viral Prediction gRPC Services
+// Target: ≤100ms inference latency with high-performance serialization
+
+syntax = "proto3";
+
+package viral_prediction.v2;
+
+import "google/protobuf/timestamp.proto";
+
+// Viral Prediction Service Definition
+service ViralPredictionService {
+  // Main prediction endpoint (target: ≤100ms)
+  rpc PredictViral(ViralPredictionRequest) returns (ViralPredictionResponse);
+  
+  // Batch prediction for multiple videos
+  rpc BatchPredictViral(BatchViralPredictionRequest) returns (BatchViralPredictionResponse);
+  
+  // Real-time feature extraction
+  rpc ExtractFeatures(FeatureExtractionRequest) returns (FeatureExtractionResponse);
+  
+  // Health check
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+  
+  // Model performance metrics
+  rpc GetMetrics(MetricsRequest) returns (MetricsResponse);
+}
+
+// Request Messages
+message ViralPredictionRequest {
+  string request_id = 1;
+  string video_url = 2;
+  string title = 3;
+  string creator = 4;
+  string platform = 5; // tiktok, instagram, youtube
+  VideoMetadata metadata = 6;
+  PredictionOptions options = 7;
+}
+
+message VideoMetadata {
+  int64 duration_ms = 1;
+  int32 width = 2;
+  int32 height = 3;
+  double frame_rate = 4;
+  int64 file_size_bytes = 5;
+  string encoding = 6;
+  google.protobuf.Timestamp upload_time = 7;
+}
+
+message PredictionOptions {
+  bool include_detailed_analysis = 1;
+  bool enable_god_mode = 2;
+  repeated string ip_components = 3; // Which IP components to use
+  double confidence_threshold = 4;
+  int32 timeout_ms = 5;
+}
+
+message BatchViralPredictionRequest {
+  string batch_id = 1;
+  repeated ViralPredictionRequest requests = 2;
+  int32 max_parallel = 3;
+}
+
+message FeatureExtractionRequest {
+  string request_id = 1;
+  string video_url = 2;
+  repeated string feature_types = 3; // text, visual, audio, multimodal
+}
+
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message MetricsRequest {
+  google.protobuf.Timestamp start_time = 1;
+  google.protobuf.Timestamp end_time = 2;
+}
+
+// Response Messages
+message ViralPredictionResponse {
+  string request_id = 1;
+  bool success = 2;
+  string error_message = 3;
+  
+  PredictionResult prediction = 4;
+  PerformanceMetrics performance = 5;
+  google.protobuf.Timestamp timestamp = 6;
+}
+
+message PredictionResult {
+  double viral_score = 1; // 0-100
+  double viral_probability = 2; // 0-1
+  string confidence_level = 3; // low, medium, high
+  double confidence_score = 4; // 0-1
+  
+  // Enhanced analysis
+  ContentAnalysis content_analysis = 5;
+  CreatorMetrics creator_metrics = 6;
+  TimingAnalysis timing_analysis = 7;
+  IPComponentResults ip_results = 8;
+  
+  // Recommendations
+  repeated Recommendation recommendations = 9;
+  repeated RiskFactor risk_factors = 10;
+  
+  // Predicted metrics
+  ViewPrediction view_prediction = 11;
+  EngagementPrediction engagement_prediction = 12;
+}
+
+message ContentAnalysis {
+  TextFeatures text_features = 1;
+  VisualFeatures visual_features = 2;
+  AudioFeatures audio_features = 3;
+  MultimodalFeatures multimodal_features = 4;
+}
+
+message TextFeatures {
+  double sentiment_score = 1;
+  repeated double emotion_scores = 2; // [joy, anger, fear, sadness, surprise, disgust, neutral]
+  int32 viral_keywords_count = 3;
+  double call_to_action_strength = 4;
+  double readability_score = 5;
+  double urgency_score = 6;
+  repeated double bert_embeddings = 7; // 768-dimensional
+  repeated double viral_embeddings = 8; // 512-dimensional domain-tuned
+}
+
+message VisualFeatures {
+  double production_quality = 1;
+  double visual_appeal = 2;
+  double color_vibrancy = 3;
+  int32 face_count = 4;
+  double motion_intensity = 5;
+  double lighting_quality = 6;
+  double composition_score = 7;
+  double thumbnail_ctr_prediction = 8;
+  repeated double clip_embeddings = 9; // 512-dimensional CLIP
+  repeated double vit_features = 10; // 1024-dimensional ViT
+}
+
+message AudioFeatures {
+  double audio_quality = 1;
+  double music_viral_potential = 2;
+  double voice_energy = 3;
+  double trend_alignment = 4;
+  int32 sound_effects_count = 5;
+  bool optimal_speech_pace = 6;
+  double hook_strength = 7;
+  repeated double whisper_embeddings = 8; // 512-dimensional
+}
+
+message MultimodalFeatures {
+  double text_visual_alignment = 1;
+  double audio_visual_sync = 2;
+  double narrative_coherence = 3;
+  repeated double fusion_embeddings = 4; // 64-dimensional cross-modal
+}
+
+message CreatorMetrics {
+  int64 follower_count = 1;
+  double engagement_rate_30d = 2;
+  int32 viral_videos_90d = 3;
+  double consistency_score = 4;
+  double niche_authority = 5;
+  double audience_loyalty = 6;
+  double momentum_score = 7;
+}
+
+message TimingAnalysis {
+  double global_optimal_score = 1;
+  double audience_optimal_score = 2;
+  double day_multiplier = 3;
+  double seasonal_alignment = 4;
+  double trend_alignment = 5;
+  double competition_level = 6;
+  double algorithm_favorability = 7;
+}
+
+message IPComponentResults {
+  FrameworkEvolutionResult framework_evolution = 1;
+  AlgorithmOrchestrationResult algorithm_orchestration = 2;
+  ScriptSingularityResult script_singularity = 3;
+  ViralDNAResult viral_dna = 4;
+  PsychologicalAnalysisResult psychological = 5;
+  CulturalTimingResult cultural_timing = 6;
+  DynamicPercentileResult dynamic_percentile = 7;
+  InceptionModeResult inception_mode = 8;
+}
+
+message FrameworkEvolutionResult {
+  repeated double framework_scores = 1; // 40+ framework scores
+  double evolution_confidence = 2;
+  repeated string discovered_patterns = 3;
+}
+
+message AlgorithmOrchestrationResult {
+  repeated double algorithm_weights = 1;
+  double ensemble_confidence = 2;
+  repeated string active_algorithms = 3;
+}
+
+message ScriptSingularityResult {
+  double trend_prediction_score = 1;
+  repeated string predicted_trends = 2;
+  double singularity_confidence = 3;
+}
+
+message ViralDNAResult {
+  repeated double dna_signature = 1; // 1024-dimensional
+  double dna_quality_score = 2;
+  repeated string viral_genes = 3;
+}
+
+message PsychologicalAnalysisResult {
+  repeated double psychological_triggers = 1;
+  double god_mode_enhancement = 2;
+  repeated string active_triggers = 3;
+}
+
+message CulturalTimingResult {
+  double cultural_relevance = 1;
+  double timing_optimization = 2;
+  repeated string cultural_factors = 3;
+}
+
+message DynamicPercentileResult {
+  double percentile_score = 1;
+  double dynamic_adjustment = 2;
+  double statistical_confidence = 3;
+}
+
+message InceptionModeResult {
+  repeated double layer_scores = 1;
+  double inception_confidence = 2;
+  int32 active_layers = 3;
+}
+
+message Recommendation {
+  string type = 1; // content, timing, creator, technical
+  string title = 2;
+  string description = 3;
+  double impact_score = 4; // Expected improvement
+  string priority = 5; // high, medium, low
+  repeated string action_items = 6;
+}
+
+message RiskFactor {
+  string type = 1;
+  string description = 2;
+  double risk_score = 3; // 0-1
+  string mitigation = 4;
+}
+
+message ViewPrediction {
+  int64 likely_views = 1;
+  int64 conservative_views = 2;
+  int64 optimistic_views = 3;
+  double confidence = 4;
+  int32 time_to_peak_hours = 5;
+}
+
+message EngagementPrediction {
+  double predicted_engagement_rate = 1;
+  int64 predicted_likes = 2;
+  int64 predicted_comments = 3;
+  int64 predicted_shares = 4;
+  double virality_velocity = 5; // Rate of spread
+}
+
+message BatchViralPredictionResponse {
+  string batch_id = 1;
+  repeated ViralPredictionResponse responses = 2;
+  BatchMetrics batch_metrics = 3;
+}
+
+message BatchMetrics {
+  int32 total_requests = 1;
+  int32 successful_predictions = 2;
+  int32 failed_predictions = 3;
+  double average_processing_time_ms = 4;
+  double total_processing_time_ms = 5;
+}
+
+message FeatureExtractionResponse {
+  string request_id = 1;
+  bool success = 2;
+  string error_message = 3;
+  
+  ContentAnalysis features = 4;
+  PerformanceMetrics performance = 5;
+}
+
+message HealthCheckResponse {
+  bool healthy = 1;
+  string status = 2;
+  repeated ServiceStatus services = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+
+message ServiceStatus {
+  string name = 1;
+  bool healthy = 2;
+  string status = 3;
+  double response_time_ms = 4;
+}
+
+message MetricsResponse {
+  PerformanceMetrics performance = 1;
+  AccuracyMetrics accuracy = 2;
+  ThroughputMetrics throughput = 3;
+  repeated SystemMetric custom_metrics = 4;
+}
+
+message PerformanceMetrics {
+  double processing_time_ms = 1;
+  double feature_extraction_time_ms = 2;
+  double inference_time_ms = 3;
+  double post_processing_time_ms = 4;
+  double total_latency_ms = 5;
+  string performance_tier = 6; // excellent, good, acceptable, poor
+}
+
+message AccuracyMetrics {
+  double current_accuracy = 1;
+  double accuracy_trend = 2;
+  int64 validated_predictions = 3;
+  double confidence_calibration = 4;
+}
+
+message ThroughputMetrics {
+  double requests_per_second = 1;
+  double predictions_per_minute = 2;
+  int64 concurrent_requests = 3;
+  double resource_utilization = 4;
+}
+
+message SystemMetric {
+  string name = 1;
+  double value = 2;
+  string unit = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}

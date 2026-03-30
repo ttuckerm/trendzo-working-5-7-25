@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "VideoPresentationCard",
+  "title": "VideoPresentationCard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "platform", "web_url", "thumbnail_url", "duration_sec", "stats"],
+  "properties": {
+    "id": { "type": "string" },
+    "platform": { "type": "string", "enum": ["tiktok", "youtube", "instagram", "linkedin"] },
+    "title": { "type": ["string", "null"] },
+    "caption": { "type": ["string", "null"] },
+    "thumbnail_url": { "type": "string", "format": "uri" },
+    "web_url": { "type": "string", "format": "uri" },
+    "duration_sec": { "type": "integer", "minimum": 0 },
+    "badges": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "stats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["views", "likes", "comments", "shares"],
+      "properties": {
+        "views": { "type": "integer", "minimum": 0 },
+        "likes": { "type": "integer", "minimum": 0 },
+        "comments": { "type": "integer", "minimum": 0 },
+        "shares": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "viral_score": { "type": ["number", "null"], "minimum": 0 },
+    "success_rate": { "type": ["number", "null"], "minimum": 0 },
+    "niches": { "type": "array", "items": { "type": "string" }, "default": [] },
+    "template": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "status": { "type": "string", "enum": ["HOT", "COOLING", "NEW"] }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+

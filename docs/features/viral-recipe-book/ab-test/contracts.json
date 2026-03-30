@@ -1,0 +1,20 @@
+{
+  "slug": "ab-test",
+  "tab": "abtesting",
+  "testIds": [
+    "ab-start",
+    "ab-row-<id>"
+  ],
+  "states": ["empty", "skeleton", "error", "success"],
+  "endpoints": [
+    { "method": "POST", "path": "/api/ab/start", "status": "to-implement" },
+    { "method": "GET", "path": "/api/ab/:id", "status": "to-implement" }
+  ],
+  "rbac": ["admin for POST"],
+  "observability": {
+    "logs": ["ab.start", "ab.poll"],
+    "metrics": ["ab.active", "ab.completed"],
+    "alerts": ["ab.start_failure"],
+    "audit": true
+  }
+}

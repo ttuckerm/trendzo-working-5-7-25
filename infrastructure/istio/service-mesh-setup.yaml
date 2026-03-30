@@ -1,0 +1,263 @@
+# Istio Service Mesh Configuration for Viral Prediction Platform
+# Target: Traffic management, security, observability for ≤100ms latency
+
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+metadata:
+  name: viral-prediction-control-plane
+spec:
+  values:
+    global:
+      meshID: viral-prediction-mesh
+      multiCluster:
+        clusterName: viral-prediction-cluster
+      network: viral-prediction-network
+    pilot:
+      env:
+        EXTERNAL_ISTIOD: false
+        PILOT_ENABLE_WORKLOAD_ENTRY_AUTOREGISTRATION: true
+  components:
+    pilot:
+      k8s:
+        resources:
+          requests:
+            cpu: 500m
+            memory: 2048Mi
+          limits:
+            cpu: 1000m
+            memory: 4096Mi
+        hpaSpec:
+          maxReplicas: 5
+          minReplicas: 2
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: istiod
+          targetCPUUtilizationPercentage: 80
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: true
+      k8s:
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+        hpaSpec:
+          maxReplicas: 5
+          minReplicas: 2
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: istio-ingressgateway
+          targetCPUUtilizationPercentage: 80
+        service:
+          type: LoadBalancer
+          ports:
+          - port: 15021
+            targetPort: 15021
+            name: status-port
+          - port: 80
+            targetPort: 8080
+            name: http2
+          - port: 443
+            targetPort: 8443
+            name: https
+          - port: 15443
+            targetPort: 15443
+            name: tls
+---
+# Gateway for viral prediction API
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: viral-prediction-gateway
+  namespace: viral-prediction
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - api.viral-prediction.local
+    - "*.viral-prediction.local"
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: viral-prediction-tls
+    hosts:
+    - api.viral-prediction.local
+    - "*.viral-prediction.local"
+---
+# Virtual Service for API routing
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: viral-prediction-api
+  namespace: viral-prediction
+spec:
+  hosts:
+  - api.viral-prediction.local
+  gateways:
+  - viral-prediction-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /api/predict/v2
+    route:
+    - destination:
+        host: viral-prediction-api
+        port:
+          number: 8080
+    timeout: 100ms  # Target ≤100ms latency
+    retries:
+      attempts: 3
+      perTryTimeout: 30ms
+  - match:
+    - uri:
+        prefix: /api/predict/legacy
+    route:
+    - destination:
+        host: viral-prediction-legacy
+        port:
+          number: 8080
+    timeout: 2s  # Legacy endpoint tolerance
+  - match:
+    - uri:
+        prefix: /api/ml
+    route:
+    - destination:
+        host: viral-prediction-ml-api
+        port:
+          number: 8080
+    timeout: 500ms  # ML operations tolerance
+---
+# Destination Rules for traffic policies
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: viral-prediction-api
+  namespace: viral-prediction
+spec:
+  host: viral-prediction-api
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 50
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 10
+        maxRetries: 3
+        consecutiveGatewayErrors: 5
+        interval: 30s
+        baseEjectionTime: 30s
+        maxEjectionPercent: 50
+    loadBalancer:
+      simple: LEAST_CONN
+    outlierDetection:
+      consecutiveGatewayErrors: 3
+      consecutive5xxErrors: 3
+      interval: 30s
+      baseEjectionTime: 30s
+      maxEjectionPercent: 50
+---
+# Service Mesh Security - PeerAuthentication
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: viral-prediction
+spec:
+  mtls:
+    mode: STRICT
+---
+# Authorization Policy for API access
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: viral-prediction-api-access
+  namespace: viral-prediction
+spec:
+  selector:
+    matchLabels:
+      app: viral-prediction-api
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/viral-prediction/sa/viral-prediction-api"]
+  - to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths: ["/api/predict/*", "/health", "/metrics"]
+---
+# Telemetry for observability
+apiVersion: telemetry.istio.io/v1alpha1
+kind: Telemetry
+metadata:
+  name: viral-prediction-metrics
+  namespace: viral-prediction
+spec:
+  metrics:
+  - providers:
+    - name: prometheus
+  - overrides:
+    - match:
+        metric: ALL_METRICS
+      tagOverrides:
+        destination_app:
+          value: "viral-prediction"
+        source_app:
+          value: "viral-prediction"
+---
+# Rate limiting for API protection
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: viral-prediction-rate-limit
+  namespace: viral-prediction
+spec:
+  workloadSelector:
+    labels:
+      app: viral-prediction-api
+  configPatches:
+  - applyTo: HTTP_FILTER
+    match:
+      context: SIDECAR_INBOUND
+      listener:
+        filterChain:
+          filter:
+            name: "envoy.filters.network.http_connection_manager"
+    patch:
+      operation: INSERT_BEFORE
+      value:
+        name: envoy.filters.http.local_ratelimit
+        typed_config:
+          "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+          type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+          value:
+            stat_prefix: viral_prediction_rate_limiter
+            token_bucket:
+              max_tokens: 1000
+              tokens_per_fill: 1000
+              fill_interval: 60s
+            filter_enabled:
+              runtime_key: viral_prediction_rate_limit_enabled
+              default_value:
+                numerator: 100
+                denominator: HUNDRED
+            filter_enforced:
+              runtime_key: viral_prediction_rate_limit_enforced
+              default_value:
+                numerator: 100
+                denominator: HUNDRED

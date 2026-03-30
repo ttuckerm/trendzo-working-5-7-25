@@ -1,0 +1,16 @@
+{
+	"version": "ops-1",
+	"objectives": [
+		{ "id": "support_incidents", "title": "Support & Incidents", "route": "/admin/operations-center", "anchor": "#incidents", "checks": { "dom": [ { "selector": "[data-testid='incidents-table']", "exists": true } ], "metrics": [ { "source": "api:/api/oncall/now", "path": "user", "op": "!=", "value": "" } ], "timing": [] }, "logic": "AND" },
+		{ "id": "bug_sla_engine", "title": "Bug SLA Engine", "route": "/admin/operations-center", "anchor": "#quality", "checks": { "dom": [ { "selector": "[data-testid='bug-sla']", "exists": true } ], "metrics": [ { "source": "api:/api/bugs/sla/summary", "path": "open_p1|open_p2|breach_count", "op": ">=", "value": 0 } ], "timing": [] }, "logic": "AND" },
+		{ "id": "voc", "title": "In-App Feedback & NPS", "route": "/admin/operations-center", "anchor": "#voc", "checks": { "dom": [ { "selector": "[data-testid='voc-panel']", "exists": true } ], "metrics": [ { "source": "api:/api/feedback/summary", "path": "feedback_count", "op": ">=", "value": 1 } ], "timing": [] }, "logic": "AND" },
+		{ "id": "docs_tutorials", "title": "Docs & Tutorials", "route": "/admin/operations-center", "anchor": "#docs", "checks": { "dom": [ { "selector": "[data-testid='docs-index']", "exists": true } ], "metrics": [], "timing": [] }, "logic": "AND" },
+		{ "id": "integrations_zapier_make", "title": "Zapier/Make Integrations", "route": "/admin/operations-center", "anchor": "#developers", "checks": { "dom": [ { "selector": "[data-testid='integrations-zapier-make']", "exists": true } ], "metrics": [ { "source": "api:/api/integrations/zapier/test", "path": "delivered", "op": "==", "value": true }, { "source": "api:/api/integrations/make/test", "path": "delivered", "op": "==", "value": true } ], "timing": [] }, "logic": "AND" },
+		{ "id": "affiliates", "title": "Referrals & Affiliates", "route": "/admin/operations-center", "anchor": "#affiliates", "checks": { "dom": [ { "selector": "[data-testid='affiliate-panel']", "exists": true } ], "metrics": [], "timing": [] }, "logic": "AND" },
+		{ "id": "growth_analytics", "title": "Growth Analytics Loop", "route": "/admin/operations-center", "anchor": "#growth", "checks": { "dom": [ { "selector": "[data-testid='growth-analytics']", "exists": true } ], "metrics": [ { "source": "api:/api/growth/summary", "path": "activation_rate|d7_retention", "op": ">=", "value": 0 } ], "timing": [] }, "logic": "AND" },
+		{ "id": "warehouse_export", "title": "Warehouse Export & BI", "route": "/admin/operations-center", "anchor": "#warehouse", "checks": { "dom": [ { "selector": "[data-testid='warehouse-status']", "exists": true } ], "metrics": [ { "source": "api:/api/warehouse/manifest", "path": "files.0.size", "op": ">", "value": 0 } ], "timing": [] }, "logic": "AND" },
+		{ "id": "release_notes", "title": "Release Notes & Post-Release", "route": "/admin/operations-center", "anchor": "#release", "checks": { "dom": [ { "selector": "[data-testid='release-notes']", "exists": true } ], "metrics": [], "timing": [] }, "logic": "AND" },
+		{ "id": "loop_automations", "title": "Loop Automations", "route": "/admin/operations-center", "anchor": "#voc", "checks": { "dom": [ { "selector": "[data-testid='automation-status']", "exists": true } ], "metrics": [], "timing": [] }, "logic": "AND" }
+	]
+}
+

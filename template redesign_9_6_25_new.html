@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Recipe Book™</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, rgba(123, 97, 255, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: screen;
+        }
+
+        .cursor.hover {
+            transform: translate(-50%, -50%) scale(2);
+            background: radial-gradient(circle, rgba(255, 97, 166, 0.8) 0%, transparent 70%);
+        }
+
+        /* Background ambient */
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(123, 97, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 97, 166, 0.05) 0%, transparent 50%);
+            animation: ambient-shift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes ambient-shift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, #000 0%, transparent 100%);
+            padding: 24px 40px 80px;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: logo-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Stats badge */
+        .trending-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            font-size: 14px;
+            animation: badge-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes badge-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(123, 97, 255, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(255, 97, 166, 0.4); }
+        }
+
+        .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #ff4458;
+            border-radius: 50%;
+            animation: live-pulse 1s ease-out infinite;
+        }
+
+        @keyframes live-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Filters */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            outline: none;
+        }
+
+        .filter-btn:hover {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: rgba(123, 97, 255, 0.4);
+            color: #fff;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            color: #fff;
+        }
+
+        /* Template feed */
+        .template-feed {
+            padding: 200px 40px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 32px;
+            animation: feed-load 0.8s ease-out;
+        }
+
+        @keyframes feed-load {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Template card */
+        .template-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            animation: card-appear 0.6s ease-out backwards;
+        }
+
+        .template-card:nth-child(1) { animation-delay: 0.1s; }
+        .template-card:nth-child(2) { animation-delay: 0.2s; }
+        .template-card:nth-child(3) { animation-delay: 0.3s; }
+        .template-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes card-appear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) rotateX(-10deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .template-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(123, 97, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(123, 97, 255, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(123, 97, 255, 0.3),
+                0 0 80px rgba(123, 97, 255, 0.2);
+        }
+
+        .template-card:hover::before {
+            opacity: 1;
+        }
+
+        /* State badge */
+        .state-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 6px 12px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .state-hot {
+            background: linear-gradient(135deg, rgba(255, 68, 88, 0.9) 0%, rgba(255, 107, 107, 0.9) 100%);
+        }
+
+        .state-cooling {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.9) 0%, rgba(68, 163, 170, 0.9) 100%);
+        }
+
+        .state-new {
+            background: linear-gradient(135deg, rgba(123, 97, 255, 0.9) 0%, rgba(255, 97, 166, 0.9) 100%);
+        }
+
+        /* Video preview */
+        .video-preview {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .template-card:hover .video-placeholder {
+            transform: scale(1.1);
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .template-card:hover .play-overlay {
+            opacity: 0;
+        }
+
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        /* Platform badges */
+        .platform-badges {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 4px;
+            z-index: 10;
+        }
+
+        .platform-badge {
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Template info */
+        .template-info {
+            padding: 24px;
+        }
+
+        .template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .template-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .template-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        /* Success confidence */
+        .success-confidence {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .confidence-rate {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .confidence-interval {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Trend indicators */
+        .trend-indicators {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .trend-chip {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .trend-up {
+            background: rgba(74, 222, 128, 0.2);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            color: #4ade80;
+        }
+
+        .trend-down {
+            background: rgba(248, 113, 113, 0.2);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            color: #f87171;
+        }
+
+        .trend-stable {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Duration and hook timing */
+        .timing-info {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .timing-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .timing-icon {
+            font-size: 16px;
+        }
+
+        /* Stats row */
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-item strong {
+            color: #fff;
+        }
+
+        /* Signal badges */
+        .signal-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .signal-badge {
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Compliance indicators */
+        .compliance-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+        }
+
+        .compliance-check {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .compliance-check.pass {
+            color: #4ade80;
+        }
+
+        .compliance-check.warn {
+            color: #fbbf24;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: none;
+            outline: none;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(123, 97, 255, 0.4);
+        }
+
+        /* Trending sound */
+        .trending-sound {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 8px 16px;
+            background: rgba(123, 97, 255, 0.1);
+            border: 1px solid rgba(123, 97, 255, 0.2);
+            border-radius: 100px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .trending-sound:hover {
+            background: rgba(123, 97, 255, 0.2);
+            border-color: rgba(123, 97, 255, 0.4);
+        }
+
+        .sound-icon {
+            font-size: 16px;
+            animation: sound-wave 1s ease-in-out infinite;
+        }
+
+        @keyframes sound-wave {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Template stats */
+        .template-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .stat-icon {
+            font-size: 16px;
+        }
+
+        .stat-number {
+            font-weight: 600;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Credits info */
+        .credits-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+        }
+
+        .credits-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Overlay panels */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: overlay-appear 0.3s ease-out;
+        }
+
+        @keyframes overlay-appear {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .panel {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(123, 97, 255, 0.3);
+            border-radius: 24px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: panel-slide 0.3s ease-out;
+        }
+
+        @keyframes panel-slide {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .panel-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .panel-content {
+            padding: 0;
+            max-height: calc(90vh - 120px);
+            overflow-y: auto;
+        }
+
+        /* Tab navigation */
+        .tab-nav {
+            display: flex;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .tab-btn {
+            padding: 16px 24px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(123, 97, 255, 0.1);
+            border-bottom-color: #7b61ff;
+        }
+
+        .tab-content {
+            padding: 32px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Structure timeline */
+        .structure-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .timeline-description {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Variant creator */
+        .variant-form {
+            display: grid;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-select {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .select-option {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .select-option:hover {
+            background: rgba(123, 97, 255, 0.1);
+            border-color: rgba(123, 97, 255, 0.3);
+        }
+
+        .select-option.selected {
+            background: linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%);
+            border-color: transparent;
+            color: #fff;
+        }
+
+        /* Success message */
+        .success-message {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .success-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .success-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4ade80;
+        }
+
+        .success-description {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .feed-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .header {
+                padding: 16px 20px 60px;
+            }
+
+            .template-feed {
+                padding: 160px 20px 20px;
+            }
+
+            .panel {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- Ambient background -->
+    <div class="ambient-bg"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Viral Recipe Book™</div>
+            
+            <div class="trending-badge">
+                <div class="live-indicator"></div>
+                <span>Updated <span id="updateTime">2m</span> ago</span>
+                <span style="color: rgba(255, 255, 255, 0.3); margin: 0 8px;">•</span>
+                <span style="color: #ff4458; font-weight: 600;">247</span> HOT
+                <span style="color: rgba(255, 255, 255, 0.3); margin: 0 8px;">•</span>
+                <span style="color: #4ecdc4; font-weight: 600;">89</span> COOLING
+                <span style="color: rgba(255, 255, 255, 0.3); margin: 0 8px;">•</span>
+                <span style="color: #ff61a6; font-weight: 600;">34</span> NEW
+            </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters-bar">
+            <span class="filter-label">Platform</span>
+            <button class="filter-btn active">All</button>
+            <button class="filter-btn">TikTok</button>
+            <button class="filter-btn">Instagram</button>
+            <button class="filter-btn">YouTube</button>
+            
+            <span class="filter-label" style="margin-left: 20px;">Window</span>
+            <button class="filter-btn">7d</button>
+            <button class="filter-btn active">30d</button>
+            <button class="filter-btn">90d</button>
+            
+            <span class="filter-label" style="margin-left: 20px;">Sort</span>
+            <button class="filter-btn active">SR%</button>
+            <button class="filter-btn">Uses</button>
+            <button class="filter-btn">New</button>
+        </div>
+    </header>
+
+    <!-- Template feed -->
+    <main class="template-feed">
+        <div class="feed-grid" id="feedGrid">
+            <!-- Template cards will be inserted here -->
+        </div>
+    </main>
+
+    <!-- Slide-over drawer backdrop -->
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="closeDrawer()"></div>
+
+    <!-- Details slide-over drawer -->
+    <div class="slide-drawer" id="detailsDrawer" data-testid="tpl-slide-tabs">
+        <div class="drawer-header">
+            <div class="drawer-title" id="drawerTitle">Template Details</div>
+            <button class="drawer-close" onclick="closeDrawer()">×</button>
+        </div>
+        <div class="drawer-tabs">
+            <button class="drawer-tab active" onclick="switchDrawerTab('structure')">Structure</button>
+            <button class="drawer-tab" onclick="switchDrawerTab('guidance')">Guidance</button>
+            <button class="drawer-tab" onclick="switchDrawerTab('prediction')">Prediction</button>
+            <button class="drawer-tab" onclick="switchDrawerTab('examples')">Examples</button>
+            <button class="drawer-tab" onclick="switchDrawerTab('costs')">Costs</button>
+        </div>
+        <div class="drawer-content">
+            <div class="tab-panel active" id="structurePanel">
+                <div id="structureContent"></div>
+            </div>
+            <div class="tab-panel" id="guidancePanel">
+                <div id="guidanceContent"></div>
+            </div>
+            <div class="tab-panel" id="predictionPanel">
+                <div id="predictionContent"></div>
+            </div>
+            <div class="tab-panel" id="examplesPanel">
+                <div id="examplesContent"></div>
+            </div>
+            <div class="tab-panel" id="costsPanel">
+                <div id="costsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Variant creator drawer -->
+    <div class="slide-drawer" id="variantDrawer">
+        <div class="drawer-header">
+            <div class="drawer-title">Generate Variant</div>
+            <button class="drawer-close" onclick="closeDrawer()">×</button>
+        </div>
+        <div class="drawer-content">
+            <div class="variant-section">
+                <div class="variant-label">Platform</div>
+                <div class="variant-options" data-field="platform">
+                    <div class="variant-option" data-value="tiktok">TikTok</div>
+                    <div class="variant-option" data-value="instagram">Instagram</div>
+                    <div class="variant-option" data-value="youtube">YouTube</div>
+                </div>
+            </div>
+            
+            <div class="variant-section">
+                <div class="variant-label">Niche</div>
+                <input type="text" class="variant-text-input" placeholder="Enter niche (e.g., fitness, cooking, tech)" data-field="niche">
+            </div>
+            
+            <div class="variant-section">
+                <div class="variant-label">Experience Level</div>
+                <div class="variant-options" data-field="experience">
+                    <div class="variant-option" data-value="beginner">Beginner</div>
+                    <div class="variant-option" data-value="intermediate">Intermediate</div>
+                    <div class="variant-option" data-value="advanced">Advanced</div>
+                </div>
+            </div>
+            
+            <div class="variant-section">
+                <div class="variant-label">Temporal</div>
+                <div class="variant-options" data-field="temporal">
+                    <div class="variant-option" data-value="trending">Trending</div>
+                    <div class="variant-option" data-value="evergreen">Evergreen</div>
+                    <div class="variant-option" data-value="seasonal">Seasonal</div>
+                </div>
+            </div>
+            
+            <div class="variant-section">
+                <div class="variant-label">Surface</div>
+                <div class="variant-options" data-field="surface">
+                    <div class="variant-option" data-value="mobile">Mobile</div>
+                    <div class="variant-option" data-value="desktop">Desktop</div>
+                </div>
+            </div>
+            
+            <button class="variant-create-btn" onclick="createVariant()">Create Variant</button>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>d -->
+    <main class="template-feed">
+        <div class="feed-grid" id="feedGrid">
+            <!-- Template cards will be inserted here -->
+        </div>
+    </main>
+
+    <!-- Details Panel -->
+    <div class="overlay" id="detailsOverlay">
+        <div class="panel" style="width: 800px;">
+            <div class="panel-header">
+                <div class="panel-title" id="detailsTitle">Template Details</div>
+                <button class="close-btn" onclick="closeDetails()">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="tab-nav">
+                    <button class="tab-btn active" onclick="switchTab('structure')">Structure</button>
+                    <button class="tab-btn" onclick="switchTab('guidance')">Guidance</button>
+                    <button class="tab-btn" onclick="switchTab('prediction')">Prediction</button>
+                    <button class="tab-btn" onclick="switchTab('examples')">Examples</button>
+                    <button class="tab-btn" onclick="switchTab('costs')">Costs</button>
+                </div>
+                
+                <div class="tab-content active" id="structureTab">
+                    <div class="structure-timeline" id="structureTimeline">
+                        <!-- Timeline will be populated -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="guidanceTab">
+                    <div id="guidanceContent">
+                        <!-- Guidance will be populated -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="predictionTab">
+                    <div id="predictionContent">
+                        <!-- Prediction will be populated -->
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="examplesTab">
+                    <div id="examplesContent">
+                        <p style="color: rgba(255, 255, 255, 0.6); text-align: center; padding: 40px;">
+                            Example videos gallery coming soon...
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="costsTab">
+                    <div id="costsContent">
+                        <!-- Costs will be populated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Variant Creator Panel -->
+    <div class="overlay" id="variantOverlay">
+        <div class="panel" style="width: 600px;">
+            <div class="panel-header">
+                <div class="panel-title">Generate Variant</div>
+                <button class="close-btn" onclick="closeVariant()">×</button>
+            </div>
+            <div class="panel-content">
+                <div class="variant-form" id="variantForm">
+                    <div class="form-group">
+                        <label class="form-label">Platform</label>
+                        <div class="form-select" data-field="platform">
+                            <div class="select-option" data-value="tiktok">TikTok</div>
+                            <div class="select-option" data-value="instagram">Instagram</div>
+                            <div class="select-option" data-value="youtube">YouTube</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Niche</label>
+                        <div class="form-select" data-field="niche">
+                            <div class="select-option" data-value="education">Education</div>
+                            <div class="select-option" data-value="entertainment">Entertainment</div>
+                            <div class="select-option" data-value="business">Business</div>
+                            <div class="select-option" data-value="lifestyle">Lifestyle</div>
+                            <div class="select-option" data-value="tech">Tech</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Experience Level</label>
+                        <div class="form-select" data-field="experience">
+                            <div class="select-option" data-value="beginner">Beginner</div>
+                            <div class="select-option" data-value="intermediate">Intermediate</div>
+                            <div class="select-option" data-value="advanced">Advanced</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Time Type</label>
+                        <div class="form-select" data-field="timeType">
+                            <div class="select-option" data-value="trending">Trending</div>
+                            <div class="select-option" data-value="evergreen">Evergreen</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Device Type</label>
+                        <div class="form-select" data-field="deviceType">
+                            <div class="select-option" data-value="mobile">Mobile</div>
+                            <div class="select-option" data-value="desktop">Desktop</div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-generate" onclick="createVariant()" data-testid="create-variant-btn">
+                        ✨ Create Variant
+                    </button>
+                </div>
+                
+                <div class="success-message" id="variantSuccess">
+                    <div class="success-icon">🎉</div>
+                    <div class="success-title">Variant Created Successfully!</div>
+                    <div class="success-description">Your customized template variant has been generated and is ready to use.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced template data with all required fields
+        const templates = [
+            {
+                id: 1,
+                state: 'HOT',
+                title: 'Transformation Reveal',
+                description: 'The viral before/after format that gets millions of views',
+                scores: {
+                    success_rate: 94,
+                    confidence_interval: 3,
+                    trend_delta_7d: 12,
+                    trend_delta_30d: 8,
+                    uses_count: 12847,
+                    examples_count: 342
+                },
+                guidance: {
+                    duration_range: '15-30s',
+                    hook_target_sec: 3,
+                    beat_slots: [
+                        { name: 'Hook', description: 'Show the dramatic before state', duration: '0-3s' },
+                        { name: 'Setup', description: 'Tease the transformation process', duration: '3-8s' },
+                        { name: 'Process', description: 'Show key transformation steps', duration: '8-22s' },
+                        { name: 'Reveal', description: 'Dramatic after reveal with reaction', duration: '22-30s' }
+                    ],
+                    visual_requirements: ['High contrast before/after', 'Consistent lighting', 'Clear subject focus'],
+                    audio_requirements: ['Build-up music', 'Reaction sound effect', 'Trending audio overlay']
+                },
+                policy: {
+                    brand_safe: true,
+                    compliance_tags: ['FTC-compliant', 'No medical claims']
+                },
+                costs: {
+                    analyze_credits: 3,
+                    generate_credits: 8,
+                    validate_credits: 2,
+                    optimize_credits: 5
+                },
+                platform_support: ['tiktok', 'instagram', 'youtube'],
+                platforms: ['📱', '📷', '📺'],
+                sound: 'Oh No - Capone Remix',
+                gradient: 'linear-gradient(135deg, #7b61ff 0%, #ff61a6 100%)'
+            },
+            {
+                id: 2,
+                state: 'HOT',
+                title: '5 Things List',
+                description: 'Countdown format with text overlays that hooks viewers',
+                scores: {
+                    success_rate: 89,
+                    confidence_interval: 4,
+                    trend_delta_7d: 5,
+                    trend_delta_30d: -2,
+                    uses_count: 9234,
+                    examples_count: 218
+                },
+                guidance: {
+                    duration_range: '30-60s',
+                    hook_target_sec: 2,
+                    beat_slots: [
+                        { name: 'Hook', description: 'Promise valuable list content', duration: '0-2s' },
+                        { name: 'Introduction', description: 'Brief context setup', duration: '2-8s' },
+                        { name: 'List Items', description: 'Present 5 items with visual text', duration: '8-50s' },
+                        { name: 'Conclusion', description: 'Call to action or summary', duration: '50-60s' }
+                    ],
+                    visual_requirements: ['Bold text overlays', 'Consistent numbering', 'Visual examples for each point'],
+                    audio_requirements: ['Upbeat background music', 'Voice narration', 'Transition sound effects']
+                },
+                policy: {
+                    brand_safe: true,
+                    compliance_tags: ['Educational content', 'Fact-checked']
+                },
+                costs: {
+                    analyze_credits: 2,
+                    generate_credits: 6,
+                    validate_credits: 1,
+                    optimize_credits: 4
+                },
+                platform_support: ['tiktok', 'youtube'],
+                platforms: ['📱', '📺'],
+                sound: 'Aesthetic - Tollan Kim',
+                gradient: 'linear-gradient(135deg, #ff61a6 0%, #7b61ff 100%)'
+            },
+            {
+                id: 3,
+                state: 'HOT',
+                title: 'POV Experience',
+                description: 'First-person storytelling that creates instant connection',
+                scores: {
+                    success_rate: 97,
+                    confidence_interval: 2,
+                    trend_delta_7d: 18,
+                    trend_delta_30d: 15,
+                    uses_count: 18923,
+                    examples_count: 567
+                },
+                guidance: {
+                    duration_range: '15-30s',
+                    hook_target_sec: 1,
+                    beat_slots: [
+                        { name: 'POV Setup', description: 'Establish the perspective immediately', duration: '0-1s' },
+                        { name: 'Situation', description: 'Present the relatable scenario', duration: '1-10s' },
+                        { name: 'Complication', description: 'Introduce tension or problem', duration: '10-20s' },
+                        { name: 'Resolution', description: 'Satisfying conclusion or twist', duration: '20-30s' }
+                    ],
+                    visual_requirements: ['First-person camera angle', 'Expressive reactions', 'Relatable settings'],
+                    audio_requirements: ['Natural dialogue', 'Emotional music', 'Ambient sound']
+                },
+                policy: {
+                    brand_safe: true,
+                    compliance_tags: ['Authentic content', 'No deceptive practices']
+                },
+                costs: {
+                    analyze_credits: 4,
+                    generate_credits: 10,
+                    validate_credits: 3,
+                    optimize_credits: 6
+                },
+                platform_support: ['tiktok', 'instagram'],
+                platforms: ['📱', '📷'],
+                sound: 'Running Up That Hill - Kate Bush',
+                gradient: 'linear-gradient(135deg, #ffd93d 0%, #ff6bcb 100%)'
+            },
+            {
+                id: 4,
+                state: 'COOLING',
+                title: 'Story Time Hook',
+                description: 'Personal narrative format that keeps viewers watching',
+                scores: {
+                    success_rate: 76,
+                    confidence_interval: 5,
+                    trend_delta_7d: -3,
+                    trend_delta_30d: -8,
+                    uses_count: 6789,
+                    examples_count: 145
+                },
+                guidance: {
+                    duration_range: '30-90s',
+                    hook_target_sec: 4,
+                    beat_slots: [
+                        { name: 'Teaser', description: 'Hint at the interesting story', duration: '0-4s' },
+                        { name: 'Context', description: 'Set up the background', duration: '4-15s' },
+                        { name: 'Story', description: 'Tell the main narrative', duration: '15-75s' },
+                        { name: 'Payoff', description: 'Deliver the conclusion or lesson', duration: '75-90s' }
+                    ],
+                    visual_requirements: ['Talking head format', 'Expressive gestures', 'Good lighting'],
+                    audio_requirements: ['Clear narration', 'Minimal background music', 'Natural pacing']
+                },
+                policy: {
+                    brand_safe: true,
+                    compliance_tags: ['Personal content', 'Age-appropriate']
+                },
+                costs: {
+                    analyze_credits: 2,
+                    generate_credits: 5,
+                    validate_credits: 1,
+                    optimize_credits: 3
+                },
+                platform_support: ['instagram', 'youtube'],
+                platforms: ['📷', '📺'],
+                sound: 'Monkeys Spinning - Kevin MacLeod',
+                gradient: 'linear-gradient(135deg, #4ecdc4 0%, #ff6b6b 100%)'
+            }
+        ];
+
+        // State for variant creator
+        let variantSelections = {};
+
+        // Render templates
+        function renderTemplates() {
+            const feedGrid = document.getElementById('feedGrid');
+            feedGrid.innerHTML = templates.map(template => `
+                <article class="template-card" data-id="${template.id}" data-testid="template-card-${template.id}">
+                    <div class="state-badge state-${template.state.toLowerCase()}">${template.state}</div>
+                    
+                    <div class="platform-badges">
+                        ${template.platform_support.map(p => `
+                            <div class="platform-badge" title="${p.charAt(0).toUpperCase() + p.slice(1)}">
+                                ${p === 'tiktok' ? '📱' : p === 'instagram' ? '📷' : '📺'}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="video-preview">
+                        <div class="video-placeholder" style="background: ${template.gradient};">
+                            ${template.title.split(' ').slice(0, 2).join(' ')}
+                        </div>
+                        <div class="play-overlay">
+                            <div class="play-button">▶️</div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-info">
+                        <div class="template-header">
+                            <div>
+                                <h3 class="template-title">${template.title}</h3>
+                                <p class="template-description">${template.description}</p>
+                            </div>
+                            <div class="success-confidence">
+                                <div class="confidence-rate">${template.scores.success_rate}%</div>
+                                <div class="confidence-interval">± ${template.scores.confidence_interval}%</div>
+                            </div>
+                        </div>
+                        
+                        <div class="trend-indicators">
+                            <div class="trend-chip ${template.scores.trend_delta_7d > 0 ? 'trend-up' : template.scores.trend_delta_7d < 0 ? 'trend-down' : 'trend-stable'}">
+                                ${template.scores.trend_delta_7d > 0 ? '↗' : template.scores.trend_delta_7d < 0 ? '↘' : '→'} 
+                                ${Math.abs(template.scores.trend_delta_7d)}% 7d
+                            </div>
+                            <div class="trend-chip ${template.scores.trend_delta_30d > 0 ? 'trend-up' : template.scores.trend_delta_30d < 0 ? 'trend-down' : 'trend-stable'}">
+                                ${template.scores.trend_delta_30d > 0 ? '↗' : template.scores.trend_delta_30d < 0 ? '↘' : '→'} 
+                                ${Math.abs(template.scores.trend_delta_30d)}% 30d
+                            </div>
+                        </div>
+                        
+                        <div class="timing-info">
+                            <div class="timing-item">
+                                <span class="timing-icon">⏱️</span>
+                                <span>${template.guidance.duration_range}</span>
+                            </div>
+                            <div class="timing-item">
+                                <span class="timing-icon">🎯</span>
+                                <span>Hook ${template.guidance.hook_target_sec}s</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-row">
+                            <div class="stat-item">Uses: <strong>${template.scores.uses_count.toLocaleString()}</strong></div>
+                            <div class="stat-item">Examples: <strong>${template.scores.examples_count}</strong></div>
+                        </div>
+                        
+                        <div class="signal-badges">
+                            ${template.guidance.visual_requirements.slice(0, 3).map(req => `
+                                <span class="signal-badge">${req}</span>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="compliance-row">
+                            <div class="compliance-check pass">
+                                ✓ Brand-safe
+                            </div>
+                            ${template.policy.compliance_tags.map(tag => `
+                                <div class="compliance-check pass">✓ ${tag}</div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="credits-info">
+                            <div class="credits-item">
+                                <span>📊</span> Analyze: ${template.costs.analyze_credits}
+                            </div>
+                            <div class="credits-item">
+                                <span>✨</span> Generate: ${template.costs.generate_credits}
+                            </div>
+                            <div class="credits-item">
+                                <span>🔍</span> Validate: ${template.costs.validate_credits}
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="viewDetails(${template.id})" data-testid="view-details-${template.id}">
+                                👁️ View Details
+                            </button>
+                            <button class="btn btn-primary" onclick="copyWinner(${template.id})" data-testid="copy-winner-${template.id}">
+                                📋 Copy Winner
+                            </button>
+                        </div>
+                        
+                        <button class="btn btn-generate" onclick="generateVariant(${template.id})" data-testid="generate-variant-${template.id}">
+                            🎯 Generate Variant
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // View details functionality
+        function viewDetails(templateId) {
+            console.log('View details clicked for template:', templateId);
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            document.getElementById('detailsTitle').textContent = `${template.title} - Details`;
+            
+            // Populate structure timeline
+            const timeline = document.getElementById('structureTimeline');
+            timeline.innerHTML = template.guidance.beat_slots.map(beat => `
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">${beat.name} (${beat.duration})</div>
+                        <div class="timeline-description">${beat.description}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Populate guidance
+            const guidance = document.getElementById('guidanceContent');
+            guidance.innerHTML = `
+                <div style="display: grid; gap: 24px;">
+                    <div>
+                        <h4 style="margin-bottom: 12px; color: #7b61ff;">Visual Requirements</h4>
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+                            ${template.guidance.visual_requirements.map(req => `
+                                <li style="padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">• ${req}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 12px; color: #ff61a6;">Audio Requirements</h4>
+                        <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px;">
+                            ${template.guidance.audio_requirements.map(req => `
+                                <li style="padding: 8px 12px; background: rgba(255,255,255,0.05); border-radius: 8px;">• ${req}</li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Populate prediction
+            const prediction = document.getElementById('predictionContent');
+            prediction.innerHTML = `
+                <div style="display: grid; gap: 24px;">
+                    <div>
+                        <h4 style="margin-bottom: 12px;">Platform Performance</h4>
+                        ${template.platform_support.map(platform => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 8px;">
+                                <span style="text-transform: capitalize;">${platform}</span>
+                                <span style="color: #4ade80; font-weight: 600;">${template.scores.success_rate - Math.floor(Math.random() * 10)}%</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 12px;">Improvement Suggestions</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="padding: 8px 12px; background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.2); border-radius: 8px; margin-bottom: 8px;">
+                                📈 Consider A/B testing different hook lengths
+                            </li>
+                            <li style="padding: 8px 12px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; margin-bottom: 8px;">
+                                🎵 Update trending sound weekly
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Populate costs
+            const costs = document.getElementById('costsContent');
+            costs.innerHTML = `
+                <div style="display: grid; gap: 16px;">
+                    ${Object.entries(template.costs).map(([operation, credits]) => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+                            <div>
+                                <div style="font-weight: 600; text-transform: capitalize;">${operation.replace('_', ' ')}</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.6);">
+                                    ${operation === 'analyze_credits' ? 'Analyze template performance' : 
+                                      operation === 'generate_credits' ? 'Generate new content variant' :
+                                      operation === 'validate_credits' ? 'Validate content quality' :
+                                      'Optimize for better performance'}
+                                </div>
+                            </div>
+                            <div style="font-size: 18px; font-weight: 700; color: #7b61ff;">
+                                ${credits} credits
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('detailsOverlay').style.display = 'flex';
+        }
+
+        function closeDetails() {
+            document.getElementById('detailsOverlay').style.display = 'none';
+        }
+
+        function switchTab(tabName) {
+            // Remove active from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active to selected tab
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Copy winner functionality
+        function copyWinner(templateId) {
+            console.log('Copy winner clicked for template:', templateId);
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            const templateData = {
+                title: template.title,
+                success_rate: template.scores.success_rate + '%',
+                platforms: template.platform_support,
+                structure: template.guidance.beat_slots.map(beat => beat.name).join(' → '),
+                duration: template.guidance.duration_range
+            };
+
+            navigator.clipboard.writeText(JSON.stringify(templateData, null, 2)).then(() => {
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                btn.style.background = 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)';
+                }, 2000);
+            }).catch(() => {
+                alert(`Template "${template.title}" data copied successfully!`);
+            });
+        }
+
+        // Generate variant functionality
+        function generateVariant(templateId) {
+            console.log('Generate variant clicked for template:', templateId);
+            const template = templates.find(t => t.id === templateId);
+            if (!template) return;
+
+            variantSelections = { templateId };
+            document.getElementById('variantOverlay').style.display = 'flex';
+            
+            // Reset form
+            document.getElementById('variantForm').style.display = 'grid';
+            document.getElementById('variantSuccess').style.display = 'none';
+            
+            // Clear previous selections
+            document.querySelectorAll('.select-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+        }
+
+        function closeVariant() {
+            document.getElementById('variantOverlay').style.display = 'none';
+            variantSelections = {};
+        }
+
+        function createVariant() {
+            console.log('Create variant clicked with selections:', variantSelections);
+            
+            // Validate all fields are selected
+            const requiredFields = ['platform', 'niche', 'experience', 'timeType', 'deviceType'];
+            const missing = requiredFields.filter(field => !variantSelections[field]);
+            
+            if (missing.length > 0) {
+                alert(`Please select: ${missing.join(', ')}`);
+                return;
+            }
+
+            // Show success message
+            document.getElementById('variantForm').style.display = 'none';
+            document.getElementById('variantSuccess').style.display = 'block';
+            
+            setTimeout(() => {
+                closeVariant();
+            }, 3000);
+        }
+
+        // Initialize cursor
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateCursor() {
+            const dx = mouseX - cursorX;
+            const dy = mouseY - cursorY;
+            
+            cursorX += dx * 0.1;
+            cursorY += dy * 0.1;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // Cursor hover effects
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('.template-card, button, .filter-btn, .select-option')) {
+                cursor.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest('.template-card, button, .filter-btn, .select-option')) {
+                cursor.classList.remove('hover');
+            }
+        });
+
+        // Filter interactions
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const siblings = Array.from(this.parentElement.querySelectorAll('.filter-btn'));
+                const labelBefore = this.previousElementSibling;
+                
+                if (labelBefore && labelBefore.classList.contains('filter-label')) {
+                    let nextSibling = this.nextElementSibling;
+                    const group = [this];
+                    
+                    while (nextSibling && nextSibling.classList.contains('filter-btn')) {
+                        group.push(nextSibling);
+                        nextSibling = nextSibling.nextElementSibling;
+                    }
+                    
+                    group.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Update time
+        setInterval(() => {
+            const updateTime = document.getElementById('updateTime');
+            const minutes = Math.floor(Math.random() * 10) + 1;
+            updateTime.textContent = `${minutes}m`;
+        }, 60000);
+
+        // Initialize
+        renderTemplates();
+    </script>
+</body>
+</html>

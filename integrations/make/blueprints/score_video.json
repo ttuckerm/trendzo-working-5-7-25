@@ -1,0 +1,11 @@
+{
+  "name": "Score video → write to Sheet",
+  "module": "score.video",
+  "steps": [
+    { "op": "http.post", "url": "/api/public/score", "body": {"video_id":"{{video_id}}"} },
+    { "op": "sheets.append", "sheet": "Scores", "fields": ["video_id","score","ts"] }
+  ]
+}
+
+
+

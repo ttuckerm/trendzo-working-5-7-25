@@ -1,0 +1,71 @@
+{
+  "timestamp": "2026-03-22T19:06:26.071Z",
+  "config_version": "baseline-v1",
+  "snapshot_date": "2026-03-22T19:06:16.159Z",
+  "sample_counts": {
+    "total_labeled_runs": 54,
+    "replayed": 40,
+    "skipped": 14
+  },
+  "niche_distribution": {
+    "unknown": 29,
+    "side_hustles": 1,
+    "side-hustles": 24
+  },
+  "replay_fidelity": {
+    "mae_vs_production": 8.5375,
+    "max_delta": 26.999999999999996,
+    "rank_correlation": 0.3078454714794794
+  },
+  "baseline_eval": {
+    "n": 40,
+    "spearman_rho": -0.39601075062758545,
+    "p_value": 0.01142144880012287,
+    "mae": 18.3121150719699,
+    "within_range_pct": 0,
+    "bootstrap_ci_95": [
+      -0.6766391802253882,
+      -0.061196344752980865
+    ],
+    "ci_width": 0.6154428354724073,
+    "by_niche": [
+      {
+        "niche": "side-hustles",
+        "n": 24,
+        "spearman_rho": -0.03015077175948992,
+        "mae": 14.29657057449529
+      },
+      {
+        "niche": "unknown",
+        "n": 15,
+        "spearman_rho": -0.7344797747116931,
+        "mae": 25.77206060606061
+      },
+      {
+        "niche": "side_hustles",
+        "n": 1,
+        "spearman_rho": 0,
+        "mae": 2.7860000000000014
+      }
+    ]
+  },
+  "validation_gates": [
+    {
+      "gate": "MIN_LABELED_ROWS",
+      "passed": true,
+      "message": "54 labeled runs (>= 5)."
+    },
+    {
+      "gate": "REPLAY_COVERAGE",
+      "passed": true,
+      "message": "74% replay coverage (40/54)."
+    },
+    {
+      "gate": "BASELINE_FIDELITY",
+      "passed": true,
+      "message": "Replay-vs-production MAE = 8.54 (<= 15)."
+    }
+  ],
+  "recommendation": "GO",
+  "recommendation_detail": "All validation gates passed. Replay fidelity is acceptable. Safe to proceed to optimization."
+}

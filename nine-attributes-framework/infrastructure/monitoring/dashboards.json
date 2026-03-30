@@ -1,0 +1,76 @@
+{
+  "dashboard": {
+    "title": "Nine Attributes Framework",
+    "panels": [
+      {
+        "title": "Attribute Score Distribution",
+        "type": "heatmap",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.5, nine_attrs_attribute_scores)",
+            "legendFormat": "{{attribute}}"
+          }
+        ]
+      },
+      {
+        "title": "Gate Failure Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(nine_attrs_gate_failures_total[5m])",
+            "legendFormat": "{{reason}}"
+          }
+        ]
+      },
+      {
+        "title": "Extraction Latency (p95)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, nine_attrs_extraction_duration_seconds)",
+            "legendFormat": "p95 latency"
+          }
+        ]
+      },
+      {
+        "title": "Calibration Error (MAPE)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "nine_attrs_calibration_error",
+            "legendFormat": "{{model}} - {{cohort}}"
+          }
+        ]
+      },
+      {
+        "title": "AVD Lift",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(nine_attrs_avd_lift)"
+          }
+        ]
+      },
+      {
+        "title": "Share Rate Lift",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(nine_attrs_share_lift)"
+          }
+        ]
+      },
+      {
+        "title": "Regret Rate Change",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "avg(nine_attrs_regret_change)"
+          }
+        ]
+      }
+    ]
+  }
+}
+
+
