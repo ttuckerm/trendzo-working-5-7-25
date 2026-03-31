@@ -236,17 +236,12 @@ async function recomputeDps(supabase: any, niche: string, source: string) {
       const tier = v2Result.tier;
       tierCounts[tier] = (tierCounts[tier] || 0) + 1;
 
-      const dbTier =
-        tier === 'mega-viral' ? 'mega-viral'
-        : tier === 'hyper-viral' ? 'hyper-viral'
-        : tier === 'viral' ? 'viral'
-        : 'normal';
-
       const { error: updateErr } = await supabase
         .from('scraped_videos')
         .update({
-          dps_score: v2Result.score,
-          dps_classification: dbTier,
+          dps_score: v2Result.display_score,
+          dps_z_score: v2Result.score,
+          dps_classification: tier,
           dps_breakdown: { ...v2Result.breakdown, formula_version: 'dps_v2' },
         })
         .eq('video_id', (v as any).video_id);
