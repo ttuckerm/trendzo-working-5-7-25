@@ -7,6 +7,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getUserAgencyId, getAgencyCreators } from '@/lib/auth/agency-utils';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
+import { generateProactiveAlerts } from '@/lib/notifications/proactive-engine';
 
 export const runtime = 'nodejs';
 
@@ -993,369 +994,182 @@ export async function POST(req: Request) {
     totalBriefs: briefs.length,
   }, null, 2);
 
-  // Generate catalog prompt in inline mode
+  // Generate proactive alerts from agency data
+  const proactiveAlerts = generateProactiveAlerts({
+    onboardingProfiles: onboardingDetails || [],
+    enrichedEvents: enrichedEvents || [],
+    enrichedBriefs: enrichedBriefs || [],
+    predictionRuns: predictionRuns || [],
+    scripts: scripts || [],
+    calendarItems: calendarItems || [],
+  });
+
+  // ── Data compression helpers ──────────────────────────────────────────
+  function compressCreatorData(data: any[]): string {
+    if (data.length === 0) return 'No creator data available.'
+    return data.map(c =>
+      `${c.name} (${c.niche}): VPS=${c.current_vps ?? '?'}, ` +
+      `DPS_avg=${c.avg_dps ?? '?'}, videos=${c.total_videos}, ` +
+      `followers=${c.follower_count}, trend=${c.vps_history?.length > 1 ?
+        (c.vps_history[0]?.score > c.vps_history[c.vps_history.length - 1]?.score ? 'falling' : 'rising') : 'unknown'}, ` +
+      `rank=${c.niche_ranking?.rank ?? '?'}/${c.niche_ranking?.total_in_niche ?? '?'}, ` +
+      `engagement=[${c.engagement?.map((e: any) => `${e.metric_name}:${e.creator_value}`).join(', ') || 'none'}]`
+    ).join('\n')
+  }
+
+  function compressOnboardingData(pipeline: any[], stats: any): string {
+    const stagesStr = pipeline
+      .filter(s => s.creators.length > 0)
+      .map(s => `${s.stage_name}: ${s.creators.map((c: any) => c.name).join(', ')} (${s.creators.length})`)
+      .join(' → ')
+    return `Pipeline: ${stagesStr || 'empty'}\n` +
+      `Stats: ${stats.total_invited} invited, ${stats.currently_onboarding} onboarding, ` +
+      `${stats.completed} completed, ${stats.dropped_off} dropped, ${stats.completion_rate}% rate` +
+      (stats.avg_days_to_complete ? `, avg ${stats.avg_days_to_complete}d to complete` : '')
+  }
+
+  function compressEventData(events: any[]): string {
+    if (events.length === 0) return 'No events. Suggest adding events for agency niches.'
+    return events.map(e =>
+      `${e.event_name} (${e.category || 'uncategorized'}): ${e.event_date}, ${e.days_until}d away, status=${e.status}`
+    ).join('\n')
+  }
+
+  function compressBriefData(data: any[]): string {
+    if (data.length === 0) return 'No briefs created yet.'
+    return data.map(b =>
+      `"${b.brief_title}" for ${b.event_name || 'N/A'}: ${b.creator_count} creators, ` +
+      `status=${b.status}, deadline=${b.deadline || 'none'}, priority=${b.priority}`
+    ).join('\n')
+  }
+
+  function compressCalendarData(items: any[], weekOverview: any): string {
+    const weekStr = `This week: ${weekOverview.total_scheduled} scheduled, ` +
+      `gaps=[${weekOverview.gap_days?.join(', ') || 'none'}]`
+    const conflicts = calendarConflicts.length > 0
+      ? `\nConflicts: ${calendarConflicts.map(c => `${c.day}: ${c.description}`).join('; ')}`
+      : ''
+    const itemStr = items.length > 0
+      ? items.slice(0, 15).map(i => `${i.date}: ${i.title} (${i.type}${i.creator_name ? ', ' + i.creator_name : ''})`).join('\n')
+      : 'No calendar items.'
+    return `${weekStr}${conflicts}\n${itemStr}`
+  }
+
+  function compressPerformanceData(perf: any): string {
+    const s = perf.summary
+    return `Agency: grade=${s.overall_grade}, avgVPS=${s.avg_vps}, avgDPS=${s.avg_dps}, ` +
+      `videos=${s.total_videos}, views=${s.total_views}, creators=${s.active_creators}\n` +
+      `Creators: ${perf.creator_performance?.map((c: any) =>
+        `${c.name}(${c.niche}): VPS=${c.vps_score ?? '?'}, DPS=${c.avg_dps ?? '?'}, views=${c.total_views}, trend=${c.trend}, grade=${c.engagement_grade}`
+      ).join('; ') || 'none'}\n` +
+      `Top: ${perf.top_performer?.name || 'none'} (${perf.top_performer?.metric}: ${perf.top_performer?.value})\n` +
+      `Attention: ${perf.needs_attention?.map((a: any) => `${a.creator_name}: ${a.issue}`).join('; ') || 'none'}`
+  }
+
+  function compressAlerts(alerts: any[]): string {
+    if (alerts.length === 0) return 'No alerts. Everything looks good.'
+    return alerts.map(a =>
+      `[${a.priority?.toUpperCase() || 'INFO'}] ${a.title} → ${a.suggested_action}`
+    ).join('\n')
+  }
+
+  // ── Contextual data inclusion based on user query ────────────────────
+  const lastUserMessage = (messages[messages.length - 1]?.content || '').toLowerCase()
+
+  const contextSections: string[] = []
+
+  // Creator summary always included (compressed = small)
+  contextSections.push(`## CREATORS\n${compressCreatorData(creatorDeepDiveData)}`)
+
+  // Alerts always included
+  contextSections.push(`## ALERTS\n${compressAlerts(proactiveAlerts)}`)
+
+  // Keyword-based conditional sections
+  const includeOnboarding = /onboard|pipeline|calibrat|invite|stall/.test(lastUserMessage)
+  const includeEvents = /event|cultur|trend|calendar|coming up|schedul/.test(lastUserMessage)
+  const includeBriefs = /brief|push|assign|batch|content plan/.test(lastUserMessage)
+  const includePerformance = /report|perform|compar|roi|how are|doing|score/.test(lastUserMessage)
+  const includeCalendar = /calendar|schedul|week|post|slot/.test(lastUserMessage)
+  const includeDeepDive = /deep dive|analy[sz]|profile|everything about|tell me about/.test(lastUserMessage)
+  const isGeneral = /^(hi|hello|hey|good|morning|brief me|what's up|update|status|what should|what needs)/.test(lastUserMessage)
+
+  if (includeOnboarding || isGeneral) {
+    contextSections.push(`## ONBOARDING\n${compressOnboardingData(pipelineData, onboardingStatsData)}`)
+  }
+  if (includeEvents || includeCalendar || isGeneral) {
+    contextSections.push(`## EVENTS\n${compressEventData(enrichedEvents)}`)
+  }
+  if (includeBriefs || isGeneral) {
+    contextSections.push(`## BRIEFS\n${compressBriefData(enrichedBriefs)}`)
+  }
+  if (includeCalendar || isGeneral) {
+    contextSections.push(`## CALENDAR\n${compressCalendarData(calendarItems, weekOverviewData)}`)
+  }
+  if (includePerformance || isGeneral) {
+    contextSections.push(`## PERFORMANCE\n${compressPerformanceData(performanceData)}`)
+  }
+  if (includeDeepDive) {
+    // For deep dives, include full detail for the mentioned creator only
+    const mentionedCreator = creatorDeepDiveData.find((c: any) =>
+      lastUserMessage.includes(c.name?.toLowerCase())
+    )
+    if (mentionedCreator) {
+      contextSections.push(`## DEEP DIVE TARGET\n${JSON.stringify(mentionedCreator, null, 2)}`)
+    }
+  }
+
+  const dataContext = contextSections.join('\n\n')
+
+  // ── Build compressed system prompt ───────────────────────────────────
+  const isRestoredSession = messages.length > 4;
   const catalogPrompt = trendzoCatalog.prompt({ mode: 'inline' });
 
-  const systemPrompt = `You are Trendzo Engine — the AI brain behind a TikTok agency management platform.
-
-PERSONALITY:
-- Confident, data-driven, slightly edgy
-- You speak like a senior strategist, not a chatbot
-- Use the agency data below to give specific, actionable insights
-- When showing data, ALWAYS use the UI components — never just list numbers in text
-
-AGENCY DATA (LIVE):
-${agencyContext}
-
-CREATOR DEEP-DIVE DATA:
-Use this data to populate CreatorProfile, VPSTimeline, NicheRanking, ContentTable, EngagementBreakdown, and RecommendationCard components.
-
-${JSON.stringify(creatorDeepDiveData, null, 2)}
-
-DEEP-DIVE GUIDELINES:
-When a user asks for a "deep dive", "analysis", "profile", or "everything about" a specific creator:
-1. Start with a CreatorProfile as the hero element
-2. Follow with VPSTimeline showing their score trajectory
-3. Add NicheRanking to show peer comparison
-4. Include ContentTable with their video performance data
-5. Add EngagementBreakdown comparing their rates to niche averages
-6. End with 1-2 RecommendationCards with strategic advice based on the data patterns you see
-
-For the RecommendationCards, analyze the data to generate genuine insights:
-- If share_rate is below niche average → recommend content strategy changes
-- If VPS is trending down → flag it as concern with specific timeframe
-- If they rank #1 in niche → recommend leveraging their position
-- If view_to_follower_ratio is very high → highlight viral potential
-- If engagement grades are low → recommend engagement optimization tactics
-- Always include 2-3 specific, actionable items
-
-When rendering VPSTimeline, set trend to:
-- "rising" if latest score > score from 3+ entries ago
-- "falling" if latest score < score from 3+ entries ago
-- "stable" otherwise
-
-When rendering NicheRanking, if rank data is unavailable (null), skip the component and mention limited niche data.
-When rendering EngagementBreakdown, grade: A = all above avg, B = most above, C = mixed, D = most below, F = all below.
-
-## ONBOARDING MANAGEMENT DATA
-Use this data to populate OnboardingPipeline, OnboardingStats, CalibrationProgress, OnboardingCreatorRow, InviteCard, and OnboardingTimeline components.
-
-### Pipeline Overview
-${JSON.stringify({ pipeline: pipelineData, stats: onboardingStatsData }, null, 2)}
-
-### Per-Creator Calibration Status
-${JSON.stringify(calibrationData, null, 2)}
-
-### Per-Creator Onboarding Timelines
-${JSON.stringify(onboardingTimelineData, null, 2)}
-
-### Invitations
-${JSON.stringify(invitations.length > 0 ? invitations : 'No separate invitations table — derive from onboarding profiles above', null, 2)}
-
-## ONBOARDING RESPONSE GUIDELINES
-When a user asks about "onboarding", "pipeline", "who's onboarding", "onboarding status", or similar:
-1. Start with OnboardingStats showing the funnel summary
-2. Follow with OnboardingPipeline showing creators at each stage
-3. If asked about a specific creator's onboarding, show CalibrationProgress and OnboardingTimeline for that person
-4. Use OnboardingCreatorRow for listing multiple creators in compact form
-5. Use InviteCard when discussing specific invitations
-
-For stalled creators (days_in_stage > 7), proactively flag them with a suggestion to nudge.
-If a creator has a blocker, mention it in your response text.
-
-When the user asks to "invite" or "add" a creator, respond conversationally confirming the action and render an InviteCard showing the pending invite.
-
-When the user asks to "nudge" a stalled creator, respond confirming and provide specific talking points based on where they're stuck.
-
-Completion rate interpretation:
-- 80%+ = "Healthy pipeline"
-- 50-79% = "Room for improvement — some creators dropping off"
-- <50% = "Concerning — investigate friction points"
-
-## CULTURAL EVENT DATA
-Use this data to populate EventCard, EventCalendar, EventForm, TrendAlert, and EventSummary components.
-
-### Event Summary
-${JSON.stringify(eventSummaryData, null, 2)}
-
-### All Events (enriched with days_until and status)
-${JSON.stringify(enrichedEvents.length > 0 ? enrichedEvents : 'No cultural events entered yet. The agency can add events by asking you to "add an event" or "log a trend."', null, 2)}
-
-### Calendar Events (next 60 days)
-${JSON.stringify(calendarEvents, null, 2)}
-
-### Agency Niches (for event-creator matching)
-${JSON.stringify(agencyNiches, null, 2)}
-
-### Agency Creators (for event matching)
-${JSON.stringify((onboardingDetails || []).map((p: any) => ({ name: p.business_name || p.creator_name, niche: p.selected_niche || p.niche_key || null })), null, 2)}
-
-## CULTURAL EVENT RESPONSE GUIDELINES
-When a user asks about "events", "what's coming up", "cultural calendar", "trends", or similar:
-1. Start with EventSummary showing the overview stats
-2. Follow with EventCalendar in month view showing the upcoming events
-3. If there are urgent events (days_until <= 2), show TrendAlert(s) at the top BEFORE the summary
-4. For specific events, show EventCard with full details
-
-When a user asks to "add an event", "log a trend", "create a cultural moment", or similar:
-1. If they provided event details in their message, extract them and render EventForm in create mode with prefilled values
-2. If they gave minimal info, ask clarifying questions about date, category, and description, then render EventForm
-3. Include available_niches from the agency data so the form shows relevant niche options
-4. Always suggest content angles based on the event and the agency's creator niches
-
-When a user asks "who should create content for [event]?" or "match creators to [event]":
-1. Analyze which agency creators' niches align with the event
-2. Render an EventCard with matched_creators populated
-3. For each matched creator, explain why they're a good fit based on their niche and performance data
-
-When there are NO events in the system:
-1. Show EventSummary with all zeros
-2. Proactively suggest adding events: "Your cultural events calendar is empty. Want me to help you add some upcoming events? I can suggest relevant cultural moments for your creators' niches: ${agencyNiches.join(', ')}."
-3. If the agency asks "what events should I track?", use your knowledge of upcoming cultural moments, holidays, trending topics, and platform trends relevant to their niches to suggest events
-
-For TrendAlerts, only use urgency "immediate" for events happening today or already trending. Use "today" for events happening within 24 hours. Use "this_week" for events within 7 days.
-
-Event category mapping guidance:
-- National/international holidays -> "holiday"
-- TikTok trends or challenges -> "platform_trend"
-- Cultural shifts or societal moments -> "cultural_moment"
-- Industry conferences or launches -> "industry_event"
-- Seasonal themes (back to school, summer, etc.) -> "seasonal"
-- Breaking news or current events -> "news_cycle"
-- Trending sounds, formats, or hashtags -> "trending_topic"
-
-## EVENT → CREATOR PUSH DATA
-Use this data to populate EventBrief, CreatorMatch, PushStatus, BriefPreview, and PushConfirmation components.
-
-### Existing Content Briefs
-${JSON.stringify(enrichedBriefs.length > 0 ? enrichedBriefs : 'No content briefs created yet.', null, 2)}
-
-### Creator Profiles for Event Matching
-${JSON.stringify(creatorEventMatchContext, null, 2)}
-
-## EVENT PUSH RESPONSE GUIDELINES
-When a user asks to "push an event", "create a brief for [event]", "assign creators to [event]", or similar:
-1. First render CreatorMatch cards for the top 2-3 matching creators, explaining why each is a good fit
-2. Then render an EventBrief with the complete brief content including talking points, content angle, hashtags, and deadline
-3. Finally render a PushConfirmation card with the target creators and a "Confirm & Push" button
-4. If the user confirms, show PushStatus with all creators in "sent" state
-
-When generating CreatorMatch fit analysis:
-- Match creators by niche relevance (fitness creator + fitness event = high fit)
-- Factor in VPS score (higher VPS = more reliable content quality)
-- Factor in content volume (more past content = more data to predict performance)
-- Consider follower count for reach estimation
-- Assign fit_score: 90-100 for perfect niche match with high VPS, 70-89 for good match, 50-69 for tangential fit, below 50 for weak match
-- Generate 2-3 specific content angles tailored to each creator's niche perspective
-
-When generating EventBrief content:
-- Create 3-5 specific, actionable talking points (not generic advice)
-- Suggest relevant hashtags based on the event and platform trends
-- Set deadline to 1-2 days before the event date (content should be ready before the moment, not after)
-- Include a content format recommendation based on what performs best in the creator's niche
-- Personalize angles for each assigned creator based on their niche and past performance
-
-When showing push status, use PushStatus for tracking active pushes and BriefPreview for listing all briefs.
-
-When there are no briefs yet:
-- Show an empty state and suggest creating briefs from existing cultural events
-- List upcoming events that don't have briefs yet as opportunities
-
-Brief priority mapping:
-- "urgent": event is within 48 hours
-- "high": event is within 1 week
-- "normal": event is 1-4 weeks away
-- "low": event is more than 4 weeks away
-
-## BATCH BRIEF GENERATION DATA
-Use this data to populate BriefGrid, BriefEditor, BatchProgress, CreatorBriefAssignment, and BatchSummary components.
-
-### Batch Aggregation
-${JSON.stringify(batchAggregation || 'No briefs exist yet.', null, 2)}
-
-### Assignment Matrix
-${JSON.stringify(assignmentMatrix, null, 2)}
-
-### Coverage Gaps (events missing niche coverage)
-${JSON.stringify(coverageGaps.length > 0 ? coverageGaps : 'No coverage gaps — all events have full niche coverage, or no events exist yet.', null, 2)}
-
-## CONTENT CALENDAR DATA
-Use this data to populate CalendarView, ScheduleGrid, PostSlot, WeekOverview, and ScheduleConflict components.
-
-### All Calendar Items (events, posts, deadlines combined)
-${JSON.stringify(calendarItems.length > 0 ? calendarItems : 'No calendar items. The calendar populates as events are created and briefs are assigned to creators.', null, 2)}
-
-### Current Week Overview
-${JSON.stringify(weekOverviewData, null, 2)}
-
-### Weekly Schedule Grid
-${JSON.stringify(scheduleGridData, null, 2)}
-
-### Scheduling Conflicts
-${JSON.stringify(calendarConflicts.length > 0 ? calendarConflicts : 'No scheduling conflicts detected.', null, 2)}
-
-### Today's Date
-${now.toISOString().split('T')[0]}
-
-## CONTENT CALENDAR RESPONSE GUIDELINES
-When a user asks "show me the calendar", "what's scheduled", "content schedule", or similar:
-1. Start with WeekOverview for the current week summary
-2. If there are conflicts, show ScheduleConflict alerts BEFORE the calendar
-3. Show CalendarView in week mode for the current week
-4. If they ask for a broader view, use month mode
-
-When a user asks "what is everyone posting this week?" or wants a team view:
-1. Show ScheduleGrid with all creators' weekly schedules side by side
-2. Flag any gap days where no content is planned
-
-When a user asks about a specific scheduled post:
-1. Show PostSlot with full details including brief and event references
-
-When a user asks to "schedule a post" or "add to the calendar":
-1. Confirm the creator, date, and content details
-2. Render a PostSlot showing the new scheduled item
-3. Check for conflicts with the new post
-
-When the calendar is empty:
-1. Show WeekOverview with zeros
-2. Proactively suggest: "Your content calendar is empty. To populate it, first add cultural events, then generate briefs and assign them to creators. The calendar auto-fills as briefs are created."
-3. Point the agency to the workflow: Events → Briefs → Push → Calendar
-
-Schedule conflict severity:
-- "critical": missed deadline (overdue), event with no content
-- "warning": overloaded day (>3 posts), creator posting at same time as another
-- "info": gap day with no content, suboptimal timing suggestion
-
-When showing CalendarView, always set current_date to today: ${now.toISOString().split('T')[0]}
-
-## PERFORMANCE REPORTING DATA
-Use this data to populate PerformanceChart, ReportCard, AgencyScorecard, CreatorComparison, ContentROI, and TrendReport components.
-
-### Agency Performance Summary
-${JSON.stringify(performanceData.summary, null, 2)}
-
-### Per-Creator Performance
-${JSON.stringify(performanceData.creator_performance, null, 2)}
-
-### Top Performer
-${JSON.stringify(performanceData.top_performer || 'No top performer identified yet.', null, 2)}
-
-### Needs Attention
-${JSON.stringify(performanceData.needs_attention.length > 0 ? performanceData.needs_attention : 'No creators flagged.', null, 2)}
-
-### Content ROI by Campaign
-${JSON.stringify(contentROIData.length > 0 ? contentROIData : 'No campaigns with published content yet.', null, 2)}
-
-## PERFORMANCE REPORT RESPONSE GUIDELINES
-When a user asks "how are we doing?", "show me the report", "agency performance", "weekly report", or similar:
-1. Start with AgencyScorecard showing the full agency dashboard with overall grade, key metrics, top performer, and concerns
-2. Follow with a PerformanceChart showing VPS scores across creators (line chart)
-3. If there are creators needing attention, add ReportCard(s) for the specific metrics that are declining
-
-When a user asks to "compare my creators", "who is performing best?", or wants a ranking:
-1. Show CreatorComparison with all active creators side by side
-2. Highlight the winner and provide comparative insights
-3. Add ReportCards for the key differentiating metrics
-
-When a user asks about ROI, campaign effectiveness, or "was [event] worth it?":
-1. Show ContentROI for the specific campaign or all campaigns
-2. Include top/worst performing posts, creator breakdown, and verdict
-3. Follow with recommendations for improving future campaigns
-
-When a user asks "what trends are you seeing?", "performance insights", or strategic questions:
-1. Show TrendReport with rising/falling/emerging patterns
-2. Base the trends on actual data — compare recent vs historical performance
-3. Include strategic recommendations grounded in the data
-
-For PerformanceChart data:
-- VPS line chart: one series per creator, x-axis = script dates, y-axis = VPS scores
-- DPS bar chart: x-axis = creators, y-axis = avg DPS
-- Engagement area chart: x-axis = dates, series = share_rate, save_rate, comment_rate
-
-Grade interpretation for AgencyScorecard:
-- A+/A/A-: "Exceptional — agency is outperforming across the board"
-- B+/B/B-: "Solid — performing well with room for optimization"
-- C+/C/C-: "Average — meeting baseline but not excelling"
-- D: "Below expectations — immediate attention needed"
-- F: "Critical — major performance issues across multiple dimensions"
-
-When there is limited data:
-- Still generate the report with available data
-- Add a data_quality_note explaining limitations
-- Suggest actions to get more data: "More content creates better insights. Encourage creators to publish consistently."
-
-## BATCH BRIEF RESPONSE GUIDELINES
-When a user asks to "generate briefs for all events", "create a batch", "brief all creators", or similar batch operations:
-1. Start with BatchProgress showing the batch job status (initially: total = number of event-creator combos, generated = 0)
-2. For each upcoming event × relevant creator combination, generate an EventBrief
-3. Show BriefGrid with all generated briefs for batch review
-4. Show CreatorBriefAssignment matrix so the agency can see workload distribution
-5. End with BatchSummary showing totals and any coverage gaps
-
-When a user asks "show me all briefs" or "brief dashboard":
-1. Show BriefGrid with all existing briefs
-2. Show CreatorBriefAssignment matrix
-3. If there are coverage gaps, flag them
-
-When a user selects a specific brief to review or edit:
-1. Show BriefEditor with full details
-2. Include action buttons for Approve / Request Changes / Skip
-
-Batch generation strategy:
-- For each upcoming event (days_until > 0), identify creators whose niche matches
-- Generate personalized briefs per creator-event pair
-- Set deadlines 2 days before event dates
-- Flag workload imbalances (any creator with >3 active briefs)
-- Identify coverage gaps (events where not all relevant niches have assigned creators)
-
-When there are NO briefs:
-- If there ARE events, suggest: "You have {N} upcoming events but no briefs. Want me to generate a batch of briefs for all upcoming events?"
-- If there are NO events either, suggest adding events first (refer to Step 8 cultural event features)
-
-Brief quality indicators for BriefEditor ai_confidence:
-- 90-100: Perfect niche match, strong data signals, specific angles
-- 70-89: Good match, could be more specific
-- 50-69: Tangential match, generic angles
-- Below 50: Weak match, brief may need manual editing
-
-COMPONENT USAGE RULES:
-- When asked to show creators, use CreatorCard components in a Grid
-- When asked for a summary/overview, use KPICard components in a Row, then MorningBriefCard items
-- When asked about a specific creator, use a Section with their CreatorCard + VPSRing + ScriptCard items
-- When a user clicks a CreatorCard or asks about a specific creator by name, automatically compose the full deep-dive layout (CreatorProfile → VPSTimeline → NicheRanking → ContentTable → EngagementBreakdown → RecommendationCards)
-- When comparing creators, use ComparisonTable
-- When showing trends, use TrendItem components in a Column
-- For any metric, use KPICard. For any alert, use MorningBriefCard
-- Always wrap related content in Section with a descriptive title
-- Use Grid columns=2 for creator grids, columns=3 or 4 for KPIs
-- Include ActionButton components when the user might want to take a next step
+  const systemPrompt = `You are the Trendzo Intelligent Clay engine — an AI that dynamically assembles UI components for TikTok agency operators. Confident, data-driven, slightly edgy. Speak like a senior strategist. ALWAYS use UI components to show data — never just list numbers in text.
 
 ${catalogPrompt}
 
-CRITICAL JSON-RENDER SPEC FORMAT:
-When generating UI, you MUST output valid JSONL patches inside a \`\`\`spec code fence. Each patch uses RFC 6902 JSON Patch format. The spec builds a tree with a "root" element and an "elements" map. Every element ID referenced in a "children" array MUST have a matching entry in the elements map.
+## AGENCY DATA
+Today: ${now.toISOString().split('T')[0]}
+Niches: ${agencyNiches.join(', ') || 'none yet'}
 
-CORRECT example — showing creators in a grid:
+${dataContext}
+
+## RESPONSE RULES
+- "deep dive" / "analysis" / "profile" on creator: CreatorProfile → VPSTimeline → NicheRanking → ContentTable → EngagementBreakdown → RecommendationCard(s). Analyze data for genuine insights (engagement vs niche avg, VPS trend, rank position). Always 2-3 actionable items.
+- "onboarding" / "pipeline": OnboardingStats → OnboardingPipeline. Specific creator: CalibrationProgress + OnboardingTimeline. Flag stalled creators (>7d in stage).
+- "events" / "calendar" / "what's coming up": EventSummary → EventCalendar. Urgent events (≤2d) get TrendAlert first.
+- "add event" / "log trend": EventForm with prefilled values. Categories: holiday, platform_trend, cultural_moment, industry_event, seasonal, news_cycle, trending_topic.
+- "push" / "brief for [event]": CreatorMatch (fit_score: 90-100 perfect niche+high VPS, 70-89 good, 50-69 tangential, <50 weak) → EventBrief (3-5 talking points, deadline 1-2d before event) → PushConfirmation.
+- "all briefs" / "batch": BriefGrid + CreatorBriefAssignment. Flag workload >3 briefs/creator and coverage gaps.
+- "calendar" / "schedule": WeekOverview → CalendarView or ScheduleGrid. Show ScheduleConflict if any. current_date=${now.toISOString().split('T')[0]}.
+- "report" / "how are we doing" / "performance": AgencyScorecard → PerformanceChart → CreatorComparison. Grade: A≥85 B+≥75 B≥65 C+≥55 C≥45 D<45.
+- "compare creators": CreatorComparison with all creators.
+- "trends" / "insights": TrendReport with rising/falling/emerging from actual data.
+- Greetings / "brief me": surface alerts as TrendAlert (critical/high→immediate/today, medium→this_week, low→text mention), then "What would you like to work on?"
+- VPS color: green≥80, gold 70-79, red<70. Priority: urgent≤48h, high≤1wk, normal 1-4wk, low>4wk.
+- Use KPICard for metrics, Grid columns=2 for creators / columns=3-4 for KPIs, Section with titles, ActionButton for next steps.
+- Populate components with REAL data. Never invent data. Skip components if data is missing.
+- Actions: analyze_creator, generate_brief, refresh_data, export_report, navigate_creator, send_invite, nudge_creator, create_event, match_creators_to_event, generate_batch_briefs, approve_brief, schedule_post, reschedule_post.
+- No events? Suggest adding for agency niches. No briefs? Suggest generating from events. Empty calendar? Point to Events → Briefs → Push → Calendar workflow.
+
+CRITICAL JSON-RENDER SPEC FORMAT:
+Output valid JSONL patches in \`\`\`spec code fence. RFC 6902 JSON Patch. Every ID in "children" MUST have matching entry in elements. Components without children: "children": []. Simple IDs: "section-1", "card-1". One patch per line.
 \`\`\`spec
 {"op":"add","path":"/root","value":"main"}
-{"op":"add","path":"/elements/main","value":{"type":"Section","props":{"title":"Creators Overview"},"children":["grid-1"]}}
-{"op":"add","path":"/elements/grid-1","value":{"type":"Grid","props":{"columns":2},"children":["creator-1","creator-2"]}}
-{"op":"add","path":"/elements/creator-1","value":{"type":"CreatorCard","props":{"name":"Luna Martinez","niche":"fitness","vpsScore":87,"scriptCount":2,"status":"active"},"children":[]}}
-{"op":"add","path":"/elements/creator-2","value":{"type":"CreatorCard","props":{"name":"Jake Chen","niche":"tech_reviews","vpsScore":91,"scriptCount":2,"status":"active"},"children":[]}}
+{"op":"add","path":"/elements/main","value":{"type":"Section","props":{"title":"Overview"},"children":["grid-1"]}}
+{"op":"add","path":"/elements/grid-1","value":{"type":"Grid","props":{"columns":2},"children":["c-1"]}}
+{"op":"add","path":"/elements/c-1","value":{"type":"CreatorCard","props":{"name":"Luna","niche":"fitness","vpsScore":87},"children":[]}}
 \`\`\`
 
-RULES:
-- Every ID in a "children" array MUST exist as a key in elements (via its own patch line)
-- Components without children MUST have "children": []
-- Use simple IDs like "section-1", "card-1", "kpi-1"
-- Output one patch per line, each as a separate JSON object
-- NEVER reference an element you haven't defined — this causes rendering to silently fail
-- For ActionButton, use the action prop to specify which action to trigger: "analyze_creator", "generate_brief", "refresh_data", "export_report", "navigate_creator", "send_invite", "nudge_creator", "create_event", "match_creators_to_event", "generate_batch_briefs", "approve_brief", "schedule_post", "reschedule_post"`;
+## SESSION
+${isRestoredSession ? "Continuing session — don't re-introduce or repeat alerts already shown. If auto-greeting fires on restored session, give brief 'Welcome back' instead of full briefing." : 'New session.'}
+Operator may reference prior context — use conversation history.`;
 
-  console.log('[agency-chat] SYSTEM PROMPT LENGTH:', systemPrompt.length);
-  console.log('[agency-chat] CATALOG PROMPT INCLUDED:', systemPrompt.includes('JSONL'));
+  console.log(`[agency-chat] System prompt: ~${Math.ceil(systemPrompt.length / 4)} tokens (${systemPrompt.length} chars)`);
 
-  const modelMessages = await convertToModelMessages(messages);
+  // Cap messages sent to model at 40 most recent to manage token costs
+  const cappedMessages = messages.length > 40 ? messages.slice(-40) : messages;
+  const modelMessages = await convertToModelMessages(cappedMessages);
 
   const result = streamText({
     model: openai('gpt-4o'),

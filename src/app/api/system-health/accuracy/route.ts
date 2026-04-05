@@ -25,6 +25,10 @@ function getSupabase() {
 }
 
 export async function GET() {
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    return NextResponse.json({ overallAccuracy: 0, totalPredictions: 0, predictions: [], componentAccuracy: [], recentTrend: 'stable', confidenceDistribution: [] });
+  }
+
   try {
     const supabase = getSupabase();
 

@@ -11,6 +11,7 @@ import { AudioProvider, useAudio } from '@/lib/contexts/AudioContext';
 import { AudioVisualProvider } from '@/lib/contexts/audiovisual/AudioVisualContext';
 import { FeatureProvider } from '@/lib/contexts/FeatureContext';
 import { AuthProvider } from '@/lib/contexts/AuthContext';
+import { SupabaseAuthProvider } from '@/lib/supabase/auth-context';
 import { Sound } from '@/lib/types/audio';
 import { TikTokSound } from '@/lib/types/tiktok';
 
@@ -40,6 +41,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <ErrorBoundary>
       <ThemeProvider>
+        <SupabaseAuthProvider>
         <AuthProvider>
           <FeatureProvider>
             <SubscriptionProvider>
@@ -53,6 +55,7 @@ export default function Providers({ children }: { children: ReactNode }) {
             </SubscriptionProvider>
           </FeatureProvider>
         </AuthProvider>
+        </SupabaseAuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

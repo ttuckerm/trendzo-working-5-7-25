@@ -1,22 +1,24 @@
 "use client"
 
-import AuthForm from "./AuthForm"
-import Link from "next/link"
+import { useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 
+/**
+ * Legacy /auth route — redirects to /login.
+ * Kept for backward compatibility with existing links/bookmarks.
+ */
 export default function AuthPage() {
-  return (
-    <>
-      <AuthForm />
-      
-      {/* Development bypass link - remove in production */}
-      <div className="fixed bottom-4 right-4">
-        <Link 
-          href="/auth/bypass-auth" 
-          className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-xs hover:bg-gray-300 transition-colors"
-        >
-          Dev Access
-        </Link>
-      </div>
-    </>
-  );
-} 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  useEffect(() => {
+    const next = searchParams.get('next')
+    if (next) {
+      router.replace(`/login?redirect=${encodeURIComponent(next)}`)
+    } else {
+      router.replace('/login')
+    }
+  }, [router, searchParams])
+
+  return null
+}

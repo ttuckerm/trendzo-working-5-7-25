@@ -6,6 +6,10 @@ import { SystemHealthSummary } from '@/lib/control-center/types';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    return NextResponse.json({ summary: { pagesHealthy: 0, pagesWarning: 0, pagesError: 0, componentsHealthy: 0, componentsWarning: 0, componentsError: 0, enhancementsComplete: 0, enhancementsInProgress: 0, enhancementsPending: 0, avgLatency: 0, uptime: 100 }, pages: [], components: [], enhancements: [] });
+  }
+
   try {
     const [pages, components, enhancements] = await Promise.all([
       checkAllPagesHealth(),

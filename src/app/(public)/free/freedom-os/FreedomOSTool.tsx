@@ -459,7 +459,14 @@ export default function FreedomOSTool() {
   const [email, setEmail] = useState('')
   const [emailStatus, setEmailStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
   const [planLink, setPlanLink] = useState<string | null>(null)
+  const [savedPlanId, setSavedPlanId] = useState<string | null>(null)
   const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+
+  // ── Waitlist state ──
+  const [waitlistEmail, setWaitlistEmail] = useState('')
+  const [waitlistStatus, setWaitlistStatus] = useState<'idle' | 'form' | 'submitting' | 'done' | 'error'>('idle')
+  const [waitlistPosition, setWaitlistPosition] = useState<number | null>(null)
+  const [waitlistError, setWaitlistError] = useState('')
 
   // ── Membership preview sidebar state ──
   const [showPreviewSidebar, setShowPreviewSidebar] = useState(false)
@@ -582,13 +589,12 @@ export default function FreedomOSTool() {
       if (res.ok && data.ok) {
         setEmailStatus('sent')
         if (data.planLink) setPlanLink(data.planLink)
+        if (data.planId) setSavedPlanId(data.planId)
       } else {
         setEmailStatus('error')
-        setTimeout(() => setEmailStatus('idle'), 4000)
       }
     } catch {
       setEmailStatus('error')
-      setTimeout(() => setEmailStatus('idle'), 4000)
     }
   }, [email, inputs, outputs])
 
@@ -616,6 +622,47 @@ export default function FreedomOSTool() {
     }
   }, [email])
 
+  const handleGetAccess = useCallback((previewId: string) => {
+    // Pre-fill with the email from plan form if available
+    if (email.trim()) setWaitlistEmail(email.trim())
+    setWaitlistStatus('form')
+    setWaitlistError('')
+  }, [email])
+
+  const handleWaitlistSubmit = useCallback(async () => {
+    if (!waitlistEmail.trim() || !selectedPreviewId) return
+    setWaitlistStatus('submitting')
+    setWaitlistError('')
+    try {
+      const res = await fetch('/api/funnel/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: waitlistEmail.trim(), source: selectedPreviewId }),
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setWaitlistPosition(data.position)
+        setWaitlistStatus('done')
+        console.log('[freedom-os/track] waitlist_joined', { source: selectedPreviewId, position: data.position })
+      } else {
+        setWaitlistError(data.error || 'Something went wrong')
+        setWaitlistStatus('error')
+      }
+    } catch {
+      setWaitlistError('Network error. Please try again.')
+      setWaitlistStatus('error')
+    }
+  }, [waitlistEmail, selectedPreviewId])
+
+  // Reset waitlist state when modal closes
+  const handleClosePreview = useCallback(() => {
+    setSelectedPreviewId(null)
+    setWaitlistStatus('idle')
+    setWaitlistPosition(null)
+    setWaitlistEmail('')
+    setWaitlistError('')
+  }, [])
+
   const freedomPreview = computeFreedomNumber(inputs)
   const runwayPreview = computeRunway(inputs)
 
@@ -631,11 +678,14 @@ export default function FreedomOSTool() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
           Back to Hub
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-          Financial Freedom OS
+        <h1
+          className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
+          style={{ fontFamily: "'Playfair Display', serif" }}
+        >
+          Your Free Business Plan in 3 Minutes
         </h1>
-        <p className="text-sm sm:text-base" style={{ color: 'rgba(255,255,255,0.45)' }}>
-          Build your first online income stream with a step-by-step launch plan. No login required.
+        <p className="text-sm sm:text-base" style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'DM Sans', sans-serif" }}>
+          10 questions. A full launch strategy. No fluff, no generic advice — built for YOUR situation.
         </p>
       </div>
 
@@ -657,21 +707,29 @@ export default function FreedomOSTool() {
         >
           Start a Business Now
         </button>
-        {['Not Ready Yet', 'Video-Specific Booster'].map(label => (
-          <button
-            key={label}
-            disabled
-            className="px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap cursor-not-allowed"
-            style={{
-              background: 'rgba(255,255,255,0.04)',
-              color: 'rgba(255,255,255,0.25)',
-              border: '1px solid rgba(255,255,255,0.06)',
-            }}
-          >
-            {label}
-            <span className="ml-1.5 text-[9px] uppercase tracking-wider opacity-60">Soon</span>
-          </button>
-        ))}
+        <Link
+          href="/free/freedom-agent"
+          className="px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap no-underline transition-all"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            color: 'rgba(255,255,255,0.35)',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}
+        >
+          Not Sure Yet? Talk to AI
+        </Link>
+        <button
+          disabled
+          className="px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap cursor-not-allowed"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            color: 'rgba(255,255,255,0.25)',
+            border: '1px solid rgba(255,255,255,0.06)',
+          }}
+        >
+          Content Scorer
+          <span className="ml-1.5 text-[9px] uppercase tracking-wider opacity-60">Soon</span>
+        </button>
       </div>
 
       {/* ── Input form ───────────────────────────── */}
@@ -984,12 +1042,21 @@ export default function FreedomOSTool() {
           </SectionCard>
 
           {/* ── Email capture (primary save action) ── */}
-          <div className="print-hide rounded-2xl p-5 sm:p-6 mb-4" style={{ background: 'rgba(229,9,20,0.05)', border: '1px solid rgba(229,9,20,0.12)' }}>
+          <div
+            className="print-hide rounded-2xl p-5 sm:p-6 mb-4 transition-colors duration-300"
+            style={emailStatus === 'sent'
+              ? { background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }
+              : { background: 'rgba(229,9,20,0.05)', border: '1px solid rgba(229,9,20,0.12)' }
+            }
+          >
             {emailStatus === 'sent' ? (
               <div className="text-center py-2">
-                <div className="text-sm font-bold text-white mb-1">You&apos;re all set!</div>
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  <span className="text-sm font-bold" style={{ color: '#10b981' }}>Plan sent! Check your inbox.</span>
+                </div>
                 <p className="text-xs mb-4" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                  Check your email for updates. You can also open your saved plan right now.
+                  You can also open your saved plan right now.
                 </p>
                 {planLink && (
                   <a
@@ -1014,6 +1081,18 @@ export default function FreedomOSTool() {
                 >
                   {resendStatus === 'sending' ? 'Resending\u2026' : resendStatus === 'sent' ? 'Resent!' : resendStatus === 'error' ? 'Failed to resend' : "Didn\u2019t get it? Resend"}
                 </button>
+                <Link
+                  href={`/free/freedom-agent${savedPlanId ? `?planId=${savedPlanId}` : ''}`}
+                  className="mt-3 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold no-underline transition-all"
+                  style={{
+                    color: '#7c3aed',
+                    border: '1px solid rgba(124,58,237,0.3)',
+                    background: 'transparent',
+                  }}
+                >
+                  Get personalized guidance
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+                </Link>
               </div>
             ) : (
               <>
@@ -1029,7 +1108,7 @@ export default function FreedomOSTool() {
                     placeholder="you@example.com"
                     className="flex-1 min-w-0 rounded-xl px-4 py-3 text-sm outline-none focus:ring-1 focus:ring-[#e50914]"
                     style={inputStyle}
-                    onKeyDown={e => { if (e.key === 'Enter' && emailStatus === 'idle') handleEmailPlan() }}
+                    onKeyDown={e => { if (e.key === 'Enter' && (emailStatus === 'idle' || emailStatus === 'error')) handleEmailPlan() }}
                   />
                   <button
                     onClick={handleEmailPlan}
@@ -1044,8 +1123,9 @@ export default function FreedomOSTool() {
                   </button>
                 </div>
                 {emailStatus === 'error' && (
-                  <p className="text-xs mt-2" style={{ color: '#ef4444' }}>
-                    Something went wrong. Please check your email and try again.
+                  <p className="text-xs mt-2 flex items-center gap-1.5" style={{ color: '#ef4444' }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
+                    Something went wrong. Check your email address and try again.
                   </p>
                 )}
               </>
@@ -1137,7 +1217,7 @@ export default function FreedomOSTool() {
           <div
             className="fixed inset-0 z-50 flex items-center justify-center px-4"
             style={{ background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(8px)' }}
-            onClick={() => setSelectedPreviewId(null)}
+            onClick={handleClosePreview}
           >
             <div
               className="w-full max-w-md rounded-2xl p-6 sm:p-8 relative"
@@ -1150,53 +1230,110 @@ export default function FreedomOSTool() {
             >
               {/* Close button */}
               <button
-                onClick={() => setSelectedPreviewId(null)}
+                onClick={handleClosePreview}
                 className="absolute top-4 right-4 p-1 rounded-lg transition-colors border-none cursor-pointer"
                 style={{ background: 'rgba(255,255,255,0.05)', color: 'rgba(255,255,255,0.4)' }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
               </button>
 
-              {/* Title */}
-              <h3 className="text-lg font-bold text-white mb-1">{item.label}</h3>
-              <p className="text-xs mb-5" style={{ color: 'rgba(255,255,255,0.35)' }}>Coming soon to your toolkit</p>
-
-              {/* Placeholder preview area */}
-              <div
-                className="rounded-xl mb-5 flex items-center justify-center"
-                style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  height: 160,
-                }}
-              >
-                <div className="text-center">
-                  <svg className="mx-auto mb-2" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>
-                  <span className="text-[10px] font-medium" style={{ color: 'rgba(255,255,255,0.2)' }}>Preview coming soon</span>
+              {waitlistStatus === 'done' ? (
+                /* ── Waitlist confirmation ── */
+                <div className="text-center py-4">
+                  <div className="text-4xl mb-3">&#127881;</div>
+                  <h3 className="text-xl font-bold text-white mb-2">You&apos;re #{waitlistPosition} on the waitlist</h3>
+                  <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                    We&apos;ll notify you when {item.label} is ready
+                  </p>
+                  <button
+                    className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all border-none cursor-pointer"
+                    style={{ background: 'rgba(255,255,255,0.08)' }}
+                    onClick={handleClosePreview}
+                  >
+                    Close
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <>
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-white mb-1">{item.label}</h3>
+                  <p className="text-xs mb-5" style={{ color: 'rgba(255,255,255,0.35)' }}>Coming soon to your toolkit</p>
 
-              {/* Benefits */}
-              <ul className="space-y-2.5 mb-6">
-                {item.bullets.map((b, i) => (
-                  <li key={i} className="flex items-start gap-2.5 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                    <svg className="shrink-0 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e50914" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-                    {b}
-                  </li>
-                ))}
-              </ul>
+                  {/* Placeholder preview area */}
+                  <div
+                    className="rounded-xl mb-5 flex items-center justify-center"
+                    style={{
+                      background: 'rgba(255,255,255,0.02)',
+                      border: '1px solid rgba(255,255,255,0.06)',
+                      height: 160,
+                    }}
+                  >
+                    <div className="text-center">
+                      <svg className="mx-auto mb-2" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+                      <span className="text-[10px] font-medium" style={{ color: 'rgba(255,255,255,0.2)' }}>Preview coming soon</span>
+                    </div>
+                  </div>
 
-              {/* CTA */}
-              <button
-                className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all border-none cursor-pointer"
-                style={{
-                  background: 'linear-gradient(135deg, #e50914, #ff1744)',
-                  boxShadow: '0 4px 20px rgba(229,9,20,0.35)',
-                }}
-                onClick={() => setSelectedPreviewId(null)}
-              >
-                Get Access
-              </button>
+                  {/* Benefits */}
+                  <ul className="space-y-2.5 mb-6">
+                    {item.bullets.map((b, i) => (
+                      <li key={i} className="flex items-start gap-2.5 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                        <svg className="shrink-0 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#e50914" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA — Get Access form or button */}
+                  {waitlistStatus === 'idle' ? (
+                    <button
+                      className="w-full py-3 rounded-xl text-sm font-bold text-white transition-all border-none cursor-pointer"
+                      style={{
+                        background: 'linear-gradient(135deg, #e50914, #ff1744)',
+                        boxShadow: '0 4px 20px rgba(229,9,20,0.35)',
+                      }}
+                      onClick={() => handleGetAccess(selectedPreviewId)}
+                    >
+                      Get Access
+                    </button>
+                  ) : (
+                    <div>
+                      <div className="flex gap-2">
+                        <input
+                          type="email"
+                          value={waitlistEmail}
+                          onChange={e => setWaitlistEmail(e.target.value)}
+                          onKeyDown={e => e.key === 'Enter' && handleWaitlistSubmit()}
+                          placeholder="your@email.com"
+                          className="flex-1 rounded-xl px-4 py-3 text-sm text-white outline-none"
+                          style={{
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                          }}
+                          disabled={waitlistStatus === 'submitting'}
+                          autoFocus
+                        />
+                        <button
+                          className="px-5 py-3 rounded-xl text-sm font-bold text-white border-none cursor-pointer flex items-center justify-center min-w-[100px]"
+                          style={{
+                            background: 'linear-gradient(135deg, #e50914, #ff1744)',
+                            opacity: waitlistStatus === 'submitting' ? 0.7 : 1,
+                          }}
+                          onClick={handleWaitlistSubmit}
+                          disabled={waitlistStatus === 'submitting' || !waitlistEmail.trim()}
+                        >
+                          {waitlistStatus === 'submitting' ? (
+                            <svg className="animate-spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10" strokeDasharray="31.4" strokeDashoffset="10" /></svg>
+                          ) : 'Join'}
+                        </button>
+                      </div>
+                      {waitlistError && (
+                        <p className="text-xs mt-2" style={{ color: '#ef4444' }}>{waitlistError}</p>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )

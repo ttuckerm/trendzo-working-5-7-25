@@ -1,12 +1,20 @@
 'use client'
 
 import React, { useState } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useSupabaseAuth } from '@/lib/supabase/auth-context'
 
 export default function GlobalHeader() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { user, profile, signOut } = useSupabaseAuth()
   const [searchValue, setSearchValue] = useState('')
   const [searchFocused, setSearchFocused] = useState(false)
+
+  const handleSignOut = async () => {
+    await signOut()
+    router.push('/login')
+  }
 
   // Get page title based on current path
   const getPageTitle = () => {
@@ -64,10 +72,16 @@ export default function GlobalHeader() {
           <span className="notification-dot absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#e50914] rounded-full animate-pulse"></span>
         </div>
 
-        {/* User Profile */}
-        <div className="user-profile flex items-center gap-3 cursor-pointer">
-          <span className="text-sm font-medium">Admin User</span>
+        {/* User Profile + Sign Out */}
+        <div className="user-profile flex items-center gap-3">
+          <span className="text-sm font-medium">{profile?.display_name || user?.email || 'Admin'}</span>
           <div className="user-avatar w-9 h-9 rounded-lg bg-gradient-to-br from-[#667eea] to-[#764ba2]"></div>
+          <button
+            onClick={handleSignOut}
+            className="text-xs text-zinc-400 hover:text-white transition ml-1"
+          >
+            Sign out
+          </button>
         </div>
       </div>
     </header>

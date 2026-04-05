@@ -160,6 +160,7 @@ export async function POST(request: NextRequest) {
           missing_features: v2Result.missing_features,
           extraction_errors: v2Result.extraction_errors,
         },
+        extracted_features: v2Result.feature_values,
         completed_at: new Date().toISOString(),
       })
       .eq('id', runId);

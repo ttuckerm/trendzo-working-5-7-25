@@ -7,6 +7,7 @@ import JarvisOverlay from './super-admin-components/JarvisOverlay'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { AdminHeader } from '@/components/admin/AdminHeader'
 import { ImpersonationBanner } from '@/components/admin/ImpersonationBanner'
+import AdminAuthGate from './AuthGate'
 import dynamic from 'next/dynamic'
 import type { ReactNode } from 'react'
 
@@ -23,6 +24,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // New role-based navigation layout
   if (USE_NEW_NAVIGATION) {
     return (
+      <AdminAuthGate>
       <div className="min-h-screen bg-[#0a0a0f] text-white flex">
         {/* Role-Based Sidebar */}
         <AdminSidebar />
@@ -53,11 +55,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {/* QA Overlay (enabled via ?qa=1) */}
         <QaOverlay />
       </div>
+      </AdminAuthGate>
     )
   }
 
   // Original layout (default)
   return (
+    <AdminAuthGate>
     <div className="app-container flex h-screen bg-black text-white overflow-hidden relative">
       {/* Master Navigation - The Three Pillars */}
       <MasterNavigation />
@@ -82,5 +86,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       {/* QA Overlay (enabled via ?qa=1) */}
       <QaOverlay />
     </div>
+    </AdminAuthGate>
   )
 }

@@ -24,7 +24,7 @@ export default function AdminProtectionWrapper({
     authCheckComplete.current = true;
 
     if (!user) {
-      router.push('/auth?next=' + encodeURIComponent(window.location.pathname));
+      router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
       return;
     }
 
@@ -54,7 +54,7 @@ export default function AdminProtectionWrapper({
         <h1 className="text-xl font-bold mb-2">Authentication Error</h1>
         <p className="text-red-400">{error.message}</p>
         <button
-          onClick={() => router.push('/auth')}
+          onClick={() => router.push('/login')}
           className="mt-4 px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
         >
           Sign In

@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Your plan has expired. Please generate a new one.' }, { status: 410 })
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   const planLink = `${siteUrl}/free/freedom-os/plan/${row.id}`
 
   console.log('[freedom-os/resend] Plan found, resending:', { planId: row.id, planLink })

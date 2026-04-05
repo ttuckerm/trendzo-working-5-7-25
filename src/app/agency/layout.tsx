@@ -1,3 +1,9 @@
+import AgencyAuthGate from './AuthGate'
+
 export default function AgencyLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <AgencyAuthGate>
+      {children}
+    </AgencyAuthGate>
+  )
 }

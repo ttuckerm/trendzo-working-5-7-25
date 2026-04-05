@@ -12,9 +12,10 @@ export default async function AgencyPage() {
   let recentScripts: Record<string, unknown>[] = [];
   let totalScripts = 0;
   let totalBriefs = 0;
+  let agencyId: string | null = null;
 
   if (user) {
-    const agencyId = await getUserAgencyId(user.id);
+    agencyId = await getUserAgencyId(user.id);
 
     if (agencyId) {
       const creatorIds = await getAgencyCreators(agencyId);
@@ -98,5 +99,12 @@ export default async function AgencyPage() {
     recentScripts,
   };
 
-  return <AgencyClient initialState={initialState} />;
+  return (
+    <AgencyClient
+      initialState={initialState}
+      userId={user?.id ?? ''}
+      agencyId={agencyId ?? ''}
+    />
+  );
 }
+

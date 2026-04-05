@@ -1,8 +1,8 @@
 import FreedomOSTool from './FreedomOSTool'
 
 export const metadata = {
-  title: 'Freedom OS | Trendzo',
-  description: 'Build your first online income stream with a personalized step-by-step launch plan. No login required.',
+  title: 'Your Free Business Plan in 3 Minutes | Trendzo',
+  description: '10 questions. A full launch strategy with revenue targets, a launch sprint, and your first 50 leads. No login required.',
 }
 
 export default function FreedomOSPage() {

@@ -3,6 +3,10 @@ import React from 'react'
 import { FlagProvider } from '@/lib/flags/client'
 
 export default function FlagProviderClient({ children }: { children: React.ReactNode }) {
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    return <>{children}</>
+  }
+
   return (
     <FlagProvider 
       keys={['rewards_v1','per_million_views_v1']}

@@ -149,6 +149,7 @@ export async function POST(request: NextRequest) {
           extraction_time_ms: result.extraction_time_ms,
           inference_time_ms: result.inference_time_ms,
         },
+        extracted_features: result.feature_values,
         completed_at: new Date().toISOString(),
       })
       .eq('id', runId);

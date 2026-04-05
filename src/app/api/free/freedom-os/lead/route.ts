@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { classifyLead, mapInputsForSegmentation, SEGMENT_LABELS } from '@/lib/funnel/segment'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const BEEHIIV_BASE = 'https://api.beehiiv.com/v2'
@@ -33,7 +34,12 @@ export async function POST(request: Request) {
 
   const cleanEmail = email.trim().toLowerCase()
 
-  console.log('[freedom-os/track] email_submitted', { email: cleanEmail })
+  // ── Classify lead into funnel segment ──────────────────────
+  const segmentInputs = mapInputsForSegmentation((inputs ?? {}) as Record<string, unknown>)
+  const segment = classifyLead(segmentInputs)
+  const segmentLabel = SEGMENT_LABELS[segment]
+
+  console.log('[freedom-os/track] email_submitted', { email: cleanEmail, segment, segmentLabel })
 
   // ── Save plan to Supabase ──────────────────────────────────
   let planId: string | null = null
@@ -54,6 +60,7 @@ export async function POST(request: Request) {
             tool: 'freedom-os',
             version: 'v0',
           },
+          segment,
           source_url: pageUrl || null,
           user_agent: ua,
           expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
@@ -70,7 +77,7 @@ export async function POST(request: Request) {
       }
 
       planId = data.id
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+      const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
       planLink = `${siteUrl}/free/freedom-os/plan/${planId}`
       console.log('[freedom-os/track] plan_saved', { planId, email: cleanEmail })
     } catch (err) {
@@ -104,11 +111,15 @@ export async function POST(request: Request) {
     { name: 'source', value: 'freedom-os' },
     { name: 'page_url', value: pageUrl || '' },
     { name: 'created_at', value: createdAt || new Date().toISOString() },
+    { name: 'funnel_segment', value: segment },
     ...(planLink ? [{ name: 'freedom_os_plan_url', value: planLink }] : []),
   ]
 
+  const desiredTags = ['freedom-os', segmentLabel]
+
   try {
     // Step 1: POST — create or reactivate subscription
+    // NOTE: Beehiiv v2 POST ignores `tags` — must use PATCH (Step 3)
     const createRes = await fetch(
       `${BEEHIIV_BASE}/publications/${publicationId}/subscriptions`,
       {
@@ -118,7 +129,7 @@ export async function POST(request: Request) {
           email: cleanEmail,
           reactivate_existing: true,
           send_welcome_email: true,
-          utm_source: 'freedom-os',
+          utm_source: 'trendzo-freedom-os',
           utm_medium: 'tool',
           utm_campaign: 'freedom-os-v0',
           referring_site: pageUrl || '',
@@ -170,7 +181,34 @@ export async function POST(request: Request) {
       }
     }
 
-    // Step 3: PUT — update custom fields to guarantee freedom_os_plan_url is set
+    // Step 3: PATCH — apply tags (Beehiiv v2 only accepts tags via PATCH, not POST)
+    if (subscriptionId) {
+      try {
+        const tagRes = await fetch(
+          `${BEEHIIV_BASE}/publications/${publicationId}/subscriptions/${subscriptionId}`,
+          {
+            method: 'PATCH',
+            headers: beehiivHeaders,
+            body: JSON.stringify({ tags: desiredTags }),
+          },
+        )
+        if (tagRes.ok) {
+          const tagData = await tagRes.json()
+          console.log('[freedom-os/lead] Beehiiv tag PATCH status:', tagRes.status)
+          console.log('[freedom-os/lead] Beehiiv tag PATCH response tags:', tagData?.data?.tags)
+        } else {
+          const tagErr = await tagRes.text()
+          console.error('[freedom-os/lead] Beehiiv tag PATCH error:', {
+            status: tagRes.status,
+            body: tagErr.slice(0, 500),
+          })
+        }
+      } catch (tagPatchErr) {
+        console.error('[freedom-os/lead] Beehiiv tag PATCH failed:', tagPatchErr)
+      }
+    }
+
+    // Step 4: PUT — update custom fields to guarantee freedom_os_plan_url is set
     if (subscriptionId && planLink) {
       try {
         const updateRes = await fetch(

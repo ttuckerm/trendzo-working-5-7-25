@@ -4,6 +4,10 @@ import { ErrorLogEntry } from '@/lib/control-center/types';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    return NextResponse.json({ errors: [] });
+  }
+
   try {
     // In production, query your error logging system/database
     // For now, return known issues

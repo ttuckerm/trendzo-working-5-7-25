@@ -257,23 +257,46 @@ export async function runFeatureExtraction(
   const startTime = Date.now();
   const { batchSize = 5, limit = 0, onProgress } = options;
 
-  // Get all existing training_features video_ids
-  const { data: existingRows } = await supabase
-    .from('training_features')
-    .select('video_id');
+  // Paginate to get ALL existing training_features video_ids (Supabase default limit is 1000)
+  const existingIds = new Set<string>();
+  let existingOffset = 0;
+  const PAGE_SIZE = 1000;
+  while (true) {
+    const { data: page } = await supabase
+      .from('training_features')
+      .select('video_id')
+      .range(existingOffset, existingOffset + PAGE_SIZE - 1);
+    if (!page || page.length === 0) break;
+    for (const r of page) existingIds.add(r.video_id);
+    if (page.length < PAGE_SIZE) break;
+    existingOffset += PAGE_SIZE;
+  }
+  console.log(`Found ${existingIds.size} already-extracted video_ids to skip.`);
 
-  const existingIds = new Set((existingRows || []).map(r => r.video_id));
-
-  // Get scraped_videos ordered by highest DPS first
-  const { data: allVideos, error } = await supabase
-    .from('scraped_videos')
-    .select('video_id, url, caption, transcript_text, hashtags, duration_seconds, creator_followers_count, upload_timestamp, is_original_sound')
-    .order('dps_score', { ascending: false, nullsFirst: false });
-
-  if (error) throw new Error(`Failed to fetch scraped_videos: ${error.message}`);
+  // Paginate scraped_videos with valid DPS, ordered by highest DPS first
+  const allVideos: Array<{
+    video_id: string; url: string; caption: string;
+    transcript_text: string | null; hashtags: string[];
+    duration_seconds: number | null; creator_followers_count: number;
+    upload_timestamp: string | null;
+  }> = [];
+  let videoOffset = 0;
+  while (true) {
+    const { data: page, error: pageErr } = await supabase
+      .from('scraped_videos')
+      .select('video_id, url, caption, transcript_text, hashtags, duration_seconds, creator_followers_count, upload_timestamp')
+      .not('dps_score', 'is', null)
+      .order('dps_score', { ascending: false })
+      .range(videoOffset, videoOffset + PAGE_SIZE - 1);
+    if (pageErr) throw new Error(`Failed to fetch scraped_videos: ${pageErr.message}`);
+    if (!page || page.length === 0) break;
+    allVideos.push(...page);
+    if (page.length < PAGE_SIZE) break;
+    videoOffset += PAGE_SIZE;
+  }
 
   // Filter out already-extracted
-  let videos = (allVideos || []).filter(v => !existingIds.has(v.video_id));
+  let videos = allVideos.filter(v => !existingIds.has(v.video_id));
   if (limit > 0) videos = videos.slice(0, limit);
 
   if (videos.length === 0) {
@@ -1227,7 +1250,8 @@ function countFeatureColumns(): number {
 }
 
 /**
- * Get summary statistics for a completed extraction run.
+ * Get summary statistics for training_features.
+ * Uses count query + small sample instead of fetching every row.
  */
 export async function getExtractionSummary(
   supabase: SupabaseClient
@@ -1237,14 +1261,26 @@ export async function getExtractionSummary(
   latestExtraction: string | null;
   versionCounts: Record<number, number>;
 }> {
-  const { data: rows, error } = await supabase
+  const { count: totalRows } = await supabase
     .from('training_features')
-    .select('*')
-    .order('extracted_at', { ascending: false });
+    .select('video_id', { count: 'exact', head: true });
 
-  if (error || !rows) {
+  if (!totalRows) {
     return { totalRows: 0, avgFeaturesPopulated: 0, latestExtraction: null, versionCounts: {} };
   }
+
+  const { data: latest } = await supabase
+    .from('training_features')
+    .select('extracted_at')
+    .order('extracted_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  // Sample up to 100 rows for avg feature population estimate
+  const { data: sample } = await supabase
+    .from('training_features')
+    .select('extraction_version, ffmpeg_scene_changes, ffmpeg_cuts_per_second, ffmpeg_avg_motion, ffmpeg_color_variance, ffmpeg_brightness_avg, ffmpeg_contrast_score, ffmpeg_resolution_width, ffmpeg_resolution_height, ffmpeg_duration_seconds, ffmpeg_bitrate, ffmpeg_fps, ffmpeg_has_audio, audio_pitch_mean_hz, audio_pitch_variance, audio_pitch_range, audio_pitch_std_dev, audio_pitch_contour_slope, audio_loudness_mean_lufs, audio_loudness_range, audio_loudness_variance, audio_silence_ratio, audio_silence_count, audio_music_ratio, audio_speech_ratio, audio_type_encoded, audio_energy_variance, speaking_rate_wpm, speaking_rate_wpm_variance, speaking_rate_wpm_acceleration, speaking_rate_wpm_peak_count, speaking_rate_fast_segments, speaking_rate_slow_segments, visual_scene_count, visual_avg_scene_duration, visual_score, thumb_brightness, thumb_contrast, thumb_colorfulness, thumb_overall_score, thumb_confidence, hook_score, hook_confidence, hook_text_score, hook_audio_score, hook_visual_score, hook_pace_score, hook_tone_score, hook_type_encoded, text_word_count, text_sentence_count, text_question_mark_count, text_exclamation_count, text_transcript_length, text_avg_sentence_length, text_unique_word_ratio, text_avg_word_length, text_syllable_count, text_flesch_reading_ease, text_has_cta, text_positive_word_count, text_negative_word_count, text_emoji_count, meta_duration_seconds, meta_hashtag_count, meta_has_viral_hashtag, meta_creator_followers, meta_creator_followers_log, meta_words_per_second')
+    .limit(100);
 
   const featureColumns = [
     'ffmpeg_scene_changes', 'ffmpeg_cuts_per_second', 'ffmpeg_avg_motion',
@@ -1270,17 +1306,13 @@ export async function getExtractionSummary(
     'text_positive_word_count', 'text_negative_word_count', 'text_emoji_count',
     'meta_duration_seconds', 'meta_hashtag_count', 'meta_has_viral_hashtag',
     'meta_creator_followers', 'meta_creator_followers_log', 'meta_words_per_second',
-    'retention_open_loop_count', 'share_relatability_score', 'share_utility_score',
-    'psych_curiosity_gap_score', 'psych_power_word_density', 'psych_direct_address_ratio',
-    'psych_social_proof_count',
-    'creator_followers_count', 'creator_followers_log', 'post_hour_utc',
-    'post_day_of_week', 'is_original_sound',
   ];
 
   let totalPopulated = 0;
   const versionCounts: Record<number, number> = {};
+  const sampleRows = sample || [];
 
-  for (const row of rows) {
+  for (const row of sampleRows) {
     let populated = 0;
     for (const col of featureColumns) {
       if ((row as any)[col] !== null && (row as any)[col] !== undefined) {
@@ -1292,9 +1324,9 @@ export async function getExtractionSummary(
   }
 
   return {
-    totalRows: rows.length,
-    avgFeaturesPopulated: rows.length > 0 ? Math.round(totalPopulated / rows.length) : 0,
-    latestExtraction: rows.length > 0 ? rows[0].extracted_at : null,
+    totalRows,
+    avgFeaturesPopulated: sampleRows.length > 0 ? Math.round(totalPopulated / sampleRows.length) : 0,
+    latestExtraction: latest?.extracted_at || null,
     versionCounts,
   };
 }
