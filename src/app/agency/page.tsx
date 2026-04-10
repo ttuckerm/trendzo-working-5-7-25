@@ -80,6 +80,29 @@ export default async function AgencyPage() {
     }
   }
 
+  // Fetch agent cards for this agency
+  let cardsSummary = { totalCards: 0, totalViews: 0, totalLeads: 0, topCards: [] as { share_id: string; creator_name: string; creator_niche: string; vps_score: number | null; total_views: number; total_leads: number }[] };
+
+  if (agencyId) {
+    const serviceClient2 = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    const { data: agencyCards } = await serviceClient2
+      .from('agent_cards')
+      .select('share_id, creator_name, creator_niche, vps_score, total_views, total_leads, total_agent_sessions, is_active')
+      .eq('agency_id', agencyId)
+      .eq('is_active', true)
+      .order('total_views', { ascending: false })
+      .limit(8);
+
+    if (agencyCards && agencyCards.length > 0) {
+      cardsSummary = {
+        totalCards: agencyCards.length,
+        totalViews: agencyCards.reduce((s, c) => s + (c.total_views || 0), 0),
+        totalLeads: agencyCards.reduce((s, c) => s + (c.total_leads || 0), 0),
+        topCards: agencyCards.slice(0, 4),
+      };
+    }
+  }
+
   const sortedCreators = [...creators].sort(
     (a, b) => ((b.latestVPS as number) || 0) - ((a.latestVPS as number) || 0)
   );
@@ -94,9 +117,12 @@ export default async function AgencyPage() {
       topPerformer: sortedCreators[0]?.name || 'N/A',
       totalScripts,
       totalBriefs,
+      cardsShared: cardsSummary.totalCards,
+      leadsFromCards: cardsSummary.totalLeads,
     },
     creators,
     recentScripts,
+    cardsSummary,
   };
 
   return (

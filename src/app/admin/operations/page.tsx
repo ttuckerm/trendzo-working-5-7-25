@@ -267,6 +267,34 @@ export default function OperationsCenterPage() {
   const [auditResult, setAuditResult] = useState<any>(null);
   const [showAuditModal, setShowAuditModal] = useState(false);
 
+  // Trainer Engine State
+  const [trainerRunning, setTrainerRunning] = useState(false);
+  const [trainerResult, setTrainerResult] = useState<string | null>(null);
+
+  async function handleRunTrainer() {
+    setTrainerRunning(true);
+    setTrainerResult(null);
+    try {
+      const res = await fetch('/api/admin/trainer', { method: 'POST' });
+      const result = await res.json();
+      if (result.success) {
+        const expCount = result.experiments?.length ?? 0;
+        const pending = result.experiments?.filter((e: any) => e.result === 'pending_promotion').length ?? 0;
+        setTrainerResult(
+          expCount === 0
+            ? `No experiments run. ${result.skipped_reason || ''}`
+            : `${expCount} experiment(s) complete. ${result.data_stats?.clean_rows ?? 0} rows evaluated.${pending > 0 ? ` ${pending} pending Chairman approval.` : ''}`
+        );
+      } else {
+        setTrainerResult(result.skipped_reason || result.error || 'Experiment failed');
+      }
+    } catch (err: any) {
+      setTrainerResult(`Error: ${err.message}`);
+    } finally {
+      setTrainerRunning(false);
+    }
+  }
+
   // System Verification State
   const [isRunningVerify, setIsRunningVerify] = useState(false);
   const [verifyResult, setVerifyResult] = useState<any>(null);
@@ -595,10 +623,19 @@ export default function OperationsCenterPage() {
               </div>
             </div>
             
-            <button className="w-full py-2.5 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors flex items-center justify-center gap-2 font-medium">
-              <Play size={16} />
-              Start Training Job
+            <button
+              onClick={handleRunTrainer}
+              disabled={trainerRunning}
+              className="w-full py-2.5 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FlaskConical size={16} />
+              {trainerRunning ? 'Running Experiment...' : 'Run Training Experiment'}
             </button>
+            {trainerResult && (
+              <div className="mt-2 p-2.5 bg-[#0a0a0f] rounded-lg text-xs text-gray-300 leading-relaxed">
+                {trainerResult}
+              </div>
+            )}
           </div>
         </div>
 

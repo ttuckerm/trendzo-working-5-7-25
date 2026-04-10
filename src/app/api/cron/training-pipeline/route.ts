@@ -12,9 +12,9 @@ import { NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // 5 minutes max for Vercel Pro
 
-type Step = 'scan' | 'backfill' | 'collect' | 'label' | 'evaluate' | 'scrape-creators' | 'pattern-extract' | 'pattern-metrics' | 'all';
+type Step = 'scan' | 'backfill' | 'collect' | 'label' | 'evaluate' | 'scrape-creators' | 'pattern-extract' | 'pattern-metrics' | 'cultural-scan' | 'classify-events' | 'autodream' | 'all';
 
-const VALID_STEPS: Step[] = ['scan', 'backfill', 'collect', 'label', 'evaluate', 'scrape-creators', 'pattern-extract', 'pattern-metrics', 'all'];
+const VALID_STEPS: Step[] = ['scan', 'backfill', 'collect', 'label', 'evaluate', 'scrape-creators', 'pattern-extract', 'pattern-metrics', 'cultural-scan', 'classify-events', 'autodream', 'all'];
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -83,6 +83,35 @@ export async function GET(request: NextRequest) {
     if (step === 'pattern-metrics') {
       const { runPatternMetricsNow } = await import('@/lib/cron/scheduler');
       results['pattern-metrics'] = await runPatternMetricsNow();
+    }
+
+    // cultural-scan is NOT included in 'all' (own nightly cron, separate cadence)
+    if (step === 'cultural-scan') {
+      const { runCulturalScanNow } = await import('@/lib/cron/scheduler');
+      const niche = searchParams.get('niche') || undefined;
+      results['cultural-scan'] = await runCulturalScanNow(niche);
+    }
+
+    // classify-events: converts detected_trends → cultural_events (NOT in 'all', own cadence)
+    if (step === 'classify-events') {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+      const niche = searchParams.get('niche') || '';
+      const classifyUrl = niche
+        ? `${baseUrl}/api/cron/classify-events?niche=${encodeURIComponent(niche)}`
+        : `${baseUrl}/api/cron/classify-events`;
+      const res = await fetch(classifyUrl, { cache: 'no-store' });
+      results['classify-events'] = await res.json();
+    }
+
+    // autodream: overnight brief generation pipeline (NOT in 'all', runs at 4am UTC)
+    if (step === 'autodream') {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `http://localhost:${process.env.PORT || 3000}`;
+      const agencyId = searchParams.get('agency_id') || '';
+      const dreamUrl = agencyId
+        ? `${baseUrl}/api/cron/autodream?agency_id=${encodeURIComponent(agencyId)}`
+        : `${baseUrl}/api/cron/autodream`;
+      const res = await fetch(dreamUrl, { cache: 'no-store' });
+      results['autodream'] = await res.json();
     }
 
     return NextResponse.json({

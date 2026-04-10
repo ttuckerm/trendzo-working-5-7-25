@@ -4,11 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 import { StatCard } from './StatCard';
 import { QuickAction } from './QuickAction';
-import { 
-  DollarSign, 
-  Building2, 
-  Users, 
-  Video, 
+import { TrainerExperiments } from './TrainerExperiments';
+import { ModelManagement } from './ModelManagement';
+import {
+  DollarSign,
+  Building2,
+  Users,
+  Video,
   TrendingUp,
   UserPlus,
   ToggleLeft,
@@ -20,9 +22,11 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
+  Cpu,
 } from 'lucide-react';
 
 export function ChairmanDashboard() {
+
   // In real implementation, fetch this data from API
   const stats = {
     totalRevenue: 416100,
@@ -111,12 +115,19 @@ export function ChairmanDashboard() {
       )}
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-5 gap-4">
         <QuickAction icon={UserPlus} label="Add Sub-Admin" href="/admin/organization/sub-admins/create" color="purple" />
         <QuickAction icon={Building2} label="Add Agency" href="/admin/organization/agencies/create" color="blue" />
         <QuickAction icon={ToggleLeft} label="Feature Toggles" href="/admin/config/feature-toggles" color="yellow" />
         <QuickAction icon={ScrollText} label="View Audit Log" href="/admin/audit-log" color="default" />
+        <QuickAction icon={Cpu} label="Training Engine" href="/admin/operations/training" color="cyan" />
       </div>
+
+      {/* Production Model Status + Comparison + Promotion */}
+      <ModelManagement />
+
+      {/* Training Experiments — Launcher, Sandbox Viewer, History */}
+      <TrainerExperiments />
 
       {/* Three-Layer Ecosystem */}
       <div className="bg-gradient-to-r from-yellow-500/5 via-blue-500/5 to-green-500/5 border border-[#1a1a2e] rounded-xl p-6">

@@ -40,21 +40,20 @@ export default function VoiceMicButton({
   if (!isSupported) return null;
 
   const buttonStyle: React.CSSProperties = {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     borderRadius: '50%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: disabled ? 'not-allowed' : 'pointer',
-    border: isListening
-      ? '2px solid #e63946'
-      : flashError
-        ? '2px solid #f59e0b'
-        : '1px solid #1e1e2e',
-    background: isListening ? 'rgba(230, 57, 70, 0.15)' : 'transparent',
-    color: isListening ? '#e63946' : '#6b7280',
-    transition: 'all 150ms ease',
+    border: 'none',
+    background: '#1c1c24',
+    boxShadow: isListening
+      ? '-3px -3px 8px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.5), 0 0 12px rgba(240,74,77,0.4)'
+      : '-3px -3px 8px rgba(255,255,255,0.05), 3px 3px 8px rgba(0,0,0,0.5)',
+    color: isListening ? '#f04a4d' : '#8888a0',
+    transition: 'box-shadow 180ms cubic-bezier(0.23, 1, 0.32, 1), color 140ms cubic-bezier(0.23, 1, 0.32, 1), opacity 140ms cubic-bezier(0.23, 1, 0.32, 1)',
     opacity: disabled ? 0.4 : 1,
     flexShrink: 0,
     padding: 0,
@@ -70,8 +69,8 @@ export default function VoiceMicButton({
       {/* Keyframes injected once */}
       <style>{`
         @keyframes voicePulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.4); }
-          50% { box-shadow: 0 0 0 6px rgba(230, 57, 70, 0); }
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.06); opacity: 0.85; }
         }
       `}</style>
 
@@ -84,14 +83,12 @@ export default function VoiceMicButton({
           style={buttonStyle}
           onMouseEnter={(e) => {
             if (!isListening && !disabled) {
-              e.currentTarget.style.background = '#0f0f16';
-              e.currentTarget.style.borderColor = '#3f3f5e';
+              e.currentTarget.style.color = '#e8e8f0';
             }
           }}
           onMouseLeave={(e) => {
             if (!isListening && !disabled) {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.borderColor = flashError ? '#f59e0b' : '#1e1e2e';
+              e.currentTarget.style.color = '#8888a0';
             }
           }}
         >
@@ -124,7 +121,7 @@ export default function VoiceMicButton({
               whiteSpace: 'nowrap',
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: 10,
-              color: '#e63946',
+              color: '#f04a4d',
               pointerEvents: 'none',
             }}
           >

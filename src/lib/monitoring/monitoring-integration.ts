@@ -614,11 +614,10 @@ export class MonitoringIntegration {
    * Start periodic health checks
    */
   private startHealthChecks(): void {
+    if (process.env.NEXT_PHASE === 'phase-production-build') return;
     this.healthCheckInterval = setInterval(async () => {
       await this.performHealthCheck();
-    }, 60000); // Every minute
-
-    console.log('❤️ Health checks started (60s interval)');
+    }, 60000);
   }
 
   /**

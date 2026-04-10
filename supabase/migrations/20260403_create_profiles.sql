@@ -1,9 +1,17 @@
 -- =============================================
--- Profiles table enhancement for auth activation
--- Adds missing columns, RLS policies, and indexes
+-- Profiles table — create + enhance for auth activation
+-- Creates the table if absent, then adds columns, RLS, indexes
 -- =============================================
 
--- Add missing columns if they don't exist
+CREATE TABLE IF NOT EXISTS profiles (
+  id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email text,
+  role text DEFAULT 'creator',
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- Add columns if they don't exist
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'profiles' AND column_name = 'full_name') THEN
     ALTER TABLE profiles ADD COLUMN full_name TEXT;

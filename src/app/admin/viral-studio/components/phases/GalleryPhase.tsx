@@ -16,13 +16,7 @@ import { useWorkflowStore as useWorkflowStoreOld } from '@/workflow/workflowStor
 import { applyStarterParam } from '@/workflow/url';
 import VideoCard from '@/components/common/VideoCard';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { getSupabaseClient } from '@/lib/supabase/client';
 
 // Helper to format large numbers
 function formatNumber(num: number | null | undefined): string {
@@ -307,6 +301,7 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
     setLoadError(null);
     
     try {
+      const supabase = getSupabaseClient();
       let query = supabase
         .from('scraped_videos')
         .select('video_id, title, creator_username, views_count, likes_count, comments_count, shares_count, dps_score, thumbnail_url, tiktok_id, duration_seconds, caption, url')

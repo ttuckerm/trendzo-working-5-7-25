@@ -22,6 +22,9 @@ let lastDiscoveryScanAt: string | null = null
 let lastPatternExtractionAt: string | null = null
 let lastPatternMetricsAt: string | null = null
 let lastCalendarRefreshAt: string | null = null
+let lastCulturalScanAt: string | null = null
+let lastMemoryConsolidationAt: string | null = null
+let lastTrainerEngineAt: string | null = null
 
 async function computeAndInsertMetrics(): Promise<void> {
   logSupabaseRuntimeEnv()
@@ -111,6 +114,9 @@ export function getLastRuns() {
     pattern_extraction_last_run: lastPatternExtractionAt,
     pattern_metrics_last_run: lastPatternMetricsAt,
     calendar_refresh_last_run: lastCalendarRefreshAt,
+    cultural_scan_last_run: lastCulturalScanAt,
+    memory_consolidation_last_run: lastMemoryConsolidationAt,
+    trainer_engine_last_run: lastTrainerEngineAt,
   }
 }
 
@@ -227,6 +233,22 @@ export function startScheduler(): void {
     } catch (err: any) { console.error('[Cron:SpearmanEval] Error:', err.message) }
   }, { timezone: 'UTC' }) } catch {}
 
+  // Nightly at 05:30 UTC — Autonomous Trainer Engine (checks program conditions)
+  try { cron.schedule('30 5 * * *', async () => {
+    try {
+      const { runTrainerEngine } = await import('@/lib/training/trainer-engine')
+      const result = await runTrainerEngine()
+      console.log(
+        `[Cron:TrainerEngine] ${result.experiments.length} experiments, ` +
+        `data: ${result.data_stats.clean_rows} rows` +
+        (result.skipped_reason ? ` — skipped: ${result.skipped_reason}` : '')
+      )
+      lastTrainerEngineAt = new Date().toISOString()
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'trainer_engine', last_run: lastTrainerEngineAt } as any)
+    } catch (err: any) { console.error('[Cron:TrainerEngine] Error:', err.message) }
+  }, { timezone: 'UTC' }) } catch {}
+
   // REMOVED: Niche Creator Scraper — replaced by Discovery Scanner (2026-03-05)
   // See fresh-video-scanner.ts. Old scraper burned 60+ PAID Apify calls per run
   // across 20 niches with no usable training data.
@@ -268,6 +290,48 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'calendar_refresh', last_run: lastCalendarRefreshAt } as any)
     } catch (err: any) { console.error('[Cron:CalendarRefresh] Error:', err.message) }
+  }, { timezone: 'UTC' }) } catch {}
+
+  // Nightly at 00:30 UTC — cultural intelligence Reddit scan
+  try { cron.schedule('30 0 * * *', async () => {
+    try {
+      const result = await runCulturalScanViaApi()
+      console.log(`[Cron:CulturalScanner] ${result.niches_scanned} niches, ${result.total_posts} posts, ${result.rows_upserted} rows`)
+      lastCulturalScanAt = new Date().toISOString()
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'cultural_scanner', last_run: lastCulturalScanAt } as any)
+    } catch (err: any) { console.error('[Cron:CulturalScanner] Error:', err.message) }
+  }, { timezone: 'UTC' }) } catch {}
+
+  // Nightly at 01:00 UTC — classify detected trends → cultural events (runs after cultural scan)
+  try { cron.schedule('0 1 * * *', async () => {
+    try {
+      const result = await runEventClassifierViaApi()
+      console.log(`[Cron:EventClassifier] ${result.classified} classified, ${result.auto_approved} auto-approved`)
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'event_classifier', last_run: new Date().toISOString() } as any)
+    } catch (err: any) { console.error('[Cron:EventClassifier] Error:', err.message) }
+  }, { timezone: 'UTC' }) } catch {}
+
+  // Nightly at 04:00 UTC — autoDream overnight pipeline (runs after cultural intel completes)
+  try { cron.schedule('0 4 * * *', async () => {
+    try {
+      const result = await runAutoDreamViaApi()
+      console.log(`[Cron:autoDream] ${result.total_briefs_generated} briefs, ${result.total_morning_cards} morning cards`)
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'autodream', last_run: new Date().toISOString() } as any)
+    } catch (err: any) { console.error('[Cron:autoDream] Error:', err.message) }
+  }, { timezone: 'UTC' }) } catch {}
+
+  // Nightly at 05:00 UTC — memory consolidation (runs after autoDream completes)
+  try { cron.schedule('0 5 * * *', async () => {
+    try {
+      const result = await runMemoryConsolidationViaApi()
+      console.log(`[Cron:MemoryConsolidation] ${result.agencies_processed} agencies, ${result.total_facts_added} facts added, ${result.total_contradictions} contradictions resolved`)
+      lastMemoryConsolidationAt = new Date().toISOString()
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'consolidate_memory', last_run: lastMemoryConsolidationAt } as any)
+    } catch (err: any) { console.error('[Cron:MemoryConsolidation] Error:', err.message) }
   }, { timezone: 'UTC' }) } catch {}
 }
 
@@ -534,4 +598,121 @@ async function computeAndStorePublicBaseline(): Promise<void> {
   try { await db.from('integration_job_runs').upsert({ job: 'baseline_public', last_run: lastBaselinePublicAt } as any) } catch {}
 }
 
+// ── Cultural Intelligence Scanner ──────────────────────────────────────
+
+async function runCulturalScanViaApi(niche?: string): Promise<any> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = niche
+    ? `${baseUrl}/api/cron/cultural-scan?niche=${encodeURIComponent(niche)}`
+    : `${baseUrl}/api/cron/cultural-scan`
+
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Cultural scan API returned ${res.status}: ${text}`)
+  }
+  return await res.json()
+}
+
+export async function runCulturalScanNow(niche?: string): Promise<{ ok: boolean; result?: any }> {
+  try {
+    const result = await runCulturalScanViaApi(niche)
+    lastCulturalScanAt = new Date().toISOString()
+    try {
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'cultural_scanner', last_run: lastCulturalScanAt } as any)
+    } catch {}
+    return { ok: true, result }
+  } catch (err: any) {
+    return { ok: false, result: { error: err.message } }
+  }
+}
+
+// ── Event Classifier ────────────────────────────────────────────────────
+
+async function runEventClassifierViaApi(niche?: string): Promise<any> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = niche
+    ? `${baseUrl}/api/cron/classify-events?niche=${encodeURIComponent(niche)}`
+    : `${baseUrl}/api/cron/classify-events`
+
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Event classifier API returned ${res.status}: ${text}`)
+  }
+  return await res.json()
+}
+
+export async function runEventClassifierNow(niche?: string): Promise<{ ok: boolean; result?: any }> {
+  try {
+    const result = await runEventClassifierViaApi(niche)
+    try {
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'event_classifier', last_run: new Date().toISOString() } as any)
+    } catch {}
+    return { ok: true, result }
+  } catch (err: any) {
+    return { ok: false, result: { error: err.message } }
+  }
+}
+
+// ── autoDream Overnight Pipeline ────────────────────────────────────────
+
+async function runAutoDreamViaApi(agencyId?: string): Promise<any> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = agencyId
+    ? `${baseUrl}/api/cron/autodream?agency_id=${encodeURIComponent(agencyId)}`
+    : `${baseUrl}/api/cron/autodream`
+
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`autoDream API returned ${res.status}: ${text}`)
+  }
+  return await res.json()
+}
+
+export async function runAutoDreamNow(agencyId?: string): Promise<{ ok: boolean; result?: any }> {
+  try {
+    const result = await runAutoDreamViaApi(agencyId)
+    try {
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'autodream', last_run: new Date().toISOString() } as any)
+    } catch {}
+    return { ok: true, result }
+  } catch (err: any) {
+    return { ok: false, result: { error: err.message } }
+  }
+}
+
+// ── Memory Consolidation (Memory Keeper) ────────────────────────────────
+
+async function runMemoryConsolidationViaApi(agencyId?: string): Promise<any> {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const url = agencyId
+    ? `${baseUrl}/api/cron/consolidate-memory?agency_id=${encodeURIComponent(agencyId)}`
+    : `${baseUrl}/api/cron/consolidate-memory`
+
+  const res = await fetch(url, { cache: 'no-store' })
+  if (!res.ok) {
+    const text = await res.text()
+    throw new Error(`Memory consolidation API returned ${res.status}: ${text}`)
+  }
+  return await res.json()
+}
+
+export async function runMemoryConsolidationNow(agencyId?: string): Promise<{ ok: boolean; result?: any }> {
+  try {
+    const result = await runMemoryConsolidationViaApi(agencyId)
+    lastMemoryConsolidationAt = new Date().toISOString()
+    try {
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'consolidate_memory', last_run: lastMemoryConsolidationAt } as any)
+    } catch {}
+    return { ok: true, result }
+  } catch (err: any) {
+    return { ok: false, result: { error: err.message } }
+  }
+}
 

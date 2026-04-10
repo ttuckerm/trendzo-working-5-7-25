@@ -8,6 +8,7 @@ import { getUserAgencyId, getAgencyCreators } from '@/lib/auth/agency-utils';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { generateProactiveAlerts } from '@/lib/notifications/proactive-engine';
+import { assembleContext } from '@/lib/context/assemble-context';
 
 export const runtime = 'nodejs';
 
@@ -16,21 +17,28 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
 
   // Authenticate user
-  const supabase = await createServerSupabaseClient();
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  let userId: string;
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
+    userId = 'dev-user';
+    console.log('[agency-chat] Auth disabled, using dev user');
+  } else {
+    const supabase = await createServerSupabaseClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  console.log('[agency-chat] Auth result:', { userId: user?.id, authError: authError?.message });
+    console.log('[agency-chat] Auth result:', { userId: user?.id, authError: authError?.message });
 
-  if (authError || !user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized', detail: authError?.message }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized', detail: authError?.message }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+    userId = user.id;
   }
 
   // Get agency scope (gracefully handle no agency — serve with empty data)
-  const agencyId = await getUserAgencyId(user.id);
-  console.log('[agency-chat] Agency lookup:', { userId: user.id, agencyId });
+  const agencyId = await getUserAgencyId(userId);
+  console.log('[agency-chat] Agency lookup:', { userId, agencyId });
 
   let profiles: any[] = [];
   let scripts: any[] = [];
@@ -42,6 +50,7 @@ export async function POST(req: Request) {
   let contentBriefs: any[] = [];
   let briefAssignments: any[] = [];
   let predictionRuns: any[] = [];
+  let pendingBriefs: any[] = [];
 
   if (agencyId) {
     const creatorIds = await getAgencyCreators(agencyId);
@@ -135,6 +144,54 @@ export async function POST(req: Request) {
       contentBriefs = briefData || []
     } catch {
       contentBriefs = []
+    }
+
+    // Fetch pending pre_generated_briefs (for review surfacing)
+    try {
+      const { data: pgBriefs } = await serviceClient
+        .from('pre_generated_briefs')
+        .select('id, client_id, brief_content, vps_score, priority_type, status, niche, cultural_event_id, final_critic_score')
+        .eq('agency_id', agencyId)
+        .in('status', ['draft', 'presented'])
+        .order('vps_score', { ascending: false })
+        .limit(20)
+
+      if (pgBriefs && pgBriefs.length > 0) {
+        // Enrich with creator names
+        const pgClientIds = [...new Set(pgBriefs.map((b: any) => b.client_id))];
+        const { data: pgProfiles } = await serviceClient
+          .from('onboarding_profiles')
+          .select('user_id, business_name')
+          .in('user_id', pgClientIds)
+        const pgNameMap = new Map((pgProfiles || []).map((p: any) => [p.user_id, p.business_name || 'Unknown']));
+
+        // Fetch variant counts
+        const pgIds = pgBriefs.map((b: any) => b.id);
+        const { data: variantData } = await serviceClient
+          .from('brief_variants')
+          .select('brief_id, variant_label, vps_score')
+          .in('brief_id', pgIds)
+        const variantCounts: Record<number, number> = {};
+        for (const v of variantData || []) {
+          variantCounts[v.brief_id] = (variantCounts[v.brief_id] || 0) + 1;
+        }
+
+        pendingBriefs = pgBriefs.map((b: any) => ({
+          id: b.id,
+          creator_name: pgNameMap.get(b.client_id) || 'Unknown',
+          title: b.brief_content?.title || 'Untitled',
+          hook: b.brief_content?.hook || '',
+          angle: b.brief_content?.angle || '',
+          format: b.brief_content?.format || '',
+          vps_score: b.vps_score,
+          priority_type: b.priority_type,
+          niche: b.niche,
+          critic_score: b.final_critic_score,
+          variant_count: variantCounts[b.id] || 1,
+        }));
+      }
+    } catch {
+      // Table may not exist yet
     }
 
     // Fetch brief assignments / push status if table exists
@@ -1043,6 +1100,14 @@ export async function POST(req: Request) {
     ).join('\n')
   }
 
+  function compressPendingBriefs(data: any[]): string {
+    if (data.length === 0) return 'No pending briefs to review.'
+    return `${data.length} briefs awaiting review:\n` + data.map(b =>
+      `- "${b.title}" for ${b.creator_name} (${b.niche}): VPS=${b.vps_score}, priority=${b.priority_type}, ` +
+      `critic_score=${b.critic_score ?? 'N/A'}${b.variant_count > 1 ? `, ${b.variant_count} variants available` : ''}`
+    ).join('\n')
+  }
+
   function compressCalendarData(items: any[], weekOverview: any): string {
     const weekStr = `This week: ${weekOverview.total_scheduled} scheduled, ` +
       `gaps=[${weekOverview.gap_days?.join(', ') || 'none'}]`
@@ -1084,6 +1149,11 @@ export async function POST(req: Request) {
   // Alerts always included
   contextSections.push(`## ALERTS\n${compressAlerts(proactiveAlerts)}`)
 
+  // Pending briefs always included (operator needs to review these)
+  if (pendingBriefs.length > 0) {
+    contextSections.push(`## PENDING BRIEF REVIEW\n${compressPendingBriefs(pendingBriefs)}`)
+  }
+
   // Keyword-based conditional sections
   const includeOnboarding = /onboard|pipeline|calibrat|invite|stall/.test(lastUserMessage)
   const includeEvents = /event|cultur|trend|calendar|coming up|schedul/.test(lastUserMessage)
@@ -1124,11 +1194,23 @@ export async function POST(req: Request) {
   const isRestoredSession = messages.length > 4;
   const catalogPrompt = trendzoCatalog.prompt({ mode: 'inline' });
 
+  // Assemble centralized context (hot memory, cultural events, accuracy stats)
+  let centralContextBlock = '';
+  if (agencyId) {
+    try {
+      const serviceDb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, { auth: { persistSession: false } });
+      const ctx = await assembleContext(serviceDb, agencyId, 'AgencyChat');
+      centralContextBlock = ctx.systemPrompt;
+    } catch (err) {
+      console.warn('[agency-chat] assembleContext failed:', err);
+    }
+  }
+
   const systemPrompt = `You are the Trendzo Intelligent Clay engine — an AI that dynamically assembles UI components for TikTok agency operators. Confident, data-driven, slightly edgy. Speak like a senior strategist. ALWAYS use UI components to show data — never just list numbers in text.
 
 ${catalogPrompt}
 
-## AGENCY DATA
+${centralContextBlock ? `${centralContextBlock}\n\n` : ''}## AGENCY DATA
 Today: ${now.toISOString().split('T')[0]}
 Niches: ${agencyNiches.join(', ') || 'none yet'}
 
@@ -1145,7 +1227,9 @@ ${dataContext}
 - "report" / "how are we doing" / "performance": AgencyScorecard → PerformanceChart → CreatorComparison. Grade: A≥85 B+≥75 B≥65 C+≥55 C≥45 D<45.
 - "compare creators": CreatorComparison with all creators.
 - "trends" / "insights": TrendReport with rising/falling/emerging from actual data.
-- Greetings / "brief me": surface alerts as TrendAlert (critical/high→immediate/today, medium→this_week, low→text mention), then "What would you like to work on?"
+- Greetings / "brief me": if PENDING BRIEF REVIEW section has briefs, lead with "I generated [N] briefs overnight" and highlight the top brief by VPS with creator name and score. Then surface alerts. If no pending briefs, surface alerts then "What would you like to work on?"
+- "show briefs" / "review briefs" / "pending briefs": show all pending briefs as KPICard grid with VPS scores, creator names, priority badges. Include ActionButton with action="approve_brief" for each. If a brief has variants, mention "N variants available — ask to see alternatives."
+- "alternatives for [brief]" / "show variants": describe the variant options (different hook type or format) with their VPS scores. Include ActionButton with action="approve_brief" for each variant.
 - VPS color: green≥80, gold 70-79, red<70. Priority: urgent≤48h, high≤1wk, normal 1-4wk, low>4wk.
 - Use KPICard for metrics, Grid columns=2 for creators / columns=3-4 for KPIs, Section with titles, ActionButton for next steps.
 - Populate components with REAL data. Never invent data. Skip components if data is missing.

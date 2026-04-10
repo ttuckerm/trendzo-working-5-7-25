@@ -249,10 +249,13 @@ export class CulturalTimingIntelligence {
       }
     });
 
-    // Seasonal alignment
+    // Seasonal alignment — try DB first, fall back to static month map
     const month = uploadDate.getMonth();
-    const seasonalEvents = this.getSeasonalEvents(month);
-    
+    const dbSeasonalEvents = await this.getSeasonalEventsFromDb();
+    const seasonalEvents = dbSeasonalEvents.length > 0
+      ? dbSeasonalEvents
+      : this.getSeasonalEvents(month);
+
     seasonalEvents.forEach(event => {
       const hasReference = event.keywords.some(keyword =>
         caption.includes(keyword.toLowerCase()) ||
@@ -285,8 +288,28 @@ export class CulturalTimingIntelligence {
     keywords: string[];
     relevanceScore: number;
   }>> {
-    // In a real implementation, this would call news APIs or trend tracking services
-    // For now, return some common evergreen trends
+    // Query approved cultural events from the Cultural Intelligence Pipeline
+    try {
+      const { data } = await this.supabase
+        .from('cultural_events')
+        .select('event_title, keywords, confidence, velocity_score')
+        .eq('status', 'approved')
+        .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+        .order('velocity_score', { ascending: false })
+        .limit(20);
+
+      if (data && data.length > 0) {
+        return data.map((event: any) => ({
+          name: event.event_title,
+          keywords: event.keywords || [],
+          relevanceScore: Math.min((event.confidence + event.velocity_score) / 2, 1),
+        }));
+      }
+    } catch (err) {
+      console.warn('[CulturalTiming] Failed to fetch cultural_events, using fallbacks:', err);
+    }
+
+    // Fallback evergreen trends if no approved events exist yet
     return [
       { name: 'Monday Motivation', keywords: ['monday', 'motivation', 'week'], relevanceScore: 0.8 },
       { name: 'Throwback', keywords: ['throwback', 'remember', 'nostalgia'], relevanceScore: 0.7 },
@@ -295,10 +318,34 @@ export class CulturalTimingIntelligence {
     ];
   }
 
+  private async getSeasonalEventsFromDb(): Promise<Array<{ name: string; keywords: string[] }>> {
+    // Query approved cultural events with low decay rate (seasonal/evergreen)
+    try {
+      const { data } = await this.supabase
+        .from('cultural_events')
+        .select('event_title, keywords, decay_rate_estimate')
+        .eq('status', 'approved')
+        .lte('decay_rate_estimate', 0.3) // Low decay = seasonal/evergreen
+        .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+        .limit(10);
+
+      if (data && data.length > 0) {
+        return data.map((event: any) => ({
+          name: event.event_title,
+          keywords: event.keywords || [],
+        }));
+      }
+    } catch (err) {
+      console.warn('[CulturalTiming] Failed to fetch seasonal events from DB:', err);
+    }
+    return [];
+  }
+
   private getSeasonalEvents(month: number): Array<{
     name: string;
     keywords: string[];
   }> {
+    // Static fallback — used when no approved seasonal events exist in cultural_events
     const seasonalEvents: { [key: number]: Array<{ name: string; keywords: string[] }> } = {
       0: [{ name: 'New Year', keywords: ['resolution', 'new year', 'fresh start'] }],
       1: [{ name: 'Valentine\'s Day', keywords: ['valentine', 'love', 'relationship'] }],

@@ -9,12 +9,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Target, Users, Crosshair, Search, Lightbulb, Layout, 
-  Layers, Goal, Music, Hash, Monitor, Captions, 
+import {
+  Target, Users, Crosshair, Search, Lightbulb, Layout,
+  Layers, Goal, Music, Hash, Monitor, Captions,
   CheckSquare, Video, Calendar, BarChart3, RefreshCw,
   ChevronLeft, ChevronRight, Sparkles
 } from 'lucide-react';
+import { getAgencySkills } from '@/lib/skills/agency-skills';
 
 // Workflow step configuration
 const WORKFLOW_STEPS = [
@@ -500,6 +501,33 @@ export default function CreatorStudio() {
             completedSteps={completedSteps}
           />
         </div>
+
+        {/* Suggested content formats (from agency skill set) */}
+        {workflowData.niche && (() => {
+          const skills = getAgencySkills(workflowData.niche || '');
+          return (
+            <div className="mt-6 flex items-center gap-2 flex-wrap">
+              <span className="text-xs text-white/40 font-medium mr-1">Suggested formats:</span>
+              {skills.contentFormats.map(fmt => (
+                <button
+                  key={fmt}
+                  onClick={() => handleUpdateStep({ format: fmt })}
+                  className="px-3 py-1 rounded-full text-xs font-medium border transition-all duration-200 hover:scale-105 capitalize"
+                  style={{
+                    borderColor: workflowData.format === fmt ? '#a78bfa' : 'rgba(255,255,255,0.1)',
+                    background: workflowData.format === fmt ? 'rgba(167,139,250,0.15)' : 'rgba(255,255,255,0.05)',
+                    color: workflowData.format === fmt ? '#c4b5fd' : 'rgba(255,255,255,0.5)',
+                  }}
+                >
+                  {fmt.replace(/-/g, ' ')}
+                </button>
+              ))}
+              <span className="text-xs text-white/30 ml-1">
+                Top KPI: {skills.kpiPriority[0]?.replace(/_/g, ' ')}
+              </span>
+            </div>
+          );
+        })()}
 
         {/* Current Step Component */}
         <div className="mt-12">

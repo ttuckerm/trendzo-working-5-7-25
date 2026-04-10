@@ -69,11 +69,11 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] flex flex-col bg-[#0a0a10] border-l border-[#1e1e2e] shadow-2xl animate-in slide-in-from-right-4 duration-300">
+    <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] flex flex-col bg-[#16161e] border-l border-[#2a2a35] shadow-2xl animate-in slide-in-from-right-4 duration-300">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#1e1e2e]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a35]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7b2ff7] to-[#e63946] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f04a4d] to-[#f04a4d] flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -83,14 +83,14 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
               </span>
               <PulseDot color="#00d4ff" size="sm" />
             </div>
-            <p className="text-xs text-[#7a7889] font-body">
+            <p className="text-xs text-[#8888a0] font-body">
               Your agency intelligence co-pilot
             </p>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-[#7a7889] hover:text-[#e8e6e3] hover:bg-[#1a1a28] transition-colors"
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-[#8888a0] hover:text-[#e8e8f0] hover:bg-[#1c1c24] transition-colors"
         >
           <X className="w-4 h-4" />
         </button>
@@ -100,13 +100,13 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-thin">
         {messages.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center px-6 opacity-60">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7b2ff7]/20 to-[#e63946]/20 border border-[#7b2ff7]/20 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f04a4d]/20 to-[#f04a4d]/20 border border-[#f04a4d]/20 flex items-center justify-center mb-4">
               <Sparkles className="w-5 h-5 text-[#00d4ff]" />
             </div>
-            <p className="text-sm text-[#e8e6e3]/50 font-body mb-1">
+            <p className="text-sm text-[#e8e8f0]/50 font-body mb-1">
               Ask me anything about your creators, content performance, or strategy.
             </p>
-            <p className="text-xs font-mono-label text-[#4a4858]">
+            <p className="text-xs font-mono-label text-[#8888a0]">
               I can see your live dashboard data.
             </p>
           </div>
@@ -121,21 +121,21 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
               <div
                 className="max-w-[85%] px-4 py-3 text-sm font-body leading-relaxed text-white"
                 style={{
-                  background: 'linear-gradient(135deg, #7b2ff7, #e63946)',
+                  background: 'linear-gradient(135deg, #f04a4d, #f04a4d)',
                   borderRadius: '18px 4px 18px 18px',
                 }}
               >
                 <div className="whitespace-pre-wrap">{msg.content}</div>
               </div>
             ) : (
-              <div className="max-w-[85%] bg-[#151520] border border-[#1e1e2e] rounded-xl px-4 py-3">
+              <div className="max-w-[85%] bg-[#1c1c24] border border-[#2a2a35] rounded-xl px-4 py-3">
                 <div className="flex items-center gap-2 mb-1.5">
                   <span className="text-[9px] font-mono-label uppercase tracking-[0.15em] text-[#00d4ff]">
                     Trendzo Engine
                   </span>
                   <PulseDot color="#00d4ff" size="sm" />
                 </div>
-                <div className="text-sm font-body leading-relaxed text-[#e8e6e3]/85 whitespace-pre-wrap">
+                <div className="text-sm font-body leading-relaxed text-[#e8e8f0]/85 whitespace-pre-wrap">
                   {msg.content}
                 </div>
               </div>
@@ -145,14 +145,14 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-[#151520] border border-[#1e1e2e] rounded-xl px-4 py-3">
+            <div className="bg-[#1c1c24] border border-[#2a2a35] rounded-xl px-4 py-3">
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-[9px] font-mono-label uppercase tracking-[0.15em] text-[#00d4ff]">
                   Trendzo Engine
                 </span>
                 <PulseDot color="#00d4ff" size="sm" />
               </div>
-              <div className="flex items-center gap-2 text-[#7a7889]">
+              <div className="flex items-center gap-2 text-[#8888a0]">
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
                 <span className="text-xs font-body">Analyzing...</span>
               </div>
@@ -170,7 +170,7 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
             <button
               key={s}
               onClick={() => handleSend(s)}
-              className="px-3 py-1.5 text-[11px] font-body rounded-lg bg-[#151520] border border-[#1e1e2e] text-[#7a7889] hover:text-[#e8e6e3] hover:border-[#2a2a3e] transition-all duration-200"
+              className="px-3 py-1.5 text-[11px] font-body rounded-lg bg-[#1c1c24] border border-[#2a2a35] text-[#8888a0] hover:text-[#e8e8f0] hover:border-[#2a2a35] transition-all duration-200"
             >
               {s}
             </button>
@@ -179,8 +179,8 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
       )}
 
       {/* Input */}
-      <div className="px-4 pb-4 pt-2 border-t border-[#1e1e2e]">
-        <div className="flex items-end gap-2 bg-[#151520] border border-[#2a2a3e] rounded-xl px-3 py-2 focus-within:border-[#7b2ff7]/50 transition-colors">
+      <div className="px-4 pb-4 pt-2 border-t border-[#2a2a35]">
+        <div className="flex items-end gap-2 bg-[#1c1c24] border border-[#2a2a35] rounded-xl px-3 py-2 focus-within:border-[#f04a4d]/50 transition-colors">
           <textarea
             ref={inputRef}
             value={input}
@@ -188,7 +188,7 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
             onKeyDown={handleKeyDown}
             placeholder="Ask about your creators, metrics..."
             rows={1}
-            className="flex-1 bg-transparent text-sm text-[#e8e6e3]/90 font-body placeholder:text-[#4a4858] resize-none outline-none max-h-[120px]"
+            className="flex-1 bg-transparent text-sm text-[#e8e8f0]/90 font-body placeholder:text-[#8888a0] resize-none outline-none max-h-[120px]"
             style={{
               height: 'auto',
               minHeight: '24px',
@@ -201,7 +201,7 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
           />
 
           {/* Voice button */}
-          <button className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[#4a4858] hover:text-[#7a7889] transition-colors">
+          <button className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[#8888a0] hover:text-[#8888a0] transition-colors">
             <Mic className="w-4 h-4" />
           </button>
 
@@ -211,14 +211,14 @@ export default function ChatPanel({ open, onClose }: ChatPanelProps) {
             className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
               background: input.trim()
-                ? 'linear-gradient(135deg, #7b2ff7, #e63946)'
-                : '#1a1a28',
+                ? 'linear-gradient(135deg, #f04a4d, #f04a4d)'
+                : '#1c1c24',
             }}
           >
             <Send className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-[10px] font-mono-label text-[#4a4858] mt-2 text-center tracking-[0.06em]">
+        <p className="text-[10px] font-mono-label text-[#8888a0] mt-2 text-center tracking-[0.06em]">
           Powered by Trendzo Engine &middot; Sees your live dashboard data
         </p>
       </div>

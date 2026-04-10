@@ -846,7 +846,7 @@ export class BusinessMetricsScheduler {
   }
 
   start(): void {
-    // Calculate user engagement metrics every 5 minutes
+    if (process.env.NEXT_PHASE === 'phase-production-build') return;
     this.intervals.push(setInterval(async () => {
       try {
         await this.calculator.calculateUserEngagement();

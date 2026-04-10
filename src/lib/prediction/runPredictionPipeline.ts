@@ -54,6 +54,7 @@ import type { CreatorContext } from '@/lib/prediction/creator-context';
 import { analyzeSpeakingRate, type SpeakingRateResult } from '@/lib/services/speaking-rate-analyzer';
 import { predictXGBoostV10, type XGBoostPredictionResult } from '@/lib/prediction/xgboost-inference';
 import { extractPredictionFeatures, type PredictionFeatureResult } from '@/lib/prediction/extract-prediction-features';
+import { resolveModelRoute, type ModelRoute } from '@/lib/prediction/model-router';
 import { emitEvent } from '@/lib/events/emit';
 
 // Initialize Supabase with service key for writes
@@ -367,9 +368,20 @@ export async function runPredictionPipeline(
     let xgboostResult: XGBoostPredictionResult | null = null;
     let xgboostFeatureMeta: PipelineResult['xgboost_v7_features'] = null;
 
+    // Per-niche model routing: check if a niche-specific variant exists
+    let modelRoute: ModelRoute | null = null;
+    try {
+      modelRoute = await resolveModelRoute(options.niche || null);
+      if (modelRoute.is_niche_specific) {
+        console.log(`[Pipeline] Model router: using niche-specific variant ${modelRoute.model_version} for "${modelRoute.niche}" (Spearman: ${modelRoute.spearman_score})`);
+      }
+    } catch (routeErr: any) {
+      console.warn(`[Pipeline] Model router failed, using default: ${routeErr.message}`);
+    }
+
     if (options.videoFilePath) {
       try {
-        console.log(`[Pipeline] XGBoost v10: extracting features from video...`);
+        console.log(`[Pipeline] XGBoost ${modelRoute?.model_version || 'v10'}: extracting features from video...`);
         const featureResult = await extractPredictionFeatures({
           videoFilePath: options.videoFilePath,
           transcript: resolvedTranscript || null,
@@ -899,6 +911,16 @@ export async function runPredictionPipeline(
             entityType: 'prediction_run',
             entityId: runId,
           }).catch(() => {});
+
+          // Atlas feedback hook: log every VPS prediction for future feedback collection
+          void supabase.from('prediction_log').insert({
+            prediction_id: runId,
+            creator_id: (options.sourceMeta?.user_id as string) ?? null,
+            content_id: videoId,
+            predicted_vps: finalResult.predicted_vps,
+            niche: options.niche ?? null,
+            content_format: options.mode ?? 'standard',
+          });
         }
       }
     } catch (dbError: any) {

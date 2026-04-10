@@ -61,16 +61,16 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
   if (!open) return null;
 
   return (
-    <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] flex flex-col bg-[#0f0f16] border-l border-[#1e1e2e] shadow-2xl animate-in slide-in-from-right-4 duration-300">
+    <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] flex flex-col bg-[#1c1c24] border-l border-[#2a2a35] shadow-2xl animate-in slide-in-from-right-4 duration-300">
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#1e1e2e]">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a35]">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#7b2ff7] to-[#e63946] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#f04a4d] to-[#f04a4d] flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
           <div>
             <span
-              className="text-[10px] uppercase tracking-[0.15em] text-[#00d4ff]"
+              className="text-[10px] uppercase tracking-[0.15em] text-[#f04a4d]"
               style={{ fontFamily: 'JetBrains Mono, monospace' }}
             >
               Trendzo Engine
@@ -92,8 +92,8 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.length === 0 && !isLoading && (
           <div className="flex flex-col items-center justify-center h-full text-center px-6 opacity-60">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#7b2ff7]/20 to-[#e63946]/20 border border-[#7b2ff7]/20 flex items-center justify-center mb-4">
-              <Sparkles className="w-5 h-5 text-[#00d4ff]" />
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#f04a4d]/20 to-[#f04a4d]/20 border border-[#f04a4d]/20 flex items-center justify-center mb-4">
+              <Sparkles className="w-5 h-5 text-[#f04a4d]" />
             </div>
             <p
               className="text-sm text-white/50 mb-1"
@@ -118,14 +118,14 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
             <div
               className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-gradient-to-r from-[#7b2ff7] to-[#e63946] text-white'
-                  : 'bg-[#151520] border border-[#1e1e2e] text-white/85'
+                  ? 'bg-gradient-to-r from-[#f04a4d] to-[#f04a4d] text-white'
+                  : 'bg-[#1c1c24] border border-[#2a2a35] text-white/85'
               }`}
               style={{ fontFamily: 'DM Sans, sans-serif' }}
             >
               {msg.role === 'assistant' && (
                 <span
-                  className="block text-[9px] uppercase tracking-[0.15em] text-[#00d4ff] mb-1.5"
+                  className="block text-[9px] uppercase tracking-[0.15em] text-[#f04a4d] mb-1.5"
                   style={{ fontFamily: 'JetBrains Mono, monospace' }}
                 >
                   Trendzo Engine
@@ -138,9 +138,9 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-[#151520] border border-[#1e1e2e] rounded-xl px-4 py-3">
+            <div className="bg-[#1c1c24] border border-[#2a2a35] rounded-xl px-4 py-3">
               <span
-                className="block text-[9px] uppercase tracking-[0.15em] text-[#00d4ff] mb-1.5"
+                className="block text-[9px] uppercase tracking-[0.15em] text-[#f04a4d] mb-1.5"
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
                 Trendzo Engine
@@ -159,8 +159,8 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-4 pt-2 border-t border-[#1e1e2e]">
-        <div className="flex items-end gap-2 bg-[#151520] border border-[#2a2a3e] rounded-xl px-3 py-2 focus-within:border-[#7b2ff7]/50 transition-colors">
+      <div className="px-4 pb-4 pt-2 border-t border-[#2a2a35]">
+        <div className="flex items-end gap-2 bg-[#1c1c24] border border-[#2a2a35] rounded-xl px-3 py-2 focus-within:border-[#f04a4d]/50 transition-colors">
           <textarea
             ref={inputRef}
             value={input}
@@ -183,7 +183,7 @@ export default function TrendzoChatPanel({ open, onClose }: TrendzoChatPanelProp
           <button
             onClick={handleSend}
             disabled={!input.trim()}
-            className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-r from-[#7b2ff7] to-[#e63946] flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+            className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-r from-[#f04a4d] to-[#f04a4d] flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
           >
             <Send className="w-3.5 h-3.5" />
           </button>

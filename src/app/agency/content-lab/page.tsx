@@ -13,7 +13,7 @@ export default async function ContentLabPage() {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-[#7a7889] text-sm">Please sign in.</p>
+        <p className="text-[#8888a0] text-sm">Please sign in.</p>
       </div>
     );
   }
@@ -22,7 +22,7 @@ export default async function ContentLabPage() {
   if (!agencyId) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-[#7a7889] text-sm">Agency not configured.</p>
+        <p className="text-[#8888a0] text-sm">Agency not configured.</p>
       </div>
     );
   }
@@ -57,12 +57,12 @@ export default async function ContentLabPage() {
 
     if (recentScripts && recentScripts.length > 0) {
       const gradients = [
-        ['#7b2ff7', '#e63946'],
-        ['#00d4ff', '#7b2ff7'],
-        ['#e63946', '#f4b942'],
+        ['#f04a4d', '#f04a4d'],
+        ['#00d4ff', '#f04a4d'],
+        ['#f04a4d', '#f4b942'],
         ['#2dd4a8', '#00d4ff'],
-        ['#f4b942', '#7b2ff7'],
-        ['#e63946', '#7b2ff7'],
+        ['#f4b942', '#f04a4d'],
+        ['#f04a4d', '#f04a4d'],
       ];
 
       concepts = recentScripts.map((s: any, i: number) => {
@@ -82,12 +82,12 @@ export default async function ContentLabPage() {
   // Placeholder if no real data
   if (concepts.length === 0) {
     concepts = [
-      { title: '"Wait for it..." — Satisfying Reveal Format', tags: [primaryNiche, 'trending'], vpsScore: 89, gradientFrom: '#7b2ff7', gradientTo: '#e63946' },
-      { title: 'POV: You just discovered this hack', tags: [primaryNiche, 'hook'], vpsScore: 82, gradientFrom: '#00d4ff', gradientTo: '#7b2ff7' },
-      { title: 'Day in the life of a [niche] creator', tags: [primaryNiche, 'vlog'], vpsScore: 76, gradientFrom: '#e63946', gradientTo: '#f4b942' },
+      { title: '"Wait for it..." — Satisfying Reveal Format', tags: [primaryNiche, 'trending'], vpsScore: 89, gradientFrom: '#f04a4d', gradientTo: '#f04a4d' },
+      { title: 'POV: You just discovered this hack', tags: [primaryNiche, 'hook'], vpsScore: 82, gradientFrom: '#00d4ff', gradientTo: '#f04a4d' },
+      { title: 'Day in the life of a [niche] creator', tags: [primaryNiche, 'vlog'], vpsScore: 76, gradientFrom: '#f04a4d', gradientTo: '#f4b942' },
       { title: 'Before vs After: Quick transformation', tags: [primaryNiche, 'transition'], vpsScore: 71, gradientFrom: '#2dd4a8', gradientTo: '#00d4ff' },
-      { title: '3 things I wish I knew about [topic]', tags: [primaryNiche, 'educational'], vpsScore: 68, gradientFrom: '#f4b942', gradientTo: '#7b2ff7' },
-      { title: 'Reacting to my first ever video', tags: [primaryNiche, 'nostalgia'], vpsScore: 64, gradientFrom: '#e63946', gradientTo: '#7b2ff7' },
+      { title: '3 things I wish I knew about [topic]', tags: [primaryNiche, 'educational'], vpsScore: 68, gradientFrom: '#f4b942', gradientTo: '#f04a4d' },
+      { title: 'Reacting to my first ever video', tags: [primaryNiche, 'nostalgia'], vpsScore: 64, gradientFrom: '#f04a4d', gradientTo: '#f04a4d' },
     ];
   }
 

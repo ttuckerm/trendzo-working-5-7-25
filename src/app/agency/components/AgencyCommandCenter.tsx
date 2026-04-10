@@ -50,11 +50,11 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
   return (
     <div className="p-6 lg:p-8 max-w-[1400px] mx-auto space-y-8">
       {/* Header — Playfair Display greeting */}
-      <div className="animate-[fadeSlideUp_0.5s_ease-out_both]">
-        <h1 className="text-3xl lg:text-4xl font-display font-bold text-[#e8e6e3] tracking-tight">
+      <div style={{ animation: 'fadeSlideUp 350ms cubic-bezier(0.23, 1, 0.32, 1) both' }}>
+        <h1 className="text-4xl lg:text-5xl font-display font-bold text-[#e8e8f0] tracking-tight leading-[1.1]">
           {greeting}.
         </h1>
-        <p className="text-sm text-[#7a7889] mt-2 font-body flex items-center gap-2">
+        <p className="text-sm text-[#8888a0] mt-3 font-body flex items-center gap-2">
           <span>
             {new Date().toLocaleDateString('en-US', {
               weekday: 'long',
@@ -62,7 +62,7 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
               day: 'numeric',
             })}
           </span>
-          <span className="text-[#4a4858]">·</span>
+          <span className="text-[#8888a0]">·</span>
           <span className="text-[#00d4ff]">
             {actionCount} action{actionCount !== 1 ? 's' : ''} across {data.totalCreators} client{data.totalCreators !== 1 ? 's' : ''}
           </span>
@@ -71,7 +71,7 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
 
       {/* Morning Brief */}
       <section className="space-y-3">
-        <h2 className="text-[10px] font-mono-label uppercase tracking-[0.15em] text-[#4a4858] px-1">
+        <h2 className="text-[10px] font-mono-label uppercase tracking-[0.15em] text-[#8888a0] px-1">
           Morning Brief
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -86,6 +86,9 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
             metric={bestScript ? `${bestScript.vps.toFixed(0)} VPS` : undefined}
             action={bestScript ? { label: 'View Script', onClick: () => {} } : undefined}
             chartData={generateChartData(data.averageVPS ?? 60)}
+            agentName="Performance Analyst"
+            agentAction={bestScript ? `scored · VPS ${bestScript.vps.toFixed(0)}` : 'monitoring'}
+            staggerIndex={0}
           />
           <MorningBriefCard
             type="warning"
@@ -98,6 +101,9 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
             metric={inactiveCount > 0 ? `${inactiveCount} inactive` : undefined}
             action={inactiveCount > 0 ? { label: 'Nudge Creators', onClick: () => {} } : undefined}
             chartData={generateChartData(inactiveCount * 15 + 30)}
+            agentName="Performance Analyst"
+            agentAction={inactiveCount > 0 ? `flagged ${inactiveCount} silent` : 'all active'}
+            staggerIndex={1}
           />
           <MorningBriefCard
             type="info"
@@ -105,20 +111,23 @@ export default function AgencyCommandCenter({ data }: { data: AgencyDashboardDat
             description="Cultural timing insights are being computed from your niche's latest viral patterns."
             action={{ label: 'View Trends', onClick: () => {} }}
             chartData={generateChartData(75)}
+            agentName="Trend Scout"
+            agentAction="scanning"
+            staggerIndex={2}
           />
         </div>
       </section>
 
       {/* KPI Row */}
       <section className="space-y-3">
-        <h2 className="text-[10px] font-mono-label uppercase tracking-[0.15em] text-[#4a4858] px-1">
+        <h2 className="text-[10px] font-mono-label uppercase tracking-[0.15em] text-[#8888a0] px-1">
           Key Metrics
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <KPICard
             label="Total Creators"
             value={data.totalCreators}
-            accentColor="#7b2ff7"
+            accentColor="#f04a4d"
           />
           <KPICard
             label="Scripts This Week"

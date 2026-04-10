@@ -781,9 +781,10 @@ export class NotificationService {
    * Start queue processor
    */
   private startQueueProcessor(): void {
+    if (process.env.NEXT_PHASE === 'phase-production-build') return;
     setInterval(() => {
       this.processQueue();
-    }, 5000); // Process queue every 5 seconds
+    }, 5000);
   }
 }
 

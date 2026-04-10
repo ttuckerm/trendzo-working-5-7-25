@@ -15,6 +15,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', weight: ['400', '700'] });
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600', '700'] });
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Trendzo | AI-Powered Social Media Template Management',
   description: 'Manage, customize, and track social media templates with AI-powered predictions and optimization',

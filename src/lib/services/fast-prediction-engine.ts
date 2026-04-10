@@ -83,10 +83,10 @@ export class FastPredictionEngine {
     this.redis = new Redis({
       host: process.env.REDIS_HOST || 'localhost',
       port: parseInt(process.env.REDIS_PORT || '6379'),
-      retryDelayOnFailover: 100,
+      lazyConnect: true,
+      maxRetriesPerRequest: 0,
+      retryStrategy: () => null,
       enableOfflineQueue: false,
-      maxRetriesPerRequest: 1,
-      lazyConnect: true
     });
 
     // Initialize memory cache

@@ -24,6 +24,7 @@ const PUBLIC_PREFIXES = [
   '/api/auth',
   '/api/health',
   '/api/ping',
+  '/api/cron',
 ]
 
 /**
@@ -135,16 +136,16 @@ async function getAuthUser(request: NextRequest): Promise<{ id: string; email?: 
 }
 
 /**
- * Look up a user's role via the Supabase REST API (Edge-compatible).
+ * Look up a user's role and onboarded status via the Supabase REST API (Edge-compatible).
  */
-async function fetchUserRole(userId: string): Promise<string> {
+async function fetchUserProfile(userId: string): Promise<{ role: string; onboarded: boolean }> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_KEY
-  if (!url || !serviceKey) return 'creator'
+  if (!url || !serviceKey) return { role: 'creator', onboarded: true }
 
   try {
     const res = await fetch(
-      `${url}/rest/v1/profiles?select=role&id=eq.${userId}&limit=1`,
+      `${url}/rest/v1/profiles?select=role,onboarded&id=eq.${userId}&limit=1`,
       {
         headers: {
           apikey: serviceKey,
@@ -152,11 +153,14 @@ async function fetchUserRole(userId: string): Promise<string> {
         },
       }
     )
-    if (!res.ok) return 'creator'
+    if (!res.ok) return { role: 'creator', onboarded: true }
     const rows = await res.json()
-    return rows?.[0]?.role || 'creator'
+    return {
+      role: rows?.[0]?.role || 'creator',
+      onboarded: rows?.[0]?.onboarded !== false,
+    }
   } catch {
-    return 'creator'
+    return { role: 'creator', onboarded: true }
   }
 }
 
@@ -209,8 +213,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Look up user's role
-  const userRole = await fetchUserRole(authUser.id)
+  // Look up user's role and onboarded status
+  const { role: userRole, onboarded } = await fetchUserProfile(authUser.id)
+
+  // Redirect un-onboarded users to /onboarding (unless already there or hitting API)
+  if (!onboarded && !isApiRoute && !reqUrl.startsWith('/onboarding')) {
+    return NextResponse.redirect(new URL('/onboarding', request.url))
+  }
 
   if (!requiredRoles.includes(userRole)) {
     if (isApiRoute) {

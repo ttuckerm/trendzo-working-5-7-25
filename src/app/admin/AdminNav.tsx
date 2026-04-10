@@ -35,6 +35,8 @@ const AdminNav = () => {
     { name: 'Process Intel', href: '/admin/process-intel' },
     { name: 'Users', href: '/admin/users' },
     { name: 'Marketing', href: '/admin/marketing-inception' },
+    { name: 'Cultural Events', href: '/admin/cultural-events' },
+    { name: 'Brief Review', href: '/admin/brief-review' },
     { name: 'Keys', href: '/admin/keys' },
     { name: 'Settings', href: '/admin/settings' },
   ];

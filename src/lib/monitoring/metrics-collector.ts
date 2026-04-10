@@ -695,14 +695,13 @@ export class MetricsCollector {
    * Start automatic buffer flushing
    */
   private startAutoFlush(): void {
+    if (process.env.NEXT_PHASE === 'phase-production-build') return;
     setInterval(async () => {
       await this.flush();
     }, this.flushInterval);
-
-    // Also record system metrics periodically
     setInterval(async () => {
       await this.recordSystemMetrics();
-    }, 60000); // Every minute
+    }, 60000);
   }
 }
 

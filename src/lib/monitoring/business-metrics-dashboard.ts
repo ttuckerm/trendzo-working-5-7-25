@@ -639,14 +639,14 @@ export class BusinessMetricsDashboard extends EventEmitter {
   // Private helper methods
 
   private setupMetricsCollection(): void {
-    // Set up real-time metric collection
+    if (typeof window !== 'undefined' || process.env.NEXT_PHASE === 'phase-production-build') return;
     setInterval(async () => {
       try {
         await this.collectRealtimeBusinessMetrics();
       } catch (error) {
         console.error('Error collecting real-time business metrics:', error);
       }
-    }, 30000); // Every 30 seconds
+    }, 30000);
   }
 
   private async collectRealtimeBusinessMetrics(): Promise<void> {

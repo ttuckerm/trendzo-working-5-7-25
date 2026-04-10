@@ -76,7 +76,25 @@ const nextConfig = {
   },
   experimental: {
     optimizeServerReact: true,
-    // Prevent tracing and globbing into local system/venv paths that can cause EACCES on Windows
+    optimizePackageImports: [
+      'lucide-react',
+      'recharts',
+      'd3',
+      'framer-motion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-popover',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-tooltip',
+      '@radix-ui/react-scroll-area',
+      '@radix-ui/react-slider',
+      '@radix-ui/react-switch',
+      '@radix-ui/react-collapsible',
+      '@radix-ui/react-context-menu',
+      '@radix-ui/react-radio-group',
+      'date-fns',
+      'chart.js',
+      'react-chartjs-2',
+    ],
     outputFileTracingExcludes: {
       '*': [
         '**/whisper_env/**',
@@ -91,10 +109,12 @@ const nextConfig = {
     config.externals.push({ 'ffmpeg-static': 'commonjs ffmpeg-static' });
     config.externals.push({ 'ffprobe-static': 'commonjs ffprobe-static' });
 
-    // On the server, keep apify libs available at runtime but out of the bundle
+    // On the server, keep heavy/optional libs available at runtime but out of the bundle
     if (isServer) {
       config.externals.push({ 'apify': 'commonjs apify' });
       config.externals.push({ 'apify-client': 'commonjs apify-client' });
+      config.externals.push({ 'ioredis': 'commonjs ioredis' });
+      config.externals.push({ 'pg': 'commonjs pg' });
     }
 
     // Ignore heavy optional modules conditionally
@@ -210,15 +230,6 @@ const nextConfig = {
     ];
   },
 
-  // Prevent API routes from handling favicon.ico
-  async routes() {
-    return [
-      {
-        source: '/favicon.ico',
-        destination: '/public/favicon.ico',
-      },
-    ];
-  },
 };
 
 export default nextConfig;

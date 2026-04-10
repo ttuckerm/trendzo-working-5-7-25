@@ -157,9 +157,10 @@ export default function EngineOrb({ state, size = 32 }: EngineOrbProps) {
           50% { transform: scale(1.08); }
         }
 
-        /* transform-origin for scale animations */
+        /* transform-origin + GPU hint for scale animations */
         .orb-glow, .orb-outer, .orb-ripple1, .orb-ripple2, .orb-rotate-ring {
           transform-origin: center;
+          will-change: transform, opacity;
         }
       `}</style>
 
@@ -176,7 +177,7 @@ export default function EngineOrb({ state, size = 32 }: EngineOrbProps) {
         </radialGradient>
         {/* Error gradient */}
         <radialGradient id={`orb-grad-error-${size}`} cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stopColor="#e63946" />
+          <stop offset="0%" stopColor="#f04a4d" />
           <stop offset="100%" stopColor="#ff6b6b" />
         </radialGradient>
       </defs>

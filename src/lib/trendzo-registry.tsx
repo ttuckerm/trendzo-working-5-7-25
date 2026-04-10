@@ -4,10 +4,22 @@ import React from 'react';
 import { defineRegistry, useActions } from '@json-render/react';
 import { trendzoCatalog } from './trendzo-catalog';
 
+// ── Neumorphic Design System ──────────────────────────────────────────
+const NEU_REG = {
+  bg: '#1c1c24',
+  raised: '-5px -5px 12px rgba(255,255,255,0.05), 5px 5px 12px rgba(0,0,0,0.6)',
+  raisedSm: '-3px -3px 8px rgba(255,255,255,0.05), 3px 3px 8px rgba(0,0,0,0.5)',
+  raisedLg: '-6px -6px 14px rgba(255,255,255,0.05), 6px 6px 14px rgba(0,0,0,0.65)',
+  inset: 'inset -3px -3px 8px rgba(255,255,255,0.04), inset 3px 3px 8px rgba(0,0,0,0.6)',
+  accent: '#f04a4d',
+  textPrimary: '#e8e8f0',
+  textSecondary: '#8888a0',
+} as const;
+
 // ── Color helpers ──────────────────────────────────────────────────────
 
 const accentMap: Record<string, string> = {
-  crimson: '#e63946',
+  crimson: '#f04a4d',
   violet: '#7c3aed',
   cyan: '#00d4ff',
   gold: '#f59e0b',
@@ -21,32 +33,32 @@ function getAccent(color?: string): string {
 function getVPSColor(score: number): string {
   if (score >= 80) return '#2dd4a8';
   if (score >= 70) return '#f59e0b';
-  return '#e63946';
+  return '#f04a4d';
 }
 
 const severityColors: Record<string, string> = {
   success: '#2dd4a8',
-  warning: '#e63946',
+  warning: '#f04a4d',
   info: '#00d4ff',
 };
 
 const statusColors: Record<string, string> = {
   active: '#2dd4a8',
-  inactive: '#e63946',
+  inactive: '#f04a4d',
   onboarding: '#f59e0b',
 };
 
 const momentumColors: Record<string, string> = {
   rising: '#2dd4a8',
   peaking: '#f59e0b',
-  declining: '#e63946',
+  declining: '#f04a4d',
 };
 
 const variantStyles: Record<string, string> = {
-  default: 'bg-[#1a1a2e] text-[#e8e6e3]',
+  default: 'bg-[#1c1c24] text-[#e8e8f0]',
   success: 'bg-[#2dd4a8]/15 text-[#2dd4a8]',
   warning: 'bg-[#f59e0b]/15 text-[#f59e0b]',
-  danger: 'bg-[#e63946]/15 text-[#e63946]',
+  danger: 'bg-[#f04a4d]/15 text-[#f04a4d]',
 };
 
 // ── Registry ───────────────────────────────────────────────────────────
@@ -104,11 +116,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     Section: ({ props, children }) => (
       <div className="space-y-3">
         <div>
-          <h2 className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#4a4858]">
+          <h2 className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#8888a0]">
             {props.title}
           </h2>
           {props.subtitle && (
-            <p className="text-sm font-sans text-[#7a7889] mt-0.5">{props.subtitle}</p>
+            <p className="text-sm font-sans text-[#8888a0] mt-0.5">{props.subtitle}</p>
           )}
         </div>
         {children}
@@ -124,17 +136,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         props.changeDirection === 'up'
           ? 'text-[#2dd4a8]'
           : props.changeDirection === 'down'
-            ? 'text-[#e63946]'
-            : 'text-[#7a7889]';
+            ? 'text-[#f04a4d]'
+            : 'text-[#8888a0]';
 
       return (
-        <div className="relative rounded-xl border border-[#1e1e2e] bg-[#0f0f16] p-5 overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2a2a3e]">
+        <div className="relative rounded-2xl p-5 overflow-hidden transition-all duration-200 hover:-translate-y-0.5" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
           {/* Gradient top line */}
           <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: accent }} />
-          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#7a7889] mb-2">
+          <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#8888a0] mb-2">
             {props.label}
           </p>
-          <p className="text-2xl font-display font-bold text-[#e8e6e3]">{props.value}</p>
+          <p className="text-2xl font-display font-bold text-[#e8e8f0]">{props.value}</p>
           {props.change && (
             <p className={`text-xs font-mono mt-1.5 ${changeColor}`}>
               {arrow} {props.change}
@@ -158,7 +170,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               }));
             }
           }}
-          className="rounded-xl border border-[#1e1e2e] bg-[#0f0f16] p-5 cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-500/50"
+          className="rounded-2xl p-5 cursor-pointer transition-all duration-200 hover:-translate-y-0.5" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}
         >
           <div className="flex items-start gap-4">
             {/* Avatar */}
@@ -171,17 +183,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-sans font-semibold text-[#e8e6e3] truncate">
+                <h3 className="text-sm font-sans font-semibold text-[#e8e8f0] truncate">
                   {props.name}
                 </h3>
                 {/* Status dot */}
                 <span
                   className="w-2 h-2 rounded-full flex-shrink-0 ml-2"
-                  style={{ backgroundColor: statusColors[props.status] ?? '#7a7889' }}
+                  style={{ backgroundColor: statusColors[props.status] ?? '#8888a0' }}
                 />
               </div>
 
-              <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded bg-[#1a1a2e] text-[#7a7889]">
+              <span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider rounded bg-[#1c1c24] text-[#8888a0]">
                 {props.niche}
               </span>
 
@@ -189,7 +201,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {/* VPS mini ring */}
                 <div className="flex items-center gap-1.5">
                   <svg width="20" height="20" viewBox="0 0 20 20">
-                    <circle cx="10" cy="10" r="8" fill="none" stroke="#1e1e2e" strokeWidth="2" />
+                    <circle cx="10" cy="10" r="8" fill="none" stroke="#2a2a35" strokeWidth="2" />
                     <circle
                       cx="10"
                       cy="10"
@@ -207,13 +219,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   </span>
                 </div>
 
-                <span className="text-xs font-mono text-[#7a7889]">
+                <span className="text-xs font-mono text-[#8888a0]">
                   {props.scriptCount} script{props.scriptCount !== 1 ? 's' : ''}
                 </span>
               </div>
 
               {props.lastActive && (
-                <p className="text-[10px] font-mono text-[#4a4858] mt-2">
+                <p className="text-[10px] font-mono text-[#8888a0] mt-2">
                   Last active: {props.lastActive}
                 </p>
               )}
@@ -241,7 +253,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               cy={size / 2}
               r={radius}
               fill="none"
-              stroke="#1e1e2e"
+              stroke="#2a2a35"
               strokeWidth={strokeWidth}
             />
             {/* Score arc */}
@@ -271,7 +283,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             </text>
           </svg>
           {props.label && (
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#7a7889]">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#8888a0]">
               {props.label}
             </span>
           )}
@@ -284,23 +296,23 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div
-          className="rounded-xl border border-[#1e1e2e] bg-[#0f0f16] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2a2a3e]"
-          style={{ borderLeftWidth: '3px', borderLeftColor: borderColor }}
+          className="rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5"
+          style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderLeftWidth: '3px', borderLeftColor: borderColor }}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <h3 className="text-sm font-sans font-semibold text-[#e8e6e3]">{props.title}</h3>
+            <h3 className="text-sm font-sans font-semibold text-[#e8e8f0]">{props.title}</h3>
             {props.timestamp && (
-              <span className="text-[10px] font-mono text-[#4a4858]">{props.timestamp}</span>
+              <span className="text-[10px] font-mono text-[#8888a0]">{props.timestamp}</span>
             )}
           </div>
-          <p className="text-sm font-sans text-[#7a7889] leading-relaxed">{props.body}</p>
+          <p className="text-sm font-sans text-[#8888a0] leading-relaxed">{props.body}</p>
         </div>
       );
     },
 
     ScriptCard: ({ props }) => {
       const statusStyles: Record<string, string> = {
-        draft: 'bg-[#7a7889]/15 text-[#7a7889]',
+        draft: 'bg-[#8888a0]/15 text-[#8888a0]',
         review: 'bg-[#f59e0b]/15 text-[#f59e0b]',
         approved: 'bg-[#2dd4a8]/15 text-[#2dd4a8]',
         published: 'bg-[#7c3aed]/15 text-[#7c3aed]',
@@ -308,15 +320,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       };
 
       return (
-        <div className="rounded-xl border border-[#1e1e2e] bg-[#0f0f16] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2a2a3e]">
+        <div className="rounded-2xl p-4 transition-all duration-200 hover:-translate-y-0.5" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
           <div className="flex items-start justify-between gap-3 mb-2">
-            <h3 className="text-sm font-sans font-semibold text-[#e8e6e3] truncate">{props.title}</h3>
+            <h3 className="text-sm font-sans font-semibold text-[#e8e8f0] truncate">{props.title}</h3>
             <span className={`flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-wider ${statusStyles[props.status] ?? ''}`}>
               {props.status}
             </span>
           </div>
 
-          <p className="text-xs font-mono text-[#7a7889] mb-2">{props.creatorName}</p>
+          <p className="text-xs font-mono text-[#8888a0] mb-2">{props.creatorName}</p>
 
           {props.vpsScore != null && (
             <span
@@ -331,37 +343,37 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           )}
 
           {props.hookPreview && (
-            <p className="text-xs font-sans text-[#4a4858] italic line-clamp-2 mt-1">
+            <p className="text-xs font-sans text-[#8888a0] italic line-clamp-2 mt-1">
               &ldquo;{props.hookPreview}&rdquo;
             </p>
           )}
 
           {props.createdAt && (
-            <p className="text-[10px] font-mono text-[#4a4858] mt-2">{props.createdAt}</p>
+            <p className="text-[10px] font-mono text-[#8888a0] mt-2">{props.createdAt}</p>
           )}
         </div>
       );
     },
 
     TrendItem: ({ props }) => {
-      const dotColor = momentumColors[props.momentum] ?? '#7a7889';
+      const dotColor = momentumColors[props.momentum] ?? '#8888a0';
 
       return (
-        <div className="flex items-center gap-3 rounded-xl border border-[#1e1e2e] bg-[#0f0f16] px-4 py-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2a2a3e]">
+        <div className="flex items-center gap-3 rounded-2xl px-4 py-3 transition-all duration-200 hover:-translate-y-0.5" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
           {/* Momentum dot */}
           <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-sans font-semibold text-[#e8e6e3] truncate">
+              <span className="text-sm font-sans font-semibold text-[#e8e8f0] truncate">
                 {props.topic}
               </span>
-              <span className="flex-shrink-0 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-[#1a1a2e] text-[#7a7889]">
+              <span className="flex-shrink-0 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded bg-[#1c1c24] text-[#8888a0]">
                 {props.category}
               </span>
             </div>
             {props.description && (
-              <p className="text-xs font-sans text-[#4a4858] mt-0.5 truncate">{props.description}</p>
+              <p className="text-xs font-sans text-[#8888a0] mt-0.5 truncate">{props.description}</p>
             )}
           </div>
 
@@ -370,7 +382,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               {props.momentum}
             </span>
             {props.relevanceScore != null && (
-              <span className="text-xs font-mono text-[#7a7889]">{props.relevanceScore}%</span>
+              <span className="text-xs font-mono text-[#8888a0]">{props.relevanceScore}%</span>
             )}
           </div>
         </div>
@@ -378,19 +390,19 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     ComparisonTable: ({ props }) => (
-      <div className="rounded-xl border border-[#1e1e2e] bg-[#0f0f16] overflow-hidden">
+      <div className="rounded-2xl overflow-hidden" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
         {props.title && (
-          <div className="px-4 py-3 border-b border-[#1e1e2e]">
-            <h3 className="text-sm font-sans font-semibold text-[#e8e6e3]">{props.title}</h3>
+          <div className="px-4 py-3 border-b border-[#2a2a35]">
+            <h3 className="text-sm font-sans font-semibold text-[#e8e8f0]">{props.title}</h3>
           </div>
         )}
         <table className="w-full">
           <thead>
-            <tr className="bg-[#0a0a10]">
+            <tr className="bg-[#16161e]">
               {props.headers.map((h, i) => (
                 <th
                   key={i}
-                  className="px-4 py-2.5 text-left text-[10px] font-mono uppercase tracking-[0.15em] text-[#4a4858] font-normal"
+                  className="px-4 py-2.5 text-left text-[10px] font-mono uppercase tracking-[0.15em] text-[#8888a0] font-normal"
                 >
                   {h}
                 </th>
@@ -401,10 +413,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {props.rows.map((row, ri) => (
               <tr
                 key={ri}
-                className={`border-t border-[#1e1e2e] ${ri % 2 === 1 ? 'bg-[#0a0a10]/50' : ''}`}
+                className={`border-t border-[#2a2a35] ${ri % 2 === 1 ? 'bg-[#16161e]/50' : ''}`}
               >
                 {row.map((cell, ci) => (
-                  <td key={ci} className="px-4 py-2.5 text-sm font-mono text-[#e8e6e3]">
+                  <td key={ci} className="px-4 py-2.5 text-sm font-mono text-[#e8e8f0]">
                     {cell}
                   </td>
                 ))}
@@ -421,7 +433,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       <span
         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono ${variantStyles[props.variant ?? 'default']}`}
       >
-        <span className="text-[#7a7889]">{props.label}</span>
+        <span className="text-[#8888a0]">{props.label}</span>
         <span className="font-semibold">{props.value}</span>
       </span>
     ),
@@ -437,13 +449,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div
-          className="w-full rounded-xl border border-[#1e1e2e] bg-[#0f0f16] px-4 py-3 flex items-start gap-3"
-          style={{ borderLeftWidth: '3px', borderLeftColor: borderColor }}
+          className="w-full rounded-2xl px-4 py-3 flex items-start gap-3"
+          style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderLeftWidth: '3px', borderLeftColor: borderColor }}
         >
           <span className="text-base flex-shrink-0 mt-0.5">{iconMap[props.variant] ?? ''}</span>
           <div>
-            <h4 className="text-sm font-sans font-semibold text-[#e8e6e3]">{props.title}</h4>
-            <p className="text-sm font-sans text-[#7a7889] mt-0.5">{props.message}</p>
+            <h4 className="text-sm font-sans font-semibold text-[#e8e8f0]">{props.title}</h4>
+            <p className="text-sm font-sans text-[#8888a0] mt-0.5">{props.message}</p>
           </div>
         </div>
       );
@@ -459,11 +471,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-          <div className="w-12 h-12 rounded-xl bg-[#1a1a2e] border border-[#1e1e2e] flex items-center justify-center mb-4 text-xl">
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-xl" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
             {iconMap[props.icon ?? 'search'] ?? '\uD83D\uDD0D'}
           </div>
-          <h3 className="text-sm font-sans font-semibold text-[#7a7889] mb-1">{props.title}</h3>
-          <p className="text-xs font-sans text-[#4a4858] max-w-xs">{props.message}</p>
+          <h3 className="text-sm font-sans font-semibold text-[#8888a0] mb-1">{props.title}</h3>
+          <p className="text-xs font-sans text-[#8888a0] max-w-xs">{props.message}</p>
         </div>
       );
     },
@@ -479,7 +491,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       };
 
       return (
-        <Tag className={`font-display font-bold text-[#e8e6e3] tracking-tight ${sizeClass[props.level ?? 'h2']}`}>
+        <Tag className={`font-display font-bold text-[#e8e8f0] tracking-tight ${sizeClass[props.level ?? 'h2']}`}>
           {props.text}
         </Tag>
       );
@@ -487,10 +499,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     Text: ({ props }) => {
       const styles: Record<string, string> = {
-        body: 'font-sans text-[#d1d0cc] text-sm leading-relaxed',
-        caption: 'font-sans text-[#7a7889] text-sm',
+        body: 'font-sans text-[#e8e8f0] text-sm leading-relaxed',
+        caption: 'font-sans text-[#8888a0] text-sm',
         mono: 'font-mono text-[#00d4ff] text-sm',
-        label: 'font-mono uppercase tracking-[0.15em] text-[10px] text-[#4a4858]',
+        label: 'font-mono uppercase tracking-[0.15em] text-[10px] text-[#8888a0]',
       };
 
       return (
@@ -507,9 +519,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       const base = 'px-4 py-2 rounded-lg text-sm font-sans font-medium transition-all duration-200 cursor-pointer';
       const variants: Record<string, string> = {
         primary: `${base} text-white hover:opacity-90`,
-        secondary: `${base} border border-[#1e1e2e] text-[#e8e6e3] hover:border-[#7c3aed]/50 hover:bg-[#1a1a2e]`,
-        ghost: `${base} text-[#7a7889] hover:text-[#e8e6e3] hover:bg-[#1a1a2e]`,
-        danger: `${base} text-[#e63946] border border-[#e63946]/30 hover:bg-[#e63946]/10`,
+        secondary: `${base} border-0 text-[#e8e8f0] hover:translate-y-0 hover:bg-[#1c1c24]`,
+        ghost: `${base} text-[#8888a0] hover:text-[#e8e8f0] hover:bg-[#1c1c24]`,
+        danger: `${base} text-[#f04a4d] border border-[#f04a4d]/30 hover:bg-[#f04a4d]/10`,
       };
       const isPrimary = (props.variant ?? 'primary') === 'primary';
 
@@ -525,7 +537,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <button
           className={variants[props.variant ?? 'primary']}
-          style={isPrimary ? { background: 'linear-gradient(135deg, #7c3aed, #e63946)' } : undefined}
+          style={isPrimary
+            ? { background: NEU_REG.accent, boxShadow: `-3px -3px 8px rgba(255,255,255,0.1), 3px 3px 8px rgba(0,0,0,0.5), 0 0 12px rgba(240,74,77,0.3)` }
+            : { background: NEU_REG.bg, boxShadow: NEU_REG.raisedSm }
+          }
           onClick={handleClick}
         >
           {props.label}
@@ -537,7 +552,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     CreatorProfile: ({ props }) => {
       const vpsColor = getVPSColor(props.vps_score);
-      const sColor = statusColors[props.status ?? 'active'] ?? '#6b7280';
+      const sColor = statusColors[props.status ?? 'active'] ?? '#8888a0';
       const initials = props.creator_name
         .split(' ')
         .map((w) => w[0])
@@ -561,9 +576,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
             width: '100%',
           }}
@@ -579,7 +594,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   height: 80,
                   borderRadius: '50%',
                   border: '3px solid transparent',
-                  background: 'linear-gradient(#0f0f16, #0f0f16) padding-box, linear-gradient(135deg, #7c3aed, #00d4ff) border-box',
+                  background: 'linear-gradient(#1c1c24, #1c1c24) padding-box, linear-gradient(135deg, #f04a4d, #00d4ff) border-box',
                   objectFit: 'cover',
                   flexShrink: 0,
                 }}
@@ -590,14 +605,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   width: 80,
                   height: 80,
                   borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #7c3aed, #00d4ff)',
+                  background: 'linear-gradient(135deg, #f04a4d, #00d4ff)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 24,
                   fontWeight: 700,
-                  color: '#ffffff',
+                  color: '#e8e8f0',
                   flexShrink: 0,
                 }}
               >
@@ -613,7 +628,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     fontFamily: "'Playfair Display', serif",
                     fontSize: 28,
                     fontWeight: 700,
-                    color: '#ffffff',
+                    color: '#e8e8f0',
                   }}
                 >
                   {props.creator_name}
@@ -669,7 +684,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         fontFamily: "'Playfair Display', serif",
                         fontSize: 20,
                         fontWeight: 700,
-                        color: '#ffffff',
+                        color: '#e8e8f0',
                       }}
                     >
                       {s.value}
@@ -680,7 +695,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         fontSize: 11,
                         textTransform: 'uppercase',
                         letterSpacing: '0.05em',
-                        color: '#6b7280',
+                        color: '#8888a0',
                         marginTop: 2,
                       }}
                     >
@@ -721,7 +736,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 14,
-                    color: '#6b7280',
+                    color: '#8888a0',
                     margin: 0,
                   }}
                 >
@@ -733,7 +748,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                     flexShrink: 0,
                     marginLeft: 16,
                   }}
@@ -751,7 +766,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       const scoreColor = getVPSColor(props.current_score);
       const trendConfig: Record<string, { arrow: string; color: string; label: string }> = {
         rising: { arrow: '↑', color: '#2dd4a8', label: 'Rising' },
-        falling: { arrow: '↓', color: '#e63946', label: 'Falling' },
+        falling: { arrow: '↓', color: '#f04a4d', label: 'Falling' },
         stable: { arrow: '→', color: '#f59e0b', label: 'Stable' },
       };
       const t = trendConfig[props.trend] ?? trendConfig.stable;
@@ -760,8 +775,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         return (
           <div
             style={{
-              background: '#0f0f16',
-              border: '1px solid #1e1e2e',
+              background: NEU_REG.bg,
+              boxShadow: NEU_REG.raised,
               borderRadius: 16,
               padding: 24,
             }}
@@ -772,7 +787,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 18,
                   fontWeight: 700,
-                  color: '#ffffff',
+                  color: '#e8e8f0',
                 }}
               >
                 VPS Timeline
@@ -786,7 +801,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 height: 120,
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: '#6b7280',
+                color: '#8888a0',
               }}
             >
               Not enough data for timeline
@@ -821,9 +836,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -842,7 +857,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 18,
                   fontWeight: 700,
-                  color: '#ffffff',
+                  color: '#e8e8f0',
                 }}
               >
                 VPS Timeline
@@ -857,7 +872,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   {props.period}
@@ -901,7 +916,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     x={p.x}
                     y={p.y - 10}
                     textAnchor="middle"
-                    fill="#e5e7eb"
+                    fill="#e8e8f0"
                     fontSize="8"
                     fontFamily="DM Sans, sans-serif"
                   >
@@ -917,7 +932,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 x={points[xl.idx].x}
                 y={chartH - 2}
                 textAnchor={xl.idx === 0 ? 'start' : xl.idx === pts.length - 1 ? 'end' : 'middle'}
-                fill="#6b7280"
+                fill="#8888a0"
                 fontSize="10"
                 fontFamily="JetBrains Mono, monospace"
               >
@@ -931,14 +946,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     NicheRanking: ({ props }) => {
       const pct = props.percentile;
-      const rankColor = pct >= 75 ? '#2dd4a8' : pct >= 50 ? '#f59e0b' : pct >= 25 ? '#00d4ff' : '#e63946';
+      const rankColor = pct >= 75 ? '#2dd4a8' : pct >= 50 ? '#f59e0b' : pct >= 25 ? '#00d4ff' : '#f04a4d';
 
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -956,7 +971,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               Niche Ranking
@@ -992,7 +1007,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: '#6b7280',
+                color: '#8888a0',
                 marginTop: 4,
               }}
             >
@@ -1005,7 +1020,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             style={{
               width: '100%',
               height: 8,
-              backgroundColor: '#1e1e2e',
+              backgroundColor: '#2a2a35',
               borderRadius: 4,
               position: 'relative',
               marginBottom: 20,
@@ -1028,7 +1043,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 height: 14,
                 borderRadius: '50%',
                 backgroundColor: rankColor,
-                border: '2px solid #0f0f16',
+                border: `2px solid ${NEU_REG.bg}`,
                 transform: 'translateX(-50%)',
               }}
             />
@@ -1040,7 +1055,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 13,
-                color: '#ffffff',
+                color: '#e8e8f0',
                 fontWeight: 700,
               }}
             >
@@ -1050,7 +1065,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 13,
-                color: '#6b7280',
+                color: '#8888a0',
               }}
             >
               Niche Avg: {props.niche_avg_vps}
@@ -1081,17 +1096,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         fontSize: 10,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        color: '#6b7280',
+        color: '#8888a0',
         padding: '8px 12px',
         textAlign: 'left',
         fontWeight: 400,
-        borderBottom: '1px solid #1e1e2e',
+        borderBottom: '1px solid #2a2a35',
       };
 
       const cellStyle: React.CSSProperties = {
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 13,
-        color: '#e5e7eb',
+        color: '#e8e8f0',
         padding: '8px 12px',
       };
 
@@ -1099,8 +1114,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         return (
           <div
             style={{
-              background: '#0f0f16',
-              border: '1px solid #1e1e2e',
+              background: NEU_REG.bg,
+              boxShadow: NEU_REG.raised,
               borderRadius: 16,
               padding: 24,
             }}
@@ -1110,7 +1125,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               Content Performance
@@ -1123,7 +1138,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 height: 120,
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: '#6b7280',
+                color: '#8888a0',
               }}
             >
               No content data available
@@ -1135,9 +1150,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             overflow: 'hidden',
           }}
         >
@@ -1156,7 +1171,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               Content Performance
@@ -1166,7 +1181,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 13,
-                  color: '#6b7280',
+                  color: '#8888a0',
                 }}
               >
                 {props.total_videos} videos
@@ -1180,7 +1195,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               maxHeight: 300,
               overflowY: 'auto',
               scrollbarWidth: 'thin',
-              scrollbarColor: '#3f3f5e #1e1e2e',
+              scrollbarColor: '#2a2a35 #1e1e2e',
             }}
           >
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -1200,7 +1215,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   <tr
                     key={i}
                     style={{
-                      backgroundColor: i % 2 === 1 ? '#0f0f16' : 'transparent',
+                      backgroundColor: i % 2 === 1 ? NEU_REG.bg : 'transparent',
                     }}
                   >
                     <td
@@ -1220,12 +1235,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         ...cellStyle,
                         fontFamily: "'Playfair Display', serif",
                         fontWeight: 700,
-                        color: v.dps_score != null ? getVPSColor(v.dps_score) : '#6b7280',
+                        color: v.dps_score != null ? getVPSColor(v.dps_score) : '#8888a0',
                       }}
                     >
                       {v.dps_score != null ? v.dps_score : '—'}
                     </td>
-                    <td style={{ ...cellStyle, color: '#ffffff', fontWeight: 700 }}>
+                    <td style={{ ...cellStyle, color: '#e8e8f0', fontWeight: 700 }}>
                       {fmtViews(v.views)}
                     </td>
                     <td style={cellStyle}>{v.shares != null ? fmtViews(v.shares) : '—'}</td>
@@ -1236,7 +1251,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         ...cellStyle,
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 12,
-                        color: '#6b7280',
+                        color: '#8888a0',
                       }}
                     >
                       {v.posted_date ?? '—'}
@@ -1255,8 +1270,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         A: '#2dd4a8',
         B: '#00d4ff',
         C: '#f59e0b',
-        D: '#e63946',
-        F: '#e63946',
+        D: '#f04a4d',
+        F: '#f04a4d',
       };
 
       const maxVal = Math.max(
@@ -1273,9 +1288,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -1293,7 +1308,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               Engagement Breakdown
@@ -1304,7 +1319,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 28,
                   fontWeight: 700,
-                  color: gradeColors[props.overall_engagement_grade] ?? '#6b7280',
+                  color: gradeColors[props.overall_engagement_grade] ?? '#8888a0',
                 }}
               >
                 {props.overall_engagement_grade}
@@ -1319,7 +1334,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               const nichePct = (m.niche_avg / maxVal) * 100;
               const diff = m.creator_value > m.niche_avg;
               const indicator = diff ? '▲' : m.creator_value < m.niche_avg ? '▼' : '';
-              const indicatorColor = diff ? '#2dd4a8' : '#e63946';
+              const indicatorColor = diff ? '#2dd4a8' : '#f04a4d';
               const sfx = unitSuffix(m.unit);
 
               return (
@@ -1328,7 +1343,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 13,
-                      color: '#ffffff',
+                      color: '#e8e8f0',
                       marginBottom: 6,
                     }}
                   >
@@ -1340,7 +1355,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       <div
                         style={{
                           height: 8,
-                          backgroundColor: '#1e1e2e',
+                          backgroundColor: '#2a2a35',
                           borderRadius: 4,
                           marginBottom: 4,
                         }}
@@ -1358,7 +1373,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       <div
                         style={{
                           height: 5,
-                          backgroundColor: '#1e1e2e',
+                          backgroundColor: '#2a2a35',
                           borderRadius: 3,
                         }}
                       >
@@ -1366,7 +1381,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                           style={{
                             width: `${nichePct}%`,
                             height: '100%',
-                            backgroundColor: '#3f3f5e',
+                            backgroundColor: '#2a2a35',
                             borderRadius: 3,
                           }}
                         />
@@ -1381,10 +1396,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         textAlign: 'right',
                       }}
                     >
-                      <span style={{ color: '#ffffff', fontWeight: 700 }}>
+                      <span style={{ color: '#e8e8f0', fontWeight: 700 }}>
                         {m.creator_value}{sfx}
                       </span>
-                      <span style={{ color: '#6b7280' }}> / {m.niche_avg}{sfx}</span>
+                      <span style={{ color: '#8888a0' }}> / {m.niche_avg}{sfx}</span>
                       {indicator && (
                         <span style={{ color: indicatorColor, marginLeft: 4, fontSize: 11 }}>
                           {indicator}
@@ -1405,7 +1420,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               marginTop: 16,
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 11,
-              color: '#6b7280',
+              color: '#8888a0',
             }}
           >
             <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -1426,7 +1441,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   width: 8,
                   height: 8,
                   borderRadius: '50%',
-                  backgroundColor: '#3f3f5e',
+                  backgroundColor: '#2a2a35',
                   display: 'inline-block',
                 }}
               />
@@ -1439,7 +1454,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     RecommendationCard: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        critical: '#e63946',
+        critical: '#f04a4d',
         high: '#f59e0b',
         medium: '#7c3aed',
         low: '#2dd4a8',
@@ -1449,14 +1464,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: `${NEU_REG.raised}, inset 0 0 40px ${color}0d`,
+            borderRadius: 20,
             padding: 24,
             paddingLeft: 28,
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: `inset 0 0 40px ${color}0d`,
           }}
         >
           {/* Left accent bar */}
@@ -1479,7 +1493,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               {props.title}
@@ -1506,7 +1520,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14,
-              color: '#e5e7eb',
+              color: '#e8e8f0',
               lineHeight: 1.6,
               margin: '12px 0 16px',
             }}
@@ -1525,7 +1539,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   gap: 8,
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 13,
-                  color: '#e5e7eb',
+                  color: '#e8e8f0',
                 }}
               >
                 <span
@@ -1552,7 +1566,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 alignItems: 'center',
                 marginTop: 16,
                 paddingTop: 12,
-                borderTop: '1px solid #1e1e2e',
+                borderTop: '1px solid #2a2a35',
               }}
             >
               {props.expected_impact && (
@@ -1571,7 +1585,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   {props.timeframe}
@@ -1592,19 +1606,19 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         calibrating: '#f59e0b',
         ready: '#2dd4a8',
         active: '#34eab9',
-        dropped: '#e63946',
+        dropped: '#f04a4d',
       };
 
       function getStageColor(key: string, fallback?: string): string {
-        return stageColorMap[key] ?? fallback ?? '#6b7280';
+        return stageColorMap[key] ?? fallback ?? '#8888a0';
       }
 
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -1622,7 +1636,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 20,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               Onboarding Pipeline
@@ -1633,7 +1647,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 13,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   Avg {props.avg_completion_days}d to complete
@@ -1643,7 +1657,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 13,
-                  color: '#6b7280',
+                  color: '#8888a0',
                 }}
               >
                 {props.total_creators} creators
@@ -1727,7 +1741,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                           style={{
                             fontFamily: "'DM Sans', sans-serif",
                             fontSize: 12,
-                            color: '#6b7280',
+                            color: '#8888a0',
                             textAlign: 'center',
                           }}
                         >
@@ -1742,7 +1756,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                               alignItems: 'center',
                               gap: 6,
                               padding: '4px 8px',
-                              background: '#0f0f16',
+                              background: NEU_REG.bg,
                               border: `1px solid ${color}4d`,
                               borderRadius: 8,
                             }}
@@ -1759,7 +1773,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                                 fontFamily: "'DM Sans', sans-serif",
                                 fontSize: 10,
                                 fontWeight: 700,
-                                color: '#ffffff',
+                                color: '#e8e8f0',
                                 flexShrink: 0,
                               }}
                             >
@@ -1770,7 +1784,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                                 style={{
                                   fontFamily: "'DM Sans', sans-serif",
                                   fontSize: 12,
-                                  color: '#ffffff',
+                                  color: '#e8e8f0',
                                   whiteSpace: 'nowrap',
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
@@ -1783,7 +1797,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                                   style={{
                                     fontFamily: "'JetBrains Mono', monospace",
                                     fontSize: 10,
-                                    color: '#6b7280',
+                                    color: '#8888a0',
                                   }}
                                 >
                                   {c.days_in_stage}d
@@ -1809,16 +1823,16 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           ? '#2dd4a8'
           : props.completion_rate >= 40
             ? '#f59e0b'
-            : '#e63946';
+            : '#f04a4d';
 
       const stats: { value: string; label: string; color: string }[] = [
-        { value: String(props.total_invited), label: 'Total Invited', color: '#ffffff' },
+        { value: String(props.total_invited), label: 'Total Invited', color: '#e8e8f0' },
         { value: String(props.currently_onboarding), label: 'Currently Onboarding', color: '#00d4ff' },
         { value: String(props.completed), label: 'Completed', color: '#2dd4a8' },
-        { value: String(props.dropped_off), label: 'Dropped Off', color: '#e63946' },
+        { value: String(props.dropped_off), label: 'Dropped Off', color: '#f04a4d' },
         { value: `${props.completion_rate}%`, label: 'Completion Rate', color: completionColor },
         ...(props.avg_days_to_complete != null
-          ? [{ value: String(props.avg_days_to_complete), label: 'Avg Days to Complete', color: '#ffffff' }]
+          ? [{ value: String(props.avg_days_to_complete), label: 'Avg Days to Complete', color: '#e8e8f0' }]
           : []),
       ];
 
@@ -1827,9 +1841,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -1838,7 +1852,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               fontFamily: "'Playfair Display', serif",
               fontSize: 16,
               fontWeight: 700,
-              color: '#ffffff',
+              color: '#e8e8f0',
               marginBottom: 20,
             }}
           >
@@ -1854,7 +1868,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     style={{
                       width: 1,
                       alignSelf: 'stretch',
-                      backgroundColor: '#1e1e2e',
+                      backgroundColor: '#2a2a35',
                       margin: '4px 20px',
                       minHeight: 36,
                     }}
@@ -1877,7 +1891,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       fontSize: 11,
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      color: '#6b7280',
+                      color: '#8888a0',
                       marginTop: 4,
                     }}
                   >
@@ -1894,10 +1908,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12,
-                color: '#6b7280',
+                color: '#8888a0',
                 marginTop: 16,
                 paddingTop: 12,
-                borderTop: '1px solid #1e1e2e',
+                borderTop: '1px solid #2a2a35',
               }}
             >
               This week:{' '}
@@ -1918,9 +1932,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -1939,7 +1953,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontFamily: "'Playfair Display', serif",
                   fontSize: 18,
                   fontWeight: 700,
-                  color: '#ffffff',
+                  color: '#e8e8f0',
                 }}
               >
                 {props.creator_name}
@@ -1958,7 +1972,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             </div>
             {/* Completion ring */}
             <svg width={60} height={60} viewBox="0 0 60 60">
-              <circle cx={30} cy={30} r={radius} fill="none" stroke="#1e1e2e" strokeWidth={4} />
+              <circle cx={30} cy={30} r={radius} fill="none" stroke="#2a2a35" strokeWidth={4} />
               <circle
                 cx={30}
                 cy={30}
@@ -1975,7 +1989,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 y={30}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fill="#ffffff"
+                fill="#e8e8f0"
                 fontSize={16}
                 fontFamily="Playfair Display, serif"
                 fontWeight={700}
@@ -1995,7 +2009,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 top: 5,
                 bottom: 5,
                 width: 2,
-                backgroundColor: '#1e1e2e',
+                backgroundColor: '#2a2a35',
               }}
             />
             {/* Green overlay for completed section */}
@@ -2047,10 +2061,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       justifyContent: 'center',
                       fontSize: 8,
                       ...(isCompleted
-                        ? { backgroundColor: '#2dd4a8', color: '#ffffff' }
+                        ? { backgroundColor: '#2dd4a8', color: '#e8e8f0' }
                         : isInProgress
-                          ? { backgroundColor: '#f59e0b', color: '#ffffff' }
-                          : { backgroundColor: 'transparent', border: '2px solid #3f3f5e' }),
+                          ? { backgroundColor: '#f59e0b', color: '#e8e8f0' }
+                          : { backgroundColor: 'transparent', border: '2px solid #2a2a35' }),
                       transform: 'translateX(-1px)',
                     }}
                   >
@@ -2061,7 +2075,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     style={{
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 14,
-                      color: isCompleted || isInProgress ? '#ffffff' : '#6b7280',
+                      color: isCompleted || isInProgress ? '#e8e8f0' : '#8888a0',
                       flex: 1,
                     }}
                   >
@@ -2073,7 +2087,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       style={{
                         fontFamily: "'JetBrains Mono', monospace",
                         fontSize: 11,
-                        color: '#6b7280',
+                        color: '#8888a0',
                       }}
                     >
                       {step.completed_at}
@@ -2092,14 +2106,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               alignItems: 'center',
               marginTop: 16,
               paddingTop: 12,
-              borderTop: '1px solid #1e1e2e',
+              borderTop: '1px solid #2a2a35',
             }}
           >
             <div
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 11,
-                color: '#6b7280',
+                color: '#8888a0',
                 display: 'flex',
                 gap: 16,
               }}
@@ -2133,9 +2147,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         calibrating: '#f59e0b',
         ready: '#2dd4a8',
         active: '#34eab9',
-        dropped: '#e63946',
+        dropped: '#f04a4d',
       };
-      const color = stageColorMap[props.stage] ?? '#6b7280';
+      const color = stageColorMap[props.stage] ?? '#8888a0';
       const [hovered, setHovered] = React.useState(false);
 
       return (
@@ -2148,8 +2162,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             gap: 12,
             padding: '12px 16px',
             height: 56,
-            borderBottom: '1px solid #1e1e2e',
-            backgroundColor: hovered ? '#0f0f16' : 'transparent',
+            borderBottom: '1px solid #2a2a35',
+            backgroundColor: hovered ? NEU_REG.bg : 'transparent',
             transition: 'background-color 0.15s',
           }}
         >
@@ -2166,7 +2180,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12,
               fontWeight: 700,
-              color: '#ffffff',
+              color: '#e8e8f0',
               flexShrink: 0,
             }}
           >
@@ -2180,7 +2194,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 14,
-                  color: '#ffffff',
+                  color: '#e8e8f0',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -2193,7 +2207,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 11,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   {props.handle}
@@ -2225,7 +2239,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 width: 60,
                 height: 4,
-                backgroundColor: '#1e1e2e',
+                backgroundColor: '#2a2a35',
                 borderRadius: 2,
                 flexShrink: 0,
               }}
@@ -2247,7 +2261,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 11,
-                color: '#e63946',
+                color: '#f04a4d',
                 flexShrink: 0,
                 maxWidth: 120,
                 whiteSpace: 'nowrap',
@@ -2280,7 +2294,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 style={{
                   fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 11,
-                  color: '#6b7280',
+                  color: '#8888a0',
                 }}
               >
                 {props.days_in_pipeline}d
@@ -2295,10 +2309,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       const statusColorMap: Record<string, string> = {
         pending: '#f59e0b',
         accepted: '#2dd4a8',
-        expired: '#6b7280',
-        revoked: '#e63946',
+        expired: '#8888a0',
+        revoked: '#f04a4d',
       };
-      const color = statusColorMap[props.invite_status] ?? '#6b7280';
+      const color = statusColorMap[props.invite_status] ?? '#8888a0';
       const isExpired = props.invite_status === 'expired';
 
       const details: { label: string; value: string }[] = [
@@ -2312,8 +2326,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           style={{
             background: isExpired
               ? 'linear-gradient(135deg, rgba(230, 57, 70, 0.03), #0f0f16)'
-              : '#0f0f16',
-            border: '1px solid #1e1e2e',
+              : NEU_REG.bg,
+            boxShadow: NEU_REG.raisedSm,
             borderRadius: 16,
             padding: 24,
             paddingLeft: 28,
@@ -2348,7 +2362,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 16,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               {props.creator_name ?? props.email ?? 'Unknown'}
@@ -2382,7 +2396,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   {d.label}
@@ -2391,7 +2405,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 12,
-                    color: '#e5e7eb',
+                    color: '#e8e8f0',
                   }}
                 >
                   {d.value}
@@ -2404,7 +2418,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   Niche
@@ -2429,7 +2443,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   Sent by
@@ -2438,7 +2452,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 12,
-                    color: '#e5e7eb',
+                    color: '#e8e8f0',
                   }}
                 >
                   {props.sent_by}
@@ -2453,10 +2467,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 11,
-                color: '#6b7280',
+                color: '#8888a0',
                 marginTop: 12,
                 paddingTop: 8,
-                borderTop: '1px solid #1e1e2e',
+                borderTop: '1px solid #2a2a35',
               }}
             >
               Code: {props.invite_code.slice(0, 4)}••••
@@ -2476,20 +2490,20 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         calibration_step_done: '#f59e0b',
         calibration_completed: '#f59e0b',
         activated: '#2dd4a8',
-        dropped: '#e63946',
+        dropped: '#f04a4d',
         reactivated: '#2dd4a8',
-        note: '#6b7280',
+        note: '#8888a0',
       };
 
       const currentStageColor =
-        eventColorMap[props.current_stage] ?? '#6b7280';
+        eventColorMap[props.current_stage] ?? '#8888a0';
 
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
           }}
         >
@@ -2507,7 +2521,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
               }}
             >
               {props.creator_name}&apos;s Onboarding Journey
@@ -2531,7 +2545,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: 11,
-                    color: '#6b7280',
+                    color: '#8888a0',
                   }}
                 >
                   {props.total_days} days
@@ -2546,7 +2560,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14,
-                color: '#6b7280',
+                color: '#8888a0',
                 textAlign: 'center',
                 padding: '24px 0',
               }}
@@ -2566,12 +2580,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   top: 5,
                   bottom: 5,
                   width: 2,
-                  backgroundColor: '#1e1e2e',
+                  backgroundColor: '#2a2a35',
                 }}
               />
 
               {props.events.map((evt, i) => {
-                const dotColor = eventColorMap[evt.event_type] ?? '#6b7280';
+                const dotColor = eventColorMap[evt.event_type] ?? '#8888a0';
                 const isReactivated = evt.event_type === 'reactivated';
                 return (
                   <div
@@ -2603,7 +2617,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         style={{
                           fontFamily: "'DM Sans', sans-serif",
                           fontSize: 13,
-                          color: '#ffffff',
+                          color: '#e8e8f0',
                         }}
                       >
                         {evt.description}
@@ -2613,7 +2627,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                           style={{
                             fontFamily: "'JetBrains Mono', monospace",
                             fontSize: 11,
-                            color: '#6b7280',
+                            color: '#8888a0',
                           }}
                         >
                           {evt.timestamp}
@@ -2623,7 +2637,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                             style={{
                               fontFamily: "'DM Sans', sans-serif",
                               fontSize: 11,
-                              color: '#6b7280',
+                              color: '#8888a0',
                               fontStyle: 'italic',
                             }}
                           >
@@ -2645,32 +2659,32 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     EventCard: ({ props }) => {
       const categoryColorMap: Record<string, string> = {
-        holiday: '#e63946',
+        holiday: '#f04a4d',
         trending_topic: '#00d4ff',
         cultural_moment: '#7c3aed',
         industry_event: '#f59e0b',
         seasonal: '#2dd4a8',
         platform_trend: '#00d4ff',
-        news_cycle: '#e63946',
+        news_cycle: '#f04a4d',
       };
-      const catColor = categoryColorMap[props.category] ?? '#6b7280';
+      const catColor = categoryColorMap[props.category] ?? '#8888a0';
 
       const statusColorMap: Record<string, string> = {
         upcoming: '#00d4ff',
         active: '#2dd4a8',
-        passed: '#6b7280',
-        draft: '#6b7280',
+        passed: '#8888a0',
+        draft: '#8888a0',
       };
-      const sColor = statusColorMap[props.status ?? 'upcoming'] ?? '#6b7280';
+      const sColor = statusColorMap[props.status ?? 'upcoming'] ?? '#8888a0';
 
       function relevanceColor(s: number): string {
         if (s >= 70) return '#2dd4a8';
         if (s >= 40) return '#f59e0b';
-        return '#e63946';
+        return '#f04a4d';
       }
 
       function daysColor(d: number): string {
-        if (d < 0) return '#e63946';
+        if (d < 0) return '#f04a4d';
         if (d <= 7) return '#f59e0b';
         return '#2dd4a8';
       }
@@ -2684,9 +2698,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       return (
         <div
           style={{
-            background: '#0f0f16',
-            border: '1px solid #1e1e2e',
-            borderRadius: 16,
+            background: NEU_REG.bg,
+            boxShadow: NEU_REG.raised,
+            borderRadius: 20,
             padding: 24,
             paddingLeft: 28,
             position: 'relative',
@@ -2713,7 +2727,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 18,
                 fontWeight: 700,
-                color: '#ffffff',
+                color: '#e8e8f0',
                 flex: 1,
               }}
             >
@@ -2756,7 +2770,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 13,
-                color: '#6b7280',
+                color: '#8888a0',
               }}
             >
               {formatDate(props.event_date)}
@@ -2797,7 +2811,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 14,
-              color: '#e5e7eb',
+              color: '#e8e8f0',
               lineHeight: 1.6,
               margin: '12px 0 0',
               display: '-webkit-box',
@@ -2839,7 +2853,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontSize: 11,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  color: '#6b7280',
+                  color: '#8888a0',
                   marginBottom: 8,
                 }}
               >
@@ -2855,7 +2869,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       gap: 6,
                       padding: '4px 10px',
                       background: '#08080d',
-                      border: '1px solid #1e1e2e',
+                      boxShadow: NEU_REG.raisedSm,
                       borderRadius: 8,
                     }}
                   >
@@ -2871,16 +2885,16 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         fontFamily: "'DM Sans', sans-serif",
                         fontSize: 10,
                         fontWeight: 700,
-                        color: '#ffffff',
+                        color: '#e8e8f0',
                         flexShrink: 0,
                       }}
                     >
                       {c.name.charAt(0).toUpperCase()}
                     </div>
                     <div>
-                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#ffffff' }}>{c.name}</div>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0' }}>{c.name}</div>
                       {c.fit_reason && (
-                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280' }}>{c.fit_reason}</div>
+                        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0' }}>{c.fit_reason}</div>
                       )}
                     </div>
                   </div>
@@ -2898,7 +2912,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   fontSize: 11,
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
-                  color: '#6b7280',
+                  color: '#8888a0',
                   marginBottom: 8,
                 }}
               >
@@ -2918,7 +2932,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     >
                       {i + 1}.
                     </span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{s}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{s}</span>
                   </div>
                 ))}
               </div>
@@ -2931,7 +2945,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               style={{
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 10,
-                color: '#6b7280',
+                color: '#8888a0',
                 fontStyle: 'italic',
                 marginTop: 12,
                 textAlign: 'right',
@@ -2946,13 +2960,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     EventCalendar: ({ props }) => {
       const categoryColorMap: Record<string, string> = {
-        holiday: '#e63946',
+        holiday: '#f04a4d',
         trending_topic: '#00d4ff',
         cultural_moment: '#7c3aed',
         industry_event: '#f59e0b',
         seasonal: '#2dd4a8',
         platform_trend: '#00d4ff',
-        news_cycle: '#e63946',
+        news_cycle: '#f04a4d',
       };
 
       const start = new Date(props.start_date);
@@ -2972,15 +2986,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         for (let d = 1; d <= daysInMonth; d++) cells.push({ day: d, date: new Date(year, month, d) });
 
         return (
-          <div style={{ background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24 }}>
+          <div style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24 }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#ffffff' }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#e8e8f0' }}>
                 Event Calendar
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>{monthName}</span>
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>Month view</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>{monthName}</span>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>Month view</span>
               </div>
             </div>
 
@@ -2989,7 +3003,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               {dayHeaders.map(d => (
                 <div key={d} style={{
                   fontFamily: "'JetBrains Mono', monospace", fontSize: 10, textTransform: 'uppercase',
-                  color: '#6b7280', textAlign: 'center', padding: '6px 0',
+                  color: '#8888a0', textAlign: 'center', padding: '6px 0',
                 }}>{d}</div>
               ))}
             </div>
@@ -3015,7 +3029,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     key={i}
                     style={{
                       minHeight: 64,
-                      border: '1px solid #1e1e2e',
+                      boxShadow: NEU_REG.raisedSm,
                       borderRadius: 4,
                       padding: 4,
                       opacity: isPast ? 0.4 : 1,
@@ -3024,7 +3038,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   >
                     <div style={{
                       fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                      color: isToday ? '#00d4ff' : '#e5e7eb',
+                      color: isToday ? '#00d4ff' : '#e8e8f0',
                     }}>{cell.day}</div>
                     {visibleEvents.map((ev, j) => (
                       <div
@@ -3035,16 +3049,16 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       >
                         <span style={{
                           width: 6, height: 6, borderRadius: '50%', flexShrink: 0,
-                          backgroundColor: categoryColorMap[ev.category] ?? '#6b7280',
+                          backgroundColor: categoryColorMap[ev.category] ?? '#8888a0',
                         }} />
                         <span style={{
-                          fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#e5e7eb',
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#e8e8f0',
                           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                         }}>{ev.event_name}</span>
                       </div>
                     ))}
                     {overflow > 0 && (
-                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#6b7280', marginTop: 2 }}>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#8888a0', marginTop: 2 }}>
                         +{overflow} more
                       </div>
                     )}
@@ -3056,7 +3070,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Total events */}
             {props.total_events != null && (
               <div style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280',
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0',
                 textAlign: 'right', marginTop: 8,
               }}>{props.total_events} total events</div>
             )}
@@ -3074,13 +3088,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       });
 
       return (
-        <div style={{ background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24 }}>
+        <div style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24 }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#ffffff' }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#e8e8f0' }}>
               Event Calendar
             </span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>Week view</span>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>Week view</span>
           </div>
 
           {/* Week grid */}
@@ -3102,15 +3116,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     borderRadius: 8,
                     padding: 8,
                     backgroundColor: isToday ? 'rgba(0, 212, 255, 0.05)' : 'transparent',
-                    border: '1px solid #1e1e2e',
+                    boxShadow: NEU_REG.raisedSm,
                   }}
                 >
                   <div style={{
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                    color: isToday ? '#00d4ff' : '#6b7280', marginBottom: 8,
+                    color: isToday ? '#00d4ff' : '#8888a0', marginBottom: 8,
                   }}>
                     <div>{dayName}</div>
-                    <div style={{ color: isToday ? '#00d4ff' : '#e5e7eb' }}>{dayNum}</div>
+                    <div style={{ color: isToday ? '#00d4ff' : '#e8e8f0' }}>{dayNum}</div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {dayEvents.map((ev, j) => (
@@ -3118,13 +3132,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         key={j}
                         style={{
                           padding: '4px 6px',
-                          borderLeft: `3px solid ${categoryColorMap[ev.category] ?? '#6b7280'}`,
+                          borderLeft: `3px solid ${categoryColorMap[ev.category] ?? '#8888a0'}`,
                           background: '#08080d',
                           borderRadius: 4,
                         }}
                       >
                         <span style={{
-                          fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e5e7eb',
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0',
                           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                           display: 'block',
                         }}>{ev.event_name}</span>
@@ -3139,14 +3153,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* No events empty state */}
           {props.events.length === 0 && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#6b7280',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8888a0',
               textAlign: 'center', padding: '32px 0',
             }}>No events scheduled</div>
           )}
 
           {props.total_events != null && (
             <div style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280',
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0',
               textAlign: 'right', marginTop: 8,
             }}>{props.total_events} total events</div>
           )}
@@ -3156,20 +3170,20 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     EventForm: ({ props }) => {
       const categoryColorMap: Record<string, string> = {
-        holiday: '#e63946',
+        holiday: '#f04a4d',
         trending_topic: '#00d4ff',
         cultural_moment: '#7c3aed',
         industry_event: '#f59e0b',
         seasonal: '#2dd4a8',
         platform_trend: '#00d4ff',
-        news_cycle: '#e63946',
+        news_cycle: '#f04a4d',
       };
 
       const pre = props.prefilled ?? {};
 
       const fieldStyle: React.CSSProperties = {
         background: '#08080d',
-        border: '1px solid #1e1e2e',
+        boxShadow: NEU_REG.raisedSm,
         borderRadius: 8,
         padding: 12,
       };
@@ -3179,22 +3193,22 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         fontSize: 11,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        color: '#6b7280',
+        color: '#8888a0',
         marginBottom: 4,
       };
 
       const emptyStyle: React.CSSProperties = {
         fontFamily: "'DM Sans', sans-serif",
         fontSize: 14,
-        color: '#6b7280',
+        color: '#8888a0',
         fontStyle: 'italic',
       };
 
       return (
-        <div style={{ background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24 }}>
+        <div style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24 }}>
           <div style={{
             fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700,
-            color: '#ffffff', marginBottom: 20,
+            color: '#e8e8f0', marginBottom: 20,
           }}>
             {props.mode === 'edit' ? 'Edit Event' : 'New Cultural Event'}
           </div>
@@ -3204,7 +3218,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={fieldStyle}>
               <div style={labelStyle}>Event Name</div>
               {pre.event_name
-                ? <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#ffffff' }}>{pre.event_name}</div>
+                ? <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#e8e8f0' }}>{pre.event_name}</div>
                 : <div style={emptyStyle}>Not specified</div>
               }
             </div>
@@ -3214,7 +3228,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <div style={fieldStyle}>
                 <div style={labelStyle}>Date</div>
                 {pre.event_date
-                  ? <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: '#e5e7eb' }}>{pre.event_date}</div>
+                  ? <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 14, color: '#e8e8f0' }}>{pre.event_date}</div>
                   : <div style={emptyStyle}>Not specified</div>
                 }
               </div>
@@ -3223,8 +3237,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {pre.category
                   ? <span style={{
                       fontFamily: "'DM Sans', sans-serif", fontSize: 12,
-                      color: categoryColorMap[pre.category] ?? '#6b7280',
-                      backgroundColor: `${categoryColorMap[pre.category] ?? '#6b7280'}26`,
+                      color: categoryColorMap[pre.category] ?? '#8888a0',
+                      backgroundColor: `${categoryColorMap[pre.category] ?? '#8888a0'}26`,
                       padding: '2px 10px', borderRadius: 999, textTransform: 'capitalize',
                     }}>{pre.category.replace(/_/g, ' ')}</span>
                   : <div style={emptyStyle}>Not specified</div>
@@ -3236,7 +3250,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={fieldStyle}>
               <div style={labelStyle}>Description</div>
               {pre.description
-                ? <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e5e7eb', lineHeight: 1.6 }}>{pre.description}</div>
+                ? <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e8e8f0', lineHeight: 1.6 }}>{pre.description}</div>
                 : <div style={emptyStyle}>Not specified</div>
               }
             </div>
@@ -3261,7 +3275,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {pre.source && (
               <div style={fieldStyle}>
                 <div style={labelStyle}>Source</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>{pre.source}</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>{pre.source}</div>
               </div>
             )}
           </div>
@@ -3276,7 +3290,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               }}
               style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
-                color: '#ffffff', backgroundColor: '#2dd4a8', border: 'none',
+                color: '#e8e8f0', backgroundColor: '#2dd4a8', border: 'none',
                 padding: '10px 20px', borderRadius: 8, cursor: 'pointer',
               }}
             >
@@ -3303,10 +3317,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     TrendAlert: ({ props }) => {
       const urgencyConfig: Record<string, { bg: string; border: string; icon: string }> = {
-        immediate: { bg: 'rgba(230, 57, 70, 0.08)', border: '#e63946', icon: '🔴' },
+        immediate: { bg: 'rgba(230, 57, 70, 0.08)', border: '#f04a4d', icon: '🔴' },
         today: { bg: 'rgba(245, 158, 11, 0.08)', border: '#f59e0b', icon: '⚡' },
         this_week: { bg: 'rgba(0, 212, 255, 0.05)', border: '#00d4ff', icon: '📅' },
-        upcoming: { bg: '#0f0f16', border: '#2dd4a8', icon: '📌' },
+        upcoming: { bg: NEU_REG.bg, border: '#2dd4a8', icon: '📌' },
       };
       const cfg = urgencyConfig[props.urgency] ?? urgencyConfig.upcoming;
 
@@ -3328,10 +3342,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Content */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e8e8f0',
             }}>{props.alert_title}</div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e5e7eb',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0',
               whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2,
             }}>{props.description}</div>
             <div style={{
@@ -3344,12 +3358,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
             {props.affected_creators && props.affected_creators.length > 0 && (
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0',
               }}>{props.affected_creators.length} creator{props.affected_creators.length !== 1 ? 's' : ''}</span>
             )}
             {props.expires_at && (
               <span style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
               }}>Expires {props.expires_at}</span>
             )}
           </div>
@@ -3361,12 +3375,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     EventBrief: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
       const pColor = priorityColors[props.priority ?? 'normal'] ?? '#7c3aed';
 
       const creatorStatusColors: Record<string, string> = {
-        pending: '#6b7280', accepted: '#00d4ff', in_progress: '#f59e0b',
+        pending: '#8888a0', accepted: '#00d4ff', in_progress: '#f59e0b',
         submitted: '#2dd4a8', published: '#2dd4a8',
       };
 
@@ -3378,7 +3392,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16,
           padding: 24, position: 'relative', overflow: 'hidden',
         }}>
           {/* Top accent gradient */}
@@ -3391,7 +3405,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#e8e8f0',
             }}>{props.brief_title}</span>
             {props.priority && (
               <span style={{
@@ -3407,7 +3421,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#00d4ff' }}>
               For: {props.event_name}
             </span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
               {props.event_date}
             </span>
             {props.deadline && (
@@ -3422,10 +3436,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Content Angle</div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#ffffff', fontStyle: 'italic',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#e8e8f0', fontStyle: 'italic',
               borderLeft: '3px solid #00d4ff', paddingLeft: 12,
             }}>{props.content_angle}</div>
           </div>
@@ -3434,7 +3448,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Talking Points</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {props.talking_points.map((pt, i) => (
@@ -3443,7 +3457,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#00d4ff',
                     minWidth: 18, textAlign: 'right',
                   }}>{i + 1}.</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{pt}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{pt}</span>
                 </div>
               ))}
             </div>
@@ -3454,12 +3468,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               {props.content_format && (
                 <span style={{
-                  fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb',
-                  backgroundColor: '#1e1e2e', padding: '3px 10px', borderRadius: 99,
+                  fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0',
+                  backgroundColor: '#2a2a35', padding: '3px 10px', borderRadius: 99,
                 }}>{props.content_format}</span>
               )}
               {props.tone && (
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                   {props.tone}
                 </span>
               )}
@@ -3482,11 +3496,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginBottom: 16 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
               }}>Assigned Creators</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {props.assigned_creators.map((c, i) => {
-                  const sColor = creatorStatusColors[c.status ?? 'pending'] ?? '#6b7280';
+                  const sColor = creatorStatusColors[c.status ?? 'pending'] ?? '#8888a0';
                   const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
                   return (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -3497,7 +3511,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       }}>{initials}</div>
                       <div style={{ flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>{c.name}</span>
+                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{c.name}</span>
                           {c.status && (
                             <span style={{
                               fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: sColor,
@@ -3507,7 +3521,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         </div>
                         {c.personalized_angle && (
                           <div style={{
-                            fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280',
+                            fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0',
                             fontStyle: 'italic', marginTop: 2,
                           }}>{c.personalized_angle}</div>
                         )}
@@ -3535,11 +3549,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     CreatorMatch: ({ props }) => {
-      const fitColor = props.fit_score >= 70 ? '#2dd4a8' : props.fit_score >= 40 ? '#f59e0b' : '#e63946';
+      const fitColor = props.fit_score >= 70 ? '#2dd4a8' : props.fit_score >= 40 ? '#f59e0b' : '#f04a4d';
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16,
           padding: 24, paddingLeft: 28, position: 'relative', overflow: 'hidden',
         }}>
           {/* Left gradient border */}
@@ -3552,7 +3566,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Top row */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
             }}>{props.creator_name}</span>
             {props.handle && (
               <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#00d4ff' }}>
@@ -3569,7 +3583,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           </div>
 
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280', marginBottom: 16,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0', marginBottom: 16,
           }}>Match for: {props.event_name}</div>
 
           {/* Fit score */}
@@ -3579,10 +3593,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: fitColor,
               }}>{props.fit_score}</span>
               <span style={{
-                fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#6b7280',
+                fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#8888a0',
               }}>/100</span>
             </div>
-            <div style={{ height: 6, backgroundColor: '#1e1e2e', borderRadius: 3 }}>
+            <div style={{ height: 6, backgroundColor: '#2a2a35', borderRadius: 3 }}>
               <div style={{
                 width: `${props.fit_score}%`, height: '100%', backgroundColor: fitColor,
                 borderRadius: 3, transition: 'width 0.3s ease',
@@ -3594,13 +3608,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Why This Creator</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {props.fit_reasons.map((r, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
                   <span style={{ color: '#2dd4a8', fontSize: 13 }}>✓</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{r}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{r}</span>
                 </div>
               ))}
             </div>
@@ -3610,7 +3624,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Suggested Content Angles</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {props.suggested_angles.map((a, i) => (
@@ -3619,7 +3633,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#00d4ff',
                     minWidth: 18, textAlign: 'right',
                   }}>{i + 1}.</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{a}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{a}</span>
                 </div>
               ))}
             </div>
@@ -3649,20 +3663,20 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {props.past_performance && (
             <div style={{
               display: 'flex', gap: 16, flexWrap: 'wrap', paddingTop: 12,
-              borderTop: '1px solid #1e1e2e',
+              borderTop: '1px solid #2a2a35',
             }}>
               {props.past_performance.similar_content_count != null && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0' }}>
                   Similar content: {props.past_performance.similar_content_count}
                 </span>
               )}
               {props.past_performance.avg_dps_similar != null && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0' }}>
                   Avg DPS: {props.past_performance.avg_dps_similar}
                 </span>
               )}
               {props.past_performance.best_performing_similar && (
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280' }}>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0' }}>
                   Best: {props.past_performance.best_performing_similar}
                 </span>
               )}
@@ -3674,8 +3688,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     PushStatus: ({ props }) => {
       const statusColors: Record<string, string> = {
-        not_sent: '#6b7280', sent: '#7c3aed', viewed: '#00d4ff', accepted: '#00d4ff',
-        in_progress: '#f59e0b', submitted: '#2dd4a8', published: '#2dd4a8', declined: '#e63946',
+        not_sent: '#8888a0', sent: '#7c3aed', viewed: '#00d4ff', accepted: '#00d4ff',
+        in_progress: '#f59e0b', submitted: '#2dd4a8', published: '#2dd4a8', declined: '#f04a4d',
       };
 
       const allPublished = props.creators.length > 0 && props.creators.every(c => c.status === 'published');
@@ -3683,17 +3697,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       // Summary bar segments
       const segmentOrder = ['published', 'accepted', 'sent', 'not_sent'] as const;
       const segmentColors: Record<string, string> = {
-        published: '#2dd4a8', accepted: '#00d4ff', sent: '#7c3aed', not_sent: '#6b7280',
+        published: '#2dd4a8', accepted: '#00d4ff', sent: '#7c3aed', not_sent: '#8888a0',
       };
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header */}
           <div style={{ marginBottom: 4 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
             }}>Push Status</span>
           </div>
           <div style={{
@@ -3703,12 +3717,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Dates */}
           <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
             {props.push_date && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
                 Pushed: {props.push_date}
               </span>
             )}
             {props.deadline && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
                 Deadline: {props.deadline}
               </span>
             )}
@@ -3718,7 +3732,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {props.summary && (
             <div style={{ marginBottom: 16 }}>
               <div style={{
-                display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', backgroundColor: '#1e1e2e',
+                display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', backgroundColor: '#2a2a35',
               }}>
                 {segmentOrder.map(seg => {
                   const count = seg === 'not_sent' ? (props.summary!.pending ?? 0)
@@ -3735,7 +3749,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 })}
               </div>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280', marginTop: 6,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0', marginTop: 6,
                 display: 'flex', gap: 8, flexWrap: 'wrap',
               }}>
                 <span><span style={{ color: '#2dd4a8' }}>{props.summary.published}</span> published</span>
@@ -3744,7 +3758,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 <span>·</span>
                 <span><span style={{ color: '#7c3aed' }}>{props.summary.sent}</span> sent</span>
                 <span>·</span>
-                <span><span style={{ color: '#6b7280' }}>{props.summary.pending}</span> pending</span>
+                <span><span style={{ color: '#8888a0' }}>{props.summary.pending}</span> pending</span>
               </div>
             </div>
           )}
@@ -3752,7 +3766,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Creator rows */}
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {props.creators.map((c, i) => {
-              const sColor = statusColors[c.status] ?? '#6b7280';
+              const sColor = statusColors[c.status] ?? '#8888a0';
               const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
               return (
                 <div key={i} style={{
@@ -3767,7 +3781,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   }}>{initials}</div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>{c.name}</span>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{c.name}</span>
                       <span style={{
                         fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: sColor,
                         backgroundColor: `${sColor}1a`, padding: '2px 8px', borderRadius: 99,
@@ -3781,19 +3795,19 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     </div>
                     <div style={{ display: 'flex', gap: 12, marginTop: 2 }}>
                       {c.sent_at && (
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280' }}>
+                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0' }}>
                           Sent: {c.sent_at}
                         </span>
                       )}
                       {c.responded_at && (
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280' }}>
+                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0' }}>
                           Responded: {c.responded_at}
                         </span>
                       )}
                     </div>
                     {c.notes && (
                       <div style={{
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280', marginTop: 2,
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0', marginTop: 2,
                       }}>{c.notes}</div>
                     )}
                   </div>
@@ -3816,13 +3830,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     BriefPreview: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
       const statusColors: Record<string, string> = {
-        draft: '#6b7280', sent: '#7c3aed', in_progress: '#f59e0b', completed: '#2dd4a8',
+        draft: '#8888a0', sent: '#7c3aed', in_progress: '#f59e0b', completed: '#2dd4a8',
       };
       const pColor = priorityColors[props.priority ?? 'normal'] ?? '#7c3aed';
-      const sColor = statusColors[props.status ?? 'draft'] ?? '#6b7280';
+      const sColor = statusColors[props.status ?? 'draft'] ?? '#8888a0';
       const isUrgentDeadline = props.priority === 'urgent';
       const truncatedAngle = props.content_angle.length > 60
         ? props.content_angle.slice(0, 60) + '…'
@@ -3830,28 +3844,28 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16,
           padding: 16, position: 'relative', overflow: 'hidden', cursor: 'pointer',
           transition: 'background 0.15s ease',
         }}
           onMouseEnter={e => (e.currentTarget.style.background = '#131320')}
-          onMouseLeave={e => (e.currentTarget.style.background = '#0f0f16')}
+          onMouseLeave={e => (e.currentTarget.style.background = NEU_REG.bg)}
         >
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
             {/* Left */}
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#ffffff',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e8e8f0',
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
               }}>{props.brief_title}</div>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280', marginTop: 2,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0', marginTop: 2,
               }}>for {props.event_name}</div>
             </div>
 
             {/* Center */}
             <div style={{
-              flex: 1.5, fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e5e7eb',
+              flex: 1.5, fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0',
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }} title={props.content_angle}>{truncatedAngle}</div>
 
@@ -3868,11 +3882,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               {props.deadline && (
                 <span style={{
                   fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-                  color: isUrgentDeadline ? '#f59e0b' : '#6b7280',
+                  color: isUrgentDeadline ? '#f59e0b' : '#8888a0',
                 }}>{props.deadline}</span>
               )}
               {props.creator_count != null && (
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280' }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0' }}>
                   {props.creator_count} creator{props.creator_count !== 1 ? 's' : ''}
                 </span>
               )}
@@ -3888,7 +3902,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Completion bar */}
           {props.completion_percent != null && (
             <div style={{
-              height: 4, backgroundColor: '#1e1e2e', borderRadius: 2, marginTop: 12,
+              height: 4, backgroundColor: '#2a2a35', borderRadius: 2, marginTop: 12,
             }}>
               <div style={{
                 width: `${props.completion_percent}%`, height: '100%',
@@ -3902,7 +3916,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     PushConfirmation: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
       const pColor = priorityColors[props.priority ?? 'normal'] ?? '#7c3aed';
 
@@ -3937,7 +3951,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '2px dashed #7c3aed', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, border: '2px dashed #7c3aed', borderRadius: 16, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
@@ -3958,10 +3972,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#00d4ff', marginBottom: 4,
           }}>{props.event_name}</div>
           <div style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 700, color: '#ffffff', marginBottom: 4,
+            fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 700, color: '#e8e8f0', marginBottom: 4,
           }}>{props.brief_title}</div>
           <div style={{
-            fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb', fontStyle: 'italic', marginBottom: 12,
+            fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0', fontStyle: 'italic', marginBottom: 12,
           }}>{props.content_angle}</div>
 
           {/* Deadline */}
@@ -3975,7 +3989,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Will be sent to:</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {props.target_creators.map((c, i) => {
@@ -3990,17 +4004,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 700, color: '#7c3aed',
                       }}>{initials}</div>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#ffffff' }}>{c.name}</span>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0' }}>{c.name}</span>
                       {c.niche && (
                         <span style={{
-                          fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
-                          backgroundColor: '#1e1e2e', padding: '2px 6px', borderRadius: 99,
+                          fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
+                          backgroundColor: '#2a2a35', padding: '2px 6px', borderRadius: 99,
                         }}>{c.niche}</span>
                       )}
                     </div>
                     {c.personalized_angle && (
                       <div style={{
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0',
                         marginLeft: 30,
                       }}>{c.personalized_angle}</div>
                     )}
@@ -4015,7 +4029,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginBottom: 16 }}>
               <span style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280',
+                letterSpacing: '0.05em', color: '#8888a0',
               }}>Est. Reach: </span>
               <span style={{
                 fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 700, color: '#2dd4a8',
@@ -4048,10 +4062,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     EventSummary: ({ props }) => {
-      const gapColor = props.without_content > 0 ? '#e63946' : '#2dd4a8';
+      const gapColor = props.without_content > 0 ? '#f04a4d' : '#2dd4a8';
 
       const stats: { value: string; label: string; color: string }[] = [
-        { value: String(props.total_events), label: 'Total Events', color: '#ffffff' },
+        { value: String(props.total_events), label: 'Total Events', color: '#e8e8f0' },
         { value: String(props.upcoming_this_week), label: 'This Week', color: '#00d4ff' },
         { value: String(props.upcoming_this_month), label: 'This Month', color: '#7c3aed' },
         { value: String(props.with_content_planned), label: 'Content Planned', color: '#2dd4a8' },
@@ -4059,10 +4073,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       ];
 
       return (
-        <div style={{ background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24 }}>
+        <div style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24 }}>
           <div style={{
             fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 700,
-            color: '#ffffff', marginBottom: 20,
+            color: '#e8e8f0', marginBottom: 20,
           }}>Cultural Events Overview</div>
 
           {/* Stat blocks */}
@@ -4071,7 +4085,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <React.Fragment key={s.label}>
                 {i > 0 && (
                   <div style={{
-                    width: 1, alignSelf: 'stretch', backgroundColor: '#1e1e2e',
+                    width: 1, alignSelf: 'stretch', backgroundColor: '#2a2a35',
                     margin: '4px 20px', minHeight: 36,
                   }} />
                 )}
@@ -4082,7 +4096,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   }}>{s.value}</div>
                   <div style={{
                     fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                    letterSpacing: '0.05em', color: '#6b7280', marginTop: 4,
+                    letterSpacing: '0.05em', color: '#8888a0', marginTop: 4,
                   }}>{s.label}</div>
                 </div>
               </React.Fragment>
@@ -4092,11 +4106,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Next event */}
           {props.next_event && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280',
-              marginTop: 16, paddingTop: 12, borderTop: '1px solid #1e1e2e',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0',
+              marginTop: 16, paddingTop: 12, borderTop: '1px solid #2a2a35',
             }}>
               Next:{' '}
-              <span style={{ color: '#ffffff' }}>{props.next_event.name}</span>
+              <span style={{ color: '#e8e8f0' }}>{props.next_event.name}</span>
               {' '}in{' '}
               <span style={{ color: '#f59e0b' }}>{props.next_event.days_until} days</span>
             </div>
@@ -4105,9 +4119,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Top category */}
           {props.top_category && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0',
               marginTop: props.next_event ? 4 : 16,
-              ...(!props.next_event ? { paddingTop: 12, borderTop: '1px solid #1e1e2e' } : {}),
+              ...(!props.next_event ? { paddingTop: 12, borderTop: '1px solid #2a2a35' } : {}),
             }}>
               Most common: {props.top_category}
             </div>
@@ -4120,23 +4134,23 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     BriefGrid: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
       const briefStatusColors: Record<string, string> = {
-        draft: '#6b7280', sent: '#7c3aed', in_progress: '#f59e0b', completed: '#2dd4a8',
+        draft: '#8888a0', sent: '#7c3aed', in_progress: '#f59e0b', completed: '#2dd4a8',
       };
       const [hoveredIdx, setHoveredIdx] = React.useState<number | null>(null);
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {props.title && (
                 <span style={{
-                  fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+                  fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
                 }}>{props.title}</span>
               )}
               {props.filter_active && (
@@ -4148,7 +4162,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             </div>
             {props.total_briefs != null && (
               <span style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280',
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0',
               }}>{props.total_briefs} total</span>
             )}
           </div>
@@ -4156,7 +4170,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Grid or empty state */}
           {props.briefs.length === 0 ? (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#6b7280',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8888a0',
               textAlign: 'center', padding: '48px 0',
             }}>No briefs to display</div>
           ) : (
@@ -4166,7 +4180,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             }}>
               {props.briefs.map((b, i) => {
                 const pColor = priorityColors[b.priority ?? 'normal'] ?? '#7c3aed';
-                const sColor = briefStatusColors[b.status ?? 'draft'] ?? '#6b7280';
+                const sColor = briefStatusColors[b.status ?? 'draft'] ?? '#8888a0';
                 const isDeadlineSoon = (() => {
                   if (!b.deadline) return false;
                   const diff = (new Date(b.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24);
@@ -4177,7 +4191,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   <div
                     key={i}
                     style={{
-                      background: '#08080d', border: `1px solid ${hoveredIdx === i ? '#3f3f5e' : '#1e1e2e'}`,
+                      background: '#08080d', border: `1px solid ${hoveredIdx === i ? '#2a2a35' : '#1e1e2e'}`,
                       borderRadius: 12, padding: 16, cursor: 'pointer',
                       transition: 'border-color 0.15s ease', position: 'relative', overflow: 'hidden',
                     }}
@@ -4187,7 +4201,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     {/* Top row: title + priority dot */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                       <span style={{
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#ffffff',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e8e8f0',
                         flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       }}>{b.brief_title}</span>
                       {b.priority && (
@@ -4205,7 +4219,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
                     {/* Content angle */}
                     <div style={{
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e5e7eb',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e8e8f0',
                       display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                       overflow: 'hidden', lineHeight: '1.4em', maxHeight: '2.8em', marginBottom: 10,
                     }}>{b.content_angle}</div>
@@ -4215,12 +4229,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       {b.deadline && (
                         <span style={{
                           fontFamily: "'JetBrains Mono', monospace", fontSize: 10,
-                          color: isDeadlineSoon ? '#f59e0b' : '#6b7280',
+                          color: isDeadlineSoon ? '#f59e0b' : '#8888a0',
                         }}>{b.deadline}</span>
                       )}
                       {b.creator_count != null && (
                         <span style={{
-                          fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280',
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0',
                         }}>{b.creator_count} creator{b.creator_count !== 1 ? 's' : ''}</span>
                       )}
                       {b.status && (
@@ -4234,7 +4248,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     {/* Completion bar */}
                     {b.completion_percent != null && (
                       <div style={{
-                        height: 3, backgroundColor: '#1e1e2e', borderRadius: 2, marginTop: 10,
+                        height: 3, backgroundColor: '#2a2a35', borderRadius: 2, marginTop: 10,
                       }}>
                         <div style={{
                           width: `${b.completion_percent}%`, height: '100%',
@@ -4253,28 +4267,28 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     BriefEditor: ({ props }) => {
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
       const creatorStatusColors: Record<string, string> = {
-        pending: '#6b7280', accepted: '#00d4ff', in_progress: '#f59e0b',
+        pending: '#8888a0', accepted: '#00d4ff', in_progress: '#f59e0b',
         submitted: '#2dd4a8', published: '#2dd4a8',
       };
       const pColor = priorityColors[props.priority ?? 'normal'] ?? '#7c3aed';
-      const confColor = (props.ai_confidence ?? 0) >= 80 ? '#2dd4a8' : (props.ai_confidence ?? 0) >= 60 ? '#f59e0b' : '#e63946';
+      const confColor = (props.ai_confidence ?? 0) >= 80 ? '#2dd4a8' : (props.ai_confidence ?? 0) >= 60 ? '#f59e0b' : '#f04a4d';
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 32,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 32,
         }}>
           {/* Header */}
           <div style={{ marginBottom: 4, display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: '#e8e8f0',
             }}>{props.brief_title}</span>
             {props.version != null && (
               <span style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
-                backgroundColor: '#1e1e2e', padding: '2px 8px', borderRadius: 99,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
+                backgroundColor: '#2a2a35', padding: '2px 8px', borderRadius: 99,
               }}>v{props.version}</span>
             )}
           </div>
@@ -4285,7 +4299,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               For: {props.event_name}
             </span>
             {props.event_date && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
                 {props.event_date}
               </span>
             )}
@@ -4312,7 +4326,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Content angle */}
           <div style={{ marginBottom: 16 }}>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#ffffff', fontStyle: 'italic',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 15, color: '#e8e8f0', fontStyle: 'italic',
               borderLeft: '3px solid #00d4ff', paddingLeft: 12,
             }}>{props.content_angle}</div>
           </div>
@@ -4321,7 +4335,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ marginBottom: 16 }}>
             <div style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-              letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+              letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
             }}>Talking Points</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
               {props.talking_points.map((pt, i) => (
@@ -4330,7 +4344,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#00d4ff',
                     minWidth: 18, textAlign: 'right',
                   }}>{i + 1}.</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e5e7eb' }}>{pt}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e8e8f0' }}>{pt}</span>
                 </div>
               ))}
             </div>
@@ -4340,12 +4354,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8, marginBottom: 16 }}>
             {props.content_format && (
               <span style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb',
-                backgroundColor: '#1e1e2e', padding: '3px 10px', borderRadius: 99,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0',
+                backgroundColor: '#2a2a35', padding: '3px 10px', borderRadius: 99,
               }}>{props.content_format}</span>
             )}
             {props.tone && (
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                 {props.tone}
               </span>
             )}
@@ -4363,11 +4377,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginBottom: 16 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
               }}>Assigned Creators</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {props.assigned_creators.map((c, i) => {
-                  const sColor = creatorStatusColors[c.status ?? 'pending'] ?? '#6b7280';
+                  const sColor = creatorStatusColors[c.status ?? 'pending'] ?? '#8888a0';
                   const initials = c.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
                   return (
                     <div key={i}>
@@ -4377,11 +4391,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 700, color: sColor,
                         }}>{initials}</div>
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>{c.name}</span>
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{c.name}</span>
                         {c.niche && (
                           <span style={{
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
-                            backgroundColor: '#1e1e2e', padding: '2px 8px', borderRadius: 99,
+                            fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
+                            backgroundColor: '#2a2a35', padding: '2px 8px', borderRadius: 99,
                           }}>{c.niche}</span>
                         )}
                         {c.status && (
@@ -4393,7 +4407,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       </div>
                       {c.personalized_angle && (
                         <div style={{
-                          fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280',
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0',
                           fontStyle: 'italic', marginTop: 2, marginLeft: 38,
                         }}>{c.personalized_angle}</div>
                       )}
@@ -4412,7 +4426,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 letterSpacing: '0.05em', color: '#f59e0b', marginBottom: 6,
               }}>Agency Notes</div>
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0',
                 backgroundColor: 'rgba(245, 158, 11, 0.05)', padding: 12, borderRadius: 8,
               }}>{props.editor_notes}</div>
             </div>
@@ -4430,7 +4444,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               }}
               style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
-                color: '#ffffff', backgroundColor: '#2dd4a8', border: 'none',
+                color: '#e8e8f0', backgroundColor: '#2dd4a8', border: 'none',
                 padding: '8px 20px', borderRadius: 8, cursor: 'pointer',
               }}
             >Approve</button>
@@ -4458,7 +4472,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               }}
               style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
-                color: '#6b7280', backgroundColor: 'transparent', border: '1px solid #6b7280',
+                color: '#8888a0', backgroundColor: 'transparent', border: '1px solid #8888a0',
                 padding: '8px 20px', borderRadius: 8, cursor: 'pointer',
               }}
             >Skip</button>
@@ -4489,7 +4503,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16',
+          background: NEU_REG.bg,
           border: isComplete ? '1px solid #2dd4a8' : '1px solid #1e1e2e',
           borderRadius: 16, padding: 24,
           boxShadow: isComplete ? '0 0 20px rgba(45, 212, 168, 0.1)' : 'none',
@@ -4498,7 +4512,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{
-                fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+                fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
               }}>{props.batch_name}</span>
               {isComplete && (
                 <span style={{
@@ -4537,7 +4551,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 }}>{s.count}</div>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase',
-                  letterSpacing: '0.05em', color: '#6b7280', marginTop: 2,
+                  letterSpacing: '0.05em', color: '#8888a0', marginTop: 2,
                 }}>{s.label}</div>
               </div>
             ))}
@@ -4547,7 +4561,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {(props.started_at || props.estimated_completion) && (
             <div style={{
               display: 'flex', gap: 16, fontFamily: "'JetBrains Mono', monospace",
-              fontSize: 11, color: '#6b7280', marginBottom: props.errors && props.errors.length > 0 ? 16 : 0,
+              fontSize: 11, color: '#8888a0', marginBottom: props.errors && props.errors.length > 0 ? 16 : 0,
             }}>
               {props.started_at && <span>Started: {props.started_at}</span>}
               {props.estimated_completion && <span>ETA: {props.estimated_completion}</span>}
@@ -4559,18 +4573,18 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#e63946', marginBottom: 6,
+                letterSpacing: '0.05em', color: '#f04a4d', marginBottom: 6,
               }}>Issues</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                 {props.errors.map((err, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{
-                      width: 6, height: 6, borderRadius: '50%', backgroundColor: '#e63946', flexShrink: 0,
+                      width: 6, height: 6, borderRadius: '50%', backgroundColor: '#f04a4d', flexShrink: 0,
                     }} />
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#ffffff' }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0' }}>
                       {err.brief_title}
                     </span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                       — {err.error}
                     </span>
                   </div>
@@ -4588,7 +4602,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         published: '#2dd4a8', not_assigned: 'transparent',
       };
       const cellStatusBorders: Record<string, string> = {
-        not_assigned: '#3f3f5e',
+        not_assigned: '#2a2a35',
       };
       const [hoveredCell, setHoveredCell] = React.useState<string | null>(null);
 
@@ -4598,12 +4612,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
             }}>Assignment Matrix</span>
             {props.workload_warning && (
               <span style={{
@@ -4619,26 +4633,26 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 <tr>
                   <th style={{
                     position: 'sticky', left: 0, zIndex: 2, background: '#08080d',
-                    padding: '8px 12px', borderBottom: '1px solid #1e1e2e', borderRight: '1px solid #1e1e2e',
+                    padding: '8px 12px', borderBottom: '1px solid #2a2a35', borderRight: '1px solid #1e1e2e',
                     textAlign: 'left', minWidth: 180,
                   }}>
                     <span style={{
                       fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                      letterSpacing: '0.05em', color: '#6b7280',
+                      letterSpacing: '0.05em', color: '#8888a0',
                     }}>Creator</span>
                   </th>
                   {props.events.map((ev, i) => (
                     <th key={i} style={{
-                      padding: '8px 12px', borderBottom: '1px solid #1e1e2e',
+                      padding: '8px 12px', borderBottom: '1px solid #2a2a35',
                       background: '#08080d', textAlign: 'center', minWidth: 80,
                     }}>
                       <div style={{
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 100,
                       }} title={ev.event_name}>{ev.event_name}</div>
                       {ev.deadline && (
                         <div style={{
-                          fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#4a4858', marginTop: 2,
+                          fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#8888a0', marginTop: 2,
                         }}>{ev.deadline}</div>
                       )}
                     </th>
@@ -4649,22 +4663,22 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {props.creators.map((creator, ci) => (
                   <tr key={ci}>
                     <td style={{
-                      position: 'sticky', left: 0, zIndex: 1, background: '#0f0f16',
-                      padding: '8px 12px', borderBottom: '1px solid #1e1e2e', borderRight: '1px solid #1e1e2e',
+                      position: 'sticky', left: 0, zIndex: 1, background: NEU_REG.bg,
+                      padding: '8px 12px', borderBottom: '1px solid #2a2a35', borderRight: '1px solid #1e1e2e',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>
+                        <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>
                           {creator.name}
                         </span>
                         {creator.niche && (
                           <span style={{
-                            fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#6b7280',
-                            backgroundColor: '#1e1e2e', padding: '1px 6px', borderRadius: 99,
+                            fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#8888a0',
+                            backgroundColor: '#2a2a35', padding: '1px 6px', borderRadius: 99,
                           }}>{creator.niche}</span>
                         )}
                       </div>
                       <div style={{
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280', marginTop: 2,
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0', marginTop: 2,
                       }}>{creator.total_completed}/{creator.total_assigned}</div>
                     </td>
                     {props.events.map((ev, ei) => {
@@ -4676,7 +4690,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
                       return (
                         <td key={ei} style={{
-                          padding: '8px 12px', borderBottom: '1px solid #1e1e2e',
+                          padding: '8px 12px', borderBottom: '1px solid #2a2a35',
                           textAlign: 'center',
                         }}>
                           <div
@@ -4707,14 +4721,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
           {/* Legend */}
           <div style={{
-            display: 'flex', gap: 16, marginTop: 16, paddingTop: 12, borderTop: '1px solid #1e1e2e',
+            display: 'flex', gap: 16, marginTop: 16, paddingTop: 12, borderTop: '1px solid #2a2a35',
           }}>
             {[
               { label: 'Assigned', color: '#7c3aed' },
               { label: 'In Progress', color: '#f59e0b' },
               { label: 'Submitted', color: '#00d4ff' },
               { label: 'Published', color: '#2dd4a8' },
-              { label: 'Not Assigned', color: 'transparent', border: '#3f3f5e' },
+              { label: 'Not Assigned', color: 'transparent', border: '#2a2a35' },
             ].map((item) => (
               <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                 <span style={{
@@ -4722,7 +4736,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   border: item.border ? `1px solid ${item.border}` : 'none',
                 }} />
                 <span style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0',
                 }}>{item.label}</span>
               </div>
             ))}
@@ -4732,10 +4746,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     BatchSummary: ({ props }) => {
-      const confColor = (props.avg_ai_confidence ?? 0) >= 80 ? '#2dd4a8' : (props.avg_ai_confidence ?? 0) >= 60 ? '#f59e0b' : '#e63946';
+      const confColor = (props.avg_ai_confidence ?? 0) >= 80 ? '#2dd4a8' : (props.avg_ai_confidence ?? 0) >= 60 ? '#f59e0b' : '#f04a4d';
 
       const priorityColors: Record<string, string> = {
-        urgent: '#e63946', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
+        urgent: '#f04a4d', high: '#f59e0b', normal: '#7c3aed', low: '#2dd4a8',
       };
 
       const prioBreakdown = props.priority_breakdown;
@@ -4751,13 +4765,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
           borderTop: '3px solid #2dd4a8',
         }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#e8e8f0',
             }}>{props.batch_name}</span>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#2dd4a8',
@@ -4774,7 +4788,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 }}>{s.value}</div>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                  letterSpacing: '0.05em', color: '#6b7280', marginTop: 4,
+                  letterSpacing: '0.05em', color: '#8888a0', marginTop: 4,
                 }}>{s.label}</div>
               </div>
             ))}
@@ -4785,7 +4799,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginBottom: 20 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
               }}>Priority Breakdown</div>
               <div style={{
                 display: 'flex', height: 10, borderRadius: 5, overflow: 'hidden', marginBottom: 8,
@@ -4830,12 +4844,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {props.coverage_gaps.map((gap, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>
                       {gap.event_name}
                     </span>
                     {gap.missing_niches.map((niche, ni) => (
                       <span key={ni} style={{
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#e63946',
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#f04a4d',
                         backgroundColor: 'rgba(230, 57, 70, 0.1)', padding: '2px 8px', borderRadius: 99,
                       }}>{niche}</span>
                     ))}
@@ -4850,7 +4864,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginBottom: 20 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
               }}>Recommended Next Steps</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {props.next_steps.map((step, i) => (
@@ -4859,7 +4873,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#00d4ff',
                       minWidth: 18, textAlign: 'right',
                     }}>{i + 1}.</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{step}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{step}</span>
                   </div>
                 ))}
               </div>
@@ -4880,7 +4894,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             }}
             style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
-              color: '#ffffff', backgroundColor: '#2dd4a8', border: 'none',
+              color: '#e8e8f0', backgroundColor: '#2dd4a8', border: 'none',
               padding: '10px 24px', borderRadius: 8, cursor: 'pointer',
             }}
           >Push All Approved</button>
@@ -4893,10 +4907,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     CalendarView: ({ props }) => {
       const typeColors: Record<string, string> = {
         post: '#00d4ff', event: '#7c3aed', brief_deadline: '#f59e0b',
-        milestone: '#2dd4a8', reminder: '#6b7280',
+        milestone: '#2dd4a8', reminder: '#8888a0',
       };
       const postStatusColors: Record<string, string> = {
-        scheduled: '#00d4ff', draft: '#6b7280', published: '#2dd4a8', overdue: '#e63946', cancelled: '#6b7280',
+        scheduled: '#00d4ff', draft: '#8888a0', published: '#2dd4a8', overdue: '#f04a4d', cancelled: '#8888a0',
       };
 
       const today = new Date().toISOString().slice(0, 10);
@@ -4947,8 +4961,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
       const renderPill = (item: typeof props.items[number], compact: boolean) => {
-        const tColor = typeColors[item.type] ?? '#6b7280';
-        const sColor = item.status ? (postStatusColors[item.status] ?? '#6b7280') : undefined;
+        const tColor = typeColors[item.type] ?? '#8888a0';
+        const sColor = item.status ? (postStatusColors[item.status] ?? '#8888a0') : undefined;
         return (
           <div key={item.id ?? item.title + item.date} style={{
             display: 'flex', alignItems: 'center', gap: compact ? 4 : 8,
@@ -4959,7 +4973,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           }}>
             <span style={{
               fontFamily: "'DM Sans', sans-serif", fontSize: compact ? 10 : 12,
-              color: '#e5e7eb', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              color: '#e8e8f0', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
               maxWidth: compact ? 80 : 200,
             }}>{item.title}</span>
             {sColor && <span style={{
@@ -4967,12 +4981,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               backgroundColor: sColor, flexShrink: 0,
             }} />}
             {!compact && item.creator_name && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0' }}>
                 {item.creator_name}
               </span>
             )}
             {!compact && item.time && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#ffffff' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#e8e8f0' }}>
                 {item.time}
               </span>
             )}
@@ -4982,17 +4996,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#ffffff' }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: '#e8e8f0' }}>
                 Content Calendar
               </span>
               {props.has_conflicts && (
                 <span style={{
-                  width: 8, height: 8, borderRadius: '50%', backgroundColor: '#e63946', display: 'inline-block',
+                  width: 8, height: 8, borderRadius: '50%', backgroundColor: '#f04a4d', display: 'inline-block',
                 }} />
               )}
             </div>
@@ -5000,13 +5014,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               {viewModes.map((m) => (
                 <span key={m} style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 12, padding: '4px 12px', borderRadius: 99,
-                  color: m === props.view_mode ? '#00d4ff' : '#6b7280',
+                  color: m === props.view_mode ? '#00d4ff' : '#8888a0',
                   backgroundColor: m === props.view_mode ? 'rgba(0,212,255,0.15)' : 'transparent',
                   cursor: 'default', textTransform: 'capitalize',
                 }}>{m}</span>
               ))}
             </div>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#6b7280', marginLeft: 'auto' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#8888a0', marginLeft: 'auto' }}>
               {formatDate(focal)}
             </span>
           </div>
@@ -5020,7 +5034,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 0 }}>
                   {dayNames.map((dn) => (
                     <div key={dn} style={{
-                      fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
                       textTransform: 'uppercase', textAlign: 'center', padding: '4px 0 8px',
                     }}>{dn}</div>
                   ))}
@@ -5034,18 +5048,18 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     const overflow = dayItems.length - 3;
                     return (
                       <div key={dayStr} style={{
-                        minHeight: 80, border: '1px solid #1e1e2e', padding: 4,
+                        minHeight: 80, boxShadow: NEU_REG.raisedSm, padding: 4,
                         borderLeft: isToday ? '3px solid #00d4ff' : '1px solid #1e1e2e',
                         opacity: isPast && !isToday ? 0.4 : isCurrentMonth ? 1 : 0.3,
                       }}>
                         <div style={{
                           fontFamily: "'JetBrains Mono', monospace", fontSize: 12,
-                          color: isToday ? '#ffffff' : '#6b7280', marginBottom: 4,
+                          color: isToday ? '#e8e8f0' : '#8888a0', marginBottom: 4,
                         }}>{dayDate.getDate()}</div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                           {visible.map((it) => renderPill(it, true))}
                           {overflow > 0 && (
-                            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#6b7280' }}>
+                            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, color: '#8888a0' }}>
                               +{overflow} more
                             </span>
                           )}
@@ -5069,12 +5083,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   const d = new Date(dayStr + 'T00:00:00');
                   return (
                     <div key={dayStr} style={{
-                      border: '1px solid #1e1e2e', padding: 8, minHeight: 120,
+                      boxShadow: NEU_REG.raisedSm, padding: 8, minHeight: 120,
                       borderTop: isToday ? '3px solid #00d4ff' : '1px solid #1e1e2e',
                     }}>
                       <div style={{
                         fontFamily: "'JetBrains Mono', monospace", fontSize: 12, marginBottom: 8,
-                        color: isToday ? '#00d4ff' : '#6b7280',
+                        color: isToday ? '#00d4ff' : '#8888a0',
                       }}>
                         {dayNames[i]} {d.getDate()}
                       </div>
@@ -5099,12 +5113,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {/* Timeline */}
                 <div style={{
                   position: 'absolute', left: 28, top: 0, bottom: 0, width: 1,
-                  backgroundColor: '#1e1e2e',
+                  backgroundColor: '#2a2a35',
                 }} />
                 {hours.map((h) => (
                   <div key={h} style={{
                     position: 'relative', minHeight: 32,
-                    fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
+                    fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
                   }}>
                     <span style={{ position: 'absolute', left: -52, top: 0 }}>
                       {h.toString().padStart(2, '0')}:00
@@ -5114,8 +5128,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {/* Items overlaid */}
                 <div style={{ position: 'absolute', left: 60, top: 0, right: 0 }}>
                   {dayItems.map((it) => {
-                    const tColor = typeColors[it.type] ?? '#6b7280';
-                    const sColor = it.status ? (postStatusColors[it.status] ?? '#6b7280') : undefined;
+                    const tColor = typeColors[it.type] ?? '#8888a0';
+                    const sColor = it.status ? (postStatusColors[it.status] ?? '#8888a0') : undefined;
                     return (
                       <div key={it.id ?? it.title} style={{
                         display: 'flex', alignItems: 'center', gap: 12,
@@ -5123,7 +5137,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         borderRadius: 6, padding: '10px 14px', marginBottom: 6,
                       }}>
                         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
-                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#ffffff' }}>
+                          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e8e8f0' }}>
                             {it.title}
                           </span>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -5133,7 +5147,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                               </span>
                             )}
                             {it.time && (
-                              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#ffffff' }}>
+                              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#e8e8f0' }}>
                                 {it.time}
                               </span>
                             )}
@@ -5157,7 +5171,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     );
                   })}
                   {dayItems.length === 0 && (
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280', padding: 16 }}>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0', padding: 16 }}>
                       No items scheduled for this day
                     </div>
                   )}
@@ -5170,7 +5184,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {props.total_items != null && (
             <div style={{
               textAlign: 'right', marginTop: 12,
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280',
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0',
             }}>{props.total_items} total items</div>
           )}
         </div>
@@ -5182,7 +5196,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         post: '#00d4ff', brief_deadline: '#f59e0b', event: '#7c3aed',
       };
       const postStatusColors: Record<string, string> = {
-        scheduled: '#00d4ff', draft: '#6b7280', published: '#2dd4a8', overdue: '#e63946',
+        scheduled: '#00d4ff', draft: '#8888a0', published: '#2dd4a8', overdue: '#f04a4d',
       };
       const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
       const dayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -5211,14 +5225,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 20 }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff' }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0' }}>
               Weekly Schedule
             </span>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
               Week of {formatWeek(props.week_start)}
             </span>
           </div>
@@ -5230,8 +5244,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 <tr style={{ backgroundColor: '#08080d' }}>
                   <th style={{
                     position: 'sticky', left: 0, zIndex: 2, width: 140, backgroundColor: '#08080d',
-                    border: '1px solid #1e1e2e', padding: '8px 12px', textAlign: 'left',
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280',
+                    boxShadow: NEU_REG.raisedSm, padding: '8px 12px', textAlign: 'left',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0',
                     textTransform: 'uppercase', letterSpacing: '0.05em',
                   }}>Creator</th>
                   {dayNames.map((dn, i) => {
@@ -5240,8 +5254,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     const dayNum = dateStr ? new Date(dateStr + 'T00:00:00').getDate() : '';
                     return (
                       <th key={dn} style={{
-                        border: '1px solid #1e1e2e', padding: '8px 6px', textAlign: 'center',
-                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: isToday ? '#00d4ff' : '#6b7280',
+                        boxShadow: NEU_REG.raisedSm, padding: '8px 6px', textAlign: 'center',
+                        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: isToday ? '#00d4ff' : '#8888a0',
                         backgroundColor: isToday ? 'rgba(0,212,255,0.03)' : '#08080d',
                       }}>{dn} {dayNum}</th>
                     );
@@ -5252,10 +5266,10 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {props.creators.map((creator) => (
                   <tr key={creator.name}>
                     <td style={{
-                      position: 'sticky', left: 0, zIndex: 1, backgroundColor: '#0f0f16',
-                      border: '1px solid #1e1e2e', padding: '8px 12px', width: 140, verticalAlign: 'top',
+                      position: 'sticky', left: 0, zIndex: 1, backgroundColor: NEU_REG.bg,
+                      boxShadow: NEU_REG.raisedSm, padding: '8px 12px', width: 140, verticalAlign: 'top',
                     }}>
-                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>
+                      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>
                         {creator.name}
                       </div>
                       {creator.niche && (
@@ -5273,7 +5287,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       const hasConflict = conflictDays.has(dk) || conflictDays.has(dateStr);
                       return (
                         <td key={dk} style={{
-                          border: '1px solid #1e1e2e', padding: 6, verticalAlign: 'top', minWidth: 90,
+                          boxShadow: NEU_REG.raisedSm, padding: 6, verticalAlign: 'top', minWidth: 90,
                           backgroundColor: hasConflict ? 'rgba(230,57,70,0.08)' : isToday ? 'rgba(0,212,255,0.03)' : 'transparent',
                         }}>
                           {items.length === 0 ? (
@@ -5281,8 +5295,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                           ) : (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                               {items.map((it, j) => {
-                                const tColor = typeColors[it.type] ?? '#6b7280';
-                                const sColor = it.status ? (postStatusColors[it.status] ?? '#6b7280') : undefined;
+                                const tColor = typeColors[it.type] ?? '#8888a0';
+                                const sColor = it.status ? (postStatusColors[it.status] ?? '#8888a0') : undefined;
                                 return (
                                   <div key={j} style={{
                                     display: 'flex', alignItems: 'center', gap: 4,
@@ -5294,12 +5308,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                                     }} />
                                     <div style={{ minWidth: 0 }}>
                                       <div style={{
-                                        fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#e5e7eb',
+                                        fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#e8e8f0',
                                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 80,
                                       }}>{it.title}</div>
                                       {it.time && (
                                         <div style={{
-                                          fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#6b7280',
+                                          fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: '#8888a0',
                                         }}>{it.time}</div>
                                       )}
                                     </div>
@@ -5322,11 +5336,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
               {props.conflicts.map((c, i) => (
                 <div key={i} style={{
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e63946',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#f04a4d',
                   display: 'flex', alignItems: 'center', gap: 6,
                 }}>
-                  <span style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: '#e63946' }} />
-                  <span style={{ color: '#6b7280' }}>{c.day}:</span> {c.description}
+                  <span style={{ width: 4, height: 4, borderRadius: '50%', backgroundColor: '#f04a4d' }} />
+                  <span style={{ color: '#8888a0' }}>{c.day}:</span> {c.description}
                 </div>
               ))}
             </div>
@@ -5337,7 +5351,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {[['Post', '#00d4ff'], ['Event', '#7c3aed'], ['Brief Deadline', '#f59e0b']].map(([label, color]) => (
               <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: color }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280' }}>{label}</span>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0' }}>{label}</span>
               </div>
             ))}
           </div>
@@ -5347,13 +5361,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     PostSlot: ({ props }) => {
       const postStatusColors: Record<string, string> = {
-        scheduled: '#00d4ff', draft: '#6b7280', in_production: '#f59e0b',
-        ready: '#2dd4a8', published: '#2dd4a8', overdue: '#e63946', cancelled: '#6b7280',
+        scheduled: '#00d4ff', draft: '#8888a0', in_production: '#f59e0b',
+        ready: '#2dd4a8', published: '#2dd4a8', overdue: '#f04a4d', cancelled: '#8888a0',
       };
 
       // Determine left border color based on references
       const borderColor = props.event_reference ? '#7c3aed' : props.brief_reference ? '#f59e0b' : '#00d4ff';
-      const sColor = props.status ? (postStatusColors[props.status] ?? '#6b7280') : undefined;
+      const sColor = props.status ? (postStatusColors[props.status] ?? '#8888a0') : undefined;
 
       const bgTint = props.status === 'overdue' ? 'rgba(230,57,70,0.05)'
         : props.status === 'published' ? 'rgba(45,212,168,0.05)' : undefined;
@@ -5371,15 +5385,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          background: bgTint ? `linear-gradient(135deg, ${bgTint}, #0f0f16)` : '#0f0f16',
-          border: '1px solid #1e1e2e', borderRadius: 16, padding: 16,
+          background: bgTint ? `linear-gradient(135deg, ${bgTint}, #0f0f16)` : NEU_REG.bg,
+          boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 16,
           borderLeft: `4px solid ${borderColor}`,
           ...(props.status === 'cancelled' ? { opacity: 0.6 } : {}),
         }}>
           {/* Row 1: title + status */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
             <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#ffffff',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e8e8f0',
               ...(props.status === 'cancelled' ? { textDecoration: 'line-through' } : {}),
             }}>{props.title}</span>
             {sColor && props.status && (
@@ -5405,7 +5419,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             )}
             {props.content_format && (
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0',
                 backgroundColor: 'rgba(107,114,128,0.15)', padding: '2px 8px', borderRadius: 99,
               }}>{props.content_format}</span>
             )}
@@ -5413,11 +5427,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
           {/* Row 3: date + time */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>
               {formatDate(props.scheduled_date)}
             </span>
             {props.scheduled_time && (
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#ffffff' }}>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#e8e8f0' }}>
                 {props.scheduled_time}
               </span>
             )}
@@ -5442,7 +5456,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Notes */}
           {props.notes && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0',
               fontStyle: 'italic', marginBottom: 8,
             }}>{props.notes}</div>
           )}
@@ -5460,11 +5474,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     WeekOverview: ({ props }) => {
       return (
         <div style={{
-          background: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          background: NEU_REG.bg, boxShadow: NEU_REG.raised, borderRadius: 20, padding: 24,
         }}>
           {/* Header */}
           <div style={{
-            fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#ffffff',
+            fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: '#e8e8f0',
             marginBottom: 16,
           }}>{props.week_label}</div>
 
@@ -5473,7 +5487,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: '#00d4ff' }}>
               {props.total_scheduled}
             </span>
-            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+            <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
               posts scheduled
             </span>
           </div>
@@ -5482,13 +5496,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {props.by_status && (
             <div style={{
               display: 'flex', gap: 0, marginBottom: 20,
-              border: '1px solid #1e1e2e', borderRadius: 12, overflow: 'hidden',
+              boxShadow: NEU_REG.raisedSm, borderRadius: 12, overflow: 'hidden',
             }}>
               {([
                 ['scheduled', '#00d4ff', props.by_status.scheduled],
-                ['draft', '#6b7280', props.by_status.draft],
+                ['draft', '#8888a0', props.by_status.draft],
                 ['published', '#2dd4a8', props.by_status.published],
-                ['overdue', '#e63946', props.by_status.overdue],
+                ['overdue', '#f04a4d', props.by_status.overdue],
               ] as [string, string, number][]).map(([label, color, count], i) => (
                 <div key={label} style={{
                   flex: 1, padding: '12px 16px', textAlign: 'center',
@@ -5498,7 +5512,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     {count}
                   </div>
                   <div style={{
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0',
                     textTransform: 'uppercase',
                   }}>{label}</div>
                 </div>
@@ -5512,15 +5526,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               {[...props.by_creator].sort((a, b) => b.post_count - a.post_count).map((c) => (
                 <div key={c.name} style={{
                   display: 'flex', alignItems: 'center', gap: 6,
-                  background: '#08080d', border: '1px solid #1e1e2e',
+                  background: '#08080d', boxShadow: NEU_REG.raisedSm,
                   padding: '4px 10px', borderRadius: 99,
                 }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e5e7eb' }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e8e8f0' }}>
                     {c.name}
                   </span>
                   <span style={{
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 10, fontWeight: 700,
-                    color: '#ffffff', backgroundColor: '#00d4ff', borderRadius: '50%',
+                    color: '#e8e8f0', backgroundColor: '#00d4ff', borderRadius: '50%',
                     width: 18, height: 18, display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>{c.post_count}</span>
                 </div>
@@ -5536,7 +5550,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               </span>
             )}
             {props.gap_days && props.gap_days.length > 0 && (
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e63946' }}>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#f04a4d' }}>
                 Gaps: {props.gap_days.join(', ')}
               </span>
             )}
@@ -5545,7 +5559,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Upcoming events */}
           {props.upcoming_events && props.upcoming_events.length > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                 Events this week:
               </span>
               {props.upcoming_events.map((ev) => (
@@ -5562,7 +5576,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Empty state */}
           {props.total_scheduled === 0 && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0',
               textAlign: 'center', padding: '20px 0',
             }}>No content scheduled this week — time to plan!</div>
           )}
@@ -5572,7 +5586,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     ScheduleConflict: ({ props }) => {
       const severityConfig: Record<string, { color: string; bg: string; icon: string }> = {
-        critical: { color: '#e63946', bg: 'rgba(230,57,70,0.08)', icon: '🔴' },
+        critical: { color: '#f04a4d', bg: 'rgba(230,57,70,0.08)', icon: '🔴' },
         warning: { color: '#f59e0b', bg: 'rgba(245,158,11,0.05)', icon: '⚠️' },
         info: { color: '#00d4ff', bg: 'rgba(0,212,255,0.03)', icon: 'ℹ️' },
       };
@@ -5593,7 +5607,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
             {/* Description */}
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff', marginBottom: 6,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0', marginBottom: 6,
             }}>{props.description}</div>
 
             {/* Affected creators */}
@@ -5601,7 +5615,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
                 {props.affected_creators.map((name) => (
                   <span key={name} style={{
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#e5e7eb',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#e8e8f0',
                     backgroundColor: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 99,
                   }}>{name}</span>
                 ))}
@@ -5611,7 +5625,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Affected date */}
             {props.affected_date && (
               <div style={{
-                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#6b7280', marginBottom: 6,
+                fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#8888a0', marginBottom: 6,
               }}>{props.affected_date}</div>
             )}
 
@@ -5627,20 +5641,20 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     // ── PERFORMANCE REPORTING ─────────────────────────────────────────────
 
     PerformanceChart: ({ props }) => {
-      const seriesColors = ['#00d4ff', '#7c3aed', '#f59e0b', '#2dd4a8', '#e63946'];
+      const seriesColors = ['#00d4ff', '#7c3aed', '#f59e0b', '#2dd4a8', '#f04a4d'];
       const xVals = props.x_axis.values;
       const series = props.series;
 
       if (!xVals.length || !series.length) {
         return (
           <div style={{
-            backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+            backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 24,
           }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#ffffff', marginBottom: 8 }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#e8e8f0', marginBottom: 8 }}>
               {props.title}
             </div>
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#6b7280', textAlign: 'center', padding: '60px 0',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8888a0', textAlign: 'center', padding: '60px 0',
             }}>No data available</div>
           </div>
         );
@@ -5755,13 +5769,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#ffffff' }}>{props.title}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#e8e8f0' }}>{props.title}</div>
             {props.period && (
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280' }}>{props.period}</div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0' }}>{props.period}</div>
             )}
           </div>
 
@@ -5770,14 +5784,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Gridlines */}
             {gridLines.map((g, i) => (
               <g key={i}>
-                <line x1={padL} y1={g.y} x2={svgW - padR} y2={g.y} stroke="#1e1e2e" strokeDasharray="4,4" />
-                <text x={padL - 6} y={g.y + 3} textAnchor="end" fill="#6b7280"
+                <line x1={padL} y1={g.y} x2={svgW - padR} y2={g.y} stroke="#2a2a35" strokeDasharray="4,4" />
+                <text x={padL - 6} y={g.y + 3} textAnchor="end" fill="#8888a0"
                   style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9 }}>{g.label}</text>
               </g>
             ))}
             {/* Y-axis label */}
             {props.y_axis_label && (
-              <text x={10} y={svgH / 2} textAnchor="middle" fill="#6b7280"
+              <text x={10} y={svgH / 2} textAnchor="middle" fill="#8888a0"
                 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9 }}
                 transform={`rotate(-90, 10, ${svgH / 2})`}>{props.y_axis_label}</text>
             )}
@@ -5791,7 +5805,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <text key={i} x={props.chart_type === 'bar' || props.chart_type === 'stacked_bar'
                 ? padL + (chartW / xVals.length) * i + (chartW / xVals.length) / 2
                 : toX(i)}
-                y={svgH - 4} textAnchor={rotateLabels ? 'end' : 'middle'} fill="#6b7280"
+                y={svgH - 4} textAnchor={rotateLabels ? 'end' : 'middle'} fill="#8888a0"
                 style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10 }}
                 transform={rotateLabels ? `rotate(-30, ${toX(i)}, ${svgH - 4})` : undefined}>{label}</text>
             ))}
@@ -5806,7 +5820,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     width: 8, height: 8, borderRadius: '50%',
                     backgroundColor: s.color ?? seriesColors[si % seriesColors.length], display: 'inline-block',
                   }} />
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e5e7eb' }}>{s.name}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#e8e8f0' }}>{s.name}</span>
                 </div>
               ))}
             </div>
@@ -5816,7 +5830,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     ReportCard: ({ props }) => {
-      const trendColor = props.trend === 'up' ? '#2dd4a8' : props.trend === 'down' ? '#e63946' : '#f59e0b';
+      const trendColor = props.trend === 'up' ? '#2dd4a8' : props.trend === 'down' ? '#f04a4d' : '#f59e0b';
       const trendArrow = props.trend === 'up' ? '▲' : props.trend === 'down' ? '▼' : '→';
 
       const formatValue = (val: number) => {
@@ -5833,14 +5847,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 16,
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 16,
           minWidth: 200, position: 'relative',
         }}>
           {/* Period badge */}
           {props.period && (
             <div style={{
               position: 'absolute', top: 12, right: 12,
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280',
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0',
               backgroundColor: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 99,
             }}>{props.period}</div>
           )}
@@ -5848,18 +5862,18 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Metric name */}
           <div style={{
             fontFamily: "'DM Sans', sans-serif", fontSize: 12, textTransform: 'uppercase',
-            letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+            letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
           }}>{props.metric_name}</div>
 
           {/* Main value + trend */}
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: '#ffffff' }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 32, color: '#e8e8f0' }}>
               {props.unit === 'currency' ? '$' : ''}{props.unit === 'views'
                 ? formatValue(props.current_value)
                 : props.current_value.toLocaleString()}{props.unit !== 'currency' && props.unit !== 'views' ? unitSuffix : ''}
             </span>
             {props.unit && props.unit !== 'number' && props.unit !== 'percent' && props.unit !== 'score' && props.unit !== 'views' && props.unit !== 'currency' && (
-              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#6b7280' }}>{props.unit}</span>
+              <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#8888a0' }}>{props.unit}</span>
             )}
             {props.trend && props.change_percent != null && (
               <span style={{
@@ -5871,17 +5885,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Previous value */}
           {props.previous_value != null && (
             <div style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#6b7280', marginBottom: 8,
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#8888a0', marginBottom: 8,
             }}>from {formatValue(props.previous_value)}</div>
           )}
 
           {/* Benchmark line */}
           {props.benchmark != null && (
             <div style={{
-              borderTop: '1px dashed #6b7280', margin: '8px 0', paddingTop: 4, position: 'relative',
+              borderTop: '1px dashed #8888a0', margin: '8px 0', paddingTop: 4, position: 'relative',
             }}>
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#6b7280',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 10, color: '#8888a0',
               }}>{props.benchmark_label ?? 'Benchmark'}: {formatValue(props.benchmark)}</span>
             </div>
           )}
@@ -5889,7 +5903,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Context */}
           {props.context && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280', marginTop: 8,
+              fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0', marginTop: 8,
               display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
             }}>{props.context}</div>
           )}
@@ -5902,17 +5916,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         if (g.startsWith('A')) return '#2dd4a8';
         if (g.startsWith('B')) return '#00d4ff';
         if (g.startsWith('C')) return '#f59e0b';
-        return '#e63946';
+        return '#f04a4d';
       };
       const trendInfo = (t?: string) => {
         if (t === 'up') return { arrow: '▲', color: '#2dd4a8' };
-        if (t === 'down') return { arrow: '▼', color: '#e63946' };
+        if (t === 'down') return { arrow: '▼', color: '#f04a4d' };
         return { arrow: '→', color: '#f59e0b' };
       };
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, overflow: 'hidden',
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, overflow: 'hidden',
         }}>
           {/* Top gradient accent */}
           <div style={{ height: 4, background: 'linear-gradient(90deg, #2dd4a8, #00d4ff, #7c3aed)' }} />
@@ -5921,8 +5935,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
               <div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#ffffff' }}>Agency Performance</div>
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#6b7280', marginTop: 4 }}>{props.period}</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#e8e8f0' }}>Agency Performance</div>
+                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#8888a0', marginTop: 4 }}>{props.period}</div>
               </div>
               {props.overall_grade && (
                 <div style={{
@@ -5941,14 +5955,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 const t = trendInfo(m.trend);
                 return (
                   <div key={i} style={{
-                    padding: '12px 16px', borderRight: '1px solid #1e1e2e', borderBottom: '1px solid #1e1e2e',
+                    padding: '12px 16px', borderRight: '1px solid #1e1e2e', borderBottom: '1px solid #2a2a35',
                   }}>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#ffffff' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, color: '#e8e8f0' }}>
                       {m.value.toLocaleString()}{m.unit ? ` ${m.unit}` : ''}
                     </div>
                     <div style={{
                       fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                      letterSpacing: '0.05em', color: '#6b7280', marginTop: 2,
+                      letterSpacing: '0.05em', color: '#8888a0', marginTop: 2,
                     }}>{m.name}</div>
                     {m.trend && m.change_percent != null && (
                       <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: t.color }}>
@@ -5978,12 +5992,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <div style={{ marginBottom: 16 }}>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                  letterSpacing: '0.05em', color: '#e63946', marginBottom: 6,
+                  letterSpacing: '0.05em', color: '#f04a4d', marginBottom: 6,
                 }}>⚠ Needs Attention</div>
                 {props.needs_attention.map((item, i) => (
                   <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#ffffff' }}>{item.creator_name}</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>{item.issue}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{item.creator_name}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>{item.issue}</span>
                   </div>
                 ))}
               </div>
@@ -5999,7 +6013,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {props.highlights.map((h, i) => (
                   <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
                     <span style={{ color: '#2dd4a8', fontSize: 13 }}>✓</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{h}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{h}</span>
                   </div>
                 ))}
               </div>
@@ -6015,7 +6029,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {props.concerns.map((c, i) => (
                   <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
                     <span style={{ color: '#f59e0b', fontSize: 13 }}>!</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{c}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{c}</span>
                   </div>
                 ))}
               </div>
@@ -6040,7 +6054,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
       const gradeKey = 'engagement_grade';
       const trendInfo = (t?: string) => {
         if (t === 'up') return { arrow: '▲', color: '#2dd4a8' };
-        if (t === 'down') return { arrow: '▼', color: '#e63946' };
+        if (t === 'down') return { arrow: '▼', color: '#f04a4d' };
         return { arrow: '→', color: '#f59e0b' };
       };
 
@@ -6050,14 +6064,14 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 24,
         }}>
           {/* Header */}
           <div style={{ marginBottom: 16 }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#ffffff' }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, color: '#e8e8f0' }}>
               Creator Comparison
               {props.comparison_metric && (
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280', marginLeft: 8 }}>
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0', marginLeft: 8 }}>
                   by {props.comparison_metric}
                 </span>
               )}
@@ -6081,7 +6095,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     textAlign: 'center', padding: '8px 12px',
                     borderLeft: ci > 0 ? '1px solid #1e1e2e' : undefined,
                   }}>
-                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#ffffff' }}>{c.name}</div>
+                    <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, color: '#e8e8f0' }}>{c.name}</div>
                     {c.niche && (
                       <span style={{
                         fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: '#7c3aed',
@@ -6107,7 +6121,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   <React.Fragment key={m.key}>
                     <div style={{
                       padding: '10px 8px', fontFamily: "'DM Sans', sans-serif", fontSize: 11,
-                      textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6b7280',
+                      textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8888a0',
                       display: 'flex', alignItems: 'center',
                       backgroundColor: mi % 2 === 1 ? '#08080d' : 'transparent',
                     }}>{m.label}</div>
@@ -6123,7 +6137,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         }}>
                           <span style={{
                             fontFamily: "'Playfair Display', serif", fontSize: 16,
-                            color: isMax ? '#2dd4a8' : '#ffffff',
+                            color: isMax ? '#2dd4a8' : '#e8e8f0',
                             fontWeight: isMax ? 700 : 400,
                             opacity: isMin ? 0.5 : 1,
                           }}>{v != null ? m.format(v) : '—'}</span>
@@ -6139,13 +6153,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 <>
                   <div style={{
                     padding: '10px 8px', fontFamily: "'DM Sans', sans-serif", fontSize: 11,
-                    textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6b7280',
+                    textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8888a0',
                     display: 'flex', alignItems: 'center',
                     backgroundColor: visibleMetrics.length % 2 === 1 ? '#08080d' : 'transparent',
                   }}>Engagement</div>
                   {creators.map((c, ci) => {
                     const g = c.engagement_grade;
-                    const gc = g === 'A' ? '#2dd4a8' : g === 'B' ? '#00d4ff' : g === 'C' ? '#f59e0b' : g === 'D' ? '#e63946' : g === 'F' ? '#e63946' : '#6b7280';
+                    const gc = g === 'A' ? '#2dd4a8' : g === 'B' ? '#00d4ff' : g === 'C' ? '#f59e0b' : g === 'D' ? '#f04a4d' : g === 'F' ? '#f04a4d' : '#8888a0';
                     return (
                       <div key={ci} style={{
                         textAlign: 'center', padding: '10px 12px',
@@ -6168,12 +6182,12 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <div style={{ marginTop: 16 }}>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
               }}>Insights</div>
               {props.insights.map((ins, i) => (
                 <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
                   <span style={{ color: '#00d4ff', fontSize: 13 }}>•</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{ins}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{ins}</span>
                 </div>
               ))}
             </div>
@@ -6184,18 +6198,18 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     ContentROI: ({ props }) => {
       const verdictColors: Record<string, string> = {
-        strong_roi: '#2dd4a8', moderate_roi: '#00d4ff', weak_roi: '#f59e0b', negative_roi: '#e63946',
+        strong_roi: '#2dd4a8', moderate_roi: '#00d4ff', weak_roi: '#f59e0b', negative_roi: '#f04a4d',
       };
       const verdictLabels: Record<string, string> = {
         strong_roi: 'Strong ROI ✓', moderate_roi: 'Moderate ROI', weak_roi: 'Weak ROI', negative_roi: 'Negative ROI ✗',
       };
-      const accentColor = props.verdict ? verdictColors[props.verdict] ?? '#6b7280' : '#6b7280';
+      const accentColor = props.verdict ? verdictColors[props.verdict] ?? '#8888a0' : '#8888a0';
 
       const formatViews = (v: number) => v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : v >= 1_000 ? `${(v / 1_000).toFixed(1)}K` : v.toString();
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, overflow: 'hidden',
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, overflow: 'hidden',
           display: 'flex',
         }}>
           {/* Left accent bar */}
@@ -6205,9 +6219,9 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#ffffff' }}>{props.campaign_name}</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#e8e8f0' }}>{props.campaign_name}</div>
                 {props.period && (
-                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280', marginTop: 4 }}>{props.period}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0', marginTop: 4 }}>{props.period}</div>
                 )}
               </div>
               {props.verdict && (
@@ -6221,25 +6235,25 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Big stats row */}
             <div style={{ display: 'flex', gap: 32, marginBottom: 16 }}>
               <div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: '#ffffff' }}>{props.total_posts}</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6b7280' }}>Total Posts</div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: '#e8e8f0' }}>{props.total_posts}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8888a0' }}>Total Posts</div>
               </div>
               <div>
                 <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: '#00d4ff' }}>{formatViews(props.total_views)}</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6b7280' }}>Total Views</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8888a0' }}>Total Views</div>
               </div>
               {props.avg_dps != null && (
                 <div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: props.avg_dps >= 80 ? '#2dd4a8' : props.avg_dps >= 60 ? '#f59e0b' : '#e63946' }}>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, color: props.avg_dps >= 80 ? '#2dd4a8' : props.avg_dps >= 60 ? '#f59e0b' : '#f04a4d' }}>
                     {props.avg_dps.toFixed(1)}
                   </div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#6b7280' }}>Avg DPS</div>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.05em', color: '#8888a0' }}>Avg DPS</div>
                 </div>
               )}
             </div>
 
             {props.total_engagement != null && (
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#6b7280', marginBottom: 16 }}>
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#8888a0', marginBottom: 16 }}>
                 Total engagement: {props.total_engagement.toLocaleString()}
               </div>
             )}
@@ -6253,8 +6267,8 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     borderLeft: '3px solid #2dd4a8',
                   }}>
                     <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', color: '#2dd4a8', marginBottom: 4 }}>Best</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#ffffff', marginBottom: 2 }}>{props.top_performing_post.title}</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0', marginBottom: 2 }}>{props.top_performing_post.title}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                       {props.top_performing_post.creator_name} · {formatViews(props.top_performing_post.views)} views
                       {props.top_performing_post.dps_score != null && ` · DPS ${props.top_performing_post.dps_score}`}
                     </div>
@@ -6263,11 +6277,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                 {props.worst_performing_post && (
                   <div style={{
                     flex: '1 1 200px', padding: 12, backgroundColor: '#08080d', borderRadius: 8,
-                    borderLeft: '3px solid #e63946',
+                    borderLeft: '3px solid #f04a4d',
                   }}>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', color: '#e63946', marginBottom: 4 }}>Lowest</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#ffffff', marginBottom: 2 }}>{props.worst_performing_post.title}</div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#6b7280' }}>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase', color: '#f04a4d', marginBottom: 4 }}>Lowest</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#e8e8f0', marginBottom: 2 }}>{props.worst_performing_post.title}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: '#8888a0' }}>
                       {props.worst_performing_post.creator_name} · {formatViews(props.worst_performing_post.views)} views
                       {props.worst_performing_post.dps_score != null && ` · DPS ${props.worst_performing_post.dps_score}`}
                     </div>
@@ -6283,16 +6297,16 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                   {['Creator', 'Posts', 'Views', 'DPS'].map((h) => (
                     <div key={h} style={{
                       fontFamily: "'DM Sans', sans-serif", fontSize: 10, textTransform: 'uppercase',
-                      letterSpacing: '0.05em', color: '#6b7280', padding: '4px 0',
+                      letterSpacing: '0.05em', color: '#8888a0', padding: '4px 0',
                     }}>{h}</div>
                   ))}
                 </div>
                 {[...props.creator_breakdown].sort((a, b) => b.views - a.views).map((c, i) => (
                   <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 60px 80px 60px', gap: 4 }}>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb' }}>{c.name}</span>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb' }}>{c.posts}</span>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb' }}>{formatViews(c.views)}</span>
-                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e5e7eb' }}>{c.avg_dps != null ? c.avg_dps.toFixed(1) : '—'}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0' }}>{c.name}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0' }}>{c.posts}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0' }}>{formatViews(c.views)}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e8e8f0' }}>{c.avg_dps != null ? c.avg_dps.toFixed(1) : '—'}</span>
                   </div>
                 ))}
               </div>
@@ -6301,7 +6315,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             {/* Verdict explanation */}
             {props.verdict_explanation && (
               <div style={{
-                fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e5e7eb', fontStyle: 'italic', marginBottom: 16,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: '#e8e8f0', fontStyle: 'italic', marginBottom: 16,
               }}>{props.verdict_explanation}</div>
             )}
 
@@ -6310,7 +6324,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
               <div>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 11, textTransform: 'uppercase',
-                  letterSpacing: '0.05em', color: '#6b7280', marginBottom: 8,
+                  letterSpacing: '0.05em', color: '#8888a0', marginBottom: 8,
                 }}>Recommendations</div>
                 {props.recommendations.map((r, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
@@ -6318,7 +6332,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                       fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#00d4ff',
                       minWidth: 18, textAlign: 'right',
                     }}>{i + 1}.</span>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{r}</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{r}</span>
                   </div>
                 ))}
               </div>
@@ -6329,17 +6343,17 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     },
 
     TrendReport: ({ props }) => {
-      const confidenceColor = (c?: string) => c === 'high' ? '#2dd4a8' : c === 'medium' ? '#f59e0b' : '#6b7280';
+      const confidenceColor = (c?: string) => c === 'high' ? '#2dd4a8' : c === 'medium' ? '#f59e0b' : '#8888a0';
 
       return (
         <div style={{
-          backgroundColor: '#0f0f16', border: '1px solid #1e1e2e', borderRadius: 16, padding: 24,
+          backgroundColor: NEU_REG.bg, boxShadow: NEU_REG.raisedSm, borderRadius: 16, padding: 24,
         }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#ffffff' }}>{props.report_title}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, color: '#e8e8f0' }}>{props.report_title}</div>
             <span style={{
-              fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#6b7280',
+              fontFamily: "'JetBrains Mono', monospace", fontSize: 12, color: '#8888a0',
               backgroundColor: 'rgba(255,255,255,0.06)', padding: '2px 10px', borderRadius: 99,
             }}>{props.period}</span>
           </div>
@@ -6364,7 +6378,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         }}>{t.magnitude}</span>
                       )}
                     </div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb', marginTop: 2 }}>{t.description}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0', marginTop: 2 }}>{t.description}</div>
                   </div>
                 ))}
               </div>
@@ -6374,24 +6388,24 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Falling Trends */}
           {props.falling_trends && props.falling_trends.length > 0 && (
             <div style={{ display: 'flex', marginBottom: 20 }}>
-              <div style={{ width: 2, backgroundColor: '#e63946', borderRadius: 1, marginRight: 16, flexShrink: 0 }} />
+              <div style={{ width: 2, backgroundColor: '#f04a4d', borderRadius: 1, marginRight: 16, flexShrink: 0 }} />
               <div style={{ flex: 1 }}>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif", fontSize: 13, textTransform: 'uppercase',
-                  letterSpacing: '0.05em', color: '#e63946', marginBottom: 10,
+                  letterSpacing: '0.05em', color: '#f04a4d', marginBottom: 10,
                 }}>📉 Declining</div>
                 {props.falling_trends.map((t, i) => (
                   <div key={i} style={{ marginBottom: 10 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#e63946' }}>{t.metric}</span>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 700, color: '#f04a4d' }}>{t.metric}</span>
                       {t.magnitude && (
                         <span style={{
-                          fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#e63946',
+                          fontFamily: "'JetBrains Mono', monospace", fontSize: 11, color: '#f04a4d',
                           backgroundColor: 'rgba(230, 57, 70, 0.1)', padding: '1px 8px', borderRadius: 99,
                         }}>{t.magnitude}</span>
                       )}
                     </div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb', marginTop: 2 }}>{t.description}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0', marginTop: 2 }}>{t.description}</div>
                   </div>
                 ))}
               </div>
@@ -6418,7 +6432,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                         }}>{p.confidence}</span>
                       )}
                     </div>
-                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb', marginTop: 2 }}>{p.description}</div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0', marginTop: 2 }}>{p.description}</div>
                   </div>
                 ))}
               </div>
@@ -6438,7 +6452,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
                     fontFamily: "'JetBrains Mono', monospace", fontSize: 13, color: '#00d4ff',
                     minWidth: 18, textAlign: 'right',
                   }}>{i + 1}.</span>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e5e7eb' }}>{r}</span>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: '#e8e8f0' }}>{r}</span>
                 </div>
               ))}
             </div>
@@ -6447,7 +6461,7 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
           {/* Data quality note */}
           {props.data_quality_note && (
             <div style={{
-              fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#6b7280', fontStyle: 'italic',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 11, color: '#8888a0', fontStyle: 'italic',
             }}>ℹ {props.data_quality_note}</div>
           )}
         </div>

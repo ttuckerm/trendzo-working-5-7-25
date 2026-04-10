@@ -33,11 +33,27 @@ interface UseAdminUserReturn extends AdminUserState {
 // =============================================
 
 export function useAdminUser(): UseAdminUserReturn {
+  const authDisabled = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true';
+
   const [state, setState] = useState<AdminUserState>({
-    user: null,
-    profile: null,
-    role: null,
-    isLoading: true,
+    user: authDisabled ? { id: 'dev-user', email: 'dev@localhost' } : null,
+    profile: authDisabled ? {
+      id: 'dev-user',
+      role: 'chairman' as UserRole,
+      display_name: 'Dev User',
+      avatar_url: null,
+      email: 'dev@localhost',
+      phone: null,
+      timezone: 'UTC',
+      language: 'en',
+      is_active: true,
+      last_login_at: new Date().toISOString(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      metadata: {},
+    } as Profile : null,
+    role: authDisabled ? 'chairman' as UserRole : null,
+    isLoading: !authDisabled,
     error: null,
   });
 
@@ -135,6 +151,8 @@ export function useAdminUser(): UseAdminUserReturn {
   }, [supabase]);
 
   useEffect(() => {
+    if (authDisabled) return;
+
     fetchUser();
 
     // Listen for auth changes
@@ -157,7 +175,7 @@ export function useAdminUser(): UseAdminUserReturn {
     return () => {
       subscription.unsubscribe();
     };
-  }, [fetchUser, supabase.auth]);
+  }, [authDisabled, fetchUser, supabase.auth]);
 
   const checkPermission = useCallback(
     (resource: Resource, action: Action, context?: PermissionContext): boolean => {

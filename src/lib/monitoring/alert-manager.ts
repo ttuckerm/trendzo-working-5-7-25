@@ -628,11 +628,10 @@ export class AlertManager {
    * Start the evaluation loop
    */
   private startEvaluationLoop(): void {
+    if (process.env.NEXT_PHASE === 'phase-production-build') return;
     setInterval(async () => {
       await this.evaluateAlertRules();
     }, this.evaluationInterval);
-
-    console.log(`🚨 Alert evaluation loop started (${this.evaluationInterval}ms interval)`);
   }
 
   /**

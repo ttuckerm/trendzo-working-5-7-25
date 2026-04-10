@@ -20,11 +20,12 @@ export default function MiniChart({ data, color, height = 32 }: MiniChartProps) 
         return (
           <div
             key={i}
-            className="w-[3px] rounded-full transition-all duration-300"
+            className="w-[3px] rounded-full"
             style={{
               height: barHeight,
               backgroundColor: color,
               opacity,
+              transition: 'height 200ms cubic-bezier(0.23, 1, 0.32, 1)',
             }}
           />
         );

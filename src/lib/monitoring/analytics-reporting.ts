@@ -691,10 +691,11 @@ export class AnalyticsReporting extends EventEmitter {
       this.processMetricForAnalytics(metric);
     });
 
-    // Set up periodic data aggregation
-    setInterval(() => {
-      this.performDataAggregation();
-    }, 3600000); // Every hour
+    if (process.env.NEXT_PHASE !== 'phase-production-build') {
+      setInterval(() => {
+        this.performDataAggregation();
+      }, 3600000);
+    }
   }
 
   private async loadReportDefinitions(): Promise<void> {
