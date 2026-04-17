@@ -354,6 +354,7 @@ async function processAgency(
         cards: sortedCards,
         card_count: sortedCards.length,
         status: 'ready',
+        generated_by_agent: 'Brief Architect',
       }, { onConflict: 'agency_id,brief_date' })
 
     if (morningErr) {

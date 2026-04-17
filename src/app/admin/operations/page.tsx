@@ -168,32 +168,32 @@ interface MetricCardProps {
 function MetricCard({ title, value, subtitle, trend, icon, status = 'neutral', href }: MetricCardProps) {
   const content = (
     <div className={cn(
-      'bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-[#2a2a4e] transition-all',
+      'bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#4A6B78] transition-all',
       href && 'cursor-pointer hover:scale-[1.02]'
     )}>
       <div className="flex items-start justify-between mb-3">
         <div className={cn(
           'w-10 h-10 rounded-lg flex items-center justify-center',
-          status === 'good' && 'bg-green-500/20',
-          status === 'warning' && 'bg-yellow-500/20',
-          status === 'critical' && 'bg-red-500/20',
-          status === 'neutral' && 'bg-purple-500/20'
+          status === 'good' && 'bg-[#1A2E23]',
+          status === 'warning' && 'bg-[#2E2410]',
+          status === 'critical' && 'bg-[#2E1A1A]',
+          status === 'neutral' && 'bg-[#1A2830]'
         )}>
           {icon}
         </div>
         {trend !== undefined && (
           <div className={cn(
             'flex items-center gap-1 text-sm font-medium',
-            trend >= 0 ? 'text-green-400' : 'text-red-400'
+            trend >= 0 ? 'text-[#4A8C6A]' : 'text-[#8C4A4A]'
           )}>
             {trend >= 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
             {trend >= 0 ? '+' : ''}{trend}%
           </div>
         )}
       </div>
-      <div className="text-2xl font-bold mb-1">{value}</div>
-      <div className="text-sm text-gray-400">{title}</div>
-      {subtitle && <div className="text-xs text-gray-500 mt-1">{subtitle}</div>}
+      <div className="text-2xl font-medium mb-1 text-[#D4D4D4]">{value}</div>
+      <div className="text-sm text-[#A8A9A9]">{title}</div>
+      {subtitle && <div className="text-xs text-[#6B6D6D] mt-1">{subtitle}</div>}
     </div>
   );
 
@@ -209,14 +209,14 @@ function StatusIndicator({ status, label, latency }: { status: 'operational' | '
       <div className="flex items-center gap-2">
         <div className={cn(
           'w-2 h-2 rounded-full',
-          status === 'operational' && 'bg-green-400 shadow-[0_0_6px_rgba(74,222,128,0.5)]',
-          status === 'degraded' && 'bg-yellow-400 shadow-[0_0_6px_rgba(250,204,21,0.5)]',
-          status === 'down' && 'bg-red-400 shadow-[0_0_6px_rgba(248,113,113,0.5)] animate-pulse'
+          status === 'operational' && 'bg-[#4A8C6A]',
+          status === 'degraded' && 'bg-[#9A7A3A]',
+          status === 'down' && 'bg-[#8C4A4A] animate-pulse'
         )} />
-        <span className="text-sm text-gray-300">{label}</span>
+        <span className="text-sm text-[#D4D4D4]">{label}</span>
       </div>
       {latency !== undefined && (
-        <span className="text-xs text-gray-500">{latency}ms</span>
+        <span className="text-xs text-[#6B6D6D]">{latency}ms</span>
       )}
     </div>
   );
@@ -228,11 +228,11 @@ function AlertBanner({ alerts }: { alerts: Alert[] }) {
   const criticalCount = alerts.filter(a => a.severity === 'critical').length;
   const warningCount = alerts.filter(a => a.severity === 'warning').length;
   
-  const bgColor = criticalCount > 0 ? 'bg-red-500/10 border-red-500/30' : 'bg-yellow-500/10 border-yellow-500/30';
-  const textColor = criticalCount > 0 ? 'text-red-400' : 'text-yellow-400';
+  const bgColor = criticalCount > 0 ? 'bg-[#2E1A1A] border-[#8C4A4A]/30' : 'bg-[#3D2523] border-[#9A5E58]';
+  const textColor = criticalCount > 0 ? 'text-[#8C4A4A]' : 'text-[#C07B74]';
   
   return (
-    <div className={cn('border rounded-xl p-4', bgColor)}>
+    <div className={cn('border border-l-[3px] rounded-lg p-4', bgColor, criticalCount > 0 ? 'border-l-[#8C4A4A]' : 'border-l-[#C07B74]')}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <AlertTriangle className={textColor} size={20} />
@@ -241,7 +241,7 @@ function AlertBanner({ alerts }: { alerts: Alert[] }) {
             {criticalCount > 0 && warningCount > 0 ? ' & ' : ''}
             {warningCount > 0 ? `${warningCount} Warning${warningCount > 1 ? 's' : ''}` : ''}
           </span>
-          <span className="text-gray-400 text-sm">
+          <span className="text-[#A8A9A9] text-sm">
             {alerts[0].title}
           </span>
         </div>
@@ -428,45 +428,45 @@ export default function OperationsCenterPage() {
   const hasDown = data.services.some(s => s.status === 'down');
 
   return (
-    <div className="p-6 space-y-6 min-h-screen bg-[#0a0a0f]">
+    <div className="p-6 space-y-6 min-h-screen bg-[#282929]">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl font-medium text-[#D4D4D4]">
             Operations Intelligence Center
           </h1>
-          <p className="text-gray-400 text-sm mt-1">
+          <p className="text-[#A8A9A9] text-sm mt-1">
             Platform health, model performance, and operational metrics
           </p>
         </div>
         <div className="flex items-center gap-4">
           <button 
             onClick={runVerificationSuite}
-            className="flex items-center gap-2 px-4 py-2 bg-[#1a1a2e] hover:bg-[#2a2a4e] border border-purple-500/30 text-purple-400 rounded-lg transition-colors font-medium text-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-[#323434] hover:bg-[#3A3C3C] border border-[#6C92A0]/30 text-[#6C92A0] rounded-lg transition-colors font-medium text-sm"
           >
             <Shield size={16} />
             Verify System
           </button>
           <button 
             onClick={runSystemAudit}
-            className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors font-medium text-sm shadow-lg shadow-purple-900/20"
+            className="flex items-center gap-2 px-4 py-2 bg-[#C07B74] hover:bg-[#9A5E58] text-[#D4D4D4] rounded-lg transition-colors font-medium text-sm"
           >
             <Activity size={16} />
             Run System Audit
           </button>
           
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-[#6B6D6D]">
             Last updated: {lastUpdated.toLocaleTimeString()}
           </span>
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
             className={cn(
-              'p-2 bg-[#111118] border border-[#1a1a2e] rounded-lg hover:border-purple-500/50 transition-colors',
+              'p-2 bg-[#323434] border border-[#3A3C3C] rounded-lg hover:border-[#6C92A0]/50 transition-colors',
               isRefreshing && 'opacity-50'
             )}
           >
-            <RefreshCw size={18} className={cn('text-gray-400', isRefreshing && 'animate-spin')} />
+            <RefreshCw size={18} className={cn('text-[#A8A9A9]', isRefreshing && 'animate-spin')} />
           </button>
         </div>
       </div>
@@ -475,7 +475,7 @@ export default function OperationsCenterPage() {
       <AlertBanner alerts={data.alerts} />
 
       {/* System Status Bar */}
-      <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4">
+      <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             {data.services.slice(0, 5).map((service) => (
@@ -489,9 +489,9 @@ export default function OperationsCenterPage() {
           </div>
           <div className={cn(
             'flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium',
-            allOperational && 'bg-green-500/10 text-green-400',
-            hasDegraded && !hasDown && 'bg-yellow-500/10 text-yellow-400',
-            hasDown && 'bg-red-500/10 text-red-400'
+            allOperational && 'bg-[#1A2E23] text-[#4A8C6A]',
+            hasDegraded && !hasDown && 'bg-[#2E2410] text-[#9A7A3A]',
+            hasDown && 'bg-[#2E1A1A] text-[#8C4A4A]'
           )}>
             {allOperational && <><CheckCircle size={16} /> All Systems Operational</>}
             {hasDegraded && !hasDown && <><AlertCircle size={16} /> Degraded Performance</>}
@@ -507,7 +507,7 @@ export default function OperationsCenterPage() {
           value={`${data.modelPerformance.accuracy}%`}
           subtitle={`MAE: ${data.modelPerformance.mae} DPS`}
           trend={data.modelPerformance.accuracyTrend}
-          icon={<Target className="text-purple-400" size={20} />}
+          icon={<Target className="text-[#6C92A0]" size={20} />}
           status={data.modelPerformance.accuracy >= 70 ? 'good' : 'warning'}
           href="/admin/operations/model"
         />
@@ -516,7 +516,7 @@ export default function OperationsCenterPage() {
           title="Calibration Score"
           value={data.modelPerformance.calibration.toFixed(2)}
           subtitle={`Feature coverage: ${data.modelPerformance.coverage}%`}
-          icon={<Activity className="text-blue-400" size={20} />}
+          icon={<Activity className="text-[#6C92A0]" size={20} />}
           status={data.modelPerformance.calibration >= 0.8 ? 'good' : 'warning'}
           href="/admin/operations/model"
         />
@@ -526,7 +526,7 @@ export default function OperationsCenterPage() {
           value={data.platformMetrics.videosAnalyzed.toLocaleString()}
           subtitle={`+${data.platformMetrics.videosTrend} this week`}
           trend={3.5}
-          icon={<BarChart3 className="text-green-400" size={20} />}
+          icon={<BarChart3 className="text-[#4A8C6A]" size={20} />}
           status="good"
         />
 
@@ -534,7 +534,7 @@ export default function OperationsCenterPage() {
           title="Avg Response Time"
           value={`${data.platformMetrics.avgResponseTime}ms`}
           subtitle={`Error rate: ${data.platformMetrics.errorRate}%`}
-          icon={<Zap className="text-yellow-400" size={20} />}
+          icon={<Zap className="text-[#9A7A3A]" size={20} />}
           status={data.platformMetrics.avgResponseTime < 500 ? 'good' : 'warning'}
           href="/admin/operations/health"
         />
@@ -544,95 +544,95 @@ export default function OperationsCenterPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Training Pipeline */}
-        <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-5">
+        <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold flex items-center gap-2">
-              <Database className="text-purple-400" size={18} />
+            <h2 className="font-medium flex items-center gap-2 text-[#D4D4D4]">
+              <Database className="text-[#6C92A0]" size={18} />
               Training Pipeline
             </h2>
             <Link 
               href="/admin/operations/training"
-              className="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1"
+              className="text-xs text-[#6C92A0] hover:text-[#6C92A0]/80 flex items-center gap-1"
             >
               Manage <ChevronRight size={12} />
             </Link>
           </div>
           
           <div className="space-y-4">
-            <div className="text-3xl font-bold">
+            <div className="text-3xl font-medium text-[#D4D4D4]">
               {data.trainingPipeline.totalSamples.toLocaleString()}
-              <span className="text-sm font-normal text-gray-400 ml-2">training samples</span>
+              <span className="text-sm font-normal text-[#A8A9A9] ml-2">training samples</span>
             </div>
             
             {/* Distribution */}
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full" />
+                  <span className="w-2 h-2 bg-[#4A8C6A] rounded-full" />
                   Viral (Top 5%)
                 </span>
-                <span className="text-gray-300">{data.trainingPipeline.viral.toLocaleString()}</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.viral.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-green-400 rounded-full" />
+                  <span className="w-2 h-2 bg-[#6C92A0] rounded-full" />
                   Above Average
                 </span>
-                <span className="text-gray-300">{data.trainingPipeline.aboveAverage.toLocaleString()}</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.aboveAverage.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-blue-400 rounded-full" />
+                  <span className="w-2 h-2 bg-[#6C92A0]/60 rounded-full" />
                   Average
                 </span>
-                <span className="text-gray-300">{data.trainingPipeline.average.toLocaleString()}</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.average.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-orange-400 rounded-full" />
+                  <span className="w-2 h-2 bg-[#9A7A3A] rounded-full" />
                   Below Average
                 </span>
-                <span className="text-gray-300">{data.trainingPipeline.belowAverage.toLocaleString()}</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.belowAverage.toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
                 <span className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-red-400 rounded-full" />
+                  <span className="w-2 h-2 bg-[#8C4A4A] rounded-full" />
                   Poor
                 </span>
-                <span className="text-gray-300">{data.trainingPipeline.poor.toLocaleString()}</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.poor.toLocaleString()}</span>
               </div>
             </div>
             
             {/* Progress bar */}
-            <div className="h-2.5 bg-[#1a1a2e] rounded-full overflow-hidden flex">
-              <div className="bg-emerald-400 h-full" style={{ width: '17%' }} title="Viral" />
-              <div className="bg-green-400 h-full" style={{ width: '26%' }} title="Above Average" />
-              <div className="bg-blue-400 h-full" style={{ width: '37%' }} title="Average" />
-              <div className="bg-orange-400 h-full" style={{ width: '12%' }} title="Below Average" />
-              <div className="bg-red-400 h-full" style={{ width: '8%' }} title="Poor" />
+            <div className="h-[3px] bg-[#3A3C3C] rounded-full overflow-hidden flex">
+              <div className="bg-[#4A8C6A] h-full" style={{ width: '17%' }} title="Viral" />
+              <div className="bg-[#6C92A0] h-full" style={{ width: '26%' }} title="Above Average" />
+              <div className="bg-[#6C92A0]/60 h-full" style={{ width: '37%' }} title="Average" />
+              <div className="bg-[#9A7A3A] h-full" style={{ width: '12%' }} title="Below Average" />
+              <div className="bg-[#8C4A4A] h-full" style={{ width: '8%' }} title="Poor" />
             </div>
             
-            <div className="pt-3 border-t border-[#1a1a2e] space-y-1">
+            <div className="pt-3 border-t border-[#3A3C3C] space-y-1">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-400">Last training:</span>
-                <span className="text-gray-300">{data.trainingPipeline.lastTraining}</span>
+                <span className="text-[#A8A9A9]">Last training:</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.lastTraining}</span>
               </div>
               <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-400">Next scheduled:</span>
-                <span className="text-gray-300">{data.trainingPipeline.nextScheduled}</span>
+                <span className="text-[#A8A9A9]">Next scheduled:</span>
+                <span className="text-[#D4D4D4]">{data.trainingPipeline.nextScheduled}</span>
               </div>
             </div>
             
             <button
               onClick={handleRunTrainer}
               disabled={trainerRunning}
-              className="w-full py-2.5 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-2.5 bg-[#1A2830] text-[#6C92A0] rounded-lg hover:bg-[#6C92A0]/20 transition-colors flex items-center justify-center gap-2 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <FlaskConical size={16} />
               {trainerRunning ? 'Running Experiment...' : 'Run Training Experiment'}
             </button>
             {trainerResult && (
-              <div className="mt-2 p-2.5 bg-[#0a0a0f] rounded-lg text-xs text-gray-300 leading-relaxed">
+              <div className="mt-2 p-2.5 bg-[#282929] rounded-lg text-xs text-[#D4D4D4] leading-relaxed">
                 {trainerResult}
               </div>
             )}
@@ -640,15 +640,15 @@ export default function OperationsCenterPage() {
         </div>
 
         {/* Active Model */}
-        <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-5">
+        <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold flex items-center gap-2">
-              <Brain className="text-blue-400" size={18} />
+            <h2 className="font-medium flex items-center gap-2 text-[#D4D4D4]">
+              <Brain className="text-[#6C92A0]" size={18} />
               Active Model
             </h2>
             <Link 
               href="/admin/operations/model"
-              className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1"
+              className="text-xs text-[#6C92A0] hover:text-[#6C92A0]/80 flex items-center gap-1"
             >
               Details <ChevronRight size={12} />
             </Link>
@@ -656,8 +656,8 @@ export default function OperationsCenterPage() {
           
           <div className="space-y-4">
             <div>
-              <div className="text-lg font-bold text-white">{data.modelPerformance.activeModel}</div>
-              <div className="text-sm text-gray-400 flex items-center gap-1">
+              <div className="text-lg font-medium text-[#D4D4D4]">{data.modelPerformance.activeModel}</div>
+              <div className="text-sm text-[#A8A9A9] flex items-center gap-1">
                 <Clock size={12} />
                 Trained {data.modelPerformance.lastTrained}
               </div>
@@ -665,28 +665,28 @@ export default function OperationsCenterPage() {
             
             {/* Performance metrics */}
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-[#0a0a0f] rounded-lg p-3 border border-[#1a1a2e]">
-                <div className="text-xl font-bold text-green-400">{data.modelPerformance.accuracy}%</div>
-                <div className="text-xs text-gray-500">Accuracy</div>
+              <div className="bg-[#282929] rounded-lg p-3 border border-[#3A3C3C]">
+                <div className="text-xl font-medium text-[#4A8C6A]">{data.modelPerformance.accuracy}%</div>
+                <div className="text-xs text-[#6B6D6D]">Accuracy</div>
               </div>
-              <div className="bg-[#0a0a0f] rounded-lg p-3 border border-[#1a1a2e]">
-                <div className="text-xl font-bold text-blue-400">{data.modelPerformance.calibration}</div>
-                <div className="text-xs text-gray-500">Calibration</div>
+              <div className="bg-[#282929] rounded-lg p-3 border border-[#3A3C3C]">
+                <div className="text-xl font-medium text-[#6C92A0]">{data.modelPerformance.calibration}</div>
+                <div className="text-xs text-[#6B6D6D]">Calibration</div>
               </div>
-              <div className="bg-[#0a0a0f] rounded-lg p-3 border border-[#1a1a2e]">
-                <div className="text-xl font-bold text-yellow-400">{data.modelPerformance.mae}</div>
-                <div className="text-xs text-gray-500">MAE (DPS)</div>
+              <div className="bg-[#282929] rounded-lg p-3 border border-[#3A3C3C]">
+                <div className="text-xl font-medium text-[#9A7A3A]">{data.modelPerformance.mae}</div>
+                <div className="text-xs text-[#6B6D6D]">MAE (DPS)</div>
               </div>
-              <div className="bg-[#0a0a0f] rounded-lg p-3 border border-[#1a1a2e]">
-                <div className="text-xl font-bold text-purple-400">{data.modelPerformance.coverage}%</div>
-                <div className="text-xs text-gray-500">Coverage</div>
+              <div className="bg-[#282929] rounded-lg p-3 border border-[#3A3C3C]">
+                <div className="text-xl font-medium text-[#6C92A0]">{data.modelPerformance.coverage}%</div>
+                <div className="text-xs text-[#6B6D6D]">Coverage</div>
               </div>
             </div>
             
             {/* Trend indicator */}
             <div className={cn(
               'flex items-center justify-center gap-2 py-2.5 rounded-lg font-medium',
-              data.modelPerformance.accuracyTrend >= 0 ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
+              data.modelPerformance.accuracyTrend >= 0 ? 'bg-[#1A2E23] text-[#4A8C6A]' : 'bg-[#2E1A1A] text-[#8C4A4A]'
             )}>
               {data.modelPerformance.accuracyTrend >= 0 ? (
                 <>
@@ -702,18 +702,18 @@ export default function OperationsCenterPage() {
             </div>
 
             {/* Feature importance preview */}
-            <div className="pt-3 border-t border-[#1a1a2e]">
-              <div className="text-xs text-gray-500 mb-2">Top Features</div>
+            <div className="pt-3 border-t border-[#3A3C3C]">
+              <div className="text-xs text-[#6B6D6D] mb-2">Top Features</div>
               <div className="space-y-1">
                 {['hook_strength', 'emotional_peak', 'trend_alignment'].map((feature, i) => (
                   <div key={feature} className="flex items-center gap-2">
-                    <div className="h-1.5 bg-purple-400/30 rounded-full flex-1">
+                    <div className="h-[3px] bg-[#6C92A0]/20 rounded-full flex-1">
                       <div 
-                        className="h-full bg-purple-400 rounded-full"
+                        className="h-full bg-[#6C92A0] rounded-full"
                         style={{ width: `${100 - i * 25}%` }}
                       />
                     </div>
-                    <span className="text-xs text-gray-400 w-24 truncate">{feature}</span>
+                    <span className="text-xs text-[#A8A9A9] w-24 truncate">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -722,15 +722,15 @@ export default function OperationsCenterPage() {
         </div>
 
         {/* Experiments */}
-        <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-5">
+        <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-5">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold flex items-center gap-2">
-              <FlaskConical className="text-green-400" size={18} />
+            <h2 className="font-medium flex items-center gap-2 text-[#D4D4D4]">
+              <FlaskConical className="text-[#4A8C6A]" size={18} />
               Active Experiments
             </h2>
             <Link 
               href="/admin/operations/experiments"
-              className="text-xs text-green-400 hover:text-green-300 flex items-center gap-1"
+              className="text-xs text-[#4A8C6A] hover:text-[#4A8C6A]/80 flex items-center gap-1"
             >
               View All <ChevronRight size={12} />
             </Link>
@@ -739,37 +739,37 @@ export default function OperationsCenterPage() {
           {data.experiments.length > 0 ? (
             <div className="space-y-3">
               {data.experiments.map((exp) => (
-                <div key={exp.id} className="bg-[#0a0a0f] rounded-lg p-4 border border-[#1a1a2e]">
+                <div key={exp.id} className="bg-[#282929] rounded-lg p-4 border border-[#3A3C3C]">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="font-medium text-sm">{exp.name}</span>
+                    <span className="font-medium text-sm text-[#D4D4D4]">{exp.name}</span>
                     <span className={cn(
                       'text-xs px-2 py-0.5 rounded-full',
-                      exp.status === 'running' && 'bg-green-500/20 text-green-400',
-                      exp.status === 'completed' && 'bg-blue-500/20 text-blue-400',
-                      exp.status === 'draft' && 'bg-gray-500/20 text-gray-400'
+                      exp.status === 'running' && 'bg-[#1A2E23] text-[#4A8C6A]',
+                      exp.status === 'completed' && 'bg-[#1A2830] text-[#6C92A0]',
+                      exp.status === 'draft' && 'bg-[#282929] text-[#6B6D6D]'
                     )}>
                       {exp.status}
                     </span>
                   </div>
                   
                   <div className="mb-2">
-                    <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                    <div className="flex items-center justify-between text-xs text-[#A8A9A9] mb-1">
                       <span>{exp.samples.toLocaleString()} samples</span>
                       <span>{exp.progress}%</span>
                     </div>
-                    <div className="h-1.5 bg-[#1a1a2e] rounded-full overflow-hidden">
+                    <div className="h-[3px] bg-[#3A3C3C] rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-green-400 transition-all"
+                        className="h-full bg-[#4A8C6A] transition-all"
                         style={{ width: `${exp.progress}%` }}
                       />
                     </div>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Preliminary lift:</span>
+                    <span className="text-[#A8A9A9]">Preliminary lift:</span>
                     <span className={cn(
                       'font-medium',
-                      exp.lift.startsWith('+') ? 'text-green-400' : 'text-red-400'
+                      exp.lift.startsWith('+') ? 'text-[#4A8C6A]' : 'text-[#8C4A4A]'
                     )}>
                       {exp.lift}
                     </span>
@@ -779,18 +779,18 @@ export default function OperationsCenterPage() {
               
               <Link
                 href="/admin/operations/experiments/new"
-                className="block w-full py-2.5 border border-dashed border-[#2a2a4e] text-gray-400 rounded-lg hover:border-green-500/50 hover:text-green-400 transition-colors text-center text-sm"
+                className="block w-full py-2.5 border border-dashed border-[#3A3C3C] text-[#A8A9A9] rounded-lg hover:border-[#4A8C6A]/50 hover:text-[#4A8C6A] transition-colors text-center text-sm"
               >
                 + New Experiment
               </Link>
             </div>
           ) : (
             <div className="text-center py-8">
-              <FlaskConical className="mx-auto text-gray-600 mb-2" size={32} />
-              <p className="text-gray-400 text-sm">No active experiments</p>
+              <FlaskConical className="mx-auto text-[#6B6D6D] mb-2" size={32} />
+              <p className="text-[#A8A9A9] text-sm">No active experiments</p>
               <Link 
                 href="/admin/operations/experiments/new"
-                className="mt-3 text-sm text-green-400 hover:text-green-300 inline-block"
+                className="mt-3 text-sm text-[#4A8C6A] hover:text-[#4A8C6A]/80 inline-block"
               >
                 Start an experiment →
               </Link>
@@ -800,52 +800,52 @@ export default function OperationsCenterPage() {
       </div>
 
       {/* Business KPIs */}
-      <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-5">
+      <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold">Business KPIs</h2>
+          <h2 className="font-medium text-[#D4D4D4]">Business KPIs</h2>
           <Link 
             href="/admin/operations/analytics"
-            className="text-xs text-gray-400 hover:text-gray-300"
+            className="text-xs text-[#A8A9A9] hover:text-[#D4D4D4]"
           >
             View Analytics →
           </Link>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold text-green-400">
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#4A8C6A]">
               ${(data.businessKPIs.mrr / 1000).toFixed(1)}K
             </div>
-            <div className="text-xs text-gray-400 mt-1">MRR</div>
-            <div className="text-xs text-green-400 flex items-center justify-center gap-1 mt-1">
+            <div className="text-xs text-[#A8A9A9] mt-1">MRR</div>
+            <div className="text-xs text-[#4A8C6A] flex items-center justify-center gap-1 mt-1">
               <TrendingUp size={10} />
               +{data.businessKPIs.mrrTrend}%
             </div>
           </div>
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold">{data.businessKPIs.activeAgencies}</div>
-            <div className="text-xs text-gray-400 mt-1">Active Agencies</div>
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#D4D4D4]">{data.businessKPIs.activeAgencies}</div>
+            <div className="text-xs text-[#A8A9A9] mt-1">Active Agencies</div>
           </div>
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold">{data.businessKPIs.activeCreators}</div>
-            <div className="text-xs text-gray-400 mt-1">Active Creators</div>
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#D4D4D4]">{data.businessKPIs.activeCreators}</div>
+            <div className="text-xs text-[#A8A9A9] mt-1">Active Creators</div>
           </div>
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold">
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#D4D4D4]">
               ${(data.businessKPIs.campaignSpend / 1000).toFixed(1)}K
             </div>
-            <div className="text-xs text-gray-400 mt-1">Campaign Spend</div>
+            <div className="text-xs text-[#A8A9A9] mt-1">Campaign Spend</div>
           </div>
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold text-yellow-400">
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#9A7A3A]">
               ${(data.businessKPIs.platformFees / 1000).toFixed(1)}K
             </div>
-            <div className="text-xs text-gray-400 mt-1">Platform Fees</div>
+            <div className="text-xs text-[#A8A9A9] mt-1">Platform Fees</div>
           </div>
-          <div className="text-center p-3 bg-[#0a0a0f] rounded-lg">
-            <div className="text-2xl font-bold text-blue-400">
+          <div className="text-center p-3 bg-[#282929] rounded-lg">
+            <div className="text-2xl font-medium text-[#6C92A0]">
               {data.platformMetrics.predictionsToday}
             </div>
-            <div className="text-xs text-gray-400 mt-1">Predictions Today</div>
+            <div className="text-xs text-[#A8A9A9] mt-1">Predictions Today</div>
           </div>
         </div>
       </div>
@@ -855,132 +855,132 @@ export default function OperationsCenterPage() {
         {/* Row 1 */}
         <Link
           href="/admin/operations/training/data"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-purple-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#6C92A0]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Database className="text-purple-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2830] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Database className="text-[#6C92A0]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Training Data</div>
-            <div className="text-xs text-gray-400">Manage training samples</div>
+            <div className="font-medium text-[#D4D4D4]">Training Data</div>
+            <div className="text-xs text-[#A8A9A9]">Manage training samples</div>
           </div>
         </Link>
         
         <Link
           href="/admin/operations/training/jobs"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-cyan-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#6C92A0]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Play className="text-cyan-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2830] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Play className="text-[#6C92A0]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Training Jobs</div>
-            <div className="text-xs text-gray-400">Run and monitor training</div>
+            <div className="font-medium text-[#D4D4D4]">Training Jobs</div>
+            <div className="text-xs text-[#A8A9A9]">Run and monitor training</div>
           </div>
         </Link>
         
         <Link
           href="/admin/operations/training/models"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-blue-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#6C92A0]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Layers className="text-blue-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2830] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Layers className="text-[#6C92A0]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Model Performance</div>
-            <div className="text-xs text-gray-400">Deployed models, accuracy</div>
+            <div className="font-medium text-[#D4D4D4]">Model Performance</div>
+            <div className="text-xs text-[#A8A9A9]">Deployed models, accuracy</div>
           </div>
         </Link>
         
         {/* Row 2 */}
         <Link
           href="/admin/operations/data-explorer"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-orange-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#C07B74]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Search className="text-orange-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#3D2523] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Search className="text-[#C07B74]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Data Explorer</div>
-            <div className="text-xs text-gray-400">Browse scraped videos</div>
+            <div className="font-medium text-[#D4D4D4]">Data Explorer</div>
+            <div className="text-xs text-[#A8A9A9]">Browse scraped videos</div>
           </div>
         </Link>
         
         <Link
           href="/admin/operations/health"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-green-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#4A8C6A]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Server className="text-green-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2E23] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Server className="text-[#4A8C6A]" size={20} />
           </div>
           <div>
-            <div className="font-medium">System Health</div>
-            <div className="text-xs text-gray-400">Services, APIs, databases</div>
+            <div className="font-medium text-[#D4D4D4]">System Health</div>
+            <div className="text-xs text-[#A8A9A9]">Services, APIs, databases</div>
           </div>
         </Link>
         
         <Link
           href="/admin/operations/experiments"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-yellow-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#9A7A3A]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <FlaskConical className="text-yellow-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#2E2410] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <FlaskConical className="text-[#9A7A3A]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Experiments</div>
-            <div className="text-xs text-gray-400">A/B tests, features</div>
+            <div className="font-medium text-[#D4D4D4]">Experiments</div>
+            <div className="text-xs text-[#A8A9A9]">A/B tests, features</div>
           </div>
         </Link>
 
         <Link
           href="/admin/operations/system-health"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-red-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#8C4A4A]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Activity className="text-red-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#2E1A1A] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Activity className="text-[#8C4A4A]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Pack Health</div>
-            <div className="text-xs text-gray-400">Component & pack pipeline status</div>
+            <div className="font-medium text-[#D4D4D4]">Pack Health</div>
+            <div className="text-xs text-[#A8A9A9]">Component & pack pipeline status</div>
           </div>
         </Link>
 
         <Link
           href="/admin/operations/training/base"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-indigo-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#6C92A0]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Radar className="text-indigo-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2830] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Radar className="text-[#6C92A0]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Training Base</div>
-            <div className="text-xs text-gray-400">Discovery scans, pipeline control</div>
+            <div className="font-medium text-[#D4D4D4]">Training Base</div>
+            <div className="text-xs text-[#A8A9A9]">Discovery scans, pipeline control</div>
           </div>
         </Link>
 
         <Link
           href="/admin/operations/accuracy"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-emerald-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#4A8C6A]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Target className="text-emerald-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2E23] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Target className="text-[#4A8C6A]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Prediction Accuracy</div>
-            <div className="text-xs text-gray-400">VPS correlation, scatter plot, trends</div>
+            <div className="font-medium text-[#D4D4D4]">Prediction Accuracy</div>
+            <div className="text-xs text-[#A8A9A9]">VPS correlation, scatter plot, trends</div>
           </div>
         </Link>
 
         <Link
           href="/admin/operations/initiative"
-          className="bg-[#111118] border border-[#1a1a2e] rounded-xl p-4 hover:border-blue-500/50 hover:bg-[#111118]/80 transition-all flex items-center gap-3 group"
+          className="bg-[#323434] border border-[#3A3C3C] rounded-xl p-4 hover:border-[#6C92A0]/50 transition-all flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Layers className="text-blue-400" size={20} />
+          <div className="w-10 h-10 rounded-lg bg-[#1A2830] flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Layers className="text-[#6C92A0]" size={20} />
           </div>
           <div>
-            <div className="font-medium">Initiative Intelligence</div>
-            <div className="text-xs text-gray-400">Signal coverage, research progress</div>
+            <div className="font-medium text-[#D4D4D4]">Initiative Intelligence</div>
+            <div className="text-xs text-[#A8A9A9]">Signal coverage, research progress</div>
           </div>
         </Link>
       </div>
@@ -988,31 +988,31 @@ export default function OperationsCenterPage() {
       {/* System Verification Modal */}
       {showVerifyModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-[#1a1a2e] flex items-center justify-between sticky top-0 bg-[#111118] z-10">
+          <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[#3A3C3C] flex items-center justify-between sticky top-0 bg-[#323434] z-10">
               <div className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-lg", isRunningVerify ? "bg-purple-500/20" : "bg-blue-500/20")}>
-                  <Shield className={cn(isRunningVerify ? "text-purple-400 animate-pulse" : "text-blue-400")} size={24} />
+                <div className={cn("p-2 rounded-lg", isRunningVerify ? "bg-[#1A2830]" : "bg-[#1A2830]")}>
+                  <Shield className={cn(isRunningVerify ? "text-[#6C92A0] animate-pulse" : "text-[#6C92A0]")} size={24} />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">System Verification Suite</h2>
-                  <p className="text-gray-400 text-sm">End-to-end integrity check</p>
+                  <h2 className="text-xl font-medium text-[#D4D4D4]">System Verification Suite</h2>
+                  <p className="text-[#A8A9A9] text-sm">End-to-end integrity check</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowVerifyModal(false)}
-                className="p-2 hover:bg-[#1a1a2e] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#3A3C3C] rounded-lg transition-colors"
               >
-                <XCircle size={24} className="text-gray-400" />
+                <XCircle size={24} className="text-[#A8A9A9]" />
               </button>
             </div>
             
             <div className="p-6 space-y-6">
               {isRunningVerify ? (
                 <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                  <RefreshCw size={48} className="text-purple-500 animate-spin" />
-                  <p className="text-lg font-medium text-purple-400">Running verification suite...</p>
-                  <div className="text-sm text-gray-500">Testing components, features, data flow, and accuracy</div>
+                  <RefreshCw size={48} className="text-[#6C92A0] animate-spin" />
+                  <p className="text-lg font-medium text-[#6C92A0]">Running verification suite...</p>
+                  <div className="text-sm text-[#6B6D6D]">Testing components, features, data flow, and accuracy</div>
                 </div>
               ) : verifyResult ? (
                 <>
@@ -1020,19 +1020,19 @@ export default function OperationsCenterPage() {
                   <div className={cn(
                     "p-4 rounded-xl border flex items-center gap-4",
                     verifyResult.overall === 'passed'
-                      ? "bg-green-500/10 border-green-500/30" 
-                      : "bg-red-500/10 border-red-500/30"
+                      ? "bg-[#1A2E23] border-[#4A8C6A]/30" 
+                      : "bg-[#2E1A1A] border-[#8C4A4A]/30"
                   )}>
                     {verifyResult.overall === 'passed' ? (
-                      <CheckCircle className="text-green-400" size={32} />
+                      <CheckCircle className="text-[#4A8C6A]" size={32} />
                     ) : (
-                      <XCircle className="text-red-400" size={32} />
+                      <XCircle className="text-[#8C4A4A]" size={32} />
                     )}
                     <div>
-                      <h3 className={cn("font-bold text-lg", verifyResult.overall === 'passed' ? "text-green-400" : "text-red-400")}>
+                      <h3 className={cn("font-medium text-lg", verifyResult.overall === 'passed' ? "text-[#4A8C6A]" : "text-[#8C4A4A]")}>
                         {verifyResult.overall === 'passed' ? "Verification Passed" : "Verification Failed"}
                       </h3>
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm text-[#D4D4D4]">
                         {verifyResult.summary?.passed || 0} passed, {verifyResult.summary?.failed || 0} failed, {verifyResult.summary?.warnings || 0} warnings
                       </p>
                     </div>
@@ -1041,30 +1041,30 @@ export default function OperationsCenterPage() {
                   {/* Test Results */}
                   <div className="space-y-3">
                     {verifyResult.tests?.map((test: any, i: number) => (
-                      <div key={i} className="bg-[#0a0a0f] border border-[#1a1a2e] rounded-lg p-4">
+                      <div key={i} className="bg-[#282929] border border-[#3A3C3C] rounded-lg p-4">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-3">
-                            {test.status === 'passed' && <CheckCircle size={18} className="text-green-400" />}
-                            {test.status === 'failed' && <XCircle size={18} className="text-red-400" />}
-                            {test.status === 'warning' && <AlertTriangle size={18} className="text-yellow-400" />}
-                            <span className="font-medium">{test.name}</span>
+                            {test.status === 'passed' && <CheckCircle size={18} className="text-[#4A8C6A]" />}
+                            {test.status === 'failed' && <XCircle size={18} className="text-[#8C4A4A]" />}
+                            {test.status === 'warning' && <AlertTriangle size={18} className="text-[#9A7A3A]" />}
+                            <span className="font-medium text-[#D4D4D4]">{test.name}</span>
                           </div>
                           <span className={cn(
-                            "text-xs px-2 py-0.5 rounded uppercase font-bold",
-                            test.status === 'passed' ? "bg-green-500/10 text-green-400" :
-                            test.status === 'failed' ? "bg-red-500/10 text-red-400" :
-                            "bg-yellow-500/10 text-yellow-400"
+                            "text-xs px-2 py-0.5 rounded uppercase font-medium",
+                            test.status === 'passed' ? "bg-[#1A2E23] text-[#4A8C6A]" :
+                            test.status === 'failed' ? "bg-[#2E1A1A] text-[#8C4A4A]" :
+                            "bg-[#2E2410] text-[#9A7A3A]"
                           )}>
                             {test.status}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-400 ml-7">{test.message}</p>
+                        <p className="text-sm text-[#A8A9A9] ml-7">{test.message}</p>
                         {test.details && test.details.length > 0 && (
-                          <div className="mt-3 ml-7 bg-[#111118] p-3 rounded border border-[#1a1a2e]">
-                            <ul className="space-y-1 text-xs text-gray-500">
+                          <div className="mt-3 ml-7 bg-[#323434] p-3 rounded border border-[#3A3C3C]">
+                            <ul className="space-y-1 text-xs text-[#6B6D6D]">
                               {test.details.map((d: string, j: number) => (
                                 <li key={j} className="flex items-start gap-2">
-                                  <span className="mt-1 w-1 h-1 rounded-full bg-gray-600 shrink-0" />
+                                  <span className="mt-1 w-1 h-1 rounded-full bg-[#6B6D6D] shrink-0" />
                                   {d}
                                 </li>
                               ))}
@@ -1076,16 +1076,16 @@ export default function OperationsCenterPage() {
                   </div>
                 </>
               ) : (
-                <div className="text-center py-12 text-red-400">
+                <div className="text-center py-12 text-[#8C4A4A]">
                   {verifyResult?.error || "Failed to run verification."}
                 </div>
               )}
             </div>
             
-            <div className="p-4 border-t border-[#1a1a2e] bg-[#111118] sticky bottom-0 flex justify-end">
+            <div className="p-4 border-t border-[#3A3C3C] bg-[#323434] sticky bottom-0 flex justify-end">
               <button 
                 onClick={() => setShowVerifyModal(false)}
-                className="px-4 py-2 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-[#3A3C3C] hover:bg-[#4A6B78] text-[#D4D4D4] rounded-lg transition-colors"
               >
                 Close
               </button>
@@ -1097,31 +1097,31 @@ export default function OperationsCenterPage() {
       {/* System Audit Modal */}
       {showAuditModal && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-          <div className="bg-[#111118] border border-[#1a1a2e] rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-6 border-b border-[#1a1a2e] flex items-center justify-between sticky top-0 bg-[#111118] z-10">
+          <div className="bg-[#323434] border border-[#3A3C3C] rounded-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[#3A3C3C] flex items-center justify-between sticky top-0 bg-[#323434] z-10">
               <div className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-lg", isRunningAudit ? "bg-purple-500/20" : "bg-green-500/20")}>
-                  <Activity className={cn(isRunningAudit ? "text-purple-400 animate-pulse" : "text-green-400")} size={24} />
+                <div className={cn("p-2 rounded-lg", isRunningAudit ? "bg-[#1A2830]" : "bg-[#1A2E23]")}>
+                  <Activity className={cn(isRunningAudit ? "text-[#6C92A0] animate-pulse" : "text-[#4A8C6A]")} size={24} />
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold">System Health Audit</h2>
-                  <p className="text-gray-400 text-sm">Comprehensive diagnostic scan</p>
+                  <h2 className="text-xl font-medium text-[#D4D4D4]">System Health Audit</h2>
+                  <p className="text-[#A8A9A9] text-sm">Comprehensive diagnostic scan</p>
                 </div>
               </div>
               <button 
                 onClick={() => setShowAuditModal(false)}
-                className="p-2 hover:bg-[#1a1a2e] rounded-lg transition-colors"
+                className="p-2 hover:bg-[#3A3C3C] rounded-lg transition-colors"
               >
-                <XCircle size={24} className="text-gray-400" />
+                <XCircle size={24} className="text-[#A8A9A9]" />
               </button>
             </div>
             
             <div className="p-6 space-y-6">
               {isRunningAudit ? (
                 <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                  <RefreshCw size={48} className="text-purple-500 animate-spin" />
-                  <p className="text-lg font-medium text-purple-400">Running diagnostics...</p>
-                  <div className="text-sm text-gray-500">Checking components, verifying data integrity, and analyzing pipeline health</div>
+                  <RefreshCw size={48} className="text-[#6C92A0] animate-spin" />
+                  <p className="text-lg font-medium text-[#6C92A0]">Running diagnostics...</p>
+                  <div className="text-sm text-[#6B6D6D]">Checking components, verifying data integrity, and analyzing pipeline health</div>
                 </div>
               ) : auditResult ? (
                 <>
@@ -1129,19 +1129,19 @@ export default function OperationsCenterPage() {
                   <div className={cn(
                     "p-4 rounded-xl border flex items-center gap-4",
                     auditResult.thresholds_met 
-                      ? "bg-green-500/10 border-green-500/30" 
-                      : "bg-red-500/10 border-red-500/30"
+                      ? "bg-[#1A2E23] border-[#4A8C6A]/30" 
+                      : "bg-[#2E1A1A] border-[#8C4A4A]/30"
                   )}>
                     {auditResult.thresholds_met ? (
-                      <CheckCircle className="text-green-400" size={32} />
+                      <CheckCircle className="text-[#4A8C6A]" size={32} />
                     ) : (
-                      <AlertTriangle className="text-red-400" size={32} />
+                      <AlertTriangle className="text-[#8C4A4A]" size={32} />
                     )}
                     <div>
-                      <h3 className={cn("font-bold text-lg", auditResult.thresholds_met ? "text-green-400" : "text-red-400")}>
+                      <h3 className={cn("font-medium text-lg", auditResult.thresholds_met ? "text-[#4A8C6A]" : "text-[#8C4A4A]")}>
                         {auditResult.thresholds_met ? "All Systems Nominal" : "Issues Detected"}
                       </h3>
-                      <p className="text-sm text-gray-300">
+                      <p className="text-sm text-[#D4D4D4]">
                         {auditResult.issues_found.length} issues found during audit
                       </p>
                     </div>
@@ -1149,11 +1149,11 @@ export default function OperationsCenterPage() {
 
                   {/* Issues List */}
                   {auditResult.issues_found.length > 0 && (
-                    <div className="bg-red-950/20 border border-red-900/30 rounded-xl p-4 space-y-2">
-                      <h4 className="text-red-400 font-medium flex items-center gap-2">
+                    <div className="bg-[#2E1A1A] border border-[#8C4A4A]/30 rounded-xl p-4 space-y-2">
+                      <h4 className="text-[#8C4A4A] font-medium flex items-center gap-2">
                         <AlertCircle size={16} /> Detected Issues
                       </h4>
-                      <ul className="list-disc list-inside space-y-1 text-sm text-red-200/80">
+                      <ul className="list-disc list-inside space-y-1 text-sm text-[#8C4A4A]/80">
                         {auditResult.issues_found.map((issue: string, i: number) => (
                           <li key={i}>{issue}</li>
                         ))}
@@ -1163,101 +1163,101 @@ export default function OperationsCenterPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Kai Orchestrator Status */}
-                    <div className="bg-[#0a0a0f] border border-[#1a1a2e] rounded-xl p-4">
-                      <h4 className="font-semibold mb-3 flex items-center gap-2">
-                        <Cpu size={16} className="text-blue-400" /> Kai Orchestrator
+                    <div className="bg-[#282929] border border-[#3A3C3C] rounded-xl p-4">
+                      <h4 className="font-medium mb-3 flex items-center gap-2 text-[#D4D4D4]">
+                        <Cpu size={16} className="text-[#6C92A0]" /> Kai Orchestrator
                       </h4>
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Status</span>
+                          <span className="text-[#A8A9A9]">Status</span>
                           <span className={cn(
                             "font-medium px-2 py-0.5 rounded",
-                            auditResult.kai_orchestrator.status === 'healthy' ? "bg-green-500/20 text-green-400" :
-                            auditResult.kai_orchestrator.status === 'degraded' ? "bg-yellow-500/20 text-yellow-400" :
-                            "bg-red-500/20 text-red-400"
+                            auditResult.kai_orchestrator.status === 'healthy' ? "bg-[#1A2E23] text-[#4A8C6A]" :
+                            auditResult.kai_orchestrator.status === 'degraded' ? "bg-[#2E2410] text-[#9A7A3A]" :
+                            "bg-[#2E1A1A] text-[#8C4A4A]"
                           )}>
                             {auditResult.kai_orchestrator.status.toUpperCase()}
                           </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Working Components</span>
-                          <span>{auditResult.kai_orchestrator.components_working}</span>
+                          <span className="text-[#A8A9A9]">Working Components</span>
+                          <span className="text-[#D4D4D4]">{auditResult.kai_orchestrator.components_working}</span>
                         </div>
                         {auditResult.kai_orchestrator.components_failing.length > 0 && (
-                          <div className="pt-2 border-t border-[#1a1a2e]">
-                            <span className="text-red-400 text-xs block mb-1">Failing Components:</span>
+                          <div className="pt-2 border-t border-[#3A3C3C]">
+                            <span className="text-[#8C4A4A] text-xs block mb-1">Failing Components:</span>
                             <div className="flex flex-wrap gap-1">
                               {auditResult.kai_orchestrator.components_failing.map((c: string) => (
-                                <span key={c} className="px-1.5 py-0.5 bg-red-500/10 text-red-400 text-xs rounded border border-red-500/20">
+                                <span key={c} className="px-1.5 py-0.5 bg-[#2E1A1A] text-[#8C4A4A] text-xs rounded border border-[#8C4A4A]/20">
                                   {c}
                                 </span>
                               ))}
                             </div>
                           </div>
                         )}
-                        <div className="text-xs text-gray-500 pt-2">
+                        <div className="text-xs text-[#6B6D6D] pt-2">
                           Last successful run: {auditResult.kai_orchestrator.last_successful_run ? new Date(auditResult.kai_orchestrator.last_successful_run).toLocaleString() : 'Never'}
                         </div>
                       </div>
                     </div>
 
                     {/* Pipeline Health */}
-                    <div className="bg-[#0a0a0f] border border-[#1a1a2e] rounded-xl p-4">
-                      <h4 className="font-semibold mb-3 flex items-center gap-2">
-                        <Activity size={16} className="text-purple-400" /> Pipeline Health (Last 10)
+                    <div className="bg-[#282929] border border-[#3A3C3C] rounded-xl p-4">
+                      <h4 className="font-medium mb-3 flex items-center gap-2 text-[#D4D4D4]">
+                        <Activity size={16} className="text-[#6C92A0]" /> Pipeline Health (Last 10)
                       </h4>
                       <div className="space-y-3 text-sm">
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Avg Features</span>
+                          <span className="text-[#A8A9A9]">Avg Features</span>
                           <div className="text-right">
-                            <div className={cn("font-medium", auditResult.pipeline_health.avg_features_last_10 >= 200 ? "text-green-400" : "text-yellow-400")}>
+                            <div className={cn("font-medium", auditResult.pipeline_health.avg_features_last_10 >= 200 ? "text-[#4A8C6A]" : "text-[#9A7A3A]")}>
                               {auditResult.pipeline_health.avg_features_last_10}
                             </div>
-                            <div className="text-xs text-gray-600">Target: 200+</div>
+                            <div className="text-xs text-[#6B6D6D]">Target: 200+</div>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Avg Components</span>
+                          <span className="text-[#A8A9A9]">Avg Components</span>
                           <div className="text-right">
-                            <div className={cn("font-medium", auditResult.pipeline_health.avg_components_succeeded_last_10 >= 15 ? "text-green-400" : "text-yellow-400")}>
+                            <div className={cn("font-medium", auditResult.pipeline_health.avg_components_succeeded_last_10 >= 15 ? "text-[#4A8C6A]" : "text-[#9A7A3A]")}>
                               {auditResult.pipeline_health.avg_components_succeeded_last_10}
                             </div>
-                            <div className="text-xs text-gray-600">Target: 15+</div>
+                            <div className="text-xs text-[#6B6D6D]">Target: 15+</div>
                           </div>
                         </div>
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-400">Quality Score</span>
+                          <span className="text-[#A8A9A9]">Quality Score</span>
                           <div className="text-right">
-                            <div className={cn("font-medium", auditResult.pipeline_health.avg_quality_score_last_10 >= 0.5 ? "text-green-400" : "text-yellow-400")}>
+                            <div className={cn("font-medium", auditResult.pipeline_health.avg_quality_score_last_10 >= 0.5 ? "text-[#4A8C6A]" : "text-[#9A7A3A]")}>
                               {(auditResult.pipeline_health.avg_quality_score_last_10 * 100).toFixed(1)}%
                             </div>
-                            <div className="text-xs text-gray-600">Target: 50%+</div>
+                            <div className="text-xs text-[#6B6D6D]">Target: 50%+</div>
                           </div>
                         </div>
                       </div>
                     </div>
 
                     {/* Data Integrity */}
-                    <div className="bg-[#0a0a0f] border border-[#1a1a2e] rounded-xl p-4 md:col-span-2">
-                      <h4 className="font-semibold mb-3 flex items-center gap-2">
-                        <Database size={16} className="text-cyan-400" /> Data Integrity
+                    <div className="bg-[#282929] border border-[#3A3C3C] rounded-xl p-4 md:col-span-2">
+                      <h4 className="font-medium mb-3 flex items-center gap-2 text-[#D4D4D4]">
+                        <Database size={16} className="text-[#6C92A0]" /> Data Integrity
                       </h4>
                       <div className="grid grid-cols-3 gap-4 text-sm">
-                        <div className="bg-[#111118] p-3 rounded-lg border border-[#1a1a2e]">
-                          <div className="text-gray-400 text-xs mb-1">Mismatched Counts</div>
-                          <div className={cn("text-xl font-bold", auditResult.data_integrity.videos_with_mismatched_counts === 0 ? "text-green-400" : "text-red-400")}>
+                        <div className="bg-[#323434] p-3 rounded-lg border border-[#3A3C3C]">
+                          <div className="text-[#A8A9A9] text-xs mb-1">Mismatched Counts</div>
+                          <div className={cn("text-xl font-medium", auditResult.data_integrity.videos_with_mismatched_counts === 0 ? "text-[#4A8C6A]" : "text-[#8C4A4A]")}>
                             {auditResult.data_integrity.videos_with_mismatched_counts}
                           </div>
                         </div>
-                        <div className="bg-[#111118] p-3 rounded-lg border border-[#1a1a2e]">
-                          <div className="text-gray-400 text-xs mb-1">Orphaned Results</div>
-                          <div className={cn("text-xl font-bold", auditResult.data_integrity.orphaned_component_results === 0 ? "text-green-400" : "text-yellow-400")}>
+                        <div className="bg-[#323434] p-3 rounded-lg border border-[#3A3C3C]">
+                          <div className="text-[#A8A9A9] text-xs mb-1">Orphaned Results</div>
+                          <div className={cn("text-xl font-medium", auditResult.data_integrity.orphaned_component_results === 0 ? "text-[#4A8C6A]" : "text-[#9A7A3A]")}>
                             {auditResult.data_integrity.orphaned_component_results}
                           </div>
                         </div>
-                        <div className="bg-[#111118] p-3 rounded-lg border border-[#1a1a2e]">
-                          <div className="text-gray-400 text-xs mb-1">Orphaned Features</div>
-                          <div className={cn("text-xl font-bold", auditResult.data_integrity.training_features_without_video_analysis === 0 ? "text-green-400" : "text-yellow-400")}>
+                        <div className="bg-[#323434] p-3 rounded-lg border border-[#3A3C3C]">
+                          <div className="text-[#A8A9A9] text-xs mb-1">Orphaned Features</div>
+                          <div className={cn("text-xl font-medium", auditResult.data_integrity.training_features_without_video_analysis === 0 ? "text-[#4A8C6A]" : "text-[#9A7A3A]")}>
                             {auditResult.data_integrity.training_features_without_video_analysis}
                           </div>
                         </div>
@@ -1266,16 +1266,16 @@ export default function OperationsCenterPage() {
                   </div>
                 </>
               ) : (
-                <div className="text-center py-12 text-red-400">
+                <div className="text-center py-12 text-[#8C4A4A]">
                   {auditResult?.error || "Failed to load audit results. Please try again."}
                 </div>
               )}
             </div>
             
-            <div className="p-4 border-t border-[#1a1a2e] bg-[#111118] sticky bottom-0 flex justify-end">
+            <div className="p-4 border-t border-[#3A3C3C] bg-[#323434] sticky bottom-0 flex justify-end">
               <button 
                 onClick={() => setShowAuditModal(false)}
-                className="px-4 py-2 bg-[#1a1a2e] hover:bg-[#2a2a4e] text-white rounded-lg transition-colors"
+                className="px-4 py-2 bg-[#3A3C3C] hover:bg-[#4A6B78] text-[#D4D4D4] rounded-lg transition-colors"
               >
                 Close Report
               </button>

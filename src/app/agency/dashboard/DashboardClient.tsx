@@ -38,6 +38,15 @@ const BRIEF_STATUS: Record<string, { color: string; label: string }> = {
   published: { color: T.green, label: 'Published' },
 };
 
+// Post-delivery lifecycle (content_briefs.completion_status).
+// Distinct from BRIEF_STATUS which reflects the generation/approval workflow.
+const COMPLETION_STATUS: Record<string, { bg: string; fg: string; label: string }> = {
+  delivered:     { bg: '#6B6D6D', fg: '#ffffff', label: 'Delivered' },
+  acknowledged:  { bg: '#6C92A0', fg: '#ffffff', label: 'Acknowledged' },
+  in_production: { bg: T.amber,   fg: '#1a1a1a', label: 'In Production' },
+  published:     { bg: '#4A8C6A', fg: '#ffffff', label: 'Published' },
+};
+
 const SEVERITY_META = {
   critical: { color: T.accent, icon: '!' },
   warning: { color: T.amber, icon: '⚠' },
@@ -81,7 +90,11 @@ function daysSilent(c: AgencyCreator): number {
   if (c.scriptCount === 0) return 14;
   if (c.status === 'inactive') return 7;
   if (c.status === 'onboarding') return 3;
-  return Math.floor(Math.random() * 3);
+  // Deterministic per-creator stub so SSR and client agree (no Math.random — causes hydration errors).
+  const key = (c.userId as string | undefined) || c.name || '';
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return h % 3;
 }
 
 function computeGrade(creators: AgencyCreator[]) {
@@ -162,17 +175,117 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
   const [generating, setGenerating] = useState(false);
   const [rejectingId, setRejectingId] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
+  const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [publishedUrlInput, setPublishedUrlInput] = useState('');
+  const [perfLoggingId, setPerfLoggingId] = useState<string | null>(null);
+  const [perfViewsInput, setPerfViewsInput] = useState('');
+  const [perfEngagementInput, setPerfEngagementInput] = useState('');
+
+  const handleLogPerformance = useCallback(async (briefId: string) => {
+    const rawId = briefId.startsWith('cb-') ? briefId.slice(3) : briefId;
+    const views = perfViewsInput.trim();
+    const engagement = perfEngagementInput.trim();
+    if (!views && !engagement) {
+      console.error('At least one performance field is required');
+      return;
+    }
+    setActionLoading(briefId);
+    try {
+      const res = await fetch('/api/brief-performance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          briefId: rawId,
+          actualViews: views || undefined,
+          actualEngagementRate: engagement || undefined,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        console.error('Log performance failed:', data?.error || res.statusText);
+        setActionLoading(null);
+        return;
+      }
+      const u = data.brief || {};
+      setBriefs(prev => prev.map(b => b.id === briefId ? {
+        ...b,
+        actualViews: u.actual_views ?? b.actualViews,
+        actualEngagementRate: u.actual_engagement_rate ?? b.actualEngagementRate,
+        performanceDelta: u.performance_delta ?? b.performanceDelta,
+        performanceMeasuredAt: u.performance_measured_at ?? b.performanceMeasuredAt,
+        vpsPrediction: u.vps_prediction ?? u.predicted_vps ?? b.vpsPrediction,
+      } : b));
+      setPerfLoggingId(null);
+      setPerfViewsInput('');
+      setPerfEngagementInput('');
+    } catch (e) { console.error('Log performance failed:', e); }
+    setActionLoading(null);
+  }, [perfViewsInput, perfEngagementInput]);
+
+  const handleCompletionUpdate = useCallback(async (
+    briefId: string,
+    status: 'acknowledged' | 'in_production' | 'published',
+    publishedUrl?: string,
+  ) => {
+    // Content-brief IDs are prefixed with 'cb-' in the dashboard; the API expects the raw UUID.
+    const rawId = briefId.startsWith('cb-') ? briefId.slice(3) : briefId;
+    setActionLoading(briefId);
+    try {
+      const res = await fetch('/api/brief-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ briefId: rawId, status, publishedUrl }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setBriefs(prev => prev.map(b => b.id === briefId
+          ? { ...b, completionStatus: status, publishedUrl: publishedUrl || b.publishedUrl }
+          : b,
+        ));
+      } else {
+        console.error('Status update failed:', data.error);
+      }
+    } catch { console.error('Status update failed'); }
+    setActionLoading(null);
+  }, []);
 
   const handleApproveBrief = useCallback(async (briefId: string, variantLabel?: string) => {
     setActionLoading(briefId);
     try {
-      await fetch('/api/agency/brief-review', {
+      const res = await fetch('/api/agency/brief-review', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: Number(briefId), action: 'approve', variant_label: variantLabel || 'A' }),
       });
-      setBriefs(prev => prev.filter(b => b.id !== briefId));
-    } catch { console.error('Approve failed'); }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        console.error('Approve failed:', data?.error || res.statusText);
+        setActionLoading(null);
+        return;
+      }
+      // Replace the pending pre_generated brief with the newly created content_brief
+      // so it appears in the Approved tab without requiring a page reload.
+      setBriefs(prev => {
+        const pending = prev.find(b => b.id === briefId);
+        const withoutPending = prev.filter(b => b.id !== briefId);
+        if (!data.content_brief_id) return withoutPending;
+        // Prefer the selected variant's content if one was supplied.
+        const selectedVariant = pending?.variants?.find(v => v.variant_label === (variantLabel || 'A'));
+        const approvedBrief: AgencyBrief = {
+          id: `cb-${data.content_brief_id}`,
+          creatorName: pending?.creatorName || 'Unknown',
+          title: selectedVariant?.brief_content?.title || pending?.title || 'Untitled Brief',
+          status: 'approved',
+          createdAt: new Date().toISOString(),
+          niche: pending?.niche,
+          briefContent: selectedVariant?.brief_content || pending?.briefContent,
+          vpsScore: selectedVariant?.vps_score ?? pending?.vpsScore,
+          source: 'content_brief',
+          completionStatus: 'delivered',
+        };
+        return [approvedBrief, ...withoutPending];
+      });
+    } catch (e) { console.error('Approve failed:', e); }
     setActionLoading(null);
   }, []);
 
@@ -522,6 +635,18 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                               <div key={b.id} className="rounded-xl overflow-hidden transition-all duration-200" style={{ background: T.bgGlass, backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: `1px solid ${isPending ? T.cyan + '30' : T.border}` }}>
                                 <div className="flex items-start gap-4 px-4 py-3">
                                   <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono uppercase tracking-wide flex-shrink-0 mt-0.5" style={{ background: `${s.color}12`, color: s.color, border: `1px solid ${s.color}20` }}>{s.label}</span>
+                                  {b.source === 'content_brief' && b.completionStatus && (() => {
+                                    const cs = COMPLETION_STATUS[b.completionStatus] || COMPLETION_STATUS.delivered;
+                                    return (
+                                      <span
+                                        className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-mono uppercase tracking-wide flex-shrink-0 mt-0.5"
+                                        style={{ background: cs.bg, color: cs.fg }}
+                                        title={b.publishedUrl ? `Published URL: ${b.publishedUrl}` : cs.label}
+                                      >
+                                        {cs.label}
+                                      </span>
+                                    );
+                                  })()}
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-center gap-2 mb-0.5">
                                       <p className="text-xs font-sans font-medium text-[#e8e8f0] truncate">{b.title}</p>
@@ -606,7 +731,108 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                                         )}
                                       </>
                                     ) : (
-                                      <span className="text-[10px] font-mono flex-shrink-0" style={{ color: T.textSecondary }}>{timeAgo(b.createdAt)}</span>
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        {b.source === 'content_brief' && (b.completionStatus === 'delivered' || !b.completionStatus) && (
+                                          <button
+                                            onClick={() => handleCompletionUpdate(b.id, 'acknowledged')}
+                                            disabled={actionLoading === b.id}
+                                            className="text-[10px] font-mono font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg transition-all"
+                                            style={{ background: '#6C92A018', color: '#6C92A0', border: '1px solid #6C92A030', cursor: 'pointer', opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                          >Acknowledge</button>
+                                        )}
+                                        {b.source === 'content_brief' && b.completionStatus === 'acknowledged' && (
+                                          <button
+                                            onClick={() => handleCompletionUpdate(b.id, 'in_production')}
+                                            disabled={actionLoading === b.id}
+                                            className="text-[10px] font-mono font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg transition-all"
+                                            style={{ background: `${T.amber}18`, color: T.amber, border: `1px solid ${T.amber}30`, cursor: 'pointer', opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                          >Mark In Production</button>
+                                        )}
+                                        {b.source === 'content_brief' && b.completionStatus === 'in_production' && (
+                                          publishingId === b.id ? (
+                                            <div className="flex flex-col gap-1.5">
+                                              <input
+                                                value={publishedUrlInput}
+                                                onChange={e => setPublishedUrlInput(e.target.value)}
+                                                placeholder="TikTok URL"
+                                                className="text-[10px] px-2 py-1 rounded border bg-transparent text-[#c0c0d0]"
+                                                style={{ borderColor: T.border, width: 200 }}
+                                              />
+                                              <div className="flex gap-1">
+                                                <button
+                                                  onClick={async () => {
+                                                    await handleCompletionUpdate(b.id, 'published', publishedUrlInput.trim() || undefined);
+                                                    setPublishingId(null);
+                                                    setPublishedUrlInput('');
+                                                  }}
+                                                  disabled={actionLoading === b.id}
+                                                  className="text-[10px] font-mono px-2 py-1 rounded transition-all"
+                                                  style={{ background: '#4A8C6A18', color: '#4A8C6A', opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                                >Confirm</button>
+                                                <button
+                                                  onClick={() => { setPublishingId(null); setPublishedUrlInput(''); }}
+                                                  className="text-[10px] font-mono px-2 py-1 rounded"
+                                                  style={{ color: T.textDim }}
+                                                >Cancel</button>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <button
+                                              onClick={() => { setPublishingId(b.id); setPublishedUrlInput(b.publishedUrl || ''); }}
+                                              disabled={actionLoading === b.id}
+                                              className="text-[10px] font-mono font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg transition-all"
+                                              style={{ background: '#4A8C6A18', color: '#4A8C6A', border: '1px solid #4A8C6A30', cursor: 'pointer', opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                            >Mark Published</button>
+                                          )
+                                        )}
+                                        {b.source === 'content_brief' && b.completionStatus === 'published' && (
+                                          perfLoggingId === b.id ? (
+                                            <div className="flex flex-col gap-1.5">
+                                              <input
+                                                value={perfViewsInput}
+                                                onChange={e => setPerfViewsInput(e.target.value)}
+                                                placeholder="Views"
+                                                inputMode="numeric"
+                                                className="text-[10px] px-2 py-1 rounded border bg-transparent text-[#c0c0d0]"
+                                                style={{ borderColor: T.border, width: 140 }}
+                                              />
+                                              <input
+                                                value={perfEngagementInput}
+                                                onChange={e => setPerfEngagementInput(e.target.value)}
+                                                placeholder="Engagement %"
+                                                inputMode="decimal"
+                                                className="text-[10px] px-2 py-1 rounded border bg-transparent text-[#c0c0d0]"
+                                                style={{ borderColor: T.border, width: 140 }}
+                                              />
+                                              <div className="flex gap-1">
+                                                <button
+                                                  onClick={() => handleLogPerformance(b.id)}
+                                                  disabled={actionLoading === b.id}
+                                                  className="text-[10px] font-mono px-2 py-1 rounded transition-all"
+                                                  style={{ background: `${T.cyan}20`, color: T.cyan, opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                                >Confirm</button>
+                                                <button
+                                                  onClick={() => { setPerfLoggingId(null); setPerfViewsInput(''); setPerfEngagementInput(''); }}
+                                                  className="text-[10px] font-mono px-2 py-1 rounded"
+                                                  style={{ color: T.textDim }}
+                                                >Cancel</button>
+                                              </div>
+                                            </div>
+                                          ) : (
+                                            <button
+                                              onClick={() => {
+                                                setPerfLoggingId(b.id);
+                                                setPerfViewsInput(b.actualViews != null ? String(b.actualViews) : '');
+                                                setPerfEngagementInput(b.actualEngagementRate != null ? String(b.actualEngagementRate) : '');
+                                              }}
+                                              disabled={actionLoading === b.id}
+                                              className="text-[10px] font-mono font-bold uppercase tracking-wide px-2.5 py-1 rounded-lg transition-all"
+                                              style={{ background: `${T.cyan}18`, color: T.cyan, border: `1px solid ${T.cyan}30`, cursor: 'pointer', opacity: actionLoading === b.id ? 0.5 : 1 }}
+                                            >{b.performanceMeasuredAt ? 'Update Performance' : 'Log Performance'}</button>
+                                          )
+                                        )}
+                                        <span className="text-[10px] font-mono flex-shrink-0" style={{ color: T.textSecondary }}>{timeAgo(b.createdAt)}</span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
@@ -656,6 +882,44 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                                     )}
                                   </div>
                                 )}
+
+                                {/* Performance summary (after Log Performance is submitted) */}
+                                {b.source === 'content_brief' && b.performanceMeasuredAt && (() => {
+                                  const delta = b.performanceDelta;
+                                  const deltaColor = delta == null
+                                    ? T.textDim
+                                    : delta >= 0 ? '#4A8C6A' : '#C07B74';
+                                  const fmt = (n: number) => n.toLocaleString('en-US');
+                                  return (
+                                    <div className="px-4 pb-3 pt-1 text-[11px] font-mono flex flex-wrap items-center gap-x-3 gap-y-1" style={{ color: T.textSecondary, borderTop: `1px solid ${T.border}` }}>
+                                      {b.vpsPrediction != null ? (
+                                        <>
+                                          <span>VPS Predicted: <span style={{ color: T.textPrimary }}>{b.vpsPrediction}</span></span>
+                                          <span>·</span>
+                                          <span>Actual: <span style={{ color: T.textPrimary }}>{b.actualViews != null ? fmt(b.actualViews) : '—'}</span></span>
+                                          {delta != null && (
+                                            <>
+                                              <span>·</span>
+                                              <span>Delta: <span style={{ color: deltaColor }}>{delta >= 0 ? '+' : ''}{fmt(delta)}</span></span>
+                                            </>
+                                          )}
+                                        </>
+                                      ) : (
+                                        <>
+                                          <span>Actual: <span style={{ color: T.textPrimary }}>{b.actualViews != null ? fmt(b.actualViews) : '—'}</span></span>
+                                          <span>·</span>
+                                          <span style={{ color: T.textDim }}>No prediction on record</span>
+                                        </>
+                                      )}
+                                      {b.actualEngagementRate != null && (
+                                        <>
+                                          <span>·</span>
+                                          <span>Engagement: <span style={{ color: T.textPrimary }}>{b.actualEngagementRate}%</span></span>
+                                        </>
+                                      )}
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             );
                           })}

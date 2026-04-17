@@ -59,10 +59,31 @@ interface PromotionLogEntry {
   created_at: string;
 }
 
+interface HyperparamDiffEntry {
+  key: string;
+  a: any;
+  b: any;
+  status: 'same' | 'changed' | 'only_a' | 'only_b';
+}
+
+interface PerNicheSpearmanRow {
+  niche: string;
+  a_spearman: number | null;
+  a_n: number | null;
+  b_spearman: number | null;
+  b_n: number | null;
+  delta: number | null;
+}
+
 interface ComparisonData {
   variant_a: ModelVariant & { experiment: any; feature_count: number };
   variant_b: ModelVariant & { experiment: any; feature_count: number };
   feature_diff: { feature: string; in_a: boolean; in_b: boolean; status: string }[];
+  hyperparam_diff: HyperparamDiffEntry[];
+  per_niche_spearman: PerNicheSpearmanRow[] | null;
+  training_rows_a: number | null;
+  training_rows_b: number | null;
+  training_rows_delta: number | null;
   spearman_delta: number | null;
 }
 
@@ -184,7 +205,32 @@ export function ModelManagement() {
   // ── Promote Variant ────────────────────────────────────────────────
 
   const handlePromote = async (variantId: string) => {
-    if (!confirm('Promote this model to production? The current model will be backed up.')) return;
+    const candidate = allVariants.find(v => v.id === variantId) || null;
+    const production = status?.active_variants?.find(
+      (v: ModelVariant) => v.niche === (candidate?.niche ?? null),
+    ) || null;
+
+    const candidateRho = candidate?.spearman_score ?? null;
+    const productionRho = production?.spearman_score ?? null;
+    const isDegraded =
+      candidateRho != null && productionRho != null && candidateRho < productionRho;
+
+    if (isDegraded) {
+      const delta = (candidateRho - productionRho).toFixed(4);
+      const typed = prompt(
+        `⚠ DEGRADED CANDIDATE\n\n` +
+        `Production ρ: ${productionRho.toFixed(4)}\n` +
+        `Candidate  ρ: ${candidateRho.toFixed(4)}\n` +
+        `Delta      : ${delta}\n\n` +
+        `This candidate is WORSE than the current production model. ` +
+        `Promoting it will degrade prediction accuracy.\n\n` +
+        `Type PROMOTE DEGRADED to confirm, or Cancel to abort.`,
+      );
+      if (typed !== 'PROMOTE DEGRADED') return;
+    } else {
+      if (!confirm('Promote this model to production? The current model will be backed up.')) return;
+    }
+
     setPromotingId(variantId);
     try {
       const res = await fetch(`/api/admin/trainer?action=promote&variant_id=${variantId}`, {
@@ -264,7 +310,9 @@ export function ModelManagement() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowComparison(!showComparison)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors"
+              disabled={allVariants.length < 2}
+              title={allVariants.length < 2 ? 'Need at least 2 model variants to compare' : ''}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-400 bg-purple-500/10 border border-purple-500/20 rounded-lg hover:bg-purple-500/20 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <GitCompare size={14} />
               Compare
@@ -433,6 +481,12 @@ export function ModelManagement() {
             </button>
           </div>
 
+          {allVariants.length < 2 && (
+            <div className="mb-4 p-4 bg-yellow-500/5 border border-yellow-500/20 rounded-lg text-sm text-yellow-200/80">
+              Need at least 2 model variants to run a comparison. Currently {allVariants.length} variant{allVariants.length === 1 ? '' : 's'} in the system.
+            </div>
+          )}
+
           {/* Variant selectors */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
@@ -506,8 +560,10 @@ export function ModelManagement() {
                         <div className="text-white font-mono mt-0.5">{variant.feature_count}</div>
                       </div>
                       <div>
-                        <span className="text-gray-500">Training Date</span>
-                        <div className="text-white mt-0.5">{formatDate(variant.created_at)}</div>
+                        <span className="text-gray-500">Training Rows</span>
+                        <div className="text-white font-mono mt-0.5">
+                          {(label === 'A' ? comparison.training_rows_a : comparison.training_rows_b)?.toLocaleString() ?? '—'}
+                        </div>
                       </div>
                       <div>
                         <span className="text-gray-500">Niche</span>
@@ -517,24 +573,10 @@ export function ModelManagement() {
 
                     {variant.experiment && (
                       <div className="mt-3 pt-3 border-t border-[#1a1a2e] text-xs">
-                        <div className="text-gray-500 mb-1">Experiment</div>
-                        <div className="text-gray-300">{variant.experiment.description?.replace(/^\[(SANDBOX|PRODUCTION)\]\s*/i, '')?.slice(0, 100)}</div>
+                        <div className="text-gray-500 mb-1">Why (experiment description)</div>
+                        <div className="text-gray-300">{variant.experiment.description?.replace(/^\[(SANDBOX|PRODUCTION)\]\s*/i, '') || '—'}</div>
                         <div className="mt-1 text-gray-500">
-                          {variant.experiment.training_data_rows} rows · {variant.experiment.experiment_type}
-                        </div>
-                      </div>
-                    )}
-
-                    {variant.hyperparams && Object.keys(variant.hyperparams).length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-[#1a1a2e] text-xs">
-                        <div className="text-gray-500 mb-1">Hyperparameters</div>
-                        <div className="space-y-0.5">
-                          {Object.entries(variant.hyperparams).slice(0, 8).map(([k, v]) => (
-                            <div key={k} className="flex justify-between">
-                              <span className="text-gray-400">{k}</span>
-                              <span className="text-white font-mono">{String(v)}</span>
-                            </div>
-                          ))}
+                          {variant.experiment.experiment_type} · trained {formatDate(variant.created_at)}
                         </div>
                       </div>
                     )}
@@ -542,19 +584,108 @@ export function ModelManagement() {
                 ))}
               </div>
 
-              {/* Spearman delta banner */}
-              {comparison.spearman_delta !== null && (
-                <div className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-medium ${
-                  comparison.spearman_delta > 0
-                    ? 'bg-green-500/10 text-green-400 border border-green-500/20'
-                    : comparison.spearman_delta < 0
-                    ? 'bg-red-500/10 text-red-400 border border-red-500/20'
-                    : 'bg-gray-500/10 text-gray-400 border border-[#1a1a2e]'
-                }`}>
-                  {comparison.spearman_delta > 0 ? <TrendingUp size={16} /> : comparison.spearman_delta < 0 ? <TrendingDown size={16} /> : <Minus size={16} />}
-                  B is {comparison.spearman_delta > 0 ? '+' : ''}{comparison.spearman_delta} Spearman {comparison.spearman_delta > 0 ? 'better' : comparison.spearman_delta < 0 ? 'worse' : 'same'} than A
+              {/* Headline deltas */}
+              <div className="grid grid-cols-2 gap-4">
+                {comparison.spearman_delta !== null && (
+                  <div className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-medium ${
+                    comparison.spearman_delta > 0
+                      ? 'bg-green-500/10 text-green-400 border border-green-500/20'
+                      : comparison.spearman_delta < 0
+                      ? 'bg-red-500/10 text-red-400 border border-red-500/20'
+                      : 'bg-gray-500/10 text-gray-400 border border-[#1a1a2e]'
+                  }`}>
+                    {comparison.spearman_delta > 0 ? <TrendingUp size={16} /> : comparison.spearman_delta < 0 ? <TrendingDown size={16} /> : <Minus size={16} />}
+                    B is {comparison.spearman_delta > 0 ? '+' : ''}{comparison.spearman_delta} Spearman {comparison.spearman_delta > 0 ? 'better' : comparison.spearman_delta < 0 ? 'worse' : 'same'}
+                  </div>
+                )}
+                {comparison.training_rows_delta !== null && (
+                  <div className={`flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-medium ${
+                    comparison.training_rows_delta > 0
+                      ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                      : comparison.training_rows_delta < 0
+                      ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20'
+                      : 'bg-gray-500/10 text-gray-400 border border-[#1a1a2e]'
+                  }`}>
+                    <Database size={16} />
+                    B trained on {comparison.training_rows_delta >= 0 ? '+' : ''}{comparison.training_rows_delta.toLocaleString()} rows
+                  </div>
+                )}
+              </div>
+
+              {/* Hyperparameter diff */}
+              {comparison.hyperparam_diff && comparison.hyperparam_diff.length > 0 && (
+                <div className="bg-[#0a0a0f] rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">Hyperparameters</div>
+                    <div className="flex items-center gap-3 text-[10px] text-gray-500">
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-gray-500/40"></span>same</span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-yellow-400/70"></span>changed</span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400/70"></span>A only</span>
+                      <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400/70"></span>B only</span>
+                    </div>
+                  </div>
+                  <div className="space-y-1 text-xs">
+                    <div className="grid grid-cols-[1fr_1fr_1fr] gap-2 text-[10px] uppercase tracking-wider text-gray-600 pb-1 border-b border-[#1a1a2e]">
+                      <span>Key</span>
+                      <span>A</span>
+                      <span>B</span>
+                    </div>
+                    {comparison.hyperparam_diff.map(h => {
+                      const rowColor =
+                        h.status === 'changed' ? 'bg-yellow-500/5 text-yellow-200' :
+                        h.status === 'only_a' ? 'bg-blue-500/5 text-blue-200' :
+                        h.status === 'only_b' ? 'bg-emerald-500/5 text-emerald-200' :
+                        'text-gray-400';
+                      return (
+                        <div key={h.key} className={`grid grid-cols-[1fr_1fr_1fr] gap-2 px-2 py-1 rounded ${rowColor}`}>
+                          <span className="font-mono text-gray-400">{h.key}</span>
+                          <span className="font-mono truncate">{h.a === null ? '—' : String(h.a)}</span>
+                          <span className="font-mono truncate">{h.b === null ? '—' : String(h.b)}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               )}
+
+              {/* Per-niche Spearman */}
+              <div className="bg-[#0a0a0f] rounded-lg p-4">
+                <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">Per-Niche Spearman</div>
+                {comparison.per_niche_spearman && comparison.per_niche_spearman.length > 0 ? (
+                  <div className="space-y-1 text-xs">
+                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-2 text-[10px] uppercase tracking-wider text-gray-600 pb-1 border-b border-[#1a1a2e]">
+                      <span>Niche</span>
+                      <span>A (ρ / n)</span>
+                      <span>B (ρ / n)</span>
+                      <span>Δ</span>
+                    </div>
+                    {comparison.per_niche_spearman.map(row => (
+                      <div key={row.niche} className="grid grid-cols-[1.5fr_1fr_1fr_1fr] gap-2 px-2 py-1 rounded hover:bg-white/5">
+                        <span className="text-purple-400 font-medium">{row.niche}</span>
+                        <span className="font-mono text-gray-300">
+                          {row.a_spearman != null ? row.a_spearman.toFixed(4) : '—'}
+                          {row.a_n != null && <span className="text-gray-600"> / {row.a_n}</span>}
+                        </span>
+                        <span className="font-mono text-gray-300">
+                          {row.b_spearman != null ? row.b_spearman.toFixed(4) : '—'}
+                          {row.b_n != null && <span className="text-gray-600"> / {row.b_n}</span>}
+                        </span>
+                        <span className={`font-mono ${
+                          row.delta == null ? 'text-gray-500' :
+                          row.delta > 0 ? 'text-green-400' :
+                          row.delta < 0 ? 'text-red-400' : 'text-gray-400'
+                        }`}>
+                          {row.delta == null ? '—' : (row.delta >= 0 ? '+' : '') + row.delta.toFixed(4)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-500 italic">
+                    Global only — per-niche scores not recorded for these experiments. Future experiments will populate this.
+                  </div>
+                )}
+              </div>
 
               {/* Feature diff */}
               {comparison.feature_diff.length > 0 && (

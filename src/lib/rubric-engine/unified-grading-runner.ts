@@ -91,12 +91,17 @@ export async function runUnifiedGrading(
         userPrompt = buildRepairPrompt(lastResponse, lastError ? [lastError] : []);
       }
 
+      // Prepend agency context (creator path only; null on testing pipeline)
+      const systemPromptText = input.agencyContextPrompt
+        ? `${input.agencyContextPrompt}\n\n${UNIFIED_GRADING_SYSTEM_PROMPT}`
+        : UNIFIED_GRADING_SYSTEM_PROMPT;
+
       // Call LLM
       const result = await ai.models.generateContent({
         model: modelName,
         config: options?.temperature !== undefined ? { temperature: options.temperature } : undefined,
         contents: [
-          { role: 'user', parts: [{ text: UNIFIED_GRADING_SYSTEM_PROMPT }, { text: userPrompt }] },
+          { role: 'user', parts: [{ text: systemPromptText }, { text: userPrompt }] },
         ],
       });
 

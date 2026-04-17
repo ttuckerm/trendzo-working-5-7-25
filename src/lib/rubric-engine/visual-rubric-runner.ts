@@ -863,6 +863,7 @@ export async function runVisualRubric(input: VisualRubricInput): Promise<VisualR
       input.videoPath,
       input.niche,
       input.ffmpegFeatures?.duration_seconds,
+      input.agencyContextPrompt ?? null,
     );
 
     if (geminiScores) {

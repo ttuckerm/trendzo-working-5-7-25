@@ -6562,5 +6562,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
         window.dispatchEvent(new CustomEvent('trendzo-chat', { detail: { message: `Rescheduling ${params?.post_title} to ${params?.new_date}` } }));
       }
     },
+    update_brief_status: async (params) => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('trendzo-action', { detail: { action: 'update_brief_status', params } }));
+      }
+    },
+    log_performance: async (params) => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('trendzo-action', { detail: { action: 'log_performance', params } }));
+      }
+    },
   },
 });

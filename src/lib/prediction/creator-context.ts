@@ -62,6 +62,14 @@ export interface CreatorContext {
   channelData: CreatorChannelData | null;
   /** Derived creator stage based on follower count */
   creatorStage: CreatorStage;
+  /** Agency that owns this creator's onboarding profile (null for unaffiliated users) */
+  agencyId: string | null;
+  /**
+   * Assembled agency system prompt (hot memory + cultural events + accuracy stats + tool context).
+   * Populated by /api/creator/predict via assembleContext(). Null on the testing pipeline.
+   * When present, LLM components in the prediction pipeline prepend this to their prompts.
+   */
+  agencyContextPrompt?: string | null;
 }
 
 // ============================================================================
@@ -159,10 +167,15 @@ export async function resolveCreatorContext(
   // Derive creator stage from follower count
   const creatorStage = deriveCreatorStage(channelData?.followerCount ?? null);
 
+  // Agency ownership (onboarding_profiles.agency_id) — null if unaffiliated
+  const agencyId: string | null = calData?.agency_id ?? null;
+
   return {
     calibrationProfile,
     channelData,
     creatorStage,
+    agencyId,
+    agencyContextPrompt: null,
   };
 }
 

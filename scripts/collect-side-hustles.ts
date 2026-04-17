@@ -392,7 +392,15 @@ async function main() {
   for (const v of unique) {
     const videoId = uuidv4();
 
-    // 4a. Insert scraped_videos
+    // 4a. Insert scraped_videos (including distribution signals)
+    const postDate = new Date(v.posted_at);
+    const FYP_TAGS = ['fyp', 'foryou', 'foryoupage', 'viral', 'trending'];
+    const hashtagsLower = v.hashtags.map(h => h.toLowerCase());
+    const nicheKeyword = NICHE.toLowerCase();
+    const nicheHashtagCount = hashtagsLower.filter(h => h.includes(nicheKeyword)).length;
+    const genericCount = hashtagsLower.filter(h => FYP_TAGS.includes(h)).length;
+    const specificCount = v.hashtags.length - genericCount;
+
     const { error: svErr } = await supabase.from('scraped_videos').insert({
       video_id: videoId,
       tiktok_id: v.tiktok_id,
@@ -423,6 +431,15 @@ async function main() {
       raw_scraping_data: v.raw_json,
       scraped_at: now,
       inserted_at: now,
+      // Distribution signals
+      posted_hour_utc: postDate.getUTCHours(),
+      posted_day_of_week: (postDate.getUTCDay() + 6) % 7, // JS Sunday=0 → ISO Monday=0
+      posted_days_since_epoch: Math.floor(postDate.getTime() / 86400000),
+      hashtag_count: v.hashtags.length,
+      hashtag_niche_count: nicheHashtagCount,
+      has_fyp_hashtag: hashtagsLower.some(h => FYP_TAGS.includes(h)),
+      hashtag_specificity_score: v.hashtags.length > 0 ? specificCount / v.hashtags.length : 0,
+      sound_type: v.music_original ? 'original' : (v.music_id ? 'licensed' : 'unknown'),
     });
 
     if (svErr) {

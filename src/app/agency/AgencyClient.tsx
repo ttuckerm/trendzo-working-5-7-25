@@ -18,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import AgencyDashboardHeader from '@/components/agency/AgencyDashboardHeader';
 import EngineOrb from './components/EngineOrb';
 import VoiceMicButton from './components/VoiceMicButton';
+import { getComponentsForIntent, ClayComponentRenderer, ComponentType, type RenderStrategy } from '@/lib/clay';
 import {
   saveConversation,
   loadActiveConversation,
@@ -26,6 +27,8 @@ import {
   type StoredMessagePart,
   type ConversationSession,
 } from '@/lib/sessions/conversation-store';
+import type { ActionConfirmationData } from '@/components/clay/ActionConfirmationCard';
+import { UniversalSkeleton } from '@/components/clay/UniversalSkeleton';
 
 // ── Neumorphic Design System ──────────────────────────────────────────
 const NEU = {
@@ -285,6 +288,21 @@ const CLAY_ANIMATIONS = `
     to { opacity: 1; transform: translateY(0) scale(1); }
   }
 
+  /* ── Clay component entry — staggered fade + slide ─────── */
+  @keyframes clayComponentIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Critical alert slide from top ──────────────────────── */
+  @keyframes clayCriticalAlertIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .clay-critical-alert {
+    animation: clayCriticalAlertIn 300ms ${EASE} both;
+  }
+
   /* ── Reduced motion ────────────────────────────────────── */
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -318,8 +336,86 @@ class RenderErrorBoundary extends React.Component<
   }
 }
 
+// ── Clay Component Block — renders components with optional pre-fetched data ──
+function ClayComponentBlock({
+  types,
+  prefetchedData,
+  onAction,
+}: {
+  types: ComponentType[]
+  prefetchedData?: Record<string, Record<string, unknown>>
+  onAction?: (action: string, payload: unknown) => void
+}) {
+  const [componentData, setComponentData] = useState<Record<string, Record<string, unknown>>>(prefetchedData || {})
+  const [fetched, setFetched] = useState(!!prefetchedData)
+  const [loading, setLoading] = useState(!prefetchedData)
+
+  useEffect(() => {
+    if (fetched || types.length === 0) return
+    setFetched(true)
+    setLoading(true)
+
+    fetch('/api/clay/component-data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ types }),
+    })
+      .then((res) => res.ok ? res.json() : {})
+      .then((data) => { setComponentData(data || {}); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [types, fetched])
+
+  if (loading) {
+    return (
+      <>
+        {types.map((type, i) => (
+          <UniversalSkeleton key={type} index={i} />
+        ))}
+      </>
+    )
+  }
+
+  return (
+    <>
+      {types.map((type, i) => (
+        <div
+          key={type}
+          style={{
+            opacity: 0,
+            animation: `clayComponentIn 200ms ease-out ${i * 80}ms forwards`,
+          }}
+        >
+          <ClayComponentRenderer
+            type={type}
+            data={(componentData[type] as Record<string, unknown>) || {}}
+            onAction={onAction}
+          />
+        </div>
+      ))}
+    </>
+  )
+}
+
+// ── Clay Classification Result ────────────────────────────────────────
+interface ClayClassification {
+  suggestedComponents: ComponentType[]
+  componentData: Record<string, Record<string, unknown>>
+  renderStrategy: RenderStrategy
+  intents: string[]
+}
+
 // ── Chat Message ──────────────────────────────────────────────────────
-function ChatMessage({ message }: { message: UIMessage }) {
+function ChatMessage({
+  message,
+  userMessageText,
+  onComponentAction,
+  clayClassification,
+}: {
+  message: UIMessage
+  userMessageText?: string
+  onComponentAction?: (action: string, payload: unknown) => void
+  clayClassification?: ClayClassification | null
+}) {
   const { spec, text, hasSpec } = useJsonRenderMessage(
     message.parts as Parameters<typeof useJsonRenderMessage>[0]
   );
@@ -334,6 +430,47 @@ function ChatMessage({ message }: { message: UIMessage }) {
     : '';
 
   const showArtifactInline = hasSpec && spec;
+
+  // Use server-side classification if available, else fallback to client-side
+  const hasClayComponents = clayClassification && clayClassification.suggestedComponents.length > 0
+  const renderStrategy = clayClassification?.renderStrategy || 'lead-with-text'
+
+  const fallbackComponents = !hasClayComponents && userMessageText
+    ? getComponentsForIntent(userMessageText)
+    : []
+
+  const componentsToRender = hasClayComponents
+    ? clayClassification!.suggestedComponents
+    : fallbackComponents
+
+  const componentData = hasClayComponents ? clayClassification!.componentData : undefined
+
+  // Render components block
+  const ComponentsBlock = componentsToRender.length > 0 ? (
+    <div
+      className="clay-artifact mt-4"
+      style={{ margin: '12px 0 12px 36px', transformOrigin: 'top left' }}
+    >
+      <ClayComponentBlock
+        types={componentsToRender}
+        prefetchedData={componentData}
+        onAction={onComponentAction}
+      />
+    </div>
+  ) : null
+
+  // Render text block
+  const TextBlock = text ? (
+    <div className="mb-4 flex items-start gap-3">
+      <div
+        className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1 clay-ai-dot"
+        style={{ background: NEU.bg, boxShadow: NEU.raisedSm }}
+      >
+        <div className="w-2 h-2 rounded-full bg-[#00d4ff]" />
+      </div>
+      <p className="font-body text-[15px] leading-relaxed" style={{ color: NEU.textPrimary }}>{text}</p>
+    </div>
+  ) : null
 
   return (
     <div className={`mb-6 ${isUser ? 'flex justify-end' : ''}`}>
@@ -351,16 +488,21 @@ function ChatMessage({ message }: { message: UIMessage }) {
         </div>
       ) : (
         <div className="clay-ai-msg w-full">
-          {text && (
-            <div className="mb-4 flex items-start gap-3">
-              <div
-                className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1 clay-ai-dot"
-                style={{ background: NEU.bg, boxShadow: NEU.raisedSm }}
-              >
-                <div className="w-2 h-2 rounded-full bg-[#00d4ff]" />
-              </div>
-              <p className="font-body text-[15px] leading-relaxed" style={{ color: NEU.textPrimary }}>{text}</p>
-            </div>
+          {/* Render order based on strategy */}
+          {renderStrategy === 'lead-with-components' ? (
+            <>
+              {ComponentsBlock}
+              {TextBlock}
+            </>
+          ) : renderStrategy === 'components-only' ? (
+            <>
+              {ComponentsBlock}
+            </>
+          ) : (
+            <>
+              {TextBlock}
+              {ComponentsBlock}
+            </>
           )}
           {showArtifactInline && (
             <div
@@ -387,6 +529,12 @@ function ChatMessage({ message }: { message: UIMessage }) {
 
 
 const AUTO_GREETING = 'Good morning. Brief me on what needs my attention.';
+
+// Invisible marker: after a write action completes, the client injects a user-role
+// message starting with this prefix + JSON. The system prompt tells the model to
+// render a spec confirmation card in response. The filter below hides the directive
+// from the rendered chat.
+const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';
 
 const postAlertSuggestions = [
   'Deep dive on the flagged creator',
@@ -504,6 +652,13 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
   const [isRestoringSession, setIsRestoringSession] = useState(true);
   const [restoredSession, setRestoredSession] = useState<ConversationSession | null>(null);
   const [showRestoredToast, setShowRestoredToast] = useState(false);
+
+  // Clay: track recently rendered component types (last 2 assistant turns)
+  const [recentComponents, setRecentComponents] = useState<ComponentType[]>([])
+  // Clay: inline action confirmations
+  const [inlineConfirmations, setInlineConfirmations] = useState<ActionConfirmationData[]>([]);
+  // Clay: classification results keyed by user message text
+  const [clayClassifications, setClayClassifications] = useState<Record<string, ClayClassification>>({});
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transport = useMemo(() => new DefaultChatTransport({ api: '/api/agency-chat' }) as any, []);
   const { messages, sendMessage, setMessages, status } = useChat({
@@ -540,11 +695,17 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
   // Session restoration on mount
   const autoGreetFired = useRef(false);
   const sessionInitialized = useRef(false);
+  // Guard C: true while a write action is dispatching or rendering its
+  // confirmation card. Blocks fireAutoGreeting so the briefing can never
+  // replace a confirmation surface.
+  const actionInFlight = useRef(false);
 
   const fireAutoGreeting = useCallback(() => {
     if (autoGreetFired.current) return;
+    if (actionInFlight.current) return;
     autoGreetFired.current = true;
     setAutoBriefing(true);
+    classifyMessage(AUTO_GREETING);
     sendMessage({ text: AUTO_GREETING });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -604,10 +765,21 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
 
   // Clear autoBriefing state when AI finishes responding
   useEffect(() => {
+    // Guard B: if the most recent user message is a hidden action-result
+    // directive, this effect must not touch greeting state — the incoming
+    // stream is a confirmation card, not a briefing response.
+    const last = messages[messages.length - 1];
+    if (last?.role === 'user') {
+      const lastText = last.parts
+        ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+        .map((p) => p.text)
+        .join('') ?? '';
+      if (lastText.startsWith(ACTION_RESULT_MARKER)) return;
+    }
     if (autoBriefing && !isLoading && messages.length > 1) {
       setAutoBriefing(false);
     }
-  }, [autoBriefing, isLoading, messages.length]);
+  }, [autoBriefing, isLoading, messages]);
 
   // Save conversation after each message exchange (debounced)
   useEffect(() => {
@@ -657,6 +829,100 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Clay: track recent components from classifications
+  useEffect(() => {
+    const allClassifications = Object.values(clayClassifications)
+    const lastTwo = allClassifications.slice(-2)
+    const recent: ComponentType[] = []
+    for (const cls of lastTwo) {
+      recent.push(...cls.suggestedComponents)
+    }
+    setRecentComponents(recent)
+  }, [clayClassifications])
+
+  // Clay: handle component actions (approve, reject, select-variant, etc.)
+  const handleComponentAction = useCallback(async (actionId: string, payload: unknown) => {
+    const pl = (payload && typeof payload === 'object' ? payload : {}) as Record<string, unknown>
+    const actionType = (pl.type as string) || actionId
+
+    // Guard C: block morning briefing while the write + confirmation is in flight.
+    actionInFlight.current = true;
+
+    // Add a pending confirmation immediately
+    const confirmationId = `confirm-${Date.now()}`
+    const pendingConfirmation: ActionConfirmationData = {
+      actionId: confirmationId,
+      actionType,
+      actionLabel: actionType.replace(/_/g, ' ').replace(/-/g, ' '),
+      target: (pl.briefId as string) || (pl.alertId as string) || actionId,
+      consequence: 'Processing...',
+      status: 'pending',
+    }
+    setInlineConfirmations((prev) => [...prev, pendingConfirmation])
+
+    try {
+      const res = await fetch('/api/clay/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actionId, type: actionType, payload: pl }),
+      })
+      const result = await res.json()
+
+      // Update the confirmation status
+      setInlineConfirmations((prev) =>
+        prev.map((c) =>
+          c.actionId === confirmationId
+            ? {
+                ...c,
+                status: result.success ? 'confirmed' as const : 'cancelled' as const,
+                consequence: result.message || (result.success ? 'Done' : 'Failed'),
+              }
+            : c,
+        ),
+      )
+
+      // If the write produced structured confirmation data, inject a hidden directive
+      // into the chat so the model renders a spec-driven confirmation card.
+      if (result.success && result.confirmation) {
+        const directive = `${ACTION_RESULT_MARKER} ${JSON.stringify(result.confirmation)}`
+        sendMessageRef.current({ text: directive })
+        // Hold the in-flight guard briefly so streaming the confirmation card
+        // can't race the greeting reset. Cleared after the response settles.
+        setTimeout(() => { actionInFlight.current = false; }, 4000);
+      } else {
+        actionInFlight.current = false;
+      }
+    } catch (err) {
+      actionInFlight.current = false;
+      setInlineConfirmations((prev) =>
+        prev.map((c) =>
+          c.actionId === confirmationId
+            ? { ...c, status: 'cancelled' as const, consequence: 'Network error — action may not have completed' }
+            : c,
+        ),
+      )
+    }
+  }, [])
+
+  // Clay: classify intent for a user message (fire-and-forget alongside chat)
+  const classifyMessage = useCallback((text: string) => {
+    fetch('/api/clay/classify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        recentComponents,
+      }),
+    })
+      .then((res) => res.ok ? res.json() : null)
+      .then((result) => {
+        if (result) {
+          setClayClassifications((prev) => ({ ...prev, [text]: result }))
+        }
+      })
+      .catch(() => {})
+  }, [recentComponents])
+
   const [sendAnimating, setSendAnimating] = useState(false);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -665,6 +931,7 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     setChatError(null);
     setSendAnimating(true);
     setTimeout(() => setSendAnimating(false), 300);
+    classifyMessage(inputValue);
     sendMessage({ text: inputValue });
     setInputValue('');
   };
@@ -672,6 +939,7 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
   const handleSuggestionClick = (suggestion: string) => {
     setHasSentFirst(true);
     setChatError(null);
+    classifyMessage(suggestion);
     sendMessage({ text: suggestion });
   };
 
@@ -682,8 +950,9 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     setInputValue('');
     if (!hasSentFirst) setHasSentFirst(true);
     setChatError(null);
+    classifyMessage(text);
     sendMessage({ text });
-  }, [isLoading, hasSentFirst, sendMessage]);
+  }, [isLoading, hasSentFirst, sendMessage, classifyMessage]);
 
   const handleVoiceInterim = useCallback((text: string) => {
     setIsVoiceListening(true);
@@ -725,7 +994,33 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
       const id = params?.creatorId || params?.id || params?.label || '';
       sendAsUser(`Show me everything about ${id}'s profile`);
     },
-  }), [sendAsUser]);
+    // Write actions — route through the Clay action pipeline so action-handler.ts
+    // runs the DB write and the hidden directive fires the confirmation spec.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    update_brief_status: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] update_brief_status missing briefId', params); return; }
+      handleComponentAction(briefId, {
+        type: 'update_brief_status',
+        briefId,
+        new_status: inner?.new_status,
+        published_url: inner?.published_url,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    log_performance: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] log_performance missing briefId', params); return; }
+      handleComponentAction(briefId, {
+        type: 'log_performance',
+        briefId,
+        actual_views: inner?.actual_views,
+        actual_engagement_rate: inner?.actual_engagement_rate,
+      });
+    },
+  }), [sendAsUser, handleComponentAction]);
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -740,7 +1035,19 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     return () => window.removeEventListener('trendzo-action', handler);
   }, [actionHandlers]);
 
-  const handleNewSession = useCallback(async () => {
+  const handleNewSession = useCallback(async (explicit: boolean = false) => {
+    // Guard A: only an explicit operator click may reset the greeting flag.
+    // Any programmatic caller (future refactors, stray handlers) must pass
+    // `explicit: true`. This prevents message injection, state churn, or
+    // re-renders from silently re-arming the morning briefing.
+    if (!explicit) {
+      console.warn('[agency] handleNewSession called without explicit=true — ignoring');
+      return;
+    }
+    if (actionInFlight.current) {
+      console.warn('[agency] handleNewSession blocked — action in flight');
+      return;
+    }
     if (userId && agencyId) {
       await startNewSession(userId, agencyId);
     }
@@ -830,6 +1137,27 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
               {/* ═══ CHAT ═══ */}
               <div className="flex-1 overflow-y-auto px-6 py-4 neu-scrollbar">
               <div className="max-w-3xl mx-auto">
+                {/* Critical proactive alerts — always rendered at top */}
+                {(() => {
+                  // Check if any classification has a critical proactive alert
+                  for (const cls of Object.values(clayClassifications)) {
+                    if (!cls.suggestedComponents.includes(ComponentType.PROACTIVE_ALERT)) continue
+                    const alertData = cls.componentData[ComponentType.PROACTIVE_ALERT]
+                    if (alertData && (alertData as Record<string, unknown>).severity === 'critical') {
+                      return (
+                        <div key="critical-alert-top" className="clay-critical-alert mb-4">
+                          <ClayComponentRenderer
+                            type={ComponentType.PROACTIVE_ALERT}
+                            data={alertData}
+                            onAction={handleComponentAction}
+                          />
+                        </div>
+                      )
+                    }
+                  }
+                  return null
+                })()}
+
                 {!hasSentFirst && messages.length === 0 && !autoBriefing && (
                   <div className="relative flex flex-col items-center justify-center min-h-[30vh]">
                     {/* Ambient background glow */}
@@ -923,22 +1251,56 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
                   </div>
                 )}
 
-                {messages.map((msg) => {
-                  // Hide auto-greeting from chat
+                {messages.map((msg, idx) => {
+                  // Hide auto-greeting and action-result directives from chat
                   if (msg.role === 'user') {
                     const msgText = msg.parts
                       ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
                       .map((p) => p.text)
                       .join('');
                     if (msgText === AUTO_GREETING) return null;
+                    if (msgText?.startsWith(ACTION_RESULT_MARKER)) return null;
                   }
+
+                  // For assistant messages, find the preceding user message text
+                  // so Clay can suggest components based on user intent
+                  let userMsgText: string | undefined
+                  if (msg.role === 'assistant') {
+                    for (let i = idx - 1; i >= 0; i--) {
+                      if (messages[i].role === 'user') {
+                        userMsgText = messages[i].parts
+                          ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+                          .map((p) => p.text)
+                          .join('')
+                        break
+                      }
+                    }
+                  }
+
+                  // Look up Clay classification for this user message
+                  const classification = userMsgText ? clayClassifications[userMsgText] || null : null
 
                   return (
                     <div key={msg.id}>
-                      <ChatMessage message={msg} />
+                      <ChatMessage
+                        message={msg}
+                        userMessageText={userMsgText}
+                        onComponentAction={handleComponentAction}
+                        clayClassification={classification}
+                      />
                     </div>
                   );
                 })}
+
+                {/* Inline action confirmations */}
+                {inlineConfirmations.map((conf) => (
+                  <div key={conf.actionId} className="clay-artifact mb-4" style={{ margin: '0 0 12px 36px' }}>
+                    <ClayComponentRenderer
+                      type={ComponentType.ACTION_CONFIRMATION}
+                      data={conf as unknown as Record<string, unknown>}
+                    />
+                  </div>
+                ))}
 
                 {isLoading && (
                   <div className="clay-ai-msg flex items-center gap-3 font-mono text-sm mb-4" style={{ color: NEU.accent }}>

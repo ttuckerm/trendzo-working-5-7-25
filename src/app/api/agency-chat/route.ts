@@ -1,4 +1,5 @@
-import { streamText, convertToModelMessages } from 'ai';
+import { streamText, convertToModelMessages, tool, stepCountIs } from 'ai';
+import { z } from 'zod';
 import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { pipeJsonRender } from '@json-render/core';
@@ -9,10 +10,162 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { generateProactiveAlerts } from '@/lib/notifications/proactive-engine';
 import { assembleContext } from '@/lib/context/assemble-context';
+import { classifyIntent } from '@/lib/clay';
 
 export const runtime = 'nodejs';
 
+const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';
+
+type ActionResultConfirmation =
+  | {
+      kind: 'brief_status';
+      briefId: string;
+      briefTitle: string;
+      creator: string;
+      previousStatus: string;
+      newStatus: string;
+      publishedUrl?: string;
+      at: string;
+    }
+  | {
+      kind: 'performance';
+      briefId: string;
+      briefTitle: string;
+      creator: string;
+      vpsPrediction: number | null;
+      actualViews: number | null;
+      actualEngagementRate: number | null;
+      performanceDelta: number | null;
+      at: string;
+    };
+
+function getLastUserText(messages: any[]): string | null {
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m?.role !== 'user') continue;
+    if (typeof m.content === 'string') return m.content;
+    const parts = Array.isArray(m.parts) ? m.parts : [];
+    const text = parts
+      .filter((p: any) => p?.type === 'text' && typeof p.text === 'string')
+      .map((p: any) => p.text)
+      .join('');
+    return text || null;
+  }
+  return null;
+}
+
+function escSpecString(v: unknown): string {
+  return JSON.stringify(v == null ? '' : String(v));
+}
+
+function formatShortDateTime(iso: string): string {
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString('en-US', {
+      month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+    });
+  } catch { return iso; }
+}
+
+function formatWithCommas(n: number | null): string {
+  if (n == null || !Number.isFinite(n)) return '—';
+  return Math.round(n).toLocaleString('en-US');
+}
+
+function formatSignedDelta(n: number | null): string {
+  if (n == null || !Number.isFinite(n)) return 'No prediction on record';
+  const rounded = Math.round(n);
+  return rounded >= 0 ? `+${rounded.toLocaleString('en-US')}` : rounded.toLocaleString('en-US');
+}
+
+function buildBriefStatusSpec(c: Extract<ActionResultConfirmation, { kind: 'brief_status' }>): string {
+  const lines: string[] = [];
+  lines.push(`{"op":"add","path":"/root","value":"bsc-1"}`);
+  lines.push(`{"op":"add","path":"/elements/bsc-1","value":{"type":"Section","props":{"title":"Status updated","accent":"#4A8C6A"},"children":["bsc-kpi-1","bsc-kpi-2","bsc-kpi-3"]}}`);
+  lines.push(`{"op":"add","path":"/elements/bsc-kpi-1","value":{"type":"KPICard","props":{"label":"Brief","value":${escSpecString(c.briefTitle)},"subtitle":${escSpecString(c.creator)}},"children":[]}}`);
+  lines.push(`{"op":"add","path":"/elements/bsc-kpi-2","value":{"type":"KPICard","props":{"label":"Transition","value":${escSpecString(`${c.previousStatus} → ${c.newStatus}`)},"accent":"#4A8C6A"},"children":[]}}`);
+  lines.push(`{"op":"add","path":"/elements/bsc-kpi-3","value":{"type":"KPICard","props":{"label":"At","value":${escSpecString(formatShortDateTime(c.at))}},"children":[]}}`);
+  if (c.publishedUrl) {
+    lines.push(`{"op":"add","path":"/elements/bsc-1/children/-","value":"bsc-kpi-4"}`);
+    lines.push(`{"op":"add","path":"/elements/bsc-kpi-4","value":{"type":"KPICard","props":{"label":"URL","value":${escSpecString(c.publishedUrl)}},"children":[]}}`);
+  }
+  return lines.join('\n');
+}
+
+function buildPerformanceSpec(c: Extract<ActionResultConfirmation, { kind: 'performance' }>): string {
+  const deltaAccent = c.performanceDelta == null
+    ? '#6B6D6D'
+    : c.performanceDelta >= 0 ? '#4A8C6A' : '#C07B74';
+  const lines: string[] = [];
+  lines.push(`{"op":"add","path":"/root","value":"perf-1"}`);
+  lines.push(`{"op":"add","path":"/elements/perf-1","value":{"type":"Section","props":{"title":"Performance logged"},"children":["perf-grid"]}}`);
+  lines.push(`{"op":"add","path":"/elements/perf-grid","value":{"type":"Grid","props":{"columns":3},"children":["perf-k1","perf-k2","perf-k3","perf-k4"]}}`);
+  lines.push(`{"op":"add","path":"/elements/perf-k1","value":{"type":"KPICard","props":{"label":"Brief","value":${escSpecString(c.briefTitle)},"subtitle":${escSpecString(c.creator)}},"children":[]}}`);
+  lines.push(`{"op":"add","path":"/elements/perf-k2","value":{"type":"KPICard","props":{"label":"VPS Predicted","value":${escSpecString(c.vpsPrediction == null ? '—' : String(Math.round(c.vpsPrediction)))}},"children":[]}}`);
+  lines.push(`{"op":"add","path":"/elements/perf-k3","value":{"type":"KPICard","props":{"label":"Actual Views","value":${escSpecString(formatWithCommas(c.actualViews))}},"children":[]}}`);
+  lines.push(`{"op":"add","path":"/elements/perf-k4","value":{"type":"KPICard","props":{"label":"Delta","value":${escSpecString(formatSignedDelta(c.performanceDelta))},"accent":"${deltaAccent}"},"children":[]}}`);
+  return lines.join('\n');
+}
+
+function buildFallbackSpec(): string {
+  const lines: string[] = [];
+  lines.push(`{"op":"add","path":"/root","value":"ack-1"}`);
+  lines.push(`{"op":"add","path":"/elements/ack-1","value":{"type":"Section","props":{"title":"Action completed"},"children":["ack-t-1"]}}`);
+  lines.push(`{"op":"add","path":"/elements/ack-t-1","value":{"type":"Text","props":{"content":"Done."},"children":[]}}`);
+  return lines.join('\n');
+}
+
+function tryBuildActionResultStream(messages: any[]): ReadableStream<any> | null {
+  const text = getLastUserText(messages);
+  if (!text || !text.startsWith(ACTION_RESULT_MARKER)) return null;
+
+  let payload: ActionResultConfirmation | null = null;
+  try {
+    const json = text.slice(ACTION_RESULT_MARKER.length).trim();
+    payload = JSON.parse(json) as ActionResultConfirmation;
+  } catch {
+    payload = null;
+  }
+
+  let specBody: string;
+  if (payload?.kind === 'brief_status') {
+    specBody = buildBriefStatusSpec(payload);
+  } else if (payload?.kind === 'performance') {
+    specBody = buildPerformanceSpec(payload);
+  } else {
+    specBody = buildFallbackSpec();
+  }
+
+  const responseText = '```spec\n' + specBody + '\n```';
+  const textId = (globalThis.crypto?.randomUUID?.() ?? `sc-${Date.now()}`);
+  const messageId = (globalThis.crypto?.randomUUID?.() ?? `scm-${Date.now()}`);
+
+  const synthetic = new ReadableStream<any>({
+    start(controller) {
+      controller.enqueue({ type: 'start', messageId });
+      controller.enqueue({ type: 'text-start', id: textId });
+      controller.enqueue({ type: 'text-delta', id: textId, delta: responseText });
+      controller.enqueue({ type: 'text-end', id: textId });
+      controller.enqueue({ type: 'finish' });
+      controller.close();
+    },
+  });
+
+  return createUIMessageStream({
+    execute: async ({ writer }) => {
+      writer.merge(pipeJsonRender(synthetic));
+    },
+    onError: (error) => (error instanceof Error ? error.message : String(error)),
+  });
+}
+
+
 export async function POST(req: Request) {
+  // #region agent log
+  const _t0 = Date.now(); const _dl = (loc: string, msg: string, data?: any) => fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'082614'},body:JSON.stringify({sessionId:'082614',location:loc,message:msg,data:{...data,elapsed:Date.now()-_t0},timestamp:Date.now(),hypothesisId:'H-A'})}).catch(()=>{});
+  await _dl('chat:start','agency-chat POST started');
+  // #endregion
   try {
   const { messages } = await req.json();
 
@@ -35,9 +188,25 @@ export async function POST(req: Request) {
     }
     userId = user.id;
   }
+  // #region agent log
+  await _dl('chat:auth','auth complete',{userId});
+  // #endregion
+
+  // ── ACTION_RESULT short-circuit ──────────────────────────────────────
+  // When the client injects a hidden user message starting with
+  // [__TRENDZO_ACTION_RESULT__], bypass the model entirely and stream a
+  // deterministic JSONL spec. Prevents the model from ignoring the
+  // priority-override rule and re-rendering a morning briefing.
+  const shortCircuit = tryBuildActionResultStream(messages);
+  if (shortCircuit) {
+    return createUIMessageStreamResponse({ stream: shortCircuit });
+  }
 
   // Get agency scope (gracefully handle no agency — serve with empty data)
   const agencyId = await getUserAgencyId(userId);
+  // #region agent log
+  await _dl('chat:agency','getUserAgencyId done',{agencyId});
+  // #endregion
   console.log('[agency-chat] Agency lookup:', { userId, agencyId });
 
   let profiles: any[] = [];
@@ -54,192 +223,111 @@ export async function POST(req: Request) {
 
   if (agencyId) {
     const creatorIds = await getAgencyCreators(agencyId);
+    // #region agent log
+    await _dl('chat:creators','getAgencyCreators done',{count:creatorIds.length});
+    // #endregion
     const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    const safeCreatorIds = creatorIds.length > 0 ? creatorIds : [''];
 
-    // Step 1: Fetch profiles and briefs by user_id
-    const [profilesResult, briefsResult] = await Promise.all([
-      serviceClient
-        .from('onboarding_profiles')
+    // ── MEGA PARALLEL BATCH: fire ALL independent queries at once ──────
+    const safeQuery = async <T>(fn: () => Promise<{ data: T | null; error: any }>): Promise<T | null> => {
+      try { const r = await fn(); return r.data; } catch { return null; }
+    };
+
+    const [
+      profilesData, briefsByUserData, obFullData,
+      inviteData, eventData, altEventData,
+      contentBriefData, pgBriefsData, predRunsData, cohortData
+    ] = await Promise.all([
+      safeQuery(() => serviceClient.from('onboarding_profiles')
         .select('id, user_id, business_name, niche_key, selected_niche, creator_stage, onboarding_step')
-        .in('user_id', creatorIds.length > 0 ? creatorIds : ['']),
-      serviceClient
-        .from('content_briefs')
+        .in('user_id', safeCreatorIds)),
+      safeQuery(() => serviceClient.from('content_briefs')
         .select('id, user_id, status')
-        .in('user_id', creatorIds.length > 0 ? creatorIds : ['']),
+        .in('user_id', safeCreatorIds)),
+      safeQuery(() => serviceClient.from('onboarding_profiles')
+        .select('*').in('user_id', safeCreatorIds).order('created_at', { ascending: false })),
+      safeQuery(() => serviceClient.from('agency_invitations')
+        .select('*').eq('agency_id', agencyId).order('created_at', { ascending: false })),
+      safeQuery(() => serviceClient.from('cultural_events')
+        .select('*').eq('agency_id', agencyId).order('event_date', { ascending: true })),
+      safeQuery(() => serviceClient.from('agency_events')
+        .select('*').eq('agency_id', agencyId).order('event_date', { ascending: true })),
+      safeQuery(() => serviceClient.from('content_briefs')
+        .select('*').eq('agency_id', agencyId).order('created_at', { ascending: false }).limit(50)),
+      safeQuery(() => serviceClient.from('pre_generated_briefs')
+        .select('id, client_id, brief_content, vps_score, priority_type, status, niche, cultural_event_id, final_critic_score')
+        .eq('agency_id', agencyId).in('status', ['draft', 'presented']).order('vps_score', { ascending: false }).limit(20)),
+      safeQuery(() => serviceClient.from('prediction_runs_enriched')
+        .select('*').in('creator_id', safeCreatorIds).order('created_at', { ascending: false }).limit(200)),
+      safeQuery(() => serviceClient.from('dps_v2_cohort_stats').select('*')),
     ]);
 
-    profiles = profilesResult.data || [];
-    briefs = briefsResult.data || [];
+    // #region agent log
+    await _dl('chat:megaBatch','all parallel queries done');
+    // #endregion
 
-    // Step 2: Fetch scripts by profile IDs (onboarding_profile_id != user_id)
+    profiles = (profilesData as any[]) || [];
+    briefs = (briefsByUserData as any[]) || [];
+    onboardingDetails = (obFullData as any[]) || [];
+    invitations = (inviteData as any[]) || [];
+    culturalEvents = (eventData as any[]) || [];
+    if (culturalEvents.length === 0) culturalEvents = (altEventData as any[]) || [];
+    contentBriefs = (contentBriefData as any[]) || [];
+    predictionRuns = (predRunsData as any[]) || [];
+    let cohortStats: any[] = (cohortData as any[]) || [];
+
+    // Scripts query depends on profile IDs (second wave)
     const profileIds = profiles.map((p: any) => p.id);
-    const { data: scriptsData } = await serviceClient
-      .from('generated_scripts')
-      .select('id, script_text, vps_score, status, created_at, onboarding_profile_id, niche_key, user_id')
-      .in('onboarding_profile_id', profileIds.length > 0 ? profileIds : [''])
-      .order('created_at', { ascending: false })
-      .limit(50);
+    const pgBriefs = (pgBriefsData as any[]) || [];
 
-    scripts = scriptsData || [];
-
-    // Onboarding details: full profile data for onboarding management components
-    try {
-      const { data: obData } = await serviceClient
-        .from('onboarding_profiles')
+    const [scriptsResult, pgProfilesResult, pgVariantsResult, assignResult] = await Promise.all([
+      safeQuery(() => serviceClient.from('generated_scripts')
+        .select('id, script_text, vps_score, status, created_at, onboarding_profile_id, niche_key, user_id')
+        .in('onboarding_profile_id', profileIds.length > 0 ? profileIds : [''])
+        .order('created_at', { ascending: false }).limit(50)),
+      pgBriefs.length > 0
+        ? safeQuery(() => serviceClient.from('onboarding_profiles')
+            .select('user_id, business_name')
+            .in('user_id', [...new Set(pgBriefs.map((b: any) => b.client_id))]))
+        : Promise.resolve(null),
+      pgBriefs.length > 0
+        ? safeQuery(() => serviceClient.from('brief_variants')
+            .select('brief_id, variant_label, vps_score')
+            .in('brief_id', pgBriefs.map((b: any) => b.id)))
+        : Promise.resolve(null),
+      safeQuery(() => serviceClient.from('brief_assignments')
         .select('*')
-        .in('user_id', creatorIds.length > 0 ? creatorIds : [''])
-        .order('created_at', { ascending: false });
-      onboardingDetails = obData || [];
-    } catch (e) {
-      console.warn('[agency-chat] onboarding_profiles full query failed:', e);
-    }
+        .in('brief_id', (contentBriefs || []).map((b: any) => b.id).filter(Boolean))),
+    ]);
 
-    // Invitations table (may not exist yet)
-    try {
-      const { data: inviteData } = await serviceClient
-        .from('agency_invitations')
-        .select('*')
-        .eq('agency_id', agencyId)
-        .order('created_at', { ascending: false });
-      invitations = inviteData || [];
-    } catch {
-      // Table may not exist yet — that's fine
-      invitations = [];
-    }
+    // #region agent log
+    await _dl('chat:wave2','dependent queries done');
+    // #endregion
 
-    // Cultural events (table may not exist yet)
-    try {
-      const { data: eventData } = await serviceClient
-        .from('cultural_events')
-        .select('*')
-        .eq('agency_id', agencyId)
-        .order('event_date', { ascending: true });
-      culturalEvents = eventData || [];
-    } catch {
-      // Table doesn't exist yet — that's fine
-    }
+    scripts = (scriptsResult as any[]) || [];
+    briefAssignments = (assignResult as any[]) || [];
 
-    // Try alternative table name if primary didn't return results
-    if (culturalEvents.length === 0) {
-      try {
-        const { data: altEventData } = await serviceClient
-          .from('agency_events')
-          .select('*')
-          .eq('agency_id', agencyId)
-          .order('event_date', { ascending: true });
-        culturalEvents = altEventData || [];
-      } catch {
-        // Also doesn't exist — we'll provide empty state guidance
+    // Enrich pending briefs with names + variants
+    if (pgBriefs.length > 0) {
+      const pgNameMap = new Map(((pgProfilesResult as any[]) || []).map((p: any) => [p.user_id, p.business_name || 'Unknown']));
+      const variantCounts: Record<number, number> = {};
+      for (const v of ((pgVariantsResult as any[]) || [])) {
+        variantCounts[v.brief_id] = (variantCounts[v.brief_id] || 0) + 1;
       }
-    }
-
-    // Fetch content briefs with assignments
-    try {
-      const { data: briefData } = await serviceClient
-        .from('content_briefs')
-        .select('*')
-        .eq('agency_id', agencyId)
-        .order('created_at', { ascending: false })
-        .limit(50)
-      contentBriefs = briefData || []
-    } catch {
-      contentBriefs = []
-    }
-
-    // Fetch pending pre_generated_briefs (for review surfacing)
-    try {
-      const { data: pgBriefs } = await serviceClient
-        .from('pre_generated_briefs')
-        .select('id, client_id, brief_content, vps_score, priority_type, status, niche, cultural_event_id, final_critic_score')
-        .eq('agency_id', agencyId)
-        .in('status', ['draft', 'presented'])
-        .order('vps_score', { ascending: false })
-        .limit(20)
-
-      if (pgBriefs && pgBriefs.length > 0) {
-        // Enrich with creator names
-        const pgClientIds = [...new Set(pgBriefs.map((b: any) => b.client_id))];
-        const { data: pgProfiles } = await serviceClient
-          .from('onboarding_profiles')
-          .select('user_id, business_name')
-          .in('user_id', pgClientIds)
-        const pgNameMap = new Map((pgProfiles || []).map((p: any) => [p.user_id, p.business_name || 'Unknown']));
-
-        // Fetch variant counts
-        const pgIds = pgBriefs.map((b: any) => b.id);
-        const { data: variantData } = await serviceClient
-          .from('brief_variants')
-          .select('brief_id, variant_label, vps_score')
-          .in('brief_id', pgIds)
-        const variantCounts: Record<number, number> = {};
-        for (const v of variantData || []) {
-          variantCounts[v.brief_id] = (variantCounts[v.brief_id] || 0) + 1;
-        }
-
-        pendingBriefs = pgBriefs.map((b: any) => ({
-          id: b.id,
-          creator_name: pgNameMap.get(b.client_id) || 'Unknown',
-          title: b.brief_content?.title || 'Untitled',
-          hook: b.brief_content?.hook || '',
-          angle: b.brief_content?.angle || '',
-          format: b.brief_content?.format || '',
-          vps_score: b.vps_score,
-          priority_type: b.priority_type,
-          niche: b.niche,
-          critic_score: b.final_critic_score,
-          variant_count: variantCounts[b.id] || 1,
-        }));
-      }
-    } catch {
-      // Table may not exist yet
-    }
-
-    // Fetch brief assignments / push status if table exists
-    try {
-      const { data: assignData } = await serviceClient
-        .from('brief_assignments')
-        .select('*')
-        .in('brief_id', (contentBriefs || []).map((b: any) => b.id).filter(Boolean))
-      briefAssignments = assignData || []
-    } catch {
-      briefAssignments = []
-    }
-
-    // Also try content_brief_creators as alternative table
-    if (briefAssignments.length === 0) {
-      try {
-        const { data: altAssignData } = await serviceClient
-          .from('content_brief_creators')
-          .select('*')
-          .in('brief_id', (contentBriefs || []).map((b: any) => b.id).filter(Boolean))
-        briefAssignments = altAssignData || []
-      } catch {
-        // Table doesn't exist — fine
-      }
-    }
-
-    // Deep-dive data: prediction runs + cohort stats (wrapped in try/catch — tables may not exist)
-    let cohortStats: any[] = [];
-
-    try {
-      const { data: prData } = await serviceClient
-        .from('prediction_runs_enriched')
-        .select('*')
-        .in('creator_id', creatorIds.length > 0 ? creatorIds : [''])
-        .order('created_at', { ascending: false })
-        .limit(200);
-      predictionRuns = prData || [];
-    } catch (e) {
-      console.warn('[agency-chat] prediction_runs_enriched query failed:', e);
-    }
-
-    try {
-      const { data: csData } = await serviceClient
-        .from('dps_v2_cohort_stats')
-        .select('*');
-      cohortStats = csData || [];
-    } catch (e) {
-      console.warn('[agency-chat] dps_v2_cohort_stats query failed:', e);
+      pendingBriefs = pgBriefs.map((b: any) => ({
+        id: b.id,
+        creator_name: pgNameMap.get(b.client_id) || 'Unknown',
+        title: b.brief_content?.title || 'Untitled',
+        hook: b.brief_content?.hook || '',
+        angle: b.brief_content?.angle || '',
+        format: b.brief_content?.format || '',
+        vps_score: b.vps_score,
+        priority_type: b.priority_type,
+        niche: b.niche,
+        critic_score: b.final_critic_score,
+        variant_count: variantCounts[b.id] || 1,
+      }));
     }
 
     // Build per-creator deep-dive summaries
@@ -1189,28 +1277,50 @@ export async function POST(req: Request) {
   }
 
   const dataContext = contextSections.join('\n\n')
+  // #region agent log
+  await _dl('chat:dataCtx','data context assembled',{chars:dataContext.length});
+  // #endregion
+
+  // ── Intent classification + context assembly IN PARALLEL ─────────
+  const recentComponentsHeader = (messages[messages.length - 2]?.metadata as Record<string, unknown>)?.suggestedComponents as string[] || []
+
+  const [intentResult, centralContextBlock] = await Promise.all([
+    classifyIntent(lastUserMessage, {
+      role: 'operator',
+      tier: 'standard',
+      recentComponents: recentComponentsHeader as any[],
+      agencyId: agencyId || undefined,
+    }),
+    (async () => {
+      if (!agencyId) return '';
+      try {
+        const serviceDb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, { auth: { persistSession: false } });
+        const ctx = await assembleContext(serviceDb, agencyId, 'AgencyChat');
+        return ctx.systemPrompt;
+      } catch (err) {
+        console.warn('[agency-chat] assembleContext failed:', err);
+        return '';
+      }
+    })(),
+  ]);
+
+  // #region agent log
+  await _dl('chat:classify+context','classifyIntent + assembleContext done in parallel',{intents:intentResult.intents,components:intentResult.suggestedComponents,contextLen:centralContextBlock.length});
+  // #endregion
+
+  const clayComponentHint = intentResult.suggestedComponents.length > 0
+    ? `\n## CLAY COMPONENTS READY\nThe operator is asking about: ${intentResult.intents.join(', ')}.\nYou have the following data ready to display as visual components: ${intentResult.suggestedComponents.join(', ')}.\nAcknowledge what you're showing them naturally — don't say "I'm rendering a component", just refer to it conversationally (e.g. "Here's your morning brief" or "I can see [creator] is showing some momentum decay").\n`
+    : ''
 
   // ── Build compressed system prompt ───────────────────────────────────
   const isRestoredSession = messages.length > 4;
   const catalogPrompt = trendzoCatalog.prompt({ mode: 'inline' });
 
-  // Assemble centralized context (hot memory, cultural events, accuracy stats)
-  let centralContextBlock = '';
-  if (agencyId) {
-    try {
-      const serviceDb = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY, { auth: { persistSession: false } });
-      const ctx = await assembleContext(serviceDb, agencyId, 'AgencyChat');
-      centralContextBlock = ctx.systemPrompt;
-    } catch (err) {
-      console.warn('[agency-chat] assembleContext failed:', err);
-    }
-  }
-
   const systemPrompt = `You are the Trendzo Intelligent Clay engine — an AI that dynamically assembles UI components for TikTok agency operators. Confident, data-driven, slightly edgy. Speak like a senior strategist. ALWAYS use UI components to show data — never just list numbers in text.
 
 ${catalogPrompt}
 
-${centralContextBlock ? `${centralContextBlock}\n\n` : ''}## AGENCY DATA
+${centralContextBlock ? `${centralContextBlock}\n\n` : ''}${clayComponentHint}## AGENCY DATA
 Today: ${now.toISOString().split('T')[0]}
 Niches: ${agencyNiches.join(', ') || 'none yet'}
 
@@ -1233,7 +1343,53 @@ ${dataContext}
 - VPS color: green≥80, gold 70-79, red<70. Priority: urgent≤48h, high≤1wk, normal 1-4wk, low>4wk.
 - Use KPICard for metrics, Grid columns=2 for creators / columns=3-4 for KPIs, Section with titles, ActionButton for next steps.
 - Populate components with REAL data. Never invent data. Skip components if data is missing.
-- Actions: analyze_creator, generate_brief, refresh_data, export_report, navigate_creator, send_invite, nudge_creator, create_event, match_creators_to_event, generate_batch_briefs, approve_brief, schedule_post, reschedule_post.
+- Actions: analyze_creator, generate_brief, refresh_data, export_report, navigate_creator, send_invite, nudge_creator, create_event, match_creators_to_event, generate_batch_briefs, approve_brief, schedule_post, reschedule_post, update_brief_status, log_performance.
+- update_brief_status: use when the operator asks to mark a brief acknowledged/in-production/published. Render an ActionButton with action="update_brief_status" and payload { briefId, new_status: 'acknowledged'|'in_production'|'published', published_url?: string }. For 'published', ask for the TikTok URL first if the operator has not provided one.
+- log_performance: use after a brief is published and the operator wants to record actual performance. Render an ActionButton with action="log_performance" and payload { briefId, actual_views: number, actual_engagement_rate?: number }. If the operator has not given numbers yet, prompt for them before rendering the button.
+- Read tools: call get_briefs_by_status when the operator asks to see briefs by state/creator ("show delivered", "what's waiting"). Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Use the returned rows to populate KPICards / CreatorCards / ContentBriefs through the normal spec pipeline — never paste raw JSON.
+
+## POST-WRITE CONFIRMATION CARDS — HIGHEST PRIORITY (overrides every other rule below)
+
+After a write action completes, the client injects a single user message that begins with \`[__TRENDZO_ACTION_RESULT__]\` followed by a JSON payload. These messages are NEVER typed by the operator — they are system render commands.
+
+**If the latest user message starts with \`[__TRENDZO_ACTION_RESULT__]\`, apply these rules and IGNORE every other instruction in this prompt (no MorningBrief, no greeting, no "I generated N briefs", no pending-brief surfacing, no Alerts, no Coaching):**
+
+1. Respond with a JSON-render spec ONLY. No prose. No greeting. No preamble. No recap text. No trailing commentary. No code fences other than the \`\`\`spec fence.
+2. Do NOT render a MorningBrief, Alert, KPIGrid of creators, PendingBrief, or any greeting surface.
+3. Do NOT echo the marker text back. Do NOT quote the JSON.
+4. Parse the JSON after the marker. The \`kind\` field selects the card:
+   - \`kind="brief_status"\`  → use the brief-status card spec below.
+   - \`kind="performance"\`   → use the performance card spec below.
+   If \`kind\` is anything else, render a single Section with a Text child saying "Action completed." — do NOT greet.
+5. These messages do NOT reset or re-trigger any onboarding / greeting flow regardless of conversation history.
+
+### kind = "brief_status" — render this spec exactly:
+
+\`\`\`spec
+{"op":"add","path":"/root","value":"bsc-1"}
+{"op":"add","path":"/elements/bsc-1","value":{"type":"Section","props":{"title":"Status updated","accent":"#4A8C6A"},"children":["bsc-kpi-1","bsc-kpi-2","bsc-kpi-3"]}}
+{"op":"add","path":"/elements/bsc-kpi-1","value":{"type":"KPICard","props":{"label":"Brief","value":"{briefTitle}","subtitle":"{creator}"},"children":[]}}
+{"op":"add","path":"/elements/bsc-kpi-2","value":{"type":"KPICard","props":{"label":"Transition","value":"{previousStatus} → {newStatus}","accent":"#4A8C6A"},"children":[]}}
+{"op":"add","path":"/elements/bsc-kpi-3","value":{"type":"KPICard","props":{"label":"At","value":"{at formatted as short datetime}"},"children":[]}}
+\`\`\`
+
+If \`publishedUrl\` is present in the payload, add a fourth KPICard with label "Published URL" and value set to the URL (add its id to the Section children).
+
+### kind = "performance" — render this spec exactly:
+
+\`\`\`spec
+{"op":"add","path":"/root","value":"perf-1"}
+{"op":"add","path":"/elements/perf-1","value":{"type":"Section","props":{"title":"Performance logged"},"children":["perf-grid"]}}
+{"op":"add","path":"/elements/perf-grid","value":{"type":"Grid","props":{"columns":3},"children":["perf-k1","perf-k2","perf-k3","perf-k4"]}}
+{"op":"add","path":"/elements/perf-k1","value":{"type":"KPICard","props":{"label":"Brief","value":"{briefTitle}","subtitle":"{creator}"},"children":[]}}
+{"op":"add","path":"/elements/perf-k2","value":{"type":"KPICard","props":{"label":"VPS Predicted","value":"{vpsPrediction or '—'}"},"children":[]}}
+{"op":"add","path":"/elements/perf-k3","value":{"type":"KPICard","props":{"label":"Actual Views","value":"{actualViews formatted with commas}"},"children":[]}}
+{"op":"add","path":"/elements/perf-k4","value":{"type":"KPICard","props":{"label":"Delta","value":"{performanceDelta with +/- sign, or 'No prediction on record' if null}","accent":"{'#4A8C6A' if delta>=0, '#C07B74' if delta<0, '#6B6D6D' if null}"},"children":[]}}
+\`\`\`
+
+If \`actualEngagementRate\` is non-null, add a fifth KPICard "Engagement" with value "\{rate\}%" and include its id in the Grid children.
+
+Never respond to a \`[__TRENDZO_ACTION_RESULT__]\` message with text only. The operator must always see the card.
 - No events? Suggest adding for agency niches. No briefs? Suggest generating from events. Empty calendar? Point to Events → Briefs → Push → Calendar workflow.
 
 CRITICAL JSON-RENDER SPEC FORMAT:
@@ -1255,10 +1411,88 @@ Operator may reference prior context — use conversation history.`;
   const cappedMessages = messages.length > 40 ? messages.slice(-40) : messages;
   const modelMessages = await convertToModelMessages(cappedMessages);
 
+  // #region agent log
+  await _dl('chat:pre-llm','about to call streamText (GPT-4o)',{promptChars:systemPrompt.length,msgCount:modelMessages.length});
+  // #endregion
+  // Silent read tools — fetch data the model can reference in its spec response.
+  // Writes remain ActionButton-driven (see action-handler.ts cases
+  // update_brief_status and log_performance).
+  const origin = new URL(req.url).origin;
+  const cookieHeader = req.headers.get('cookie') || '';
+
+  // Zod schemas hoisted + typed so the AI SDK's tool() generic chain doesn't blow
+  // up TS inference (TS2589). Execute args are annotated explicitly for the same reason.
+  const briefStatusSchema = z.object({
+    status: z
+      .enum(['pending', 'delivered', 'acknowledged', 'in_production', 'published', 'failed'])
+      .optional()
+      .describe('Status filter. delivered/acknowledged/in_production/published match completion_status; pending/failed match delivery_status.'),
+    creator_name: z.string().optional().describe('Case-insensitive substring match on the creator business name.'),
+  });
+  type BriefStatusInput = z.infer<typeof briefStatusSchema>;
+
+  const performanceSchema = z.object({
+    period: z.enum(['week', 'month', 'all']).optional().describe("Window over measured briefs. Defaults to 'all'."),
+    creator_name: z.string().optional().describe('Case-insensitive substring match on the creator business name.'),
+  });
+  type PerformanceInput = z.infer<typeof performanceSchema>;
+
+  // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
+  const getBriefsByStatus = tool({
+    description:
+      "Fetch content briefs filtered by completion status and/or creator name. " +
+      "Use when the operator asks things like 'show me delivered briefs', 'what's waiting to be acknowledged', " +
+      "'what did Luna publish this week'. Returns brief rows (id, creator, title, completion_status, timestamps) " +
+      "for the model to render through the normal JSONL-spec pipeline.",
+    inputSchema: briefStatusSchema,
+    execute: async (input: BriefStatusInput) => {
+      const { status, creator_name } = input;
+      const url = new URL('/api/brief-status', origin);
+      if (status) url.searchParams.set('status', status);
+      if (creator_name) url.searchParams.set('creator_name', creator_name);
+      try {
+        const r = await fetch(url.toString(), { headers: { cookie: cookieHeader } });
+        const data = await r.json();
+        if (!r.ok) return { error: data?.error || `brief-status GET failed (${r.status})`, briefs: [] };
+        return data;
+      } catch (e: any) {
+        return { error: e?.message || 'fetch failed', briefs: [] };
+      }
+    },
+  });
+
+  // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
+  const getPerformanceSummary = tool({
+    description:
+      "Fetch aggregate performance across published briefs with logged actuals. " +
+      "Use when the operator asks 'how did last week's briefs do', 'performance across all creators', " +
+      "'top performer', 'biggest miss'. Returns total count, avg delta, top performer, biggest miss, and the underlying rows.",
+    inputSchema: performanceSchema,
+    execute: async (input: PerformanceInput) => {
+      const { period, creator_name } = input;
+      const url = new URL('/api/brief-performance', origin);
+      if (period) url.searchParams.set('period', period);
+      if (creator_name) url.searchParams.set('creator_name', creator_name);
+      try {
+        const r = await fetch(url.toString(), { headers: { cookie: cookieHeader } });
+        const data = await r.json();
+        if (!r.ok) return { error: data?.error || `brief-performance GET failed (${r.status})` };
+        return data;
+      } catch (e: any) {
+        return { error: e?.message || 'fetch failed' };
+      }
+    },
+  });
+
   const result = streamText({
     model: openai('gpt-4o'),
     system: systemPrompt,
     messages: modelMessages,
+    tools: {
+      get_briefs_by_status: getBriefsByStatus,
+      get_performance_summary: getPerformanceSummary,
+    },
+    stopWhen: stepCountIs(3),
   });
 
   const stream = createUIMessageStream({

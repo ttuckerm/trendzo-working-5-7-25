@@ -22,6 +22,8 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { analyzeVideo as analyzeVideoCanonical } from '@/lib/services/ffmpeg-canonical-analyzer';
 import { analyzeProsody } from '@/lib/services/audio-prosodic-analyzer';
 import { classifyAudioContent } from '@/lib/services/audio-classifier';
+import { transcribeVideo, type WhisperTranscriptionResult } from '@/lib/services/whisper-service';
+import { analyzeSpeakingRate } from '@/lib/services/speaking-rate-analyzer';
 import { VisualSceneDetector } from '@/lib/components/visual-scene-detector';
 import { ThumbnailAnalyzer } from '@/lib/components/thumbnail-analyzer';
 import { HookScorer } from '@/lib/components/hook-scorer';
@@ -274,23 +276,30 @@ export async function runFeatureExtraction(
   console.log(`Found ${existingIds.size} already-extracted video_ids to skip.`);
 
   // Paginate scraped_videos with valid DPS, ordered by highest DPS first
-  const allVideos: Array<{
-    video_id: string; url: string; caption: string;
-    transcript_text: string | null; hashtags: string[];
-    duration_seconds: number | null; creator_followers_count: number;
-    upload_timestamp: string | null;
-  }> = [];
+  const allVideos: ScrapedVideo[] = [];
   let videoOffset = 0;
   while (true) {
     const { data: page, error: pageErr } = await supabase
       .from('scraped_videos')
-      .select('video_id, url, caption, transcript_text, hashtags, duration_seconds, creator_followers_count, upload_timestamp')
+      .select('video_id, url, caption, transcript_text, hashtags, duration_seconds, creator_followers_count, upload_timestamp, music_is_original')
       .not('dps_score', 'is', null)
       .order('dps_score', { ascending: false })
       .range(videoOffset, videoOffset + PAGE_SIZE - 1);
     if (pageErr) throw new Error(`Failed to fetch scraped_videos: ${pageErr.message}`);
     if (!page || page.length === 0) break;
-    allVideos.push(...page);
+    for (const p of page as Array<Record<string, any>>) {
+      allVideos.push({
+        video_id: p.video_id,
+        url: p.url,
+        caption: p.caption,
+        transcript_text: p.transcript_text,
+        hashtags: p.hashtags,
+        duration_seconds: p.duration_seconds,
+        creator_followers_count: p.creator_followers_count,
+        upload_timestamp: p.upload_timestamp,
+        is_original_sound: p.music_is_original ?? null,
+      });
+    }
     if (page.length < PAGE_SIZE) break;
     videoOffset += PAGE_SIZE;
   }
@@ -392,8 +401,18 @@ export async function runFeatureExtraction(
  * Extract all features for a single scraped video.
  * Downloads the video, runs all deterministic analyzers, returns flat row.
  */
+export interface ExtractFeaturesOptions {
+  /**
+   * If provided, skips the paid Whisper call and uses these segments for the
+   * speaking_rate_wpm_* features + visual_to_verbal_ratio. If omitted and
+   * ENABLE_WHISPER_FOR_TRAINING=1, the extractor will run Whisper itself.
+   */
+  whisperResult?: WhisperTranscriptionResult | null;
+}
+
 export async function extractFeaturesForVideo(
-  video: ScrapedVideo
+  video: ScrapedVideo,
+  options?: ExtractFeaturesOptions,
 ): Promise<TrainingFeatureRow> {
   const startTime = Date.now();
   const errors: string[] = [];
@@ -644,8 +663,10 @@ export async function extractFeaturesForVideo(
     }
 
     // ── 6. Audio prosodic analysis (requires video file) ──
+    let prosodicForHook: Awaited<ReturnType<typeof analyzeProsody>> | null = null;
     try {
       const prosodic = await analyzeProsody(videoPath);
+      prosodicForHook = prosodic;
 
       if (prosodic.success) {
         if (prosodic.pitchAnalysis) {
@@ -677,8 +698,10 @@ export async function extractFeaturesForVideo(
     extractVocalConfidenceComposite(row);
 
     // ── 7. Audio classifier (requires video file) ──
+    let lastAudioClass: Awaited<ReturnType<typeof classifyAudioContent>> | null = null;
     try {
       const audioClass = await classifyAudioContent(videoPath);
+      lastAudioClass = audioClass;
 
       if (audioClass.success) {
         row.audio_music_ratio = audioClass.musicRatio;
@@ -690,6 +713,79 @@ export async function extractFeaturesForVideo(
       }
     } catch (err: any) {
       errors.push(`audio-classifier: ${err.message}`);
+    }
+
+    // ── 7b. Re-score hook with multi-modal channels now that we have
+    //        audio/visual/tone data from the video file. The early text-only
+    //        call in step 3 left hook_audio_score / hook_visual_score /
+    //        hook_pace_score / hook_tone_score at 0. We keep the fused score
+    //        (row.hook_score) from the richer call.
+    try {
+      rescoreHookWithMultiModal(video, row, prosodicForHook, lastAudioClass);
+    } catch (err: any) {
+      errors.push(`hook-scorer-multimodal: ${err.message}`);
+    }
+
+    // ── 7c. Whisper + speaking rate analysis (optional, opt-in).
+    //        The 5 speaking_rate_wpm_* features + visual_to_verbal_ratio all
+    //        need per-segment timestamps from Whisper's verbose_json. This is
+    //        a paid API call (~$0.006/min) so we only run it when explicitly
+    //        enabled via the ENABLE_WHISPER_FOR_TRAINING env flag, or when
+    //        the caller passes a pre-computed `options.whisperResult`.
+    const shouldTranscribe =
+      (options?.whisperResult != null) ||
+      process.env.ENABLE_WHISPER_FOR_TRAINING === '1';
+    let whisperResult: WhisperTranscriptionResult | null = options?.whisperResult ?? null;
+    if (shouldTranscribe && videoPath) {
+      try {
+        if (!whisperResult) {
+          console.log(`[FeatureExtractor] Transcribing with Whisper…`);
+          whisperResult = await transcribeVideo(videoPath);
+        }
+        const totalDuration = row.ffmpeg_duration_seconds ?? video.duration_seconds ?? 0;
+        const sra = analyzeSpeakingRate(
+          whisperResult.segments.map(s => ({ start: s.start, end: s.end, text: s.text })),
+          totalDuration,
+        );
+        if (sra.success) {
+          row.speaking_rate_wpm_variance = sra.wpmVariance;
+          row.speaking_rate_wpm_acceleration = sra.wpmAcceleration;
+          row.speaking_rate_wpm_peak_count = sra.wpmPeakCount;
+          row.speaking_rate_fast_segments = sra.fastSegments;
+          row.speaking_rate_slow_segments = sra.slowSegments;
+          // Richer WPM estimate: overallWpm uses actual speech duration, not
+          // word_count / video_duration. Overwrite the rough estimate.
+          if (sra.overallWpm > 0) row.speaking_rate_wpm = sra.overallWpm;
+        }
+        // visual_to_verbal_ratio: fraction of video duration NOT covered by
+        // Whisper speech segments. Higher = more visual-driven.
+        if (totalDuration > 0 && whisperResult.segments.length > 0) {
+          const speechDuration = whisperResult.segments.reduce(
+            (acc, s) => acc + Math.max(0, s.end - s.start),
+            0,
+          );
+          const visual = Math.max(0, totalDuration - speechDuration);
+          row.visual_to_verbal_ratio = visual / totalDuration;
+        }
+
+        // Re-run the multi-modal hook scorer now that we have pace data from
+        // Whisper. Also covers videos whose native caption/transcript was
+        // empty — those returned early from the step 7b pass.
+        const paceHook = sra.success && sra.overallWpm > 0 && sra.hookWpm > 0
+          ? { hookWpm: sra.hookWpm, wpmAcceleration: sra.wpmAcceleration }
+          : undefined;
+        const hasAnyTranscript = Boolean(
+          video.transcript_text || video.caption || whisperResult.transcript,
+        );
+        if (hasAnyTranscript) {
+          rescoreHookWithMultiModal(
+            video, row, prosodicForHook, lastAudioClass,
+            whisperResult.transcript, paceHook,
+          );
+        }
+      } catch (err: any) {
+        errors.push(`whisper/speaking-rate: ${err.message}`);
+      }
     }
 
     // ── 8. FFmpeg segment features (requires video file) ──
@@ -728,7 +824,13 @@ export async function extractFeaturesForVideo(
         row.visual_proof_ratio = frameFeatures.visual_proof_ratio;
         row.talking_head_ratio = frameFeatures.talking_head_ratio;
         row.text_overlay_density = frameFeatures.text_overlay_density;
-        row.visual_to_verbal_ratio = frameFeatures.visual_to_verbal_ratio;
+        // Only overwrite visual_to_verbal_ratio if the frame classifier
+        // actually computed one. Step 7c may already have populated it from
+        // Whisper segments, and frameFeatures.visual_to_verbal_ratio is null
+        // in the training pipeline.
+        if (frameFeatures.visual_to_verbal_ratio !== null) {
+          row.visual_to_verbal_ratio = frameFeatures.visual_to_verbal_ratio;
+        }
       }
     } catch (err: any) {
       errors.push(`frame-classifier: ${err.message}`);
@@ -850,6 +952,76 @@ function extractHookFeatures(video: ScrapedVideo, row: TrainingFeatureRow): void
   if (!transcript) return;
 
   const hookResult = HookScorer.analyze(transcript);
+
+  if (hookResult.success) {
+    row.hook_score = hookResult.hookScore;
+    row.hook_confidence = hookResult.hookConfidence;
+    row.hook_text_score = hookResult.channels.text.score;
+    row.hook_audio_score = hookResult.channels.audio.score;
+    row.hook_visual_score = hookResult.channels.visual.score;
+    row.hook_pace_score = hookResult.channels.pace.score;
+    row.hook_tone_score = hookResult.channels.tone.score;
+
+    const hookType = hookResult.hookType || 'weak';
+    row.hook_type_encoded = HOOK_TYPE_MAP[hookType] ?? 0;
+  }
+}
+
+/**
+ * Re-run HookScorer with audio/visual/tone channels populated from
+ * prosodic + audio-classifier + canonical data. The first pass (text-only)
+ * left those sub-scores at 0 — all the data is present by this point in
+ * the pipeline, so we can now produce a real multi-modal fused score.
+ *
+ * Pace channel stays unavailable (it needs Whisper segment timestamps
+ * which aren't in the training pipeline).
+ */
+function rescoreHookWithMultiModal(
+  video: ScrapedVideo,
+  row: TrainingFeatureRow,
+  prosodic: Awaited<ReturnType<typeof analyzeProsody>> | null,
+  audioClass: Awaited<ReturnType<typeof classifyAudioContent>> | null,
+  whisperTranscript?: string,
+  paceHook?: { hookWpm: number; wpmAcceleration: number },
+): void {
+  const transcript = video.transcript_text || video.caption || whisperTranscript || '';
+  if (!transcript) return;
+
+  // ── Audio channel — uses prosodic's first-3s ratios
+  let audioHook: { hookLoudness: number; hookPitchMean: number; hookSilenceRatio: number } | undefined;
+  if (prosodic?.success) {
+    const hookLoudness = prosodic.volumeDynamics?.hookLoudness;
+    const hookPitchMean = prosodic.pitchAnalysis?.hookPitchMean;
+    const hookSilenceRatio = prosodic.silencePatterns?.hookSilenceRatio;
+    if (hookLoudness != null && hookPitchMean != null && hookSilenceRatio != null) {
+      audioHook = { hookLoudness, hookPitchMean, hookSilenceRatio };
+    }
+  }
+
+  // ── Visual channel — approx hookSceneChanges from cuts_per_second × 3s
+  let visualHook: { hookSceneChanges: number } | undefined;
+  if (row.ffmpeg_cuts_per_second != null) {
+    visualHook = { hookSceneChanges: Math.round(row.ffmpeg_cuts_per_second * 3) };
+  }
+
+  // ── Tone channel — musicRatio from classifier, energyLevel from loudness,
+  //   pitchContourSlope from prosodic
+  let tone: { musicRatio: number; energyLevel: string; pitchContourSlope: number } | undefined;
+  const musicRatio = audioClass?.success ? audioClass.musicRatio : undefined;
+  const loudness = prosodic?.volumeDynamics?.loudnessMean;
+  const pitchSlope = prosodic?.pitchAnalysis?.pitchContourSlope;
+  if (musicRatio != null && loudness != null && pitchSlope != null) {
+    const energyLevel = loudness > -14 ? 'high' : loudness > -20 ? 'medium' : 'low';
+    tone = { musicRatio, energyLevel, pitchContourSlope: pitchSlope };
+  }
+
+  const hookResult = HookScorer.analyze({
+    transcript,
+    audioHook,
+    visualHook,
+    tone,
+    paceHook,
+  });
 
   if (hookResult.success) {
     row.hook_score = hookResult.hookScore;

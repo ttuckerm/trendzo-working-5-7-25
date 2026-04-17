@@ -61,11 +61,24 @@ export interface SpearmanEvalResult {
 export async function runSpearmanEvaluation(opts?: {
   /** Include legacy v1 labels in evaluation (default: false) */
   includeLegacy?: boolean;
+  /** Inclusive lower bound on prediction_runs.created_at (ISO string). Optional. */
+  startDate?: string;
+  /** Inclusive upper bound on prediction_runs.created_at (ISO string). Optional. */
+  endDate?: string;
+  /** Skip persisting the result to vps_evaluation. Use for ad-hoc windowed evals. */
+  skipPersist?: boolean;
 }): Promise<SpearmanEvalResult> {
   const includeLegacy = opts?.includeLegacy ?? false;
+  const startDate = opts?.startDate;
+  const endDate = opts?.endDate;
   const supabase = getSupabase();
 
-  console.log(`[SpearmanEval] Starting evaluation (v2_only=${!includeLegacy})`);
+  console.log(
+    `[SpearmanEval] Starting evaluation (v2_only=${!includeLegacy}` +
+    (startDate ? `, start=${startDate}` : '') +
+    (endDate ? `, end=${endDate}` : '') +
+    `)`,
+  );
 
   // Ensure vps_evaluation table exists
   try {
@@ -86,11 +99,16 @@ export async function runSpearmanEvaluation(opts?: {
 
   // Fetch all labeled runs with both predicted and actual VPS,
   // plus v2 provenance columns for filtering
-  const { data: runs, error } = await supabase
+  let runsQuery = supabase
     .from('prediction_runs')
-    .select('id, predicted_dps_7d, actual_dps, prediction_range_low, prediction_range_high, video_id, labeling_mode, dps_formula_version, dps_label_trust, dps_training_weight')
+    .select('id, predicted_dps_7d, actual_dps, prediction_range_low, prediction_range_high, video_id, labeling_mode, dps_formula_version, dps_label_trust, dps_training_weight, created_at')
     .not('actual_dps', 'is', null)
     .not('predicted_dps_7d', 'is', null);
+
+  if (startDate) runsQuery = runsQuery.gte('created_at', startDate);
+  if (endDate) runsQuery = runsQuery.lte('created_at', endDate);
+
+  const { data: runs, error } = await runsQuery;
 
   if (error) {
     throw new Error(`Failed to fetch labeled runs: ${error.message}`);
@@ -209,7 +227,15 @@ export async function runSpearmanEvaluation(opts?: {
     computed_at: computedAt,
   };
 
-  // Store result
+  // Store result (skipped for windowed ad-hoc evals — they shouldn't
+  // pollute the vps_evaluation time series which represents full-history snapshots)
+  if (opts?.skipPersist || startDate || endDate) {
+    console.log(
+      `[SpearmanEval] Complete (not persisted): n=${result.n}, rho=${result.spearman_rho}`,
+    );
+    return result;
+  }
+
   try {
     await supabase.from('vps_evaluation').insert({
       computed_at: computedAt,
@@ -239,7 +265,7 @@ export async function runSpearmanEvaluation(opts?: {
  * Spearman rank correlation with tie handling.
  * Returns rho and approximate p-value.
  */
-function spearmanRankCorrelation(
+export function spearmanRankCorrelation(
   x: number[],
   y: number[],
 ): { rho: number; p: number } {

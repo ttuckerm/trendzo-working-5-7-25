@@ -37,6 +37,7 @@ export async function scoreFramesWithGemini(
   videoPath: string,
   niche?: string,
   durationSeconds?: number,
+  agencyContextPrompt?: string | null,
 ): Promise<GeminiVisionScores | null> {
   const apiKey =
     process.env.GOOGLE_GEMINI_AI_API_KEY ||
@@ -69,7 +70,7 @@ export async function scoreFramesWithGemini(
 
     // Step 2: Send frames to Gemini Vision
     const ai = new GoogleGenAI({ apiKey });
-    const scores = await analyzeFramesWithGemini(ai, framePaths, niche);
+    const scores = await analyzeFramesWithGemini(ai, framePaths, niche, agencyContextPrompt);
 
     return scores;
   } catch (error: unknown) {
@@ -140,6 +141,7 @@ async function analyzeFramesWithGemini(
   ai: GoogleGenAI,
   framePaths: string[],
   niche?: string,
+  agencyContextPrompt?: string | null,
 ): Promise<GeminiVisionScores | null> {
   // Build image parts from frame files
   const imageParts: Array<{ inlineData: { mimeType: string; data: string } }> = [];
@@ -152,7 +154,10 @@ async function analyzeFramesWithGemini(
     });
   }
 
-  const prompt = buildVisionPrompt(framePaths.length, niche);
+  const basePrompt = buildVisionPrompt(framePaths.length, niche);
+  const prompt = agencyContextPrompt
+    ? `${agencyContextPrompt}\n\n${basePrompt}`
+    : basePrompt;
 
   const result = await ai.models.generateContent({
     model: 'gemini-2.5-flash',

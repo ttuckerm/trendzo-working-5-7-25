@@ -3297,11 +3297,15 @@ export class KaiOrchestrator {
 
       console.log('[GPT-4] Calling OpenAI API for viral analysis...');
 
+      const agencyContext = input.creatorContext?.agencyContextPrompt
+        ? `${input.creatorContext.agencyContextPrompt}\n\n`
+        : '';
+
       const response = await openai.chat.completions.create({
         model: 'gpt-4o-mini',
         messages: [{
           role: 'user',
-          content: `Analyze this TikTok video transcript for viral potential in the ${niche} niche.
+          content: `${agencyContext}Analyze this TikTok video transcript for viral potential in the ${niche} niche.
 
 HOOK (first 3 seconds): "${hookText}"
 
@@ -3447,13 +3451,16 @@ Return ONLY valid JSON with these 4 numeric scores:
 
       let result;
 
+      const agencyContextPrompt = input.creatorContext?.agencyContextPrompt ?? null;
+
       // Prioritize video file analysis if videoPath is available
       if (input.videoPath) {
         console.log('[Gemini 3 Pro] Analyzing video file directly');
         result = await geminiService.analyzeVideoFile(
           input.videoPath,
           input.niche,
-          input.goal
+          input.goal,
+          agencyContextPrompt
         );
       } else {
         // Fallback to transcript analysis
@@ -3476,7 +3483,8 @@ Return ONLY valid JSON with these 4 numeric scores:
             title: input.title,
             description: input.description,
             hashtags: input.hashtags
-          }
+          },
+          agencyContextPrompt
         );
       }
 
@@ -4945,13 +4953,17 @@ Scoring guidelines for execution_score:
       }
       const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
+      const agencyContext = input.creatorContext?.agencyContextPrompt
+        ? `${input.creatorContext.agencyContextPrompt}\n\n`
+        : '';
+
       const response = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: 1024,
         temperature: this.getTemperature(0.3),
         messages: [{
           role: 'user',
-          content: `Analyze this video transcript for viral potential on TikTok. Score from 0-100.
+          content: `${agencyContext}Analyze this video transcript for viral potential on TikTok. Score from 0-100.
 
 TRANSCRIPT:
 """
@@ -5140,7 +5152,8 @@ Respond as JSON only:
       const result = await runUnifiedGrading({
         transcript,
         niche: input.niche,
-        goal: input.goal
+        goal: input.goal,
+        agencyContextPrompt: input.creatorContext?.agencyContextPrompt ?? null,
       }, {
         temperature: this._deterministic ? 0 : undefined,
       });
@@ -5413,7 +5426,8 @@ Respond as JSON only:
         sceneFeatures,
         audioFeatures,
         hookFeatures,
-        niche: input.niche
+        niche: input.niche,
+        agencyContextPrompt: input.creatorContext?.agencyContextPrompt ?? null,
       });
 
       console.log(`[visual-rubric] Analysis complete: overall=${result.overall_visual_score}/100`);

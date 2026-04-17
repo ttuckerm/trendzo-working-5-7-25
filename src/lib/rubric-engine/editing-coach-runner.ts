@@ -84,11 +84,16 @@ export async function runEditingCoach(
       input.creator_context
     );
 
+    // Prepend agency context (creator path only; null on testing pipeline)
+    const systemPromptText = input.creator_context?.agencyContextPrompt
+      ? `${input.creator_context.agencyContextPrompt}\n\n${EDITING_COACH_SYSTEM_PROMPT}`
+      : EDITING_COACH_SYSTEM_PROMPT;
+
     const result = await ai.models.generateContent({
       model: modelName,
       config: options?.temperature !== undefined ? { temperature: options.temperature } : undefined,
       contents: [
-        { role: 'user', parts: [{ text: EDITING_COACH_SYSTEM_PROMPT }, { text: userPrompt }] },
+        { role: 'user', parts: [{ text: systemPromptText }, { text: userPrompt }] },
       ],
     });
 

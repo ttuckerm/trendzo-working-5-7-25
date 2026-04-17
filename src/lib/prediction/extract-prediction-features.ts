@@ -1,13 +1,11 @@
 /**
- * Feature Extraction for Live Prediction (v10)
+ * Feature Extraction for Live Prediction (v10 + v15)
  *
- * Extracts the 58 features used by XGBoost v10.
- * v10 = v9 (51 features) + 7 new features:
- *   creator_followers_log, post_hour_utc, post_day_of_week,
- *   specificity_score, instructional_density, has_step_structure, hedge_word_density
+ * Produces a superset object with every feature either model version needs.
+ * v10 uses 58 keys and ignores the rest; v15 uses 91 keys. Missing values are
+ * left as null — XGBoost's default_left branch handles them at inference.
  *
- * Mirrors the logic in src/lib/training/feature-extractor.ts for the
- * features that remain.
+ * Mirrors the logic in src/lib/training/feature-extractor.ts for parity.
  */
 
 import { analyzeVideo as analyzeVideoCanonical } from '@/lib/services/ffmpeg-canonical-analyzer';
@@ -29,6 +27,7 @@ import fs from 'fs';
 const FFMPEG_TIMEOUT = 60_000;
 
 const NEGATIVE_WORDS = ['hate', 'worst', 'terrible', 'bad', 'awful', 'horrible', 'never', 'ugly', 'disgusting', 'disappointing'];
+const POSITIVE_WORDS = ['love', 'amazing', 'great', 'best', 'awesome', 'incredible', 'perfect', 'beautiful', 'wonderful', 'fantastic'];
 const CTA_WORDS = ['follow', 'like', 'comment', 'share', 'subscribe', 'save', 'click', 'link'];
 
 const HOOK_TYPE_MAP: Record<string, number> = {
@@ -184,6 +183,27 @@ export async function extractPredictionFeatures(
     instructional_density: null,
     has_step_structure: null,
     hedge_word_density: null,
+
+    // v15 Extras (ignored by v10; consumed by v15-honest-with-res)
+    thumb_confidence: null,
+    text_positive_word_count: null,
+    meta_hashtag_count: null,
+    meta_has_viral_hashtag: null,
+    meta_creator_followers: null,
+    meta_creator_followers_log: null,
+    talking_head_ratio: null,
+    // sound_type / music_is_original / posted_* / creator_verified are only
+    // known when the video comes from TikTok metadata. Null at local-predict
+    // time — XGBoost's default_left branch absorbs missing values.
+    sound_type: null,
+    music_is_original: null,
+    posted_hour_utc: null,
+    posted_day_of_week: null,
+    creator_verified: null,
+    has_fyp_hashtag: null,
+    hashtag_count: null,
+    creator_followers_count: null,
+    duration_seconds: null,
   };
 
   // ── 1. Text features ──
@@ -256,6 +276,7 @@ export async function extractPredictionFeatures(
         features.thumb_contrast = thumbResult.features?.contrast ?? null;
         features.thumb_colorfulness = thumbResult.features?.colorfulness ?? null;
         features.thumb_overall_score = thumbResult.overallScore;
+        features.thumb_confidence = thumbResult.confidence ?? null;
       } catch (err: any) {
         errors.push(`thumbnail: ${err.message}`);
       }
@@ -342,13 +363,14 @@ export async function extractPredictionFeatures(
   // 7a. vocal_confidence_composite — derived from already-extracted audio prosodic features
   computeVocalConfidenceComposite(features);
 
-  // 7b. visual_proof_ratio + text_overlay_density — Gemini Vision frame classifier
+  // 7b. visual_proof_ratio + text_overlay_density + talking_head_ratio — Gemini Vision
   try {
     const duration = (features.ffmpeg_duration_seconds as number) || 30;
     const frameResult = await classifyVideoFrames(input.videoFilePath, duration);
     if (frameResult) {
       features.visual_proof_ratio = frameResult.visual_proof_ratio;
       features.text_overlay_density = frameResult.text_overlay_density;
+      features.talking_head_ratio = frameResult.talking_head_ratio;
     }
   } catch (err: any) {
     errors.push(`frame-classifier: ${err.message}`);
@@ -359,8 +381,33 @@ export async function extractPredictionFeatures(
   // 8a. creator_followers_log — from onboarded creator profile, null for anonymous
   if (input.creatorFollowerCount != null && input.creatorFollowerCount >= 0) {
     features.creator_followers_log = Math.log10(input.creatorFollowerCount + 1);
+    // v15 duplicates these under different names; keep them in sync.
+    features.creator_followers_count = input.creatorFollowerCount;
+    features.meta_creator_followers = input.creatorFollowerCount;
+    features.meta_creator_followers_log = features.creator_followers_log;
   }
   // post_hour_utc and post_day_of_week stay null — training-only context features
+
+  // 8c. v15 caption-derived extras (hashtags, duration alias)
+  const captionText = input.caption || '';
+  if (captionText) {
+    const hashtagMatches: string[] = captionText.match(/#[\w-]+/g) ?? [];
+    const hashtagLower: string[] = hashtagMatches.map((h: string) => h.toLowerCase());
+    features.hashtag_count = hashtagMatches.length;
+    features.meta_hashtag_count = hashtagMatches.length;
+    features.has_fyp_hashtag = hashtagLower.some((h: string) => h === '#fyp' || h === '#foryou' || h === '#foryoupage');
+    features.meta_has_viral_hashtag = hashtagLower.some((h: string) => h.includes('viral'));
+  } else {
+    features.hashtag_count = 0;
+    features.meta_hashtag_count = 0;
+    features.has_fyp_hashtag = false;
+    features.meta_has_viral_hashtag = false;
+  }
+
+  // 8d. duration_seconds is a v15 alias for the FFmpeg duration
+  if (features.ffmpeg_duration_seconds != null) {
+    features.duration_seconds = features.ffmpeg_duration_seconds;
+  }
 
   // 8b. Text-analysis features (specificity, instructional density, hedge words)
   // Matches logic in src/lib/training/feature-extractor.ts exactly
@@ -427,6 +474,7 @@ function extractTextFeatures(
 
   features.text_has_cta = CTA_WORDS.some(w => lower.includes(w));
   features.text_negative_word_count = NEGATIVE_WORDS.filter(w => lower.includes(w)).length;
+  features.text_positive_word_count = POSITIVE_WORDS.filter(w => lower.includes(w)).length;
 
   // Emoji count from caption
   const emojiRegex = /[\uD83C-\uDBFF\uDC00-\uDFFF]+|[\u2600-\u27BF]/g;
@@ -490,7 +538,7 @@ type FrameClassification =
 async function classifyVideoFrames(
   videoPath: string,
   durationSeconds: number,
-): Promise<{ visual_proof_ratio: number; text_overlay_density: number } | null> {
+): Promise<{ visual_proof_ratio: number; text_overlay_density: number; talking_head_ratio: number } | null> {
   const apiKey =
     process.env.GOOGLE_GEMINI_AI_API_KEY ||
     process.env.GOOGLE_AI_API_KEY ||
@@ -570,8 +618,11 @@ Return ONLY a JSON array of ${framePaths.length} strings in the same order as th
     const textCardFrames = classifications.filter(c => c === 'text_card').length;
     const text_overlay_density = textCardFrames / durationMinutes;
 
-    console.log(`[FrameClassifier] visual_proof_ratio=${visual_proof_ratio.toFixed(3)}, text_overlay_density=${text_overlay_density.toFixed(3)}`);
-    return { visual_proof_ratio, text_overlay_density };
+    const talkingHeadFrames = classifications.filter(c => c === 'talking_head').length;
+    const talking_head_ratio = talkingHeadFrames / totalFrames;
+
+    console.log(`[FrameClassifier] visual_proof_ratio=${visual_proof_ratio.toFixed(3)}, text_overlay_density=${text_overlay_density.toFixed(3)}, talking_head_ratio=${talking_head_ratio.toFixed(3)}`);
+    return { visual_proof_ratio, text_overlay_density, talking_head_ratio };
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
     console.error(`[FrameClassifier] Failed (graceful fallback): ${msg}`);

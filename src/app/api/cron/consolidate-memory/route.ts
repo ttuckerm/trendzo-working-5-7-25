@@ -411,6 +411,28 @@ async function logConsolidation(
     error_message: result.error || null,
     generated_by_agent: 'Memory Keeper',
   })
+
+  // Prompt 40 — Self-Scheduler hook. Many contradictions in one run
+  // means the LLM extractor is churning — schedule a deep memory audit
+  // in 24h so the Chairman can review what's going on. scheduleActionSafe
+  // swallows errors so a scheduler failure can't break the consolidation.
+  const CONTRADICTION_THRESHOLD = 5
+  if ((result.contradictions_resolved || 0) >= CONTRADICTION_THRESHOLD) {
+    try {
+      const { scheduleActionSafe, hoursFromNow } = await import('@/lib/scheduler/schedule-action')
+      void scheduleActionSafe({
+        actionType: 'memory_audit',
+        triggerCondition: `Memory consolidation resolved ${result.contradictions_resolved} contradictions for agency ${result.agency_id} (threshold ${CONTRADICTION_THRESHOLD})`,
+        scheduledFor: hoursFromNow(24),
+        sourceSubsystem: 'memory',
+        params: {
+          agency_id: result.agency_id,
+          contradictions_resolved: result.contradictions_resolved,
+          emergency_drops: result.emergency_drops,
+        },
+      })
+    } catch { /* non-fatal, by design */ }
+  }
 }
 
 // ── Main Handler ────────────────────────────────────────────────────────

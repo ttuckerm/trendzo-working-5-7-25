@@ -126,6 +126,13 @@ export interface VisualRubricInput {
 
   // Niche for style fit evaluation
   niche?: string;
+
+  /**
+   * Optional assembled agency context. When present, prepended to the Gemini
+   * Vision prompt so visual scoring is aware of agency-specific standards.
+   * Null on the testing pipeline.
+   */
+  agencyContextPrompt?: string | null;
 }
 
 // ============================================================================

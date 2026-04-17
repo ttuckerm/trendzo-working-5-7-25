@@ -13,6 +13,7 @@
 import { createHash } from 'crypto';
 import path from 'path';
 import { unlink } from 'fs/promises';
+import { spawn } from 'child_process';
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 import ffprobeStatic from 'ffprobe-static';
@@ -235,59 +236,77 @@ interface AstatsData {
 }
 
 async function runAstats(videoPath: string): Promise<AstatsData> {
+  // Without `ametadata=print` the astats filter only emits an END-OF-STREAM
+  // summary to stderr ("RMS level dB: -73.1"), not per-frame metadata —
+  // so the original lavfi regex never matched. Every call returned zero RMS
+  // values, which cascaded to audioType='silent', musicRatio=0, etc.
+  //
+  // Fix: chain `ametadata=print:file=-` to emit per-frame metadata to stdout,
+  // and spawn FFmpeg directly so we can capture stdout (fluent-ffmpeg only
+  // surfaces stderr). Using `file=-` avoids writing to a temp file on
+  // Windows where drive-letter colons would be mis-parsed as FFmpeg filter
+  // argument separators.
+  const bin = ffmpegStatic || 'ffmpeg';
+  const args = [
+    '-hide_banner',
+    '-nostats',
+    '-i', videoPath,
+    '-af', 'astats=metadata=1:reset=1,ametadata=print:file=-',
+    '-f', 'null',
+    '-',
+  ];
+
   return new Promise((resolve, reject) => {
     const rmsValues: number[] = [];
     const zcrValues: number[] = [];
     let duration = 0;
-
-    // astats outputs per-frame RMS level and zero crossings
-    // We use metadata=print to get values in stderr
     const rmsRegex = /lavfi\.astats\.\d+\.RMS_level=([-\d.inf]+)/;
     const zcrRegex = /lavfi\.astats\.\d+\.Zero_crossings_rate=([\d.]+)/;
-    const durationRegex = /Duration:\s*(\d+):(\d+):([\d.]+)/;
+    const durRegex = /Duration:\s*(\d+):(\d+):([\d.]+)/;
 
-    ffmpeg(videoPath)
-      .audioFilters('astats=metadata=1:reset=1')
-      .format('null')
-      .output('-')
-      .on('stderr', (line: string) => {
-        // Parse RMS level
-        const rmsMatch = line.match(rmsRegex);
-        if (rmsMatch) {
-          const val = rmsMatch[1];
-          if (val !== '-inf' && val !== 'inf') {
-            const db = parseFloat(val);
-            if (isFinite(db)) {
-              // Convert dB to linear scale (0-1 range)
-              const linear = Math.pow(10, db / 20);
-              rmsValues.push(linear);
-            }
+    const proc = spawn(bin, args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    let outBuf = '';
+    let errBuf = '';
+
+    proc.stdout!.on('data', (chunk: Buffer) => {
+      outBuf += chunk.toString('utf8');
+      const lines = outBuf.split(/\r?\n/);
+      outBuf = lines.pop() || '';
+      for (const ln of lines) {
+        const rm = ln.match(rmsRegex);
+        if (rm) {
+          const val = rm[1];
+          if (val === '-inf' || val === 'inf') {
+            rmsValues.push(0);
           } else {
-            rmsValues.push(0); // silence
+            const db = parseFloat(val);
+            if (isFinite(db)) rmsValues.push(Math.pow(10, db / 20));
           }
+          continue;
         }
-
-        // Parse zero crossing rate
-        const zcrMatch = line.match(zcrRegex);
-        if (zcrMatch) {
-          const zcr = parseFloat(zcrMatch[1]);
-          if (isFinite(zcr)) {
-            zcrValues.push(zcr);
-          }
+        const zm = ln.match(zcrRegex);
+        if (zm) {
+          const zcr = parseFloat(zm[1]);
+          if (isFinite(zcr)) zcrValues.push(zcr);
         }
-
-        // Parse duration
-        const durMatch = line.match(durationRegex);
-        if (durMatch && duration === 0) {
-          duration = parseInt(durMatch[1]) * 3600 + parseInt(durMatch[2]) * 60 + parseFloat(durMatch[3]);
-        }
-      })
-      .on('end', () => {
-        console.log(`[AudioClassifier] astats: ${rmsValues.length} RMS frames, ${zcrValues.length} ZCR frames`);
-        resolve({ rmsValues, zcrValues, duration });
-      })
-      .on('error', (err: Error) => reject(new Error(`astats failed: ${err.message}`)))
-      .run();
+      }
+    });
+    proc.stderr!.on('data', (chunk: Buffer) => {
+      errBuf += chunk.toString('utf8');
+      const m = errBuf.match(durRegex);
+      if (m && duration === 0) {
+        duration = parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseFloat(m[3]);
+      }
+    });
+    proc.on('error', (err) => reject(new Error(`astats spawn: ${err.message}`)));
+    proc.on('close', (code) => {
+      if (code !== 0 && rmsValues.length === 0) {
+        reject(new Error(`astats exited ${code}: ${errBuf.slice(-500)}`));
+        return;
+      }
+      console.log(`[AudioClassifier] astats: ${rmsValues.length} RMS frames, ${zcrValues.length} ZCR frames`);
+      resolve({ rmsValues, zcrValues, duration });
+    });
   });
 }
 

@@ -4,7 +4,12 @@
  * Pure UX labeling layer. Each persona maps to a class of
  * Atlas-generated content. No backend architecture changes —
  * just a config object that surfaces the right name on the right card.
+ *
+ * Also integrates with the Clay Formless UI component registry
+ * to suggest dynamic components based on user intent.
  */
+
+import { getComponentsForIntent, ComponentType } from '@/lib/clay'
 
 export interface AgentPersona {
   id: string
@@ -121,4 +126,16 @@ export function formatAttributionTime(
   const ampm = hours >= 12 ? 'pm' : 'am'
   const h12 = hours % 12 || 12
   return `${verb} ${h12}:${mins}${ampm}`
+}
+
+/**
+ * Given a user message, return the Clay Formless UI components
+ * the AI should render alongside its text response.
+ *
+ * This bridges the agent-personas layer with the Clay component registry.
+ * Call after the agent generates a text response to determine which
+ * visual components to attach to the response payload.
+ */
+export function getSuggestedComponents(userMessage: string): ComponentType[] {
+  return getComponentsForIntent(userMessage)
 }

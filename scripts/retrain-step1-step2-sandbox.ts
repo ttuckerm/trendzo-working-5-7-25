@@ -19,6 +19,11 @@ import { createClient } from '@supabase/supabase-js';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as dotenv from 'dotenv';
+import { extractCreatorFeatures, CREATOR_FEATURE_NAMES } from '../src/lib/features/creator-trajectory';
+import { extractCulturalFeatures, CULTURAL_FEATURE_NAMES } from '../src/lib/features/cultural-momentum';
+import { extractAudienceFeatures, AUDIENCE_FEATURE_NAMES } from '../src/lib/features/audience-quality';
+import { extractDistributionFeatures, DISTRIBUTION_FEATURE_NAMES } from '../src/lib/features/distribution-signals';
+import { ALL_FEATURES } from '../src/lib/features/feature-matrix-builder';
 
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
@@ -28,7 +33,7 @@ const supabase = createClient(
   { auth: { persistSession: false } },
 );
 
-// Canonical v10 feature list (58 features)
+// Canonical v10 feature list (58 content features)
 const V10_FEATURES = [
   'ffmpeg_scene_changes', 'ffmpeg_cuts_per_second', 'ffmpeg_avg_motion',
   'ffmpeg_color_variance', 'ffmpeg_brightness_avg', 'ffmpeg_contrast_score',
@@ -375,11 +380,32 @@ async function main() {
     const batch = videoIds.slice(i, i + batchSize);
     const { data: svBatch } = await supabase
       .from('scraped_videos')
-      .select('video_id, caption, description, duration_seconds, creator_followers_count, views_count, hashtags')
+      .select('video_id, caption, description, duration_seconds, creator_followers_count, views_count, hashtags, niche')
       .in('video_id', batch);
     for (const sv of (svBatch || [])) scrapedMap.set(sv.video_id, sv);
   }
   console.log(`  Scraped video matches: ${scrapedMap.size}/${rows.length}`);
+
+  // Try to load creator_id mapping (column may not exist yet)
+  const creatorIdMap = new Map<string, string>();
+  try {
+    const runIds = rows.map((r: any) => r.id);
+    for (let i = 0; i < runIds.length; i += batchSize) {
+      const batch = runIds.slice(i, i + batchSize);
+      const { data: cidBatch, error: cidErr } = await supabase
+        .from('prediction_runs')
+        .select('id, creator_id')
+        .in('id', batch)
+        .not('creator_id', 'is', null);
+      if (cidErr) throw cidErr;
+      for (const r of (cidBatch || [])) {
+        if (r.creator_id) creatorIdMap.set(r.id, r.creator_id);
+      }
+    }
+    console.log(`  Creator ID matches: ${creatorIdMap.size}/${rows.length}`);
+  } catch {
+    console.log('  Creator ID column not available — using default trajectory features for all rows');
+  }
 
   // Extract features for each row
   const outputRows: any[] = [];
@@ -459,6 +485,93 @@ async function main() {
     features.post_hour_utc = null;
     features.post_day_of_week = null;
 
+    // ── Creator trajectory features (5 new features) ────────────────────
+    const creatorId = creatorIdMap.get(row.id) || null;
+    const videoPostDate = new Date(row.created_at);
+    const creatorFeatures = await extractCreatorFeatures(
+      creatorId || '',
+      videoPostDate,
+      supabase,
+    );
+    features.creator_momentum_30d = creatorFeatures.creator_momentum_30d;
+    features.creator_avg_vps_90d = creatorFeatures.creator_avg_vps_90d;
+    features.creator_viral_recency = creatorFeatures.creator_viral_recency;
+    features.creator_consistency_score = creatorFeatures.creator_consistency_score;
+    features.creator_trajectory_label = creatorFeatures.creator_trajectory_label;
+    featureCount += 5;
+
+    // ── Cultural momentum features (4 new features) ──────────────────────
+    const videoNiche = scraped?.niche || '';
+    const videoTopic = scraped?.caption || scraped?.description || '';
+    const culturalFeatures = await extractCulturalFeatures(
+      videoNiche,
+      videoTopic,
+      videoPostDate,
+      supabase,
+    );
+    features.cultural_momentum_score = culturalFeatures.cultural_momentum_score;
+    features.trend_phase_encoded = culturalFeatures.trend_phase_encoded;
+    features.niche_activation_score = culturalFeatures.niche_activation_score;
+    features.cultural_timing_advantage = culturalFeatures.cultural_timing_advantage;
+    featureCount += 4;
+
+    // ── Audience quality features (5 new features) ───────────────────────
+    const audienceFeatures = await extractAudienceFeatures(
+      creatorId || '',
+      supabase,
+    );
+    features.follower_count_log = audienceFeatures.follower_count_log;
+    features.engagement_rate_estimate = audienceFeatures.engagement_rate_estimate;
+    features.follower_growth_velocity = audienceFeatures.follower_growth_velocity;
+    features.audience_size_tier = audienceFeatures.audience_size_tier;
+    features.follower_quality_score = audienceFeatures.follower_quality_score;
+    featureCount += 5;
+
+    // ── Distribution signal features (6 new features) ────────────────────
+    const distFeatures = await extractDistributionFeatures(
+      row.video_id,
+      audienceFeatures.audience_size_tier,
+      supabase,
+    );
+    features.post_hour_score = distFeatures.post_hour_score;
+    features.post_day_score = distFeatures.post_day_score;
+    features.hashtag_strategy_score = distFeatures.hashtag_strategy_score;
+    features.sound_advantage_score = distFeatures.sound_advantage_score;
+    features.early_velocity_signal = distFeatures.early_velocity_signal;
+    features.distribution_composite = distFeatures.distribution_composite;
+    featureCount += 6;
+
+    // Log first row's new features for verification
+    if (outputRows.length === 0) {
+      console.log('\n  ── First row creator trajectory features ──');
+      console.log(`    creator_id:               ${creatorId || '(none)'}`);
+      console.log(`    creator_momentum_30d:      ${creatorFeatures.creator_momentum_30d}`);
+      console.log(`    creator_avg_vps_90d:       ${creatorFeatures.creator_avg_vps_90d}`);
+      console.log(`    creator_viral_recency:     ${creatorFeatures.creator_viral_recency}`);
+      console.log(`    creator_consistency_score:  ${creatorFeatures.creator_consistency_score}`);
+      console.log(`    creator_trajectory_label:   ${creatorFeatures.creator_trajectory_label}`);
+      console.log('  ── First row cultural momentum features ──');
+      console.log(`    niche:                     ${videoNiche || '(none)'}`);
+      console.log(`    cultural_momentum_score:    ${culturalFeatures.cultural_momentum_score}`);
+      console.log(`    trend_phase_encoded:        ${culturalFeatures.trend_phase_encoded}`);
+      console.log(`    niche_activation_score:     ${culturalFeatures.niche_activation_score}`);
+      console.log(`    cultural_timing_advantage:  ${culturalFeatures.cultural_timing_advantage}`);
+      console.log('  ── First row audience quality features ──');
+      console.log(`    follower_count_log:         ${audienceFeatures.follower_count_log}`);
+      console.log(`    engagement_rate_estimate:   ${audienceFeatures.engagement_rate_estimate}`);
+      console.log(`    follower_growth_velocity:   ${audienceFeatures.follower_growth_velocity}`);
+      console.log(`    audience_size_tier:          ${audienceFeatures.audience_size_tier}`);
+      console.log(`    follower_quality_score:      ${audienceFeatures.follower_quality_score}`);
+      console.log('  ── First row distribution signal features ──');
+      console.log(`    video_id:                   ${row.video_id}`);
+      console.log(`    post_hour_score:            ${distFeatures.post_hour_score}`);
+      console.log(`    post_day_score:             ${distFeatures.post_day_score}`);
+      console.log(`    hashtag_strategy_score:     ${distFeatures.hashtag_strategy_score}`);
+      console.log(`    sound_advantage_score:      ${distFeatures.sound_advantage_score}`);
+      console.log(`    early_velocity_signal:      ${distFeatures.early_velocity_signal}`);
+      console.log(`    distribution_composite:     ${distFeatures.distribution_composite}`);
+    }
+
     if (featureCount < 3) {
       extractionErrors.push({ video_id: row.video_id, reason: `Only ${featureCount} features extractable (minimum 3)` });
       continue;
@@ -473,7 +586,7 @@ async function main() {
       actual_views: row.actual_views,
       actual_follower_count: followerCount,
       feature_count: featureCount,
-      null_feature_count: V10_FEATURES.length - featureCount,
+      null_feature_count: ALL_FEATURES.length - featureCount,
       has_scraped_data: !!scraped,
       has_raw_result: !!rawResult,
     });
@@ -483,11 +596,12 @@ async function main() {
   const avgFeatures = totalFeaturesExtracted / outputRows.length;
   console.log(`\n  Rows with features: ${outputRows.length}/${rows.length}`);
   console.log(`  Extraction failures: ${extractionErrors.length}`);
-  console.log(`  Avg features per row: ${avgFeatures.toFixed(1)}/${V10_FEATURES.length}`);
+  console.log(`  Training with ${ALL_FEATURES.length} features (${V10_FEATURES.length} content + ${CREATOR_FEATURE_NAMES.length} creator + ${CULTURAL_FEATURE_NAMES.length} cultural + ${AUDIENCE_FEATURE_NAMES.length} audience + ${DISTRIBUTION_FEATURE_NAMES.length} distribution)`);
+  console.log(`  Avg features per row: ${avgFeatures.toFixed(1)}/${ALL_FEATURES.length}`);
 
   // Feature coverage by category
   const featureCoverage = new Map<string, { filled: number; total: number }>();
-  for (const fname of V10_FEATURES) {
+  for (const fname of ALL_FEATURES) {
     const prefix = fname.split('_')[0];
     if (!featureCoverage.has(prefix)) featureCoverage.set(prefix, { filled: 0, total: 0 });
     const stat = featureCoverage.get(prefix)!;
@@ -516,8 +630,8 @@ async function main() {
     })),
     metadata: {
       total_rows: outputRows.length,
-      feature_count: V10_FEATURES.length,
-      feature_names: V10_FEATURES,
+      feature_count: ALL_FEATURES.length,
+      feature_names: ALL_FEATURES,
       cohort_size: 6718,
       avg_features_per_row: Math.round(avgFeatures * 10) / 10,
       source: 'prediction_runs (labeled) + raw_result JSONB + scraped_videos',

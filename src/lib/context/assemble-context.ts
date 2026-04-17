@@ -117,6 +117,13 @@ Generating briefs in parallel for multiple clients.
 Avoid duplicate angles across clients in the same niche.
 Each brief should address a different cultural event or angle.
 Prioritize events with highest velocity and lowest decay.`,
+
+  RunVPSPrediction: `## Tool: VPS Prediction (Creator Path)
+You are scoring a short-form video for an authenticated creator inside an agency.
+Use the agency's hot memory to understand quality standards and recurring patterns.
+Consider active cultural events when judging timing, novelty, and shareability.
+Reference warm memory (creator-specific calibration) when available for audience fit.
+Your score and rationale should remain grounded in the rubric — context informs judgement, it does not override the rubric thresholds.`,
 }
 
 // ── Data Fetchers (run in parallel) ─────────────────────────────────────

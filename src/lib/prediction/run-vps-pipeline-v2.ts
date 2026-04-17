@@ -1,9 +1,8 @@
 /**
  * VPS Pipeline V2 — XGBoost as sole score producer
  *
- * Calls extractPredictionFeatures() + predictXGBoostV10() directly.
- * No KaiOrchestrator, no multi-path averaging, no LLM consensus gate,
- * no calibratePrediction().
+ * Calls extractPredictionFeatures() + predictXGBoost() directly, routing to
+ * the active model variant resolved from the DB.
  *
  * @module run-vps-pipeline-v2
  */
@@ -14,9 +13,10 @@ import {
   type PredictionFeatureResult,
 } from '@/lib/prediction/extract-prediction-features';
 import {
-  predictXGBoostV10,
+  predictXGBoost,
   type XGBoostPredictionResult,
 } from '@/lib/prediction/xgboost-inference';
+import { resolveModelRoute } from '@/lib/prediction/model-router';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -64,10 +64,17 @@ export async function runVpsPipelineV2(
   const featureResult: PredictionFeatureResult =
     await extractPredictionFeatures(featureInput);
 
-  // 2. XGBoost inference
+  // 2. XGBoost inference — route to the active model variant
+  let modelVersion = 'v10';
+  try {
+    const route = await resolveModelRoute(input.niche ?? null);
+    if (route?.model_version) modelVersion = route.model_version;
+  } catch {
+    // fall back to v10 silently — the legacy default
+  }
   const inferenceStart = Date.now();
   const xgbResult: XGBoostPredictionResult =
-    predictXGBoostV10(featureResult.features);
+    predictXGBoost(featureResult.features, modelVersion);
   const inferenceTimeMs = Date.now() - inferenceStart;
 
   // 3. Assemble result

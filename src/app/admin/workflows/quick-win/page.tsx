@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import {
   Loader2, ArrowLeft, Copy, Sparkles, Video, Check,
   Mic, BarChart3, Wrench, PartyPopper, ExternalLink,
@@ -12,11 +12,6 @@ import { DPSGauge, FixCard, AICoachBubble, ScoreBar, FixData } from '@/component
 import { TeleprompterModal } from '@/components/teleprompter';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { scoreTemplatesForCreator, type ScoredTemplate, type PatternSuggestion, type CreatorPreferences } from '@/lib/quick-win/template-scorer';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 // Extended step type for 7-step workflow
 type Step = 'select' | 'generate' | 'create' | 'record' | 'analyze' | 'fix' | 'publish';
@@ -163,23 +158,31 @@ export default function QuickWinWorkflow() {
     async function loadTemplates() {
       setLoadingTemplates(true);
       try {
+        const supabase = getSupabaseClient();
+        const { data: authData } = await supabase.auth.getSession();
+        const hasSession = !!authData.session;
+        // #region agent log
+        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:start',message:'quick-win load start',data:{userNiche,hasSession},hypothesisId:'H1',timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
         let templates: Template[] = [];
 
+        // viral_genomes v2 (20251130): source_video_id + dps_score — not example_videos / dps_average
         const { data: genomes, error: genomesError } = await supabase
           .from('viral_genomes')
-          .select('niche, example_videos, dps_average')
+          .select('niche, source_video_id, dps_score')
           .ilike('niche', `%${userNiche.replace(/-/g, ' ')}%`)
-          .order('dps_average', { ascending: false })
+          .order('dps_score', { ascending: false })
           .limit(10);
+
+        // #region agent log
+        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:afterGenomes',message:'viral_genomes query',data:{genomeRows:genomes?.length??0,genomesErr:genomesError?(genomesError as {message?:string}).message?.slice(0,120):null},hypothesisId:'H3',timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
 
         if (!genomesError && genomes && genomes.length > 0) {
           const videoIds: string[] = [];
           genomes.forEach(g => {
-            if (g.example_videos && Array.isArray(g.example_videos)) {
-              g.example_videos.forEach((vid: string) => {
-                if (!videoIds.includes(vid)) videoIds.push(vid);
-              });
-            }
+            const vid = (g as { source_video_id?: string | null }).source_video_id;
+            if (vid && !videoIds.includes(vid)) videoIds.push(vid);
           });
 
           if (videoIds.length > 0) {
@@ -231,8 +234,14 @@ export default function QuickWinWorkflow() {
         }
 
         setTopTemplates(templates);
+        // #region agent log
+        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:done',message:'templates resolved',data:{finalCount:templates.length},hypothesisId:'H2',timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
       } catch (error) {
         console.error('Error loading templates:', error);
+        // #region agent log
+        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:catch',message:'load threw',data:{err:String((error as Error)?.message ?? error).slice(0,160)},hypothesisId:'H4',timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
       } finally {
         setLoadingTemplates(false);
       }

@@ -149,7 +149,8 @@ export class GeminiService {
       title?: string;
       description?: string;
       hashtags?: string[];
-    }
+    },
+    agencyContextPrompt?: string | null
   ): Promise<GeminiAnalysisResult> {
     if (!this.client) {
       return this.getFallbackAnalysis('Gemini API not initialized');
@@ -163,7 +164,8 @@ export class GeminiService {
       console.log('[Gemini Transcript] 📝 Starting analysis with model:', this.modelName);
       console.log('[Gemini Transcript] 📊 Transcript length:', transcript.length, 'chars');
       
-      const prompt = this.buildAnalysisPrompt(transcript, niche, goal, videoMetadata);
+      const basePrompt = this.buildAnalysisPrompt(transcript, niche, goal, videoMetadata);
+      const prompt = agencyContextPrompt ? `${agencyContextPrompt}\n\n${basePrompt}` : basePrompt;
 
       const result = await this.client.models.generateContent({
         model: this.modelName,
@@ -382,7 +384,8 @@ Remember: Score based on VIRAL POTENTIAL using the calibration guidelines, not p
   async analyzeVideoFile(
     videoPath: string,
     niche?: string,
-    goal?: string
+    goal?: string,
+    agencyContextPrompt?: string | null
   ): Promise<GeminiAnalysisResult> {
     if (!this.client) {
       return {
@@ -437,7 +440,8 @@ Remember: Score based on VIRAL POTENTIAL using the calibration guidelines, not p
       console.log('[Gemini] Video ready for analysis');
 
       // Build analysis prompt
-      const prompt = this.buildVideoAnalysisPrompt(niche, goal);
+      const basePrompt = this.buildVideoAnalysisPrompt(niche, goal);
+      const prompt = agencyContextPrompt ? `${agencyContextPrompt}\n\n${basePrompt}` : basePrompt;
 
       // Analyze video with multimodal input
       const result = await this.client.models.generateContent({

@@ -12,6 +12,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getVariantsForBriefs, selectVariant } from '@/lib/content/variant-generator'
+import { sendBriefToCreator } from '@/lib/email/send-brief'
 
 export const dynamic = 'force-dynamic'
 
@@ -190,13 +191,29 @@ export async function PATCH(request: NextRequest) {
         user_id: brief.client_id,
         brief_content: briefContent,
         predicted_vps: approvedVps,
-        status: 'generated', // enters the Quick Win workflow
+        vps_prediction: approvedVps, // performance-loop column; mirrors predicted_vps at approval time
+        status: 'accepted', // operator-approved; surfaces in the Approved tab
       })
       .select('id')
       .single()
 
     if (insertErr) {
       return NextResponse.json({ error: `Failed to create content brief: ${insertErr.message}` }, { status: 500 })
+    }
+
+    // Fire-and-forget: email the creator. Do not await — approval response returns immediately.
+    // Errors are logged only; they do not block approval.
+    if (contentBrief?.id) {
+      const briefIdToSend = contentBrief.id as string
+      sendBriefToCreator(briefIdToSend)
+        .then((result) => {
+          if (!result.success) {
+            console.error(`[brief-email] send failed for ${briefIdToSend}: ${result.error}`)
+          }
+        })
+        .catch((e) => {
+          console.error(`[brief-email] unhandled error for ${briefIdToSend}:`, e)
+        })
     }
 
     return NextResponse.json({

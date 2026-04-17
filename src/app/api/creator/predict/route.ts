@@ -27,6 +27,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { runPredictionPipeline } from '@/lib/prediction/runPredictionPipeline';
 import { resolveCreatorContext } from '@/lib/prediction/creator-context';
 import { createMetricSchedules } from '@/lib/training/metric-scheduler';
+import { assembleContext } from '@/lib/context/assemble-context';
 
 // Service key client for DB writes (video_files table)
 const supabase = createClient(
@@ -87,8 +88,30 @@ export async function POST(request: NextRequest) {
       `[Creator Predict] User ${user.id}: creatorContext=${!!creatorContext}, ` +
         `calibration=${!!creatorContext?.calibrationProfile}, ` +
         `channel=${!!creatorContext?.channelData}, ` +
-        `stage=${creatorContext?.creatorStage ?? 'none'}`
+        `stage=${creatorContext?.creatorStage ?? 'none'}, ` +
+        `agency=${creatorContext?.agencyId ?? 'none'}`
     );
+
+    // ── Assemble agency context for LLM components (creator path only) ──────
+    // Injects agency hot memory + cultural events + accuracy stats into Pack
+    // 1/2/V and gpt4/gemini/claude prompts. Skipped silently when no agency.
+    if (creatorContext?.agencyId) {
+      try {
+        const assembled = await assembleContext(
+          supabase,
+          creatorContext.agencyId,
+          'RunVPSPrediction',
+          user.id,
+        );
+        creatorContext.agencyContextPrompt = assembled.systemPrompt || null;
+        console.log(
+          `[Creator Predict] Agency context assembled: ${assembled.meta.total_tokens} tokens ` +
+            `(hot=${assembled.meta.hot_tokens}, warm=${assembled.meta.warm_tokens}, cultural=${assembled.meta.cultural_tokens})`
+        );
+      } catch (ctxErr: any) {
+        console.warn(`[Creator Predict] assembleContext failed (non-fatal): ${ctxErr.message}`);
+      }
+    }
 
     // ── Save video file ──────────────────────────────────────────────────────
     let storagePath: string | null = null;

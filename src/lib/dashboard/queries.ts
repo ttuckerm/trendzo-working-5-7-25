@@ -75,6 +75,15 @@ export interface AgencyBrief {
   variants?: BriefVariant[];
   hasMeaningfulAlternatives?: boolean;
   finalCriticScore?: number;
+  // Completion lifecycle (content_briefs only): delivered -> acknowledged -> in_production -> published
+  completionStatus?: 'delivered' | 'acknowledged' | 'in_production' | 'published';
+  publishedUrl?: string;
+  // Performance loop (content_briefs only): populated after manual logging via /api/brief-performance.
+  vpsPrediction?: number;
+  actualViews?: number;
+  actualEngagementRate?: number;
+  performanceDelta?: number;
+  performanceMeasuredAt?: string;
 }
 
 export interface CoachingInsight {
@@ -240,7 +249,7 @@ export async function getAgencyBriefs(agencyId: string): Promise<AgencyBrief[]> 
   // Fetch both content_briefs AND pre_generated_briefs (for review queue)
   const [briefsRes, preGenRes, profilesRes] = await Promise.all([
     db.from('content_briefs')
-      .select('id, user_id, status, created_at, topic, niche_key')
+      .select('id, user_id, status, created_at, brief_content, predicted_vps, completion_status, published_url, vps_prediction, actual_views, actual_engagement_rate, performance_delta, performance_measured_at')
       .in('user_id', creatorIds)
       .order('created_at', { ascending: false })
       .limit(20),
@@ -294,14 +303,27 @@ export async function getAgencyBriefs(agencyId: string): Promise<AgencyBrief[]> 
     published: 'published', generated: 'in-progress', accepted: 'approved',
   };
 
+  if (briefsRes.error) {
+    console.error('[getAgencyBriefs] content_briefs select error:', briefsRes.error);
+  }
+
   const contentBriefs: AgencyBrief[] = (briefsRes.data || []).map((b: any) => ({
     id: `cb-${b.id}`,
     creatorName: nameMap.get(b.user_id) || 'Unknown',
-    title: b.topic || 'Untitled Brief',
+    title: b.brief_content?.title || b.brief_content?.campaign_name || 'Untitled Brief',
     status: statusMap[b.status] || 'draft',
     createdAt: b.created_at,
-    niche: b.niche_key,
+    niche: b.brief_content?.niche || undefined,
+    briefContent: b.brief_content || undefined,
+    vpsScore: b.predicted_vps ?? undefined,
     source: 'content_brief' as const,
+    completionStatus: (b.completion_status || 'delivered') as AgencyBrief['completionStatus'],
+    publishedUrl: b.published_url || undefined,
+    vpsPrediction: b.vps_prediction ?? b.predicted_vps ?? undefined,
+    actualViews: b.actual_views ?? undefined,
+    actualEngagementRate: b.actual_engagement_rate ?? undefined,
+    performanceDelta: b.performance_delta ?? undefined,
+    performanceMeasuredAt: b.performance_measured_at || undefined,
   }));
 
   // Map pre_generated_briefs (pending review) with variants

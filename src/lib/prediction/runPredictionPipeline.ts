@@ -52,7 +52,7 @@ import {
 } from '@/lib/prediction/contamination-lock';
 import type { CreatorContext } from '@/lib/prediction/creator-context';
 import { analyzeSpeakingRate, type SpeakingRateResult } from '@/lib/services/speaking-rate-analyzer';
-import { predictXGBoostV10, type XGBoostPredictionResult } from '@/lib/prediction/xgboost-inference';
+import { predictXGBoost, type XGBoostPredictionResult } from '@/lib/prediction/xgboost-inference';
 import { extractPredictionFeatures, type PredictionFeatureResult } from '@/lib/prediction/extract-prediction-features';
 import { resolveModelRoute, type ModelRoute } from '@/lib/prediction/model-router';
 import { emitEvent } from '@/lib/events/emit';
@@ -401,10 +401,11 @@ export async function runPredictionPipeline(
           console.warn(`[Pipeline] XGBoost v10 feature extraction warnings: ${featureResult.errors.join(', ')}`);
         }
 
-        console.log(`[Pipeline] XGBoost v10: running inference (${xgboostFeatureMeta.features_provided}/${xgboostFeatureMeta.features_total} features)...`);
-        xgboostResult = predictXGBoostV10(featureResult.features);
+        const activeVersion = modelRoute?.model_version || 'v10';
+        console.log(`[Pipeline] XGBoost ${activeVersion}: running inference (${xgboostFeatureMeta.features_provided}/${xgboostFeatureMeta.features_total} features)...`);
+        xgboostResult = predictXGBoost(featureResult.features, activeVersion);
 
-        console.log(`[Pipeline] XGBoost v10: VPS=${xgboostResult.vps} (raw=${xgboostResult.raw_prediction.toFixed(2)}), missing=${xgboostResult.missing_features.length} features`);
+        console.log(`[Pipeline] XGBoost ${xgboostResult.model_version}: VPS=${xgboostResult.vps} (raw=${xgboostResult.raw_prediction.toFixed(2)}), missing=${xgboostResult.missing_features.length} features`);
 
         // Pass pre-computed result to orchestrator via VideoInput
         sanitizedVideoInput.xgboostPrecomputed = {

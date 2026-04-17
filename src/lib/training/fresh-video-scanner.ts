@@ -409,7 +409,26 @@ async function scanNiche(
         const saves = item.collectCount || item.stats?.collectCount || 0;
         const followers = item.authorMeta?.fans || item.author?.fans || 0;
 
-        // 1. Insert into scraped_videos
+        // 1. Insert into scraped_videos (including distribution signals)
+        const videoHashtags = (item.hashtags || []).map((h: any) => h.name || h.title || '').filter(Boolean);
+        const FYP_TAGS = ['fyp', 'foryou', 'foryoupage', 'viral', 'trending'];
+        const hashtagsLower = videoHashtags.map((h: string) => h.toLowerCase());
+        const nicheKw = (config.niche_key || '').toLowerCase();
+        const nicheHCount = nicheKw ? hashtagsLower.filter((h: string) => h.includes(nicheKw)).length : 0;
+        const genericHCount = hashtagsLower.filter((h: string) => FYP_TAGS.includes(h)).length;
+        const specificHCount = videoHashtags.length - genericHCount;
+
+        // Parse post time from createTime
+        let postDate: Date | null = null;
+        if (typeof item.createTime === 'number') {
+          postDate = new Date(item.createTime * 1000);
+        } else if (item.createTimeISO || item.createTime) {
+          postDate = new Date(item.createTimeISO || item.createTime);
+        }
+
+        const isOriginalSound = item.musicMeta?.musicOriginal || false;
+        const soundId = item.musicMeta?.musicId || null;
+
         await supabase.from('scraped_videos').upsert({
           video_id: tiktokId,
           url: webVideoUrl,
@@ -420,7 +439,7 @@ async function scanNiche(
           creator_followers_count: followers,
           caption: item.text || item.desc || '',
           transcript_text: transcript || null,
-          hashtags: (item.hashtags || []).map((h: any) => h.name || h.title || '').filter(Boolean),
+          hashtags: videoHashtags,
           duration_seconds: item.videoMeta?.duration || item.video?.duration || null,
           views_count: views,
           likes_count: likes,
@@ -430,6 +449,18 @@ async function scanNiche(
           niche: config.niche_key,
           source: 'discovery_scan',
           scraped_at: new Date().toISOString(),
+          // Distribution signals
+          ...(postDate ? {
+            upload_timestamp: postDate.toISOString(),
+            posted_hour_utc: postDate.getUTCHours(),
+            posted_day_of_week: (postDate.getUTCDay() + 6) % 7,
+            posted_days_since_epoch: Math.floor(postDate.getTime() / 86400000),
+          } : {}),
+          hashtag_count: videoHashtags.length,
+          hashtag_niche_count: nicheHCount,
+          has_fyp_hashtag: hashtagsLower.some((h: string) => FYP_TAGS.includes(h)),
+          hashtag_specificity_score: videoHashtags.length > 0 ? specificHCount / videoHashtags.length : 0,
+          sound_type: isOriginalSound ? 'original' : (soundId ? 'licensed' : 'unknown'),
         }, { onConflict: 'video_id' });
 
         // 2. Create video_files record

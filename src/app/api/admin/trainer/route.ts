@@ -23,6 +23,7 @@ import {
   launchExperiment,
   promoteSandboxExperiment,
 } from '@/lib/training/trainer-engine'
+import { runPostPromotionValidation } from '@/lib/training/post-promotion-validator'
 import type { ExperimentMode, LaunchExperimentOptions } from '@/lib/training/trainer-engine'
 import { invalidateRouteCache } from '@/lib/prediction/model-router'
 import { createClient } from '@supabase/supabase-js'
@@ -70,6 +71,13 @@ export async function POST(request: NextRequest) {
     const result = await rollbackModelVariant(niche === '' ? null : niche, reason)
     if (result.success) invalidateRouteCache()
     return NextResponse.json(result, { status: result.success ? 200 : 400 })
+  }
+
+  // Action: manually trigger the 48h post-promotion validator (Prompt 33)
+  if (action === 'validate_post_promotion') {
+    const startTime = Date.now()
+    const result = await runPostPromotionValidation()
+    return NextResponse.json({ ...result, elapsed_ms: Date.now() - startTime })
   }
 
   // Action: promote sandbox experiment to production (re-run)
@@ -188,6 +196,55 @@ export async function GET(request: NextRequest) {
         : featuresA.includes(f) ? 'only_a' : 'only_b',
     }))
 
+    // Compute hyperparameter diff
+    const hypA: Record<string, any> = (variantA.hyperparams && typeof variantA.hyperparams === 'object') ? variantA.hyperparams : {}
+    const hypB: Record<string, any> = (variantB.hyperparams && typeof variantB.hyperparams === 'object') ? variantB.hyperparams : {}
+    const allHypKeys = [...new Set([...Object.keys(hypA), ...Object.keys(hypB)])].sort()
+    const hyperparamDiff = allHypKeys.map(key => {
+      const inA = key in hypA
+      const inB = key in hypB
+      let status: 'same' | 'changed' | 'only_a' | 'only_b'
+      if (inA && inB) {
+        status = JSON.stringify(hypA[key]) === JSON.stringify(hypB[key]) ? 'same' : 'changed'
+      } else {
+        status = inA ? 'only_a' : 'only_b'
+      }
+      return { key, a: inA ? hypA[key] : null, b: inB ? hypB[key] : null, status }
+    })
+
+    // Per-niche Spearman — only available from experiment.validation_by_niche
+    // (forward-looking column; NULL for experiments before 2026-04-10).
+    const perNicheA = expA?.validation_by_niche || null
+    const perNicheB = expB?.validation_by_niche || null
+    let perNicheRows: Array<{ niche: string; a_spearman: number | null; a_n: number | null; b_spearman: number | null; b_n: number | null; delta: number | null }> | null = null
+    if (perNicheA || perNicheB) {
+      const niches = [...new Set([
+        ...Object.keys(perNicheA || {}),
+        ...Object.keys(perNicheB || {}),
+      ])].sort()
+      perNicheRows = niches.map(n => {
+        const a = perNicheA?.[n] || null
+        const b = perNicheB?.[n] || null
+        const delta = (a?.spearman != null && b?.spearman != null)
+          ? Math.round((b.spearman - a.spearman) * 10000) / 10000
+          : null
+        return {
+          niche: n,
+          a_spearman: a?.spearman ?? null,
+          a_n: a?.n ?? null,
+          b_spearman: b?.spearman ?? null,
+          b_n: b?.n ?? null,
+          delta,
+        }
+      })
+    }
+
+    const trainingRowsA = expA?.training_data_rows ?? null
+    const trainingRowsB = expB?.training_data_rows ?? null
+    const trainingRowsDelta = (trainingRowsA != null && trainingRowsB != null)
+      ? trainingRowsB - trainingRowsA
+      : null
+
     return NextResponse.json({
       variant_a: {
         ...variantA,
@@ -200,6 +257,11 @@ export async function GET(request: NextRequest) {
         feature_count: featuresB.length,
       },
       feature_diff: featureDiff,
+      hyperparam_diff: hyperparamDiff,
+      per_niche_spearman: perNicheRows,
+      training_rows_a: trainingRowsA,
+      training_rows_b: trainingRowsB,
+      training_rows_delta: trainingRowsDelta,
       spearman_delta: variantA.spearman_score != null && variantB.spearman_score != null
         ? Math.round((variantB.spearman_score - variantA.spearman_score) * 10000) / 10000
         : null,

@@ -269,6 +269,7 @@ export async function POST(req: NextRequest) {
   }
 
   console.log(`[atlas/feedback-collector] Processed ${predictions.length}: collected=${collectedCount}, skipped=${skipped}`);
+  console.log(`[atlas/feedback-collector] Feedback Collector: found ${collectedCount} rows with actual_performance data`);
 
   return NextResponse.json({
     collected: collectedCount,

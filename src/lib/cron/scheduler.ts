@@ -25,6 +25,8 @@ let lastCalendarRefreshAt: string | null = null
 let lastCulturalScanAt: string | null = null
 let lastMemoryConsolidationAt: string | null = null
 let lastTrainerEngineAt: string | null = null
+let lastPostPromotionValidationAt: string | null = null
+let lastPlatformMonitorAt: string | null = null
 
 async function computeAndInsertMetrics(): Promise<void> {
   logSupabaseRuntimeEnv()
@@ -117,24 +119,142 @@ export function getLastRuns() {
     cultural_scan_last_run: lastCulturalScanAt,
     memory_consolidation_last_run: lastMemoryConsolidationAt,
     trainer_engine_last_run: lastTrainerEngineAt,
+    post_promotion_validation_last_run: lastPostPromotionValidationAt,
+    platform_monitor_last_run: lastPlatformMonitorAt,
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Cron registry — SINGLE SOURCE OF TRUTH for what is scheduled + enabled.
+// Only `enabled: true` jobs actually register with node-cron at startup.
+// Updated 2026-04-14: we are in a 7-day data-accumulation window. Only the
+// Feedback Collector (Atlas S1) and the Cultural Intelligence pipeline
+// (scanner + classifier, together one logical pipeline) are allowed to run.
+// ═══════════════════════════════════════════════════════════════════════════
+export type CronJobName =
+  | 'nightly-eval'
+  | 'nightly-calibration'
+  | 'weekly-cohort'
+  | 'daily-baseline'
+  | 'daily-recipes'
+  | 'hourly-discovery-recompute'
+  | 'nightly-templates'
+  | 'feature-drift'
+  | 'discovery-scanner'
+  | 'schedule-backfill'
+  | 'metric-collector'
+  | 'auto-labeler'
+  | 'spearman-eval'
+  | 'platform-monitor'
+  | 'post-promotion-validator'
+  | 'trainer-engine'
+  | 'pattern-extraction'
+  | 'pattern-metrics'
+  | 'calendar-refresh'
+  | 'cultural-scanner'
+  | 'event-classifier'
+  | 'autodream'
+  | 'memory-consolidation'
+  | 'network-intelligence'
+  | 'self-scheduler'
+  | 'feedback-collector'
+
+export interface CronJobRegistryEntry {
+  name: CronJobName
+  schedule: string
+  enabled: boolean
+  /** Human-readable label for the status dashboard. */
+  description: string
+  /** Name of the row written to integration_job_runs (for last-run lookup). */
+  jobRunKey?: string
+}
+
+const CRON_REGISTRY: CronJobRegistryEntry[] = [
+  { name: 'nightly-eval',               schedule: '0 2 * * *',           enabled: false, description: 'Nightly accuracy metrics',              jobRunKey: 'nightly_eval' },
+  { name: 'nightly-calibration',        schedule: '30 2 * * *',          enabled: false, description: 'Nightly calibration + thresholds',      jobRunKey: 'nightly_calibration' },
+  { name: 'weekly-cohort',              schedule: '0 3 * * 1',           enabled: false, description: 'Weekly cohort baseline recompute',       jobRunKey: 'weekly_baselines' },
+  { name: 'daily-baseline',             schedule: '0 4 * * *',           enabled: false, description: 'Daily public baseline metrics',          jobRunKey: 'baseline_public' },
+  { name: 'daily-recipes',              schedule: '0 6 * * *',           enabled: false, description: 'Daily recipe book compute',              jobRunKey: 'daily_recipes' },
+  { name: 'hourly-discovery-recompute', schedule: '0 * * * *',           enabled: false, description: 'Hourly discovery recompute (gated)' },
+  { name: 'nightly-templates',          schedule: '0 6 * * *',           enabled: false, description: 'Nightly templates aggregate' },
+  { name: 'feature-drift',              schedule: '0 */3 * * *',         enabled: false, description: 'Feature importance drift (every 3h)',    jobRunKey: 'feature_drift' },
+  { name: 'discovery-scanner',          schedule: '*/15 * * * *',        enabled: false, description: 'Discovery scanner (every 15 min)',       jobRunKey: 'discovery_scanner' },
+  { name: 'schedule-backfill',          schedule: '0 1 * * *',           enabled: false, description: 'Daily metric schedule backfill',         jobRunKey: 'schedule_backfill' },
+  { name: 'metric-collector',           schedule: '30 0,6,12,18 * * *',  enabled: false, description: 'Apify metric collection (every 6h)',     jobRunKey: 'metric_collector' },
+  { name: 'auto-labeler',               schedule: '30 3 * * *',          enabled: false, description: 'Daily auto-labeler',                     jobRunKey: 'auto_labeler' },
+  { name: 'spearman-eval',              schedule: '0 5 * * 0',           enabled: false, description: 'Weekly Spearman eval',                   jobRunKey: 'spearman_eval' },
+  { name: 'platform-monitor',           schedule: '45 */6 * * *',        enabled: false, description: 'Platform monitor (every 6h)',            jobRunKey: 'platform_monitor' },
+  { name: 'post-promotion-validator',   schedule: '15 */6 * * *',        enabled: false, description: 'Post-promotion validator (every 6h)',    jobRunKey: 'post_promotion_validation' },
+  { name: 'trainer-engine',             schedule: '30 5 * * *',          enabled: false, description: 'Autonomous trainer engine (nightly)',    jobRunKey: 'trainer_engine' },
+  { name: 'pattern-extraction',         schedule: '15 2 * * *',          enabled: false, description: 'Pattern extraction (nightly)',           jobRunKey: 'pattern_extraction' },
+  { name: 'pattern-metrics',            schedule: '0 6 * * 0',           enabled: false, description: 'Pattern metrics (weekly)',               jobRunKey: 'pattern_metrics' },
+  { name: 'calendar-refresh',           schedule: '0 7 * * 1',           enabled: false, description: 'Content calendar refresh (weekly)',      jobRunKey: 'calendar_refresh' },
+
+  // ── Cultural Intelligence (nightly, 2-step pipeline) ─────────────────────
+  // Enabled as a pair — scanner writes detected_trends, classifier writes
+  // cultural_events. Neither is useful without the other.
+  { name: 'cultural-scanner',           schedule: '30 0 * * *',          enabled: true,  description: 'Cultural Intelligence — Reddit/X scan',  jobRunKey: 'cultural_scanner' },
+  { name: 'event-classifier',           schedule: '0 1 * * *',           enabled: true,  description: 'Cultural Intelligence — event classify', jobRunKey: 'event_classifier' },
+
+  { name: 'autodream',                  schedule: '0 4 * * *',           enabled: false, description: 'autoDream overnight pipeline',           jobRunKey: 'autodream' },
+  { name: 'memory-consolidation',       schedule: '0 5 * * *',           enabled: false, description: 'Memory consolidation (nightly)',         jobRunKey: 'consolidate_memory' },
+  { name: 'network-intelligence',       schedule: '45 4 * * *',          enabled: false, description: 'Network intelligence (daily)' },
+  { name: 'self-scheduler',             schedule: '0 * * * *',           enabled: false, description: 'Self-scheduler tick (hourly)' },
+
+  // ── Feedback Collector (Atlas S1) ────────────────────────────────────────
+  // Previously unregistered. Calls POST /api/atlas/feedback-collector every 6h.
+  { name: 'feedback-collector',         schedule: '0 */6 * * *',         enabled: true,  description: 'Feedback Collector (Atlas S1) — every 6h', jobRunKey: 'feedback_collector' },
+]
+
+export function getCronRegistry(): CronJobRegistryEntry[] {
+  return CRON_REGISTRY.map((j) => ({ ...j }))
+}
+
+function scheduleJob(
+  name: CronJobName,
+  handler: () => unknown | Promise<unknown>,
+): void {
+  const job = CRON_REGISTRY.find((j) => j.name === name)
+  if (!job) {
+    console.error(`[Cron] Unknown job name: ${name} — not scheduled`)
+    return
+  }
+  if (!job.enabled) return
+  try {
+    cron.schedule(
+      job.schedule,
+      () => {
+        try { Promise.resolve(handler()).catch(() => {}) } catch {}
+      },
+      { timezone: 'UTC' },
+    )
+  } catch (err: any) {
+    console.error(`[Cron] Failed to register ${name}: ${err?.message || err}`)
   }
 }
 
 export function startScheduler(): void {
   if (started) return
   started = true
+
+  const enabledCount = CRON_REGISTRY.filter((j) => j.enabled).length
+  console.log(
+    `Cron scheduler: ${CRON_REGISTRY.length} jobs registered, ${enabledCount} enabled ` +
+    `(${CRON_REGISTRY.filter((j) => j.enabled).map((j) => j.name).join(', ') || 'none'})`,
+  )
+
   // Nightly at 02:00 UTC
-  try { cron.schedule('0 2 * * *', () => { computeAndInsertMetrics().catch(()=>{}) }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('nightly-eval', () => computeAndInsertMetrics())
   // Nightly calibration + thresholds at 02:30 UTC
-  try { cron.schedule('30 2 * * *', () => { runCalibrationJob().catch(()=>{}) }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('nightly-calibration', () => runCalibrationJob())
   // Weekly Monday at 03:00 UTC
-  try { cron.schedule('0 3 * * 1', () => { recomputeCohorts().catch(()=>{}) }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('weekly-cohort', () => recomputeCohorts())
   // Daily baseline public metrics at 04:00 UTC
-  try { cron.schedule('0 4 * * *', () => { computeAndStorePublicBaseline().catch(()=>{}) }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('daily-baseline', () => computeAndStorePublicBaseline())
   // Daily recipes at 06:00 UTC
-  try { cron.schedule('0 6 * * *', () => { computeDailyRecipeBook().catch(()=>{}) }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('daily-recipes', () => computeDailyRecipeBook())
   // Hourly discovery recompute with backpressure guard
-  try { cron.schedule('0 * * * *', async () => {
+  scheduleJob('hourly-discovery-recompute', async () => {
     try {
       // Check pipeline readiness via modules endpoint; skip if any non-green
       const url = `${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/admin/pipeline/modules`
@@ -146,11 +266,11 @@ export function startScheduler(): void {
         try { await computeDailyRecipeBook() } catch {}
       }
     } catch {}
-  }, { timezone: 'UTC' }) } catch {}
+  })
   // Nightly templates aggregate at 06:00 UTC
-  try { cron.schedule('0 6 * * *', async () => { try { const { aggregateTemplates } = await import('@/lib/templates/aggregate'); await aggregateTemplates(30) } catch {} }, { timezone: 'UTC' }) } catch {}
+  scheduleJob('nightly-templates', async () => { try { const { aggregateTemplates } = await import('@/lib/templates/aggregate'); await aggregateTemplates(30) } catch {} })
   // Every 3 hours: feature-importance drift
-  try { cron.schedule('0 */3 * * *', async () => {
+  scheduleJob('feature-drift', async () => {
     try {
       const now = new Date()
       const end = now.toISOString()
@@ -161,7 +281,7 @@ export function startScheduler(): void {
       await db.from('integration_job_runs').upsert({ job: 'feature_drift', last_run: new Date().toISOString() } as any)
       ;(globalThis as any).__drift_last_run = new Date().toISOString()
     } catch {}
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // ── Training Pipeline Automation (re-enabled 2026-03-05) ─────────────────
   // Previously disabled 2026-03-04 due to Apify budget burn.
@@ -173,7 +293,7 @@ export function startScheduler(): void {
 
   // Every 15 min — Discovery Scanner (Track 1)
   // DB-level locking prevents double-scan; budget check inside runDiscoveryScan()
-  try { cron.schedule('*/15 * * * *', async () => {
+  scheduleJob('discovery-scanner', async () => {
     try {
       const { runDiscoveryScan } = await import('@/lib/training/fresh-video-scanner')
       const result = await runDiscoveryScan()
@@ -182,10 +302,10 @@ export function startScheduler(): void {
       }
       lastDiscoveryScanAt = new Date().toISOString()
     } catch (err: any) { console.error('[Cron:DiscoveryScanner] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Daily at 01:00 UTC — backfill metric schedules for runs missing them
-  try { cron.schedule('0 1 * * *', async () => {
+  scheduleJob('schedule-backfill', async () => {
     try {
       const { backfillMetricSchedules } = await import('@/lib/training/schedule-backfill')
       const result = await backfillMetricSchedules({ limit: 100 })
@@ -194,11 +314,11 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'schedule_backfill', last_run: lastScheduleBackfillAt } as any)
     } catch (err: any) { console.error('[Cron:ScheduleBackfill] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Every 6h — collect due metrics from TikTok via Apify (FREE actor)
   // metric-collector.ts already rejects UUID-based platform_video_ids
-  try { cron.schedule('30 0,6,12,18 * * *', async () => {
+  scheduleJob('metric-collector', async () => {
     try {
       const { runMetricCollector } = await import('@/lib/training/metric-collector')
       const result = await runMetricCollector({ limit: 50 })
@@ -207,10 +327,10 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'metric_collector', last_run: lastMetricCollectorAt } as any)
     } catch (err: any) { console.error('[Cron:MetricCollector] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Daily at 03:30 UTC — auto-label runs with completed metrics
-  try { cron.schedule('30 3 * * *', async () => {
+  scheduleJob('auto-labeler', async () => {
     try {
       const { runAutoLabeler } = await import('@/lib/training/auto-labeler')
       const result = await runAutoLabeler({ limit: 50 })
@@ -219,10 +339,10 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'auto_labeler', last_run: lastAutoLabelerAt } as any)
     } catch (err: any) { console.error('[Cron:AutoLabeler] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Weekly Sunday at 05:00 UTC — Spearman rank correlation evaluation
-  try { cron.schedule('0 5 * * 0', async () => {
+  scheduleJob('spearman-eval', async () => {
     try {
       const { runSpearmanEvaluation } = await import('@/lib/training/spearman-evaluator')
       const result = await runSpearmanEvaluation()
@@ -231,10 +351,49 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'spearman_eval', last_run: lastSpearmanEvalAt } as any)
     } catch (err: any) { console.error('[Cron:SpearmanEval] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
+
+  // Every 6h at :45 — Proactive Platform Monitor (Prompt 34)
+  // Offset from post-promotion validator (:15) so the two jobs don't
+  // run concurrently and share a common cache miss window.
+  scheduleJob('platform-monitor', async () => {
+    try {
+      const { runPlatformMonitor } = await import('@/lib/monitoring/platform-monitor')
+      const result = await runPlatformMonitor()
+      console.log(
+        `[Cron:PlatformMonitor] candidates=${result.candidate_alerts} ` +
+        `written=${result.written} deduped=${result.suppressed_duplicate} ` +
+        `bumped=${result.bumped_existing} dropped_sev=${result.suppressed_low_severity} ` +
+        `dropped_conf=${result.suppressed_low_confidence} errors=${result.write_errors}`,
+      )
+      lastPlatformMonitorAt = new Date().toISOString()
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'platform_monitor', last_run: lastPlatformMonitorAt } as any)
+    } catch (err: any) { console.error('[Cron:PlatformMonitor] Error:', err.message) }
+  })
+
+  // Every 6h at :15 — Post-Promotion Validator (Prompt 33)
+  // Checks promotions 48h+ old. Computes post-promotion Spearman vs
+  // pre-promotion baseline. Writes chairman_alerts on degradation
+  // (warning: delta <= -0.05, critical: delta <= -0.10) or starvation
+  // (insufficient_data after 96h).
+  scheduleJob('post-promotion-validator', async () => {
+    try {
+      const { runPostPromotionValidation } = await import('@/lib/training/post-promotion-validator')
+      const result = await runPostPromotionValidation()
+      console.log(
+        `[Cron:PostPromotionValidator] checked=${result.checked} validated=${result.validated} ` +
+        `retry=${result.insufficient_retry} final=${result.insufficient_final} ` +
+        `alerts=${result.degradation_alerts} errors=${result.errors}`,
+      )
+      lastPostPromotionValidationAt = new Date().toISOString()
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      await db.from('integration_job_runs').upsert({ job: 'post_promotion_validation', last_run: lastPostPromotionValidationAt } as any)
+    } catch (err: any) { console.error('[Cron:PostPromotionValidator] Error:', err.message) }
+  })
 
   // Nightly at 05:30 UTC — Autonomous Trainer Engine (checks program conditions)
-  try { cron.schedule('30 5 * * *', async () => {
+  scheduleJob('trainer-engine', async () => {
     try {
       const { runTrainerEngine } = await import('@/lib/training/trainer-engine')
       const result = await runTrainerEngine()
@@ -247,7 +406,7 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'trainer_engine', last_run: lastTrainerEngineAt } as any)
     } catch (err: any) { console.error('[Cron:TrainerEngine] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // REMOVED: Niche Creator Scraper — replaced by Discovery Scanner (2026-03-05)
   // See fresh-video-scanner.ts. Old scraper burned 60+ PAID Apify calls per run
@@ -256,7 +415,7 @@ export function startScheduler(): void {
   // ── Pattern Library ────────────────────────────────────────────────────────
 
   // Nightly at 02:15 UTC — extract patterns from newly viral scraped videos
-  try { cron.schedule('15 2 * * *', async () => {
+  scheduleJob('pattern-extraction', async () => {
     try {
       const result = await runPatternExtractionJob()
       console.log(`[Cron:PatternExtraction] ${result.extracted}/${result.candidates} classified`)
@@ -264,10 +423,10 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'pattern_extraction', last_run: lastPatternExtractionAt } as any)
     } catch (err: any) { console.error('[Cron:PatternExtraction] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Weekly Sunday at 06:00 UTC — recompute pattern niche metrics
-  try { cron.schedule('0 6 * * 0', async () => {
+  scheduleJob('pattern-metrics', async () => {
     try {
       const { computeArchetypeMetrics } = await import('@/lib/patterns/pattern-metrics')
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
@@ -276,12 +435,12 @@ export function startScheduler(): void {
       lastPatternMetricsAt = new Date().toISOString()
       await db.from('integration_job_runs').upsert({ job: 'pattern_metrics', last_run: lastPatternMetricsAt } as any)
     } catch (err: any) { console.error('[Cron:PatternMetrics] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // ── Content Calendar ──────────────────────────────────────────────────────
 
   // Weekly Monday at 07:00 UTC — regenerate content calendars for active creators
-  try { cron.schedule('0 7 * * 1', async () => {
+  scheduleJob('calendar-refresh', async () => {
     try {
       const { refreshActiveCalendars } = await import('@/lib/content/calendar-refresh')
       const result = await refreshActiveCalendars()
@@ -290,10 +449,10 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'calendar_refresh', last_run: lastCalendarRefreshAt } as any)
     } catch (err: any) { console.error('[Cron:CalendarRefresh] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Nightly at 00:30 UTC — cultural intelligence Reddit scan
-  try { cron.schedule('30 0 * * *', async () => {
+  scheduleJob('cultural-scanner', async () => {
     try {
       const result = await runCulturalScanViaApi()
       console.log(`[Cron:CulturalScanner] ${result.niches_scanned} niches, ${result.total_posts} posts, ${result.rows_upserted} rows`)
@@ -301,30 +460,33 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'cultural_scanner', last_run: lastCulturalScanAt } as any)
     } catch (err: any) { console.error('[Cron:CulturalScanner] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Nightly at 01:00 UTC — classify detected trends → cultural events (runs after cultural scan)
-  try { cron.schedule('0 1 * * *', async () => {
+  scheduleJob('event-classifier', async () => {
     try {
       const result = await runEventClassifierViaApi()
-      console.log(`[Cron:EventClassifier] ${result.classified} classified, ${result.auto_approved} auto-approved`)
+      const niches = Number(result?.niches_processed ?? result?.niches_scanned ?? 0)
+      const inserted = Number(result?.classified ?? 0)
+      console.log(`[Cron:EventClassifier] Cultural Intelligence: processed ${niches} niches, inserted ${inserted} new events ` +
+        `(auto-approved ${result?.auto_approved ?? 0})`)
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'event_classifier', last_run: new Date().toISOString() } as any)
     } catch (err: any) { console.error('[Cron:EventClassifier] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Nightly at 04:00 UTC — autoDream overnight pipeline (runs after cultural intel completes)
-  try { cron.schedule('0 4 * * *', async () => {
+  scheduleJob('autodream', async () => {
     try {
       const result = await runAutoDreamViaApi()
       console.log(`[Cron:autoDream] ${result.total_briefs_generated} briefs, ${result.total_morning_cards} morning cards`)
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'autodream', last_run: new Date().toISOString() } as any)
     } catch (err: any) { console.error('[Cron:autoDream] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
 
   // Nightly at 05:00 UTC — memory consolidation (runs after autoDream completes)
-  try { cron.schedule('0 5 * * *', async () => {
+  scheduleJob('memory-consolidation', async () => {
     try {
       const result = await runMemoryConsolidationViaApi()
       console.log(`[Cron:MemoryConsolidation] ${result.agencies_processed} agencies, ${result.total_facts_added} facts added, ${result.total_contradictions} contradictions resolved`)
@@ -332,7 +494,58 @@ export function startScheduler(): void {
       const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
       await db.from('integration_job_runs').upsert({ job: 'consolidate_memory', last_run: lastMemoryConsolidationAt } as any)
     } catch (err: any) { console.error('[Cron:MemoryConsolidation] Error:', err.message) }
-  }, { timezone: 'UTC' }) } catch {}
+  })
+
+  // Prompt 44 — Network Intelligence: daily at 04:45 UTC, generate
+  // aggregate statistical insights across the network. Skips gracefully
+  // when <30 active agencies.
+  scheduleJob('network-intelligence', async () => {
+    try {
+      const { generateNetworkInsights } = await import('@/lib/network-intelligence/generate')
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      const result = await generateNetworkInsights(db)
+      console.log(`[Cron:NetworkIntelligence] run=${result.run_id.slice(0,8)} written=${result.written_count} skipped=${result.skipped} agencies=${result.global.active_agency_count}`)
+    } catch (err: any) { console.error('[Cron:NetworkIntelligence] Error:', err.message) }
+  })
+
+  // Prompt 40 — Self-Scheduler: every hour at :00, process any due scheduled_actions.
+  scheduleJob('self-scheduler', async () => {
+    try {
+      const { processPendingActions } = await import('@/lib/scheduler/processor')
+      const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+      const result = await processPendingActions(db)
+      if (result.picked_up > 0) {
+        console.log(`[Cron:SelfScheduler] picked_up=${result.picked_up} executed=${result.executed} failed=${result.failed}`)
+      }
+    } catch (err: any) { console.error('[Cron:SelfScheduler] Error:', err.message) }
+  })
+
+  // Feedback Collector (Atlas S1) — every 6h. Calls the existing HTTP endpoint
+  // at /api/atlas/feedback-collector with CRON_SECRET auth. The endpoint reads
+  // prediction_log + prediction_runs.actual_dps and writes actual_performance
+  // back to prediction_log.
+  scheduleJob('feedback-collector', async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+      const url = `${baseUrl}/api/atlas/feedback-collector`
+      const secret = process.env.CRON_SECRET
+      const res = await fetch(url, {
+        method: 'POST',
+        cache: 'no-store',
+        headers: secret ? { Authorization: `Bearer ${secret}` } : undefined,
+      })
+      const json = await res.json().catch(() => null)
+      if (!res.ok) {
+        console.error(`[Cron:FeedbackCollector] HTTP ${res.status}: ${json?.error || 'unknown'}`)
+      } else {
+        console.log(`[Cron:FeedbackCollector] collected=${json?.collected ?? 0} skipped=${json?.skipped ?? 0} total=${json?.total ?? 0}`)
+      }
+      try {
+        const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+        await db.from('integration_job_runs').upsert({ job: 'feedback_collector', last_run: new Date().toISOString() } as any)
+      } catch {}
+    } catch (err: any) { console.error('[Cron:FeedbackCollector] Error:', err.message) }
+  })
 }
 
 export async function stopScheduler(): Promise<void> {

@@ -974,5 +974,21 @@ export const trendzoCatalog = defineCatalog(schema, {
         new_time: z.string().optional(),
       }),
     },
+    update_brief_status: {
+      description: 'Advance a content brief through the post-publish lifecycle (delivered → acknowledged → in_production → published). Operator-initiated.',
+      params: z.object({
+        briefId: z.string(),
+        new_status: z.enum(['acknowledged', 'in_production', 'published']),
+        published_url: z.string().optional(),
+      }),
+    },
+    log_performance: {
+      description: 'Record actual views and engagement for a published brief. Writes to content_briefs and triggers a confirmation card.',
+      params: z.object({
+        briefId: z.string(),
+        actual_views: z.number(),
+        actual_engagement_rate: z.number().optional(),
+      }),
+    },
   },
 });

@@ -294,11 +294,16 @@ async function loadFeedbackData(
   db: SupabaseClient,
   lastTrainingDate?: string,
 ): Promise<{ clean: FeedbackRow[]; corrupted: number }> {
+  // HOLDOUT GUARD: is_holdout = false is required. Never remove this filter.
   let query = db
     .from('prediction_runs')
     .select('id, predicted_dps_7d, actual_dps, video_id')
+    .eq('is_holdout', false)
     .not('actual_dps', 'is', null)
     .not('predicted_dps_7d', 'is', null)
+    // Newest-first so the dedup loop below keeps the latest prediction
+    // per video_id. Without this, "latest" is undefined.
+    .order('created_at', { ascending: false })
 
   if (lastTrainingDate) {
     query = query.gte('created_at', lastTrainingDate)
@@ -311,7 +316,14 @@ async function loadFeedbackData(
     return { clean: [], corrupted: 0 }
   }
 
-  // Get niche info from video_files
+  // Get niche info from video_files (UUIDs) and scraped_videos (TikTok IDs).
+  // prediction_runs.video_id is text and holds both shapes:
+  //   - UUIDs from local uploads → join to video_files.id (uuid)
+  //   - TikTok numeric IDs / short codes → join to scraped_videos.video_id (text)
+  // Previously this was a single .in() against video_files.id, which
+  // silently returned zero matches for non-UUID values because Postgres
+  // can't cast a TikTok ID to uuid.
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
   const videoIds = [...new Set(data.map((r: any) => r.video_id).filter(Boolean))]
   const nicheMap = new Map<string, string>()
 
@@ -319,13 +331,27 @@ async function loadFeedbackData(
     // Batch in groups of 100 to avoid query limits
     for (let i = 0; i < videoIds.length; i += 100) {
       const batch = videoIds.slice(i, i + 100)
-      const { data: videos } = await db
-        .from('video_files')
-        .select('id, niche')
-        .in('id', batch)
+      const uuidBatch = batch.filter((id) => UUID_RE.test(id))
+      const externalBatch = batch.filter((id) => !UUID_RE.test(id))
 
-      for (const v of videos || []) {
-        if (v.niche) nicheMap.set(v.id, v.niche)
+      if (uuidBatch.length > 0) {
+        const { data: videos } = await db
+          .from('video_files')
+          .select('id, niche')
+          .in('id', uuidBatch)
+        for (const v of videos || []) {
+          if (v.niche) nicheMap.set(v.id, v.niche)
+        }
+      }
+
+      if (externalBatch.length > 0) {
+        const { data: scraped } = await db
+          .from('scraped_videos')
+          .select('video_id, niche')
+          .in('video_id', externalBatch)
+        for (const sv of scraped || []) {
+          if (sv.niche) nicheMap.set(sv.video_id, sv.niche)
+        }
       }
     }
   }
@@ -353,7 +379,11 @@ async function loadFeedbackData(
     const predicted = Number(row.predicted_dps_7d)
     const actual = Number(row.actual_dps)
 
-    if (isNaN(predicted) || isNaN(actual) || predicted < 0 || actual < 0) {
+    // DPS is a z-score-like metric centered on 0 — negative actual_dps
+    // means the video underperformed its cohort median, which is
+    // VALID training signal, not corruption. Only reject NaN and
+    // negative predicted VPS (0–100 scale, never negative).
+    if (isNaN(predicted) || isNaN(actual) || predicted < 0) {
       corrupted++
       continue
     }
@@ -367,11 +397,25 @@ async function loadFeedbackData(
     })
   }
 
-  if (corrupted > 0) {
-    console.log(`[Trainer] Skipped ${corrupted} corrupted rows (null/NaN VPS scores)`)
+  // Dedup: keep only the latest prediction per video_id. The query is
+  // ordered newest-first, so first-seen wins. Rows without a video_id
+  // (shouldn't happen in practice) are passed through untouched.
+  const seenVideos = new Set<string>()
+  const deduped: FeedbackRow[] = []
+  for (const row of clean) {
+    if (row.video_id && seenVideos.has(row.video_id)) continue
+    if (row.video_id) seenVideos.add(row.video_id)
+    deduped.push(row)
+  }
+  const dedupDropped = clean.length - deduped.length
+
+  if (corrupted > 0 || dedupDropped > 0) {
+    console.log(
+      `[Trainer] Feedback load: ${deduped.length} clean, ${corrupted} corrupted, ${dedupDropped} duplicates dropped`,
+    )
   }
 
-  return { clean, corrupted }
+  return { clean: deduped, corrupted }
 }
 
 // ── Get Last Training Date ──────────────────────────────────────────────
@@ -508,6 +552,7 @@ async function runExperiment(
       niche_scope: nicheScope,
       description: `[${mode.toUpperCase()}] ${description}`,
       features_used: featuresUsed,
+      feature_set: featuresUsed, // duplicate for new schema column (jsonb)
       hyperparams,
       training_data_rows: scopedRows.length,
       validation_spearman: validationSpearman,
@@ -544,6 +589,32 @@ async function runExperiment(
       `delta +${delta}) but model_variants is NOT modified in sandbox mode.`
     )
   }
+
+  // Prompt 40 — Self-Scheduler hooks. One-liners wrapped in Safe helper:
+  // the scheduler.schedule-action module catches all errors internally
+  // so a scheduler failure can never break the trainer experiment.
+  try {
+    const { scheduleActionSafe, hoursFromNow } = await import('@/lib/scheduler/schedule-action')
+    if (mode === 'production' && finalResult === 'pending_promotion') {
+      // Successful candidate → check back in 48h to confirm it held up.
+      void scheduleActionSafe({
+        actionType: 'promotion_validation',
+        triggerCondition: `Candidate model promoted at Spearman ${validationSpearman} (delta +${delta})`,
+        scheduledFor: hoursFromNow(48),
+        sourceSubsystem: 'trainer',
+        params: { experiment_id: experimentId, niche_scope: nicheScope, validation_spearman: validationSpearman, delta },
+      })
+    } else if (finalResult === 'degraded' || finalResult === 'no_change') {
+      // Failed/flat experiment → try again with an expanded feature set in 48h.
+      void scheduleActionSafe({
+        actionType: 'retrain_expanded',
+        triggerCondition: `Experiment result "${finalResult}" (delta ${delta}) — retry with expanded feature set`,
+        scheduledFor: hoursFromNow(48),
+        sourceSubsystem: 'trainer',
+        params: { experiment_id: experimentId, niche_scope: nicheScope, prior_delta: delta },
+      })
+    }
+  } catch { /* scheduler module unavailable — non-fatal, by design */ }
 
   return {
     experiment_id: experimentId,
@@ -1226,4 +1297,334 @@ export async function promoteSandboxExperiment(
   }
 
   return result
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// Prompt 41 — Feature Discovery helpers
+// ═══════════════════════════════════════════════════════════════════════
+//
+// The Feature Discovery coordinator task (src/lib/coordinator/handlers/
+// feature-discovery.ts) dispatches 5 parallel workers and each one calls
+// `runFeatureDiscoveryExperiment()`. The helper exists here (not in the
+// handler file) so the proxy-delta evaluation logic lives next to the
+// rest of the trainer's Spearman math and stays consistent with
+// `runExperiment()`.
+//
+// HONEST LIMITATION — read this before interpreting results:
+//   The current trainer engine does not retrain XGBoost from TypeScript.
+//   It evaluates the already-deployed model's stored predicted_vps against
+//   actual_dps on a validation split. Worker B ("add feature X") therefore
+//   cannot measure the actual lift from a new feature — the deployed
+//   model doesn't know about it yet. Instead, each worker evaluates
+//   Spearman on a DETERMINISTIC VALIDATION SUBSAMPLE seeded by the
+//   worker's label. The resulting deltas differentiate workers enough
+//   for the coordinator to pick a "best performer" and flag it for
+//   Chairman review — but the delta is a PROXY, not a true lift
+//   measurement. The Chairman review step is where a human decides
+//   whether to trigger the real Python retrain (training-executor.ts)
+//   with the candidate feature wired into the extraction pipeline.
+//
+//   TODO(prompt-41-followup): when the Trainer Engine gains the ability
+//   to invoke training-executor.ts for real retrains, replace the
+//   subsample-proxy in runFeatureDiscoveryExperiment() with a real
+//   Python retrain call. The handler's Subtask surface is already
+//   shaped for this — only the body of this function changes.
+//
+//   TODO(prompt-41-followup): when training-executor.ts completes a
+//   retrain it should call XGBoost's `model.get_score()` (or equivalent
+//   importance extraction) and write the result to model_variants.features
+//   as a ranked list from most to least important. Worker D currently
+//   uses the "last feature in the list" fallback because this ranking
+//   doesn't exist yet. Once present, Worker D's removeWeakestFeature()
+//   becomes a real importance-driven choice instead of a positional guess.
+
+// ── Hyperparameter overrides format ─────────────────────────────────────
+//
+// Active trainer_programs.program_content can include an optional section:
+//
+//   ## Hyperparameter overrides
+//   - max_depth: 8
+//   - learning_rate: 0.05
+//   - n_estimators: 500
+//
+// parseHyperparameterOverrides() pulls these out as { key: value } pairs.
+// Values are parsed as numbers when they look numeric, otherwise left as
+// strings. If the section is absent or empty, returns an empty object and
+// Worker E becomes a no-op (it reports `skipped: no_overrides_defined`).
+//
+// Why markdown and not JSON: the rest of the program is human-written
+// markdown (see seed in 20260407_trainer_engine.sql). Keeping the override
+// section in the same format means the Chairman edits one file, not two.
+
+export function parseHyperparameterOverrides(
+  content: string,
+): Record<string, number | string> {
+  const out: Record<string, number | string> = {}
+  // Match the section header up to the next `## ` header (or EOF).
+  const sectionMatch = content.match(
+    /##\s+Hyperparameter\s+overrides\s*\n([\s\S]*?)(?=\n##\s|$)/i,
+  )
+  if (!sectionMatch) return out
+
+  const body = sectionMatch[1]
+  const lineRe = /^\s*-\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*(.+?)\s*$/gm
+  let m: RegExpExecArray | null
+  while ((m = lineRe.exec(body)) !== null) {
+    const key = m[1]
+    const raw = m[2].trim()
+    const asNum = Number(raw)
+    out[key] = Number.isFinite(asNum) && raw !== '' ? asNum : raw
+  }
+  return out
+}
+
+// ── Current-model feature list loader ──────────────────────────────────
+//
+// Reads the features list for the currently-active GLOBAL variant.
+// Falls back to reading models/xgboost-v10-features.json from disk if
+// the DB row has no `features` array. Returns [] if neither source is
+// available — callers must handle the empty case.
+
+export async function loadActiveFeatureList(
+  db: SupabaseClient,
+): Promise<string[]> {
+  const { data } = await db
+    .from('model_variants')
+    .select('features')
+    .is('niche', null)
+    .eq('is_active', true)
+    .limit(1)
+    .single()
+
+  const fromDb = data?.features
+  if (Array.isArray(fromDb) && fromDb.length > 0) {
+    return fromDb.map((f) => String(f))
+  }
+
+  // Disk fallback.
+  try {
+    const featuresPath = join(process.cwd(), 'models', 'xgboost-v10-features.json')
+    if (existsSync(featuresPath)) {
+      const parsed = JSON.parse(readFileSync(featuresPath, 'utf-8'))
+      if (Array.isArray(parsed)) return parsed.map((f) => String(f))
+    }
+  } catch { /* non-fatal */ }
+
+  return []
+}
+
+// ── Deterministic validation subsample ──────────────────────────────────
+//
+// Seeded shuffle using FNV-1a → LCG. Same seed → same subset → same
+// Spearman. Different seeds → different subsets → different Spearman.
+// This is how the 5 workers produce differentiated proxy deltas.
+
+function hashSeed(s: string): number {
+  let h = 2166136261
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return h >>> 0
+}
+
+function seededSubsample<T>(rows: T[], fraction: number, seed: number): T[] {
+  if (rows.length === 0) return []
+  const clamped = Math.max(0.1, Math.min(1, fraction))
+  const targetN = Math.max(3, Math.floor(rows.length * clamped))
+
+  // Tag each row with a deterministic score, sort by score, take top N.
+  let state = seed || 1
+  const scored = rows.map((row) => {
+    state = (Math.imul(state, 1103515245) + 12345) >>> 0
+    return { row, score: state }
+  })
+  scored.sort((a, b) => a.score - b.score)
+  return scored.slice(0, targetN).map((x) => x.row)
+}
+
+// ── Feature Discovery experiment runner ─────────────────────────────────
+//
+// Called by the feature-discovery coordinator handler once per worker.
+// Records one row in training_experiments, returns the proxy delta.
+//
+// IMPORTANT: this function is sandbox-only. It never sets
+// result='pending_promotion' and never writes to model_variants. Promotion
+// from Feature Discovery always requires a human via the Chairman review
+// scheduled_action written by the finalizer.
+
+export interface FeatureDiscoveryExperimentInput {
+  /** Worker label, e.g. "worker_b_add_hook_word_count". Used as seed. */
+  workerLabel: string
+  /** Human description for training_experiments.description. */
+  description: string
+  /** "retrain" | "feature_add" | "feature_remove" | "hyperparameter". */
+  experimentType: 'retrain' | 'feature_add' | 'feature_remove' | 'hyperparameter'
+  /** Full feature list this worker is "testing" (for recording only). */
+  features: string[]
+  /** Hyperparameter set this worker is "testing" (for recording only). */
+  hyperparams: Record<string, unknown>
+  /** Pre-loaded clean feedback rows (shared across workers in one run). */
+  feedbackRows: FeedbackRow[]
+  /** Active trainer_program id to link the experiment to, or null. */
+  programId: string | null
+  /** Optional candidate_features.id this worker is evaluating. */
+  candidateFeatureId?: string | null
+}
+
+export interface FeatureDiscoveryExperimentResult {
+  experiment_id: string
+  worker_label: string
+  experiment_type: string
+  validation_spearman: number
+  baseline_spearman: number
+  delta: number
+  n_evaluated: number
+  /** Size of the worker's validation subsample (same as n_evaluated). */
+  validation_set_size: number
+  /** Total clean feedback rows the loader returned for this run. */
+  total_feedback_rows: number
+  /**
+   * Honest classification. 'inconclusive_tiny_sample' when the validation
+   * subsample was < MIN_RELIABLE_SUBSET rows — Spearman on that few
+   * points is statistical noise, not signal. The finalizer MUST NOT
+   * promote/reject candidate_features on inconclusive results.
+   */
+  result:
+    | 'improved'
+    | 'no_change'
+    | 'degraded'
+    | 'inconclusive_tiny_sample'
+    | 'skipped'
+  candidate_feature_id: string | null
+  skipped_reason?: string
+}
+
+// Honesty thresholds for the proxy evaluator.
+// Rationale: with fewer than 20 feedback rows total, a stratified
+// 20% validation split leaves 3–4 rows. Workers B–E then take an
+// 85% subsample → still 3–4 rows. Spearman on 3 points is a 1-in-6
+// random-ordering event, not a signal. Skipping below 20 avoids
+// wasting DB rows on noise. The subsample threshold (10) catches
+// the case where the total is high enough but the per-worker
+// subsample still ends up tiny.
+const MIN_FEEDBACK_ROWS_FOR_PROXY = 20
+const MIN_RELIABLE_SUBSET = 10
+
+export async function runFeatureDiscoveryExperiment(
+  db: SupabaseClient,
+  input: FeatureDiscoveryExperimentInput,
+): Promise<FeatureDiscoveryExperimentResult> {
+  const {
+    workerLabel, description, experimentType, features, hyperparams,
+    feedbackRows, programId, candidateFeatureId = null,
+  } = input
+
+  // Baseline = the currently-active global variant's stored Spearman.
+  const baselineVariant = await getActiveVariant(db, null)
+  const baselineSpearman = baselineVariant?.spearman_score ?? 0
+
+  // Insufficient data → skip WITHOUT writing a training_experiments row.
+  // Proxy deltas below this threshold are pure noise; persisting them
+  // pollutes the experiment history.
+  if (feedbackRows.length < MIN_FEEDBACK_ROWS_FOR_PROXY) {
+    return {
+      experiment_id: '',
+      worker_label: workerLabel,
+      experiment_type: experimentType,
+      validation_spearman: 0,
+      baseline_spearman: baselineSpearman,
+      delta: 0,
+      n_evaluated: 0,
+      validation_set_size: 0,
+      total_feedback_rows: feedbackRows.length,
+      result: 'skipped',
+      candidate_feature_id: candidateFeatureId,
+      skipped_reason: `insufficient_data_for_proxy_evaluation (${feedbackRows.length} rows, need ${MIN_FEEDBACK_ROWS_FOR_PROXY}+)`,
+    }
+  }
+
+  // Split stratified by niche (same logic as runExperiment).
+  const { validation } = stratifiedSplit(feedbackRows)
+
+  // Worker A (baseline) evaluates the full validation set. Workers B–E
+  // evaluate a deterministic subsample seeded by their label. This is
+  // the proxy-delta mechanism — see the limitation comment at the top.
+  const isBaseline = experimentType === 'retrain'
+  const subset = isBaseline
+    ? validation
+    : seededSubsample(validation, 0.85, hashSeed(workerLabel))
+
+  const predicted = subset.map((r) => r.predicted_vps)
+  const actual = subset.map((r) => r.actual_dps)
+  const evalResult = evaluateModel(predicted, actual)
+
+  const validationSpearman = Math.round(evalResult.spearman * 10000) / 10000
+  const delta = Math.round((validationSpearman - baselineSpearman) * 10000) / 10000
+
+  // Honest labeling: tiny samples → inconclusive, not improved/degraded.
+  // A Spearman of 1.0 on 3 points is a 1-in-6 random event, not a signal.
+  const isTinySubset = subset.length < MIN_RELIABLE_SUBSET
+  const honestResult: FeatureDiscoveryExperimentResult['result'] = isTinySubset
+    ? 'inconclusive_tiny_sample'
+    : delta > 0
+      ? 'improved'
+      : Math.abs(delta) < 0.001
+        ? 'no_change'
+        : 'degraded'
+
+  const descriptionFull =
+    `[PROXY_EVAL][FEATURE_DISCOVERY] ${description} — proxy delta from deterministic subsample ` +
+    `(n=${subset.length}/${validation.length}, total=${feedbackRows.length}). ` +
+    `NOTE: same model evaluated on different subsets, NOT a retrained model. ` +
+    `Feature changes are metadata only.` +
+    (isTinySubset ? ` INCONCLUSIVE — tiny sample (n<${MIN_RELIABLE_SUBSET}), Spearman is statistical noise.` : '')
+
+  const { data: inserted } = await db
+    .from('training_experiments')
+    .insert({
+      program_id: programId,
+      experiment_type: experimentType,
+      niche_scope: null,
+      description: descriptionFull,
+      features_used: features,
+      hyperparams,
+      training_data_rows: subset.length,
+      validation_spearman: validationSpearman,
+      baseline_spearman: baselineSpearman,
+      delta,
+      result: honestResult,
+      experiment_mode: 'sandbox',
+    })
+    .select('id')
+    .single()
+
+  return {
+    experiment_id: inserted?.id ?? '',
+    worker_label: workerLabel,
+    experiment_type: experimentType,
+    validation_spearman: validationSpearman,
+    baseline_spearman: baselineSpearman,
+    delta,
+    n_evaluated: subset.length,
+    validation_set_size: subset.length,
+    total_feedback_rows: feedbackRows.length,
+    result: honestResult,
+    candidate_feature_id: candidateFeatureId,
+  }
+}
+
+// ── Shared loader used by feature-discovery ─────────────────────────────
+// Deliberately does NOT apply the `created_at >= lastTrainingDate`
+// incremental filter that the regular retrain path uses. Feature
+// Discovery is comparing different feature sets / hyperparams against
+// the SAME validation data, not doing incremental retraining on new
+// rows, so it needs every scoreable row the DB has — not just rows
+// added since the last retrain. Without this, a recent production
+// retrain would "consume" all existing labeled data and feature
+// discovery would see feedback_rows=0 forever after.
+export async function loadFeedbackForDiscovery(
+  db: SupabaseClient,
+): Promise<{ clean: FeedbackRow[]; corrupted: number }> {
+  return loadFeedbackData(db, undefined)
 }

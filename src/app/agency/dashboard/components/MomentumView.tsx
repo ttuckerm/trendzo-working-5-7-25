@@ -14,7 +14,11 @@ function daysSilent(c: AgencyCreator): number {
   if (c.scriptCount === 0) return 14;
   if (c.status === 'inactive') return 7;
   if (c.status === 'onboarding') return 3;
-  return Math.floor(Math.random() * 3); // Active creators: 0-2 days
+  // Deterministic per-creator stub — Math.random here caused hydration mismatches.
+  const key = (c.userId as string | undefined) || c.name || '';
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return h % 3;
 }
 
 function momentumScore(c: AgencyCreator): number {

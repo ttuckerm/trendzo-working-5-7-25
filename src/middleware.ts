@@ -41,6 +41,7 @@ const PROTECTED_ROUTES: Record<string, string[]> = {
   // API routes — chairman/sub_admin only for admin endpoints
   '/api/admin': ['chairman', 'sub_admin'],
   '/api/agency-chat': ['chairman', 'sub_admin', 'agency'],
+  '/api/chairman-chat': ['chairman', 'sub_admin'],
 }
 
 const ROLE_HOME: Record<string, string> = {

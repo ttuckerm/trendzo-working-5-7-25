@@ -18,6 +18,12 @@ export interface UnifiedGradingInput {
     has_audio?: boolean;
     resolution?: string;
   };
+  /**
+   * Optional assembled agency context (hot memory, cultural events, accuracy stats).
+   * When present, prepended to the system prompt so the grader is aware of
+   * agency-specific quality standards. Never populated on the testing pipeline.
+   */
+  agencyContextPrompt?: string | null;
 }
 
 // ============================================================================

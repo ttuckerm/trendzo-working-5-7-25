@@ -24,7 +24,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#6C92A0]" />
       </div>
     );
   }
@@ -32,8 +32,8 @@ export default function DashboardPage() {
   // Dev mode role selector (only shown when not authenticated)
   const DevRoleSelector = () => (
     !authRole && DEV_MODE && (
-      <div className="fixed bottom-4 left-4 bg-[#111118] border border-purple-500/50 rounded-lg p-3 z-50 shadow-xl">
-        <div className="text-xs text-purple-400 mb-2 font-medium">🔧 Dev Mode - Select Role:</div>
+      <div className="fixed bottom-4 left-4 bg-[#323434] border border-[#6C92A0]/50 rounded-lg p-3 z-50">
+        <div className="text-xs text-[#6C92A0] mb-2 font-medium">Dev Mode - Select Role:</div>
         <div className="flex flex-wrap gap-2">
           {(['chairman', 'sub_admin', 'agency', 'developer', 'creator', 'clipper'] as UserRole[]).map((r) => (
             <button
@@ -41,8 +41,8 @@ export default function DashboardPage() {
               onClick={() => setDevRole(r)}
               className={`px-2 py-1 text-xs rounded transition-colors ${
                 devRole === r 
-                  ? 'bg-purple-500 text-white' 
-                  : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                  ? 'bg-[#6C92A0] text-[#1E1F1F]' 
+                  : 'bg-[#3A3C3C] text-[#A8A9A9] hover:bg-[#4A6B78]/30'
               }`}
             >
               {r}
@@ -70,11 +70,11 @@ export default function DashboardPage() {
       default:
         return (
           <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl">🤔</span>
+            <div className="w-16 h-16 bg-[#323434] rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-3xl">?</span>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-2">Unknown Role</h2>
-            <p className="text-gray-400">
+            <h2 className="text-xl font-medium text-[#D4D4D4] mb-2">Unknown Role</h2>
+            <p className="text-[#A8A9A9]">
               Your role could not be determined. Please contact support.
             </p>
           </div>

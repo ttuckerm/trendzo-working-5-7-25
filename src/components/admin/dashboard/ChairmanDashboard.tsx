@@ -6,6 +6,12 @@ import { StatCard } from './StatCard';
 import { QuickAction } from './QuickAction';
 import { TrainerExperiments } from './TrainerExperiments';
 import { ModelManagement } from './ModelManagement';
+import { ChairmanAlertsBanner } from './ChairmanAlertsBanner';
+import { PlatformHealthPanel } from './PlatformHealthPanel';
+import { OperationsPanel } from './OperationsPanel';
+import { UltraplanPanel } from './UltraplanPanel';
+import { PlanningActionItemsPanel } from './PlanningActionItemsPanel';
+import { ScheduledActionsPanel } from './ScheduledActionsPanel';
 import {
   DollarSign,
   Building2,
@@ -47,6 +53,9 @@ export function ChairmanDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Chairman Alerts Banner (Prompt 33) — renders nothing when no open alerts */}
+      <ChairmanAlertsBanner />
+
       {/* Stats Row */}
       <div className="grid grid-cols-5 gap-4">
         <StatCard
@@ -122,6 +131,21 @@ export function ChairmanDashboard() {
         <QuickAction icon={ScrollText} label="View Audit Log" href="/admin/audit-log" color="default" />
         <QuickAction icon={Cpu} label="Training Engine" href="/admin/operations/training" color="cyan" />
       </div>
+
+      {/* Platform Health — proactive monitoring alerts (Prompt 35) */}
+      <PlatformHealthPanel />
+
+      {/* Operations — parallel task dispatch with live progress (Prompt 36 + 37) */}
+      <OperationsPanel />
+
+      {/* ULTRAPLAN — remote Opus planning sessions (Prompt 38) */}
+      <UltraplanPanel />
+
+      {/* Action items from approved plans (Prompt 39) */}
+      <PlanningActionItemsPanel />
+
+      {/* Self-scheduled actions from Atlas subsystems (Prompt 40) */}
+      <ScheduledActionsPanel />
 
       {/* Production Model Status + Comparison + Promotion */}
       <ModelManagement />
