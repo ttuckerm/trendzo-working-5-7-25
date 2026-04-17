@@ -1504,8 +1504,9 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
                 />
                 {/* Phase 1 Turn 5: refresh-triage button. Re-runs the overnight
                     job for this agency on demand and pushes a fresh spec into
-                    the chat. Hidden until first message has been sent. */}
-                {hasSentFirst && (
+                    the chat. Visible whenever there's any chat content (which
+                    on first load includes the triage marker). */}
+                {messages.length > 0 && (
                   <div className="max-w-3xl mx-auto mb-2 flex justify-end">
                     <button
                       type="button"
