@@ -843,7 +843,25 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
   // Clay: handle component actions (approve, reject, select-variant, etc.)
   const handleComponentAction = useCallback(async (actionId: string, payload: unknown) => {
     const pl = (payload && typeof payload === 'object' ? payload : {}) as Record<string, unknown>
-    const actionType = (pl.type as string) || actionId
+    // Phase 1 Turn 2 fix: enforce explicit type in payload. Silent fallback to
+    // actionId previously hid bugs where the catalog omitted `type` and the
+    // wrong handler ran. Tell the operator instead of guessing.
+    if (!pl.type || typeof pl.type !== 'string') {
+      console.error('[agency] Action invoked without payload.type', { actionId, payload })
+      setInlineConfirmations((prev) => [
+        ...prev,
+        {
+          actionId: `confirm-${Date.now()}`,
+          actionType: 'unknown',
+          actionLabel: 'Action',
+          target: actionId,
+          consequence: 'Action missing type — catalog bug. See console.',
+          status: 'cancelled',
+        },
+      ])
+      return
+    }
+    const actionType = pl.type as string
 
     // Guard C: block morning briefing while the write + confirmation is in flight.
     actionInFlight.current = true;
@@ -1018,6 +1036,114 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
         briefId,
         actual_views: inner?.actual_views,
         actual_engagement_rate: inner?.actual_engagement_rate,
+      });
+    },
+
+    // ─────────────────────────────────────────────────────────────────
+    // Phase 1 Turn 2 — previously dead handlers (11)
+    // Registry: src/lib/clay/intelligent-clay-registry.ts
+    // Each routes through /api/clay/action → action-handler.ts
+    // ─────────────────────────────────────────────────────────────────
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    approve_brief: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] approve_brief missing briefId', params); return; }
+      handleComponentAction(briefId, { type: 'approve_brief', briefId });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    send_invite: (params: any) => {
+      const inner = params?.params || params;
+      handleComponentAction(`invite-${Date.now()}`, {
+        type: 'send_invite',
+        creatorEmail: inner?.creatorEmail || inner?.email,
+        creatorName: inner?.creatorName || inner?.name,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    nudge_creator: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] nudge_creator missing briefId', params); return; }
+      handleComponentAction(briefId, {
+        type: 'nudge_creator',
+        briefId,
+        creatorId: inner?.creatorId,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    create_event: (params: any) => {
+      const inner = params?.params || params;
+      handleComponentAction(`event-${Date.now()}`, {
+        type: 'create_event',
+        eventName: inner?.eventName || inner?.name,
+        eventDate: inner?.eventDate || inner?.date,
+        category: inner?.category,
+        description: inner?.description,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    match_creators_to_event: (params: any) => {
+      const inner = params?.params || params;
+      const eventId = inner?.eventId;
+      if (!eventId) { console.error('[agency] match_creators_to_event missing eventId', params); return; }
+      handleComponentAction(eventId, { type: 'match_creators_to_event', eventId });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    push_brief_to_creators: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      const creatorIds = inner?.creatorIds;
+      if (!briefId || !Array.isArray(creatorIds)) {
+        console.error('[agency] push_brief_to_creators missing briefId or creatorIds', params);
+        return;
+      }
+      handleComponentAction(briefId, { type: 'push_brief_to_creators', briefId, creatorIds });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    check_push_status: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] check_push_status missing briefId', params); return; }
+      handleComponentAction(briefId, { type: 'check_push_status', briefId });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    generate_batch_briefs: (params: any) => {
+      const inner = params?.params || params;
+      handleComponentAction(`batch-${Date.now()}`, {
+        type: 'generate_batch_briefs',
+        creatorIds: inner?.creatorIds,
+        topic: inner?.topic,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    schedule_post: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] schedule_post missing briefId', params); return; }
+      handleComponentAction(briefId, {
+        type: 'schedule_post',
+        briefId,
+        scheduledFor: inner?.scheduledFor,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    generate_report: (params: any) => {
+      const inner = params?.params || params;
+      handleComponentAction(`report-${Date.now()}`, {
+        type: 'generate_report',
+        timeWindow: inner?.timeWindow,
+      });
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    reschedule_post: (params: any) => {
+      const inner = params?.params || params;
+      const briefId = inner?.briefId;
+      if (!briefId) { console.error('[agency] reschedule_post missing briefId', params); return; }
+      handleComponentAction(briefId, {
+        type: 'reschedule_post',
+        briefId,
+        newScheduledFor: inner?.newScheduledFor,
       });
     },
   }), [sendAsUser, handleComponentAction]);

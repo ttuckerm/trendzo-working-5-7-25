@@ -12,6 +12,7 @@ const ref = process.env.NEXT_PUBLIC_SUPABASE_URL!.replace('https://', '').split(
 const MIGRATIONS = [
   'supabase/migrations/20260417_agency_triage.sql',
   'supabase/migrations/20260417_content_briefs_email_tracking.sql',
+  'supabase/migrations/20260417_phase1_action_scaffolding.sql',
 ]
 
 ;(async () => {
