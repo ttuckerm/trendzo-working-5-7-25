@@ -158,6 +158,7 @@ export type CronJobName =
   | 'network-intelligence'
   | 'self-scheduler'
   | 'feedback-collector'
+  | 'overnight-triage'
 
 export interface CronJobRegistryEntry {
   name: CronJobName
@@ -204,6 +205,11 @@ const CRON_REGISTRY: CronJobRegistryEntry[] = [
   // ── Feedback Collector (Atlas S1) ────────────────────────────────────────
   // Previously unregistered. Calls POST /api/atlas/feedback-collector every 6h.
   { name: 'feedback-collector',         schedule: '0 */6 * * *',         enabled: true,  description: 'Feedback Collector (Atlas S1) — every 6h', jobRunKey: 'feedback_collector' },
+
+  // ── Overnight Triage (Phase 1 Turn 4) ────────────────────────────────────
+  // Populates agency_triage with top-5 urgency-ranked items per agency so the
+  // 8 AM morning brief is a deterministic read, not a GPT cold-start.
+  { name: 'overnight-triage',           schedule: '0 6 * * *',           enabled: true,  description: 'Overnight triage for /agency morning brief',      jobRunKey: 'overnight_triage' },
 ]
 
 export function getCronRegistry(): CronJobRegistryEntry[] {
@@ -545,6 +551,21 @@ export function startScheduler(): void {
         await db.from('integration_job_runs').upsert({ job: 'feedback_collector', last_run: new Date().toISOString() } as any)
       } catch {}
     } catch (err: any) { console.error('[Cron:FeedbackCollector] Error:', err.message) }
+  })
+
+  // Phase 1 Turn 4: Overnight triage at 06:00 UTC
+  scheduleJob('overnight-triage', async () => {
+    try {
+      const { runTriageForAllAgencies } = await import('@/lib/triage/overnight-triage')
+      const result = await runTriageForAllAgencies()
+      console.log(
+        `[Cron:OvernightTriage] agencies=${result.agencies_processed} items=${result.items_written} errors=${result.errors.length}`,
+      )
+      try {
+        const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+        await db.from('integration_job_runs').upsert({ job: 'overnight_triage', last_run: new Date().toISOString() } as any)
+      } catch {}
+    } catch (err: any) { console.error('[Cron:OvernightTriage] Error:', err.message) }
   })
 }
 
