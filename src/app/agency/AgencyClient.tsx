@@ -527,6 +527,7 @@ const AUTO_GREETING = 'Good morning. Brief me on what needs my attention.';
 // render a spec confirmation card in response. The filter below hides the directive
 // from the rendered chat.
 const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';
+const TRIAGE_MARKER = '[__TRENDZO_TRIAGE__]';
 
 const postAlertSuggestions = [
   'Deep dive on the flagged creator',
@@ -692,11 +693,32 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
   // replace a confirmation surface.
   const actionInFlight = useRef(false);
 
-  const fireAutoGreeting = useCallback(() => {
+  // Phase 1 Turn 4: morning greeting now reads from agency_triage (overnight
+  // job) and injects a deterministic spec via the TRIAGE_MARKER short-circuit
+  // in /api/agency-chat — no GPT cold-start. Falls back to the LLM path only
+  // if the triage fetch fails entirely.
+  const fireAutoGreeting = useCallback(async () => {
     if (autoGreetFired.current) return;
     if (actionInFlight.current) return;
     autoGreetFired.current = true;
     setAutoBriefing(true);
+
+    try {
+      const res = await fetch('/api/triage/today', { cache: 'no-store' });
+      if (res.ok) {
+        const triage = await res.json() as { items: unknown[]; stale: boolean; triage_date: string | null };
+        const marker = '[__TRENDZO_TRIAGE__] ' + JSON.stringify(triage);
+        sendMessage({ text: marker });
+        return;
+      }
+      // eslint-disable-next-line no-console
+      console.warn('[agency] triage fetch failed, falling back to LLM greeting', res.status);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn('[agency] triage fetch threw, falling back to LLM greeting', err);
+    }
+
+    // Fallback: original GPT greeting (only reached on triage fetch failure).
     classifyMessage(AUTO_GREETING);
     sendMessage({ text: AUTO_GREETING });
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -767,6 +789,8 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
         .map((p) => p.text)
         .join('') ?? '';
       if (lastText.startsWith(ACTION_RESULT_MARKER)) return;
+      // Triage marker is also a hidden directive — treat like action-result.
+      if (lastText.startsWith(TRIAGE_MARKER)) return;
     }
     if (autoBriefing && !isLoading && messages.length > 1) {
       setAutoBriefing(false);
@@ -1378,6 +1402,7 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
                       .join('');
                     if (msgText === AUTO_GREETING) return null;
                     if (msgText?.startsWith(ACTION_RESULT_MARKER)) return null;
+                    if (msgText?.startsWith(TRIAGE_MARKER)) return null;
                   }
 
                   // For assistant messages, find the preceding user message text

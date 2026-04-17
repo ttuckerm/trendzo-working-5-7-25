@@ -15,6 +15,7 @@ import { classifyIntent } from '@/lib/clay';
 export const runtime = 'nodejs';
 
 const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';
+const TRIAGE_MARKER = '[__TRENDZO_TRIAGE__]';
 
 type ActionResultConfirmation =
   | {
@@ -116,6 +117,104 @@ function buildFallbackSpec(): string {
   return lines.join('\n');
 }
 
+/**
+ * Phase 1 Turn 4: Build a deterministic morning brief spec from pre-computed
+ * triage items (agency_triage table). Each item becomes a KPICard inside a
+ * Section titled "Good morning. Here's what needs you."
+ *
+ * Urgency → accent color map:
+ *   8-10 → status-error (#C07B74 coral)
+ *   5-7  → status-warning (#9A7A3A amber)
+ *   1-4  → status-success (#4A8C6A green) — low urgency / informational
+ */
+function buildTriageSpec(payload: { stale?: boolean; triage_date?: string | null; items: any[] }): string {
+  const lines: string[] = [];
+  const rootId = 'mb-1';
+  const items = Array.isArray(payload.items) ? payload.items : [];
+
+  lines.push(`{"op":"add","path":"/root","value":"${rootId}"}`);
+
+  const title = items.length === 0
+    ? 'All quiet on the roster.'
+    : `Good morning. ${items.length} thing${items.length === 1 ? '' : 's'} need${items.length === 1 ? 's' : ''} you.`;
+  const subtitle = payload.stale
+    ? `Stale: briefing from ${payload.triage_date || 'an earlier day'}. [Re-run to refresh]`
+    : items.length === 0
+      ? 'Nothing needs you right now. Pulse below.'
+      : undefined;
+  const headerProps: string[] = [`"title":${escSpecString(title)}`];
+  if (subtitle) headerProps.push(`"subtitle":${escSpecString(subtitle)}`);
+  if (!payload.stale && items.length > 0) headerProps.push(`"accent":"#6C92A0"`);
+  if (payload.stale) headerProps.push(`"accent":"#9A7A3A"`);
+
+  const kpiIds = items.map((_, i) => `mb-kpi-${i + 1}`);
+  lines.push(
+    `{"op":"add","path":"/elements/${rootId}","value":{"type":"Section","props":{${headerProps.join(',')}},"children":${JSON.stringify(kpiIds)}}}`,
+  );
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const urgency = Number(item.urgency) || 0;
+    const accent = urgency >= 8 ? '#C07B74' : urgency >= 5 ? '#9A7A3A' : '#4A8C6A';
+    const typeLabel =
+      item.type === 'overdue_brief' ? 'Overdue'
+      : item.type === 'trend_opportunity' ? 'Trend'
+      : item.type === 'performance_highlight' ? 'Win'
+      : String(item.type || '').replace(/_/g, ' ');
+
+    const cardValue = String(item.summary || '').slice(0, 180);
+    const cardSubtitle = `${typeLabel} · urgency ${urgency}/10 · ${String(item.creator_name || '')}`;
+
+    lines.push(
+      `{"op":"add","path":"/elements/${kpiIds[i]}","value":{"type":"KPICard","props":{"label":${escSpecString(typeLabel)},"value":${escSpecString(cardValue)},"subtitle":${escSpecString(cardSubtitle)},"accent":"${accent}"},"children":[]}}`,
+    );
+  }
+
+  if (items.length === 0) {
+    const emptyId = 'mb-empty-1';
+    lines.push(`{"op":"add","path":"/elements/${rootId}/children/-","value":"${emptyId}"}`);
+    lines.push(`{"op":"add","path":"/elements/${emptyId}","value":{"type":"Text","props":{"content":"No overdue briefs, no trend windows closing soon, no surprises overnight. Come back tomorrow."},"children":[]}}`);
+  }
+
+  return lines.join('\n');
+}
+
+function tryBuildTriageStream(messages: any[]): ReadableStream<any> | null {
+  const text = getLastUserText(messages);
+  if (!text || !text.startsWith(TRIAGE_MARKER)) return null;
+
+  let payload: { stale?: boolean; triage_date?: string | null; items: any[] } = { items: [] };
+  try {
+    const json = text.slice(TRIAGE_MARKER.length).trim();
+    payload = JSON.parse(json);
+  } catch {
+    payload = { items: [] };
+  }
+
+  const specBody = buildTriageSpec(payload);
+  const responseText = '```spec\n' + specBody + '\n```';
+  const textId = (globalThis.crypto?.randomUUID?.() ?? `tri-${Date.now()}`);
+  const messageId = (globalThis.crypto?.randomUUID?.() ?? `trim-${Date.now()}`);
+
+  const synthetic = new ReadableStream<any>({
+    start(controller) {
+      controller.enqueue({ type: 'start', messageId });
+      controller.enqueue({ type: 'text-start', id: textId });
+      controller.enqueue({ type: 'text-delta', id: textId, delta: responseText });
+      controller.enqueue({ type: 'text-end', id: textId });
+      controller.enqueue({ type: 'finish' });
+      controller.close();
+    },
+  });
+
+  return createUIMessageStream({
+    execute: async ({ writer }) => {
+      writer.merge(pipeJsonRender(synthetic));
+    },
+    onError: (error) => (error instanceof Error ? error.message : String(error)),
+  });
+}
+
 function tryBuildActionResultStream(messages: any[]): ReadableStream<any> | null {
   const text = getLastUserText(messages);
   if (!text || !text.startsWith(ACTION_RESULT_MARKER)) return null;
@@ -193,6 +292,16 @@ export async function POST(req: Request) {
   const shortCircuit = tryBuildActionResultStream(messages);
   if (shortCircuit) {
     return createUIMessageStreamResponse({ stream: shortCircuit });
+  }
+
+  // ── TRIAGE short-circuit (Phase 1 Turn 4) ────────────────────────────
+  // When the client injects a hidden user message starting with
+  // [__TRENDZO_TRIAGE__], bypass the model and stream a deterministic
+  // morning-brief spec built from agency_triage. Replaces the GPT
+  // cold-start that fireAutoGreeting used to send.
+  const triageShortCircuit = tryBuildTriageStream(messages);
+  if (triageShortCircuit) {
+    return createUIMessageStreamResponse({ stream: triageShortCircuit });
   }
 
   // Get agency scope (gracefully handle no agency — serve with empty data)
