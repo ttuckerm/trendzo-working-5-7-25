@@ -5,17 +5,8 @@ import { getUserAgencyId, getAgencyCreators } from '@/lib/auth/agency-utils';
 import AgencyClient from './AgencyClient';
 
 export default async function AgencyPage() {
-  // #region agent log
-  const _t0 = Date.now(); const _dl = (loc: string, msg: string, data?: any) => fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'082614'},body:JSON.stringify({sessionId:'082614',location:loc,message:msg,data:{...data,elapsed:Date.now()-_t0},timestamp:Date.now(),hypothesisId:'H-B'})}).catch(()=>{});
-  // #endregion
-  // #region agent log
-  await _dl('page.tsx:start','AgencyPage render started');
-  // #endregion
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
-  // #region agent log
-  await _dl('page.tsx:auth','getUser completed',{hasUser:!!user});
-  // #endregion
 
   let creators: Record<string, unknown>[] = [];
   let recentScripts: Record<string, unknown>[] = [];
@@ -33,13 +24,7 @@ export default async function AgencyPage() {
     agencyId = await getUserAgencyId(user.id);
 
     if (agencyId) {
-      // #region agent log
-      await _dl('page.tsx:agencyId','got agencyId',{agencyId});
-      // #endregion
       const creatorIds = await getAgencyCreators(agencyId);
-      // #region agent log
-      await _dl('page.tsx:creators','getAgencyCreators done',{count:creatorIds.length});
-      // #endregion
       const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
       const safeIds = creatorIds.length > 0 ? creatorIds : [''];
 
@@ -60,9 +45,6 @@ export default async function AgencyPage() {
       const profiles = profilesResult.data || [];
       const briefs = briefsResult.data || [];
       const agencyCards = cardsResult.data || [];
-      // #region agent log
-      await _dl('page.tsx:batch1','profiles+briefs+cards done',{profiles:profiles.length,briefs:briefs.length,cards:agencyCards.length});
-      // #endregion
 
       if (agencyCards.length > 0) {
         cardsSummary = {
@@ -83,9 +65,6 @@ export default async function AgencyPage() {
         .limit(50);
 
       const scripts = scriptsData || [];
-      // #region agent log
-      await _dl('page.tsx:scripts','scripts query done',{count:scripts.length});
-      // #endregion
 
       totalScripts = scripts.length;
       totalBriefs = briefs.length;
@@ -141,10 +120,6 @@ export default async function AgencyPage() {
     recentScripts,
     cardsSummary,
   };
-
-  // #region agent log
-  await _dl('page.tsx:done','AgencyPage SSR complete',{totalCreators:creators.length,totalScripts,totalBriefs});
-  // #endregion
 
   return (
     <AgencyClient

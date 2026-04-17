@@ -162,10 +162,6 @@ function tryBuildActionResultStream(messages: any[]): ReadableStream<any> | null
 
 
 export async function POST(req: Request) {
-  // #region agent log
-  const _t0 = Date.now(); const _dl = (loc: string, msg: string, data?: any) => fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'082614'},body:JSON.stringify({sessionId:'082614',location:loc,message:msg,data:{...data,elapsed:Date.now()-_t0},timestamp:Date.now(),hypothesisId:'H-A'})}).catch(()=>{});
-  await _dl('chat:start','agency-chat POST started');
-  // #endregion
   try {
   const { messages } = await req.json();
 
@@ -188,9 +184,6 @@ export async function POST(req: Request) {
     }
     userId = user.id;
   }
-  // #region agent log
-  await _dl('chat:auth','auth complete',{userId});
-  // #endregion
 
   // ── ACTION_RESULT short-circuit ──────────────────────────────────────
   // When the client injects a hidden user message starting with
@@ -204,9 +197,6 @@ export async function POST(req: Request) {
 
   // Get agency scope (gracefully handle no agency — serve with empty data)
   const agencyId = await getUserAgencyId(userId);
-  // #region agent log
-  await _dl('chat:agency','getUserAgencyId done',{agencyId});
-  // #endregion
   console.log('[agency-chat] Agency lookup:', { userId, agencyId });
 
   let profiles: any[] = [];
@@ -223,9 +213,6 @@ export async function POST(req: Request) {
 
   if (agencyId) {
     const creatorIds = await getAgencyCreators(agencyId);
-    // #region agent log
-    await _dl('chat:creators','getAgencyCreators done',{count:creatorIds.length});
-    // #endregion
     const serviceClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     const safeCreatorIds = creatorIds.length > 0 ? creatorIds : [''];
 
@@ -263,9 +250,6 @@ export async function POST(req: Request) {
       safeQuery(() => serviceClient.from('dps_v2_cohort_stats').select('*')),
     ]);
 
-    // #region agent log
-    await _dl('chat:megaBatch','all parallel queries done');
-    // #endregion
 
     profiles = (profilesData as any[]) || [];
     briefs = (briefsByUserData as any[]) || [];
@@ -301,9 +285,6 @@ export async function POST(req: Request) {
         .in('brief_id', (contentBriefs || []).map((b: any) => b.id).filter(Boolean))),
     ]);
 
-    // #region agent log
-    await _dl('chat:wave2','dependent queries done');
-    // #endregion
 
     scripts = (scriptsResult as any[]) || [];
     briefAssignments = (assignResult as any[]) || [];
@@ -1277,9 +1258,6 @@ export async function POST(req: Request) {
   }
 
   const dataContext = contextSections.join('\n\n')
-  // #region agent log
-  await _dl('chat:dataCtx','data context assembled',{chars:dataContext.length});
-  // #endregion
 
   // ── Intent classification + context assembly IN PARALLEL ─────────
   const recentComponentsHeader = (messages[messages.length - 2]?.metadata as Record<string, unknown>)?.suggestedComponents as string[] || []
@@ -1304,9 +1282,6 @@ export async function POST(req: Request) {
     })(),
   ]);
 
-  // #region agent log
-  await _dl('chat:classify+context','classifyIntent + assembleContext done in parallel',{intents:intentResult.intents,components:intentResult.suggestedComponents,contextLen:centralContextBlock.length});
-  // #endregion
 
   const clayComponentHint = intentResult.suggestedComponents.length > 0
     ? `\n## CLAY COMPONENTS READY\nThe operator is asking about: ${intentResult.intents.join(', ')}.\nYou have the following data ready to display as visual components: ${intentResult.suggestedComponents.join(', ')}.\nAcknowledge what you're showing them naturally — don't say "I'm rendering a component", just refer to it conversationally (e.g. "Here's your morning brief" or "I can see [creator] is showing some momentum decay").\n`
@@ -1411,9 +1386,6 @@ Operator may reference prior context — use conversation history.`;
   const cappedMessages = messages.length > 40 ? messages.slice(-40) : messages;
   const modelMessages = await convertToModelMessages(cappedMessages);
 
-  // #region agent log
-  await _dl('chat:pre-llm','about to call streamText (GPT-4o)',{promptChars:systemPrompt.length,msgCount:modelMessages.length});
-  // #endregion
   // Silent read tools — fetch data the model can reference in its spec response.
   // Writes remain ActionButton-driven (see action-handler.ts cases
   // update_brief_status and log_performance).

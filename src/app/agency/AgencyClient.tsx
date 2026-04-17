@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 import AgencyDashboardHeader from '@/components/agency/AgencyDashboardHeader';
 import EngineOrb from './components/EngineOrb';
 import VoiceMicButton from './components/VoiceMicButton';
-import { getComponentsForIntent, ClayComponentRenderer, ComponentType, type RenderStrategy } from '@/lib/clay';
+import { getComponentsForIntent, ClayComponentRenderer, ComponentType } from '@/lib/clay';
 import {
   saveConversation,
   loadActiveConversation,
@@ -397,10 +397,11 @@ function ClayComponentBlock({
 }
 
 // ── Clay Classification Result ────────────────────────────────────────
+// Note: renderStrategy is no longer read by the client (Phase 1 Turn 3)
+// but the classify route may still emit it for backward compatibility.
 interface ClayClassification {
   suggestedComponents: ComponentType[]
   componentData: Record<string, Record<string, unknown>>
-  renderStrategy: RenderStrategy
   intents: string[]
 }
 
@@ -431,9 +432,11 @@ function ChatMessage({
 
   const showArtifactInline = hasSpec && spec;
 
-  // Use server-side classification if available, else fallback to client-side
+  // Phase 1 Turn 3: Clay is classification-only. The LLM's spec is the primary
+  // rendering path. Clay's suggestedComponents remain as a fallback for when
+  // the LLM hasn't emitted a spec — eventually the system prompt hint will
+  // cover this and ClayComponentBlock can be fully retired.
   const hasClayComponents = clayClassification && clayClassification.suggestedComponents.length > 0
-  const renderStrategy = clayClassification?.renderStrategy || 'lead-with-text'
 
   const fallbackComponents = !hasClayComponents && userMessageText
     ? getComponentsForIntent(userMessageText)
@@ -445,7 +448,7 @@ function ChatMessage({
 
   const componentData = hasClayComponents ? clayClassification!.componentData : undefined
 
-  // Render components block
+  // Render components block (fallback only — LLM spec takes precedence)
   const ComponentsBlock = componentsToRender.length > 0 ? (
     <div
       className="clay-artifact mt-4"
@@ -488,22 +491,11 @@ function ChatMessage({
         </div>
       ) : (
         <div className="clay-ai-msg w-full">
-          {/* Render order based on strategy */}
-          {renderStrategy === 'lead-with-components' ? (
-            <>
-              {ComponentsBlock}
-              {TextBlock}
-            </>
-          ) : renderStrategy === 'components-only' ? (
-            <>
-              {ComponentsBlock}
-            </>
-          ) : (
-            <>
-              {TextBlock}
-              {ComponentsBlock}
-            </>
-          )}
+          {/* Phase 1 Turn 3: single render path — text first, then any Clay
+              fallback components, then LLM-authored spec artifact. No more
+              renderStrategy branching (lead-with-components / components-only). */}
+          {TextBlock}
+          {ComponentsBlock}
           {showArtifactInline && (
             <div
               className="clay-artifact mt-4"

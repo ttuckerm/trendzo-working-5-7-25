@@ -7,6 +7,9 @@
  */
 
 export { ComponentType, type ComponentSpec, COMPONENT_CATALOG, getComponentsForIntent } from './component-registry'
+// @deprecated Phase 1 Turn 3: ClayComponentRenderer is being retired in favor
+// of json-render specs authored by the LLM. Inline action confirmations still
+// use it for now; full retirement is scheduled for a follow-up turn.
 export { ClayComponentRenderer, renderComponents } from './component-renderer'
 export { classifyIntent, type IntentClassification, type RenderStrategy } from './intent-classifier'
 // NOTE: handleComponentAction is server-only (imports nodemailer via send-brief).

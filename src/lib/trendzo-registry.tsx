@@ -114,7 +114,13 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     ),
 
     Section: ({ props, children }) => (
+      // Phase 1 Turn 3: honor `accent` prop written by buildBriefStatusSpec /
+      // buildPerformanceSpec / Turn 2 action confirmations. A thin top border
+      // in the accent color signals the section's semantic status.
       <div className="space-y-3">
+        {props.accent && (
+          <div className="h-[2px] rounded-full" style={{ background: props.accent }} />
+        )}
         <div>
           <h2 className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#8888a0]">
             {props.title}
@@ -130,7 +136,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     // ── DATA DISPLAY ─────────────────────────────────────────────────
 
     KPICard: ({ props }) => {
-      const accent = getAccent(props.accentColor);
+      // Phase 1 Turn 3: accept both `accent` (raw hex) and `accentColor`
+      // (semantic token) so server-built specs (buildBriefStatusSpec,
+      // buildPerformanceSpec, Turn 2 structured confirmations) render the
+      // top border they intend. Also honor optional `subtitle`.
+      const accent = props.accent || getAccent(props.accentColor);
       const arrow = props.changeDirection === 'up' ? '\u2191' : props.changeDirection === 'down' ? '\u2193' : '';
       const changeColor =
         props.changeDirection === 'up'
@@ -141,12 +151,15 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
       return (
         <div className="relative rounded-2xl p-5 overflow-hidden transition-all duration-200 hover:-translate-y-0.5" style={{ background: NEU_REG.bg, boxShadow: NEU_REG.raised }}>
-          {/* Gradient top line */}
+          {/* Top accent line */}
           <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: accent }} />
           <p className="text-[10px] font-mono uppercase tracking-[0.15em] text-[#8888a0] mb-2">
             {props.label}
           </p>
           <p className="text-2xl font-display font-bold text-[#e8e8f0]">{props.value}</p>
+          {props.subtitle && (
+            <p className="text-xs font-sans text-[#8888a0] mt-1">{props.subtitle}</p>
+          )}
           {props.change && (
             <p className={`text-xs font-mono mt-1.5 ${changeColor}`}>
               {arrow} {props.change}

@@ -34,6 +34,9 @@ export const trendzoCatalog = defineCatalog(schema, {
       props: z.object({
         title: z.string(),
         subtitle: z.string().optional(),
+        // Raw hex accent used by server-built ACTION_RESULT specs (Phase 1 Turn 3).
+        // Renders as a thin top border signaling semantic status.
+        accent: z.string().optional(),
       }),
       slots: ['default'],
       description: 'Titled section with optional subtitle, used to group related content',
@@ -44,9 +47,16 @@ export const trendzoCatalog = defineCatalog(schema, {
       props: z.object({
         label: z.string(),
         value: z.string(),
+        // Free-form subtitle — used by server-built ACTION_RESULT specs for
+        // secondary context like the creator name under a brief title.
+        subtitle: z.string().optional(),
         change: z.string().optional(),
         changeDirection: z.enum(['up', 'down', 'neutral']).optional(),
         accentColor: z.enum(['crimson', 'violet', 'cyan', 'gold', 'green']).optional(),
+        // Raw hex accent (Phase 1 Turn 3). Takes precedence over accentColor
+        // when present. Used by buildBriefStatusSpec / buildPerformanceSpec
+        // and Turn 2 structured action confirmations.
+        accent: z.string().optional(),
       }),
       description: 'Key performance indicator card with value, label, and optional trend. Use for metrics like total creators, average VPS, scripts this week, active briefs.',
     },
