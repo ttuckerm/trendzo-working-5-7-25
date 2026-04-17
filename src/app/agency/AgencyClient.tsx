@@ -704,15 +704,30 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     setAutoBriefing(true);
 
     try {
-      const res = await fetch('/api/triage/today', { cache: 'no-store' });
+      // Pass agencyId explicitly — the route can't rely on auth when
+      // NEXT_PUBLIC_DISABLE_AUTH is set (it gets a 'dev-user' id with no
+      // membership). The page already resolved agencyId server-side.
+      const url = agencyId
+        ? `/api/triage/today?agency_id=${encodeURIComponent(agencyId)}`
+        : '/api/triage/today';
+      const res = await fetch(url, { cache: 'no-store' });
       if (res.ok) {
         const triage = await res.json() as { items: unknown[]; stale: boolean; triage_date: string | null };
-        const marker = '[__TRENDZO_TRIAGE__] ' + JSON.stringify(triage);
-        sendMessage({ text: marker });
-        return;
+        // Only short-circuit the LLM if there's something to render. Empty
+        // triage on a brand-new install would otherwise leave the operator
+        // staring at "All quiet" forever — fall back to the LLM greeting
+        // until Phase 2A introduces the proper guided first-run state.
+        if (Array.isArray(triage.items) && triage.items.length > 0) {
+          const marker = '[__TRENDZO_TRIAGE__] ' + JSON.stringify(triage);
+          sendMessage({ text: marker });
+          return;
+        }
+        // eslint-disable-next-line no-console
+        console.info('[agency] triage empty, falling back to LLM greeting');
+      } else {
+        // eslint-disable-next-line no-console
+        console.warn('[agency] triage fetch failed, falling back to LLM greeting', res.status);
       }
-      // eslint-disable-next-line no-console
-      console.warn('[agency] triage fetch failed, falling back to LLM greeting', res.status);
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn('[agency] triage fetch threw, falling back to LLM greeting', err);
