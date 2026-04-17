@@ -9,7 +9,10 @@
 export { ComponentType, type ComponentSpec, COMPONENT_CATALOG, getComponentsForIntent } from './component-registry'
 export { ClayComponentRenderer, renderComponents } from './component-renderer'
 export { classifyIntent, type IntentClassification, type RenderStrategy } from './intent-classifier'
-export { handleComponentAction } from './action-handler'
+// NOTE: handleComponentAction is server-only (imports nodemailer via send-brief).
+// Consumers must import it directly from '@/lib/clay/action-handler' — NOT the
+// barrel — so client components pulling from '@/lib/clay' don't transitively
+// try to bundle nodemailer (which fails on Node's `fs` module in the browser).
 export {
   ACTION_REGISTRY,
   ALL_ACTION_IDS,
