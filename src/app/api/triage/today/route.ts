@@ -33,13 +33,20 @@ export async function GET(req: Request) {
     }
 
     if (!agencyId && process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      // Dev fallback: when auth bypass is on, look up the admin user's agency
+      // Dev fallback: when auth bypass is on, look up the agency owner row
+      // directly. The auth-admin API has been flaky ("Database error finding
+      // users") so we go via agency_members instead.
       const { createClient } = await import('@supabase/supabase-js')
       const { SUPABASE_URL, SUPABASE_SERVICE_KEY } = await import('@/lib/env')
       const sc = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-      const { data: adminList } = await sc.auth.admin.listUsers()
-      const adminUser = adminList?.users?.find((u: any) => u.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL)
-      if (adminUser) agencyId = await getUserAgencyId(adminUser.id)
+      const { data: ownerRow } = await sc
+        .from('agency_members')
+        .select('agency_id')
+        .eq('role', 'owner')
+        .eq('is_active', true)
+        .limit(1)
+        .maybeSingle()
+      if (ownerRow?.agency_id) agencyId = ownerRow.agency_id
     }
 
     if (!agencyId) return NextResponse.json({ items: [], triage_date: null, stale: false }, { status: 200 })

@@ -432,35 +432,16 @@ function ChatMessage({
 
   const showArtifactInline = hasSpec && spec;
 
-  // Phase 1 Turn 3: Clay is classification-only. The LLM's spec is the primary
-  // rendering path. Clay's suggestedComponents remain as a fallback for when
-  // the LLM hasn't emitted a spec — eventually the system prompt hint will
-  // cover this and ClayComponentBlock can be fully retired.
-  const hasClayComponents = clayClassification && clayClassification.suggestedComponents.length > 0
-
-  const fallbackComponents = !hasClayComponents && userMessageText
-    ? getComponentsForIntent(userMessageText)
-    : []
-
-  const componentsToRender = hasClayComponents
-    ? clayClassification!.suggestedComponents
-    : fallbackComponents
-
-  const componentData = hasClayComponents ? clayClassification!.componentData : undefined
-
-  // Render components block (fallback only — LLM spec takes precedence)
-  const ComponentsBlock = componentsToRender.length > 0 ? (
-    <div
-      className="clay-artifact mt-4"
-      style={{ margin: '12px 0 12px 36px', transformOrigin: 'top left' }}
-    >
-      <ClayComponentBlock
-        types={componentsToRender}
-        prefetchedData={componentData}
-        onAction={onComponentAction}
-      />
-    </div>
-  ) : null
+  // Phase 1 Turn 5: ClayComponentBlock fallback is fully retired in chat
+  // rendering. The LLM-authored spec (showArtifactInline) is the only render
+  // path for assistant content. This kills the "MORNING BRIEF / KPI SUMMARY /
+  // CREATOR PROFILE" empty-state cards that were appearing on every page load
+  // because getComponentsForIntent() matched the auto-greeting keywords.
+  // (ClayComponentRenderer is still used by inlineConfirmations below — those
+  // are Turn 2 action confirmations, not chat-thread renders.)
+  void clayClassification
+  void userMessageText
+  void onComponentAction
 
   // Render text block
   const TextBlock = text ? (
@@ -491,11 +472,10 @@ function ChatMessage({
         </div>
       ) : (
         <div className="clay-ai-msg w-full">
-          {/* Phase 1 Turn 3: single render path — text first, then any Clay
-              fallback components, then LLM-authored spec artifact. No more
-              renderStrategy branching (lead-with-components / components-only). */}
+          {/* Phase 1 Turn 5: assistant content is text + LLM-authored spec only.
+              Clay fallback components retired from chat rendering — they were
+              creating empty-state noise on every page load. */}
           {TextBlock}
-          {ComponentsBlock}
           {showArtifactInline && (
             <div
               className="clay-artifact mt-4"
@@ -738,6 +718,39 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
     sendMessage({ text: AUTO_GREETING });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Phase 1 Turn 5: Operator-triggered triage refresh. Re-runs the overnight
+  // job for this agency (not all agencies — that's the cron's job) and pushes
+  // a fresh deterministic spec into the chat so the operator can see the
+  // updated triage without waiting for tomorrow's 06:00 UTC run.
+  const [refreshingTriage, setRefreshingTriage] = useState(false);
+  const refreshTriage = useCallback(async () => {
+    if (refreshingTriage) return;
+    setRefreshingTriage(true);
+    try {
+      const runUrl = agencyId
+        ? `/api/triage/run?scope=mine`
+        : `/api/triage/run?scope=mine`;
+      const runRes = await fetch(runUrl, { method: 'POST', cache: 'no-store' });
+      if (!runRes.ok) {
+        console.warn('[agency] triage re-run failed', runRes.status);
+        return;
+      }
+      const todayUrl = agencyId
+        ? `/api/triage/today?agency_id=${encodeURIComponent(agencyId)}`
+        : '/api/triage/today';
+      const res = await fetch(todayUrl, { cache: 'no-store' });
+      if (!res.ok) return;
+      const triage = await res.json() as { items: unknown[]; stale: boolean; triage_date: string | null };
+      const marker = '[__TRENDZO_TRIAGE__] ' + JSON.stringify(triage);
+      sendMessageRef.current({ text: marker });
+    } catch (err) {
+      console.warn('[agency] refreshTriage threw', err);
+    } finally {
+      setRefreshingTriage(false);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agencyId, refreshingTriage]);
 
   useEffect(() => {
     if (sessionInitialized.current) return;
@@ -1294,26 +1307,10 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
               {/* ═══ CHAT ═══ */}
               <div className="flex-1 overflow-y-auto px-6 py-4 neu-scrollbar">
               <div className="max-w-3xl mx-auto">
-                {/* Critical proactive alerts — always rendered at top */}
-                {(() => {
-                  // Check if any classification has a critical proactive alert
-                  for (const cls of Object.values(clayClassifications)) {
-                    if (!cls.suggestedComponents.includes(ComponentType.PROACTIVE_ALERT)) continue
-                    const alertData = cls.componentData[ComponentType.PROACTIVE_ALERT]
-                    if (alertData && (alertData as Record<string, unknown>).severity === 'critical') {
-                      return (
-                        <div key="critical-alert-top" className="clay-critical-alert mb-4">
-                          <ClayComponentRenderer
-                            type={ComponentType.PROACTIVE_ALERT}
-                            data={alertData}
-                            onAction={handleComponentAction}
-                          />
-                        </div>
-                      )
-                    }
-                  }
-                  return null
-                })()}
+                {/* Phase 1 Turn 5: critical proactive alert block retired —
+                    was reading from Clay classifications which produced empty
+                    state cards. Critical alerts now flow through the triage
+                    pipeline (urgency 8+ items appear at top of morning brief). */}
 
                 {!hasSentFirst && messages.length === 0 && !autoBriefing && (
                   <div className="relative flex flex-col items-center justify-center min-h-[30vh]">
@@ -1505,6 +1502,22 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
                     background: 'linear-gradient(90deg, transparent, rgba(240,74,77,0.2) 30%, rgba(0,212,255,0.15) 70%, transparent)',
                   }}
                 />
+                {/* Phase 1 Turn 5: refresh-triage button. Re-runs the overnight
+                    job for this agency on demand and pushes a fresh spec into
+                    the chat. Hidden until first message has been sent. */}
+                {hasSentFirst && (
+                  <div className="max-w-3xl mx-auto mb-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={refreshTriage}
+                      disabled={refreshingTriage}
+                      className="text-[11px] font-mono uppercase tracking-[0.12em] px-3 py-1 rounded-full transition-opacity disabled:opacity-40 hover:opacity-80"
+                      style={{ color: NEU.textSecondary, background: 'transparent', border: `1px solid ${NEU.textSecondary}33` }}
+                    >
+                      {refreshingTriage ? 'Refreshing…' : '↻ Refresh triage'}
+                    </button>
+                  </div>
+                )}
                 <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
                   <div className="flex items-center gap-3">
                     <VoiceMicButton
