@@ -870,6 +870,41 @@ export const trendzoCatalog = defineCatalog(schema, {
         data_quality_note: z.string().optional().describe('Note about data completeness or limitations'),
       }),
     },
+
+    // === MORNING BRIEF — Phase 2A ===
+    // Card 2 from uiverse, adapted to DESIGN.md tokens. Single decision card
+    // for the operator's morning brief: who, what, why-it-matters, and 1-2
+    // primary actions with a status strip at the bottom.
+    ActionDecisionCard: {
+      props: z.object({
+        // Top meta row
+        metaLeft: z.string().describe('Type label, e.g. "OVERDUE" / "TREND" / "WIN"'),
+        metaRight: z.string().optional().describe('Right-aligned meta, e.g. "urgency 4/10"'),
+        // Creator block
+        avatarInitial: z.string().describe('Single character for avatar circle'),
+        creatorName: z.string(),
+        statusText: z.string().describe('Short status under creator name, e.g. "3 days overdue"'),
+        statusDotColor: z.string().optional().describe('Hex for the status dot, default uses bottomAccent'),
+        // Optional context block (the brief title or trend description)
+        context: z.string().optional(),
+        contextDetail: z.string().optional(),
+        // Actions — fire via the trendzo-action event bus (handled by AgencyClient.tsx actionHandlers)
+        primaryAction: z.object({
+          label: z.string(),
+          actionType: z.string().describe('Maps to a key in actionHandlers, e.g. "approve_brief"'),
+          payload: z.record(z.string(), z.any()).optional(),
+        }).optional(),
+        secondaryAction: z.object({
+          label: z.string(),
+          actionType: z.string(),
+          payload: z.record(z.string(), z.any()).optional(),
+        }).optional(),
+        // Bottom status strip
+        bottomLabel: z.string().optional().describe('All-caps status, e.g. "DELIVERED, NO OPEN SIGNAL"'),
+        bottomAccent: z.string().optional().describe('Hex bg for bottom strip, default DESIGN.md status-warning'),
+      }),
+      description: 'Decision card for the morning brief: meta + creator + actions + status strip. Each card represents one operator decision (approve, nudge, generate, etc.).',
+    },
   },
 
   actions: {

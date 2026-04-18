@@ -527,6 +527,222 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
 
     // ── INTERACTIVE ──────────────────────────────────────────────────
 
+    // ── ACTION DECISION CARD (Phase 2A) ─────────────────────────────────
+    // Adapted from uiverse Card 2. Dark-only per DESIGN.md non-negotiable.
+    // Card 2's bright bottom strip is replaced with status-token-driven color.
+    // Buttons fire via `useActions().handlers[actionType]` so they route into
+    // AgencyClient.tsx's actionHandlers map (Turn 2 wiring).
+    ActionDecisionCard: ({ props }) => {
+      const { handlers } = useActions();
+      const bottomAccent = props.bottomAccent || '#9A7A3A'; // status-warning default
+      const dotColor = props.statusDotColor || bottomAccent;
+
+      const fire = (a?: { actionType: string; payload?: Record<string, unknown> }) => {
+        if (!a?.actionType) return;
+        const h = handlers[a.actionType];
+        if (h) {
+          h({ ...(a.payload || {}), _source: 'action-decision-card', type: a.actionType });
+        } else {
+          // Fallback: dispatch a CustomEvent the way AgencyClient listens for
+          // (handles cases where the action isn't registered in the catalog
+          // but IS in the AgencyClient actionHandlers map).
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('trendzo-action', {
+              detail: { action: a.actionType, params: a.payload || {} },
+            }));
+          }
+        }
+      };
+
+      return (
+        <div
+          className="adc-card"
+          style={{
+            width: '100%',
+            maxWidth: 360,
+            borderRadius: 18,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            cursor: 'default',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04)',
+          }}
+        >
+          {/* Top dark section */}
+          <div
+            style={{
+              position: 'relative',
+              padding: 18,
+              background:
+                'radial-gradient(140% 120% at 0% 0%, rgba(255,255,255,0.10), transparent 45%), linear-gradient(180deg, #1E1F1F, #141414)',
+            }}
+          >
+            {/* Meta row */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                fontSize: 11,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: 'rgba(212,212,212,0.6)',
+                marginBottom: 14,
+                fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+              }}
+            >
+              <span>{props.metaLeft}</span>
+              {props.metaRight && <span>{props.metaRight}</span>}
+            </div>
+
+            {/* Creator block */}
+            <div style={{ display: 'flex', gap: 12, marginBottom: 14, alignItems: 'center' }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle at 30% 30%, #4a6b78, #2a3d44)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <span style={{ color: '#D4D4D4', fontWeight: 600, fontSize: 16 }}>
+                  {props.avatarInitial}
+                </span>
+              </div>
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div style={{ color: '#D4D4D4', fontWeight: 600, fontSize: 15, lineHeight: 1.2 }}>
+                  {props.creatorName}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    fontSize: 12,
+                    color: 'rgba(212,212,212,0.7)',
+                    marginTop: 2,
+                  }}
+                >
+                  <span style={{ width: 6, height: 6, background: dotColor, borderRadius: '50%' }} />
+                  {props.statusText}
+                </div>
+              </div>
+            </div>
+
+            {/* Optional context */}
+            {props.context && (
+              <div
+                style={{
+                  marginBottom: 14,
+                  padding: '10px 12px',
+                  borderRadius: 10,
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.05)',
+                }}
+              >
+                <div style={{ color: '#D4D4D4', fontWeight: 500, fontSize: 13, lineHeight: 1.35 }}>
+                  {props.context}
+                </div>
+                {props.contextDetail && (
+                  <div
+                    style={{
+                      color: 'rgba(212,212,212,0.55)',
+                      fontSize: 11,
+                      marginTop: 4,
+                      lineHeight: 1.4,
+                    }}
+                  >
+                    {props.contextDetail}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Stacked actions */}
+            {(props.primaryAction || props.secondaryAction) && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {props.primaryAction && (
+                  <button
+                    onClick={() => fire(props.primaryAction)}
+                    style={{
+                      height: 38,
+                      borderRadius: 10,
+                      border: 'none',
+                      cursor: 'pointer',
+                      color: '#D4D4D4',
+                      fontSize: 13,
+                      fontWeight: 500,
+                      background:
+                        'linear-gradient(180deg, rgba(108,146,160,0.35), rgba(108,146,160,0.18))',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
+                      transition: 'transform 0.15s ease, filter 0.15s ease',
+                    }}
+                    onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
+                    onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.1)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.filter = 'brightness(1)')}
+                  >
+                    {props.primaryAction.label}
+                  </button>
+                )}
+                {props.secondaryAction && (
+                  <button
+                    onClick={() => fire(props.secondaryAction)}
+                    style={{
+                      height: 38,
+                      borderRadius: 10,
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      cursor: 'pointer',
+                      color: '#A8A9A9',
+                      fontSize: 13,
+                      fontWeight: 500,
+                      background: 'transparent',
+                      transition: 'transform 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+                    }}
+                    onMouseDown={(e) => (e.currentTarget.style.transform = 'translateY(1px)')}
+                    onMouseUp={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#D4D4D4';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#A8A9A9';
+                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
+                    }}
+                  >
+                    {props.secondaryAction.label}
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Bottom status strip — replaces Card 2's bright green */}
+          {props.bottomLabel && (
+            <div
+              style={{
+                background: bottomAccent,
+                padding: '10px 14px',
+                textAlign: 'center',
+                fontWeight: 600,
+                fontSize: 11,
+                letterSpacing: '0.10em',
+                textTransform: 'uppercase',
+                color: '#1E1F1F',
+                fontFamily: 'ui-monospace, SFMono-Regular, monospace',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.18)',
+              }}
+            >
+              {props.bottomLabel}
+            </div>
+          )}
+        </div>
+      );
+    },
+
     ActionButton: ({ props, emit, on }) => {
       const { handlers } = useActions();
       const base = 'px-4 py-2 rounded-lg text-sm font-sans font-medium transition-all duration-200 cursor-pointer';

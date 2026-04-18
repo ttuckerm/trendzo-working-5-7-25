@@ -127,6 +127,55 @@ function buildFallbackSpec(): string {
  *   5-7  → status-warning (#9A7A3A amber)
  *   1-4  → status-success (#4A8C6A green) — low urgency / informational
  */
+/**
+ * Map a triage item's suggested_actions to a primary/secondary button spec.
+ * Phase 2A: each card has at most 2 visible actions; rest are accessible via
+ * deep-dive. Order of preference per item type:
+ *   overdue_brief         → Nudge (primary), Mark in production (secondary)
+ *   trend_opportunity     → Generate brief (primary), View matches (secondary)
+ *   performance_highlight → Generate similar (primary), View deep-dive (secondary)
+ */
+function actionsForTriageItem(item: any): {
+  primary?: { label: string; actionType: string; payload: Record<string, unknown> };
+  secondary?: { label: string; actionType: string; payload: Record<string, unknown> };
+} {
+  const briefId = item?.data?.brief_id;
+  const eventId = item?.data?.event_id;
+  const creatorId = item?.creator_id;
+
+  switch (item.type) {
+    case 'overdue_brief':
+      return {
+        primary: briefId
+          ? { label: 'Nudge', actionType: 'nudge_creator', payload: { briefId, creatorId } }
+          : undefined,
+        secondary: briefId
+          ? { label: 'Check delivery', actionType: 'check_push_status', payload: { briefId } }
+          : undefined,
+      };
+    case 'trend_opportunity':
+      return {
+        primary: eventId
+          ? { label: 'Generate brief', actionType: 'generate_brief', payload: { eventId } }
+          : undefined,
+        secondary: eventId
+          ? { label: 'Match creators', actionType: 'match_creators_to_event', payload: { eventId } }
+          : undefined,
+      };
+    case 'performance_highlight':
+      return {
+        primary: creatorId
+          ? { label: 'Generate similar', actionType: 'generate_brief', payload: { creatorName: item.creator_name } }
+          : undefined,
+        secondary: creatorId
+          ? { label: 'Deep dive', actionType: 'analyze_creator', payload: { creatorName: item.creator_name } }
+          : undefined,
+      };
+    default:
+      return {};
+  }
+}
+
 function buildTriageSpec(payload: { stale?: boolean; triage_date?: string | null; items: any[] }): string {
   const lines: string[] = [];
   const rootId = 'mb-1';
@@ -147,26 +196,84 @@ function buildTriageSpec(payload: { stale?: boolean; triage_date?: string | null
   if (!payload.stale && items.length > 0) headerProps.push(`"accent":"#6C92A0"`);
   if (payload.stale) headerProps.push(`"accent":"#9A7A3A"`);
 
-  const kpiIds = items.map((_, i) => `mb-kpi-${i + 1}`);
+  const cardIds = items.map((_, i) => `mb-card-${i + 1}`);
   lines.push(
-    `{"op":"add","path":"/elements/${rootId}","value":{"type":"Section","props":{${headerProps.join(',')}},"children":${JSON.stringify(kpiIds)}}}`,
+    `{"op":"add","path":"/elements/${rootId}","value":{"type":"Section","props":{${headerProps.join(',')}},"children":${JSON.stringify(cardIds)}}}`,
   );
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     const urgency = Number(item.urgency) || 0;
-    const accent = urgency >= 8 ? '#C07B74' : urgency >= 5 ? '#9A7A3A' : '#4A8C6A';
+    const bottomAccent = urgency >= 8 ? '#C07B74' : urgency >= 5 ? '#9A7A3A' : '#4A8C6A';
     const typeLabel =
-      item.type === 'overdue_brief' ? 'Overdue'
-      : item.type === 'trend_opportunity' ? 'Trend'
-      : item.type === 'performance_highlight' ? 'Win'
-      : String(item.type || '').replace(/_/g, ' ');
+      item.type === 'overdue_brief' ? 'OVERDUE'
+      : item.type === 'trend_opportunity' ? 'TREND'
+      : item.type === 'performance_highlight' ? 'WIN'
+      : String(item.type || '').replace(/_/g, ' ').toUpperCase();
 
-    const cardValue = String(item.summary || '').slice(0, 180);
-    const cardSubtitle = `${typeLabel} · urgency ${urgency}/10 · ${String(item.creator_name || '')}`;
+    const creatorName = String(item.creator_name || 'Unknown');
+    const avatarInitial = (creatorName.trim()[0] || '?').toUpperCase();
+
+    // Status text under creator name — short, action-relevant
+    const statusText = (() => {
+      if (item.type === 'overdue_brief') {
+        const days = item?.data?.days_overdue;
+        return days ? `${days} day${days === 1 ? '' : 's'} overdue` : 'overdue';
+      }
+      if (item.type === 'trend_opportunity') {
+        const hrs = item?.data?.hours_left;
+        return typeof hrs === 'number' ? `closes in ${Math.ceil(hrs)}h` : 'trend opportunity';
+      }
+      if (item.type === 'performance_highlight') {
+        const pct = item?.data?.pct_delta;
+        return typeof pct === 'number' ? `+${Math.round(pct)}% vs prediction` : 'performance win';
+      }
+      return '';
+    })();
+
+    // Context block — the headline that was previously the KPICard's value
+    const briefTitleMatch = String(item.summary || '').match(/"([^"]+)"/);
+    const context = briefTitleMatch ? briefTitleMatch[1] : item.summary;
+    const contextDetail = (() => {
+      if (item.type === 'overdue_brief') {
+        return item?.data?.opened ? 'Opened by creator, no response' : 'No open signal yet';
+      }
+      if (item.type === 'trend_opportunity') {
+        return item?.data?.matched_creator
+          ? `Matched: ${item.data.matched_creator.name}`
+          : 'No creator matched yet';
+      }
+      return undefined;
+    })();
+
+    const bottomLabel = (() => {
+      if (item.type === 'overdue_brief') {
+        return item?.data?.opened ? 'OPENED · NO REPLY' : 'DELIVERED · NO OPEN SIGNAL';
+      }
+      if (item.type === 'trend_opportunity') return `URGENCY ${urgency}/10`;
+      if (item.type === 'performance_highlight') return 'POSITIVE SURPRISE';
+      return undefined;
+    })();
+
+    const { primary, secondary } = actionsForTriageItem(item);
+
+    const cardProps: Record<string, unknown> = {
+      metaLeft: typeLabel,
+      metaRight: `urgency ${urgency}/10`,
+      avatarInitial,
+      creatorName,
+      statusText,
+      statusDotColor: bottomAccent,
+      context,
+      contextDetail,
+      bottomLabel,
+      bottomAccent,
+    };
+    if (primary) cardProps.primaryAction = primary;
+    if (secondary) cardProps.secondaryAction = secondary;
 
     lines.push(
-      `{"op":"add","path":"/elements/${kpiIds[i]}","value":{"type":"KPICard","props":{"label":${escSpecString(typeLabel)},"value":${escSpecString(cardValue)},"subtitle":${escSpecString(cardSubtitle)},"accent":"${accent}"},"children":[]}}`,
+      `{"op":"add","path":"/elements/${cardIds[i]}","value":{"type":"ActionDecisionCard","props":${JSON.stringify(cardProps)},"children":[]}}`,
     );
   }
 
