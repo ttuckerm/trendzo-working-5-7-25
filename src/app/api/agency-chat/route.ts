@@ -195,6 +195,7 @@ function buildTriageSpec(payload: { stale?: boolean; triage_date?: string | null
   if (subtitle) headerProps.push(`"subtitle":${escSpecString(subtitle)}`);
   if (!payload.stale && items.length > 0) headerProps.push(`"accent":"#6C92A0"`);
   if (payload.stale) headerProps.push(`"accent":"#9A7A3A"`);
+  if (items.length > 1) headerProps.push(`"layout":"grid"`);
 
   const cardIds = items.map((_, i) => `mb-card-${i + 1}`);
   lines.push(

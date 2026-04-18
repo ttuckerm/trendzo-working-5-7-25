@@ -114,9 +114,6 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
     ),
 
     Section: ({ props, children }) => (
-      // Phase 1 Turn 3: honor `accent` prop written by buildBriefStatusSpec /
-      // buildPerformanceSpec / Turn 2 action confirmations. A thin top border
-      // in the accent color signals the section's semantic status.
       <div className="space-y-3">
         {props.accent && (
           <div className="h-[2px] rounded-full" style={{ background: props.accent }} />
@@ -129,7 +126,11 @@ export const { registry, handlers, executeAction } = defineRegistry(trendzoCatal
             <p className="text-sm font-sans text-[#8888a0] mt-0.5">{props.subtitle}</p>
           )}
         </div>
-        {children}
+        {props.layout === 'grid' ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">{children}</div>
+        ) : (
+          children
+        )}
       </div>
     ),
 

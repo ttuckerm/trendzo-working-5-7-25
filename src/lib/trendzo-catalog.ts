@@ -37,6 +37,8 @@ export const trendzoCatalog = defineCatalog(schema, {
         // Raw hex accent used by server-built ACTION_RESULT specs (Phase 1 Turn 3).
         // Renders as a thin top border signaling semantic status.
         accent: z.string().optional(),
+        // "grid" arranges children in a 2-column responsive grid; default stacks vertically.
+        layout: z.enum(['stack', 'grid']).optional(),
       }),
       slots: ['default'],
       description: 'Titled section with optional subtitle, used to group related content',
