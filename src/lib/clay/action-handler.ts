@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { ComponentType } from './component-registry'
 import { sendBriefToCreator } from '@/lib/email/send-brief'
+import { emitEvent } from '@/lib/events/emit'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DB = any
@@ -69,6 +70,18 @@ export async function handleComponentAction(
   context: ActionContext,
 ): Promise<ActionResult> {
   const db = getServiceClient()
+
+  emitEvent({
+    eventType: 'action.confirmed',
+    payload: {
+      actionType: action.type,
+      actionId: action.actionId,
+      payloadKeys: Object.keys(action.payload ?? {}),
+    },
+    actorType: 'user',
+    actorId: context.userId,
+    agencyId: context.agencyId,
+  }).catch(() => {})
 
   try {
     switch (action.type) {
@@ -817,6 +830,19 @@ async function pushBriefToCreators(
       results.push({ creatorId, success: false, error: insertErr.message })
       continue
     }
+    emitEvent({
+      eventType: 'brief.generated',
+      payload: {
+        briefId: newBrief.id,
+        sourceBriefId: briefId,
+        creatorId: creatorId,
+      },
+      actorType: 'user',
+      actorId: context.userId,
+      agencyId: context.agencyId,
+      entityType: 'content_brief',
+      entityId: newBrief.id,
+    }).catch(() => {})
     const sendResult = await sendBriefToCreator(newBrief.id)
     results.push({ creatorId, briefId: newBrief.id, success: sendResult.success, error: sendResult.error })
   }

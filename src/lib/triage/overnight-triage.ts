@@ -21,6 +21,7 @@ import {
   TRIAGE_RETENTION_DAYS,
   type TriageItem,
 } from '@/lib/clay/intelligent-clay-registry'
+import { emitEvent } from '@/lib/events/emit'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DB = any
@@ -259,6 +260,18 @@ export async function runTriageForAgency(db: DB, agencyId: string): Promise<numb
       { onConflict: 'agency_id,triage_date' },
     )
   if (upsertErr) throw new Error(`upsert failed: ${upsertErr.message}`)
+
+  emitEvent({
+    eventType: 'triage.generated',
+    payload: {
+      itemCount: topItems.length,
+      triageDate: today,
+      itemTypes: topItems.map((i) => i.type),
+    },
+    actorType: 'cron',
+    agencyId: agencyId,
+    entityType: 'agency_triage',
+  }).catch(() => {})
 
   return topItems.length
 }

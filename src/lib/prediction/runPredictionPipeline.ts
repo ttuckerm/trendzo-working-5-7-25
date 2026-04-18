@@ -908,7 +908,10 @@ export async function runPredictionPipeline(
               vpsScore: finalResult.predicted_vps,
               tier: finalResult.predicted_tier_7d,
               confidence: finalResult.confidence,
+              latencyMs: finalLatencyMs,
             },
+            actorType: 'system',
+            correlationId: runId,
             entityType: 'prediction_run',
             entityId: runId,
           }).catch(() => {});
@@ -922,6 +925,20 @@ export async function runPredictionPipeline(
             niche: options.niche ?? null,
             content_format: options.mode ?? 'standard',
           });
+        } else if (finalStatus === 'failed') {
+          emitEvent({
+            eventType: 'pipeline.error',
+            payload: {
+              predictionRunId: runId,
+              videoId,
+              error: finalError,
+              latencyMs: finalLatencyMs,
+            },
+            actorType: 'system',
+            correlationId: runId,
+            entityType: 'prediction_run',
+            entityId: runId,
+          }).catch(() => {});
         }
       }
     } catch (dbError: any) {
