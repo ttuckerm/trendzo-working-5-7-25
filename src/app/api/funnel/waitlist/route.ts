@@ -122,7 +122,6 @@ export async function POST(request: Request) {
 
       try {
         // Step 1: POST — create or reactivate subscription
-        // NOTE: Beehiiv v2 POST ignores `tags` — must use PATCH (Step 2)
         const createRes = await fetch(
           `${BEEHIIV_BASE}/publications/${publicationId}/subscriptions`,
           {
@@ -155,30 +154,31 @@ export async function POST(request: Request) {
           console.error('[funnel/waitlist] Beehiiv POST error:', { status: createRes.status, body: errText.slice(0, 500) })
         }
 
-        // Step 2: PATCH — apply tags (Beehiiv v2 only accepts tags via PATCH, not POST)
+        // Step 2: POST tags via the dedicated /tags endpoint.
+        // Tags cannot be set via PUT/PATCH on the subscription resource.
         if (subscriptionId) {
           try {
             const tagRes = await fetch(
-              `${BEEHIIV_BASE}/publications/${publicationId}/subscriptions/${subscriptionId}`,
+              `${BEEHIIV_BASE}/publications/${publicationId}/subscriptions/${subscriptionId}/tags`,
               {
-                method: 'PATCH',
+                method: 'POST',
                 headers: beehiivHeaders,
                 body: JSON.stringify({ tags: desiredTags }),
               },
             )
             if (tagRes.ok) {
               const tagData = await tagRes.json()
-              console.log('[funnel/waitlist] Beehiiv tag PATCH status:', tagRes.status)
-              console.log('[funnel/waitlist] Beehiiv tag PATCH response tags:', tagData?.data?.tags)
+              console.log('[funnel/waitlist] Beehiiv tag POST status:', tagRes.status)
+              console.log('[funnel/waitlist] Beehiiv tag POST response tags:', tagData?.data?.tags)
             } else {
               const tagErr = await tagRes.text()
-              console.error('[funnel/waitlist] Beehiiv tag PATCH error:', {
+              console.error('[funnel/waitlist] Beehiiv tag POST error:', {
                 status: tagRes.status,
                 body: tagErr.slice(0, 500),
               })
             }
-          } catch (tagPatchErr) {
-            console.error('[funnel/waitlist] Beehiiv tag PATCH failed:', tagPatchErr)
+          } catch (tagPostErr) {
+            console.error('[funnel/waitlist] Beehiiv tag POST failed:', tagPostErr)
           }
         }
       } catch (err) {

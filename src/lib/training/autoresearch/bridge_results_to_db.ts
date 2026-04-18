@@ -36,11 +36,14 @@ interface Cli {
   experimentId: string;
   hypothesis: string;
   dropFeatures: string;
+  keepOnlyFeatures: string;
   addFeatures: string;
   excludeRowsWhere: string;
   optunaTrials: string;
   maxDepthRange: string;
   learningRateRange: string;
+  nEstimators: string;
+  earlyStoppingRounds: string;
   outputDir: string;
   trainingCsv?: string;
   holdoutCsv?: string;
@@ -64,11 +67,14 @@ function parseArgs(): Cli {
     experimentId,
     hypothesis: get('--hypothesis', ''),
     dropFeatures: get('--drop-features', ''),
+    keepOnlyFeatures: get('--keep-only-features', ''),
     addFeatures: get('--add-features', ''),
     excludeRowsWhere: get('--exclude-rows-where', 'none'),
     optunaTrials: get('--optuna-trials', '100'),
     maxDepthRange: get('--max-depth-range', '3,10'),
     learningRateRange: get('--learning-rate-range', '0.01,0.3'),
+    nEstimators: get('--n-estimators', ''),
+    earlyStoppingRounds: get('--early-stopping-rounds', ''),
     outputDir: get('--output-dir', `results-autoresearch/${experimentId}`),
     trainingCsv: get('--training-csv'),
     holdoutCsv: get('--holdout-csv'),
@@ -193,6 +199,7 @@ function runPython(cli: Cli): Promise<void> {
     '--experiment-id', cli.experimentId,
     '--hypothesis', cli.hypothesis || `Autoresearch ${cli.experimentId}`,
     '--drop-features', cli.dropFeatures,
+    '--keep-only-features', cli.keepOnlyFeatures,
     '--add-features', cli.addFeatures,
     '--exclude-rows-where', cli.excludeRowsWhere,
     '--optuna-trials', cli.optunaTrials,
@@ -200,6 +207,8 @@ function runPython(cli: Cli): Promise<void> {
     '--learning-rate-range', cli.learningRateRange,
     '--output-dir', cli.outputDir,
   ];
+  if (cli.nEstimators) args.push('--n-estimators', cli.nEstimators);
+  if (cli.earlyStoppingRounds) args.push('--early-stopping-rounds', cli.earlyStoppingRounds);
   if (cli.trainingCsv) args.push('--training-csv', cli.trainingCsv);
   if (cli.holdoutCsv) args.push('--holdout-csv', cli.holdoutCsv);
 
