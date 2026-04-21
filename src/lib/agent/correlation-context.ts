@@ -38,3 +38,13 @@ export function runWithAgentContext<T>(ctx: AgentContext, fn: () => Promise<T> |
 export function getAgentContext(): AgentContext | undefined {
   return storage.getStore();
 }
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+/**
+ * Coerce a string to a UUID or undefined. Used at platform_events emit
+ * boundaries where actor_id / agency_id columns are `uuid` and reject sentinel
+ * values like 'dev-user' (the bypass-auth userId) or empty strings.
+ */
+export function uuidOrNull(s: string | undefined | null): string | undefined {
+  return s && UUID_RE.test(s) ? s : undefined;
+}

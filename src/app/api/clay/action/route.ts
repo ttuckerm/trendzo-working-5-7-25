@@ -4,6 +4,7 @@ import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { handleComponentAction } from '@/lib/clay/action-handler'
 import { emitEvent, emitEventStrict } from '@/lib/events/emit'
 import { hashPayload } from '@/lib/agent/proposal-gate'
+import { uuidOrNull } from '@/lib/agent/correlation-context'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
@@ -97,8 +98,8 @@ export async function POST(req: Request) {
           eventType: 'agent.write_unauthorized',
           payload: { proposal_id: proposalId, reason: 'payload_hash_mismatch', action_id: type },
           actorType: 'user',
-          actorId: ctx.userId,
-          agencyId: ctx.agencyId,
+          actorId: uuidOrNull(ctx.userId),
+          agencyId: uuidOrNull(ctx.agencyId),
           correlationId,
         }).catch(() => {})
         return NextResponse.json(
@@ -118,8 +119,8 @@ export async function POST(req: Request) {
             action_payload: actionPayload,
           },
           actorType: 'user',
-          actorId: ctx.userId,
-          agencyId: ctx.agencyId,
+          actorId: uuidOrNull(ctx.userId),
+          agencyId: uuidOrNull(ctx.agencyId),
           correlationId,
         })
       } catch (err) {
@@ -146,8 +147,8 @@ export async function POST(req: Request) {
             action_id: type,
           },
           actorType: 'user',
-          actorId: ctx.userId,
-          agencyId: ctx.agencyId,
+          actorId: uuidOrNull(ctx.userId),
+          agencyId: uuidOrNull(ctx.agencyId),
           correlationId,
         }).catch(() => {})
         return NextResponse.json(

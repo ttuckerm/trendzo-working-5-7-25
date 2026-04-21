@@ -21,7 +21,7 @@ import { tool } from 'ai';
 import { randomUUID } from 'node:crypto';
 import { ADAPTERS, type ActionAdapter } from './handler-adapters';
 import { hashPayload } from './proposal-gate';
-import type { AgentContext } from './correlation-context';
+import { type AgentContext, uuidOrNull } from './correlation-context';
 import { emitEventStrict } from '@/lib/events/emit';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -75,10 +75,14 @@ export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, Any
               action_payload: input,
               expires_at: expiresAt,
               consumed: false,
+              // Preserve the raw caller IDs in payload for audit even when the
+              // top-level uuid columns coerce to null (e.g. dev-user).
+              raw_user_id: context.userId,
+              raw_agency_id: context.agencyId,
             },
             actorType: 'agent',
-            actorId: context.userId,
-            agencyId: context.agencyId,
+            actorId: uuidOrNull(context.userId),
+            agencyId: uuidOrNull(context.agencyId),
             correlationId: context.correlationId,
           });
         } catch (err) {
