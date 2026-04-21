@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { handleComponentAction } from '@/lib/clay/action-handler'
-import { emitEventStrict } from '@/lib/events/emit'
 
 export const runtime = 'nodejs'
 
@@ -65,52 +64,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'No agency found' }, { status: 403 })
     }
 
-    // Stage 3 Phase 2: agent proposal-confirm branch.
-    // When the click carries a proposal_id (only the agent's propose_* tools
-    // set this), we DO NOT execute the underlying write here. Instead we
-    // write an `agent.proposal_confirmed` event to platform_events — the
-    // real <action> tool on the agent's NEXT turn will find that event via
-    // the consume_agent_proposal RPC and execute atomically. Any non-agent
-    // click (ActionButton rendered from a list) has no proposal_id and keeps
-    // the direct-execute path below unchanged.
-    const p = (payload || {}) as Record<string, unknown>
-    const proposalId = typeof p.proposal_id === 'string' ? p.proposal_id : null
-    const payloadHash = typeof p.payload_hash === 'string' ? p.payload_hash : null
-    const correlationId = typeof p.correlation_id === 'string' ? p.correlation_id : undefined
-    if (proposalId && payloadHash) {
-      try {
-        await emitEventStrict({
-          eventType: 'agent.proposal_confirmed',
-          payload: {
-            proposal_id: proposalId,
-            payload_hash: payloadHash,
-            action_id: type,
-            // Strip gate-metadata from action payload so the agent sees the original args.
-            action_payload: Object.fromEntries(
-              Object.entries(p).filter(([k]) => k !== 'proposal_id' && k !== 'payload_hash' && k !== 'correlation_id'),
-            ),
-            consumed: false,
-          },
-          actorType: 'user',
-          actorId: ctx.userId,
-          agencyId: ctx.agencyId,
-          correlationId,
-        })
-      } catch (err) {
-        console.error('[clay/action] proposal_confirmed strict emit failed:', err)
-        return NextResponse.json(
-          { error: 'Could not record your confirmation. Please try again.', success: false },
-          { status: 500 },
-        )
-      }
-      return NextResponse.json({
-        success: true,
-        message: 'Confirmed. Tell the agent "go" (or anything) and it will execute the action.',
-      })
-    }
-
     const result = await handleComponentAction(
-      { actionId, type, payload: p },
+      { actionId, type, payload: payload || {} },
       ctx,
     )
 
