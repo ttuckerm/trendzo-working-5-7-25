@@ -29,10 +29,18 @@ import { hashPayload, verifyAndConsumeProposal } from './proposal-gate';
 import type { AgentContext } from './correlation-context';
 import { emitEvent, emitEventStrict } from '@/lib/events/emit';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTool = any;
+
 export interface BuildToolsArgs {
   context: AgentContext;
-  /** Pre-built read tools (e.g. get_briefs_by_status) that don't need the proposal gate. */
-  extraReadTools?: Record<string, ReturnType<typeof tool>>;
+  /**
+   * Pre-built read tools (e.g. get_briefs_by_status) that don't need the proposal gate.
+   * Typed loosely — AI SDK's tool() return type trips TS2589 (deep instantiation) when
+   * mixed with inline tool() calls that use zod schemas; matches the existing
+   * project convention of @ts-expect-error on tool() definitions.
+   */
+  extraReadTools?: Record<string, AnyTool>;
 }
 
 const PROPOSAL_TTL_MINUTES = 10;
@@ -55,9 +63,9 @@ function realDescription(adapter: ActionAdapter): string {
   );
 }
 
-export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, ReturnType<typeof tool>> {
+export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, AnyTool> {
   const { context } = args;
-  const out: Record<string, ReturnType<typeof tool>> = { ...(args.extraReadTools ?? {}) };
+  const out: Record<string, AnyTool> = { ...(args.extraReadTools ?? {}) };
 
   for (const adapter of Object.values(ADAPTERS)) {
     const proposeName = `propose_${adapter.id}`;
