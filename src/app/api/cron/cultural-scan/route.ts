@@ -491,6 +491,10 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 // ═══════════════════════════════════════════════════════════════════════
 
 export async function GET(request: NextRequest) {
+  const auth = request.headers.get('authorization')
+  if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const { searchParams } = new URL(request.url)
   const targetNiche = searchParams.get('niche') || null
   const phase = searchParams.get('phase') || 'all' // reddit | twitter | synthesize | all

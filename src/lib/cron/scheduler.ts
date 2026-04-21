@@ -840,7 +840,11 @@ async function runCulturalScanViaApi(niche?: string): Promise<any> {
     ? `${baseUrl}/api/cron/cultural-scan?niche=${encodeURIComponent(niche)}`
     : `${baseUrl}/api/cron/cultural-scan`
 
-  const res = await fetch(url, { cache: 'no-store' })
+  const secret = process.env.CRON_SECRET
+  const res = await fetch(url, {
+    cache: 'no-store',
+    headers: secret ? { Authorization: `Bearer ${secret}` } : undefined,
+  })
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`Cultural scan API returned ${res.status}: ${text}`)
@@ -870,7 +874,11 @@ async function runEventClassifierViaApi(niche?: string): Promise<any> {
     ? `${baseUrl}/api/cron/classify-events?niche=${encodeURIComponent(niche)}`
     : `${baseUrl}/api/cron/classify-events`
 
-  const res = await fetch(url, { cache: 'no-store' })
+  const secret = process.env.CRON_SECRET
+  const res = await fetch(url, {
+    cache: 'no-store',
+    headers: secret ? { Authorization: `Bearer ${secret}` } : undefined,
+  })
   if (!res.ok) {
     const text = await res.text()
     throw new Error(`Event classifier API returned ${res.status}: ${text}`)
