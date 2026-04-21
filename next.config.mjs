@@ -76,7 +76,15 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    instrumentationHook: true,
+    // TEMPORARILY disabled 2026-04-21 — src/instrumentation.ts pulls the entire
+    // scheduler chain (node-cron → fluent-ffmpeg → fresh-video-scanner) into
+    // webpack's bundle target, which can't resolve Node built-ins (fs, path)
+    // in the instrumentation context. Dev server returns 500 on every route.
+    // Auto-start convenience is lost (kick the scheduler manually via
+    // /api/admin/integration/status on boot). Re-enable after the
+    // instrumentation chain is refactored to use runtime require() so webpack
+    // doesn't statically analyze it.
+    instrumentationHook: false,
     optimizeServerReact: true,
     optimizePackageImports: [
       'lucide-react',
