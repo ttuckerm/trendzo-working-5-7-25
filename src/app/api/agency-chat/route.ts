@@ -1,7 +1,7 @@
 import { streamText, convertToModelMessages, tool, stepCountIs } from 'ai';
 import { z } from 'zod';
 import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { anthropic } from '@ai-sdk/anthropic';
 import { pipeJsonRender } from '@json-render/core';
 import { trendzoCatalog } from '@/lib/trendzo-catalog';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
@@ -1536,9 +1536,14 @@ ${dataContext}
 - Use KPICard for metrics, Grid columns=2 for creators / columns=3-4 for KPIs, Section with titles, ActionButton for next steps.
 - Populate components with REAL data. Never invent data. Skip components if data is missing.
 - Actions: analyze_creator, generate_brief, refresh_data, export_report, navigate_creator, send_invite, nudge_creator, create_event, match_creators_to_event, generate_batch_briefs, approve_brief, schedule_post, reschedule_post, update_brief_status, log_performance.
-- update_brief_status: use when the operator asks to mark a brief acknowledged/in-production/published. Render an ActionButton with action="update_brief_status" and payload { briefId, new_status: 'acknowledged'|'in_production'|'published', published_url?: string }. For 'published', ask for the TikTok URL first if the operator has not provided one.
+- update_brief_status: use when the operator asks to mark a brief acknowledged/in-production/published. Render an ActionButton with action="update_brief_status" and payload { briefId, new_status: 'acknowledged'|'in_production'|'published', published_url?: string }. For 'published', ask for the TikTok URL first if the operator has not provided one. **Multi-match rule:** if the operator names a creator (or any criterion) that matches MORE than one brief — e.g. "mark Luna in production" and Luna has 3 active briefs — DO NOT ask the operator to paste a brief ID. Instead, call get_briefs_by_status to fetch the candidates, then render a Grid of one ContentBriefCard per matching brief, each carrying its own ActionButton(action="update_brief_status", payload={briefId:<that row's id>, new_status:<target>}). The operator clicks the brief they meant.
 - log_performance: use after a brief is published and the operator wants to record actual performance. Render an ActionButton with action="log_performance" and payload { briefId, actual_views: number, actual_engagement_rate?: number }. If the operator has not given numbers yet, prompt for them before rendering the button.
-- Read tools: call get_briefs_by_status when the operator asks to see briefs by state/creator ("show delivered", "what's waiting"). Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Use the returned rows to populate KPICards / CreatorCards / ContentBriefs through the normal spec pipeline — never paste raw JSON.
+- Read tools: call get_briefs_by_status when the operator asks to see briefs by state/creator ("show delivered", "what's waiting"). Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Render returned brief rows as a Grid of ContentBriefCards — one per row, NEVER as static KPICards or plain text — and attach the ActionButton appropriate for each card's current completion_status (legal next-state transition):
+  • completion_status='delivered'    → ActionButton(action="update_brief_status", label="Mark Acknowledged",  payload={briefId, new_status:"acknowledged"})
+  • completion_status='acknowledged' → ActionButton(action="update_brief_status", label="Mark In Production", payload={briefId, new_status:"in_production"})
+  • completion_status='in_production'→ ActionButton(action="update_brief_status", label="Mark Published",     payload={briefId, new_status:"published"})  // ask for the TikTok URL first; pass payload.published_url
+  • completion_status='published'    → ActionButton(action="log_performance",     label="Log Performance",    payload={briefId, actual_views, actual_engagement_rate?})  // ask for views first
+  Never paste raw JSON. The briefId in every button MUST be the row's id field returned by the tool — not a placeholder, not a name.
 
 ## POST-WRITE CONFIRMATION CARDS — HIGHEST PRIORITY (overrides every other rule below)
 
@@ -1673,16 +1678,39 @@ Operator may reference prior context — use conversation history.`;
     },
   });
 
+  // Stage 3 Phase 1: Anthropic + prompt caching. System message carries
+  // providerOptions.anthropic.cacheControl so Claude reuses the cached system
+  // across turns in the same session (90% discount on cached input tokens).
+  // Acceptance: second call in the same session should show cachedInputTokens > 0.
   const result = streamText({
-    model: openai('gpt-4o'),
-    system: systemPrompt,
-    messages: modelMessages,
+    model: anthropic('claude-haiku-4-5'),
+    messages: [
+      {
+        role: 'system',
+        content: systemPrompt,
+        providerOptions: {
+          anthropic: { cacheControl: { type: 'ephemeral' } },
+        },
+      },
+      ...modelMessages,
+    ],
     tools: {
       get_briefs_by_status: getBriefsByStatus,
       get_performance_summary: getPerformanceSummary,
     },
     stopWhen: stepCountIs(3),
   });
+
+  // Fire-and-forget usage log — proves cache is working without blocking stream.
+  result.usage
+    .then((u: any) => {
+      const cached = u.cachedInputTokens ?? u.cache_read_input_tokens ?? 0;
+      console.log(
+        `[agency-chat] Usage: input=${u.inputTokens ?? u.promptTokens ?? '?'} ` +
+        `output=${u.outputTokens ?? u.completionTokens ?? '?'} cached=${cached}`
+      );
+    })
+    .catch(() => {});
 
   const stream = createUIMessageStream({
     execute: async ({ writer }) => {
