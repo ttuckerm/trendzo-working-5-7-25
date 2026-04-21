@@ -75,6 +75,7 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
+    instrumentationHook: true,
     optimizeServerReact: true,
     optimizePackageImports: [
       'lucide-react',
