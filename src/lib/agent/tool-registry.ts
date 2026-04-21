@@ -1,38 +1,40 @@
 /**
- * Stage 3 Phase 2: agent tool registry.
+ * Stage 3 Phase 2 (v2): agent tool registry — propose-only design.
  *
- * Builds the AI SDK `tool()` definitions the /agency chat loop hands to
- * `streamText`. Two-phase pattern per CEO plan §Guardrail Architecture:
+ * The agent registers ONE tool per adapter: `propose_<id>`. Calling it emits
+ * an `agent.proposal` event (with proposal_id + payload_hash + action_payload)
+ * and returns a confirm-card spec for the LLM to render. The real write does
+ * NOT happen in the agent loop.
  *
- *   Write/external actions → generate a PAIR:
- *     propose_<id>(input) — safe. Emits `agent.proposal`, returns a confirm-card
- *                           spec for the LLM to render. No DB write.
- *     <id>(input + proposal_id) — real. Calls verifyAndConsumeProposal() which
- *                                atomically consumes a matching
- *                                `agent.proposal_confirmed` row from
- *                                platform_events. If consumed, calls the
- *                                handler adapter. If not, emits
- *                                `agent.write_unauthorized` and returns failure.
+ * When the operator clicks the Confirm button, the client POSTs to
+ * /api/clay/action with the payload carrying proposal_id + payload_hash.
+ * That endpoint looks up the matching `agent.proposal` event via the
+ * consume_agent_proposal RPC (atomic lock + consume) and, if authorized,
+ * runs handleComponentAction directly. Simpler, one request per confirm,
+ * no multi-turn tool-call dance.
  *
- * Read tools are passed through unchanged — they don't need proposals. The
- * caller supplies them via `extraReadTools`.
- *
- * Context propagation: closure-bound. `buildToolsFromRegistry({correlationId,
- * agencyId, userId, mode})` is called once per request; every tool's execute
- * fn captures those values lexically, survives any AI SDK async boundary.
+ * Context propagation: closure-bound. buildToolsFromRegistry({correlationId,
+ * agencyId, userId, mode}) is called once per request and each tool captures
+ * those values lexically.
  */
 import { tool } from 'ai';
-import { z } from 'zod';
 import { randomUUID } from 'node:crypto';
 import { ADAPTERS, type ActionAdapter } from './handler-adapters';
-import { hashPayload, verifyAndConsumeProposal } from './proposal-gate';
+import { hashPayload } from './proposal-gate';
 import type { AgentContext } from './correlation-context';
-import { emitEvent, emitEventStrict } from '@/lib/events/emit';
+import { emitEventStrict } from '@/lib/events/emit';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTool = any;
 
 export interface BuildToolsArgs {
   context: AgentContext;
-  /** Pre-built read tools (e.g. get_briefs_by_status) that don't need the proposal gate. */
-  extraReadTools?: Record<string, ReturnType<typeof tool>>;
+  /**
+   * Pre-built read tools (e.g. get_briefs_by_status) that don't need a proposal.
+   * Typed loosely — AI SDK's tool() return type trips TS2589 (deep instantiation)
+   * when mixed with inline tool() calls that use zod schemas.
+   */
+  extraReadTools?: Record<string, AnyTool>;
 }
 
 const PROPOSAL_TTL_MINUTES = 10;
@@ -40,30 +42,20 @@ const PROPOSAL_TTL_MINUTES = 10;
 function proposeDescription(adapter: ActionAdapter): string {
   return (
     `Propose ${adapter.id}. ${adapter.description} ` +
-    `Calling this does NOT execute the action — it returns a confirm card for the operator to approve. ` +
-    `After calling propose_${adapter.id}, stop and wait for the operator to confirm. ` +
-    `The real ${adapter.id} tool can only succeed AFTER an explicit operator confirmation.`
+    `Calling this records a proposal but does NOT execute the action. ` +
+    `Render the returned confirm_button as a Clay ActionButton and wait for ` +
+    `the operator to click it — the click is what runs the action (via /api/clay/action), ` +
+    `not you. After calling propose_${adapter.id}, stop calling tools and render the card.`
   );
 }
 
-function realDescription(adapter: ActionAdapter): string {
-  return (
-    `Execute ${adapter.id}. ONLY call this after propose_${adapter.id} has been confirmed by the operator. ` +
-    `Pass the same input values plus the proposal_id from the prior confirm card. ` +
-    `This call is DB-gated — it will fail with agent.write_unauthorized unless a fresh operator ` +
-    `confirmation exists in platform_events.`
-  );
-}
-
-export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, ReturnType<typeof tool>> {
+export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, AnyTool> {
   const { context } = args;
-  const out: Record<string, ReturnType<typeof tool>> = { ...(args.extraReadTools ?? {}) };
+  const out: Record<string, AnyTool> = { ...(args.extraReadTools ?? {}) };
 
   for (const adapter of Object.values(ADAPTERS)) {
     const proposeName = `propose_${adapter.id}`;
-    const realName = adapter.id;
 
-    // ─── propose_<id> — safe, returns confirm card spec ──────────────────
     // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
     out[proposeName] = tool({
       description: proposeDescription(adapter),
@@ -82,6 +74,7 @@ export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, Ret
               action_id: adapter.id,
               action_payload: input,
               expires_at: expiresAt,
+              consumed: false,
             },
             actorType: 'agent',
             actorId: context.userId,
@@ -108,110 +101,14 @@ export function buildToolsFromRegistry(args: BuildToolsArgs): Record<string, Ret
           confirm_button: {
             action: adapter.id,
             label: 'Confirm',
-            payload: { ...input, proposal_id: proposalId, payload_hash: payloadHash },
+            payload: {
+              ...input,
+              proposal_id: proposalId,
+              payload_hash: payloadHash,
+              correlation_id: context.correlationId,
+            },
           },
-          cancel_button: { action: `${adapter.id}_cancel`, label: 'Cancel' },
         };
-      },
-    });
-
-    // ─── <id> — real, DB-gated ──────────────────────────────────────────
-    const realSchema = (adapter.schema as z.AnyZodObject).extend({
-      proposal_id: z
-        .string()
-        .describe(`The proposal_id returned by propose_${adapter.id} in the prior turn.`),
-    });
-
-    // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
-    out[realName] = tool({
-      description: realDescription(adapter),
-      inputSchema: realSchema,
-      execute: async (input: Record<string, unknown>) => {
-        const proposalId = String(input.proposal_id ?? '');
-        if (!proposalId) {
-          return { ok: false, error: 'missing_proposal_id', message: `Must pass proposal_id from propose_${adapter.id}.` };
-        }
-
-        // Rehash the action payload (excluding proposal_id) so the RPC can verify
-        // integrity against what was originally proposed. The LLM can't tamper
-        // with the payload between propose and execute without a hash mismatch.
-        const { proposal_id: _omit, ...actionInput } = input;
-        const payloadHash = hashPayload(actionInput);
-
-        emitEvent({
-          eventType: 'tool.called',
-          payload: { tool: adapter.id, proposal_id: proposalId, mode: context.mode },
-          actorType: 'agent',
-          actorId: context.userId,
-          agencyId: context.agencyId,
-          correlationId: context.correlationId,
-        }).catch(() => {});
-
-        let authorized = false;
-        if (context.mode === 'headless') {
-          // Pre-authorization replaces per-call confirmation in headless mode.
-          authorized = (context.preAuthorizedWriteIds ?? []).includes(adapter.id);
-          if (!authorized) {
-            emitEvent({
-              eventType: 'agent.write_blocked_unauthorized',
-              payload: { tool: adapter.id, proposal_id: proposalId, reason: 'not_in_preauth_list' },
-              actorType: 'agent',
-              actorId: context.userId,
-              agencyId: context.agencyId,
-              correlationId: context.correlationId,
-            }).catch(() => {});
-          }
-        } else {
-          authorized = await verifyAndConsumeProposal(proposalId, payloadHash);
-          if (!authorized) {
-            emitEvent({
-              eventType: 'agent.write_unauthorized',
-              payload: { tool: adapter.id, proposal_id: proposalId, payload_hash: payloadHash, reason: 'no_matching_confirmation' },
-              actorType: 'agent',
-              actorId: context.userId,
-              agencyId: context.agencyId,
-              correlationId: context.correlationId,
-            }).catch(() => {});
-          }
-        }
-
-        if (!authorized) {
-          return {
-            ok: false,
-            error: 'write_unauthorized',
-            message:
-              context.mode === 'headless'
-                ? `Saved prompt is not pre-authorized to run ${adapter.id}. Ask the operator to edit the prompt's pre-authorized tools.`
-                : `No operator confirmation found for proposal ${proposalId}. The proposal may have expired or been cancelled.`,
-          };
-        }
-
-        let result: Awaited<ReturnType<typeof adapter.run>>;
-        try {
-          result = await adapter.run({ input: actionInput, context });
-        } catch (err) {
-          const msg = err instanceof Error ? err.message : String(err);
-          emitEvent({
-            eventType: 'tool.result',
-            payload: { tool: adapter.id, proposal_id: proposalId, ok: false, error: msg },
-            actorType: 'agent',
-            actorId: context.userId,
-            agencyId: context.agencyId,
-            correlationId: context.correlationId,
-          }).catch(() => {});
-          return { ok: false, error: 'adapter_exception', message: msg };
-        }
-
-        emitEvent({
-          eventType: 'tool.result',
-          payload: { tool: adapter.id, proposal_id: proposalId, ok: result.success, message: result.message },
-          actorType: 'agent',
-          actorId: context.userId,
-          agencyId: context.agencyId,
-          correlationId: context.correlationId,
-        }).catch(() => {});
-
-        return { ok: result.success, message: result.message, result: result.result ?? null };
       },
     });
   }

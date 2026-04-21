@@ -11,6 +11,9 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { generateProactiveAlerts } from '@/lib/notifications/proactive-engine';
 import { assembleContext } from '@/lib/context/assemble-context';
 import { classifyIntent } from '@/lib/clay';
+import { randomUUID } from 'node:crypto';
+import { buildToolsFromRegistry } from '@/lib/agent/tool-registry';
+import type { AgentContext } from '@/lib/agent/correlation-context';
 
 export const runtime = 'nodejs';
 
@@ -1538,6 +1541,12 @@ ${dataContext}
 - Actions: analyze_creator, generate_brief, refresh_data, export_report, navigate_creator, send_invite, nudge_creator, create_event, match_creators_to_event, generate_batch_briefs, approve_brief, schedule_post, reschedule_post, update_brief_status, log_performance.
 - update_brief_status: use when the operator asks to mark a brief acknowledged/in-production/published. Render an ActionButton with action="update_brief_status" and payload { briefId, new_status: 'acknowledged'|'in_production'|'published', published_url?: string }. For 'published', ask for the TikTok URL first if the operator has not provided one. **Multi-match rule:** if the operator names a creator (or any criterion) that matches MORE than one brief — e.g. "mark Luna in production" and Luna has 3 active briefs — DO NOT ask the operator to paste a brief ID. Instead, call get_briefs_by_status to fetch the candidates, then render a Grid of one ContentBriefCard per matching brief, each carrying its own ActionButton(action="update_brief_status", payload={briefId:<that row's id>, new_status:<target>}). The operator clicks the brief they meant.
 - log_performance: use after a brief is published and the operator wants to record actual performance. Render an ActionButton with action="log_performance" and payload { briefId, actual_views: number, actual_engagement_rate?: number }. If the operator has not given numbers yet, prompt for them before rendering the button.
+- **propose_nudge_creator (agent-proposed write):** when the operator asks to nudge / poke / remind / follow up with a creator about an overdue brief, use this tool:
+  1. If you don't know the specific {briefId, creatorId}, call get_briefs_by_status first to find the target. If multiple briefs match, render a Grid of ContentBriefCards with ActionButton(action="nudge_creator", payload={briefId, creatorId}) and let the operator pick — no propose tool needed in that case, the backend gates the direct click too.
+  2. When you have an unambiguous {briefId, creatorId}, call **propose_nudge_creator({briefId, creatorId})**. It returns {ok, proposal_id, consequence, confirm_button}.
+  3. Render a single Section titled "Confirm: nudge [creator name]" with a Text child showing the 'consequence' string, and one ActionButton child whose payload is the 'confirm_button.payload' object verbatim (it already contains proposal_id + payload_hash + correlation_id). Label the button "Confirm".
+  4. STOP. Do NOT call any other tool. The operator's click on Confirm is what runs the action — the backend handles it, not you.
+  5. On a future turn, you may see the result of the operator's click in the conversation as a standard ACTION_RESULT marker — render that as you normally would.
 - Read tools: call get_briefs_by_status when the operator asks to see briefs by state/creator ("show delivered", "what's waiting"). Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Render returned brief rows as a Grid of ContentBriefCards — one per row, NEVER as static KPICards or plain text — and attach the ActionButton appropriate for each card's current completion_status (legal next-state transition):
   • completion_status='delivered'    → ActionButton(action="update_brief_status", label="Mark Acknowledged",  payload={briefId, new_status:"acknowledged"})
   • completion_status='acknowledged' → ActionButton(action="update_brief_status", label="Mark In Production", payload={briefId, new_status:"in_production"})
@@ -1678,10 +1687,27 @@ Operator may reference prior context — use conversation history.`;
     },
   });
 
-  // Stage 3 Phase 1: Anthropic + prompt caching. System message carries
-  // providerOptions.anthropic.cacheControl so Claude reuses the cached system
-  // across turns in the same session (90% discount on cached input tokens).
-  // Acceptance: second call in the same session should show cachedInputTokens > 0.
+  // Stage 3 Phase 1: Anthropic + prompt caching (providerOptions.anthropic.cacheControl).
+  // Stage 3 Phase 2 v2: agent registers ONLY propose_* tools derived from
+  // ACTION_REGISTRY. The agent never calls the real write tool itself — the
+  // operator's click on the Confirm button fires /api/clay/action, which runs
+  // the consume_agent_proposal RPC + handleComponentAction. Step count stays
+  // at 3 because no multi-turn tool-call chain is needed.
+  const correlationId = randomUUID();
+  const agentContext: AgentContext = {
+    correlationId,
+    agencyId: agencyId ?? '',
+    userId,
+    mode: 'interactive',
+  };
+  const tools = buildToolsFromRegistry({
+    context: agentContext,
+    extraReadTools: {
+      get_briefs_by_status: getBriefsByStatus,
+      get_performance_summary: getPerformanceSummary,
+    },
+  });
+
   const result = streamText({
     model: anthropic('claude-haiku-4-5'),
     messages: [
@@ -1694,10 +1720,7 @@ Operator may reference prior context — use conversation history.`;
       },
       ...modelMessages,
     ],
-    tools: {
-      get_briefs_by_status: getBriefsByStatus,
-      get_performance_summary: getPerformanceSummary,
-    },
+    tools,
     stopWhen: stepCountIs(3),
   });
 
