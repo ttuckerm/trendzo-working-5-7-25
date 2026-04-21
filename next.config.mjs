@@ -10,8 +10,9 @@ const nextConfig = {
     SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY,
     NEXT_PUBLIC_CLONE_URL: process.env.NEXT_PUBLIC_CLONE_URL || 'https://os.ryo.lu/',
   },
-  // Enable standalone output for Docker deployment
-  output: 'standalone',
+  // Enable standalone output ONLY for production builds (Docker deployment).
+  // In dev, standalone output adds heavy file-tracing overhead that slows compiles.
+  ...(process.env.NODE_ENV === 'production' ? { output: 'standalone' } : {}),
   
   // Optimize for production
   poweredByHeader: false,
@@ -116,6 +117,10 @@ const nextConfig = {
       config.externals.push({ 'apify-client': 'commonjs apify-client' });
       config.externals.push({ 'ioredis': 'commonjs ioredis' });
       config.externals.push({ 'pg': 'commonjs pg' });
+      // fluent-ffmpeg requires Node's 'fs' which webpack can't resolve when bundling
+      // the instrumentation hook chain (scheduler → fresh-video-scanner → kai-orchestrator
+      // → audio-analyzer). Load at runtime instead.
+      config.externals.push({ 'fluent-ffmpeg': 'commonjs fluent-ffmpeg' });
     }
 
     // Ignore heavy optional modules conditionally
@@ -150,6 +155,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Stop /favicon.ico from triggering a 500 + full _error page recompile in dev.
+      // Browsers auto-request /favicon.ico; we redirect to the SVG we actually ship.
+      {
+        source: '/favicon.ico',
+        destination: '/favicon.svg',
+        permanent: false,
+      },
       // Ensure all trend prediction routes are properly handled
       {
         source: '/trend-predictions',
