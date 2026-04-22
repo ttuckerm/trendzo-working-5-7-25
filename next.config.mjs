@@ -86,6 +86,10 @@ const nextConfig = {
     // doesn't statically analyze it.
     instrumentationHook: false,
     optimizeServerReact: true,
+    // jsdom ships a CSS asset (default-stylesheet.css) loaded via require.resolve;
+    // webpack can't trace it, so the build fails at /api/admin/api-keys.
+    // isomorphic-dompurify depends on jsdom — keep them together.
+    serverComponentsExternalPackages: ['jsdom', 'isomorphic-dompurify'],
     optimizePackageImports: [
       'lucide-react',
       'recharts',
