@@ -92,11 +92,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ── Resolve creator's agency (nullable — unaffiliated creators are valid) ──
+    const { data: creatorProfile } = await serviceClient
+      .from('onboarding_profiles')
+      .select('agency_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    const resolvedAgencyId = creatorProfile?.agency_id ?? null;
+
     // ── Create content_brief entry ───────────────────────────────────────
     const { data: newBrief, error: briefError } = await serviceClient
       .from('content_briefs')
       .insert({
         user_id: user.id,
+        agency_id: resolvedAgencyId,
         source_video_id: null,
         pattern_id,
         brief_content: {

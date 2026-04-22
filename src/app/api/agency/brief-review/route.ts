@@ -189,6 +189,7 @@ export async function PATCH(request: NextRequest) {
       .from('content_briefs')
       .insert({
         user_id: brief.client_id,
+        agency_id: brief.agency_id, // carry agency from source pre_generated_brief
         brief_content: briefContent,
         predicted_vps: approvedVps,
         vps_prediction: approvedVps, // performance-loop column; mirrors predicted_vps at approval time

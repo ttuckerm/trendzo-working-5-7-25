@@ -179,11 +179,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ── Resolve creator's agency (nullable — unaffiliated creators are valid) ──
+    const { data: creatorProfile } = await supabase
+      .from('onboarding_profiles')
+      .select('agency_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    const resolvedAgencyId = creatorProfile?.agency_id ?? null;
+
     // ── Create content_brief ───────────────────────────────────────────────
     const { data: brief, error: briefError } = await supabase
       .from('content_briefs')
       .insert({
         user_id: user.id,
+        agency_id: resolvedAgencyId,
         source_video_id: videoRecord.id,
         pattern_id: conceptScore.matched_pattern_id,
         brief_content: {

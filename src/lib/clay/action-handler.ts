@@ -707,10 +707,11 @@ async function nudgeCreator(
   const sendResult = await sendBriefToCreator(briefId)
 
   const now = new Date().toISOString()
-  await db
+  const { error: updateErr } = await db
     .from('content_briefs')
     .update({ last_nudged_at: now, nudge_count: (brief.nudge_count || 0) + 1 })
     .eq('id', briefId)
+  if (updateErr) return fail(`Failed to record nudge: ${updateErr.message}`)
 
   let creator = 'the creator'
   if (brief.user_id) {
@@ -719,12 +720,7 @@ async function nudgeCreator(
   }
 
   if (!sendResult.success) {
-    return ok(
-      'nudge_creator',
-      `Nudge logged for ${creator}`,
-      `Email send failed: ${sendResult.error || 'unknown'}. Nudge still recorded.`,
-      { briefId, creator, emailSent: false },
-    )
+    return fail(`Nudge email to ${creator} failed: ${sendResult.error || 'unknown'}`)
   }
   return ok('nudge_creator', `Nudged ${creator}`, 'Reminder email sent; nudge count incremented.', { briefId, creator, emailSent: true })
 }
@@ -823,6 +819,7 @@ async function pushBriefToCreators(
     delete clone.created_at
     delete clone.updated_at
     clone.user_id = creatorId
+    clone.agency_id = context.agencyId // operator's agency; cloned brief stays in-agency
     clone.delivery_status = 'pending'
 
     const { data: newBrief, error: insertErr } = await db.from('content_briefs').insert(clone).select('id').single()
@@ -899,6 +896,7 @@ async function generateBatchBriefs(
       .from('content_briefs')
       .insert({
         user_id: creatorId,
+        agency_id: context.agencyId,
         status: 'draft',
         brief_content: {
           title: `Draft brief — ${topic}`,

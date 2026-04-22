@@ -37,10 +37,19 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { source_video_id, pattern_id, brief_content, predicted_vps } = body;
 
+    // Resolve creator's agency (nullable — unaffiliated creators are valid)
+    const { data: creatorProfile } = await serviceClient
+      .from('onboarding_profiles')
+      .select('agency_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+    const resolvedAgencyId = creatorProfile?.agency_id ?? null;
+
     const { data, error } = await serviceClient
       .from('content_briefs')
       .insert({
         user_id: user.id,
+        agency_id: resolvedAgencyId,
         source_video_id: source_video_id || null,
         pattern_id: pattern_id || null,
         brief_content: brief_content || {},

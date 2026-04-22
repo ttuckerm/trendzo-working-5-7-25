@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+import { signBriefAckToken } from '@/lib/email/brief-ack-token'
 
 export interface SendBriefResult {
   success: boolean
@@ -153,7 +154,14 @@ export async function sendBriefToCreator(briefId: string): Promise<SendBriefResu
   const subject = `${subjectTitle} — ${creatorName}`
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.APP_URL || 'http://localhost:3000'
-  const ackUrl = `${baseUrl.replace(/\/$/, '')}/api/brief-acknowledge/${briefId}`
+  let ackToken: string
+  try {
+    ackToken = signBriefAckToken(briefId, brief.user_id)
+  } catch (e: any) {
+    await db.from('content_briefs').update({ delivery_status: 'failed' }).eq('id', briefId)
+    return { success: false, error: `Cannot sign ack token: ${e?.message || 'BRIEF_ACK_SECRET not configured'}` }
+  }
+  const ackUrl = `${baseUrl.replace(/\/$/, '')}/api/brief-acknowledge/${briefId}?token=${ackToken}`
 
   const html = buildEmailHtml({ creatorName, brief: briefContent, ackUrl })
   const text = buildEmailText({ creatorName, brief: briefContent, ackUrl })
@@ -186,6 +194,9 @@ export async function sendBriefToCreator(briefId: string): Promise<SendBriefResu
     return { success: false, error: `SMTP send failed: ${e?.message || 'unknown'}` }
   }
 
-  await db.from('content_briefs').update({ delivery_status: 'delivered' }).eq('id', briefId)
+  await db
+    .from('content_briefs')
+    .update({ delivery_status: 'delivered', delivered_at: new Date().toISOString() })
+    .eq('id', briefId)
   return { success: true }
 }

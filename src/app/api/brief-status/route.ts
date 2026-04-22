@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { getUserAgencyId } from '@/lib/auth/agency-utils'
+import { emitEvent } from '@/lib/events/emit'
 
 export const dynamic = 'force-dynamic'
 
@@ -87,6 +90,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Missing Supabase config' }, { status: 500 })
   }
 
+  // ── Session auth ─────────────────────────────────────────────────────────
+  const authSupabase = await createServerSupabaseClient()
+  const { data: { user } } = await authSupabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ success: false, error: 'Authentication required' }, { status: 401 })
+  }
+
+  // ── Agency membership ────────────────────────────────────────────────────
+  const operatorAgencyId = await getUserAgencyId(user.id)
+  if (!operatorAgencyId) {
+    return NextResponse.json({ success: false, error: 'Operator not assigned to an agency' }, { status: 403 })
+  }
+
   let body: { briefId?: string; status?: TargetStatus; publishedUrl?: string }
   try {
     body = await req.json()
@@ -107,12 +123,20 @@ export async function POST(req: NextRequest) {
 
   const { data: brief, error: fetchErr } = await db
     .from('content_briefs')
-    .select('id, completion_status')
+    .select('id, completion_status, agency_id')
     .eq('id', briefId)
     .single()
 
   if (fetchErr || !brief) {
     return NextResponse.json({ success: false, error: 'Brief not found' }, { status: 404 })
+  }
+
+  // ── Agency ownership ────────────────────────────────────────────────────
+  // Uses content_briefs.agency_id populated by Fix 1 migration 20260421.
+  // Briefs with agency_id = NULL (unaffiliated creators) are intentionally not
+  // mutable via operator APIs.
+  if (brief.agency_id !== operatorAgencyId) {
+    return NextResponse.json({ success: false, error: 'Brief belongs to a different agency' }, { status: 403 })
   }
 
   const current = brief.completion_status || 'delivered'
@@ -143,6 +167,22 @@ export async function POST(req: NextRequest) {
   if (updateErr) {
     return NextResponse.json({ success: false, error: updateErr.message }, { status: 500 })
   }
+
+  // Audit log — fire-and-forget (emitEvent is non-throwing).
+  emitEvent({
+    eventType: 'brief.status_updated_via_api',
+    payload: {
+      briefId,
+      previous_status: current,
+      new_status: status,
+      published_url: (update.published_url as string | undefined) ?? null,
+    },
+    actorId: user.id,
+    actorType: 'user',
+    agencyId: operatorAgencyId,
+    entityType: 'content_brief',
+    entityId: briefId,
+  })
 
   return NextResponse.json({ success: true })
 }
