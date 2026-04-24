@@ -743,6 +743,25 @@ export default function AgencyClient({ initialState, userId, agencyId }: AgencyC
       if (!res.ok) return;
       const triage = await res.json() as { items: unknown[]; stale: boolean; triage_date: string | null };
       const marker = '[__TRENDZO_TRIAGE__] ' + JSON.stringify(triage);
+      // Stacked-briefing fix (2026-04-24): strip the prior triage turn (user
+      // marker + its immediately-following assistant spec) before dispatching
+      // the fresh one, so Refresh Triage replaces the briefing instead of
+      // stacking a second one on top.
+      setMessages((prev) => {
+        const isTriageUser = (m: typeof prev[number]): boolean => {
+          if (m.role !== 'user') return false;
+          const text = m.parts
+            ?.filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+            .map((p) => p.text)
+            .join('') ?? '';
+          return text.startsWith(TRIAGE_MARKER);
+        };
+        return prev.filter((m, i) => {
+          if (isTriageUser(m)) return false;
+          if (m.role === 'assistant' && i > 0 && isTriageUser(prev[i - 1])) return false;
+          return true;
+        });
+      });
       sendMessageRef.current({ text: marker });
     } catch (err) {
       console.warn('[agency] refreshTriage threw', err);
