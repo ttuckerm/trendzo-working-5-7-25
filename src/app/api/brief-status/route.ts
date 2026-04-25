@@ -15,13 +15,62 @@ const VALID_TRANSITIONS: Record<TargetStatus, string[]> = {
   published: ['in_production'],
 }
 
+// AM Step 2 (2026-04-24): resolve operator context so the GET list is scoped
+// to the caller's agency. Mirrors src/app/api/clay/action/route.ts:19-53 —
+// intentional inline copy, not a shared helper (out of scope for this fix).
+async function resolveContextForStatusGet(): Promise<{ userId: string; agencyId: string } | null> {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.id) {
+      const agencyId = await getUserAgencyId(user.id)
+      if (agencyId) return { userId: user.id, agencyId }
+    }
+  } catch {
+    // ignore
+  }
+
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true' && process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    const sc = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    const { data: ownerRow } = await sc
+      .from('agency_members')
+      .select('user_id, agency_id')
+      .eq('role', 'owner')
+      .eq('is_active', true)
+      .limit(1)
+      .maybeSingle()
+    if (ownerRow?.user_id && ownerRow?.agency_id) {
+      return { userId: ownerRow.user_id, agencyId: ownerRow.agency_id }
+    }
+  }
+
+  return null
+}
+
 // GET /api/brief-status?status=<delivered|acknowledged|in_production|published|pending|failed>&creator_name=<name>
 // Returns content_briefs filtered by the given status (routed to completion_status or delivery_status
-// based on the value) and optionally by creator business name.
+// based on the value) and optionally by creator business name. Scoped to the caller's agency.
 export async function GET(req: NextRequest) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     return NextResponse.json({ briefs: [], error: 'Missing Supabase config' }, { status: 500 })
   }
+
+  // ── Session auth + agency scope ─────────────────────────────────────────
+  const ctx = await resolveContextForStatusGet()
+  if (!ctx) {
+    const hasSession = await (async () => {
+      try {
+        const s = await createServerSupabaseClient()
+        const { data: { user } } = await s.auth.getUser()
+        return !!user?.id
+      } catch { return false }
+    })()
+    if (!hasSession) {
+      return NextResponse.json({ briefs: [], error: 'Unauthorized' }, { status: 401 })
+    }
+    return NextResponse.json({ briefs: [], error: 'No agency found' }, { status: 403 })
+  }
+  const { agencyId } = ctx
 
   const url = new URL(req.url)
   const status = url.searchParams.get('status')?.trim() || ''
@@ -32,6 +81,7 @@ export async function GET(req: NextRequest) {
   let query = db
     .from('content_briefs')
     .select('id, user_id, brief_content, completion_status, delivery_status, published_url, created_at, acknowledged_at, in_production_at, published_at, performance_measured_at')
+    .eq('agency_id', agencyId)
     .order('created_at', { ascending: false })
     .limit(50)
 

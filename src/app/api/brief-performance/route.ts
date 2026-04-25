@@ -19,13 +19,63 @@ function toNumberOrNull(v: unknown): number | null {
   return Number.isFinite(n) ? n : null
 }
 
+// AM Step 2 (2026-04-24): resolve operator context so the GET aggregate is
+// scoped to the caller's agency. Mirrors src/app/api/clay/action/route.ts:19-53 —
+// intentional inline copy, not a shared helper (out of scope for this fix).
+async function resolveContextForPerformanceGet(): Promise<{ userId: string; agencyId: string } | null> {
+  try {
+    const supabase = await createServerSupabaseClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user?.id) {
+      const agencyId = await getUserAgencyId(user.id)
+      if (agencyId) return { userId: user.id, agencyId }
+    }
+  } catch {
+    // ignore
+  }
+
+  if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true' && process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    const sc = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    const { data: ownerRow } = await sc
+      .from('agency_members')
+      .select('user_id, agency_id')
+      .eq('role', 'owner')
+      .eq('is_active', true)
+      .limit(1)
+      .maybeSingle()
+    if (ownerRow?.user_id && ownerRow?.agency_id) {
+      return { userId: ownerRow.user_id, agencyId: ownerRow.agency_id }
+    }
+  }
+
+  return null
+}
+
 // GET /api/brief-performance?period=<week|month|all>&creator_name=<name>
 // Returns aggregate performance across logged published briefs: total, avg delta,
-// top performer, biggest miss, plus the raw rows behind the aggregate.
+// top performer, biggest miss, plus the raw rows behind the aggregate. Scoped
+// to the caller's agency.
 export async function GET(req: NextRequest) {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     return NextResponse.json({ error: 'Missing Supabase config' }, { status: 500 })
   }
+
+  // ── Session auth + agency scope ─────────────────────────────────────────
+  const ctx = await resolveContextForPerformanceGet()
+  if (!ctx) {
+    const hasSession = await (async () => {
+      try {
+        const s = await createServerSupabaseClient()
+        const { data: { user } } = await s.auth.getUser()
+        return !!user?.id
+      } catch { return false }
+    })()
+    if (!hasSession) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    return NextResponse.json({ error: 'No agency found' }, { status: 403 })
+  }
+  const { agencyId } = ctx
 
   const url = new URL(req.url)
   const periodParam = (url.searchParams.get('period') || 'all').toLowerCase()
@@ -44,7 +94,8 @@ export async function GET(req: NextRequest) {
 
   let query = db
     .from('content_briefs')
-    .select('id, user_id, brief_content, vps_prediction, predicted_vps, actual_views, actual_engagement_rate, performance_delta, performance_measured_at')
+    .select('id, user_id, brief_content, predicted_vps, actual_views, actual_engagement_rate, performance_delta, performance_measured_at')
+    .eq('agency_id', agencyId)
     .eq('completion_status', 'published')
     .not('performance_measured_at', 'is', null)
     .order('performance_measured_at', { ascending: false })
@@ -77,7 +128,7 @@ export async function GET(req: NextRequest) {
       id: b.id,
       creator: nameMap[b.user_id] || 'Unknown',
       title: b.brief_content?.title || b.brief_content?.campaign_name || 'Untitled Brief',
-      vps_prediction: b.vps_prediction ?? b.predicted_vps ?? null,
+      vps_prediction: b.predicted_vps ?? null,
       actual_views: b.actual_views ?? null,
       actual_engagement_rate: b.actual_engagement_rate ?? null,
       performance_delta: b.performance_delta ?? null,
@@ -154,7 +205,7 @@ export async function POST(req: NextRequest) {
 
   const { data: brief, error: fetchErr } = await db
     .from('content_briefs')
-    .select('id, vps_prediction, predicted_vps, completion_status, agency_id')
+    .select('id, predicted_vps, completion_status, agency_id')
     .eq('id', briefId)
     .single()
 
@@ -168,9 +219,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: 'Brief belongs to a different agency' }, { status: 403 })
   }
 
-  // vps_prediction is the performance-loop column; fall back to predicted_vps if not set
-  // (briefs approved before the performance-loop migration wrote only predicted_vps).
-  const prediction = toNumberOrNull(brief.vps_prediction) ?? toNumberOrNull(brief.predicted_vps)
+  // predicted_vps is the canonical VPS column.
+  const prediction = toNumberOrNull(brief.predicted_vps)
   const performanceDelta =
     prediction !== null && actualViews !== null ? actualViews - prediction : null
 
@@ -186,7 +236,7 @@ export async function POST(req: NextRequest) {
     .from('content_briefs')
     .update(update)
     .eq('id', briefId)
-    .select('id, vps_prediction, predicted_vps, actual_views, actual_engagement_rate, performance_delta, performance_measured_at, performance_source, completion_status')
+    .select('id, predicted_vps, actual_views, actual_engagement_rate, performance_delta, performance_measured_at, performance_source, completion_status')
     .single()
 
   if (updateErr) {
