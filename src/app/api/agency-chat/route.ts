@@ -20,6 +20,51 @@ export const runtime = 'nodejs';
 const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';
 const TRIAGE_MARKER = '[__TRENDZO_TRIAGE__]';
 
+/**
+ * Drops "void" assistant turns from the UI history before it is handed to the
+ * AI SDK's `convertToModelMessages` validator.
+ *
+ * BUG 2 (2026-04-24) — Clay chat threw "Invalid prompt: The messages do not
+ * match the ModelMessage[] schema." on every typed message. Root cause: this
+ * route emits assistant turns through `pipeJsonRender(...)` in three places
+ * (TRIAGE short-circuit ~L323, ACTION_RESULT short-circuit ~L367, and the real
+ * LLM stream ~L1742). The transform in `@json-render/core` rewrites the model's
+ * `\`\`\`spec ... \`\`\`` text body into a sequence of `data-spec` UIMessage
+ * parts, leaving at most an empty canonical `text` part behind. AI SDK v6's
+ * `convertToModelMessages` filters every `data-*` part out (no
+ * `convertDataPart` option is passed), so those assistant turns collapse to
+ * functionally empty `content` and the validator/provider rejects the prompt
+ * before the model is called.
+ *
+ * Filtering them out of the model-bound history (NOT the UI history — the
+ * `useChat` `messages[]` is untouched, so the rendered cards are preserved)
+ * fixes all three call sites with a single change. See
+ * BUG2_CHAT_SCHEMA_FIX_2026-04-24.md for the full analysis.
+ *
+ * A part "survives" if it would carry content into the ModelMessage:
+ * non-empty `text`, non-empty `reasoning`, any `file`, or any tool part
+ * (`tool-*` / `dynamic-tool`). `data-*` parts and empty/whitespace-only
+ * `text` parts do not survive. Any assistant turn whose parts list nothing
+ * that survives is dropped. User and system turns pass through unchanged.
+ */
+function stripVoidAssistantTurns<T extends { role?: string; parts?: unknown }>(uiMessages: T[]): T[] {
+  return uiMessages.filter((message) => {
+    if (message?.role !== 'assistant') return true;
+    const parts = Array.isArray(message.parts) ? message.parts : [];
+    return parts.some((rawPart) => {
+      const part = rawPart as { type?: unknown; text?: unknown };
+      const type = typeof part?.type === 'string' ? part.type : '';
+      if (type === 'text' || type === 'reasoning') {
+        return typeof part.text === 'string' && part.text.trim().length > 0;
+      }
+      if (type === 'file') return true;
+      if (type.startsWith('tool-') || type === 'dynamic-tool') return true;
+      // data-* parts are dropped by convertToModelMessages, so they don't count.
+      return false;
+    });
+  });
+}
+
 type ActionResultConfirmation =
   | {
       kind: 'brief_status';
@@ -1549,7 +1594,7 @@ ${dataContext}
   4. STOP. Do NOT call any other tool. The operator's click on Confirm fires /api/clay/action which runs the real action with DB-gated authorization. You are not involved in executing the write.
   5. On a future turn you may see a [__TRENDZO_ACTION_RESULT__] marker — render it as you normally would.
   If the propose tool returns {ok: false}, surface the error message to the operator as a Text in a Section — do NOT retry silently.
-- Read tools: call get_briefs_by_status when the operator asks to see briefs by state/creator ("show delivered", "what's waiting"). Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Render returned brief rows as a Grid of ContentBriefCards — one per row, NEVER as static KPICards or plain text — and attach the ActionButton appropriate for each card's current completion_status (legal next-state transition):
+- Read tools: If the operator asks about unacknowledged briefs, what's waiting, what hasn't been responded to, or briefs awaiting acknowledgment, call get_unacknowledged_briefs (it returns delivered-but-not-yet-acknowledged briefs with a server-computed days_since_created on each row). For any other status query — "show me what's in production", "what did Luna publish this week", a specific creator filter, or any non-delivered status — call get_briefs_by_status. Call get_performance_summary when they ask about actuals, deltas, top performers, biggest misses, or "how did last week do". Render returned brief rows as a Grid of ContentBriefCards — one per row, NEVER as static KPICards or plain text — and attach the ActionButton appropriate for each card's current completion_status (legal next-state transition):
   • completion_status='delivered'    → ActionButton(action="update_brief_status", label="Mark Acknowledged",  payload={briefId, new_status:"acknowledged"})
   • completion_status='acknowledged' → ActionButton(action="update_brief_status", label="Mark In Production", payload={briefId, new_status:"in_production"})
   • completion_status='in_production'→ ActionButton(action="update_brief_status", label="Mark Published",     payload={briefId, new_status:"published"})  // ask for the TikTok URL first; pass payload.published_url
@@ -1617,7 +1662,11 @@ Operator may reference prior context — use conversation history.`;
 
   // Cap messages sent to model at 40 most recent to manage token costs
   const cappedMessages = messages.length > 40 ? messages.slice(-40) : messages;
-  const modelMessages = await convertToModelMessages(cappedMessages);
+  // BUG 2 (2026-04-24): drop assistant turns that pipeJsonRender wrote as
+  // data-spec-only — those collapse to empty ModelMessage content and fail
+  // AI SDK v6 prompt validation. The UI's messages[] is untouched.
+  const sanitizedMessages = stripVoidAssistantTurns(cappedMessages);
+  const modelMessages = await convertToModelMessages(sanitizedMessages);
 
   // Silent read tools — fetch data the model can reference in its spec response.
   // Writes remain ActionButton-driven (see action-handler.ts cases
@@ -1666,6 +1715,49 @@ Operator may reference prior context — use conversation history.`;
     },
   });
 
+  const unacknowledgedSchema = z.object({
+    limit: z
+      .number()
+      .int()
+      .min(1)
+      .max(100)
+      .optional()
+      .describe('Max rows to return. Defaults to 50, capped at 100.'),
+  });
+  type UnacknowledgedInput = z.infer<typeof unacknowledgedSchema>;
+
+  // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
+  const getUnacknowledgedBriefs = tool({
+    description:
+      "Returns briefs that have been delivered to creators but not yet acknowledged. " +
+      "Use when the operator asks about unacknowledged briefs, briefs awaiting acknowledgment, " +
+      "what's waiting, or who hasn't responded yet. Each row includes a server-computed " +
+      "days_since_created integer for easy aging surfaces.",
+    inputSchema: unacknowledgedSchema,
+    execute: async (input: UnacknowledgedInput) => {
+      const limit = Math.min(Math.max(input?.limit ?? 50, 1), 100);
+      const url = new URL('/api/brief-status', origin);
+      url.searchParams.set('status', 'delivered');
+      try {
+        const r = await fetch(url.toString(), { headers: { cookie: cookieHeader } });
+        const data = await r.json();
+        if (!r.ok) return { error: data?.error || `brief-status GET failed (${r.status})`, briefs: [] };
+        const nowMs = Date.now();
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+        const rows = Array.isArray(data?.briefs) ? data.briefs : [];
+        const enriched = rows.slice(0, limit).map((b: any) => ({
+          ...b,
+          days_since_created: b?.created_at
+            ? Math.floor((nowMs - new Date(b.created_at).getTime()) / ONE_DAY)
+            : null,
+        }));
+        return { ...data, briefs: enriched, count: enriched.length };
+      } catch (e: any) {
+        return { error: e?.message || 'fetch failed', briefs: [] };
+      }
+    },
+  });
+
   // @ts-expect-error — AI SDK v6 tool() generic chain + zod schema hits TS2589 (deep instantiation). Runtime is fine.
   const getPerformanceSummary = tool({
     description:
@@ -1707,6 +1799,7 @@ Operator may reference prior context — use conversation history.`;
     extraReadTools: {
       get_briefs_by_status: getBriefsByStatus,
       get_performance_summary: getPerformanceSummary,
+      get_unacknowledged_briefs: getUnacknowledgedBriefs,
     },
   });
 

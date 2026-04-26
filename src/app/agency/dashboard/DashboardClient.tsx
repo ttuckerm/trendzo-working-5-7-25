@@ -167,6 +167,7 @@ const AGENCY_ID = '62cb020e-5303-452e-8cf2-83368c912b6e';
 export default function DashboardClient({ stats, creators, alerts, briefs: initialBriefs, insights }: DashboardClientProps) {
   const [creatorFilter, setCreatorFilter] = useState<'all' | 'active' | 'onboarding' | 'inactive'>('all');
   const [briefFilter, setBriefFilter] = useState<'all' | 'draft' | 'in-progress' | 'approved' | 'published'>('all');
+  const [deliveryFilter, setDeliveryFilter] = useState<'all' | 'delivered'>('all');
   const [activeDimension, setActiveDimension] = useState<Dimension>('momentum');
   const [clayOpen, setClayOpen] = useState(false);
   const [briefs, setBriefs] = useState<AgencyBrief[]>(initialBriefs);
@@ -213,7 +214,7 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
         actualEngagementRate: u.actual_engagement_rate ?? b.actualEngagementRate,
         performanceDelta: u.performance_delta ?? b.performanceDelta,
         performanceMeasuredAt: u.performance_measured_at ?? b.performanceMeasuredAt,
-        vpsPrediction: u.vps_prediction ?? u.predicted_vps ?? b.vpsPrediction,
+        vpsPrediction: u.predicted_vps ?? b.vpsPrediction,
       } : b));
       setPerfLoggingId(null);
       setPerfViewsInput('');
@@ -357,7 +358,11 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
   const skills = getAgencySkills(primaryNiche);
 
   const filteredCreators = creatorFilter === 'all' ? creators : creators.filter(c => c.status === creatorFilter);
-  const filteredBriefs = briefFilter === 'all' ? briefs : briefs.filter(b => b.status === briefFilter);
+  const filteredBriefs = briefs.filter(b => {
+    if (briefFilter !== 'all' && b.status !== briefFilter) return false;
+    if (deliveryFilter === 'delivered' && b.completionStatus !== 'delivered') return false;
+    return true;
+  });
 
   const weekDays = getWeekDays();
   const briefsByDay = new Map<string, AgencyBrief[]>();
@@ -386,6 +391,7 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
     approved: briefs.filter(b => b.status === 'approved').length,
     published: briefs.filter(b => b.status === 'published').length,
   };
+  const deliveredCount = briefs.filter(b => b.completionStatus === 'delivered').length;
 
   return (
     <>
@@ -617,9 +623,17 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                           {generating ? '◌ Generating...' : '+ Generate Briefs'}
                         </button>
                         <div className="flex items-center gap-2 ml-auto overflow-x-auto no-scrollbar">
+                          <span className="flex-shrink-0 text-[9px] font-mono uppercase tracking-wider" style={{ color: T.textDim }}>Generation:</span>
                           {(['all', 'draft', 'in-progress', 'approved', 'published'] as const).map(f => (
                             <FilterPill key={f} label={f === 'all' ? 'All' : BRIEF_STATUS[f]?.label || f} active={briefFilter === f} onClick={() => setBriefFilter(f)} count={briefStatusCounts[f]} />
                           ))}
+                          <span className="flex-shrink-0 text-[9px] font-mono uppercase tracking-wider ml-2" style={{ color: T.textDim }}>Delivery:</span>
+                          <FilterPill
+                            label="Delivered"
+                            active={deliveryFilter === 'delivered'}
+                            onClick={() => setDeliveryFilter(deliveryFilter === 'delivered' ? 'all' : 'delivered')}
+                            count={deliveredCount}
+                          />
                         </div>
                       </div>
                       {filteredBriefs.length > 0 ? (
@@ -926,7 +940,7 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                         </div>
                       ) : (
                         <div className="rounded-2xl p-6 text-center" style={{ background: T.bgGlass, border: `1px solid ${T.border}` }}>
-                          <p className="text-sm" style={{ color: T.textSecondary }}>{briefFilter === 'all' ? 'No briefs yet. Click "Generate Briefs" to create some.' : 'No briefs match this filter.'}</p>
+                          <p className="text-sm" style={{ color: T.textSecondary }}>{briefFilter === 'all' && deliveryFilter === 'all' ? 'No briefs yet. Click "Generate Briefs" to create some.' : 'No briefs match this filter.'}</p>
                         </div>
                       )}
                     </section>
