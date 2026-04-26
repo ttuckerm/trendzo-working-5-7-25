@@ -138,3 +138,37 @@ Untouched in this commit:
 - `action-handler.ts:956` cross-agency leak in `generateReport()`
 - Markdown rendering in Clay output
 - All other AI Employees
+
+---
+
+## Addendum — emit fix (2026-04-26, post-build)
+
+Initial verification surfaced a real bug: the operator's `AM_STEP_4_DRY_RUN_VERIFY.sql` Block 2 returned zero `auto_nudge.*` rows even though the route's response showed `dry_run_count: 3`. Investigation in `AM_STEP_4_EMIT_INVESTIGATION_2026-04-26.md`.
+
+**Root cause:** every emit call passed `actorId: 'auto-nudge-unacknowledged'`, a literal string, into `platform_events.actor_id` — which is typed `uuid` (`20260319_platform_events.sql:9`). Postgres rejected each insert with `invalid input syntax for type uuid`. The non-strict `emitEvent` swallowed the error (`console.error` only, returns `void`), so the route's per-call counters incremented at the call site while zero rows actually landed.
+
+**Fix applied (Option 1 + Option 3, approved):**
+1. **Option 1** — removed `actorId:` from all 4 emit call sites (lines 108, 134, 191, 248 of `route.ts`). The route identifier moved into `payload.source: 'auto-nudge-unacknowledged'` on every event. `actor_id` falls through to `null`, which is a permitted UUID value.
+2. **Option 3** — swapped `import { emitEvent }` → `import { emitEventStrict }` for this file. Strict throws on schema mismatch; future drift surfaces in the response's `errors[]` instead of being silently dropped.
+3. **Batch resilience preserved** — both per-brief `try/catch` wrappers (lines 106→149 and 169→263) still bracket every emit. If `emitEventStrict` ever throws, the catch pushes `{brief_id, error}` and the loop continues to the next brief. Verified via `grep` after the edit: 4 strict emits, 2 try, 2 catch.
+
+**Post-fix verification (Cursor ran these locally — operator does not need to re-run):**
+
+Curl with auth (same command as Test C.3):
+```
+{"dry_run":true,"eligible_count":3,"nudged_count":0,"dry_run_count":3,"escalated_count":0,"errors":[]}
+```
+
+Direct Supabase REST query against `platform_events` (`event_type=like.auto_nudge.*`, ordered desc, last 10):
+
+| count | event_type | actor_type | agency_id | payload.source |
+|---|---|---|---|---|
+| 3 | `auto_nudge.dry_run` | `cron` | `62cb020e-5303-452e-8cf2-83368c912b6e` (valid UUID) | `auto-nudge-unacknowledged` |
+
+The 3 rows correspond exactly to the 3 eligible briefs from PF5: 2 with `current_nudge_count=0` + `last_nudged_at=null` (PF5's `never_nudged=2`), and 1 with `current_nudge_count=2` + `last_nudged_at` past the 24h cutoff. `would_be_nudge_count` on the latter is 3 — that brief will hit the cap on its next real nudge and get escalated to a `chairman_alerts` row.
+
+If the operator now re-runs Block 2 of `AM_STEP_4_DRY_RUN_VERIFY.sql` they will see those 3 rows (and any later rows from subsequent re-curls — re-curling is idempotent since dry-run still doesn't mutate `last_nudged_at`).
+
+TS check: zero new errors.
+
+Commit: `AM Step 4 fix: remove uuid-incompatible actorId, swap to emitEventStrict, preserve batch resilience`. No push, no deploy.

@@ -34,7 +34,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { runNudgeForBrief } from '@/lib/account-manager/auto-nudge';
-import { emitEvent } from '@/lib/events/emit';
+import { emitEventStrict } from '@/lib/events/emit';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300;
@@ -105,9 +105,10 @@ export async function GET(request: NextRequest) {
     const wouldBeNudgeCount = (row.nudge_count || 0) + 1;
     try {
       if (dryRun) {
-        await emitEvent({
+        await emitEventStrict({
           eventType: 'auto_nudge.dry_run',
           payload: {
+            source: 'auto-nudge-unacknowledged',
             brief_id: briefId,
             creator_id: row.user_id,
             current_nudge_count: row.nudge_count || 0,
@@ -116,7 +117,6 @@ export async function GET(request: NextRequest) {
             last_nudged_at: row.last_nudged_at,
           },
           actorType: 'cron',
-          actorId: 'auto-nudge-unacknowledged',
           agencyId: row.agency_id,
           entityType: 'content_brief',
           entityId: briefId,
@@ -131,16 +131,16 @@ export async function GET(request: NextRequest) {
         continue;
       }
 
-      await emitEvent({
+      await emitEventStrict({
         eventType: 'auto_nudge.sent',
         payload: {
+          source: 'auto-nudge-unacknowledged',
           brief_id: briefId,
           creator: result.creator,
           new_nudge_count: result.newNudgeCount,
           email_sent: result.emailSent === true,
         },
         actorType: 'cron',
-        actorId: 'auto-nudge-unacknowledged',
         agencyId: row.agency_id,
         entityType: 'content_brief',
         entityId: briefId,
@@ -188,16 +188,16 @@ export async function GET(request: NextRequest) {
         if ((existing || []).length > 0) continue;
 
         if (dryRun) {
-          await emitEvent({
+          await emitEventStrict({
             eventType: 'auto_nudge.escalated_dry_run',
             payload: {
+              source: 'auto-nudge-unacknowledged',
               brief_id: briefId,
               creator_id: row.user_id,
               nudge_count: row.nudge_count,
               would_create_chairman_alert: true,
             },
             actorType: 'cron',
-            actorId: 'auto-nudge-unacknowledged',
             agencyId: row.agency_id,
             entityType: 'content_brief',
             entityId: briefId,
@@ -246,15 +246,15 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        await emitEvent({
+        await emitEventStrict({
           eventType: 'auto_nudge.escalated',
           payload: {
+            source: 'auto-nudge-unacknowledged',
             brief_id: briefId,
             creator_name: creatorName,
             nudge_count: row.nudge_count,
           },
           actorType: 'cron',
-          actorId: 'auto-nudge-unacknowledged',
           agencyId: row.agency_id,
           entityType: 'content_brief',
           entityId: briefId,
