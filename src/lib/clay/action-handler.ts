@@ -3,6 +3,7 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { ComponentType } from './component-registry'
 import { sendBriefToCreator } from '@/lib/email/send-brief'
 import { emitEvent } from '@/lib/events/emit'
+import { runNudgeForBrief } from '@/lib/account-manager/auto-nudge'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DB = any
@@ -528,7 +529,7 @@ async function logBriefPerformance(
 
   const { data: brief, error: fetchErr } = await db
     .from('content_briefs')
-    .select('id, user_id, brief_content, vps_prediction, predicted_vps')
+    .select('id, user_id, brief_content, predicted_vps')
     .eq('id', briefId)
     .single()
 
@@ -536,7 +537,7 @@ async function logBriefPerformance(
     return { success: false, message: 'Brief not found', followUpComponents: [ComponentType.ACTION_CONFIRMATION] }
   }
 
-  const prediction = toNum(brief.vps_prediction) ?? toNum(brief.predicted_vps)
+  const prediction = toNum(brief.predicted_vps)
   const delta = prediction !== null && views !== null ? views - prediction : null
   const now = new Date().toISOString()
 
@@ -637,7 +638,7 @@ function fail(message: string): ActionResult {
 async function approveContentBrief(db: DB, briefId: string, context: ActionContext): Promise<ActionResult> {
   const { error } = await db
     .from('content_briefs')
-    .update({ status: 'approved' })
+    .update({ status: 'accepted' })
     .eq('id', briefId)
   if (error) return fail(`Failed to approve brief: ${error.message}`)
 
@@ -687,42 +688,14 @@ async function nudgeCreator(
   payload: Record<string, unknown>,
   context: ActionContext,
 ): Promise<ActionResult> {
-  const { data: brief, error: fetchErr } = await db
-    .from('content_briefs')
-    .select('id, user_id, last_nudged_at, nudge_count, brief_content')
-    .eq('id', briefId)
-    .single()
-  if (fetchErr || !brief) return fail('Brief not found')
-
-  // Rate-limit: one nudge per 24h.
-  if (brief.last_nudged_at) {
-    const hoursSince = (Date.now() - new Date(brief.last_nudged_at).getTime()) / 36e5
-    if (hoursSince < 24) {
-      const hoursLeft = Math.ceil(24 - hoursSince)
-      return fail(`Already nudged ${Math.floor(hoursSince)}h ago. Try again in ${hoursLeft}h.`)
-    }
-  }
-
-  // Re-send the brief email as a reminder.
-  const sendResult = await sendBriefToCreator(briefId)
-
-  const now = new Date().toISOString()
-  const { error: updateErr } = await db
-    .from('content_briefs')
-    .update({ last_nudged_at: now, nudge_count: (brief.nudge_count || 0) + 1 })
-    .eq('id', briefId)
-  if (updateErr) return fail(`Failed to record nudge: ${updateErr.message}`)
-
-  let creator = 'the creator'
-  if (brief.user_id) {
-    const { data: profile } = await db.from('onboarding_profiles').select('business_name').eq('user_id', brief.user_id).maybeSingle()
-    if (profile?.business_name) creator = profile.business_name
-  }
-
-  if (!sendResult.success) {
-    return fail(`Nudge email to ${creator} failed: ${sendResult.error || 'unknown'}`)
-  }
-  return ok('nudge_creator', `Nudged ${creator}`, 'Reminder email sent; nudge count incremented.', { briefId, creator, emailSent: true })
+  const result = await runNudgeForBrief(db, briefId)
+  if (!result.success) return fail(result.error || 'Nudge failed')
+  return ok(
+    'nudge_creator',
+    `Nudged ${result.creator}`,
+    'Reminder email sent; nudge count incremented.',
+    { briefId, creator: result.creator, emailSent: true },
+  )
 }
 
 async function createAgencyEvent(
