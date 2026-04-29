@@ -980,10 +980,6 @@ export class KaiOrchestrator {
       finalPrediction = calibrated.prediction;
       finalConfidence = calibrated.confidence;
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:'kai-orchestrator.ts:ORCH_FINAL',message:'Orchestrator final VPS computation',data:{rawScoreBeforeCalibration,nicheFactor:calibrated.adjustments.nicheFactor,accountFactor:calibrated.adjustments.accountFactor,postCalibrationVPS:finalPrediction,finalConfidence,patternBoost,agreementLevel:agreement.level,llmSpread:llmGate.llmSpread,llmDisagreement:llmGate.llmDisagreement,llmInfluenceApplied:llmGate.llmInfluenceApplied,pathAggregations:pathResults.filter(p=>p.success).map(p=>({path:p.path,weight:p.weight,aggregatedPrediction:p.aggregatedPrediction}))},timestamp:Date.now(),hypothesisId:'C,D'})}).catch(()=>{});
-      // #endregion
-      
       // Store adjustment details for transparency
       const adjustmentsApplied = {
         rawScore: rawScoreBeforeCalibration,
@@ -1456,10 +1452,6 @@ export class KaiOrchestrator {
           } else {
             console.log(`[${pathName}] 🎯 Aggregated prediction: ${aggregatedPrediction?.toFixed(1)} (from ${successfulResults.length} components)`);
           }
-
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:`kai-orchestrator.ts:PATH_${pathName}`,message:`Path ${pathName} component scores`,data:{path:pathName,aggregatedPrediction,aggregatedConfidence,componentScores:results.filter(r=>r.success&&r.prediction!==undefined).map(r=>({id:r.componentId,prediction:r.prediction,confidence:r.confidence,isCoachLane:['gpt4','claude','unified-grading','editing-coach','9-attributes','7-legos'].includes(r.componentId)})),excludedDefaults:results.filter(r=>r.success&&r.prediction!==undefined).filter(r=>{const dv=[50,62,65,68,70];return dv.includes(Math.round(r.prediction||0))&&(!r.features||Object.keys(r.features).length===0)}).map(r=>r.componentId)},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
-          // #endregion
 
           return {
             path: pathName,

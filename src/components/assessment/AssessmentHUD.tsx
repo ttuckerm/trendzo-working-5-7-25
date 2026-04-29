@@ -15,7 +15,7 @@ import { LeadsPanel } from './LeadsPanel'
 import { AgentRail } from './AgentRail'
 import { DeliverablesHeader } from './DeliverablesHeader'
 import { Day1Spotlight } from './Day1Spotlight'
-import { EmailCapturePanel } from './EmailCapturePanel'
+import { AgentGate } from './AgentGate'
 import { Chassis } from './Chassis'
 import '@/styles/instrument.css'
 
@@ -196,24 +196,16 @@ export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) 
           </Chassis>
         </div>
 
-        <div style={{ gridColumn: 'span 12' }} className="hud-cell">
-          <Chassis
-            intensity="subtle"
-            statusLabel="SYS://CHANNEL_OPEN"
-            status="active"
-          >
-            <EmailCapturePanel
-              assessmentId={payload.assessmentId}
-              reducedMotion={reduced}
-              delayMs={TIMELINE.emailCapture}
-            />
-          </Chassis>
-        </div>
       </div>
 
       <AgentRail
         assessmentId={payload.assessmentId}
         agentContext={payload.agentContext}
+      />
+
+      <AgentGate
+        assessmentId={payload.assessmentId}
+        firstName={payload.operator.firstName}
       />
 
       <style>{`

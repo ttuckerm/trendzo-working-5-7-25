@@ -2,8 +2,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { ComponentType } from './component-registry'
 import { sendBriefToCreator } from '@/lib/email/send-brief'
-import { emitEvent } from '@/lib/events/emit'
+import { emitEvent, emitEventStrict } from '@/lib/events/emit'
 import { runNudgeForBrief } from '@/lib/account-manager/auto-nudge'
+import { uuidOrNull } from '@/lib/agent/correlation-context'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type DB = any
@@ -80,8 +81,8 @@ export async function handleComponentAction(
       payloadKeys: Object.keys(action.payload ?? {}),
     },
     actorType: 'user',
-    actorId: context.userId,
-    agencyId: context.agencyId,
+    actorId: uuidOrNull(context.userId),
+    agencyId: uuidOrNull(context.agencyId),
   }).catch(() => {})
 
   try {
@@ -131,13 +132,13 @@ export async function handleComponentAction(
       case 'update_brief_status': {
         const newStatus = String(action.payload.new_status || '') as 'acknowledged' | 'in_production' | 'published'
         const publishedUrl = typeof action.payload.published_url === 'string' ? action.payload.published_url : undefined
-        return updateBriefStatus(db, action.actionId, newStatus, publishedUrl)
+        return updateBriefStatus(db, action.actionId, newStatus, publishedUrl, context)
       }
 
       case 'log_performance': {
         const views = action.payload.actual_views
         const engagement = action.payload.actual_engagement_rate
-        return logBriefPerformance(db, action.actionId, views, engagement)
+        return logBriefPerformance(db, action.actionId, views, engagement, context)
       }
 
       case 'upgrade': {
@@ -431,7 +432,8 @@ async function updateBriefStatus(
   db: DB,
   briefId: string,
   newStatus: 'acknowledged' | 'in_production' | 'published',
-  publishedUrl?: string,
+  publishedUrl: string | undefined,
+  context: ActionContext,
 ): Promise<ActionResult> {
   const VALID: Record<string, string[]> = {
     acknowledged: ['delivered'],
@@ -475,6 +477,25 @@ async function updateBriefStatus(
     return { success: false, message: `Failed to update: ${updateErr.message}`, followUpComponents: [ComponentType.ACTION_CONFIRMATION] }
   }
 
+  try {
+    await emitEventStrict({
+      eventType: 'brief.status_changed',
+      payload: {
+        source: 'operator-action',
+        brief_id: briefId,
+        previous_status: current,
+        new_status: newStatus,
+        published_url: publishedUrl ?? null,
+      },
+      actorType: 'user',
+      agencyId: uuidOrNull(context.agencyId),
+      entityType: 'content_brief',
+      entityId: briefId,
+    })
+  } catch (emitErr) {
+    console.error('[update_brief_status] emit failed:', emitErr)
+  }
+
   // Resolve creator name for the confirmation card
   let creator = 'Unknown'
   if (brief.user_id) {
@@ -511,6 +532,7 @@ async function logBriefPerformance(
   briefId: string,
   rawViews: unknown,
   rawEngagement: unknown,
+  context: ActionContext,
 ): Promise<ActionResult> {
   const toNum = (v: unknown): number | null => {
     if (v === null || v === undefined || v === '') return null
@@ -554,6 +576,26 @@ async function logBriefPerformance(
 
   if (updateErr) {
     return { success: false, message: `Failed to log performance: ${updateErr.message}`, followUpComponents: [ComponentType.ACTION_CONFIRMATION] }
+  }
+
+  try {
+    await emitEventStrict({
+      eventType: 'performance.logged',
+      payload: {
+        source: 'operator-action',
+        brief_id: briefId,
+        actual_views: views,
+        actual_engagement_rate: engagement,
+        predicted_vps: prediction,
+        performance_delta: delta,
+      },
+      actorType: 'user',
+      agencyId: uuidOrNull(context.agencyId),
+      entityType: 'content_brief',
+      entityId: briefId,
+    })
+  } catch (emitErr) {
+    console.error('[log_performance] emit failed:', emitErr)
   }
 
   let creator = 'Unknown'
@@ -654,31 +696,65 @@ async function approveContentBrief(db: DB, briefId: string, context: ActionConte
   return ok('approve_brief', `Approved "${briefTitle}"`, `${creator}'s brief is cleared to publish.`, { briefId, creator })
 }
 
-async function sendInvite(db: DB, payload: Record<string, unknown>, context: ActionContext): Promise<ActionResult> {
+async function sendInvite(_db: DB, payload: Record<string, unknown>, context: ActionContext): Promise<ActionResult> {
   const email = String(payload.creatorEmail || payload.email || '').trim().toLowerCase()
   const name = String(payload.creatorName || payload.name || '').trim()
   if (!email) return fail('Email address required')
 
-  const { error } = await db
-    .from('agency_invites')
-    .upsert(
-      {
-        agency_id: context.agencyId,
+  const { sendInviteFor } = await import('@/lib/email/send-invite')
+  const result = await sendInviteFor({
+    agencyId: context.agencyId,
+    userId: context.userId,
+    creatorEmail: email,
+    creatorName: name,
+  })
+
+  if (!result.ok) {
+    try {
+      await emitEventStrict({
+        eventType: 'invite.failed',
+        payload: {
+          source: 'operator-action',
+          invite_id: result.inviteId ?? null,
+          creator_email: email,
+          creator_name: name || null,
+          error: result.error,
+        },
+        actorType: 'user',
+        agencyId: uuidOrNull(context.agencyId),
+        entityType: 'agency_invite',
+        entityId: result.inviteId,
+      })
+    } catch (emitErr) {
+      console.error('[send_invite] invite.failed emit failed:', emitErr)
+    }
+    return fail(`Email failed to send: ${result.error}`)
+  }
+
+  try {
+    await emitEventStrict({
+      eventType: 'invite.sent',
+      payload: {
+        source: 'operator-action',
+        invite_id: result.inviteId,
         creator_email: email,
         creator_name: name || null,
-        invited_by: context.userId,
-        status: 'pending',
+        email_sent: true,
       },
-      { onConflict: 'agency_id,creator_email' },
-    )
-  if (error) return fail(`Failed to queue invite: ${error.message}`)
+      actorType: 'user',
+      agencyId: uuidOrNull(context.agencyId),
+      entityType: 'agency_invite',
+      entityId: result.inviteId,
+    })
+  } catch (emitErr) {
+    console.error('[send_invite] invite.sent emit failed:', emitErr)
+  }
 
-  // Email send lives in Phase 1 Turn 4; for now the invite row is queued.
   return ok(
     'send_invite',
-    `Invite queued for ${name || email}`,
-    'Delivery pipeline ships in Turn 4; invite row recorded.',
-    { email, name },
+    `Invite emailed to ${name || email}`,
+    `Invitation sent to ${email}. Status will update when they accept.`,
+    { email, name, inviteId: result.inviteId },
   )
 }
 
@@ -690,6 +766,26 @@ async function nudgeCreator(
 ): Promise<ActionResult> {
   const result = await runNudgeForBrief(db, briefId)
   if (!result.success) return fail(result.error || 'Nudge failed')
+
+  try {
+    await emitEventStrict({
+      eventType: 'nudge.sent',
+      payload: {
+        source: 'operator-action',
+        brief_id: briefId,
+        creator: result.creator ?? null,
+        new_nudge_count: result.newNudgeCount,
+        email_sent: result.emailSent === true,
+      },
+      actorType: 'user',
+      agencyId: uuidOrNull(context.agencyId),
+      entityType: 'content_brief',
+      entityId: briefId,
+    })
+  } catch (emitErr) {
+    console.error('[nudge_creator] emit failed:', emitErr)
+  }
+
   return ok(
     'nudge_creator',
     `Nudged ${result.creator}`,

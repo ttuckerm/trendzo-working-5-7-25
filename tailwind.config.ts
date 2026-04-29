@@ -51,6 +51,23 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Powered-instrument palette (Escape Assessment landing page + future cleanup of /assessment).
+        // Do NOT remove the inline hex values currently used by src/components/assessment/* — those
+        // get migrated to these utilities in a separate cleanup pass.
+        instrument: {
+          bg: "#08080d",
+          surface: "#1c1c24",
+          "surface-raised": "#22222c",
+          "surface-inset": "#141419",
+          divider: "#2a2a34",
+          primary: "#f4f4f6",
+          secondary: "#9b9ba4",
+          tertiary: "#5b5b63",
+          crimson: "#f04a4d",
+          "crimson-deep": "#7a2527",
+          "crimson-dim": "rgba(240, 74, 77, 0.45)",
+          success: "#3aa67a",
+        },
         // Liquid Glass Design System Colors
         glass: {
           bg: "var(--glass-bg-card)",

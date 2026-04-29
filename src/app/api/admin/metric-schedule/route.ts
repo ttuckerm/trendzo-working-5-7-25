@@ -140,21 +140,12 @@ export async function GET(request: NextRequest) {
  * Creates metric collection schedules for a given run.
  */
 export async function POST(request: NextRequest) {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/a4f9accb-2f2f-4c36-b371-f1fb1eca536b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1c9eeb'},body:JSON.stringify({sessionId:'1c9eeb',location:'metric-schedule/route.ts:POST-entry',message:'metric-schedule POST called',data:{METRIC_COLLECTOR_ENABLED_raw:process.env.METRIC_COLLECTOR_ENABLED,METRIC_COLLECTOR_ENABLED_result:METRIC_COLLECTOR_ENABLED(),NEXT_PUBLIC_METRIC_COLLECTOR_ENABLED:process.env.NEXT_PUBLIC_METRIC_COLLECTOR_ENABLED},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-  // #endregion
   const auth = await verifyAdminAuth(request);
   if (!auth.success) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/a4f9accb-2f2f-4c36-b371-f1fb1eca536b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1c9eeb'},body:JSON.stringify({sessionId:'1c9eeb',location:'metric-schedule/route.ts:auth-fail',message:'admin auth failed',data:{error:auth.error},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     return NextResponse.json({ error: auth.error }, { status: 401 });
   }
 
   if (!METRIC_COLLECTOR_ENABLED()) {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/a4f9accb-2f2f-4c36-b371-f1fb1eca536b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1c9eeb'},body:JSON.stringify({sessionId:'1c9eeb',location:'metric-schedule/route.ts:flag-blocked',message:'METRIC_COLLECTOR_ENABLED is false - returning 403',data:{envVal:process.env.METRIC_COLLECTOR_ENABLED},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
     return NextResponse.json(
       { error: 'Metric collector is not enabled' },
       { status: 403 },
@@ -211,10 +202,6 @@ export async function POST(request: NextRequest) {
     const scheduleCount = await createMetricSchedules(run_id, (run as any).video_id, {
       platformVideoId: resolvedPlatformVideoId || undefined,
     });
-
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/a4f9accb-2f2f-4c36-b371-f1fb1eca536b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1c9eeb'},body:JSON.stringify({sessionId:'1c9eeb',location:'metric-schedule/route.ts:POST-success',message:'schedules created',data:{run_id,scheduleCount,resolvedPlatformVideoId},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-    // #endregion
 
     return NextResponse.json({
       schedule_count: scheduleCount,

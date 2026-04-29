@@ -12,12 +12,6 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
   const authDisabled = process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true'
 
-  // #region agent log
-  useEffect(() => {
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'ProtectedRoute.tsx:mount',message:'ProtectedRoute mounted',data:{authDisabled},timestamp:Date.now(),hypothesisId:'H6'})}).catch(()=>{});
-  }, [authDisabled])
-  // #endregion
-
   if (authDisabled) {
     return <>{children}</>
   }
@@ -31,12 +25,6 @@ function ProtectedRouteInner({ children, allowedRoles }: ProtectedRouteProps) {
   const redirected = useRef(false)
   const [timedOut, setTimedOut] = useState(false)
   const [secondsWaiting, setSecondsWaiting] = useState(0)
-
-  // #region agent log
-  useEffect(() => {
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'ProtectedRoute.tsx:render',message:'ProtectedRouteInner render state',data:{loading,hasUser:!!user,hasProfile:!!profile,profileRole:profile?.role,timedOut},timestamp:Date.now(),hypothesisId:'H5'})}).catch(()=>{});
-  }, [loading, user, profile, timedOut])
-  // #endregion
 
   useEffect(() => {
     if (!loading) {

@@ -376,11 +376,6 @@ async function fetchCohortForV2(niche: string): Promise<ScrapedVideoRow[]> {
     if (page.length < COHORT_PAGE_SIZE) break;
     offset += COHORT_PAGE_SIZE;
   }
-  // #region agent log
-  const _nonZeroFollowers = rows.filter(r => (r.follower_count ?? 0) > 0).length;
-  const _sampleFollowers = rows.slice(0, 5).map(r => r.follower_count ?? 0);
-  fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'f793b9'},body:JSON.stringify({sessionId:'f793b9',location:'learning/update/route.ts:fetchCohortForV2',message:'Cohort follower data after fix',data:{totalRows:rows.length,nonZeroFollowers:_nonZeroFollowers,sampleFollowers:_sampleFollowers,niche},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-  // #endregion
   return rows;
 }
 

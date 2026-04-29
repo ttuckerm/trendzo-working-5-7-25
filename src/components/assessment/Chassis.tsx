@@ -195,11 +195,12 @@ export const Chassis = forwardRef<HTMLDivElement, ChassisProps>(function Chassis
 
       {children}
 
-      <style>{`
-        .chassis-root[data-flash="true"] {
-          animation: hudGlowSoftBreath 0.8s ease-out 1;
-        }
-      `}</style>
+      <style
+        dangerouslySetInnerHTML={{
+          __html:
+            ".chassis-root[data-flash='true']{animation:hudGlowSoftBreath 0.8s ease-out 1;}",
+        }}
+      />
     </div>
   )
 })

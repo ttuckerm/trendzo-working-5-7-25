@@ -2,6 +2,8 @@
 ## The Build Bible
 **Date:** April 14, 2026 | **Version:** 1.0 | **Status:** LOCKED REFERENCE
 
+> **Schema source of truth is `supabase/migrations/`. If this doc conflicts with the actual schema, the schema wins. Audit before referencing columns.**
+
 ---
 
 ## CORE PRINCIPLE
@@ -63,7 +65,7 @@ Every AI employee owns a segment of this lifecycle. Every segment has defined tr
 | **Clay UX** | "Luna hasn't acknowledged her brief in 26 hours. Nudge sent automatically. Want to call her instead?" |
 | **Dashboard UX** | Brief card shows amber "Nudge Sent" badge with timestamp |
 | **Escalation** | If no response 48 hours after nudge → operator alerted for manual intervention |
-| **DB writes** | `content_briefs.nudge_sent_at` → timestamp, `content_briefs.nudge_count` → increment |
+| **DB writes** | `content_briefs.last_nudged_at` → timestamp, `content_briefs.nudge_count` → increment |
 | **Status:** | **NOT BUILT** |
 
 #### AM-4: Production Status Tracking

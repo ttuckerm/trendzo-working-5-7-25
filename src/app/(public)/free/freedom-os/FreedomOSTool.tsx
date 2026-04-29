@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { buildInputFromForm, type FormState } from '@/lib/assessment/build-input-from-form'
 import { FreedomMultiplierControl } from '@/components/freedom-os/FreedomMultiplierControl'
@@ -63,7 +62,14 @@ function FieldError({ message }: { message?: string }) {
 
 type RunwayMode = 'months' | 'amount'
 
-export default function FreedomOSTool() {
+export interface FreedomOSToolProps {
+  // When the user arrived through the paid Stripe path, this is the
+  // checkout session id. The generator route uses it to mark the purchase
+  // consumed and link it to the new assessment. Null for the code path.
+  sessionId?: string | null
+}
+
+export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps = {}) {
   const router = useRouter()
   const [form, setForm] = useState<FormState>(DEFAULT_FORM)
   const [runwayMode, setRunwayMode] = useState<RunwayMode>('months')
@@ -169,7 +175,7 @@ export default function FreedomOSTool() {
       const res = await fetch('/api/assessment/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(result.input),
+        body: JSON.stringify(sessionId ? { ...result.input, sessionId } : result.input),
       })
 
       let data: { ok?: boolean; assessmentId?: string; error?: string } = {}
@@ -198,21 +204,11 @@ export default function FreedomOSTool() {
       setSubmitError('Network error. Please check your connection and try again.')
       setIsSubmitting(false)
     }
-  }, [form, runwayMode, savingsAmount, freedomMultiplier, router])
+  }, [form, runwayMode, savingsAmount, freedomMultiplier, router, sessionId])
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8">
       <div className="text-center mb-8">
-        <Link
-          href="/free"
-          className="inline-flex items-center gap-1.5 text-xs font-medium no-underline mb-6"
-          style={{ color: 'rgba(255,255,255,0.35)' }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-          Back to Hub
-        </Link>
         <h1
           className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
           style={{ fontFamily: "'Playfair Display', serif" }}

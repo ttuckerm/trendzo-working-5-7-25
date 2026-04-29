@@ -111,7 +111,7 @@ const approveBriefSchema = z.object({
 });
 export const approveBriefAdapter: ActionAdapter = {
   id: 'approve_brief',
-  description: 'Approve a generated content brief (sets content_briefs.status = "approved").',
+  description: 'Approve a generated content brief (operator approval; sets content_briefs.status = "accepted").',
   consequence: (i) => `Approve brief ${i.briefId}.`,
   schema: approveBriefSchema,
   run: ({ input, context }) => callHandler('approve_brief', String(input.briefId ?? ''), { briefId: input.briefId }, context),

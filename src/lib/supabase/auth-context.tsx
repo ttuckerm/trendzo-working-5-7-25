@@ -41,18 +41,12 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   const supabase = getSupabaseClient()
 
   const fetchProfile = useCallback(async (userId: string) => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:fetchProfile-entry',message:'fetchProfile called',data:{userId},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
-    // #endregion
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
       .single()
 
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:fetchProfile-exit',message:'fetchProfile completed',data:{hasData:!!data,errorCode:error?.code,errorMsg:error?.message},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});
-    // #endregion
     if (error && error.code !== 'PGRST116') {
       console.error('[auth-context] Profile fetch error:', error)
     }
@@ -60,34 +54,17 @@ export function SupabaseAuthProvider({ children }: { children: React.ReactNode }
   }, [supabase])
 
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:useEffect-entry',message:'SupabaseAuthProvider useEffect fired',data:{},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
-    // #endregion
-
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:getSession-resolved',message:'getSession resolved',data:{hasSession:!!session,hasUser:!!session?.user,userEmail:session?.user?.email},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-      // #endregion
       const u = session?.user ?? null
       setUser(u)
       if (u) {
         fetchProfile(u.id).finally(() => {
-          // #region agent log
-          fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:setLoading-false-after-profile',message:'setLoading(false) after fetchProfile',data:{},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-          // #endregion
           setLoading(false)
         })
       } else {
-        // #region agent log
-        fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:setLoading-false-no-user',message:'setLoading(false) - no user',data:{},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-        // #endregion
         setLoading(false)
       }
     }).catch((err: unknown) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'31a8a3'},body:JSON.stringify({sessionId:'31a8a3',location:'auth-context.tsx:getSession-REJECTED',message:'getSession REJECTED - this is the bug',data:{error:String(err)},timestamp:Date.now(),hypothesisId:'H1'})}).catch(()=>{});
-      // #endregion
       console.error('[auth-context] getSession failed:', err)
       setLoading(false)
     })

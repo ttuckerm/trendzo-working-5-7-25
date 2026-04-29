@@ -575,6 +575,197 @@ const WAITLIST: NurtureEmail[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════
+// FREEDOM AGENT — 8-Week Nurture Sequence
+// Triggered via API when user subscribes through the Freedom Agent funnel.
+// After each send: add tag "freedom-agent-week-N"
+// After WK7: if clicks waitlist link → add "trendzo-interested" → skip to Founding Member email
+// After WK8: remove "freedom-agent-active", add "freedom-agent-complete"
+// ═══════════════════════════════════════════════════════════════
+
+const FREEDOM_AGENT_8WEEK: NurtureEmail[] = [
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 1,
+    delayDays: 0,
+    subject: "Your AI business advisor is ready",
+    previewText: "Let's make the next 8 weeks count",
+    body: email([
+      heading("Welcome. Your Freedom Agent is live."),
+      p("You now have a personal AI business advisor that remembers your plan, your niche, and your goals. Most people don't have anything like this — and the ones who do move 3x faster."),
+      p("Here's the deal for the next 8 weeks: I'll send you one email every Monday with a specific lesson, tactic, or insight. Each one is designed to stack on the last."),
+      p("By week 8, you'll have:"),
+      p("&bull; A working rhythm that doesn't depend on motivation<br>"
+        + "&bull; A clear understanding of what content actually grows a business<br>"
+        + "&bull; Proof from your own progress that the system works<br>"
+        + "&bull; Early access to the tools most creators won't see for another year"),
+      p("Before next Monday, do one thing: <strong style='color:#fff'>ask your advisor a real question.</strong> Not a test. A real one — about your niche, your pricing, your next step."),
+      cta('{{freedom_agent_url}}', 'Open the Freedom Agent'),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 2,
+    delayDays: 7,
+    subject: "Why week 2 is where most people quit",
+    previewText: "The honeymoon is over. Now what?",
+    body: email([
+      heading("Week 1 was exciting. Week 2 is where it gets real."),
+      p("The initial rush fades. You've posted a few things that didn't go anywhere. You pitched someone and they ghosted. Your family still doesn't quite get what you're doing."),
+      p("This is the <strong style='color:#fff'>consistency gap</strong> — and it's where most businesses die. Not because the idea was bad. Because the excitement ran out before the system kicked in."),
+      p("The people who make it through week 2 all do one thing: <strong style='color:#fff'>they stop measuring by results and start measuring by reps.</strong>"),
+      p("Reps you can control:"),
+      p("&bull; Did I post today? (Yes / No)<br>"
+        + "&bull; Did I reach out to one potential customer? (Yes / No)<br>"
+        + "&bull; Did I ask my advisor for one piece of guidance? (Yes / No)"),
+      p("Results are lagging indicators. Reps are leading indicators. Track the reps, and the results follow 4-8 weeks later — every single time."),
+      p("This week, give your advisor a status update and ask it to hold you accountable. Tell it what you committed to. It'll remember."),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 3,
+    delayDays: 14,
+    subject: "Your first $1 matters more than you think",
+    previewText: "Proof changes everything",
+    body: email([
+      heading("Forget $10,000. Focus on $1."),
+      p("The first dollar is the hardest. Not because the dollar itself is hard to earn — it's because it breaks the psychological barrier between 'person with an idea' and 'person running a business.'"),
+      p("Once you've been paid once, your brain files this under <em>real</em>. Every subsequent dollar is easier. Momentum compounds."),
+      p("So how do you get to $1 fastest?"),
+      p("&bull; <strong style='color:#fff'>Sell something that already exists.</strong> A 30-minute consultation. A template you've already made. A small piece of your bigger service.<br>"
+        + "&bull; <strong style='color:#fff'>Charge one person you already know.</strong> Not a stranger. Someone who already trusts you and needs what you're offering.<br>"
+        + "&bull; <strong style='color:#fff'>Price it so low it's a no-brainer.</strong> $10. $25. The goal isn't revenue — it's proof."),
+      p("Every successful founder has a first-dollar story. Get yours this week."),
+      p("Ask your advisor: <em>'Given my niche and current skills, what's the fastest way I can earn my first $25 this week?'</em>"),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 4,
+    delayDays: 21,
+    subject: "The content that actually grows a business",
+    previewText: "Stop chasing viral. Target your 500.",
+    body: email([
+      heading("Viral is a vanity metric for most businesses."),
+      p("A fitness coach with 1M followers who can't convert is worth less than a coach with 5,000 followers who sells out every cohort. The math is obvious once you see it."),
+      p("You don't need to reach millions. You need the <strong style='color:#fff'>right 500 people</strong> — the ones who want what you're selling and can afford to pay for it."),
+      p("Targeted content > viral content, every time. Here's what targeted content looks like:"),
+      p("&bull; Specific pain points your ideal customer has right now<br>"
+        + "&bull; Language they use to describe their problem (not your industry jargon)<br>"
+        + "&bull; Proof you've solved this exact problem before<br>"
+        + "&bull; A clear next step for the people who feel seen"),
+      p("If your content feels too specific, you're probably doing it right. Generic content gets scrolled past. Specific content gets saved, shared with someone who needs it, and acted on."),
+      p("Ask your advisor: <em>'Who is the single most profitable person I could reach with my content, and what would I say to them?'</em>"),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 5,
+    delayDays: 28,
+    subject: "What if you could predict performance before posting?",
+    previewText: "The shift that's changing how creators work",
+    body: email([
+      heading("You're halfway through. Time to introduce something new."),
+      p("Every creator faces the same problem: you spend hours making content, post it, and hope. The feedback loop is slow and expensive. Every miss is time you can't get back."),
+      p("The shift happening right now is that AI can score a content concept <strong style='color:#fff'>before you make it.</strong> Not perfectly. But directionally enough to change everything."),
+      p("The system we're building looks at 8 signals that correlate with performance:"),
+      p("&bull; <strong style='color:#fff'>Hook strength</strong> — Does the first 2 seconds command attention?<br>"
+        + "&bull; <strong style='color:#fff'>Emotional arc</strong> — Does it build tension and resolve?<br>"
+        + "&bull; <strong style='color:#fff'>Niche timing</strong> — Is this topic rising in your niche right now?<br>"
+        + "&bull; <strong style='color:#fff'>Cultural alignment</strong> — Does it match what audiences care about today?<br>"
+        + "&bull; <strong style='color:#fff'>Creator-audience fit</strong> — Is this the right creator for this content?<br>"
+        + "&bull; <strong style='color:#fff'>Format fit</strong> — Does the structure match what the algorithm rewards?<br>"
+        + "&bull; <strong style='color:#fff'>Competitive gap</strong> — Is anyone else doing this well?<br>"
+        + "&bull; <strong style='color:#fff'>Trend velocity</strong> — Is this wave rising or falling?"),
+      p("One score comes out — your <strong style='color:#fff'>Viral Potential Score (VPS).</strong> Higher score means higher likelihood of landing. You stop guessing. You start compounding."),
+      p("This tool is coming soon. You'll be among the first to get it."),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 6,
+    delayDays: 35,
+    subject: "The full platform we're building",
+    previewText: "Your advisor is one piece of something bigger",
+    body: email([
+      heading("Your Freedom Agent is part of something larger."),
+      p("The advisor you've been using is one component of a platform called <strong style='color:#fff'>Trendzo</strong> — built for creators and businesses that want to use AI to make better decisions faster."),
+      p("Here's what the full platform does:"),
+      p("&bull; <strong style='color:#fff'>VPS content scoring</strong> — Score ideas before you create them<br>"
+        + "&bull; <strong style='color:#fff'>AI content briefs</strong> — Turn your top-scoring ideas into detailed execution plans<br>"
+        + "&bull; <strong style='color:#fff'>Niche intelligence</strong> — See what's working in your specific market right now<br>"
+        + "&bull; <strong style='color:#fff'>Creator portfolio management</strong> — Track multiple creators and campaigns in one place<br>"
+        + "&bull; <strong style='color:#fff'>Your AI advisor</strong> — Deeper context, longer memory, more capability than the free version"),
+      p("The free advisor you have now is the entry point. The full platform is what turns individual guidance into a compounding system."),
+      p("We're opening founding access soon. Founding members lock in early pricing before we open to the public — and get first access to every new feature."),
+      p("Next week I'll show you how to join."),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 7,
+    delayDays: 42,
+    subject: "Founding access is opening — lock in your spot",
+    previewText: "Early members get founding pricing for life",
+    body: email([
+      heading("Here's the invitation."),
+      p("You've spent 7 weeks with the Freedom Agent. You've seen what it can do with just a conversation. The full Trendzo platform extends that by orders of magnitude."),
+      p("<strong style='color:#fff'>Founding access includes:</strong>"),
+      p("&bull; First access to VPS scoring and AI content briefs when they launch<br>"
+        + "&bull; Founding pricing locked in for life (before public pricing goes live)<br>"
+        + "&bull; Direct input on what we build next<br>"
+        + "&bull; Access to the founding community<br>"
+        + "&bull; Upgraded advisor with deeper memory and context<br>"
+        + "&bull; All current free tools stay free forever"),
+      p("This is the one email where I'm going to ask you to do something specific. <strong style='color:#fff'>Join the waitlist now</strong> to secure founding access before we open to the public."),
+      cta('{{waitlist_url}}', 'Join the founding waitlist'),
+      p("Doors open soon. Founding spots are limited — the earlier you're on the list, the better your access."),
+      p("If you have questions, reply to this email or ask your advisor. I read every reply."),
+      sig(),
+      footer(''),
+    ]),
+  },
+  {
+    segment: 'freedom-agent-8week',
+    emailNumber: 8,
+    delayDays: 49,
+    subject: "8 weeks in — here's what's next",
+    previewText: "Thanks for sticking with it",
+    body: email([
+      heading("You made it through 8 weeks. That alone puts you ahead of 95% of people who start."),
+      p("Here's what you've got now:"),
+      p("&bull; A working AI advisor that knows your business<br>"
+        + "&bull; A framework for getting to your first dollar and beyond<br>"
+        + "&bull; The consistency mindset that separates builders from dabblers<br>"
+        + "&bull; A content strategy built on targeting, not chasing virality<br>"
+        + "&bull; Early awareness of AI content intelligence — before most of your peers"),
+      p("These emails stop here. But your advisor doesn't. It remembers everything. Keep using it."),
+      p("Two paths forward:"),
+      p("<strong style='color:#fff'>Path 1 — Keep going free.</strong> Use your advisor, revisit Freedom OS, apply what you've learned. No pressure, no deadline. The door stays open."),
+      p("<strong style='color:#fff'>Path 2 — Go deeper with founding access.</strong> If you're ready to scale what you're building and want the full Trendzo platform, founding access is still open for a limited time."),
+      cta('{{waitlist_url}}', 'Explore founding access'),
+      p("Either way — thank you for spending 8 weeks with us. We don't take that lightly."),
+      p("Your advisor is always one click away:"),
+      p("<a href='{{freedom_agent_url}}' style='color:#7c3aed;'>Continue with your advisor →</a>"),
+      sig(),
+      footer(''),
+    ]),
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
 // COMBINED EXPORT
 // ═══════════════════════════════════════════════════════════════
 
@@ -584,4 +775,5 @@ export const NURTURE_SEQUENCES: NurtureEmail[] = [
   ...SEGMENT_C,
   ...SEGMENT_D,
   ...WAITLIST,
+  ...FREEDOM_AGENT_8WEEK,
 ];

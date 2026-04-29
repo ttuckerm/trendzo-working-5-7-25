@@ -547,10 +547,6 @@ export function calibratePrediction(input: CalibrationInput): CalibrationResult 
   console.log(`[Calibrator] Training features extracted: ${Object.keys(trainingFeatures).length} fields`);
   console.log('[Calibrator] ═══════════════════════════════════════════════════════════');
 
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:'prediction-calibrator.ts:FINAL',message:'Calibrator adjustments applied',data:{rawVps:input.rawVps,finalVps:currentVps,rawConfidence:input.rawConfidence,finalConfidence:currentConfidence,adjustmentsApplied:adjustments.map(a=>({rule:a.rule,vpsBefore:a.vpsBefore,vpsAfter:a.vpsAfter})),transcriptionSource:input.transcriptionSource,transcriptionSkipped:input.transcriptionSkipped,resolvedTranscriptLength:input.resolvedTranscriptLength,audioPresent:input.audioPresent,packVScore:input.packV?.overall_visual_score,detectedStyle:input.detectedStyle,hasCreatorContext:!!input.creatorContext},timestamp:Date.now(),hypothesisId:'B'})}).catch(()=>{});
-  // #endregion
-
   return {
     calibratedVps: currentVps,
     calibratedDps: currentVps,

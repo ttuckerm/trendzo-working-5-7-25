@@ -16,6 +16,7 @@ import type {
   AgencyCreator,
   AgencyAlert,
   AgencyBrief,
+  AgencyInvite,
   BriefVariant,
   CoachingInsight,
 } from '@/lib/dashboard/queries';
@@ -45,6 +46,16 @@ const COMPLETION_STATUS: Record<string, { bg: string; fg: string; label: string 
   acknowledged:  { bg: '#6C92A0', fg: '#ffffff', label: 'Acknowledged' },
   in_production: { bg: T.amber,   fg: '#1a1a1a', label: 'In Production' },
   published:     { bg: '#4A8C6A', fg: '#ffffff', label: 'Published' },
+};
+
+// agency_invites.status lifecycle (OB-1).
+const INVITE_STATUS: Record<string, { bg: string; fg: string; label: string }> = {
+  pending:  { bg: '#6B6D6D', fg: '#ffffff', label: 'Pending' },
+  sent:     { bg: '#6C92A0', fg: '#ffffff', label: 'Sent' },
+  accepted: { bg: '#4A8C6A', fg: '#ffffff', label: 'Accepted' },
+  declined: { bg: T.amber,   fg: '#1a1a1a', label: 'Declined' },
+  expired:  { bg: T.textDim, fg: '#ffffff', label: 'Expired' },
+  failed:   { bg: T.accent,  fg: '#ffffff', label: 'Failed' },
 };
 
 const SEVERITY_META = {
@@ -160,11 +171,12 @@ interface DashboardClientProps {
   alerts: AgencyAlert[];
   briefs: AgencyBrief[];
   insights: CoachingInsight[];
+  invites: AgencyInvite[];
 }
 
 const AGENCY_ID = '62cb020e-5303-452e-8cf2-83368c912b6e';
 
-export default function DashboardClient({ stats, creators, alerts, briefs: initialBriefs, insights }: DashboardClientProps) {
+export default function DashboardClient({ stats, creators, alerts, briefs: initialBriefs, insights, invites: initialInvites }: DashboardClientProps) {
   const [creatorFilter, setCreatorFilter] = useState<'all' | 'active' | 'onboarding' | 'inactive'>('all');
   const [briefFilter, setBriefFilter] = useState<'all' | 'draft' | 'in-progress' | 'approved' | 'published'>('all');
   const [deliveryFilter, setDeliveryFilter] = useState<'all' | 'delivered'>('all');
@@ -181,6 +193,53 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
   const [perfLoggingId, setPerfLoggingId] = useState<string | null>(null);
   const [perfViewsInput, setPerfViewsInput] = useState('');
   const [perfEngagementInput, setPerfEngagementInput] = useState('');
+
+  // OB-1 Dashboard parity — invite creator state
+  const [invites, setInvites] = useState<AgencyInvite[]>(initialInvites);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteName, setInviteName] = useState('');
+  const [invitingNow, setInvitingNow] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+
+  const handleSendInvite = useCallback(async () => {
+    const email = inviteEmail.trim();
+    const name = inviteName.trim();
+    if (!email || !name) {
+      setInviteError('Email and name are both required');
+      return;
+    }
+    setInvitingNow(true);
+    setInviteError(null);
+    try {
+      const res = await fetch('/api/invites/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ creatorEmail: email, creatorName: name }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        setInviteError(data?.error || res.statusText || 'Failed to send invite');
+        setInvitingNow(false);
+        return;
+      }
+      const now = new Date().toISOString();
+      setInvites(prev => [{
+        id: data.inviteId,
+        creator_email: email.toLowerCase(),
+        creator_name: name,
+        status: 'sent',
+        invited_at: now,
+        sent_at: now,
+        accepted_at: null,
+        error_message: null,
+      }, ...prev.filter(i => i.creator_email !== email.toLowerCase())]);
+      setInviteEmail('');
+      setInviteName('');
+    } catch (e: any) {
+      setInviteError(e?.message || 'Failed to send invite');
+    }
+    setInvitingNow(false);
+  }, [inviteEmail, inviteName]);
 
   const handleLogPerformance = useCallback(async (briefId: string) => {
     const rawId = briefId.startsWith('cb-') ? briefId.slice(3) : briefId;
@@ -943,6 +1002,97 @@ export default function DashboardClient({ stats, creators, alerts, briefs: initi
                           <p className="text-sm" style={{ color: T.textSecondary }}>{briefFilter === 'all' && deliveryFilter === 'all' ? 'No briefs yet. Click "Generate Briefs" to create some.' : 'No briefs match this filter.'}</p>
                         </div>
                       )}
+                    </section>
+
+                    {/* OB-1 Dashboard parity — Invite Creator + Recent Invites */}
+                    <section>
+                      <div className="flex items-center gap-3 mb-4">
+                        <h2 className="text-sm font-display font-bold tracking-wide" style={{ color: T.textPrimary }}>Creator Invites</h2>
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full" style={{ background: `${T.cyan}15`, color: T.cyan }}>
+                          {invites.length} {invites.length === 1 ? 'Invite' : 'Invites'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-4">
+                        {/* LEFT: inline invite form */}
+                        <div className="rounded-2xl p-5" style={{ background: T.bgGlass, backdropFilter: T.blur, WebkitBackdropFilter: T.blur, border: `1px solid ${T.border}` }}>
+                          <h3 className="text-[10px] font-mono uppercase tracking-[0.15em] mb-3" style={{ color: T.textSecondary }}>Invite a creator</h3>
+                          <div className="flex flex-col gap-2">
+                            <input
+                              value={inviteEmail}
+                              onChange={e => setInviteEmail(e.target.value)}
+                              placeholder="creator@example.com"
+                              type="email"
+                              autoComplete="off"
+                              disabled={invitingNow}
+                              className="text-[11px] px-2 py-1.5 rounded border bg-transparent text-[#c0c0d0]"
+                              style={{ borderColor: T.border }}
+                            />
+                            <input
+                              value={inviteName}
+                              onChange={e => setInviteName(e.target.value)}
+                              placeholder="Creator display name"
+                              autoComplete="off"
+                              disabled={invitingNow}
+                              className="text-[11px] px-2 py-1.5 rounded border bg-transparent text-[#c0c0d0]"
+                              style={{ borderColor: T.border }}
+                            />
+                            <div className="flex items-center gap-2 mt-1">
+                              <button
+                                onClick={handleSendInvite}
+                                disabled={invitingNow || !inviteEmail.trim() || !inviteName.trim()}
+                                className="text-[10px] font-mono font-bold uppercase tracking-wide px-3 py-1.5 rounded-lg transition-all duration-200"
+                                style={{ background: `${T.green}18`, color: T.green, border: `1px solid ${T.green}30`, cursor: invitingNow ? 'not-allowed' : 'pointer', opacity: invitingNow || !inviteEmail.trim() || !inviteName.trim() ? 0.5 : 1 }}
+                              >{invitingNow ? '◌ Sending...' : '+ Send Invite'}</button>
+                              {(inviteEmail || inviteName) && !invitingNow && (
+                                <button
+                                  onClick={() => { setInviteEmail(''); setInviteName(''); setInviteError(null); }}
+                                  className="text-[10px] font-mono uppercase tracking-wide px-3 py-1.5 rounded-lg"
+                                  style={{ color: T.textDim, background: 'transparent', border: 'none', cursor: 'pointer' }}
+                                >Clear</button>
+                              )}
+                            </div>
+                            {inviteError && (
+                              <p className="text-[10px] font-mono mt-1" style={{ color: T.accent }}>{inviteError}</p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* RIGHT: recent invites list */}
+                        <div className="rounded-2xl p-5" style={{ background: T.bgGlass, backdropFilter: T.blur, WebkitBackdropFilter: T.blur, border: `1px solid ${T.border}` }}>
+                          <h3 className="text-[10px] font-mono uppercase tracking-[0.15em] mb-3" style={{ color: T.textSecondary }}>Recent Invites</h3>
+                          {invites.length === 0 ? (
+                            <p className="text-[11px]" style={{ color: T.textSecondary }}>No invites yet. Send your first invite using the form on the left.</p>
+                          ) : (
+                            <div className="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+                              {invites.map(inv => {
+                                const meta = INVITE_STATUS[inv.status] || { bg: T.textDim, fg: '#ffffff', label: inv.status };
+                                return (
+                                  <div key={inv.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: `${T.bg}80`, border: `1px solid ${T.border}` }}>
+                                    <div className="flex-1 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <p className="text-[11px] font-medium text-[#e8e8f0] truncate">{inv.creator_name || inv.creator_email}</p>
+                                        {inv.creator_name && (
+                                          <p className="text-[10px] font-mono truncate" style={{ color: T.textDim }}>{inv.creator_email}</p>
+                                        )}
+                                      </div>
+                                      <p className="text-[9px] font-mono mt-0.5" style={{ color: T.textDim }}>
+                                        Invited {timeAgo(inv.invited_at)}{inv.sent_at && inv.status === 'sent' ? ` • sent ${timeAgo(inv.sent_at)}` : ''}{inv.accepted_at ? ` • accepted ${timeAgo(inv.accepted_at)}` : ''}
+                                      </p>
+                                      {inv.status === 'failed' && inv.error_message && (
+                                        <p className="text-[9px] font-mono mt-0.5 truncate" style={{ color: T.accent }} title={inv.error_message}>{inv.error_message}</p>
+                                      )}
+                                    </div>
+                                    <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded flex-shrink-0" style={{ background: meta.bg, color: meta.fg }}>
+                                      {meta.label}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </section>
 
                     {/* Bottom: Coaching + Alerts sidebar */}

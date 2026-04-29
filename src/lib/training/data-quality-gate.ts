@@ -403,37 +403,6 @@ export async function diagnoseDataQualityGate(): Promise<QualityGateDiagnosis> {
     simulated,
   };
 
-  // #region agent log
-  fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '1d6d32' },
-    body: JSON.stringify({
-      sessionId: '1d6d32',
-      hypothesisId: 'H1-H5',
-      location: 'data-quality-gate.ts:diagnoseDataQualityGate',
-      message: 'quality_gate_diagnosis',
-      data: {
-        H1_sequential_buckets: {
-          total,
-          no_video_analysis: noAnalysis.length,
-          after_pass1: pass1Runs.length,
-          followers_bucket_equals_miss_plus_low_plus_ok: followerLookupMiss + followerBelowThreshold + followerOk === pass1Runs.length,
-        },
-        H2_ffmpeg_false_negative: {
-          runsPass1OnlyWithExtendedHeight,
-          extendedPassCount: extendedHeightPass.size,
-          productionPassCount: productionVideoOk.size,
-          sampleFfmpegFeatureKeys: diagnosis.sampleFfmpegFeatureKeys,
-        },
-        H3_follower_miss_vs_low: { followerLookupMiss, followerBelowThreshold, followerOk },
-        H4_missing_ids_on_pass1: { runsMissingCreatorAndVideo },
-        H5_eligible: eligible,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   return diagnosis;
 }
 

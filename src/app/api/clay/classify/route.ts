@@ -12,10 +12,6 @@ export const runtime = 'nodejs'
  * Called by the client alongside the chat request.
  */
 export async function POST(req: Request) {
-  // #region agent log
-  const _t0 = Date.now(); const _dl = (loc: string, msg: string, data?: any) => fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'082614'},body:JSON.stringify({sessionId:'082614',location:loc,message:msg,data:{...data,elapsed:Date.now()-_t0},timestamp:Date.now(),hypothesisId:'H-D'})}).catch(()=>{});
-  await _dl('classify:start','classify POST started');
-  // #endregion
   try {
     let userId: string
     if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
@@ -28,9 +24,6 @@ export async function POST(req: Request) {
       }
       userId = user.id
     }
-    // #region agent log
-    await _dl('classify:auth','auth done',{userId});
-    // #endregion
 
     const { message, recentComponents, role, tier } = await req.json() as {
       message: string
@@ -44,9 +37,6 @@ export async function POST(req: Request) {
     }
 
     const agencyId = await getUserAgencyId(userId)
-    // #region agent log
-    await _dl('classify:agency','getUserAgencyId done',{agencyId});
-    // #endregion
 
     const result = await classifyIntent(message, {
       role: role || 'operator',
@@ -54,9 +44,6 @@ export async function POST(req: Request) {
       recentComponents: (recentComponents || []) as ComponentType[],
       agencyId: agencyId || undefined,
     })
-    // #region agent log
-    await _dl('classify:done','classifyIntent complete',{intents:result.intents,components:result.suggestedComponents});
-    // #endregion
 
     return NextResponse.json(result)
   } catch (error) {

@@ -452,10 +452,6 @@ export async function runPredictionPipeline(
     }
     console.log(`[Pipeline] Orchestrator finished: success=${result.success}, vps=${result.vps}`);
 
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:'runPredictionPipeline.ts:ORCH_RESULT',message:'Orchestrator raw result before calibrator',data:{orchestratorVps:result.vps,orchestratorConfidence:result.confidence,viralPotential:result.viralPotential,componentsUsed:result.componentsUsed,adjustments:result.adjustments,llmSpread:result.llm_spread,llmInfluenceApplied:result.llm_influence_applied,hasVideoPath:!!options.videoFilePath,hasTranscript:!!resolvedTranscript,transcriptSource,transcriptLength:resolvedTranscript?.length||0},timestamp:Date.now(),hypothesisId:'ALL'})}).catch(()=>{});
-    // #endregion
-
     // NOTE: We no longer do the main status update here - it's consolidated in the finally block
     // This ensures the update always happens even if later code throws
 
@@ -776,10 +772,6 @@ export async function runPredictionPipeline(
       unified_grading: legacyPack1,
       editing_suggestions: legacyPack2,
     };
-
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:'runPredictionPipeline.ts:FINAL_OUTPUT',message:'Pipeline final output',data:{finalVps:finalVps,finalConfidence,calibrationAdjustments:calibrationResult.adjustments.map(a=>({rule:a.rule,vpsBefore:a.vpsBefore,vpsAfter:a.vpsAfter})),scoreLaneVps:scoreLaneVps,orchestratorRawVps:result.vps,executedComponentCount,executedComponentIds,hasVideoPath:!!options.videoFilePath,niche:options.niche},timestamp:Date.now(),hypothesisId:'ALL'})}).catch(()=>{});
-    // #endregion
 
   } catch (error: any) {
     console.error('[Pipeline] Prediction failed:', error);

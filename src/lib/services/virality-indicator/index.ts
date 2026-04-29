@@ -286,10 +286,6 @@ export const viralityIndicator = {
     if (pacingScore < 60) recommendations.push('Optimize video length to 15-45 seconds');
     if (engagementScore < 60) recommendations.push('Make content more relatable with "you" language');
     
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'30a7b9'},body:JSON.stringify({sessionId:'30a7b9',location:'virality-indicator/index.ts:RESULT',message:'Virality indicator factor breakdown',data:{viralityIndicator:Math.round(viralityIndicator*10)/10,textScore,visualScore,audioScore,pacingScore,engagementScore,wordCount,duration,hasFFmpegData:!!input.ffmpeg_data,hasMetadata:!!input.metadata,hasResolution:!!input.resolution,sceneChanges:input.ffmpeg_data?.scene_changes,avgBrightness:input.ffmpeg_data?.avg_brightness,hasFaces:input.ffmpeg_data?.has_faces,audioLevels:input.ffmpeg_data?.audio_levels?.length||0,transcriptLength:transcript.length},timestamp:Date.now(),hypothesisId:'A,E'})}).catch(()=>{});
-    // #endregion
-
     return {
       virality_indicator: Math.round(viralityIndicator * 10) / 10,
       confidence: Math.min(1, confidence),

@@ -1,5 +1,43 @@
 [bridge] experiment=auto-010
 [bridge] hypothesis=Content-only ceiling: remove all context features (creator, timing, hashtags, sound)
-[bridge] acquired sandbox lock id=7fe8e6eb-777e-469b-bd92-507be53ce1af
+[bridge] acquired sandbox lock id=744d1882-507d-4085-b8a8-38f19554a239
 [bridge] spawning: python C:\Projects\CleanCopy\src\lib\training\autoresearch\autoresearch_run.py --experiment-id auto-010 --hypothesis Content-only ceiling: remove all context features (creator, timing, hashtags, sound) --drop-features music_is_original,sound_type,creator_followers,creator_followers_count,creator_followers_log,creator_followers_log_computed,meta_creator_followers,meta_creator_followers_log,creator_verified,posted_hour_utc,posted_day_of_week,post_hour_utc,post_day_of_week,hashtag_count,meta_hashtag_count,has_fyp_hashtag,meta_has_viral_hashtag,sound_is_original,is_original_sound --keep-only-features  --add-features  --exclude-rows-where none --optuna-trials 100 --max-depth-range 3,10 --learning-rate-range 0.01,0.3 --output-dir results-autoresearch/auto-010
-[bridge] FAILED: python exited 1
+=== Autoresearch auto-010 ===
+Hypothesis:      Content-only ceiling: remove all context features (creator, timing, hashtags, sound)
+Parent baseline: v15-honest-with-res
+Drop features:   ['music_is_original', 'sound_type', 'creator_followers', 'creator_followers_count', 'creator_followers_log', 'creator_followers_log_computed', 'meta_creator_followers', 'meta_creator_followers_log', 'creator_verified', 'posted_hour_utc', 'posted_day_of_week', 'post_hour_utc', 'post_day_of_week', 'hashtag_count', 'meta_hashtag_count', 'has_fyp_hashtag', 'meta_has_viral_hashtag', 'sound_is_original', 'is_original_sound']
+Keep only:       (full set)
+Add features:    (none)
+Row filter:      none
+Optuna trials:   100
+max_depth range: (3, 10)
+learning rate:   (0.01, 0.3)
+Fixed n_est:     None
+Early stopping:  None
+
+Rows after filter: train=5645 (excl 0), holdout=200 (excl 0)
+
+Feature count: 75  (dropped_requested=19, dropped_dead=15, added=0)
+
+=== auto-010: 75 features, 5645 training rows ===
+  trial 1/100, best CV Spearman: 0.3379
+  trial 10/100, best CV Spearman: 0.4453
+  trial 20/100, best CV Spearman: 0.4587
+  trial 30/100, best CV Spearman: 0.4587
+  trial 40/100, best CV Spearman: 0.4630
+  trial 50/100, best CV Spearman: 0.4630
+  trial 60/100, best CV Spearman: 0.4650
+  trial 70/100, best CV Spearman: 0.4650
+  trial 80/100, best CV Spearman: 0.4650
+  trial 90/100, best CV Spearman: 0.4650
+  trial 100/100, best CV Spearman: 0.4650
+  CV=0.4650+/-0.0159  HOLDOUT Spearman=0.5248  MAE=19.3514
+  Top 3: ffmpeg_resolution_height(21296), ffmpeg_resolution_width(10077), visual_avg_scene_duration(6036)
+
+Results written to results-autoresearch/auto-010\results.json
+Model artefact:    results-autoresearch/auto-010\model.json
+CV Spearman:       0.4650 +/- 0.0159
+Holdout Spearman:  0.5248
+[bridge] parsed results: cv=0.4650 holdout=0.5248 mae=19.35 features=75 rows=5645
+[bridge] row finalized as result='degraded' (delta -0.1557 vs v15)
+[bridge] training_experiments.id = 744d1882-507d-4085-b8a8-38f19554a239

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -8,14 +8,16 @@ export default function FreedomAgentEntry() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const planId = searchParams.get('planId')
+  const prefilledEmail = searchParams.get('email') ?? ''
 
-  const [email, setEmail] = useState('')
+  const [email, setEmail] = useState(prefilledEmail)
   const [status, setStatus] = useState<'idle' | 'loading' | 'returning' | 'error'>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const autoSubmittedRef = useRef(false)
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!email.trim()) return
+  const startSession = useCallback(async (rawEmail: string) => {
+    const cleaned = rawEmail.trim()
+    if (!cleaned) return
     setStatus('loading')
     setErrorMsg('')
 
@@ -23,7 +25,7 @@ export default function FreedomAgentEntry() {
       const res = await fetch('/api/freedom-agent/session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), planId }),
+        body: JSON.stringify({ email: cleaned, planId }),
       })
       const data = await res.json()
       if (!res.ok) {
@@ -44,7 +46,23 @@ export default function FreedomAgentEntry() {
       setErrorMsg('Network error. Please try again.')
       setStatus('error')
     }
+  }, [planId, router])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    await startSession(email)
   }
+
+  // Auto-start when landing with ?email= — skip straight to chat
+  useEffect(() => {
+    if (autoSubmittedRef.current) return
+    const clean = prefilledEmail.trim()
+    if (!clean) return
+    // Basic email sanity check — fall through to manual entry if malformed
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) return
+    autoSubmittedRef.current = true
+    startSession(clean)
+  }, [prefilledEmail, startSession])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-5" style={{ background: '#08080d' }}>

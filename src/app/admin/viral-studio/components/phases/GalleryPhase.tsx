@@ -302,11 +302,6 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
     
     try {
       const supabase = getSupabaseClient();
-      const { data: authData } = await supabase.auth.getSession();
-      const hasSession = !!authData.session;
-      // #region agent log
-      fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:fetchRealTemplates:start',message:'gallery fetch start',data:{category,hasSession},hypothesisId:'H1',timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       let query = supabase
         .from('scraped_videos')
         .select('video_id, title, creator_username, views_count, likes_count, comments_count, shares_count, dps_score, thumbnail_url, tiktok_id, duration_seconds, caption, url')
@@ -337,10 +332,6 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
       }
 
       let { data, error } = await query;
-
-      // #region agent log
-      fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:afterStrictQuery',message:'strict scraped_videos result',data:{category,rowCount:data?.length??0,errCode:(error as { code?: string })?.code??null,errMsg:(error as { message?: string })?.message?.slice(0,120)??null},hypothesisId:'H2',timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
 
       if (error) {
         console.error('Error fetching templates:', error);
@@ -376,9 +367,6 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
         const second = await relaxed;
         data = second.data;
         error = second.error;
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:afterRelaxedQuery',message:'relaxed scraped_videos result',data:{category,rowCount:second.data?.length??0,errCode:(second.error as { code?: string })?.code??null,errMsg:(second.error as { message?: string })?.message?.slice(0,120)??null},hypothesisId:'H3',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         if (error) {
           console.error('Error fetching templates (relaxed):', error);
           setLoadError('Failed to load templates from database');
@@ -389,9 +377,6 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
 
       if (!data || data.length === 0) {
         console.log('No templates found for category:', category);
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:emptyFinal',message:'no rows after strict+relaxed',data:{category},hypothesisId:'H2',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         setCurrentTemplates([]);
         return;
       }
@@ -458,13 +443,7 @@ export default function GalleryPhase({ selectedNiche, onTemplateSelect, hoveredT
       console.error('Error in fetchRealTemplates:', err);
       setLoadError('Failed to fetch templates');
       setCurrentTemplates([]);
-      // #region agent log
-      fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:fetchCatch',message:'fetch threw',data:{err:String((err as Error)?.message ?? err).slice(0,160)},hypothesisId:'H4',timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
     } finally {
-      // #region agent log
-      fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'GalleryPhase.tsx:fetchFinally',message:'loading false',data:{},hypothesisId:'H4',timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
       setIsLoadingTemplates(false);
     }
   };

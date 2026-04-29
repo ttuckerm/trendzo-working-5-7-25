@@ -159,11 +159,6 @@ export default function QuickWinWorkflow() {
       setLoadingTemplates(true);
       try {
         const supabase = getSupabaseClient();
-        const { data: authData } = await supabase.auth.getSession();
-        const hasSession = !!authData.session;
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:start',message:'quick-win load start',data:{userNiche,hasSession},hypothesisId:'H1',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         let templates: Template[] = [];
 
         // viral_genomes v2 (20251130): source_video_id + dps_score — not example_videos / dps_average
@@ -173,10 +168,6 @@ export default function QuickWinWorkflow() {
           .ilike('niche', `%${userNiche.replace(/-/g, ' ')}%`)
           .order('dps_score', { ascending: false })
           .limit(10);
-
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:afterGenomes',message:'viral_genomes query',data:{genomeRows:genomes?.length??0,genomesErr:genomesError?(genomesError as {message?:string}).message?.slice(0,120):null},hypothesisId:'H3',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
 
         if (!genomesError && genomes && genomes.length > 0) {
           const videoIds: string[] = [];
@@ -234,14 +225,8 @@ export default function QuickWinWorkflow() {
         }
 
         setTopTemplates(templates);
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:done',message:'templates resolved',data:{finalCount:templates.length},hypothesisId:'H2',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
       } catch (error) {
         console.error('Error loading templates:', error);
-        // #region agent log
-        fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'282545'},body:JSON.stringify({sessionId:'282545',location:'quick-win/page.tsx:loadTemplates:catch',message:'load threw',data:{err:String((error as Error)?.message ?? error).slice(0,160)},hypothesisId:'H4',timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
       } finally {
         setLoadingTemplates(false);
       }

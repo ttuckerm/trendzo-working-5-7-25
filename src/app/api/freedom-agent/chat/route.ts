@@ -4,6 +4,7 @@
 import { NextResponse } from 'next/server'
 import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
+import { createClient } from '@supabase/supabase-js'
 import type { FreedomAgentChatRequest, FreedomAgentMessage } from '@/types/freedom-agent'
 import { fetchAssessment } from '@/lib/assessment/fetch-assessment'
 import { fetchOrCreateConversation } from '@/lib/freedom-agent/fetch-conversation'
@@ -59,6 +60,18 @@ export async function POST(request: Request) {
   const assessment = await fetchAssessment(assessmentId)
   if (!assessment) {
     return err('ASSESSMENT_NOT_FOUND', 'Assessment not found', 404)
+  }
+
+  // Server-side email gate. UI also blocks behind a non-dismissable overlay,
+  // but never trust the UI: an attacker who knew the assessmentId could call
+  // this endpoint directly. Refuse unless an assessment_emails row exists.
+  const gateOk = await hasEmailCaptured(assessmentId)
+  if (!gateOk) {
+    return err(
+      'EMAIL_GATE',
+      'The Freedom Agent is locked until you provide an email on the assessment page.',
+      403,
+    )
   }
 
   let conversation
@@ -186,4 +199,36 @@ export async function POST(request: Request) {
       'X-User-Message-Count': String(userMessageCount),
     },
   })
+}
+
+// True when an assessment_emails row exists for this assessment. Treats DB
+// outages as failed gate (deny rather than allow) — the UI gate is the
+// happy path and a brief Supabase blip still keeps the agent locked.
+async function hasEmailCaptured(assessmentId: string): Promise<boolean> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const key =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_SERVICE_KEY ||
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !key) {
+    console.error('[freedom-agent/chat] supabase not configured for gate check')
+    return false
+  }
+  try {
+    const supabase = createClient(url, key, { auth: { persistSession: false } })
+    const { data, error } = await supabase
+      .from('assessment_emails')
+      .select('assessment_id')
+      .eq('assessment_id', assessmentId)
+      .maybeSingle()
+    if (error) {
+      console.error('[freedom-agent/chat] gate query failed', error)
+      return false
+    }
+    return Boolean(data)
+  } catch (e) {
+    console.error('[freedom-agent/chat] gate check threw', e)
+    return false
+  }
 }

@@ -153,7 +153,7 @@ export async function runTriageForAgency(db: DB, agencyId: string): Promise<numb
   if (userIdSet.size > 0) {
     const { data: perf } = await db
       .from('content_briefs')
-      .select('id, user_id, brief_content, predicted_vps, vps_prediction, actual_views, performance_delta, performance_measured_at')
+      .select('id, user_id, brief_content, predicted_vps, actual_views, performance_delta, performance_measured_at')
       .in('user_id', Array.from(userIdSet))
       .not('performance_delta', 'is', null)
       .gte('performance_measured_at', sevenDaysAgo)
@@ -161,7 +161,7 @@ export async function runTriageForAgency(db: DB, agencyId: string): Promise<numb
       .limit(20)
 
     for (const b of (perf as any[]) || []) {
-      const prediction = b.vps_prediction || b.predicted_vps
+      const prediction = b.predicted_vps
       if (!prediction || prediction === 0) continue
       const pctDelta = (b.performance_delta / prediction) * 100
       const urgency = Math.abs(pctDelta) > 30 ? 5 : 2

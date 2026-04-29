@@ -249,7 +249,7 @@ export async function getAgencyBriefs(agencyId: string): Promise<AgencyBrief[]> 
   // Fetch both content_briefs AND pre_generated_briefs (for review queue)
   const [briefsRes, preGenRes, profilesRes] = await Promise.all([
     db.from('content_briefs')
-      .select('id, user_id, status, created_at, brief_content, predicted_vps, completion_status, published_url, vps_prediction, actual_views, actual_engagement_rate, performance_delta, performance_measured_at')
+      .select('id, user_id, status, created_at, brief_content, predicted_vps, completion_status, published_url, actual_views, actual_engagement_rate, performance_delta, performance_measured_at')
       .in('user_id', creatorIds)
       .order('created_at', { ascending: false })
       .limit(20),
@@ -319,7 +319,7 @@ export async function getAgencyBriefs(agencyId: string): Promise<AgencyBrief[]> 
     source: 'content_brief' as const,
     completionStatus: (b.completion_status || 'delivered') as AgencyBrief['completionStatus'],
     publishedUrl: b.published_url || undefined,
-    vpsPrediction: b.vps_prediction ?? b.predicted_vps ?? undefined,
+    vpsPrediction: b.predicted_vps ?? undefined,
     actualViews: b.actual_views ?? undefined,
     actualEngagementRate: b.actual_engagement_rate ?? undefined,
     performanceDelta: b.performance_delta ?? undefined,
@@ -405,4 +405,33 @@ export function getCoachingInsights(creators: AgencyCreator[]): CoachingInsight[
   }
 
   return insights;
+}
+
+// ── Agency Invites ────────────────────────────────────────────────────
+
+export interface AgencyInvite {
+  id: string;
+  creator_email: string;
+  creator_name: string | null;
+  status: string;
+  invited_at: string;
+  sent_at: string | null;
+  accepted_at: string | null;
+  error_message: string | null;
+}
+
+export async function getAgencyInvites(agencyId: string): Promise<AgencyInvite[]> {
+  const db = getServiceClient();
+  const { data, error } = await db
+    .from('agency_invites')
+    .select('id, creator_email, creator_name, status, invited_at, sent_at, accepted_at, error_message')
+    .eq('agency_id', agencyId)
+    .order('invited_at', { ascending: false })
+    .limit(50);
+
+  if (error) {
+    console.error('[getAgencyInvites] select error:', error);
+    return [];
+  }
+  return (data || []) as AgencyInvite[];
 }

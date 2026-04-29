@@ -154,7 +154,7 @@ export const ACTION_REGISTRY: Record<string, ActionDefinition> = {
     label: 'Approve a generated brief',
     firedBy: ['ContentBriefCard', 'MorningBriefCard (action card)'],
     handlerLocation: 'action-handler.ts (new case) + AgencyClient.tsx actionHandlers (new key)',
-    notes: 'Distinct from existing "approve" case which targets pre_generated_briefs. approve_brief targets content_briefs.status = "approved".',
+    notes: 'Distinct from existing "approve" case which targets pre_generated_briefs. approve_brief sets content_briefs.status = "accepted" (the CHECK-constraint value that represents operator approval; the agency dashboard statusMap collapses "accepted" to the "Approved" tab).',
   },
   send_invite: {
     id: 'send_invite',

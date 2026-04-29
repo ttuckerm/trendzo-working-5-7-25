@@ -273,13 +273,6 @@ export async function POST(request: NextRequest) {
       console.error(`[Kai API] Failed to finalize run ${runId}:`, updateError);
     }
 
-    // #region agent log
-    const _ef = v2Result.feature_values;
-    const _efKeys = _ef ? Object.keys(_ef).length : 0;
-    const _efPopulated = _ef ? Object.values(_ef).filter(v => v !== null && v !== undefined).length : 0;
-    fetch('http://127.0.0.1:7242/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'37607f'},body:JSON.stringify({sessionId:'37607f',location:'kai/predict/route.ts:post-update',message:'extracted_features persistence check',data:{runId,updateError:updateError?.message||null,featureKeysCount:_efKeys,featurePopulatedCount:_efPopulated,sampleKeys:_ef?Object.keys(_ef).slice(0,5):[]},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-
     console.log(
       `[Kai API] VPS v2 done: VPS=${v2Result.vps}, raw=${v2Result.raw_prediction.toFixed(2)}, ` +
       `features=${v2Result.features_provided}/${v2Result.features_total}, latency=${totalLatency}ms`,

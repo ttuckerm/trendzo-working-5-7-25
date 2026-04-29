@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { loadFreedomPlanById } from '@/lib/freedom-agent/load-plan-for-session';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,18 +33,14 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Fetch their Freedom OS plan if planId provided
-    let plan = null;
-    let segment = null;
-    if (planId) {
-      const { data: planRow } = await supabase
-        .from('freedom_os_saved_plans')
-        .select('plan, segment')
-        .eq('id', planId)
-        .single();
-      if (planRow) {
-        plan = planRow.plan;
-        segment = planRow.segment;
+    // Fetch Freedom OS plan: freedom_os_plans (Claude) or freedom_os_saved_plans (legacy email flow)
+    let plan: unknown = null;
+    let segment: string | null = null;
+    if (planId && typeof planId === 'string') {
+      const loaded = await loadFreedomPlanById(supabase, planId);
+      if (loaded) {
+        plan = loaded.freedom_os_plan;
+        segment = loaded.segment;
       }
     }
 

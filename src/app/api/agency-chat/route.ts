@@ -499,8 +499,8 @@ export async function POST(req: Request) {
         .in('user_id', safeCreatorIds)),
       safeQuery(() => serviceClient.from('onboarding_profiles')
         .select('*').in('user_id', safeCreatorIds).order('created_at', { ascending: false })),
-      safeQuery(() => serviceClient.from('agency_invitations')
-        .select('*').eq('agency_id', agencyId).order('created_at', { ascending: false })),
+      safeQuery(() => serviceClient.from('agency_invites')
+        .select('*').eq('agency_id', agencyId).order('invited_at', { ascending: false })),
       safeQuery(() => serviceClient.from('cultural_events')
         .select('*').eq('agency_id', agencyId).order('event_date', { ascending: true })),
       safeQuery(() => serviceClient.from('agency_events')

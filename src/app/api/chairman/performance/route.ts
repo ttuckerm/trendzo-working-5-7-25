@@ -13,7 +13,7 @@ export async function GET() {
 
   const { data: briefs, error } = await db
     .from('content_briefs')
-    .select('id, user_id, brief_content, vps_prediction, predicted_vps, actual_views, performance_delta, performance_measured_at')
+    .select('id, user_id, brief_content, predicted_vps, actual_views, performance_delta, performance_measured_at')
     .eq('completion_status', 'published')
     .not('performance_measured_at', 'is', null)
     .order('performance_measured_at', { ascending: false })
@@ -39,7 +39,7 @@ export async function GET() {
     id: b.id,
     creator: nameMap[b.user_id] || 'Unknown',
     title: b.brief_content?.title || b.brief_content?.campaign_name || 'Untitled Brief',
-    vpsPrediction: b.vps_prediction ?? b.predicted_vps ?? null,
+    vpsPrediction: b.predicted_vps ?? null,
     actualViews: b.actual_views ?? null,
     delta: b.performance_delta ?? null,
     measuredAt: b.performance_measured_at,

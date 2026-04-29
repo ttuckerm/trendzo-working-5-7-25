@@ -1,12 +1,13 @@
 // The Escape Assessment generator route.
 // Future user-facing route: /assessment/[assessmentId] (built in Cursor Prompt 2).
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import {
   type AssessmentInput,
   type RiskTolerance,
 } from '@/types/assessment'
 import { generateAssessment, generateAssessmentId } from '@/lib/assessment/generate'
+import { CODE_PATH_COOKIE_NAME, readCodePathCookieRedemptionId } from '@/lib/stripe/cookie'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -15,6 +16,16 @@ const RISK_VALUES: ReadonlySet<RiskTolerance> = new Set(['Low', 'Medium', 'High'
 
 interface ValidatedInput { ok: true; input: AssessmentInput }
 interface InvalidInput   { ok: false; error: string }
+
+function extractSessionId(raw: unknown): string | null {
+  if (!raw || typeof raw !== 'object') return null
+  const v = (raw as Record<string, unknown>).sessionId
+  if (typeof v !== 'string') return null
+  const trimmed = v.trim()
+  // Stripe checkout session ids start with cs_ and are reasonable length.
+  if (!/^cs_[A-Za-z0-9_]+$/.test(trimmed) || trimmed.length > 200) return null
+  return trimmed
+}
 
 function validateInput(raw: unknown): ValidatedInput | InvalidInput {
   if (!raw || typeof raw !== 'object') return { ok: false, error: 'body not object' }
@@ -77,7 +88,7 @@ function getServiceSupabase() {
   return createClient(url, key, { auth: { persistSession: false } })
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   let raw: unknown
   try {
     raw = await request.json()
@@ -89,6 +100,15 @@ export async function POST(request: Request) {
   if (!validated.ok) {
     return NextResponse.json({ ok: false, error: validated.error }, { status: 400 })
   }
+
+  const sessionId = extractSessionId(raw)
+  // Code-path linkage: the dl_code_path cookie (issued by /api/landing/code-validate)
+  // carries the code_redemptions.id. We use it after the assessment is persisted
+  // to link the redemption row back to the assessment — same atomic conditional
+  // pattern as stripe_purchases.consumed_at.
+  const codePathRedemptionId = readCodePathCookieRedemptionId(
+    request.cookies.get(CODE_PATH_COOKIE_NAME)?.value,
+  )
 
   const result = await generateAssessment(validated.input)
   if (!result.ok) {
@@ -141,6 +161,48 @@ export async function POST(request: Request) {
     }
   } else {
     console.warn('[assessment/generate] supabase not configured, skipping persistence')
+  }
+
+  // If the user came through the paid Stripe path, link the purchase to the
+  // new assessment and mark it consumed. The page guard already verified the
+  // session is paid; here we only enforce that the row is in the 'paid' state
+  // and not already consumed by some other flow. Server-side and atomic.
+  if (sessionId && supabase && internalAssessmentUuid) {
+    const { error: linkErr, data: linked } = await supabase
+      .from('stripe_purchases')
+      .update({
+        status: 'consumed',
+        consumed_at: new Date().toISOString(),
+        assessment_id: internalAssessmentUuid,
+      })
+      .eq('stripe_session_id', sessionId)
+      .eq('status', 'paid')
+      .select('id')
+      .maybeSingle()
+    if (linkErr) {
+      console.error('[assessment/generate] purchase link failed', linkErr)
+    } else if (!linked) {
+      console.warn('[assessment/generate] purchase row not in paid state, skipped link', { sessionId })
+    }
+  }
+
+  // Code-path linkage. The redemption row was inserted at code-validate time;
+  // here we fill in assessment_id on the still-unfilled row. Conditional on
+  // assessment_id IS NULL so a stale/replayed cookie can't relink someone else's
+  // redemption to a new assessment.
+  if (codePathRedemptionId && supabase && internalAssessmentUuid) {
+    const { error: linkErr, data: linked } = await supabase
+      .from('code_redemptions')
+      .update({ assessment_id: internalAssessmentUuid })
+      .eq('id', codePathRedemptionId)
+      .is('assessment_id', null)
+      .select('id')
+      .maybeSingle()
+    if (linkErr) {
+      console.error('[assessment/generate] code redemption link failed', linkErr)
+    } else if (!linked) {
+      console.warn('[assessment/generate] redemption already linked or missing', { codePathRedemptionId })
+    }
   }
 
   return NextResponse.json({

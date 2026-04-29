@@ -4,6 +4,7 @@ import {
   getAgencyStats,
   getAgencyCreatorsList,
   getAgencyBriefs,
+  getAgencyInvites,
   getCoachingInsights,
   type AgencyCreator,
   type AgencyAlert,
@@ -32,23 +33,13 @@ function deriveAlerts(creators: AgencyCreator[]): AgencyAlert[] {
 }
 
 export default async function AgencyDashboardPage() {
-  // #region agent log
-  const _t0 = Date.now(); const _dl = (loc: string, msg: string, data?: any) => fetch('http://127.0.0.1:7620/ingest/204e847a-b9ca-4f4d-8fbf-8ff6a93211a9',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'082614'},body:JSON.stringify({sessionId:'082614',location:loc,message:msg,data:{...data,elapsed:Date.now()-_t0},timestamp:Date.now(),hypothesisId:'H-B-dash'})}).catch(()=>{});
-  await _dl('dash:start','Dashboard render started');
-  // #endregion
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
-  // #region agent log
-  await _dl('dash:auth','getUser done',{hasUser:!!user});
-  // #endregion
 
   let agencyId: string | null = null;
   if (user) {
     agencyId = await getUserAgencyId(user.id);
   }
-  // #region agent log
-  await _dl('dash:agencyId','getUserAgencyId done',{agencyId});
-  // #endregion
 
   if (!user || !agencyId) {
     return (
@@ -61,26 +52,16 @@ export default async function AgencyDashboardPage() {
     );
   }
 
-  // #region agent log
-  await _dl('dash:pre-queries','about to run queries');
-  // #endregion
-  // Run stats, creators, and briefs in parallel (alerts + insights are derived from creators — no extra DB call)
-  const [stats, creators, briefs] = await Promise.all([
+  const [stats, creators, briefs, invites] = await Promise.all([
     getAgencyStats(agencyId),
     getAgencyCreatorsList(agencyId),
     getAgencyBriefs(agencyId),
+    getAgencyInvites(agencyId),
   ]);
-  // Derive alerts from already-fetched creators (avoids getAgencyAlerts calling getAgencyCreatorsList again)
   const alerts = deriveAlerts(creators);
-  // #region agent log
-  await _dl('dash:queries-done','queries complete',{creators:creators.length,briefs:briefs.length,alerts:alerts.length});
-  // #endregion
 
   const insights = getCoachingInsights(creators);
 
-  // #region agent log
-  await _dl('dash:done','Dashboard SSR complete');
-  // #endregion
   return (
     <DashboardClient
       stats={stats}
@@ -88,6 +69,7 @@ export default async function AgencyDashboardPage() {
       alerts={alerts}
       briefs={briefs}
       insights={insights}
+      invites={invites}
     />
   );
 }

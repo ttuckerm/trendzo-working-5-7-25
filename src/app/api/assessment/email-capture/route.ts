@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { fetchAssessment, DISPLAY_ID_REGEX } from '@/lib/assessment/fetch-assessment'
 import type {
   EmailCaptureRequest,
   EmailCaptureSource,
 } from '@/types/email-capture'
+import { notifyBeehiiv } from '@/lib/beehiiv/notify'
+import {
+  classifyEscapeAssessment,
+  type EscapeAssessmentInputsLite,
+} from '@/lib/funnel/segment'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -49,6 +54,33 @@ function validate(raw: unknown): EmailCaptureRequest | null {
   }
 }
 
+// Look up the YouTube source attribution for a given assessment via the
+// code_redemptions → redemption_codes join. Null when the user came in
+// through the paid path (no redemption row).
+async function lookupYoutubeSource(
+  supabase: SupabaseClient,
+  internalAssessmentUuid: string,
+): Promise<string | null> {
+  try {
+    const { data: redemption, error: redemptionErr } = await supabase
+      .from('code_redemptions')
+      .select('code_id')
+      .eq('assessment_id', internalAssessmentUuid)
+      .maybeSingle()
+    if (redemptionErr || !redemption?.code_id) return null
+    const { data: code, error: codeErr } = await supabase
+      .from('redemption_codes')
+      .select('source')
+      .eq('id', redemption.code_id as string)
+      .maybeSingle()
+    if (codeErr || !code) return null
+    return typeof code.source === 'string' && code.source.length > 0 ? code.source : null
+  } catch (e) {
+    console.error('[email-capture] youtube_source lookup threw', e)
+    return null
+  }
+}
+
 export async function POST(request: Request) {
   let raw: unknown
   try {
@@ -86,32 +118,84 @@ export async function POST(request: Request) {
       notify_on_codes: body.notifyOnCodes ?? true,
     })
 
+  let alreadyCaptured = false
+  let existingSource: EmailCaptureSource = body.source
   if (insertError) {
-    // Unique-constraint violation = email already captured for this assessment.
-    // Both flows treat this as success; return the existing row's source.
     if (insertError.code === '23505') {
+      alreadyCaptured = true
       const { data: existing } = await supabase
         .from('assessment_emails')
         .select('capture_source')
         .eq('assessment_id', body.assessmentId)
         .maybeSingle()
-      const existingSource =
-        existing && typeof existing.capture_source === 'string'
-          ? (existing.capture_source as EmailCaptureSource)
-          : body.source
-      return NextResponse.json({
-        ok: true,
-        captured: true,
-        source: existingSource,
-      })
+      if (existing && typeof existing.capture_source === 'string') {
+        existingSource = existing.capture_source as EmailCaptureSource
+      }
+    } else {
+      console.error('[email-capture] insert failed', insertError)
+      return err('SERVER_ERROR', 'Could not save your email just now.', 500)
     }
-    console.error('[email-capture] insert failed', insertError)
-    return err('SERVER_ERROR', 'Could not save your email just now.', 500)
+  }
+
+  // ── Beehiiv (best-effort, never blocks the user response) ──────────────
+  // Push assessment_url, freedom_number, youtube_source, funnel_segment.
+  try {
+    const operatorInputs = assessment.payload.operator.inputs
+    const lite: EscapeAssessmentInputsLite = {
+      hoursPerWeek: operatorInputs.hoursPerWeek,
+      monthlyIncome: operatorInputs.monthlyIncome,
+      monthlyExpenses: operatorInputs.monthlyExpenses,
+      runwayMonths: operatorInputs.runwayMonths,
+      skillProfile: operatorInputs.skillProfile,
+      riskTolerance: operatorInputs.riskTolerance,
+      audienceAccess: operatorInputs.audienceAccess,
+      nicheSignal: operatorInputs.nicheSignal,
+    }
+    const segment = classifyEscapeAssessment(lite)
+
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      'http://localhost:3000'
+    const assessmentUrl = `${siteUrl.replace(/\/+$/, '')}/assessment/${assessment.display_id}`
+    const freedomNumber = Math.round(assessment.payload.freedomNumber.monthlyTarget)
+    const youtubeSource = await lookupYoutubeSource(supabase, assessment.assessment_id)
+
+    console.log('[assessment/email-capture] beehiiv push', {
+      email: body.email,
+      assessmentId: assessment.display_id,
+      segment,
+      freedomNumber,
+      youtubeSource,
+    })
+
+    const customFields = [
+      { name: 'assessment_url', value: assessmentUrl },
+      { name: 'funnel_segment', value: segment },
+      { name: 'freedom_number', value: String(freedomNumber) },
+      { name: 'youtube_source', value: youtubeSource ?? '' },
+    ]
+
+    await notifyBeehiiv({
+      email: body.email,
+      customFields,
+      tags: ['freedom-os', segment],
+      reactivateExisting: true,
+      sendWelcomeEmail: true,
+      utmSource: 'dailylotion',
+      utmMedium: 'assessment',
+      utmCampaign: 'escape-assessment',
+      referringSite: assessmentUrl,
+      logScope: 'assessment/email-capture',
+    })
+  } catch (beehiivErr) {
+    console.error('[assessment/email-capture] beehiiv side-effect threw', beehiivErr)
   }
 
   return NextResponse.json({
     ok: true,
     captured: true,
-    source: body.source,
+    source: alreadyCaptured ? existingSource : body.source,
   })
 }
