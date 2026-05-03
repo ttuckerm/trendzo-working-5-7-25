@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { soundLibraryService } from '@/lib/services/soundLibraryService';
 import { TrackSoundUsageRequest } from '@/lib/types/sound';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/sounds/tracking
  * Retrieves sound usage history for the authenticated user

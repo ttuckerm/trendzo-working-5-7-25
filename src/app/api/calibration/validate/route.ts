@@ -3,6 +3,9 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import crypto from 'crypto';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Store validation results for learning loop
  */

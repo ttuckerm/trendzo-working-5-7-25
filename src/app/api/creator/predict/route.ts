@@ -29,6 +29,9 @@ import { resolveCreatorContext } from '@/lib/prediction/creator-context';
 import { createMetricSchedules } from '@/lib/training/metric-scheduler';
 import { assembleContext } from '@/lib/context/assemble-context';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Service key client for DB writes (video_files table)
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

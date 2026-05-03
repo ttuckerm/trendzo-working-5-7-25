@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Template redirect handler for newsletter links
  * Handles click tracking, authentication checks, and proper redirection

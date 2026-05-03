@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { computeAlignmentFactor, mergeExpectedFirstHourForTokens, FirstHourTelemetryPoint } from '@/lib/frameworks/mapping_guide'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Simple counterfactual: token presence adds small boosts
 const TOKEN_WEIGHTS: Record<string, number> = {
   pov: 2.5,

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { TemplateDiscoveryEngine } from '@/lib/analytics/discovery';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // This is a simple way to protect the route.
 // In a production environment, you'd want something more robust,
 // like checking a secret key or an authenticated user's role.

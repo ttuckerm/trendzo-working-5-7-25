@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runEtlIntegrationTests } from '@/lib/test/etl-integration-test';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * API route for testing ETL functionality
  * 

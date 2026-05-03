@@ -4,6 +4,9 @@ import { ensureFixtures } from '@/lib/data/init-fixtures'
 import { computeDriftIndex } from '@/lib/learning/summary'
 import { GET as ADAPT_SUM } from '@/app/api/adaptation/summary/route'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   if (process.env.MOCK === '1') ensureFixtures()
   const m = await source.metrics()

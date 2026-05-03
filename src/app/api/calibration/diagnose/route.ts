@@ -3,6 +3,9 @@ import { calibrateScore } from '@/lib/calibration/score-calibrator';
 import { applySignals } from '@/lib/calibration/negative-signals';
 import { KaiOrchestrator } from '@/lib/orchestration/kai-orchestrator';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Diagnostic API for Calibration Lab
  * 

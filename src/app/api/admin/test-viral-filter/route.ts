@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { testViralFilter } from '@/lib/services/viralFilter';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('Starting ViralFilter test...');

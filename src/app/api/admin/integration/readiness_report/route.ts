@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function safeGet(url: string): Promise<any> {
   try { const r = await fetch(url, { cache: 'no-store' }); return await r.json() } catch { return null }
 }

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { type NextRequest } from 'next/server';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Mock data generator for sound category analytics
 const generateSoundCategoryData = (timeRange: string = '30d') => {
   const categories = [

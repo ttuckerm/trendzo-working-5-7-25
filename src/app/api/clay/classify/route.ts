@@ -4,6 +4,9 @@ import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { classifyIntent } from '@/lib/clay/intent-classifier'
 import { ComponentType } from '@/lib/clay/component-registry'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 /**

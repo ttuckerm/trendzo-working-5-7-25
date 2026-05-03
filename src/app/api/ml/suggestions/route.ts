@@ -5,6 +5,9 @@ import { supabaseClient as supabase } from '@/lib/supabase-client';
 import { mlPredictionService } from '@/lib/services/mlPredictionService';
 import { TrendPrediction, ManualAdjustmentLog } from '@/lib/types/trendingTemplate';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * API endpoint to get ML-based suggestions for trend predictions
  * 

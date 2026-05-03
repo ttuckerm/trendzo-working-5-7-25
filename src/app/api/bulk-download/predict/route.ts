@@ -13,6 +13,9 @@ import { createClient } from '@supabase/supabase-js';
 import { existsSync } from 'fs';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!,

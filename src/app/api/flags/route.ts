@@ -3,6 +3,9 @@ import { NextResponse as NRes } from 'next/server'
 import { evaluateFlag } from '@/server/flags/evaluator'
 import { getUserRoles } from '@/server/flags/providers/corteza'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({} as any))
 

@@ -3,6 +3,9 @@ import { randomUUID } from 'crypto'
 import { ViralPredictionModel } from '@/lib/services/viral-prediction-model'
 import type { ExtractedFeatures } from '@/lib/services/feature-extractor'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Lightweight synthetic feature generator for server-side scoring
 function generateSyntheticFeatures(platform: 'tiktok' | 'instagram' | 'youtube' | 'linkedin' = 'tiktok'): ExtractedFeatures {
   const isVertical = platform === 'tiktok' || platform === 'instagram'

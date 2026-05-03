@@ -3,6 +3,9 @@ import { soundAnalysisService } from '@/lib/services/soundAnalysisService';
 import { soundService } from '@/lib/services/soundService';
 import { auth } from '@/lib/auth';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Cache expiration time in seconds (5 minutes)
 const CACHE_EXPIRATION = 5 * 60;
 // In-memory cache for trend reports

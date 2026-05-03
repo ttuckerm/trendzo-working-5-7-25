@@ -9,6 +9,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { KaiOrchestrator } from '@/lib/orchestration/kai-orchestrator';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { transcript, niche = 'personal-finance' } = await request.json();

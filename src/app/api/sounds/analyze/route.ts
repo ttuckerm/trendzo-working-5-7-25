@@ -4,6 +4,9 @@ import { soundService } from '@/lib/services/soundService';
 import { TikTokSound } from '@/lib/types/tiktok';
 import { auth } from '@/lib/auth';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/sounds/analyze
  * Analyzes a TikTok sound and extracts insights

@@ -6,6 +6,9 @@ import OpenAI from 'openai';
 import { getCanvasSystemPrompt } from '@/lib/canvas/ai-system-prompt';
 import { getRelevantFiles } from '@/lib/canvas/knowledge/file-reader';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Canvas AI Chat Route
  *

@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ViralScrapingWorkflow } from '@/lib/donna/workflows/viral-scraping-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Run a single scraping cycle (called by cron)
  *

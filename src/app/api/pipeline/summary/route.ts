@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL as string
 const KEY = process.env.SUPABASE_SERVICE_KEY as string
 

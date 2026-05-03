@@ -3,6 +3,9 @@ import { getServerSupabase } from '@/lib/supabase-server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // ── Signal family definitions ────────────────────────────────────────────────
 
 interface Signal {

@@ -5,6 +5,9 @@ import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { putText } from '@/lib/storage/object_store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function precisionAtK(yTrue: number[], yScore: number[], k: number): number {
   const idx = yScore.map((s, i) => i).sort((a, b) => yScore[b] - yScore[a])
   const top = idx.slice(0, Math.min(k, yScore.length))

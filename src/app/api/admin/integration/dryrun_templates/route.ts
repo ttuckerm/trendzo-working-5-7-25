@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { putJson } from '@/lib/storage/object_store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(_req: NextRequest) {
   const example_row = {
     template_id: 'fw_POV_HOOK__genes_a1b2',

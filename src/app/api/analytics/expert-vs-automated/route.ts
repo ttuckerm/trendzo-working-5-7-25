@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { generateContentComparison } from '@/lib/analytics/expertAnalyticsPipeline';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * API endpoint for retrieving expert vs. automated content comparison data
  * 

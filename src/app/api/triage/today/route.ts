@@ -3,6 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { readTriageForAgency } from '@/lib/triage/overnight-triage'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 /**

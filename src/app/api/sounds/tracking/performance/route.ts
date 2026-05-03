@@ -4,6 +4,9 @@ import { soundLibraryService } from '@/lib/services/soundLibraryService';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 import { SoundPerformance } from '@/lib/types/sound';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/sounds/tracking/performance
  * Retrieves performance metrics for user's sounds

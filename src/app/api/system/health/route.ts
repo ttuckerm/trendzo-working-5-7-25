@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import IORedis from 'ioredis'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 let _redis: IORedis | null = null
 function getRedis() {
   if (!_redis) _redis = new IORedis(process.env.REDIS_URL || 'redis://127.0.0.1:6379', { lazyConnect: true, maxRetriesPerRequest: 0, retryStrategy: () => null })

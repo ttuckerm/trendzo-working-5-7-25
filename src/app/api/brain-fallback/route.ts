@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Fallback brain API that doesn't use OpenAI - for testing and rate limit avoidance
 export async function POST(request: NextRequest) {
   try {

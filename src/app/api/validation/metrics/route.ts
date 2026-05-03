@@ -1,5 +1,8 @@
 import { AccuracyTracker } from '@/lib/services/viral-prediction/accuracy-tracker';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const tracker = new AccuracyTracker();

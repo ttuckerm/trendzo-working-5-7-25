@@ -3,6 +3,9 @@ import { advancedTemplateAnalysisService } from '@/lib/services/advancedTemplate
 import { TikTokVideo } from '@/lib/types/trendingTemplate';
 import { templateStorageService } from '@/lib/services/templateStorageService';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Mock analysis result for development when Claude API is unavailable
  */

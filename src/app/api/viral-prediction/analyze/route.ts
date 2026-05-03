@@ -15,6 +15,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runPredictionPipeline } from '@/lib/prediction/runPredictionPipeline';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Helper to extract TikTok ID from URL
 function extractTikTokId(url: string): string {
   const patterns = [

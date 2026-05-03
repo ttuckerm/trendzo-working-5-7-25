@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { v4 as uuidv4 } from 'uuid';
+
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
 // import { db } from '@/lib/firebase/firebase';
 // import { collection, doc, setDoc } from 'firebase/firestore';
 import { CreateNewsletterLinkParams, NewsletterTemplateLink } from '@/lib/types/newsletter';

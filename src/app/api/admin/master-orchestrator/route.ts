@@ -6,6 +6,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { masterOrchestrator, getDailyWorkflowRecommendation, createTestWorkflow } from '@/lib/services/master-agent-orchestrator';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action');

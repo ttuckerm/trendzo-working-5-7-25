@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { computeDiscoveryReadiness } from '@/lib/discovery/discovery_readiness'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const report = await computeDiscoveryReadiness()

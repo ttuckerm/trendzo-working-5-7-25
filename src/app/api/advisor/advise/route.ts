@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { advise, AdvisorInput, AdvisorOutput } from '../../../../lib/modules/advisor-service';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * AdvisorService API Endpoint
  * Template match and fix-list generator for video drafts

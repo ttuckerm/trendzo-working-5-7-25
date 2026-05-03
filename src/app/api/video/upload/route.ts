@@ -10,6 +10,9 @@ import ViralPredictionDB from '@/lib/database/supabase-viral-prediction'
 import { VideoProcessor } from '@/lib/services/video-processor'
 import { FeatureExtractor } from '@/lib/services/feature-extractor'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!
 const supabaseStorage = createClient(supabaseUrl, supabaseServiceKey)

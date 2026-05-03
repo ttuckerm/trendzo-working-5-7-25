@@ -4,6 +4,9 @@ import { newsletterSoundService } from '@/lib/services/newsletterSoundService';
 import { checkSubscriptionAccess } from '@/middleware/checkSubscription';
 import { getMockSoundPerformanceData } from '@/lib/mocks/newsletterSoundMocks';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/sounds/performance-tracking
  * Retrieves performance data for a sound with tracking analytics

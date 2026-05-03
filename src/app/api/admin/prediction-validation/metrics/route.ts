@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSupabase } from '@/lib/supabase-server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // This endpoint powers the Studio → "🎯 Accuracy Validation" tab
 // It aggregates validation metrics from the `prediction_validation` table.
 

@@ -6,6 +6,9 @@ import { scrapeTikTokBatch, ensureRawVideosTable } from '@/lib/services/apifyScr
 import { runWithProgress } from '@/app/api/admin/jobs/runner'
 import { updateJobRun } from '@/lib/jobs/job_store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 type ScrapeBody = {
   keywords?: string[]
   mode?: 'frameworks' | 'keywords' | 'trending'

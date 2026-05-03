@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { mergeExpectedFirstHourForTokens } from '@/lib/frameworks/mapping_guide'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const GENERIC_TOKENS = ['fyp','viral','trending','generic','HASHTAG_GENERIC']
 const HIGH_LIFT_TOKENS = ['hook','before_after','story','pov','controversy','challenge']
 

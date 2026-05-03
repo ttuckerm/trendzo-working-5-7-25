@@ -2,6 +2,9 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/server/supabaseAdmin";
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const flags = {
     FF_INTEL_ORCHESTRATOR: process.env.FF_INTEL_ORCHESTRATOR === "true",

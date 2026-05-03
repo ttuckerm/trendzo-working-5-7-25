@@ -3,6 +3,9 @@ import { source } from '@/lib/data'
 import { computeViral } from '@/lib/vit/compute'
 import { ensureFixtures } from '@/lib/data/init-fixtures'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Add detailed logging for debugging
 import { logger } from '@/lib/utils/logger';
 

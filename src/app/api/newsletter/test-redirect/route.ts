@@ -18,6 +18,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { trackNewsletterClick, trackTemplateView, trackNewsletterAnalytics } from '@/lib/analytics/newsletterAnalytics';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     // Get query params

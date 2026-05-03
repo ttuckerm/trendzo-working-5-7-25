@@ -7,6 +7,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { geminiService } from '@/lib/services/gemini-service';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   console.log('[Gemini Test API] 🔍 Starting Gemini diagnostic test...');
   

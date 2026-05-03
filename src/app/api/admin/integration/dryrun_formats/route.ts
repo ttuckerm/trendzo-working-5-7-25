@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminAuth } from '@/lib/utils/adminAuth'
 import { getPredictionEngine } from '@/lib/services/viral-prediction/unified-prediction-engine'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminAuth(req)
   if (!auth.success) return NextResponse.json({ error: 'forbidden' }, { status: 403 })

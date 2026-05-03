@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { createHmac } from 'crypto'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function sign(secret: string, payload: any): string {
   const body = JSON.stringify(payload)
   return createHmac('sha256', secret).update(body).digest('hex')

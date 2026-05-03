@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const HUB_CONFIG = {
   featured: [
     { id: 'freedom-os', title: 'Freedom OS', path: '/free/freedom-os', status: 'preview' as const },

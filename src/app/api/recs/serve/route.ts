@@ -6,6 +6,9 @@ import { applyExploration } from '@/lib/recs/cap330/exploration'
 import { emitScoreServed, emitRegretCapped, emitItemPromoted, emitItemDemoted } from '@/lib/recs/events'
 import { evaluateGuardrails, recordExposure } from '@/lib/recs/guardrails'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const tenantId = req.headers.get('x-tenant-id') || null
   const enabled = await evaluateFlag('algo_aplusplus', tenantId)

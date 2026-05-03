@@ -4,6 +4,9 @@ import { findKey, recordUsage } from '@/lib/moat/keys'
 import { enforce } from '@/lib/moat/rate'
 import { getUniqueInsightsCached } from '@/lib/insights/service'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
 	try {
 		const flags = getFlags()

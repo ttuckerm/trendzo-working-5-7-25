@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY, SUPABASE_ANON_KEY, logSupabaseRuntimeEnv } from '@/lib/env';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 logSupabaseRuntimeEnv();
 function getDb(){ return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY || SUPABASE_ANON_KEY) }
 const supabase = new Proxy({}, { get(_t, p){ return (getDb() as any)[p as any] } }) as any;

@@ -18,6 +18,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { optimizationOrchestrator } from '@/lib/services/optimization/optimization-orchestrator';
 import { realTimeMonitor } from '@/lib/monitoring/real-time-monitor';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // ===== REQUEST/RESPONSE TYPES =====
 
 interface OptimizedPredictionAPIRequest {

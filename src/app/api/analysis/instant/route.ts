@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const url = new URL(req.url)
   const sample = url.searchParams.get('sample') === '1'

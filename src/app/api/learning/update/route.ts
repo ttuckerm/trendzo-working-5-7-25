@@ -16,6 +16,9 @@ import {
   type ScrapedVideoRow,
 } from '@/lib/training/dps-v2';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const COHORT_PAGE_SIZE = 1000;
 
 const supabase = createClient(

@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import OpenAI from "openai";
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const openai = new OpenAI();
 
 export async function POST(req: Request) {

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { rotateKey } from '@/lib/moat/keys'
 import { rotateApiKey } from '@/lib/security/key_rotation'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function isAuthorized(req: NextRequest): boolean {
 	const bearer = req.headers.get('authorization') || req.headers.get('x-admin-token') || ''
 	const apiKeyHeader = req.headers.get('x-api-key') || ''

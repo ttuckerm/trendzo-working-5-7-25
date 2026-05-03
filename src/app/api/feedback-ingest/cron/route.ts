@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ingestMetrics, getFeedbackIngestStatus } from '../../../../lib/modules/feedback-ingest';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * FeedbackIngest Cron API Endpoint
  * Scheduled to run every 15 minutes for real-world metrics collection

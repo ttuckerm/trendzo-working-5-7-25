@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { createIdea, listIdeasByDate } from "@/lib/server/deimStore";
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const date = searchParams.get("date") ?? undefined;

@@ -6,6 +6,9 @@ import { computeDpsV2FromRows, type DpsV2RawMetrics } from '@/lib/training/dps-v
 import { devAddOutcome, devUpsertLabel } from '@/lib/dev/accuracyStore'
 import { thresholdFor } from '@/lib/calibration/thresholds'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
  
 
 export async function POST(req: NextRequest) {

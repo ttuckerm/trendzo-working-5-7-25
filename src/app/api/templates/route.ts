@@ -4,6 +4,9 @@ import { Template } from '@/lib/types/template'
 import { getCurrentUserId, handleApiError } from '@/lib/utils/apiHelpers'
 import { generateRecipeBook } from '@/lib/templates/service'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // GET all templates for the current user
 export async function GET(request: NextRequest) {
   try {

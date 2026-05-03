@@ -4,6 +4,9 @@ import { newsletterSoundService } from '@/lib/services/newsletterSoundService';
 import { auth } from '@/lib/auth';
 import { getMockTemplateSoundRecommendations, getMockSoundPerformanceData } from '@/lib/mocks/newsletterSoundMocks';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/sounds/template-pairings
  * Find optimal template pairings for a sound with enhanced sorting and filtering

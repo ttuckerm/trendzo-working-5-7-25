@@ -11,6 +11,9 @@ import {
 import { auth } from '@/lib/firebase/firebase';
 import { mockVerifyToken } from '@/lib/firebase/firebaseAdmin';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const isDev = process.env.NODE_ENV === 'development';
 
 // Get current user from Firebase token

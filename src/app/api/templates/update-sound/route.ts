@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 import { newsletterSoundService } from '@/lib/services/newsletterSoundService';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/templates/update-sound
  * 

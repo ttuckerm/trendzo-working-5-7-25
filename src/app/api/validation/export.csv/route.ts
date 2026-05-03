@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { readAllValidations } from '@/lib/validation/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const rows = readAllValidations()
   const header = 'predictionId,videoId,platform,madeAtISO,maturedAtISO,probability,actualViral,predictedViral\n'

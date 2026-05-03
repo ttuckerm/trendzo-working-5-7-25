@@ -4,6 +4,9 @@ import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { ComponentType } from '@/lib/clay/component-registry'
 import { fetchComponentData } from '@/lib/clay/component-data-fetcher'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs'
 
 export async function POST(req: Request) {

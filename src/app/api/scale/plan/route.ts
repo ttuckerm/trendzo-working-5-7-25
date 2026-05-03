@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ensureFiles, listCreators, listPlans, writeAllPlans, appendNdjsonLine } from '@/lib/scale/store'
 import { make30DayPlan } from '@/lib/scale/plan'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest){
 	try{
 		ensureFiles()

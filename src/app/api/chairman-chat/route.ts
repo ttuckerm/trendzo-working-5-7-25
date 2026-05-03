@@ -5,6 +5,9 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { z } from 'zod';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs';
 
 // Service-role Supabase client for tool handlers (server-only)

@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { getServerSupabase } from '@/lib/supabase-server';
 import { runBenchmarkEvaluation } from '@/lib/evaluation/benchmark-runner';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // ─── GET: Return evaluation runs + benchmark set + experiment log ────────────
 
 export async function GET() {

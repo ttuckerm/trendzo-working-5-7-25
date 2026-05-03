@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { expertInsightService } from '@/lib/services/expertInsightService';
 import { auth } from '@/lib/firebase/firebase';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Add expert insights to a template
  * Requires authentication and expert or admin role

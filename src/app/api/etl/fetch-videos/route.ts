@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { apifyService } from '@/lib/services/apifyService';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Comprehensive mock data for development
 const MOCK_VIDEOS = [
   {

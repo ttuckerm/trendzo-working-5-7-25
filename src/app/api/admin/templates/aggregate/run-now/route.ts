@@ -5,6 +5,9 @@ import { aggregateTemplates } from '@/lib/templates/aggregate'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const auth = await verifyAdminAuth(req)
   if (!auth.success) return NextResponse.json({ error: 'forbidden' }, { status: 403 })

@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import * as path from 'path'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function findLatestProof(): Promise<null | { absolutePath: string; relativePath: string }>{
   const dir = path.join(process.cwd(), 'storage', 'proof')
   try {

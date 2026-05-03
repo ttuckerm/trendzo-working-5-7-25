@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { extractKnowledge, type VideoInput } from '@/lib/services/gppt/knowledge-extraction-engine'
 import crypto from 'crypto'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!

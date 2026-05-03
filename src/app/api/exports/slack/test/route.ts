@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const url = process.env.SLACK_WEBHOOK_URL || ''
   if (!url) return NextResponse.json({ error: 'not_configured' }, { status: 400 })

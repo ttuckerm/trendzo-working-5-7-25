@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { randomBytes, createHash } from 'crypto'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function ensureInviteTables(db: any) {
   const sql = `
   create table if not exists invite (

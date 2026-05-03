@@ -4,6 +4,9 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function precisionAtK(yTrue: number[], yScore: number[], k: number) {
   const idx = yScore.map((s,i)=>[s,i]).sort((a,b)=>b[0]-a[0]).slice(0,k).map(x=>x[1])
   const hits = idx.reduce((acc,i)=> acc + (yTrue[i]===1 ? 1 : 0), 0)

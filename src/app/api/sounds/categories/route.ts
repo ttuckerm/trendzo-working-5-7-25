@@ -5,6 +5,9 @@ import { auth } from '@/lib/auth';
 import { soundLibraryService } from '@/lib/services/soundLibraryService';
 import { CreateCategoryRequest, UpdateCategoryRequest } from '@/lib/types/sound';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Define interface for categories response
 interface CategoriesResponse {
   soundCategories: string[];

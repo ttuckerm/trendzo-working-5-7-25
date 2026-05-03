@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function ensure(db:any){ try { await (db as any).rpc?.('exec_sql', { query: "create table if not exists audit_event (id bigserial primary key, ts timestamptz default now(), actor text, action text, details jsonb);" }) } catch {} }
 
 export async function POST(_req: NextRequest) {

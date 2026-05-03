@@ -3,6 +3,9 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { devGetCalibration } from '@/lib/dev/accuracyStore';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   try {
     const u = new URL(req.url);

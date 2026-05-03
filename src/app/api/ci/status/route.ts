@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function readJsonSafe(p: string) {
   try { return JSON.parse(fs.readFileSync(p, 'utf-8')) } catch { return null }
 }

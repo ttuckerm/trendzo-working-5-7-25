@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { UnifiedPredictionEngine } from '@/lib/services/viral-prediction/unified-prediction-engine'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const from = req.nextUrl.searchParams.get('from') || ''
   const to = req.nextUrl.searchParams.get('to') || ''

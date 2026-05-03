@@ -19,6 +19,9 @@ import { ValidationSystem } from '@/lib/services/validationSystem'
 import OmniscientDatabase from '@/lib/services/omniscientDatabase'
 import OmniscientIntegration from '@/lib/services/omniscientIntegration'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)

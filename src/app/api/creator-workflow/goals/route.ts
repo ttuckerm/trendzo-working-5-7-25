@@ -4,6 +4,9 @@
 import { NextResponse } from 'next/server';
 import { GOALS } from '@/types/creator-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     return NextResponse.json({

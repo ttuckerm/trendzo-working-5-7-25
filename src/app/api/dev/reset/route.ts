@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { reset as devReset, getAll as devGetAll } from '@/lib/dev/accuracyStore'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(_req: NextRequest) {
   try {
     const before = devGetAll()

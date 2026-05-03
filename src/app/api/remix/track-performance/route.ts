@@ -1,4 +1,7 @@
 import { NextResponse } from 'next/server';
+
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
 // import { collection, doc, getDoc, setDoc, Firestore } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 // import { db } from '@/lib/firebase/firebase'; // Firebase db is null

@@ -3,6 +3,9 @@ import { promises as fs } from 'fs'
 import * as path from 'path'
 import { putJson } from '@/lib/storage/object_store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   let body:any={}
   try { body = await req.json() } catch {}

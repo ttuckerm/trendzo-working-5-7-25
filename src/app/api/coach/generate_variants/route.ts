@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const HOOK_TEMPLATES = [
   'The 3-second fix that 3x’d our views',
   'Stop scrolling: try this counter-intuitive trick',

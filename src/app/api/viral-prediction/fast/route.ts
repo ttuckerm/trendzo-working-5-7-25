@@ -31,6 +31,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { realTimeMonitor } from '@/lib/monitoring/real-time-monitor';
 import { devGetCalibration } from '@/lib/dev/accuracyStore'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function getFastEngine(){
   const mod = await import('@/lib/services/fast-prediction-engine');
   return (mod as any).fastPredictionEngine || (mod as any).default || mod;

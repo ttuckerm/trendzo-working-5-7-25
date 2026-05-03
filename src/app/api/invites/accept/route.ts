@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { createHash } from 'crypto'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
   const { token } = await req.json().catch(()=>({})) as any

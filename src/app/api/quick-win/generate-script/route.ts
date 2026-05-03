@@ -6,6 +6,9 @@ import { runPredictionPipeline } from '@/lib/prediction/runPredictionPipeline';
 import { resolveCreatorContext } from '@/lib/prediction/creator-context';
 import { getVpsTier } from '@/lib/prediction/system-registry';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/quick-win/generate-script
  *

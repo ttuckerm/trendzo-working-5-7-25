@@ -3,6 +3,9 @@ import type { CoachInput } from '@/lib/coach/types'
 import { applyEdit } from '@/lib/coach/apply'
 import { createExperiment } from '@/lib/experiments/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
 	try {
 		const body = await req.json().catch(()=>({})) as any

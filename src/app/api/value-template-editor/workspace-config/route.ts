@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/lib/env'
 import { analyzeContentAndMatchFrameworks, ContentAnalysis } from '@/lib/services/viral-pattern-analyzer';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function getDb(){
   return createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 }

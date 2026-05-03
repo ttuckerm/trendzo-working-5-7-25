@@ -4,6 +4,9 @@ import { Expert, AdjustmentVerification } from '@/lib/types/expert';
 import { auth } from '@/lib/firebase/firebase';
 import { isExpertUser } from '@/lib/types/user';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Get expert performance metrics
  * GET /api/experts/performance?expertId=<id>

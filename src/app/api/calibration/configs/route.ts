@@ -3,6 +3,9 @@ import { DEFAULT_CALIBRATIONS, CalibrationConfig } from '@/lib/calibration/score
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Get current calibration configurations
  */

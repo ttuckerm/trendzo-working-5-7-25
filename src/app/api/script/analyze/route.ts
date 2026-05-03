@@ -5,6 +5,9 @@ import { scoreScript } from '@/lib/script/score'
 import { scriptRecommendations } from '@/lib/script/recommend'
 import { appendNdjson } from '@/lib/script/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const { text, platform, niche } = await req.json()

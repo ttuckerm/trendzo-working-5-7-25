@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { runViralFilter, VideoMetrics } from '@/lib/services/viralFilter';
 import { createClient } from '@supabase/supabase-js';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);

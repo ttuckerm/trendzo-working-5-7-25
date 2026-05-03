@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { actLockPredictions } from '@/app/actions/validation-workflow';
 import type { LockPredictionsRequest } from '@/types/validation-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const body: LockPredictionsRequest = await req.json();

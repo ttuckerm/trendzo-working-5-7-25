@@ -15,6 +15,9 @@ import { METRIC_COLLECTOR_ENABLED } from '@/lib/training/feature-availability-ma
 import { runMetricCollector } from '@/lib/training/metric-collector';
 import type { MetricCollectorRequest } from '@/lib/training/training-ingest-types';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   // 1. Admin auth gate
   const auth = await verifyAdminAuth(request);

@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { actGenerateFingerprints } from '@/app/actions/validation-workflow';
 import type { GenerateFingerprintsRequest } from '@/types/validation-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const body: GenerateFingerprintsRequest = await req.json();

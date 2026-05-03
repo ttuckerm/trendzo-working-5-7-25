@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { actCreateValidationRun } from '@/app/actions/validation-workflow';
 import type { CreateRunRequest } from '@/types/validation-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const body: CreateRunRequest = await req.json();

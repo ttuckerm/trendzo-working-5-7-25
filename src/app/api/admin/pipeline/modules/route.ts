@@ -3,6 +3,9 @@ import { getAdminDb, guardAdmin, parseRange, withCache } from '../_lib'
 import { synthModules } from '../_synthetic'
 import { computeSloForAll } from '../_slo'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const denied = await guardAdmin(req)
   if (denied) return denied

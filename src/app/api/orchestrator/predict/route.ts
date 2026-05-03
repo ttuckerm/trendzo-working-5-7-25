@@ -4,6 +4,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
 // Temporarily disable import to fix compilation
 // import { predictDraft, DraftInput, PredictionResult } from '../../../../lib/modules/orchestrator-mvp';
 

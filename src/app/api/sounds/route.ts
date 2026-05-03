@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 import { auth } from '@/lib/auth';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Collection name
 const SOUNDS_COLLECTION = 'sounds';
 

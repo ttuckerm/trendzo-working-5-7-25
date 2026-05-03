@@ -1,6 +1,9 @@
 import { NextRequest } from 'next/server';
 import { supabaseClient } from '@/lib/supabase/client';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 interface WebSocketClient {
   id: string;
   socket: WebSocket;

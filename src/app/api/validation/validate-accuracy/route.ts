@@ -5,6 +5,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { actValidateAccuracy } from '@/app/actions/validation-workflow';
 import type { ValidateAccuracyRequest } from '@/types/validation-workflow';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const body: ValidateAccuracyRequest = await req.json();

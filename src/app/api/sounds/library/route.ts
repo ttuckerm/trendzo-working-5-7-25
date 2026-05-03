@@ -3,6 +3,9 @@ import { auth } from '@/lib/auth';
 import { soundLibraryService } from '@/lib/services/soundLibraryService';
 import { SaveSoundRequest, UpdateSavedSoundRequest } from '@/lib/types/sound';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/sounds/library
  * Retrieves user's saved sounds with optional filters

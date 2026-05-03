@@ -11,6 +11,9 @@ import { matchPatterns } from '@/lib/script/match'
 import { scoreScript } from '@/lib/script/score'
 import { scriptRecommendations } from '@/lib/script/recommend'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
 	const flags = getFlags()
 	if (!flags.publicApi) return NextResponse.json({ ok: false, message: 'disabled' }, { status: 403 })

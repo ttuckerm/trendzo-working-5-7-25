@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { formatAudioTime } from '@/lib/utils/audioUtils';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   // Test cases
   const testCases = [

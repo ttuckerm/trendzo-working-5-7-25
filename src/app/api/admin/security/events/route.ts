@@ -8,6 +8,9 @@ import { createRateLimiter, RateLimitTiers, KeyGenerators } from '@/lib/security
 import { requireAuth, Permission } from '@/lib/security/auth-middleware';
 import { securityMonitor, SecurityEventType, SecuritySeverity } from '@/lib/security/security-monitor';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Rate limiting for security events API
 const securityEventsRateLimit = createRateLimiter({
   ...RateLimitTiers.ADMIN_OPERATIONS,

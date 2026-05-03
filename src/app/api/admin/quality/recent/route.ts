@@ -3,6 +3,9 @@ import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { computeQualityReasons } from '@/lib/quality/anti_gaming'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const auth = await requireRole(UserRole.ADMIN)(req)
   if (auth.response) return auth.response

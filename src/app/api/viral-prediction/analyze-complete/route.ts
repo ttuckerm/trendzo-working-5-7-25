@@ -5,6 +5,9 @@ import { MainPredictionEngine } from '@/lib/services/viral-prediction/main-predi
 import { FrameworkParser } from '@/lib/services/viral-prediction/framework-parser';
 import { AiBrainIntelligenceSystem } from '@/lib/services/viral-prediction/ai-brain-intelligence';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

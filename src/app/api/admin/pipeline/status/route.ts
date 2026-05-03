@@ -3,6 +3,9 @@ import { z } from 'zod'
 import { getAdminDb, guardAdmin, parseRange, getWindow, withCache } from '../_lib'
 import { synthStatus } from '../_synthetic'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const QuerySchema = z.object({ range: z.enum(['1h','6h','24h','7d']).optional() })
 
 export async function GET(req: NextRequest) {

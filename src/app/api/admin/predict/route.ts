@@ -17,6 +17,9 @@ import { createClient } from '@supabase/supabase-js';
 import { runPredictionPipeline } from '@/lib/prediction/runPredictionPipeline';
 import { PredictionHash } from '@/lib/services/prediction-hash';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Use service key for video_files table only
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -5,6 +5,9 @@ import { devUpsertStore } from '@/lib/dev/upsertStore'
 import { VITSchema, VIT_UPSERT_KEY } from '@trendzo/shared'
 import { upsertVit } from '@/lib/db/pg'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // In-memory store keyed by (platform, videoId) for local dev; replace with Postgres in production
 const store = new Map<string, any>()
 let _redis: IORedis | null = null

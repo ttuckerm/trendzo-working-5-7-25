@@ -6,6 +6,9 @@ import { TrendPredictionNotification } from '@/lib/types/trendingTemplate';
 import { checkSubscriptionAccess } from '@/middleware/checkSubscription';
 import { isDemoRequest, getSampleTrendPredictions } from '@/lib/utils/demoData';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * API endpoint to fetch trend prediction notifications
  * 

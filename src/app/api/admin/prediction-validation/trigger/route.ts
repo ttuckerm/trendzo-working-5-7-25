@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSupabase } from '@/lib/supabase-server'
 import { chooseSnapshotAtHorizon } from '@/lib/validation/actuals_join'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Triggers a lightweight validation cycle: it finds pending records in
 // `prediction_validation` and attempts to validate them using currently
 // available "actual" metrics. This keeps the flow non-blocking and safe.

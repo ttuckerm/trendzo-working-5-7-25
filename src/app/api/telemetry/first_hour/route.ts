@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { validateTelemetryKeyFromRequest } from '@/lib/security/telemetry-keys'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 type Body = {
   video_id: string
   ts_iso: string

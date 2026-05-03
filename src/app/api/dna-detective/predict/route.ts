@@ -8,6 +8,9 @@ import { z } from 'zod';
 import { predictDNA, clearTemplateCache, getCacheStatus } from '../../../../lib/modules/dna-detective';
 import { recordPrediction } from '@/lib/prediction/record'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Request validation schema
 const CohortAxesSchema = z.object({
   platform: z.string().nullable().optional(),

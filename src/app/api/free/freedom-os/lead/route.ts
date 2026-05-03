@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { classifyLead, mapInputsForSegmentation, SEGMENT_LABELS } from '@/lib/funnel/segment'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const BEEHIIV_BASE = 'https://api.beehiiv.com/v2'
 

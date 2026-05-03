@@ -2,6 +2,9 @@
 import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 type OrchestrateInput = { idea: string; objective?: string };
 type Provider = { tag: "openai" | "anthropic"; model: string };
 

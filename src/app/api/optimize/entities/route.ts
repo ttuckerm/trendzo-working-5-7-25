@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
 	const entities = [
 		{ type: 'sound', name: 'Upbeat Synth 128bpm', velocity: 0.82 },

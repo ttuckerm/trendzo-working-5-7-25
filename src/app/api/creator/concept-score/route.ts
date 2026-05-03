@@ -14,6 +14,9 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { resolveCreatorContext } from '@/lib/prediction/creator-context';
 import { scoreConcept } from '@/lib/prediction/concept-scorer';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Service key client for DB writes
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

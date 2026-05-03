@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { aggregateScriptElements } from '@/lib/services/scriptElementsAggregator'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const data = aggregateScriptElements()

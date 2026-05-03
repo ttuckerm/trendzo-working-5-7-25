@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js';
 import { executeTrainingJob } from '@/lib/training/training-executor';
 import { TRAINING_V2_ENABLED } from '@/lib/training/feature-availability-matrix';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

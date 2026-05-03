@@ -5,6 +5,9 @@ import {
   LiveTrackingTest
 } from '@/lib/donna/testing/testing-framework';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Run Testing Framework
  *

@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { ensureBillingTables } from '@/lib/billing/enforcement'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function randomKey(): string {
   return 'k_' + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)
 }

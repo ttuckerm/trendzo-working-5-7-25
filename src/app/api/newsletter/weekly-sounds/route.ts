@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { newsletterSoundService } from '@/lib/services/newsletterSoundService';
 import { getMockWeeklyShowcase } from '@/lib/mocks/newsletterSoundMocks';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/newsletter/weekly-sounds
  * Returns the latest weekly trending sounds showcase for newsletters

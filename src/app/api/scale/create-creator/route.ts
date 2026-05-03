@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Creator, Platform, appendNdjsonLine, ensureFiles, listCreators, replaceCreators } from '@/lib/scale/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function uid() { return 'cr_' + Math.random().toString(36).slice(2,10) }
 
 export async function POST(req: NextRequest){

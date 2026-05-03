@@ -3,6 +3,9 @@ import { buildCascades, summarize } from '@/lib/cross/service'
 import { getSource } from '@/lib/data'
 import { ensureFixtures } from '@/lib/data/init-fixtures'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(){
   try{
     if (process.env.MOCK === '1') ensureFixtures()

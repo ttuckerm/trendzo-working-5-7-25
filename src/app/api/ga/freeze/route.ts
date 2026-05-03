@@ -5,6 +5,9 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import path from 'path'
 import fs from 'fs'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function getDb(){
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 }

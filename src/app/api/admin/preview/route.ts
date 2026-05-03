@@ -4,6 +4,9 @@ import { evaluateFlag } from '@/server/flags/evaluator'
 import { getUserRoles } from '@/server/flags/providers/corteza'
 import { requireRole } from '@/lib/auth/server-auth'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest){
   const guard = await requireRole(req, ['chairman'])
   if (guard) return guard

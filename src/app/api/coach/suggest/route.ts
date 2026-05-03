@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import type { CoachInput } from '@/lib/coach/types'
 import { suggest } from '@/lib/coach/service'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
 	try {
 		// Friendly GET handler: returns a demo response in MOCK or guidance otherwise

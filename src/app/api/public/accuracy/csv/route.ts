@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readAllValidations } from '@/lib/validation/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(_req: NextRequest) {
   try {
     // Always return CSV content directly; safe in MOCK and live

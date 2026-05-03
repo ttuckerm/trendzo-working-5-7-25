@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import * as templateAnalyzerTests from '@/lib/etl/test-template-analyzer';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Check admin API key for authorization
 function isAuthorized(request: NextRequest): boolean {
   // For development, allow all requests

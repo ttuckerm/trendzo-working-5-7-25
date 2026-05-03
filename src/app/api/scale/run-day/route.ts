@@ -3,6 +3,9 @@ import { ensureFiles, listPlans } from '@/lib/scale/store'
 import { runDay } from '@/lib/scale/simulate'
 import { listCreators } from '@/lib/scale/store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest){
 	try{
 		ensureFiles()

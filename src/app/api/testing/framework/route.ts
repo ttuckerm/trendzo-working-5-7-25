@@ -20,6 +20,9 @@ import { testFrameworkCore } from '@/lib/testing/test-framework-core';
 import { testSuiteCollection } from '@/lib/testing/test-suites';
 import { realTimeMonitor } from '@/lib/monitoring/real-time-monitor';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // ===== REQUEST/RESPONSE TYPES =====
 
 interface TestExecutionRequest {

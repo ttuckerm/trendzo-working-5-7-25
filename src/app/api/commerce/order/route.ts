@@ -5,6 +5,9 @@ import { ensureCommerceTables } from '@/lib/commerce/ensure'
 import { corsHeaders } from '@/lib/commerce/utils'
 import { enforceTelemetryQuota } from '@/lib/security/telemetry-keys'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function OPTIONS() { return new NextResponse(null, { headers: corsHeaders() }) }
 
 export async function POST(req: NextRequest) {

@@ -7,6 +7,9 @@ import { TikTokDownloader } from '@/lib/services/tiktok-downloader';
 import { KaiOrchestrator } from '@/lib/orchestration/kai-orchestrator';
 import { transcribeVideo } from '@/lib/services/whisper-service';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function getDb(){
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY || SUPABASE_ANON_KEY)
 }

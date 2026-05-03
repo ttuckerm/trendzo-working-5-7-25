@@ -45,6 +45,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { accuracyOrchestrator } from '@/lib/services/accuracy-enhancement/accuracy-orchestrator';
 import { realTimeMonitor } from '@/lib/monitoring/real-time-monitor';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Rate limiting and authentication (simplified)
 const REQUEST_LIMIT = 100; // per hour
 const requestCounts = new Map<string, { count: number; resetTime: number }>();

@@ -12,6 +12,9 @@ import { businessMetricsDashboard, TimePeriod } from '@/lib/monitoring/business-
 import { alertSystem, AlertChannel, AlertSeverity } from '@/lib/monitoring/alert-system';
 import { analyticsReporting, ReportType, ReportFormat } from '@/lib/monitoring/analytics-reporting';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Rate limiting for monitoring API
 const monitoringRateLimit = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute

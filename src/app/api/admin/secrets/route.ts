@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 async function ensure(db:any){
   await (db as any).rpc?.('exec_sql', { query: `
     create table if not exists secrets_vault (

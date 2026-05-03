@@ -3,6 +3,9 @@ import { TikTokSound } from '@/lib/types/tiktok';
 import { validateSoundData } from '@/lib/utils/soundValidation';
 import { auth } from '@/lib/auth';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * POST /api/sounds/validate
  * Validates sound data before storing in the database

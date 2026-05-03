@@ -15,6 +15,9 @@ import { analyzeVideoImmediately } from '@/lib/services/immediate-video-analyzer
 import { zScoreToDisplayDps, classifyDpsV2 } from '@/lib/training/dps-v2';
 import { generateDpsInsights } from '@/lib/training/dps-insights';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!,

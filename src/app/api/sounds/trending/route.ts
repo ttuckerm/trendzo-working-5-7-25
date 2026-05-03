@@ -7,6 +7,9 @@ import { isDemoRequest } from '@/lib/utils/demoData';
 import { db } from '@/lib/firebase/firebase';
 import { collection, getDocs, query, where, limit, orderBy, startAfter, doc, getDoc } from 'firebase/firestore';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Mock trending sounds for development
 const MOCK_TRENDING_SOUNDS = [
   {

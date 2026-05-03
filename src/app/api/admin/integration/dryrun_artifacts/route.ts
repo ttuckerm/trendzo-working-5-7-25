@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { putJson, getSignedUrl } from '@/lib/storage/object_store'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(_req: NextRequest) {
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
   try { await (db as any).rpc?.('exec_sql', { query: "create table if not exists experiment_runs (id bigserial primary key, created_at timestamptz not null default now(), platform text, model_version text, metrics jsonb, storage_url text);" }) } catch {}

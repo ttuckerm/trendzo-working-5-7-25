@@ -5,6 +5,9 @@ import { AICustomizationResponse, GenerateVariationsRequest, RemixSuggestion } f
 import { v4 as uuidv4 } from 'uuid';
 import OpenAI from 'openai';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || '',

@@ -3,6 +3,9 @@ export const runtime = 'nodejs'
 
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // DEV store (in-memory) helpers
 import { getAll as devGetAll, devSaveCalibration } from '@/lib/dev/accuracyStore'
 

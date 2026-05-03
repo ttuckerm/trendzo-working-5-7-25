@@ -3,6 +3,9 @@ import { testGeneTagger } from '@/lib/services/geneTagger';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(request: NextRequest) {
   try {
     console.log('Starting GeneTagger test...');

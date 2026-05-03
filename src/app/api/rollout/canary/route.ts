@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { evaluateFlag, setFlag } from '@/lib/flags'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const tenantId = req.headers.get('x-tenant-id') || null
   const enabled = await evaluateFlag('algo_aplusplus', tenantId)

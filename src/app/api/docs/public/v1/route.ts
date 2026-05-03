@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const openapi = {
   openapi: '3.0.3',
   info: { title: 'ViralLab Public API', version: 'v1' },

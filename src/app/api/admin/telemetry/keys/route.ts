@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth, Permission } from '@/lib/security/auth-middleware'
 import { ensureTelemetryKeysTable, mintTelemetryKey } from '@/lib/security/telemetry-keys'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   const { response } = await requireAuth([Permission.ADMIN_API_KEYS])(req)
   if (response) return response

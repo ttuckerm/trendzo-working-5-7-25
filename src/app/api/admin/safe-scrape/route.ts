@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { scrapeTikTokBatch } from '@/lib/services/apifyScraper';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function envNumber(name: string, fallback: number): number {
   const v = process.env[name];
   const n = v ? Number(v) : NaN;

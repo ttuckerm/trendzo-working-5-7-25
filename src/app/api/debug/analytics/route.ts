@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getMockAnalyticsData, getMockExpertInsights } from '@/app/api/templates/analytics/route';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Define Template interface to match the structure from getMockAnalyticsData
 interface Template {
   id: string;

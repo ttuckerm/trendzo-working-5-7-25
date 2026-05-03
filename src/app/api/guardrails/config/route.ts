@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGuardrailsConfig, setGuardrailsConfig } from '@/lib/recs/guardrails'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   return NextResponse.json(getGuardrailsConfig(), { headers: { 'Cache-Control': 'no-store' } })
 }

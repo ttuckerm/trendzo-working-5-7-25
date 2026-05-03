@@ -5,6 +5,9 @@ import { enforce } from '@/lib/moat/rate'
 import { generateRecipeBook } from '@/lib/templates/service'
 import { ensureFixtures } from '@/lib/data/init-fixtures'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
 	try {
 		const flags = getFlags()

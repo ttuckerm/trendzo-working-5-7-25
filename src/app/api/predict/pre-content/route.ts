@@ -15,6 +15,9 @@ import {
 import { runPredictionPipeline } from '@/lib/prediction/runPredictionPipeline';
 import { z } from 'zod';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // ============================================================================
 // Feature Flag Check
 // ============================================================================

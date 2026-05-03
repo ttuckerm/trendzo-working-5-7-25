@@ -3,6 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { verifyAdminAuth } from '@/lib/utils/adminAuth'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const auth = await verifyAdminAuth(req)
   if (!auth.success) return NextResponse.json({ error: 'forbidden' }, { status: 403 })

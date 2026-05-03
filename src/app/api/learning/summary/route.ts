@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import { getCurrentModel, readCandidate } from '@/lib/learning/store'
 import { buildTrend, computeDriftIndex, readCachedSummary, writeCachedSummary } from '@/lib/learning/summary'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const cached = readCachedSummary()

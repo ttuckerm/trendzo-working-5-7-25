@@ -5,6 +5,9 @@ import { requireRole } from '@/lib/auth/server-auth'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { computeDiscoveryReadiness } from '@/lib/discovery/discovery_readiness'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function db(): SupabaseClient {
   return createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 }

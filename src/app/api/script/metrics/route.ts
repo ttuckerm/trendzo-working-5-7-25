@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { computeScriptMetrics } from '@/lib/script/metrics'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const m = computeScriptMetrics()
   return NextResponse.json(m)

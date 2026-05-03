@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createValidator } from '@/lib/validation/jsonSchema';
+
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
 // Import schemas without $schema to avoid Ajv fetching meta-schema at build time
 import ingestionSchemaRaw from '@/lib/schemas/video-ingestion-record.schema.json';
 import presentationSchemaRaw from '@/lib/schemas/video-presentation-card.schema.json';

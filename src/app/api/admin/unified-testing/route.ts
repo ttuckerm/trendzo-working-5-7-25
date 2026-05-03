@@ -8,6 +8,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import UnifiedTestingFramework from '@/lib/services/unifiedTestingFramework'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     const { action, ...params } = await req.json()

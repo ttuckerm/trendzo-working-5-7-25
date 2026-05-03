@@ -15,6 +15,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Mapping of template IDs to display names for more context in analytics
 const TEMPLATE_NAMES = {
   'dance-challenge': 'Viral Dance Challenge',

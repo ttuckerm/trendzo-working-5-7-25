@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { alertManager } from '@/lib/monitoring/alert-manager';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(_req: NextRequest) {
 	try {
 		const active = alertManager.getActiveAlerts();

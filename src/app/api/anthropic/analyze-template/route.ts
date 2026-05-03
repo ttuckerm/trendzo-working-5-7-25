@@ -5,6 +5,9 @@ import { AICustomizationResponse, GenerateVariationsRequest } from '@/lib/types/
 import { v4 as uuidv4 } from 'uuid';
 import { Anthropic } from '@anthropic-ai/sdk';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Use a type-safe approach for Anthropic API
 // For production, install the official SDK with: npm install @anthropic-ai/sdk
 interface AnthropicMessage {

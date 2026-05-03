@@ -3,6 +3,9 @@ import { getExperiment, ensureDemoExperiment } from '@/lib/experiments/store'
 import { simulateTicks } from '@/lib/experiments/simulator'
 import { buildSummary } from '@/lib/experiments/summary'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest){
   try{
     const body = await req.json().catch(()=>({}))

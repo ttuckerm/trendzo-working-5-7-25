@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { buildCascades, ensureCrossFixtures, readFixtureCascades } from '@/lib/cross/service'
 import { getSource } from '@/lib/data'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET(req: NextRequest) {
   const url = new URL(req.url)
   const window = url.searchParams.get('window') ?? '30d'

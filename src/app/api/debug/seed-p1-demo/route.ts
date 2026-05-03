@@ -7,6 +7,9 @@ import { addPrediction, addOutcome, upsertLabel } from '@/lib/dev/accuracyStore'
 import { thresholdFor } from '@/lib/calibration/thresholds'
 import { POST as INGEST } from '@/app/api/outcomes/ingest/route'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // TODO: Add proper auth/role protection. This is an unauthenticated debug endpoint intended for local/demo only.
 
 type Platform = 'tiktok' | 'instagram' | 'youtube'

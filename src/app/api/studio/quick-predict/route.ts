@@ -3,6 +3,9 @@ import { VideoIntelligenceService } from '@/lib/services/videoIntelligenceServic
 import { VideoScraperService } from '@/lib/services/videoScraperService';
 import { AlertService } from '@/lib/services/alertService';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 interface PredictionRequest {
   videoUrl: string;
 }

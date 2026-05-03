@@ -10,6 +10,9 @@ import { metricsCollector, MetricType } from '@/lib/monitoring/metrics-collector
 import { businessMetricsCalculator, TimePeriod } from '@/lib/monitoring/business-metrics';
 import { alertManager } from '@/lib/monitoring/alert-manager';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Rate limiting for dashboard
 const dashboardRateLimit = createRateLimiter({
   windowMs: 60 * 1000, // 1 minute

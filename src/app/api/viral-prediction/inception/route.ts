@@ -3,6 +3,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { InceptionModeSystem } from '@/lib/services/viral-prediction/inception-mode';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { action, data } = await request.json();

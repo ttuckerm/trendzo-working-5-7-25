@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { etlErrorHandlingService } from '@/lib/services/etlErrorHandlingService';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * DIRECT PRODUCTION TEST of etlErrorHandlingService
  * 

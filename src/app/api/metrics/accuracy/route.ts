@@ -4,6 +4,9 @@ export const runtime = 'nodejs'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 type Bin = { x?: number; y?: number; pHat?: number; fracPos?: number; count?: number }
 
 export async function GET(req: NextRequest) {

@@ -3,6 +3,9 @@ import OpenAI from 'openai'
 import { getCurrentUserId, handleApiError, createErrorResponse } from '@/lib/utils/apiHelpers'
 import { useSubscription } from '@/lib/contexts/SubscriptionContext'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Initialize OpenAI client
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY

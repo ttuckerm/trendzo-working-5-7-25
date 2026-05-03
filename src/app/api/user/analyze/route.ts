@@ -3,6 +3,9 @@ import { supabaseClient } from '@/lib/supabase/client';
 import { predictDNA } from '@/lib/modules/dna-detective';
 import { orchestratePrediction } from '@/lib/modules/orchestrator';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { video_url } = await request.json();

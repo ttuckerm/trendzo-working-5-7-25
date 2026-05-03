@@ -10,6 +10,9 @@ import { z } from 'zod';
 import { extractEnhancedPatterns } from '@/lib/services/pattern-extraction/enhanced-extraction-service';
 import type { EnhancedPatternExtractionRequest } from '@/lib/services/pattern-extraction/types-enhanced';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // =====================================================
 // Request Validation
 // =====================================================

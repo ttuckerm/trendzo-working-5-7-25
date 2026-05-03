@@ -8,6 +8,9 @@ import { NextResponse } from 'next/server';
 import { creatorAttributionService } from '@/lib/services/creatorAttributionService';
 import { Platform } from '@/lib/types/database';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // POST /api/creator-attribution - Handle attribution actions
 export async function POST(request: Request) {
   try {

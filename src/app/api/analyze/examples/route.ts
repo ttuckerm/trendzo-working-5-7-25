@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   if (process.env.MOCK !== '1') return NextResponse.json({ error: 'examples_only_in_mock' }, { status: 404 })
   const examples = [

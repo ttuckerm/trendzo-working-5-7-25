@@ -15,6 +15,9 @@ import { randomUUID } from 'node:crypto';
 import { buildToolsFromRegistry } from '@/lib/agent/tool-registry';
 import type { AgentContext } from '@/lib/agent/correlation-context';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export const runtime = 'nodejs';
 
 const ACTION_RESULT_MARKER = '[__TRENDZO_ACTION_RESULT__]';

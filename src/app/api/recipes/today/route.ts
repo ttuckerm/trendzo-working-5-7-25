@@ -4,6 +4,9 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 function todayUTC(): string { const d=new Date(); return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())).toISOString().slice(0,10) }
 
 export async function GET(req: NextRequest) {

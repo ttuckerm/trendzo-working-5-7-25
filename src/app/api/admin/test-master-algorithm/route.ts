@@ -6,6 +6,9 @@
 import { NextResponse } from 'next/server';
 import { masterViralAlgorithm } from '@/lib/services/master-viral-algorithm';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
   try {
     const { videoUrl, title, platform = 'tiktok' } = await request.json();

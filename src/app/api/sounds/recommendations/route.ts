@@ -5,6 +5,9 @@ import { mockSounds } from '@/lib/mock/mockSoundData';
 import { checkSubscriptionAccess } from '@/middleware/checkSubscription';
 import { isDemoRequest } from '@/lib/utils/demoData';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 // Create a mock similarity matrix if it doesn't exist
 const mockSimilarityMatrix: Record<string, Record<string, number>> = {};
 

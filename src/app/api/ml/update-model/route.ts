@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { Prediction, PredictionFeedback } from '@/lib/types/prediction';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 interface ModelUpdateRequest {
   originalPrediction: Prediction;
   expertFeedback: PredictionFeedback;

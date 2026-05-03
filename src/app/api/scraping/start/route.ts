@@ -4,6 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { KaiOrchestrator } from '@/lib/orchestration/kai-orchestrator';
 import { analyzeVideoImmediately } from '@/lib/services/immediate-video-analyzer';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_KEY!

@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const tpl = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ''}/api/templates?range=30d`, { cache: 'no-store' }).then(r=> r.ok? r.json(): []);

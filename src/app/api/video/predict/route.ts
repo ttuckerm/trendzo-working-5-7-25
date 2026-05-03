@@ -9,6 +9,9 @@ import ViralPredictionDB from '@/lib/database/supabase-viral-prediction'
 import { FeatureExtractor } from '@/lib/services/feature-extractor'
 import { ViralPredictionModel } from '@/lib/services/viral-prediction-model'
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: NextRequest) {
   try {
     const { videoId, videoUrl, platform } = await request.json()

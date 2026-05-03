@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Test API endpoint for audio button functionality
  * This endpoint returns a mock sound to test with the audio button

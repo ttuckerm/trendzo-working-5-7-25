@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth/api-guard';
 import { createClient } from '@supabase/supabase-js';
 
+// Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
+export const dynamic = 'force-dynamic'
+
 /**
  * Atlas Accuracy Dashboard API
  *
