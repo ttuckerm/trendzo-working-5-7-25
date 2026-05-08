@@ -89,18 +89,6 @@ export async function GET() {
     // Check which dashboard pages exist and should be consuming this data
     const dashboardPages = [
       {
-        page: 'super-admin-live',
-        url: '/admin/super-admin-live', 
-        apis: ['dashboard-data'],
-        description: 'Main super admin dashboard with live metrics'
-      },
-      {
-        page: 'command-center',
-        url: '/admin/command-center',
-        apis: ['system-metrics', 'prediction-validations'],
-        description: 'Command center with system overview'
-      },
-      {
         page: 'studio',
         url: '/admin/studio',
         apis: ['dashboard-data'],

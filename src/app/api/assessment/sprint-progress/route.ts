@@ -10,6 +10,7 @@
 
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { fetchAssessmentByShareId, SHARE_TOKEN_REGEX } from '@/lib/assessment/fetch-assessment'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -46,6 +47,7 @@ function isSprintProgressMap(v: unknown): v is SprintProgressMap {
 
 interface Body {
   assessmentId: string // EA-X-XXX display ID
+  shareToken: string
   dayNumber: number
   completed: boolean
 }
@@ -55,6 +57,9 @@ function validateBody(raw: unknown): { ok: true; body: Body } | { ok: false; err
   const o = raw as Record<string, unknown>
   if (typeof o.assessmentId !== 'string' || !DISPLAY_ID_REGEX.test(o.assessmentId)) {
     return { ok: false, error: 'assessmentId must match EA-X-XXX format' }
+  }
+  if (typeof o.shareToken !== 'string' || !SHARE_TOKEN_REGEX.test(o.shareToken)) {
+    return { ok: false, error: 'shareToken required' }
   }
   if (
     typeof o.dayNumber !== 'number' ||
@@ -71,6 +76,7 @@ function validateBody(raw: unknown): { ok: true; body: Body } | { ok: false; err
     ok: true,
     body: {
       assessmentId: o.assessmentId,
+      shareToken: o.shareToken,
       dayNumber: o.dayNumber,
       completed: o.completed,
     },
@@ -89,7 +95,13 @@ export async function POST(request: Request) {
   if (!validated.ok) {
     return NextResponse.json({ ok: false, error: validated.error }, { status: 400 })
   }
-  const { assessmentId: displayId, dayNumber, completed } = validated.body
+  const { assessmentId: displayId, shareToken, dayNumber, completed } = validated.body
+
+  // Token-gated: 403 unless assessmentId + shareToken match a stored row.
+  const verified = await fetchAssessmentByShareId(displayId, shareToken)
+  if (!verified) {
+    return NextResponse.json({ ok: false, error: 'Forbidden' }, { status: 403 })
+  }
 
   const supabase = getServerSupabase()
   if (!supabase) {

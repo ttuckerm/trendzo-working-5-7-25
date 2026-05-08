@@ -37,11 +37,6 @@ export default function Footer() {
                     Template Library
                   </Link>
                 </li>
-                <li>
-                  <Link href="/admin/template-analyzer" className="text-gray-600 hover:text-purple-600">
-                    Template Analyzer
-                  </Link>
-                </li>
               </ul>
             </div>
             

@@ -24,7 +24,6 @@ const PANEL_CONTENT: Record<string, PanelMeta> = {
     title: "Dashboard",
     description: "Snapshot of template performance, accuracy and adoption.",
     primaryActionLabel: "Open Dashboard",
-    deepLinkHref: "/admin/viral-recipe-book",
   },
   scripts: {
     title: "Scripts",

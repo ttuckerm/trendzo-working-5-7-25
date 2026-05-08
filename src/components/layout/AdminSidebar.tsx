@@ -293,52 +293,10 @@ export default function AdminSidebar({
                 isCollapsed={isCollapsed}
               />
               <NavItem
-                href="/admin/flipboard"
-                icon={<BarChart2 size={18} />}
-                label="Super Admin Flipboard"
-                isActive={pathname === '/admin/flipboard'}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/studio"
-                icon={<FileText size={18} />}
-                label="Creator Studio"
-                isActive={pathname === '/admin/studio' || pathname.startsWith('/admin/studio/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/command-center/validation"
-                icon={<BarChart2 size={18} />}
-                label="Prediction Validation"
-                isActive={pathname === '/admin/command-center/validation'}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
                 href="/admin/demo"
                 icon={<FileText size={18} />}
                 label="Demo Script"
                 isActive={pathname === '/admin/demo'}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/insights"
-                icon={<Lightbulb size={18} />}
-                label="Expert Insights"
-                isActive={pathname === '/admin/insights' || pathname.startsWith('/admin/insights/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/analytics"
-                icon={<BarChart2 size={18} />}
-                label="Analytics"
-                isActive={pathname === '/admin/analytics' || pathname.startsWith('/admin/analytics/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/users"
-                icon={<User size={18} />}
-                label="User Management"
-                isActive={pathname === '/admin/users' || pathname.startsWith('/admin/users/')}
                 isCollapsed={isCollapsed}
               />
               <NavItem
@@ -354,36 +312,6 @@ export default function AdminSidebar({
                 label="API Management"
                 isActive={pathname === '/admin/api' || pathname.startsWith('/admin/api/')}
                 isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/etl-dashboard"
-                icon={<BarChart2 size={18} />}
-                label="ETL Dashboard"
-                isActive={pathname === '/admin/etl-dashboard' || pathname.startsWith('/admin/etl-dashboard/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/newsletter"
-                icon={<AlertCircle size={18} />}
-                label="Newsletter"
-                isActive={pathname === '/admin/newsletter' || pathname.startsWith('/admin/newsletter/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/ai-brain"
-                icon={<Brain size={18} />}
-                label="AI Brain Interface"
-                isActive={pathname === '/admin/ai-brain' || pathname.startsWith('/admin/ai-brain/')}
-                isCollapsed={isCollapsed}
-              />
-              <NavItem
-                href="/admin/marketing-studio"
-                icon={<Sparkles size={18} />}
-                label="Marketing Studio"
-                isActive={pathname === '/admin/marketing-studio' || pathname.startsWith('/admin/marketing-studio/')}
-                isCollapsed={isCollapsed}
-                badge="New"
-                badgeColor="bg-purple-100 text-purple-700"
               />
               <NavItem
                 href="/admin/supabase-migration"

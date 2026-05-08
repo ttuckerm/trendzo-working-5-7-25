@@ -155,15 +155,6 @@ export function MasterNavigation() {
             <NavItem icon={Sparkles} href="/admin/workflows/quick-win">
               Quick Win
             </NavItem>
-            <NavItem icon={Layers} href="/admin/studio?tab=creator">
-              Creator Studio
-            </NavItem>
-            <NavItem icon={Grid} href="/admin/studio?tab=template-library">
-              Templates
-            </NavItem>
-            <NavItem icon={Upload} href="/admin/studio?tab=instant-analysis">
-              Analyze
-            </NavItem>
             <NavItem icon={Brain} href="/admin/algorithm-iq" badge={`IQ: ${algorithmIQ}`}>
               Intelligence
             </NavItem>
@@ -193,15 +184,6 @@ export function MasterNavigation() {
           <div className="px-4 py-4 space-y-2">
             <NavItem icon={Sparkles} href="/admin/workflows/quick-win">
               Quick Win
-            </NavItem>
-            <NavItem icon={Layers} href="/admin/studio?tab=creator">
-              Creator Studio
-            </NavItem>
-            <NavItem icon={Grid} href="/admin/studio?tab=template-library">
-              Templates
-            </NavItem>
-            <NavItem icon={Upload} href="/admin/studio?tab=instant-analysis">
-              Analyze
             </NavItem>
             <NavItem icon={Brain} href="/admin/algorithm-iq">
               Intelligence Hub

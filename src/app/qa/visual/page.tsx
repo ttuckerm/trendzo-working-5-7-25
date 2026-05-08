@@ -99,27 +99,6 @@ export default function VisualQAPage() {
       const isNumber = /^\d+$/.test(valueText)
       results.push({ id: 'impact-data', label: 'ImpactScore loads live data', pass: isNumber, details: valueText })
 
-      // 4) Discovery rollups charts present if dashboard uses them
-      // Use the admin dashboard tab that renders charts
-      const admin = document.createElement('iframe')
-      admin.src = '/admin/viral-recipe-book?tab=dashboard'
-      admin.style.width = '0'; admin.style.height = '0'; admin.style.border = '0'
-      document.body.appendChild(admin)
-      await new Promise(res => admin.addEventListener('load', res, { once: true }))
-      const adminDoc = admin.contentDocument
-      let discovery: Element | null = null
-      let decay: Element | null = null
-      for (let i = 0; i < 10; i++) {
-        const d1 = adminDoc?.querySelector('[data-testid="chart-discovery"]') as Element | null | undefined
-        const d2 = adminDoc?.querySelector('[data-testid="template-leaderboard"]') as Element | null | undefined
-        discovery = (d1 || d2 || null) as Element | null
-        decay = (adminDoc?.querySelector('[data-testid="chart-decay"]') as Element | null | undefined) || null
-        if (discovery && decay) break
-        await new Promise(res => setTimeout(res, 200))
-      }
-      const chartsOk = !!discovery && !!decay
-      results.push({ id: 'rollups', label: 'Discovery rollups render charts', pass: chartsOk })
-
       // 5) A++ Recs endpoint (gated by feature flag)
       try {
         const postRes = await fetch('/api/recs/serve', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ topK: 5, demo: true, platform: 'tiktok' }) })
@@ -162,7 +141,7 @@ export default function VisualQAPage() {
       // Now commit results once, including recs & calibration & guardrails & metrics
       setChecks(prev => prev.map(c => results.find(r => r.id === c.id) || c))
       // Clean up iframe after a short delay
-      setTimeout(() => { frame.remove(); admin.remove() }, 2000)
+      setTimeout(() => { frame.remove() }, 2000)
     })()
   }, [])
 

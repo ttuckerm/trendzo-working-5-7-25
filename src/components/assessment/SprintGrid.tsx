@@ -6,7 +6,8 @@ import type { SprintBlock, SprintDay } from '@/types/assessment'
 import type { SprintProgressMap } from '@/lib/assessment/fetch-assessment'
 
 interface Props {
-  assessmentId: string
+  assessmentId: string // EA-X-XXX display ID
+  shareToken: string
   sprint: SprintBlock
   initialProgress: SprintProgressMap
   reducedMotion: boolean
@@ -34,6 +35,7 @@ interface SprintToggleDetail {
 
 export function SprintGrid({
   assessmentId,
+  shareToken,
   sprint,
   initialProgress,
   reducedMotion,
@@ -84,6 +86,7 @@ export function SprintGrid({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             assessmentId,
+            shareToken,
             dayNumber: day.dayNumber,
             completed: nextCompleted,
           }),
@@ -105,7 +108,7 @@ export function SprintGrid({
         window.setTimeout(() => setToast(null), 3000)
       }
     },
-    [assessmentId, progress, interactionEnabled],
+    [assessmentId, shareToken, progress, interactionEnabled],
   )
 
   return (

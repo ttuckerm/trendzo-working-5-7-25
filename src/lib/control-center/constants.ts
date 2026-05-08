@@ -14,17 +14,6 @@ export const PAGE_DEFINITIONS: PageDefinition[] = [
     components: ['apify-api', 'video-storage', 'metadata-extractor']
   },
   {
-    id: 'component-test',
-    name: 'Component Test',
-    path: '/admin/component-test',
-    description: 'Test individual AI components in isolation',
-    icon: 'FlaskConical',
-    workflows: [
-      { id: 'component-tester', name: 'Component Tester', description: 'Test components individually' }
-    ],
-    components: ['all']
-  },
-  {
     id: 'calibration',
     name: 'Calibration Lab',
     path: '/admin/calibration',
@@ -128,17 +117,6 @@ export const PAGE_DEFINITIONS: PageDefinition[] = [
       { id: 'settings-manager', name: 'Settings Manager', description: 'Manage system settings' }
     ],
     components: ['config-store']
-  },
-  {
-    id: 'error-logs',
-    name: 'Error Logs',
-    path: '/admin/error-logs',
-    description: 'System error tracking and debugging',
-    icon: 'AlertTriangle',
-    workflows: [
-      { id: 'log-aggregator', name: 'Log Aggregator', description: 'Aggregate system logs' }
-    ],
-    components: ['logger', 'error-tracker']
   },
   {
     id: 'home',

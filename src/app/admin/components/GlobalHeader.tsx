@@ -20,7 +20,6 @@ export default function GlobalHeader() {
   const getPageTitle = () => {
     switch (pathname) {
       case '/admin':
-      case '/admin/command-center':
         return 'Command Center'
       case '/admin/studio':
         return 'The Studio'
@@ -30,7 +29,6 @@ export default function GlobalHeader() {
         return 'Settings'
       default:
         if (pathname.startsWith('/admin/studio')) return 'The Studio'
-        if (pathname.startsWith('/admin/command-center')) return 'Command Center'
         if (pathname.startsWith('/admin/engine-room')) return 'Engine Room'
         if (pathname.startsWith('/admin/settings')) return 'Settings'
         return 'Admin Dashboard'

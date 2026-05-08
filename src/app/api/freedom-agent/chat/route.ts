@@ -6,7 +6,7 @@ import { streamText } from 'ai'
 import { anthropic } from '@ai-sdk/anthropic'
 import { createClient } from '@supabase/supabase-js'
 import type { FreedomAgentChatRequest, FreedomAgentMessage } from '@/types/freedom-agent'
-import { fetchAssessment } from '@/lib/assessment/fetch-assessment'
+import { fetchAssessmentByShareId, SHARE_TOKEN_REGEX } from '@/lib/assessment/fetch-assessment'
 import { fetchOrCreateConversation } from '@/lib/freedom-agent/fetch-conversation'
 import { appendMessages } from '@/lib/freedom-agent/append-message'
 import { buildFreedomAgentSystemPrompt } from '@/lib/freedom-agent/build-system-prompt'
@@ -25,6 +25,7 @@ function err(code: string, error: string, status: number) {
 
 interface ValidatedBody {
   assessmentId: string
+  shareToken: string
   message: string
 }
 
@@ -32,11 +33,12 @@ function validate(raw: unknown): ValidatedBody | null {
   if (!raw || typeof raw !== 'object') return null
   const o = raw as Record<string, unknown>
   if (typeof o.assessmentId !== 'string' || !DISPLAY_ID_REGEX.test(o.assessmentId)) return null
+  if (typeof o.shareToken !== 'string' || !SHARE_TOKEN_REGEX.test(o.shareToken)) return null
   if (typeof o.message !== 'string') return null
   const trimmed = o.message.trim()
   if (!trimmed) return null
   if (trimmed.length > MAX_MESSAGE_CHARS) return null
-  return { assessmentId: o.assessmentId, message: trimmed }
+  return { assessmentId: o.assessmentId, shareToken: o.shareToken, message: trimmed }
 }
 
 export async function POST(request: Request) {
@@ -51,15 +53,17 @@ export async function POST(request: Request) {
   if (!body) {
     return err(
       'INVALID_INPUT',
-      'assessmentId and non-empty message ≤ 2000 chars required',
+      'assessmentId, shareToken, and non-empty message ≤ 2000 chars required',
       400,
     )
   }
-  const { assessmentId, message } = body as FreedomAgentChatRequest
+  const { assessmentId, shareToken, message } = body
 
-  const assessment = await fetchAssessment(assessmentId)
+  // Token-gated: the assessment id alone is insufficient. Both must match a
+  // stored row or we 403 — without revealing which half was wrong.
+  const assessment = await fetchAssessmentByShareId(assessmentId, shareToken)
   if (!assessment) {
-    return err('ASSESSMENT_NOT_FOUND', 'Assessment not found', 404)
+    return err('FORBIDDEN', 'Forbidden', 403)
   }
 
   // Server-side email gate. UI also blocks behind a non-dismissable overlay,

@@ -46,10 +46,6 @@ export default function StudioControls({
       </div>
       
       <div className="action-buttons">
-        <Link href="/admin/viral-recipe-book" className="btn-recipe-book">
-          📚 View Full Recipe Book
-        </Link>
-        
         <button className="btn-refresh" onClick={onRefresh}>
           🔄 Refresh
         </button>

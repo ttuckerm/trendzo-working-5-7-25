@@ -65,27 +65,6 @@ export default function AdminHeader({ toggleSidebar }: { toggleSidebar?: () => v
             Creator Studio
           </span>
         </Link>
-        <Link href="/admin/insights" className="text-gray-700 hover:text-blue-600 transition-colors">
-          <span className="flex items-center">
-            <Lightbulb size={16} className="mr-1" />
-            Expert Insights
-          </span>
-        </Link>
-        <Link href="/admin/analytics" className="text-gray-700 hover:text-blue-600 transition-colors">
-          <span className="flex items-center">
-            <BarChart2 size={16} className="mr-1" />
-            Analytics
-          </span>
-        </Link>
-        <Link href="/admin/ai-brain" className="text-gray-700 hover:text-blue-600 transition-colors">
-          <span className="flex items-center">
-            <Brain size={16} className="mr-1" />
-            AI Brain
-          </span>
-        </Link>
-        <Link href="/admin/etl-dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-          ETL Dashboard
-        </Link>
         <Link href="/dashboard" className="text-blue-600 hover:text-blue-800 font-semibold">
           Back to App
         </Link>
@@ -190,38 +169,8 @@ export default function AdminHeader({ toggleSidebar }: { toggleSidebar?: () => v
                 Creator Studio
               </span>
             </Link>
-            <Link 
-              href="/admin/insights" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="flex items-center">
-                <Lightbulb size={16} className="mr-1" />
-                Expert Insights
-              </span>
-            </Link>
-            <Link 
-              href="/admin/analytics" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="flex items-center">
-                <BarChart2 size={16} className="mr-1" />
-                Analytics
-              </span>
-            </Link>
-            <Link 
-              href="/admin/users" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="flex items-center">
-                <User size={16} className="mr-1" />
-                User Management
-              </span>
-            </Link>
-            <Link 
-              href="/admin/system" 
+            <Link
+              href="/admin/system"
               className="text-gray-700 hover:text-blue-600 py-2"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -240,39 +189,8 @@ export default function AdminHeader({ toggleSidebar }: { toggleSidebar?: () => v
                 API Management
               </span>
             </Link>
-            <Link 
-              href="/admin/template-analyzer" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Template Analyzer
-            </Link>
-            <Link 
-              href="/admin/newsletter" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Newsletter
-            </Link>
-            <Link 
-              href="/admin/ai-brain" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <span className="flex items-center">
-                <Brain size={16} className="mr-1" />
-                AI Brain
-              </span>
-            </Link>
-            <Link 
-              href="/admin/etl-dashboard" 
-              className="text-gray-700 hover:text-blue-600 py-2"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              ETL Dashboard
-            </Link>
-            <Link 
-              href="/admin/settings" 
+            <Link
+              href="/admin/settings"
               className="text-gray-700 hover:text-blue-600 py-2"
               onClick={() => setMobileMenuOpen(false)}
             >

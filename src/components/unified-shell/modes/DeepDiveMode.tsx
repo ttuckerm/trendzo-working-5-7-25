@@ -28,7 +28,6 @@ export const DeepDiveMode: React.FC = () => {
       description: 'Templates, optimization & A/B testing',
       icon: Book,
       color: 'from-blue-500 to-cyan-500',
-      url: '/admin/recipe-book',
       stats: { templates: 45, active: 12, success: '89%' },
       features: [
         'Viral content templates',
@@ -142,7 +141,7 @@ export const DeepDiveMode: React.FC = () => {
                     </div>
                     <div className="flex items-center space-x-3">
                       <button
-                        onClick={() => openInterface(section.url)}
+                        onClick={() => openInterface(section.url ?? '')}
                         className={`
                           px-4 py-2 rounded-lg bg-gradient-to-r ${section.color}
                           text-white font-medium hover:scale-105 transition-transform

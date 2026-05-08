@@ -129,6 +129,7 @@ export async function POST(request: NextRequest) {
   const supabase = getServiceSupabase()
   let internalAssessmentUuid: string | null = null
   let displayId: string = result.payload.assessmentId
+  let shareToken: string | null = null
   if (supabase) {
     const MAX_ATTEMPTS = 8
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
@@ -138,10 +139,11 @@ export async function POST(request: NextRequest) {
           payload: result.payload,
           inputs: validated.input,
         })
-        .select('assessment_id')
+        .select('assessment_id, share_token')
         .single()
       if (!insertErr) {
         if (data?.assessment_id) internalAssessmentUuid = data.assessment_id as string
+        if (typeof data?.share_token === 'string') shareToken = data.share_token
         break
       }
       const isUnique = (insertErr as { code?: string }).code === '23505'
@@ -205,13 +207,20 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // shareUrlId is what the form should put in the URL: {EA-X-XXX}-{token}.
+  // When supabase is unconfigured (dev only) we fall back to the bare display
+  // id so the redirect still navigates somewhere — but production always has
+  // supabase wired so shareToken will be set.
+  const shareUrlId = shareToken ? `${displayId}-${shareToken}` : displayId
+
   return NextResponse.json({
     ok: true,
     assessment: result.payload,
     internalAssessmentUuid,
-    // The form redirects to /assessment/{assessmentId}. The URL uses the
-    // EA-X-XXX display ID stored in payload.assessmentId, enforced unique by
-    // a partial index on payload->>'assessmentId'.
+    // The form redirects to /assessment/{shareUrlId}. The URL is
+    // {EA-X-XXX}-{share_token} so it can't be enumerated.
     assessmentId: displayId,
+    shareToken,
+    shareUrlId,
   })
 }

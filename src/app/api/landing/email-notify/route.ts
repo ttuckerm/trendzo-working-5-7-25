@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
       customFields: [
         { name: 'waitlist_source', value: 'landing-page' },
       ],
-      tags: ['waitlist', 'high-intent'],
+      tags: ['high-intent'],
       reactivateExisting: true,
       sendWelcomeEmail: false,
       utmSource: 'dailylotion',

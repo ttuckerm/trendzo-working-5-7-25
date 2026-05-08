@@ -15,7 +15,6 @@ export const allowedStarterRoutes = [
   '/admin/studio/analysis',
   '/admin/studio/schedule',
   '/admin/studio/receipt',
-  '/admin/viral-recipe-book',
 ];
 
 export function applyStarterParam(url: string, on: boolean): string {

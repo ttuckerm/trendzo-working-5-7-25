@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { CodeEntry } from './CodeEntry';
 import { PaidCheckoutButton } from './PaidCheckoutButton';
 
@@ -40,15 +39,6 @@ export function CloseSection() {
 
         <div className="mb-6">
           <PaidCheckoutButton idPrefix="paid-final" />
-        </div>
-
-        <div className="mt-16 text-center">
-          <Link
-            href="/recover"
-            className="font-mono text-[10px] tracking-[0.24em] uppercase text-instrument-tertiary hover:text-instrument-secondary transition-colors"
-          >
-            Lost your assessment link? →
-          </Link>
         </div>
       </div>
     </section>

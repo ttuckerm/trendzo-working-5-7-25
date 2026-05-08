@@ -21,40 +21,10 @@ export default function QuickActionsDashboard() {
       action: () => router.push('/admin/studio')
     },
     {
-      icon: "📊",
-      label: "Today's Performance",
-      gradient: "linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(236, 72, 153, 0.1))",
-      action: () => router.push('/admin/analytics')
-    },
-    {
-      icon: "🔮",
-      label: "Trending Now",
-      gradient: "linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 146, 60, 0.1))",
-      action: () => router.push('/admin/analytics')
-    },
-    {
       icon: "🚨",
       label: "Critical Alerts",
       gradient: "linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 107, 107, 0.1))",
       action: () => router.push('/admin/system')
-    },
-    {
-      icon: "💰",
-      label: "Revenue Pulse",
-      gradient: "linear-gradient(135deg, rgba(0, 255, 0, 0.1), rgba(107, 207, 127, 0.1))",
-      action: () => router.push('/admin/analytics')
-    },
-    {
-      icon: "🧠",
-      label: "AI Brain Chat",
-      gradient: "linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 255, 255, 0.05))",
-      action: () => router.push('/admin/ai-brain')
-    },
-    {
-      icon: "📧",
-      label: "Newsletter Blast",
-      gradient: "linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1))",
-      action: () => router.push('/admin/newsletter')
     },
     {
       icon: "⚡",

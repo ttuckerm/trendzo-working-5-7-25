@@ -9,6 +9,7 @@ import { Chassis } from './Chassis'
 
 interface Props {
   assessmentId: string
+  shareToken: string
   day1: SprintDay
   sprintStartDate: string
   initialCompleted: boolean
@@ -27,6 +28,7 @@ function parseStartDate(iso: string): Date {
 
 export function Day1Spotlight({
   assessmentId,
+  shareToken,
   day1,
   sprintStartDate,
   initialCompleted,
@@ -78,6 +80,7 @@ export function Day1Spotlight({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           assessmentId,
+          shareToken,
           dayNumber: day1.dayNumber,
           completed: next,
         }),
@@ -98,7 +101,7 @@ export function Day1Spotlight({
     } finally {
       setSaving(false)
     }
-  }, [assessmentId, completed, day1.dayNumber, saving, onCompletionChange])
+  }, [assessmentId, shareToken, completed, day1.dayNumber, saving, onCompletionChange])
 
   const dateLabel = format(parseStartDate(sprintStartDate), 'EEEE, MMM d')
 

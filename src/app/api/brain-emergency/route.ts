@@ -42,8 +42,6 @@ export async function POST(request: NextRequest) {
         screenContext += `\n\n⚙️ **Pipeline Dashboard detected** - I can see module status and pipeline metrics.`;
       } else if (route.includes('/admin/viral-prediction')) {
         screenContext += `\n\n🔮 **Viral Prediction Dashboard detected** - I can see prediction metrics and analysis tools.`;
-      } else if (route.includes('/admin/marketing-studio')) {
-        screenContext += `\n\n🎨 **Marketing Studio detected** - I can see template creation and optimization tools.`;
       } else if (route.includes('/admin')) {
         screenContext += `\n\n🔧 **Admin Panel detected** - I can see administrative tools and system controls.`;
       }

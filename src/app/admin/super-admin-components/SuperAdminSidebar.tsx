@@ -40,13 +40,7 @@ const navigationStructure: NavGroup[] = [
     expandable: true,
     expanded: true,
     active: true,
-    items: [
-      { label: "Conversational Framework", href: "/admin/ai-brain?section=conversational-framework" },
-      { label: "Knowledge Extraction", href: "/admin/ai-brain?section=knowledge-extraction" },
-      { label: "Framework Visualization", href: "/admin/ai-brain?section=framework-visualization" },
-      { label: "Emotional Resonance", href: "/admin/ai-brain?section=emotional-resonance" },
-      { label: "Multi-Sensory Profiles", href: "/admin/ai-brain?section=multi-sensory-profiles" }
-    ]
+    items: []
   },
   {
     title: "Operations Center",
@@ -82,52 +76,25 @@ const navigationStructure: NavGroup[] = [
     title: "Template Management",
     icon: "📝",
     expandable: true,
-    items: [
-      { label: "Template Library", href: "/admin/studio" },
-      { label: "Template Analytics", href: "/admin/studio" },
-      { label: "Template Categorization", href: "/admin/studio" },
-      { label: "Viral Pattern Analysis", href: "/admin/studio" },
-      { label: "Performance Tracking", href: "/admin/studio" }
-    ]
+    items: []
   },
   {
     title: "Expert Insights",
     icon: "💡",
     expandable: true,
-    items: [
-      { label: "Expert Review Queues", href: "/admin/insights" },
-      { label: "Expert Annotations", href: "/admin/insights" },
-      { label: "Format Management", href: "/admin/insights" },
-      { label: "Hook Genie Control", href: "/admin/insights" },
-      { label: "Manual Override Controls", href: "/admin/insights" },
-      { label: "Audit Trail System", href: "/admin/insights" }
-    ]
+    items: []
   },
   {
     title: "Analytics",
     icon: "📊",
     expandable: true,
-    items: [
-      { label: "Platform Metrics", href: "/admin/analytics" },
-      { label: "User Behavior", href: "/admin/analytics" },
-      { label: "Revenue Analytics", href: "/admin/analytics" },
-      { label: "Prediction Accuracy", href: "/admin/analytics" },
-      { label: "Market Intelligence", href: "/admin/analytics" },
-      { label: "Conversion Optimization", href: "/admin/analytics" }
-    ]
+    items: []
   },
   {
     title: "User Management",
     icon: "👥",
     expandable: true,
-    items: [
-      { label: "User Database", href: "/admin/users" },
-      { label: "Tier Management", href: "/admin/users" },
-      { label: "Access Control", href: "/admin/users" },
-      { label: "CRM Integration", href: "/admin/users" },
-      { label: "Growth Systems", href: "/admin/users" },
-      { label: "Personalized Onboarding", href: "/admin/users" }
-    ]
+    items: []
   },
   {
     title: "System Health",
@@ -167,45 +134,25 @@ const navigationStructure: NavGroup[] = [
     title: "Content Analysis",
     icon: "🧬",
     expandable: false,
-    items: [
-      { label: "Viral Recipe Book", href: "/admin/recipe-book" },
-      { label: "My Drafts Analyzer", href: "/admin/draft-analyzer" }
-    ]
+    items: []
   },
   {
     title: "ETL Dashboard",
     icon: "📈",
     expandable: true,
-    items: [
-      { label: "Data Import/Export", href: "/admin/etl-dashboard" },
-      { label: "ETL Process Monitoring", href: "/admin/etl-dashboard" },
-      { label: "Data Quality Checks", href: "/admin/etl-dashboard" },
-      { label: "Scheduled Jobs", href: "/admin/etl-dashboard" },
-      { label: "Error Logs", href: "/admin/etl-dashboard" }
-    ]
+    items: []
   },
   {
     title: "Newsletter",
     icon: "📰",
     expandable: true,
-    items: [
-      { label: "Campaign Management", href: "/admin/newsletter" },
-      { label: "Subscriber Analytics", href: "/admin/newsletter" },
-      { label: "Template Generation", href: "/admin/newsletter" },
-      { label: "A/B Testing", href: "/admin/newsletter" },
-      { label: "Performance Tracking", href: "/admin/newsletter" }
-    ]
+    items: []
   },
   {
     title: "Marketing Studio",
     icon: "🛍️",
     expandable: true,
-    items: [
-      { label: "Magic Actions", href: "/admin/marketing-studio" },
-      { label: "Engagement Funnels", href: "/admin/marketing-studio" },
-      { label: "Brand Partnerships", href: "/admin/marketing-studio" },
-      { label: "Social Media Integration", href: "/admin/marketing-studio" }
-    ]
+    items: []
   }
   ,
   {
@@ -216,8 +163,6 @@ const navigationStructure: NavGroup[] = [
     items: [
       { label: "1) System Health", href: "/api/admin/master-orchestrator?action=status" },
       { label: "2) ApifyScraper Dashboard", href: "/admin/apify-scraper" },
-      { label: "3) Template Discovery", href: "/admin/template-analyzer" },
-      { label: "4) Feature Decomposer", href: "/admin/feature-decomposer" },
       { label: "5) Draft Analyzer / Predict", href: "/video/predict" },
       { label: "6) Prediction Validation", href: "/admin/prediction-validation" },
       { label: "7) Dashboards / Reporting", href: "/admin/super-admin" }

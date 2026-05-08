@@ -16,6 +16,7 @@ import { AgentIdentityGlyph } from './AgentIdentityGlyph'
 
 interface Props {
   assessmentId: string // EA-X-XXX display ID
+  shareToken: string
   agentContext: AgentContext
 }
 
@@ -30,7 +31,7 @@ const EMAIL_ASK_PROMPT_TEXT =
 
 type EmailAskPhase = 'never' | 'shown' | 'submitting' | 'success' | 'dismissed'
 
-export function AgentRail({ assessmentId, agentContext }: Props) {
+export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [messages, setMessages] = useState<FreedomAgentMessage[]>([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
@@ -50,7 +51,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
     setIsLoadingHistory(true)
     try {
       const res = await fetch(
-        `/api/freedom-agent/conversation?assessmentId=${encodeURIComponent(assessmentId)}`,
+        `/api/freedom-agent/conversation?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
         { method: 'GET', cache: 'no-store' },
       )
       if (res.ok) {
@@ -63,7 +64,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
       setIsLoadingHistory(false)
       setHistoryLoaded(true)
     }
-  }, [assessmentId, historyLoaded, isLoadingHistory])
+  }, [assessmentId, shareToken, historyLoaded, isLoadingHistory])
 
   const expand = useCallback(() => {
     setIsExpanded(true)
@@ -138,7 +139,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
           return
         }
         const res = await fetch(
-          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}`,
+          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
           { method: 'GET', cache: 'no-store' },
         )
         if (!res.ok) return
@@ -170,7 +171,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
     return () => {
       cancelled = true
     }
-  }, [messages, isStreaming, emailAskPhase, assessmentId])
+  }, [messages, isStreaming, emailAskPhase, assessmentId, shareToken])
 
   const dismissEmailAsk = useCallback(() => {
     try {
@@ -198,6 +199,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           assessmentId,
+          shareToken,
           email: trimmed,
           source: 'agent_conversation',
           notifyOnCodes: true,
@@ -241,7 +243,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
       setAskError("Couldn't save that just now. Try again in a moment.")
       setEmailAskPhase('shown')
     }
-  }, [assessmentId, askEmail])
+  }, [assessmentId, shareToken, askEmail])
 
   const send = useCallback(
     async (text: string) => {
@@ -261,7 +263,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
         const res = await fetch('/api/freedom-agent/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ assessmentId, message: text }),
+          body: JSON.stringify({ assessmentId, shareToken, message: text }),
         })
 
         if (!res.ok || !res.body) {
@@ -314,7 +316,7 @@ export function AgentRail({ assessmentId, agentContext }: Props) {
         setStreamingContent('')
       }
     },
-    [assessmentId, isStreaming],
+    [assessmentId, shareToken, isStreaming],
   )
 
   const onChipClick = useCallback(

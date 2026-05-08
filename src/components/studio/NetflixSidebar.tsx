@@ -13,17 +13,6 @@ interface NavItem {
 
 const navigationItems: NavItem[] = [
   {
-    icon: "🏠",
-    label: "Dashboard",
-    href: "/admin/studio"
-  },
-  {
-    icon: "🎯",
-    label: "Proving Grounds",
-    href: "/admin/studio",
-    badge: "LIVE"
-  },
-  {
     icon: "⚔️",
     label: "The Armory",
     href: "/admin/studio/armory"

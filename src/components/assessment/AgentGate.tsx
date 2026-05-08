@@ -1,73 +1,218 @@
 'use client'
 
-// Non-dismissable visual gate that sits over the Freedom Agent rail until
-// the user provides an email. Renders nothing when the email is already
-// captured (status check on mount + cross-component event listener).
+// Email gate built as a click-trigger pattern. The Freedom Agent rail
+// renders fully and looks identical to the unlocked state. Until an email
+// is captured, a sibling <RailClickGate> wraps the rail and intercepts
+// every click + focus on its children, popping the <AgentEmailModal>
+// instead. Once the user submits a valid email, the wrapper detaches and
+// the rail becomes natively interactive.
 //
-// The static assessment above is fully readable; this component only
-// covers the bottom dock area where AgentRail floats. backdrop-filter on
-// the overlay lets the user see the agent's shape (curiosity gap) without
-// being able to read or interact with it.
+// Server-side enforcement (the 403 in /api/freedom-agent/chat) stays as the
+// real gate — this UI is just the "show, don't hide" experience layer.
 
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+  type FocusEvent as ReactFocusEvent,
+  type MouseEvent as ReactMouseEvent,
+} from 'react'
 import type {
   EmailStatusResponse,
   EmailCaptureResponse,
   EmailCaptureErrorResponse,
 } from '@/types/email-capture'
 
-interface Props {
-  assessmentId: string // EA-X-XXX
-  firstName?: string
-}
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const ASK_FLAG_KEY_PREFIX = 'agent_email_asked:'
 const EMAIL_CAPTURED_EVENT = 'assessment:email-captured'
 
-type Phase = 'loading' | 'gated' | 'submitting' | 'unlocked'
+// ─── RailClickGate ──────────────────────────────────────────────────────────
+// Wraps the agent rail. Intercepts clicks + focus while locked; transparent
+// pass-through once unlocked. Decides locked/unlocked from the email-status
+// endpoint on mount and listens for cross-component capture events.
 
-export function AgentGate({ assessmentId, firstName }: Props) {
-  const [phase, setPhase] = useState<Phase>('loading')
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState<string | null>(null)
+interface RailClickGateProps {
+  assessmentId: string
+  shareToken: string
+  children: ReactNode
+}
 
-  // Initial status check — skip the gate entirely for returning users.
+export function RailClickGate({ assessmentId, shareToken, children }: RailClickGateProps) {
+  const [hasCapture, setHasCapture] = useState<boolean | null>(null) // null = unknown
+  const [modalOpen, setModalOpen] = useState(false)
+
+  // Status check on mount.
   useEffect(() => {
     let cancelled = false
     async function check() {
       try {
         const res = await fetch(
-          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}`,
+          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
           { method: 'GET', cache: 'no-store' },
         )
         if (!res.ok) {
-          if (!cancelled) setPhase('gated')
+          if (!cancelled) setHasCapture(false)
           return
         }
         const data = (await res.json()) as EmailStatusResponse
-        if (!cancelled) setPhase(data.hasCapture ? 'unlocked' : 'gated')
+        if (!cancelled) setHasCapture(Boolean(data.hasCapture))
       } catch {
-        if (!cancelled) setPhase('gated')
+        if (!cancelled) setHasCapture(false)
       }
     }
     check()
     return () => {
       cancelled = true
     }
-  }, [assessmentId])
+  }, [assessmentId, shareToken])
 
-  // Unlock instantly if another component captures during this session.
+  // Listen for captures from elsewhere (legacy panel, agent-conversation
+  // ask path) and detach the interceptor when one fires.
   useEffect(() => {
     function onCaptured(e: Event) {
       const detail = (e as CustomEvent<{ assessmentId: string }>).detail
       if (!detail || detail.assessmentId !== assessmentId) return
-      setPhase('unlocked')
+      setHasCapture(true)
+      setModalOpen(false)
     }
     window.addEventListener(EMAIL_CAPTURED_EVENT, onCaptured as EventListener)
     return () =>
       window.removeEventListener(EMAIL_CAPTURED_EVENT, onCaptured as EventListener)
   }, [assessmentId])
+
+  const onSuccess = useCallback(() => {
+    setHasCapture(true)
+    setModalOpen(false)
+  }, [])
+
+  // Treat unknown-status the same as locked: deny clicks until we hear
+  // back from /email-status. Status check is fast (single Supabase query).
+  const locked = hasCapture !== true
+
+  const onClickCapture = useCallback(
+    (e: ReactMouseEvent<HTMLDivElement>) => {
+      if (!locked) return
+      e.preventDefault()
+      e.stopPropagation()
+      setModalOpen(true)
+    },
+    [locked],
+  )
+
+  const onFocusCapture = useCallback(
+    (e: ReactFocusEvent<HTMLDivElement>) => {
+      if (!locked) return
+      // Pull focus off the child (e.g. textarea) so the user can re-tab and
+      // we re-trigger this branch cleanly. Otherwise the field stays focused
+      // behind the modal.
+      const target = e.target as HTMLElement
+      if (typeof target?.blur === 'function') target.blur()
+      setModalOpen(true)
+    },
+    [locked],
+  )
+
+  const onKeyDownCapture = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (!locked) return
+      // Block Enter/Space/typing into a child input from sneaking past the
+      // click interceptor (rare but possible if focus-capture fired before
+      // we attached and the user starts typing).
+      if (
+        e.key === 'Enter' ||
+        e.key === ' ' ||
+        (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey)
+      ) {
+        e.preventDefault()
+        e.stopPropagation()
+        setModalOpen(true)
+      }
+    },
+    [locked],
+  )
+
+  return (
+    <>
+      <div
+        // Wrapper exists in both states; only attaches handlers when locked
+        // so React doesn't re-mount the rail on transition.
+        onClickCapture={locked ? onClickCapture : undefined}
+        onFocusCapture={locked ? onFocusCapture : undefined}
+        onKeyDownCapture={locked ? onKeyDownCapture : undefined}
+        // No visual styling: the rail must look identical to the unlocked
+        // state. Wrapper is invisible.
+        style={{ display: 'contents' }}
+      >
+        {children}
+      </div>
+
+      {locked && (
+        <AgentEmailModal
+          assessmentId={assessmentId}
+          shareToken={shareToken}
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          onSuccess={onSuccess}
+        />
+      )}
+    </>
+  )
+}
+
+// ─── AgentEmailModal ────────────────────────────────────────────────────────
+// Centered modal with copy that matches the prior gate. Closeable via X,
+// scrim click, or Escape — none of those unlock the rail.
+
+interface AgentEmailModalProps {
+  assessmentId: string
+  shareToken: string
+  isOpen: boolean
+  onClose: () => void
+  onSuccess: () => void
+}
+
+type Phase = 'idle' | 'submitting'
+
+export function AgentEmailModal({
+  assessmentId,
+  shareToken,
+  isOpen,
+  onClose,
+  onSuccess,
+}: AgentEmailModalProps) {
+  const [email, setEmail] = useState('')
+  const [phase, setPhase] = useState<Phase>('idle')
+  const [error, setError] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  // Escape closes.
+  useEffect(() => {
+    if (!isOpen) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isOpen, onClose])
+
+  // Auto-focus the input when opened.
+  useEffect(() => {
+    if (!isOpen) return
+    const t = window.setTimeout(() => inputRef.current?.focus(), 30)
+    return () => window.clearTimeout(t)
+  }, [isOpen])
+
+  // Reset transient state when closed.
+  useEffect(() => {
+    if (!isOpen) {
+      setError(null)
+      setPhase('idle')
+    }
+  }, [isOpen])
 
   const onSubmit = useCallback(
     async (e: FormEvent) => {
@@ -85,6 +230,7 @@ export function AgentGate({ assessmentId, firstName }: Props) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             assessmentId,
+            shareToken,
             email: trimmed,
             source: 'hud_panel',
             notifyOnCodes: true,
@@ -106,7 +252,7 @@ export function AgentGate({ assessmentId, firstName }: Props) {
                 detail: { assessmentId, source: 'hud_panel' },
               }),
             )
-            setPhase('unlocked')
+            onSuccess()
             return
           }
         }
@@ -120,85 +266,75 @@ export function AgentGate({ assessmentId, firstName }: Props) {
           }
         }
         setError(friendly)
-        setPhase('gated')
+        setPhase('idle')
       } catch {
         setError("Couldn't save that just now. Try again in a moment.")
-        setPhase('gated')
+        setPhase('idle')
       }
     },
-    [assessmentId, email],
+    [assessmentId, shareToken, email, onSuccess],
   )
 
-  if (phase === 'loading' || phase === 'unlocked') return null
+  if (!isOpen) return null
 
   const submitting = phase === 'submitting'
-  const greeting = firstName ? `Hi ${firstName},` : 'Hi there,'
 
   return (
     <div
       role="dialog"
       aria-modal="true"
       aria-label="Unlock the Freedom Agent"
+      onClick={onClose}
       style={{
         position: 'fixed',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        // Cover at minimum the height of the collapsed agent rail; on desktop
-        // we lift higher so the centred panel breathes.
-        height: 'min(420px, 60vh)',
-        zIndex: 60, // AgentRail is z-50; sit above it.
-        // Frosted blur of whatever's underneath (the rail).
+        inset: 0,
+        zIndex: 80,
         background: 'rgba(8, 8, 13, 0.55)',
-        backdropFilter: 'blur(16px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(16px) saturate(140%)',
-        borderTop: '1px solid rgba(240, 74, 77, 0.20)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px 16px',
+        padding: 16,
+        fontFamily: '"DM Sans", system-ui, sans-serif',
       }}
     >
-      {/* Blurred preview text peeks behind the panel for the curiosity gap */}
-      <div
-        aria-hidden
-        style={{
-          position: 'absolute',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'flex-start',
-          padding: '24px',
-          pointerEvents: 'none',
-          opacity: 0.45,
-          filter: 'blur(6px)',
-          color: '#9b9ba4',
-          fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 14,
-          lineHeight: 1.6,
-          maxWidth: 720,
-        }}
-      >
-        {greeting} I&apos;ve been reviewing your assessment — your Freedom Number,
-        the sprint, the leads list. There&apos;s one thing I want to flag before
-        you start Day 1…
-      </div>
-
       <form
+        onClick={e => e.stopPropagation()}
         onSubmit={onSubmit}
         style={{
           position: 'relative',
           width: '100%',
-          maxWidth: 520,
+          maxWidth: 440,
           background: '#1c1c24',
           border: '1px solid rgba(240, 74, 77, 0.22)',
           borderRadius: 14,
           padding: '24px 22px',
           boxShadow:
-            '0 12px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
-          fontFamily: '"DM Sans", system-ui, sans-serif',
+            '0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
         }}
       >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            width: 28,
+            height: 28,
+            border: 'none',
+            background: 'transparent',
+            color: '#8b8b94',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 6,
+          }}
+        >
+          <CloseIcon />
+        </button>
+
         <div
           style={{
             fontFamily: '"Playfair Display", serif',
@@ -207,6 +343,8 @@ export function AgentGate({ assessmentId, firstName }: Props) {
             color: '#f4f4f6',
             marginBottom: 6,
             letterSpacing: -0.2,
+            textAlign: 'center',
+            paddingRight: 24,
           }}
         >
           Meet your Freedom Agent.
@@ -215,28 +353,19 @@ export function AgentGate({ assessmentId, firstName }: Props) {
           style={{
             fontSize: 14,
             color: '#c5c5cc',
-            marginBottom: 4,
             lineHeight: 1.5,
-          }}
-        >
-          Trained on your specific situation. Unlimited messages. No credit card.
-          Yours free.
-        </div>
-        <div
-          style={{
-            fontSize: 13,
-            color: '#8b8b94',
+            textAlign: 'center',
             marginBottom: 14,
-            lineHeight: 1.5,
           }}
         >
-          Just tell me where to send updates about your sprint.
+          Don&apos;t worry — still totally free, still unlimited. Where should I
+          send your sprint updates?
         </div>
 
         <input
+          ref={inputRef}
           type="email"
           autoComplete="email"
-          autoFocus
           value={email}
           onChange={e => {
             setEmail(e.target.value)
@@ -305,5 +434,24 @@ export function AgentGate({ assessmentId, firstName }: Props) {
         </div>
       </form>
     </div>
+  )
+}
+
+function CloseIcon() {
+  return (
+    <svg
+      aria-hidden
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18" />
+      <line x1="6" y1="6" x2="18" y2="18" />
+    </svg>
   )
 }

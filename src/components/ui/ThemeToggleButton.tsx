@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useTheme } from '@/contexts/ThemeContext'; // Assuming ThemeContext is in src/contexts
+import { useTheme } from '@/lib/contexts/ThemeContext';
 import { Button } from '@/components/ui/button'; // Assuming you have a Button component
 import { Moon, Sun } from 'lucide-react';
 

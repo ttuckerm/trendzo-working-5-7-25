@@ -38,7 +38,6 @@ export default function ScriptPage(){
     if (!isStarterPackEnabled() || !starterOn) return
     if (!templateId) {
       toast({ description: 'Select a Starter Pack template', variant: 'default' })
-      router.replace('/admin/viral-recipe-book?starter=on')
     }
   }, [templateId, starterOn, router, toast])
 

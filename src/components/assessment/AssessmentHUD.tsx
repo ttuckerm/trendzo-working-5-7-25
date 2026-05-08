@@ -15,12 +15,14 @@ import { LeadsPanel } from './LeadsPanel'
 import { AgentRail } from './AgentRail'
 import { DeliverablesHeader } from './DeliverablesHeader'
 import { Day1Spotlight } from './Day1Spotlight'
-import { AgentGate } from './AgentGate'
+import { RailClickGate } from './AgentGate'
 import { Chassis } from './Chassis'
+import { SaveYourLinkNotice } from './SaveYourLinkNotice'
 import '@/styles/instrument.css'
 
 interface Props {
   assessmentId: string
+  shareToken: string
   payload: AssessmentPayload
   sprintProgress: SprintProgressMap
 }
@@ -40,7 +42,7 @@ const TIMELINE = {
   done: 4400,
 } as const
 
-export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) {
+export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgress }: Props) {
   const reduced = usePrefersReducedMotion()
   const [bootDone, setBootDone] = useState<boolean>(reduced)
 
@@ -81,6 +83,10 @@ export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) 
         }}
         className="hud-grid"
       >
+        <div style={{ gridColumn: 'span 12' }} className="hud-cell">
+          <SaveYourLinkNotice />
+        </div>
+
         <div style={{ gridColumn: 'span 12' }} className="hud-cell">
           <DeliverablesHeader
             firstName={payload.operator.firstName}
@@ -143,6 +149,7 @@ export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) 
         <div style={{ gridColumn: 'span 12' }} className="hud-cell">
           <Day1Spotlight
             assessmentId={payload.assessmentId}
+            shareToken={shareToken}
             day1={day1}
             sprintStartDate={payload.sprint.startDate}
             initialCompleted={day1Completed}
@@ -158,7 +165,8 @@ export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) 
             status="active"
           >
             <SprintGrid
-              assessmentId={assessmentId}
+              assessmentId={payload.assessmentId}
+              shareToken={shareToken}
               sprint={payload.sprint}
               initialProgress={initialSprintProgress}
               reducedMotion={reduced}
@@ -198,15 +206,16 @@ export function AssessmentHUD({ assessmentId, payload, sprintProgress }: Props) 
 
       </div>
 
-      <AgentRail
+      <RailClickGate
         assessmentId={payload.assessmentId}
-        agentContext={payload.agentContext}
-      />
-
-      <AgentGate
-        assessmentId={payload.assessmentId}
-        firstName={payload.operator.firstName}
-      />
+        shareToken={shareToken}
+      >
+        <AgentRail
+          assessmentId={payload.assessmentId}
+          shareToken={shareToken}
+          agentContext={payload.agentContext}
+        />
+      </RailClickGate>
 
       <style>{`
         @media (max-width: 1023px) {

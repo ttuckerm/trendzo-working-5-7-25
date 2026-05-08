@@ -28,12 +28,6 @@ describe('useStarterSurfaceCheck mount behavior', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  test('Admin/Recipe Book does not call useStarterSurfaceCheck()', async () => {
-    const spy = jest.spyOn(console, 'debug').mockImplementation(() => undefined as unknown as void);
-    const RecipeBook = (await import('../../app/admin/viral-recipe-book/page')).default;
-    render(<RecipeBook />);
-    expect(spy).not.toHaveBeenCalled();
-  });
 });
 
 

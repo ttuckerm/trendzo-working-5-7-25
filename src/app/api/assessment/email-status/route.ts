@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { DISPLAY_ID_REGEX } from '@/lib/assessment/fetch-assessment'
+import {
+  DISPLAY_ID_REGEX,
+  SHARE_TOKEN_REGEX,
+  fetchAssessmentByShareId,
+} from '@/lib/assessment/fetch-assessment'
 import type { EmailCaptureSource } from '@/types/email-capture'
 
 export const runtime = 'nodejs'
@@ -20,11 +24,23 @@ function getServerSupabase() {
 export async function GET(request: Request) {
   const url = new URL(request.url)
   const assessmentId = url.searchParams.get('assessmentId')
+  const shareToken = url.searchParams.get('shareToken')
+
   if (!assessmentId || !DISPLAY_ID_REGEX.test(assessmentId)) {
     return NextResponse.json(
       { error: 'Invalid assessmentId format' },
       { status: 400 },
     )
+  }
+  if (!shareToken || !SHARE_TOKEN_REGEX.test(shareToken)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  // Token-gated: confirm assessmentId+shareToken matches a stored row before
+  // doing anything else. 403 on mismatch (don't leak which half was wrong).
+  const assessment = await fetchAssessmentByShareId(assessmentId, shareToken)
+  if (!assessment) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   const supabase = getServerSupabase()

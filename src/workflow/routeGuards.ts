@@ -15,11 +15,8 @@ const ALLOWED_STARTER_FLOW_PREFIXES = [
 
 // Explicit deny list: Admin/Recipe Book and analytics routes should never match starter surfaces
 const DENY_PREFIXES = [
-  "/admin/viral-recipe-book",
-  "/admin/recipe-book",
   "/admin/prediction-validation",
   "/admin/accuracy",
-  "/admin/analytics",
 ];
 
 export function isStudioViralWorkflow(pathname, activeTopTab) {

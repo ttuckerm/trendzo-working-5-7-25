@@ -178,7 +178,13 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         body: JSON.stringify(sessionId ? { ...result.input, sessionId } : result.input),
       })
 
-      let data: { ok?: boolean; assessmentId?: string; error?: string } = {}
+      let data: {
+        ok?: boolean
+        assessmentId?: string
+        shareUrlId?: string
+        shareToken?: string | null
+        error?: string
+      } = {}
       try { data = await res.json() } catch { /* parse error handled below */ }
 
       if (!res.ok || !data.ok || typeof data.assessmentId !== 'string') {
@@ -199,7 +205,14 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         return
       }
 
-      router.push(`/assessment/${data.assessmentId}`)
+      // Prefer the full {EA-X-XXX}-{share_token} url segment from the API.
+      // Fall back to the bare display id only when the server didn't return a
+      // shareUrlId (supabase-not-configured dev path).
+      const shareUrlId =
+        typeof data.shareUrlId === 'string' && data.shareUrlId
+          ? data.shareUrlId
+          : data.assessmentId
+      router.push(`/assessment/${shareUrlId}`)
     } catch {
       setSubmitError('Network error. Please check your connection and try again.')
       setIsSubmitting(false)

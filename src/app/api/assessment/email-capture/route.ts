@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { fetchAssessment, DISPLAY_ID_REGEX } from '@/lib/assessment/fetch-assessment'
+import {
+  fetchAssessmentByShareId,
+  DISPLAY_ID_REGEX,
+  SHARE_TOKEN_REGEX,
+} from '@/lib/assessment/fetch-assessment'
 import type {
   EmailCaptureRequest,
   EmailCaptureSource,
@@ -29,17 +33,22 @@ function getServerSupabase() {
 }
 
 function err(
-  code: 'INVALID_EMAIL' | 'INVALID_ASSESSMENT' | 'SERVER_ERROR',
+  code: 'INVALID_EMAIL' | 'INVALID_ASSESSMENT' | 'FORBIDDEN' | 'SERVER_ERROR',
   error: string,
   status: number,
 ) {
   return NextResponse.json({ ok: false, error, code }, { status })
 }
 
-function validate(raw: unknown): EmailCaptureRequest | null {
+interface ValidatedBody extends EmailCaptureRequest {
+  shareToken: string
+}
+
+function validate(raw: unknown): ValidatedBody | null {
   if (!raw || typeof raw !== 'object') return null
   const o = raw as Record<string, unknown>
   if (typeof o.assessmentId !== 'string' || !DISPLAY_ID_REGEX.test(o.assessmentId)) return null
+  if (typeof o.shareToken !== 'string' || !SHARE_TOKEN_REGEX.test(o.shareToken)) return null
   if (typeof o.email !== 'string' || !EMAIL_REGEX.test(o.email.trim())) return null
   if (typeof o.source !== 'string' || !VALID_SOURCES.includes(o.source as EmailCaptureSource)) {
     return null
@@ -48,6 +57,7 @@ function validate(raw: unknown): EmailCaptureRequest | null {
     typeof o.notifyOnCodes === 'boolean' ? o.notifyOnCodes : true
   return {
     assessmentId: o.assessmentId,
+    shareToken: o.shareToken,
     email: o.email.trim(),
     source: o.source as EmailCaptureSource,
     notifyOnCodes,
@@ -93,14 +103,16 @@ export async function POST(request: Request) {
   if (!body) {
     return err(
       'INVALID_EMAIL',
-      'assessmentId (EA-X-XXX), valid email, and source required',
+      'assessmentId (EA-X-XXX), shareToken, valid email, and source required',
       400,
     )
   }
 
-  const assessment = await fetchAssessment(body.assessmentId)
+  // Token-gated: assessmentId + shareToken must both match a stored row.
+  // 403 (don't leak which half was wrong, don't differentiate from missing).
+  const assessment = await fetchAssessmentByShareId(body.assessmentId, body.shareToken)
   if (!assessment) {
-    return err('INVALID_ASSESSMENT', 'Assessment not found', 404)
+    return err('FORBIDDEN', 'Forbidden', 403)
   }
 
   const supabase = getServerSupabase()
@@ -158,7 +170,11 @@ export async function POST(request: Request) {
       process.env.NEXT_PUBLIC_BASE_URL ||
       process.env.NEXT_PUBLIC_APP_URL ||
       'http://localhost:3000'
-    const assessmentUrl = `${siteUrl.replace(/\/+$/, '')}/assessment/${assessment.display_id}`
+    // Use the unguessable {EA-X-XXX}-{share_token} url segment so the link
+    // pushed to Beehiiv (and into the welcome email) is the same long format
+    // the user got after generating the assessment.
+    const shareUrlId = `${assessment.display_id}-${assessment.share_token}`
+    const assessmentUrl = `${siteUrl.replace(/\/+$/, '')}/assessment/${shareUrlId}`
     const freedomNumber = Math.round(assessment.payload.freedomNumber.monthlyTarget)
     const youtubeSource = await lookupYoutubeSource(supabase, assessment.assessment_id)
 
@@ -180,7 +196,7 @@ export async function POST(request: Request) {
     await notifyBeehiiv({
       email: body.email,
       customFields,
-      tags: ['freedom-os', segment],
+      tags: [segment],
       reactivateExisting: true,
       sendWelcomeEmail: true,
       utmSource: 'dailylotion',

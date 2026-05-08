@@ -90,58 +90,8 @@ export const VIRAL_OBJECTIVES: ViralObjective[] = [
     priority: 'high',
     status: 'pending'
   },
-  {
-    id: 'template-discovery',
-    name: 'Template Discovery Engine',
-    description: 'Identify viral templates from content patterns',
-    category: 'discovery',
-    endpoint: '/api/admin/super-admin/template-discovery',
-    uiPath: '/admin/template-analyzer',
-    priority: 'high',
-    status: 'pending'
-  },
-  {
-    id: 'trend-discovery',
-    name: 'Trend Discovery & Analysis',
-    description: 'Real-time trend identification and classification',
-    category: 'discovery',
-    endpoint: '/api/admin/data-ingestion',
-    uiPath: '/admin/data-ingestion',
-    priority: 'medium',
-    status: 'pending'
-  },
 
   // ANALYSIS CATEGORY
-  {
-    id: 'dna-analysis',
-    name: 'Viral DNA Extraction',
-    description: 'Deep pattern analysis and viral gene identification',
-    category: 'analysis',
-    endpoint: '/api/dna-detective/predict',
-    uiPath: '/admin/dna-detective',
-    priority: 'high',
-    status: 'pending'
-  },
-  {
-    id: 'feature-decomposition',
-    name: 'Feature Decomposer',
-    description: 'Break down content into analyzable components',
-    category: 'analysis',
-    endpoint: '/api/admin/run-feature-decomposer',
-    uiPath: '/admin/feature-decomposer',
-    priority: 'high',
-    status: 'pending'
-  },
-  {
-    id: 'gene-tagging',
-    name: 'Gene Tagger System',
-    description: 'Tag and classify viral DNA components',
-    category: 'analysis',
-    endpoint: '/api/admin/run-gene-tagger',
-    uiPath: '/admin/gene-tagger',
-    priority: 'medium',
-    status: 'pending'
-  },
   {
     id: 'script-intelligence',
     name: 'Script Intelligence Engine',
@@ -154,36 +104,6 @@ export const VIRAL_OBJECTIVES: ViralObjective[] = [
   },
 
   // REPLICATION CATEGORY
-  {
-    id: 'template-generation',
-    name: 'Template Generator',
-    description: 'Generate new templates based on viral patterns',
-    category: 'replication',
-    endpoint: '/api/admin/template-generator/run',
-    uiPath: '/admin/template-generator',
-    priority: 'high',
-    status: 'pending'
-  },
-  {
-    id: 'content-personalization',
-    name: 'Content Personalization Engine',
-    description: 'Adapt content for different audiences and contexts',
-    category: 'replication',
-    endpoint: '/api/admin/inception-studio/generate',
-    uiPath: '/admin/inception-studio',
-    priority: 'medium',
-    status: 'pending'
-  },
-  {
-    id: 'viral-filtering',
-    name: 'Viral Filter System',
-    description: 'Filter and rank content by viral potential',
-    category: 'replication',
-    endpoint: '/api/admin/run-viral-filter',
-    uiPath: '/admin/viral-filter',
-    priority: 'medium',
-    status: 'pending'
-  },
 
   // PREDICTION CATEGORY
   {
@@ -218,26 +138,6 @@ export const VIRAL_OBJECTIVES: ViralObjective[] = [
     priority: 'high',
     status: 'pending'
   },
-  {
-    id: 'feedback-intelligence',
-    name: 'Feedback Intelligence System',
-    description: 'Learn from user feedback and performance data',
-    category: 'learning',
-    endpoint: '/api/feedback-ingest/cron',
-    uiPath: '/admin/feedback-ingest',
-    priority: 'medium',
-    status: 'pending'
-  },
-  {
-    id: 'advisor-service',
-    name: 'AI Advisor Service',
-    description: 'Provide intelligent recommendations and insights',
-    category: 'learning',
-    endpoint: '/api/advisor/advise',
-    uiPath: '/admin/advisor-service',
-    priority: 'medium',
-    status: 'pending'
-  }
 ];
 
 // ====================================
@@ -250,37 +150,17 @@ export const SUBAGENTS: SubAgent[] = [
     name: 'Apify Scraper Agent',
     type: 'hybrid',
     endpoints: ['/api/admin/apify-scrapers', '/api/admin/run-apify-scraper'],
-    uiPaths: ['/admin/apify-scraper', '/admin/etl-dashboard'],
+    uiPaths: ['/admin/apify-scraper'],
     capabilities: ['content-scraping', 'data-ingestion', 'trend-discovery'],
     status: 'idle',
     performance: { successRate: 0.95, avgResponseTime: 2000, totalExecutions: 0 }
-  },
-  {
-    id: 'dna-detective-agent',
-    name: 'DNA Detective Agent',
-    type: 'service',
-    endpoints: ['/api/dna-detective/predict'],
-    uiPaths: ['/admin/dna-detective'],
-    capabilities: ['viral-analysis', 'pattern-recognition', 'gene-extraction'],
-    status: 'idle',
-    performance: { successRate: 0.88, avgResponseTime: 1500, totalExecutions: 0 }
-  },
-  {
-    id: 'template-engine-agent',
-    name: 'Template Engine Agent',
-    type: 'hybrid',
-    endpoints: ['/api/admin/template-generator/run', '/api/admin/super-admin/template-discovery'],
-    uiPaths: ['/admin/template-generator', '/admin/template-analyzer'],
-    capabilities: ['template-generation', 'template-discovery', 'pattern-analysis'],
-    status: 'idle',
-    performance: { successRate: 0.92, avgResponseTime: 3000, totalExecutions: 0 }
   },
   {
     id: 'prediction-engine-agent',
     name: 'Prediction Engine Agent',
     type: 'service',
     endpoints: ['/api/orchestrator/predict', '/api/admin/viral-prediction/analyze'],
-    uiPaths: ['/admin/viral-prediction', '/admin/orchestrator'],
+    uiPaths: ['/admin/viral-prediction'],
     capabilities: ['viral-prediction', 'probability-scoring', 'result-blending'],
     status: 'idle',
     performance: { successRate: 0.90, avgResponseTime: 1200, totalExecutions: 0 }
@@ -300,7 +180,7 @@ export const SUBAGENTS: SubAgent[] = [
     name: 'Evolution Agent',
     type: 'service',
     endpoints: ['/api/admin/evolution-engine/run', '/api/admin/framework-evolution/run'],
-    uiPaths: ['/admin/evolution-engine', '/admin/framework-reservoir'],
+    uiPaths: ['/admin/evolution-engine'],
     capabilities: ['model-evolution', 'pattern-learning', 'intelligence-amplification'],
     status: 'idle',
     performance: { successRate: 0.87, avgResponseTime: 5000, totalExecutions: 0 }
@@ -310,7 +190,7 @@ export const SUBAGENTS: SubAgent[] = [
     name: 'Intelligence Agent',
     type: 'hybrid',
     endpoints: ['/api/admin/script-intelligence/analyze', '/api/admin/ai-brain/apply'],
-    uiPaths: ['/admin/script-intelligence', '/admin/ai-brain'],
+    uiPaths: ['/admin/script-intelligence'],
     capabilities: ['script-analysis', 'intelligence-processing', 'optimization-recommendations'],
     status: 'idle',
     performance: { successRate: 0.91, avgResponseTime: 2500, totalExecutions: 0 }
@@ -320,7 +200,7 @@ export const SUBAGENTS: SubAgent[] = [
     name: 'Pipeline Agent',
     type: 'ui',
     endpoints: ['/api/admin/pipeline-status', '/api/admin/pipeline-actions'],
-    uiPaths: ['/admin/pipeline-dashboard', '/admin/etl-status'],
+    uiPaths: ['/admin/pipeline-dashboard'],
     capabilities: ['pipeline-monitoring', 'data-flow-coordination', 'system-health'],
     status: 'idle',
     performance: { successRate: 0.98, avgResponseTime: 500, totalExecutions: 0 }
@@ -340,7 +220,7 @@ export const SUBAGENTS: SubAgent[] = [
     name: 'Command Center Agent',
     type: 'ui',
     endpoints: ['/api/admin/super-admin/dashboard-data', '/api/admin/mission-control/metrics'],
-    uiPaths: ['/admin/command-center', '/admin/mission-control', '/admin/super-admin-live'],
+    uiPaths: [],
     capabilities: ['system-monitoring', 'metrics-aggregation', 'operational-oversight'],
     status: 'idle',
     performance: { successRate: 0.99, avgResponseTime: 300, totalExecutions: 0 }
@@ -456,7 +336,7 @@ export class MasterAgentOrchestrator extends EventEmitter {
 
     this.emit('phase:started', { category, objectives: phaseObjectives.length });
 
-    const results = {
+    const results: { success: boolean; completedObjectives: string[]; failedObjectives: string[]; errors: string[]; phaseResults: Record<string, any> } = {
       success: true,
       completedObjectives: [],
       failedObjectives: [],

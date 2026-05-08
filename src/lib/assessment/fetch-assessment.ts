@@ -21,6 +21,7 @@ export type SprintProgressMap = Record<string, SprintProgressEntry>
 export interface AssessmentRow {
   assessment_id: string // internal UUID PK (not exposed to URL)
   display_id: string    // EA-X-XXX format from payload.assessmentId
+  share_token: string   // unguessable URL token; required for access
   payload: AssessmentPayload
   sprint_progress: SprintProgressMap
   generated_at: string
@@ -28,6 +29,36 @@ export interface AssessmentRow {
 
 // EA-X-XXX format (one digit 1-9, dash, three digits).
 export const DISPLAY_ID_REGEX = /^EA-[1-9]-\d{3}$/
+
+// 20 lowercase alphanumeric characters (matches the share_token generator).
+export const SHARE_TOKEN_REGEX = /^[a-z0-9]{20}$/
+
+// Combined share id for the URL: {EA-X-XXX}-{share_token}.
+// e.g. EA-7-378-k7x9m2nq8pwer4t5y6u8.
+export const SHARE_ID_REGEX = /^EA-[1-9]-\d{3}-[a-z0-9]{20}$/
+
+// Build the user-facing /assessment/ url segment from a row.
+export function buildAssessmentShareId(displayId: string, shareToken: string): string {
+  return `${displayId}-${shareToken}`
+}
+
+// Parse the /assessment/[shareId] param into its two components. Returns null
+// when the param doesn't conform to {EA-X-XXX}-{20 alnum} — caller should 404.
+export function parseShareIdParam(
+  raw: string | undefined | null,
+): { displayId: string; shareToken: string } | null {
+  if (!raw || typeof raw !== 'string') return null
+  if (!SHARE_ID_REGEX.test(raw)) return null
+  // Split on the LAST hyphen — the EA-X-XXX prefix already contains hyphens.
+  const lastHyphen = raw.lastIndexOf('-')
+  if (lastHyphen <= 0) return null
+  const displayId = raw.slice(0, lastHyphen)
+  const shareToken = raw.slice(lastHyphen + 1)
+  if (!DISPLAY_ID_REGEX.test(displayId) || !SHARE_TOKEN_REGEX.test(shareToken)) {
+    return null
+  }
+  return { displayId, shareToken }
+}
 
 function getServerSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
@@ -51,6 +82,9 @@ function isSprintProgressMap(v: unknown): v is SprintProgressMap {
   return true
 }
 
+// Lookup an assessment by its EA-X-XXX display id. Caller MUST also verify
+// share_token before using this for any user-facing access; for paths that
+// require token possession, prefer fetchAssessmentByShareId.
 export async function fetchAssessment(
   displayId: string,
 ): Promise<AssessmentRow | null> {
@@ -67,7 +101,7 @@ export async function fetchAssessment(
   // The unique partial index makes this O(log n) and guarantees a single row.
   const { data, error } = await supabase
     .from('escape_assessments')
-    .select('assessment_id, payload, sprint_progress, created_at')
+    .select('assessment_id, payload, sprint_progress, created_at, share_token')
     .eq('payload->>assessmentId', displayId)
     .maybeSingle()
 
@@ -91,12 +125,40 @@ export async function fetchAssessment(
     : {}
 
   const payload = data.payload as AssessmentPayload
+  const shareToken = typeof data.share_token === 'string' ? data.share_token : ''
 
   return {
     assessment_id: data.assessment_id as string,
     display_id: payload.assessmentId,
+    share_token: shareToken,
     payload,
     sprint_progress: sprintProgress,
     generated_at: data.created_at as string,
   }
+}
+
+// Lookup an assessment by display id AND verify share_token matches. Returns
+// null on either mismatch — callers should treat null as 404 (don't leak which
+// of the two halves was wrong).
+export async function fetchAssessmentByShareId(
+  displayId: string,
+  shareToken: string,
+): Promise<AssessmentRow | null> {
+  if (!DISPLAY_ID_REGEX.test(displayId)) return null
+  if (!SHARE_TOKEN_REGEX.test(shareToken)) return null
+  const row = await fetchAssessment(displayId)
+  if (!row) return null
+  // Constant-time comparison to avoid timing oracles. Tokens are 20 chars so
+  // the timing difference of a == is tiny in practice, but be safe.
+  if (!constantTimeEquals(row.share_token, shareToken)) return null
+  return row
+}
+
+function constantTimeEquals(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  let mismatch = 0
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  }
+  return mismatch === 0
 }

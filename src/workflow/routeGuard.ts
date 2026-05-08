@@ -6,7 +6,7 @@ export function isGalleryRoute(pathname: string): boolean {
   // Only true for the Gallery/Recipe Book views
   // Current gallery route lives at /admin/viral-recipe-book and the sandbox workflow gallery
   const normalized = pathname.split('?')[0];
-  return normalized === '/admin/viral-recipe-book' || normalized === '/app/admin/viral-recipe-book' || normalized === '/app/admin/recipe-book' || normalized === '/admin/recipe-book' || normalized === '/sandbox/workflow/gallery' || normalized === '/app/sandbox/workflow/gallery';
+  return normalized === '/app/admin/viral-recipe-book' || normalized === '/app/admin/recipe-book' || normalized === '/sandbox/workflow/gallery' || normalized === '/app/sandbox/workflow/gallery';
 }
 
 

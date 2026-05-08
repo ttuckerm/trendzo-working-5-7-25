@@ -41,14 +41,6 @@ const actionCards: ActionCard[] = [
     subtitle: 'Track growth',
     route: '/analytics'
   }
-  ,
-  {
-    id: 'instant-analysis',
-    icon: '⚡',
-    title: 'Instant Analysis',
-    subtitle: 'Under 5s',
-    route: '/admin/analysis'
-  }
 ]
 
 export function QuickActions() {

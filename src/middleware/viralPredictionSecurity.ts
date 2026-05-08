@@ -159,10 +159,7 @@ async function logAccess(request: NextRequest, pathname: string): Promise<void> 
 function isImportantPage(pathname: string): boolean {
   const importantPages = [
     '/viral-analyzer',
-    '/admin/mission-control',
-    '/admin/prediction-validation',
-    '/admin/inception-studio',
-    '/admin/limited-users'
+    '/admin/prediction-validation'
   ];
 
   return importantPages.includes(pathname);

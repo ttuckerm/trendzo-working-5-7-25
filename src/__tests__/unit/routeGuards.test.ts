@@ -38,12 +38,9 @@ describe('routeGuards', () => {
     expect(guards.isAllowedStarterFlowPath('/receipt')).toBe(true);
 
     // deny-list overrides allow
-    expect(guards.isAllowedStarterFlowPath('/admin/viral-recipe-book')).toBe(false);
-    expect(guards.isAllowedStarterFlowPath('/admin/recipe-book')).toBe(false);
     expect(guards.isAllowedStarterFlowPath('/admin/prediction-validation')).toBe(false);
 
     // not allowed
-    expect(guards.isAllowedStarterFlowPath('/admin/analytics')).toBe(false);
     expect(guards.isAllowedStarterFlowPath('')).toBe(false);
   });
 });

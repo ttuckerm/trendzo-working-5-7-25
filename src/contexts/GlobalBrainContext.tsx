@@ -148,12 +148,9 @@ export function useGlobalBrain() {
 function getPageNameFromRoute(route: string): string {
   const routeMap: Record<string, string> = {
     '/admin': 'Admin Dashboard',
-    '/admin/ai-brain': 'AI Brain Interface',
     '/admin/pipeline-dashboard': 'Pipeline Dashboard',
     '/admin/templates': 'Template Management',
-    '/admin/analytics': 'Analytics',
     '/admin/system-settings': 'System Settings',
-    '/admin/users': 'User Management',
   }
 
   // Check exact matches first

@@ -27,13 +27,6 @@ export const FocusMode: React.FC = () => {
       color: 'from-green-500 to-emerald-500'
     },
     {
-      title: 'Recipe Book',
-      description: 'Access templates & optimization',
-      icon: Target,
-      action: () => window.open('/admin/recipe-book', '_blank'),
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
       title: 'Analytics',
       description: 'View performance metrics',
       icon: BarChart3,

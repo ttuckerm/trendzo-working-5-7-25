@@ -37,19 +37,6 @@ const navItems: NavItem[] = [
     path: '/admin/control-center',
   },
   {
-    id: 'studio',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <circle cx="6" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-        <circle cx="18" cy="6" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-        <circle cx="12" cy="18" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M8.5 6h7M7.2 8l3.5 8M16.8 8l-3.5 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-      </svg>
-    ),
-    label: 'THE STUDIO',
-    path: '/admin/studio',
-  },
-  {
     id: 'operations',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -83,19 +70,6 @@ const navItems: NavItem[] = [
     ),
     label: 'HUB',
     path: '/admin/hub',
-  },
-  {
-    id: 'ecom',
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-        <path d="M3 6h18" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    label: 'ECOM FORECAST',
-    path: '/admin/ecom',
-    featureFlag: 'NEXT_PUBLIC_FEATURE_ECOM_FORECAST',
   },
 ]
 

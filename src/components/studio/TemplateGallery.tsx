@@ -202,12 +202,6 @@ export default function TemplateGallery({ onTemplateSelect }: TemplateGalleryPro
               </div>
             )}
 
-            {/* Bridge to Full Recipe Book */}
-            <Link href="/admin/viral-recipe-book" className="view-all-recipes">
-              <div className="view-all-text">
-                📖 View Full Recipe Book →
-              </div>
-            </Link>
           </>
         )}
       </div>

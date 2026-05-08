@@ -63,53 +63,8 @@ export const INTEGRATION_CHECKS: IntegrationCheck[] = [
     uiPath: '/admin/apify-scraper',
     status: 'pending'
   },
-  {
-    id: 'template-discovery-integration',
-    name: 'Template Discovery Engine',
-    description: 'Verify template discovery can identify viral patterns',
-    type: 'api',
-    endpoint: '/api/admin/super-admin/template-discovery',
-    uiPath: '/admin/template-analyzer',
-    status: 'pending'
-  },
-  {
-    id: 'data-ingestion-integration',
-    name: 'Data Ingestion Pipeline',
-    description: 'Verify data ingestion processes raw content correctly',
-    type: 'workflow',
-    endpoint: '/api/admin/data-ingestion',
-    uiPath: '/admin/data-ingestion',
-    status: 'pending'
-  },
 
   // ANALYSIS CAPABILITY CHECKS
-  {
-    id: 'dna-detective-integration',
-    name: 'DNA Detective Analysis',
-    description: 'Verify DNA Detective can analyze viral patterns',
-    type: 'service',
-    endpoint: '/api/dna-detective/predict',
-    uiPath: '/admin/dna-detective',
-    status: 'pending'
-  },
-  {
-    id: 'feature-decomposer-integration',
-    name: 'Feature Decomposer Service',
-    description: 'Verify feature decomposition breaks down content correctly',
-    type: 'api',
-    endpoint: '/api/admin/run-feature-decomposer',
-    uiPath: '/admin/feature-decomposer',
-    status: 'pending'
-  },
-  {
-    id: 'gene-tagger-integration',
-    name: 'Gene Tagger System',
-    description: 'Verify gene tagging classifies viral components',
-    type: 'api',
-    endpoint: '/api/admin/run-gene-tagger',
-    uiPath: '/admin/gene-tagger',
-    status: 'pending'
-  },
   {
     id: 'script-intelligence-integration',
     name: 'Script Intelligence Engine',
@@ -121,33 +76,6 @@ export const INTEGRATION_CHECKS: IntegrationCheck[] = [
   },
 
   // REPLICATION CAPABILITY CHECKS
-  {
-    id: 'template-generator-integration',
-    name: 'Template Generator Service',
-    description: 'Verify template generation creates new viral templates',
-    type: 'api',
-    endpoint: '/api/admin/template-generator/run',
-    uiPath: '/admin/template-generator',
-    status: 'pending'
-  },
-  {
-    id: 'inception-studio-integration',
-    name: 'Inception Studio (Personalization)',
-    description: 'Verify content personalization adapts to audiences',
-    type: 'api',
-    endpoint: '/api/admin/inception-studio/generate',
-    uiPath: '/admin/inception-studio',
-    status: 'pending'
-  },
-  {
-    id: 'viral-filter-integration',
-    name: 'Viral Filter System',
-    description: 'Verify viral filtering ranks content by potential',
-    type: 'api',
-    endpoint: '/api/admin/run-viral-filter',
-    uiPath: '/admin/viral-filter',
-    status: 'pending'
-  },
 
   // PREDICTION CAPABILITY CHECKS
   {
@@ -179,34 +107,8 @@ export const INTEGRATION_CHECKS: IntegrationCheck[] = [
     uiPath: '/admin/evolution-engine',
     status: 'pending'
   },
-  {
-    id: 'feedback-intelligence-integration',
-    name: 'Feedback Intelligence System',
-    description: 'Verify feedback processing improves system learning',
-    type: 'api',
-    endpoint: '/api/feedback-ingest/cron',
-    uiPath: '/admin/feedback-ingest',
-    status: 'pending'
-  },
-  {
-    id: 'advisor-service-integration',
-    name: 'AI Advisor Service',
-    description: 'Verify advisor provides intelligent recommendations',
-    type: 'api',
-    endpoint: '/api/advisor/advise',
-    uiPath: '/admin/advisor-service',
-    status: 'pending'
-  },
 
   // UI AND COORDINATION CHECKS
-  {
-    id: 'mission-control-integration',
-    name: 'Mission Control Dashboard',
-    description: 'Verify mission control provides system oversight',
-    type: 'ui',
-    uiPath: '/admin/mission-control',
-    status: 'pending'
-  },
   {
     id: 'pipeline-dashboard-integration',
     name: 'Pipeline Dashboard',

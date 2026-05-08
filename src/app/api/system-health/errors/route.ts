@@ -40,15 +40,6 @@ export async function GET() {
         resolved: false
       },
       {
-        id: '4',
-        source: 'Trend Timing',
-        sourcePath: '/admin/component-test',
-        message: 'Rate limit exceeded for trend API',
-        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-        severity: 'warning',
-        resolved: false
-      },
-      {
         id: '5',
         source: 'Algorithm IQ',
         sourcePath: '/admin/algorithm-iq',

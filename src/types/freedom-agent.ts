@@ -17,6 +17,7 @@ export interface FreedomAgentConversation {
 
 export interface FreedomAgentChatRequest {
   assessmentId: string
+  shareToken: string
   message: string
 }
 
@@ -25,6 +26,7 @@ export type FreedomAgentChatErrorCode =
   | 'INVALID_INPUT'
   | 'AI_FAILURE'
   | 'RATE_LIMIT'
+  | 'FORBIDDEN'
 
 export interface FreedomAgentChatErrorResponse {
   error: string

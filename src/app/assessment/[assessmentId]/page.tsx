@@ -1,10 +1,18 @@
 // User-facing renderer for an Escape Assessment.
 // Server component: fetches the row, validates payload, hands off to the HUD
 // client component for animation + interactivity.
+//
+// URL format: /assessment/{EA-X-XXX}-{share_token}. The share_token is a
+// 20-char unguessable suffix added so URLs aren't enumerable. Both halves must
+// match a stored row — on either mismatch we 404 (never redirect; never reveal
+// which half was wrong).
 
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { fetchAssessment } from '@/lib/assessment/fetch-assessment'
+import {
+  fetchAssessmentByShareId,
+  parseShareIdParam,
+} from '@/lib/assessment/fetch-assessment'
 import { AssessmentHUD } from '@/components/assessment/AssessmentHUD'
 
 export const dynamic = 'force-dynamic'
@@ -21,12 +29,16 @@ interface PageProps {
 }
 
 export default async function AssessmentPage({ params }: PageProps) {
-  const row = await fetchAssessment(params.assessmentId)
+  const parsed = parseShareIdParam(params.assessmentId)
+  if (!parsed) notFound()
+
+  const row = await fetchAssessmentByShareId(parsed.displayId, parsed.shareToken)
   if (!row) notFound()
 
   return (
     <AssessmentHUD
       assessmentId={row.assessment_id}
+      shareToken={row.share_token}
       payload={row.payload}
       sprintProgress={row.sprint_progress}
     />

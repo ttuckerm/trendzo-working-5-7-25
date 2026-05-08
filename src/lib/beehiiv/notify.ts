@@ -17,11 +17,14 @@
 // publication. The Escape Assessment funnel uses:
 //   custom fields: waitlist_source, funnel_segment, assessment_url,
 //                  freedom_number, youtube_source
-//   tags:          freedom-os, recovery-requested,
+//   tags:          recovery-requested, high-intent,
 //                  ready-to-scale, building-momentum, stuck-zero, tire-kicker
 //
 // Legacy `freedom_os_plan_url` was renamed to `assessment_url` — the user
 // renames the field in the Beehiiv dashboard manually as part of deploy.
+//
+// This helper is tag-agnostic — callers pass the tag list they want; nothing
+// is hardcoded as a default here.
 
 const BEEHIIV_BASE = 'https://api.beehiiv.com/v2'
 

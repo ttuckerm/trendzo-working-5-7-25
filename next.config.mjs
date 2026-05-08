@@ -219,26 +219,6 @@ const nextConfig = {
         permanent: false,
       },
       // Viral Recipe Book ownership
-      {
-        source: '/admin/recipe-book',
-        destination: '/admin/viral-recipe-book',
-        permanent: true,
-      },
-      {
-        source: '/admin/recipe-book/:path*',
-        destination: '/admin/viral-recipe-book',
-        permanent: true,
-      },
-      {
-        source: '/admin/template-analyzer',
-        destination: '/admin/viral-recipe-book?tab=analyzer',
-        permanent: true,
-      },
-      {
-        source: '/admin/template-analyzer/:path*',
-        destination: '/admin/viral-recipe-book?tab=analyzer',
-        permanent: true,
-      },
     ];
   },
   async rewrites() {
