@@ -26,3 +26,15 @@ export function getSupabaseClient() {
 
 // Alias for compatibility with common naming patterns
 export const createClient = getSupabaseClient;
+
+// Lazy proxy: defers client construction to first property access.
+// Restores legacy `supabaseClient` and default-import shapes without eager init.
+export const supabaseClient = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const c = getSupabaseClient() as any;
+    const value = c[prop];
+    return typeof value === "function" ? value.bind(c) : value;
+  },
+});
+
+export default supabaseClient;

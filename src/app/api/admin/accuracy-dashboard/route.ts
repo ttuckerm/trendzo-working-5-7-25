@@ -18,20 +18,26 @@ import {
   PredictionWithActual
 } from '@/lib/services/accuracy-calculator';
 
-// Use service key (Admin Lab)
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-  {
-    db: { schema: 'public' },
-    auth: { persistSession: false }
+// Lazy-init: defers Supabase construction until first call, avoiding build-time eager construction.
+let _supabase: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!,
+      {
+        db: { schema: 'public' },
+        auth: { persistSession: false }
+      }
+    );
   }
-);
+  return _supabase;
+}
 
 export async function GET(request: NextRequest) {
   try {
     // Query all predictions with actuals
-    const { data: rawData, error: queryError } = await supabase
+    const { data: rawData, error: queryError } = await getSupabase()
       .from('prediction_events')
       .select(`
         id,
@@ -164,7 +170,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Build query with filters
-    let query = supabase
+    let query = getSupabase()
       .from('prediction_events')
       .select(`
         id,
