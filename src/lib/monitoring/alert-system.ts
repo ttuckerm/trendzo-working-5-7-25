@@ -542,7 +542,7 @@ export class AlertSystem extends EventEmitter {
 
     // Initialize email transporter
     if (this.notificationConfig.email.smtp.auth.user) {
-      this.emailTransporter = nodemailer.createTransporter(this.notificationConfig.email.smtp);
+      this.emailTransporter = nodemailer.createTransport(this.notificationConfig.email.smtp);
     }
   }
 
