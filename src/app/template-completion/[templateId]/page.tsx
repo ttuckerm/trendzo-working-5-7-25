@@ -17,6 +17,7 @@ import {
   Gift
 } from 'lucide-react';
 import CreatorAttributionModal from '@/components/creator/CreatorAttributionModal';
+export const dynamic = 'force-dynamic';
 
 interface TemplateCompletion {
   templateId: string;

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CardHoverRevealDemo } from '@/components/ui/reveal-on-hover-demo';
+export const dynamic = 'force-dynamic';
 
 export default function HoverCardDemoPage() {
   return (

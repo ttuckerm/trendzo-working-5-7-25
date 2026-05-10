@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 /**
  * This page redirects from /remix to the remix page in the dashboard route group

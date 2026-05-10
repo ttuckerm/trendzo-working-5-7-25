@@ -1,4 +1,5 @@
 import SimpleExpertPerformanceDashboard from '@/components/experts/SimpleExpertPerformanceDashboard';
+export const dynamic = 'force-dynamic';
 
 export default function ExpertPerformancePage() {
   return (

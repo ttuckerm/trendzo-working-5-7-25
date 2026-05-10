@@ -7,6 +7,7 @@ import { ArrowRight, Lock, TrendingUp, Eye, Clock, ChevronRight, Mail } from 'lu
 import { useAuth } from '@/lib/hooks/useAuth';
 import LoadingFallback from '@/components/ui/LoadingFallback';
 import Link from 'next/link';
+export const dynamic = 'force-dynamic';
 
 interface TemplatePreview {
   id: string;

@@ -7,6 +7,7 @@ import type { Prediction } from "../_types";
 import { SandboxServices } from "../_services";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+export const dynamic = 'force-dynamic';
 
 function ReceiptInner() {
   const router = useRouter();

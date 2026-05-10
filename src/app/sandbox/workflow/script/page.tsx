@@ -7,6 +7,7 @@ import presets from "../_fixtures/script-presets.json";
 import type { ScriptDoc } from "../_types";
 import { exportSRT } from "../_services/exports";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+export const dynamic = 'force-dynamic';
 
 function Teleprompter({ open, onClose, text }: { open: boolean; onClose: () => void; text: string }) {
   return (

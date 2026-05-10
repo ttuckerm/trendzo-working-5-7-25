@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { AlertTriangle } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 export default function AuthErrorPage() {
   const router = useRouter();

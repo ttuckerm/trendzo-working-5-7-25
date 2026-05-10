@@ -41,6 +41,7 @@ import UnifiedScoring from '@/components/analytics/UnifiedScoring';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import AudioVisualSelector from '@/components/audiovisual/AudioVisualSelector';
 import { AudioVisualProvider } from '@/lib/contexts/audiovisual/AudioVisualContext';
+export const dynamic = 'force-dynamic';
 
 // Initialize component resolution system
 if (typeof window !== 'undefined') {

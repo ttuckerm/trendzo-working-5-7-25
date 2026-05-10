@@ -6,6 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { GOALS, type Goal, type ViralVideo, type NineFields, type Prediction, type WorkflowUIState } from '@/types/creator-workflow';
+export const dynamic = 'force-dynamic';
 
 export default function CreatorWorkflowPage() {
   // ============================================================================

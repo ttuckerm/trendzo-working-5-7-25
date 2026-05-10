@@ -4,6 +4,7 @@
 // (built in Cursor Prompt 2) — this page is internal QA only.
 
 import { useCallback, useEffect, useState } from 'react'
+export const dynamic = 'force-dynamic';
 
 interface QualityChecks {
   hasAssessmentId: boolean

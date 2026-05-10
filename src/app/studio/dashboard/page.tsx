@@ -15,6 +15,7 @@ import {
   Sparkles, BarChart3, Clock, Award, ArrowUpRight,
   Lightbulb, AlertTriangle, CheckCircle
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface DashboardStats {
   algorithmIQ: number;

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+export const dynamic = 'force-dynamic';
 
 type Check = { id: string; label: string; pass: boolean | null; details?: string }
 

@@ -2,6 +2,7 @@ import { ServerEnvDisplay } from '@/components/ui/ServerEnvDisplay';
 import { ClientEnvDisplay } from '@/components/ui/EnvDisplay';
 import { getPublicEnvConfig } from '@/lib/utils/env';
 import { debugServerEnv } from './env-debug';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Environment Variables Demo',

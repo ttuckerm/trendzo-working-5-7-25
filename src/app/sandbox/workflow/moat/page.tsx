@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 export default function MoatPage(){
   return (
     <div className="p-6">

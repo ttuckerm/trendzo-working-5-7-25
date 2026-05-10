@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
+export const dynamic = 'force-dynamic';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES

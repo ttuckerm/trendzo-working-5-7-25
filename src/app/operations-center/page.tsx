@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+export const dynamic = 'force-dynamic';
 
 type OnCallNow = { user: string; contacts: { email?: string; sms?: string } }
 type BugSlaSummary = { open_p1: number; open_p2: number; breach_count: number }

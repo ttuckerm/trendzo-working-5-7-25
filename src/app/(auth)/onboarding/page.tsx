@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/supabase/client';
 import { AGENCY_SKILL_SETS } from '@/lib/skills/agency-skills';
+export const dynamic = 'force-dynamic';
 
 const NICHES = Object.keys(AGENCY_SKILL_SETS);
 

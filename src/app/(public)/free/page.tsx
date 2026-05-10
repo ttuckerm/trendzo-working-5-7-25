@@ -1,4 +1,5 @@
 import Link from 'next/link'
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Free AI Tools for Creators & Founders | Trendzo',

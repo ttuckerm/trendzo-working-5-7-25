@@ -11,6 +11,7 @@ import { Template, TemplateSection, TextOverlay } from '@/lib/types/template';
 
 // Import only the named export of EnhancedAnalyticsDisplay to avoid errors
 import { EnhancedAnalyticsDisplay } from '@/components/analytics/EnhancedAnalyticsDisplay';
+export const dynamic = 'force-dynamic';
 
 export default function EnhancedComponentsPage() {
   const [activeTab, setActiveTab] = useState<string>("browse");

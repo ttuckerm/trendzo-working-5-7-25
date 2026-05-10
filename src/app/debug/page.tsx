@@ -3,6 +3,7 @@
 import { useFeatures } from '@/lib/contexts/FeatureContext';
 import { auth, db } from '@/lib/firebase/firebase';
 import FeatureDebug from '@/components/FeatureDebug';
+export const dynamic = 'force-dynamic';
 
 export default function DebugPage() {
   const { features, subscription } = useFeatures();

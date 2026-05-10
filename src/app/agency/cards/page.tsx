@@ -3,6 +3,7 @@ import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import CardsManager from './CardsManager'
+export const dynamic = 'force-dynamic';
 
 export default async function AgencyCardsPage() {
   const supabase = await createServerSupabaseClient()

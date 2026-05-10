@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TrendingTemplate } from '@/lib/types/trendingTemplate';
+export const dynamic = 'force-dynamic';
 
 /**
  * Public Templates Page

@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import PlanResultsView from '../../PlanResultsView'
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Your Plan | Freedom OS',

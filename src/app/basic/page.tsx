@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 export default function BasicPage() {
   return (
     <div style={{padding: "20px", fontFamily: "Arial, sans-serif"}}>

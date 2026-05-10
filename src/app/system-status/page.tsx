@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react'
 import { CheckCircle, XCircle, Clock, Zap, Database, Cpu, Globe } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface SystemCheck {
   name: string;

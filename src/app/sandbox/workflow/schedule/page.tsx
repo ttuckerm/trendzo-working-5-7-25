@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { SandboxWorkflowProvider, useSandboxWorkflow } from "../_context/SandboxWorkflowContext";
 import { SandboxServices } from "../_services";
 import { exportCSV, exportICS, exportTXT } from "../_services/exports";
+export const dynamic = 'force-dynamic';
 
 function ScheduleInner() {
   const { state, setSchedule, emit } = useSandboxWorkflow();

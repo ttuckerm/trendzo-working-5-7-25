@@ -14,6 +14,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+export const dynamic = 'force-dynamic';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 

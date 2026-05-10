@@ -10,6 +10,7 @@ import { LoadingIndicator } from '@/components/templates/LoadingIndicator';
 import { getTemplates } from '@/lib/services/template-service';
 import { Template } from '@/lib/types/database';
 import { useInView } from 'react-intersection-observer';
+export const dynamic = 'force-dynamic';
 
 // Transform database template to display format
 const transformTemplate = (dbTemplate: Template) => ({

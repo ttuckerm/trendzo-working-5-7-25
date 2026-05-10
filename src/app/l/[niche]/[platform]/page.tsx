@@ -7,6 +7,7 @@ import LandingPageComponent from '@/components/mvp/LandingPage';
 import { ContentGeneratorService } from '@/lib/services/contentGenerator';
 import { trackPageView } from '@/lib/services/analytics';
 import { Niche, Platform } from '@/lib/types/database';
+export const dynamic = 'force-dynamic';
 
 // Validate route params
 const VALID_NICHES = ['business', 'creator', 'fitness', 'education'] as const;

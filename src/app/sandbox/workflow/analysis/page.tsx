@@ -7,6 +7,7 @@ import { SandboxServices } from "../_services";
 import type { AnalysisResult } from "../_types";
 import { exportPDFStub } from "../_services/exports";
 import { Badge } from "@/components/ui/badge";
+export const dynamic = 'force-dynamic';
 
 function AnalysisInner() {
   const router = useRouter();

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+export const dynamic = 'force-dynamic';
 
 export default function FreedomAgentEntry() {
   const searchParams = useSearchParams()

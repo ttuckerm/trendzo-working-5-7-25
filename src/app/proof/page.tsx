@@ -1,6 +1,7 @@
 'use server'
 
 import React, { Suspense } from 'react'
+export const dynamic = 'force-dynamic';
 
 type PublicSummary = {
 	ok: boolean

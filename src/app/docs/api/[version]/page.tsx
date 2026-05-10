@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { publicV1Spec, publicV2Spec } from '@/lib/api/openapi'
+export const dynamic = 'force-dynamic';
 
 export default function ApiDocsPage({ params }: { params: { version: string } }) {
   const v = params.version

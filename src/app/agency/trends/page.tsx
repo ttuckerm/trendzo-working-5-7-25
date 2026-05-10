@@ -3,6 +3,7 @@ import { getUserAgencyId } from '@/lib/auth/agency-utils';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import TrendRadar from './TrendRadar';
+export const dynamic = 'force-dynamic';
 
 export default async function TrendsPage() {
   const supabase = await createServerSupabaseClient();

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { saveEmailCapture, sendMagicLinkEmail } from '@/lib/services/magicLink';
 import { trackEvent } from '@/lib/services/analytics';
+export const dynamic = 'force-dynamic';
 
 export default function SaveTemplatePage() {
   const router = useRouter();

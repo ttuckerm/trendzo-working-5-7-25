@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 export default function CompetitiveIntelPage() {
   return (
     <div className="flex items-center justify-center min-h-[60vh] animate-[fadeSlideUp_0.5s_ease-out_both]">

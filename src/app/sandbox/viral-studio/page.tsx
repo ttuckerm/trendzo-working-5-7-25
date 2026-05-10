@@ -11,6 +11,7 @@ import AnalysisPhase from './components/phases/AnalysisPhase';
 import LabPhase1 from './components/phases/LabPhase1';
 import LabPhase2 from './components/phases/LabPhase2';
 import LabPhase3 from './components/phases/LabPhase3';
+export const dynamic = 'force-dynamic';
 
 // Phase definitions
 enum ViralStudioPhase {

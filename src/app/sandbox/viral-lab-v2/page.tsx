@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+export const dynamic = 'force-dynamic';
 
 export default function ViralLabV2() {
   // State management

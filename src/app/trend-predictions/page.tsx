@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+export const dynamic = 'force-dynamic';
 
 export default function TrendPredictionsRedirect() {
   redirect('/dashboard-view/trend-predictions-dashboard');

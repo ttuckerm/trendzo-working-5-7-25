@@ -7,6 +7,7 @@ import { SandboxServices } from "../_services";
 import type { Template } from "../_types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+export const dynamic = 'force-dynamic';
 
 function GalleryInner() {
   const router = useRouter();

@@ -7,6 +7,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { TrendingUp, Music, Star, Lock } from 'lucide-react';
 import Link from 'next/link';
+export const dynamic = 'force-dynamic';
 
 /**
  * Templates browsing page

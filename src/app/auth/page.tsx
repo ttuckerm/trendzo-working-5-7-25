@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+export const dynamic = 'force-dynamic';
 
 /**
  * Legacy /auth route — redirects to /login.

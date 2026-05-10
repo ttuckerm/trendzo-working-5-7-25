@@ -31,6 +31,7 @@ import {
   ArrowRight,
   MessageCircle,
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // ============================================================================
 // TYPES

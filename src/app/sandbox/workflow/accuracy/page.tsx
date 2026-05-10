@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { SandboxWorkflowProvider } from "../_context/SandboxWorkflowContext";
 import { SandboxServices } from "../_services";
 import type { ValidationMetrics } from "../_types";
+export const dynamic = 'force-dynamic';
 
 function AccuracyInner() {
   const [m, setM] = useState<ValidationMetrics | null>(null);

@@ -2,6 +2,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import CreatorHomeClient from './CreatorHomeClient';
+export const dynamic = 'force-dynamic';
 
 export default async function CreatorHomePage() {
   const supabase = await createServerSupabaseClient();

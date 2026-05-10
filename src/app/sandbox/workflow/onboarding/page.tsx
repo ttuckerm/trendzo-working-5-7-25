@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SandboxWorkflowProvider, useSandboxWorkflow } from "../_context/SandboxWorkflowContext";
 import { useConfetti } from "@/lib/hooks/useConfetti";
+export const dynamic = 'force-dynamic';
 
 function OnboardingInner() {
   const router = useRouter();

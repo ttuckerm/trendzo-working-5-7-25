@@ -10,6 +10,7 @@ import {
   type AgencyAlert,
 } from '@/lib/dashboard/queries';
 import DashboardClient from './DashboardClient';
+export const dynamic = 'force-dynamic';
 
 function deriveAlerts(creators: AgencyCreator[]): AgencyAlert[] {
   const alerts: AgencyAlert[] = [];

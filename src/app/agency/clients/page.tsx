@@ -3,6 +3,7 @@ import { getUserAgencyId, getAgencyCreators } from '@/lib/auth/agency-utils';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import ClientsGrid from './ClientsGrid';
+export const dynamic = 'force-dynamic';
 
 export default async function ClientsPage() {
   const supabase = await createServerSupabaseClient();

@@ -1,4 +1,5 @@
 import React from 'react'
+export const dynamic = 'force-dynamic';
 
 export default function PredictionReceiptPage({ params }: { params: { receiptId: string } }) {
   const { receiptId } = params

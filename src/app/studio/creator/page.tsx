@@ -16,6 +16,7 @@ import {
   ChevronLeft, ChevronRight, Sparkles
 } from 'lucide-react';
 import { getAgencySkills } from '@/lib/skills/agency-skills';
+export const dynamic = 'force-dynamic';
 
 // Workflow step configuration
 const WORKFLOW_STEPS = [

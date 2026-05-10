@@ -2,6 +2,7 @@
 
 import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+export const dynamic = 'force-dynamic';
 
 function CallbackHandlerContent() {
   const router = useRouter()

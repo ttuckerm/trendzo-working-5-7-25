@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { verifyMagicLink, createUserFromMagicLink } from '@/lib/services/magicLink';
 import { supabaseClient } from '@/lib/supabase-client';
+export const dynamic = 'force-dynamic';
 
 export default function MagicLinkPage() {
   const router = useRouter();

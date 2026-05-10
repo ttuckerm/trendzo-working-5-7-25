@@ -1,6 +1,7 @@
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { getUserAgencyId } from '@/lib/auth/agency-utils'
 import MemoryClient from './MemoryClient'
+export const dynamic = 'force-dynamic';
 
 export default async function AgencyMemoryPage() {
   const supabase = await createServerSupabaseClient()

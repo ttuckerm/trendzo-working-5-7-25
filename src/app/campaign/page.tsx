@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
 
 const NICHES = [
   { id: 'business', title: 'Business Leader', emoji: '💼', color: 'from-blue-500 to-purple-500' },

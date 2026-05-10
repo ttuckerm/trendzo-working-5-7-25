@@ -5,6 +5,7 @@ import { Music, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import MultiSensoryPreferenceManager from '@/components/audiovisual/MultiSensoryPreferenceManager';
 import { AudioVisualProvider } from '@/lib/contexts/audiovisual/AudioVisualContext';
+export const dynamic = 'force-dynamic';
 
 export default function MultiSensoryPreferencesPage() {
   return (

@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
 import { getUserAgencyId, getAgencyCreators } from '@/lib/auth/agency-utils';
 import AgencyClient from './AgencyClient';
+export const dynamic = 'force-dynamic';
 
 export default async function AgencyPage() {
   const supabase = await createServerSupabaseClient();

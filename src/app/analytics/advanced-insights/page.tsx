@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
 
 /**
  * This page redirects users from /analytics/advanced-insights to the analytics section in dashboard-view

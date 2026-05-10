@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import CanvasOverlay from '@/components/canvas/CanvasOverlay';
 import { PerfHUD } from '@/components/templateMiniUI/PerfHUD';
 import CanvasPortal from '@/components/canvas/CanvasPortal';
+export const dynamic = 'force-dynamic';
 
 export default function CanvasOSPage() {
   const router = useRouter();
