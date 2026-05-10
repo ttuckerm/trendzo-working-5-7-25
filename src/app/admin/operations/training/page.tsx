@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { MetricScheduleSummary, MetricCheckType } from '@/lib/training/training-ingest-types';
+export const dynamic = 'force-dynamic';
 
 // Types
 interface TrainingJob {

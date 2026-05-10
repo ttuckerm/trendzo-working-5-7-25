@@ -16,6 +16,7 @@ import { LaboratoryTab } from './components/LaboratoryTab'
 import { LegacyProvingGroundsTab } from './components/LegacyProvingGroundsTab'
 import { ArmoryTab } from './components/ArmoryTab'
 import { ConceptScorerTab } from './components/ConceptScorerTab'
+export const dynamic = 'force-dynamic';
 
 export default function StudioPage() {
   const params = useSearchParams();

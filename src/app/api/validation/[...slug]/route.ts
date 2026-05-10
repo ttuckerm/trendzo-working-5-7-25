@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireRole } from '@/lib/auth/server-auth'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 function ok(data: any) { return NextResponse.json({ success: true, ...data }, { status: 200 }) }
 

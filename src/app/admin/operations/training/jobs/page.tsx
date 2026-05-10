@@ -19,6 +19,7 @@ import {
   Trash2,
   Eye
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface TrainingJob {
   id: string;

@@ -8,6 +8,7 @@ import { Upload, Link2, Sparkles, ArrowRight, Zap, FileVideo, Database, ChevronD
 import { useAdminUserWithDevFallback } from '@/hooks/useAdminUser';
 import type { TrainingIngestResponse, TrainingRunSummary, MetricCollectorResult, MetricScheduleRow } from '@/lib/training/training-ingest-types';
 import { getActiveComponentCount, NICHE_REGISTRY, getNicheByKey } from '@/lib/prediction/system-registry';
+export const dynamic = 'force-dynamic';
 
 // Initialize Supabase client for fetching recent runs
 const supabase = createClient(

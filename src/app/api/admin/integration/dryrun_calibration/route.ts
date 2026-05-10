@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { ensureCalibrationTables, trainCalibrationModelsForLast30d, getCalibrationVersion } from '@/lib/calibration/calibration'
+export const dynamic = 'force-dynamic';
 
 function expectedCalibrationError(yTrue: number[], yProb: number[], bins = 10) {
   const bucket = Array.from({length: bins},()=>({n:0, p:0, y:0}))

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { createClient } from '@supabase/supabase-js'
 import { getAdminDb, guardAdmin, parsePaging, withCache } from '../../../_lib'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY, SUPABASE_ANON_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 const Params = z.object({ id: z.string().min(1) })
 

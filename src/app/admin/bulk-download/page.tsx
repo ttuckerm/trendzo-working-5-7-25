@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { NICHE_REGISTRY } from '@/lib/prediction/system-registry';
 import { zScoreToDisplayDps, classifyDpsV2 } from '@/lib/training/dps-v2';
 import { useAdminUserWithDevFallback } from '@/hooks/useAdminUser';
+export const dynamic = 'force-dynamic';
 
 interface DownloadJob {
   id: string;

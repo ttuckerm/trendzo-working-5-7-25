@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { TRAINING_V2_ENABLED } from '@/lib/training/feature-availability-matrix';
+export const dynamic = 'force-dynamic';
 
 export async function POST(
   request: NextRequest,

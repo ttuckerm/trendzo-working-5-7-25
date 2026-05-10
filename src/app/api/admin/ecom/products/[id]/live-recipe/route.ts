@@ -7,6 +7,7 @@ import {
   generateLiveRecipe,
   type ProductMetrics,
 } from "@/lib/ecom/live-recipe-generator";
+export const dynamic = 'force-dynamic';
 
 const InputSchema = z.object({
   targetBuyer: z.string().optional(),

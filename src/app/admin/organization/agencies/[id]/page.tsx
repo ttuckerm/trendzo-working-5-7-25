@@ -22,6 +22,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 type Tab = 'overview' | 'creators' | 'campaigns' | 'features' | 'settings' | 'activity';
 

@@ -20,6 +20,7 @@ import {
   EyeOff,
   MinusCircle,
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // ─── Types (matching API response) ──────────────────────────────────────────
 

@@ -23,6 +23,7 @@ import { AccuracyBreakdown } from '@/components/control-center/AccuracyBreakdown
 import { EnhancementGrid } from '@/components/control-center/EnhancementCard';
 import { ErrorList } from '@/components/control-center/ErrorItem';
 import { DetailPanel } from '@/components/control-center/DetailPanel';
+export const dynamic = 'force-dynamic';
 
 type Section = 'overview' | 'pages' | 'components' | 'accuracy' | 'enhancements' | 'errors';
 

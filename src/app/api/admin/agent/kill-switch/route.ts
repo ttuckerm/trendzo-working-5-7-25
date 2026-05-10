@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getKillSwitch, setKillSwitch } from '@/lib/jarvis/store'
+export const dynamic = 'force-dynamic';
  
 async function resolveActor(req: NextRequest, disableAuth: boolean): Promise<string> {
   if (disableAuth) return req.headers.get('x-actor-id') || 'dev@local'

@@ -23,6 +23,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface SystemConfig {
   api: {

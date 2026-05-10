@@ -5,6 +5,7 @@ import { runAttribution } from '@/lib/commerce/attribution'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { dispatchAlarm } from '@/lib/ops/notifier'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const auth = await verifyAdminAuth(req)

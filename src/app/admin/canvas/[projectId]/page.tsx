@@ -8,6 +8,7 @@ import { TopBar } from './_components/TopBar';
 import { CanvasNode as CanvasNodeComponent } from './_components/CanvasNode';
 import { ConnectionLayer } from './_components/ConnectionLayer';
 import { DetailPanel } from './_components/DetailPanel';
+export const dynamic = 'force-dynamic';
 
 // === Shared Types ===
 export type NodeType = 'screen' | 'action' | 'logic' | 'ai' | 'step' | 'acceptance_tests';

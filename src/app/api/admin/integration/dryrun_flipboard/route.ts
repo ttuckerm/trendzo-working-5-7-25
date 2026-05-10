@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { checkPrereqs } from '@/lib/admin/flipboard_prereq'
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const ids: any[] = ['ingestion','validation','telemetry','billing','alarms']

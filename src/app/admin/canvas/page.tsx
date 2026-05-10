@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Workflow, FileText, Link2, Settings, Sparkles, ArrowLeft, X } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 const TEMPLATES = [
   { id: 'page',        title: 'Page Feature',    icon: FileText, color: '#6366f1', iconClass: 'cv-icon-indigo' },

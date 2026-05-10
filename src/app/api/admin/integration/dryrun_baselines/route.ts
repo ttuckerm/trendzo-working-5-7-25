@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 function formatBaselineVersion(d = new Date()): string {
   const oneJan = new Date(d.getFullYear(), 0, 1)

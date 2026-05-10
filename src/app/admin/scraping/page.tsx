@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Search, PlayCircle, Database, TrendingUp, AlertCircle, CheckCircle, XCircle, Loader2, BarChart3, Eye, Zap, Clock, Target, RefreshCw, GitBranch, ArrowRight } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+export const dynamic = 'force-dynamic';
 
 // Pipeline status types
 interface VideoPipelineStatus {

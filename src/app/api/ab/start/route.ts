@@ -3,6 +3,7 @@ import { requireRole } from '@/lib/auth/server-auth'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const rl = await commonRateLimiters.admin(req)

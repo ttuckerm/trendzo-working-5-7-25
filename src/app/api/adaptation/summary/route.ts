@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { computeSignals } from '@/lib/adaptation/signals'
 import { recentChanges } from '@/lib/adaptation/store'
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {

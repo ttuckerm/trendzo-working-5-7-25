@@ -22,6 +22,7 @@ import {
   Pin,
   Zap
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // ============================================================================
 // DEFAULT SEARCH QUERIES (from user's Apify config)

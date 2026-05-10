@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getSupabaseClient } from '@/lib/supabase/client';
+export const dynamic = 'force-dynamic';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Types

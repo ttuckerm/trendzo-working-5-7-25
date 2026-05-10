@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 // Readback endpoint for the unified event log (Stage 2 of substrate pivot).
 // Middleware already gates /api/admin/* to chairman / sub_admin roles.

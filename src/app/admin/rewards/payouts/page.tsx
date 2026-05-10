@@ -17,6 +17,7 @@ import {
   Film,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 type PayoutStatus = 'pending' | 'processing' | 'completed' | 'failed';
 type PayoutType = 'clipper' | 'developer' | 'affiliate';

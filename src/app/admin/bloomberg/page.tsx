@@ -3,6 +3,7 @@
 import { TrendingUp, Zap, Video, Clock, Eye, Flame, X, BarChart, Activity, Sparkles, Loader2, Store } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
 
 interface Pattern {
   id?: string;

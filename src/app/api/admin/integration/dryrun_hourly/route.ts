@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { upsertVideoHourly, getVideoHourlySeries } from '@/lib/video/hourly'
 import { getPredictionEngine } from '@/lib/services/viral-prediction/unified-prediction-engine'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const video_id = `vid_${Date.now()}`

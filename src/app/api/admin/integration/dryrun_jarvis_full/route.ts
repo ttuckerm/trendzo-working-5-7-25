@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { orchestrator } from '@/lib/jarvis/orchestrator'
 import { getSystemSnapshot } from '@/lib/jarvis/read_model'
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const snapshot = await getSystemSnapshot()

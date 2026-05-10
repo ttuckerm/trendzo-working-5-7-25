@@ -15,6 +15,7 @@ import {
   Check,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 export default function CreatePlatformCampaignPage() {
   const router = useRouter();

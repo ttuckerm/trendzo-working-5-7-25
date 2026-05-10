@@ -6,6 +6,7 @@ import {
   TrendingUp, TrendingDown, Target, Zap, RefreshCw, Settings,
   BarChart3, Activity, Download, Upload, Sparkles
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // Sample transcripts with KNOWN expected scores
 const CALIBRATION_SAMPLES = [

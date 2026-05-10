@@ -9,6 +9,7 @@ import { requireAuth, Permission, getAuthService, ApiKey } from '@/lib/security/
 import { createValidationMiddleware, ValidationSchemas } from '@/lib/security/validation-middleware';
 import { createClient } from '@supabase/supabase-js';
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env';
+export const dynamic = 'force-dynamic';
 
 // Rate limiting for API key management
 const apiKeyRateLimit = createRateLimiter({

@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdminUser } from '@/hooks/useAdminUser';
+export const dynamic = 'force-dynamic';
 
 type AffiliateTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 

@@ -9,6 +9,7 @@ import { CreatorDashboard } from '@/components/admin/dashboard/CreatorDashboard'
 import { ClipperDashboard } from '@/components/admin/dashboard/ClipperDashboard';
 import { Loader2 } from 'lucide-react';
 import { UserRole } from '@/types/admin';
+export const dynamic = 'force-dynamic';
 
 // Development mode: set to true to enable role switching UI
 const DEV_MODE = process.env.NODE_ENV === 'development';

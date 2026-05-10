@@ -17,6 +17,7 @@ import {
   calculateAccuracyBreakdown,
   PredictionWithActual
 } from '@/lib/services/accuracy-calculator';
+export const dynamic = 'force-dynamic';
 
 // Lazy-init: defers Supabase construction until first call, avoiding build-time eager construction.
 let _supabase: ReturnType<typeof createClient> | null = null;

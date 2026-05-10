@@ -12,6 +12,7 @@ import { DPSGauge, FixCard, AICoachBubble, ScoreBar, FixData } from '@/component
 import { TeleprompterModal } from '@/components/teleprompter';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { scoreTemplatesForCreator, type ScoredTemplate, type PatternSuggestion, type CreatorPreferences } from '@/lib/quick-win/template-scorer';
+export const dynamic = 'force-dynamic';
 
 // Extended step type for 7-step workflow
 type Step = 'select' | 'generate' | 'create' | 'record' | 'analyze' | 'fix' | 'publish';

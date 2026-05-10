@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { getNicheTemplate } from '@/lib/freedom-agent/niche-templates'
 import { assembleContext } from '@/lib/context/assemble-context'
+export const dynamic = 'force-dynamic';
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
 const MAX_MESSAGES_PER_SESSION = 10

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+export const dynamic = 'force-dynamic';
 
 const SEED = 1337
 

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { checkPrereqs } from '@/lib/admin/flipboard_prereq'
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)

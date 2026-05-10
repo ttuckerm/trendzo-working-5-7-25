@@ -20,6 +20,7 @@ import {
   Scissors,
   LucideIcon,
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 export default function OrganizationPage() {
   // In real implementation, fetch organization stats from API

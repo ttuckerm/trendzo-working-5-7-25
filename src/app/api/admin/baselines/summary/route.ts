@@ -4,6 +4,7 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { getCalibrationVersion } from '@/lib/calibration/calibration'
 import { commonRateLimiters } from '@/lib/security/rate-limiter'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const auth = await requireRole(UserRole.ADMIN)(req)

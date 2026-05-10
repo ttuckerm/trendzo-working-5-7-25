@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 const STEPS = ['ingest_started','template_picked','script_generated','edit_made','score_checked','publish_ready']
 

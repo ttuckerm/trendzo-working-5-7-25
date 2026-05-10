@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { resolveCanvasAuth } from '../../../_lib/auth';
+export const dynamic = 'force-dynamic';
 
 /**
  * POST /api/canvas/projects/[id]/beacon

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { soundService } from '@/lib/services/soundService';
 import { handleApiError } from '@/lib/utils/apiHelpers';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET method to retrieve a specific sound by ID

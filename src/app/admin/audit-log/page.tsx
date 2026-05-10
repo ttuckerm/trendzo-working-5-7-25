@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdminUser } from '@/hooks/useAdminUser';
+export const dynamic = 'force-dynamic';
 
 type EventAction = 
   | 'user.login' | 'user.logout'

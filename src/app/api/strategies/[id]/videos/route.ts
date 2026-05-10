@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { StrategyVideoData } from '@/types/database';
+export const dynamic = 'force-dynamic';
 
 /**
  * GET /api/strategies/[id]/videos

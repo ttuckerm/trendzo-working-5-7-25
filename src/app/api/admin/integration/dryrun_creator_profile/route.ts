@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ensureCreatorTables } from '@/lib/creator/profile_builder'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   await ensureCreatorTables()

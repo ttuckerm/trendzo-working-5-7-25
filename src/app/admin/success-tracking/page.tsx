@@ -24,6 +24,7 @@ import {
   Target,
   Zap
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface SuccessStory {
   id: string;

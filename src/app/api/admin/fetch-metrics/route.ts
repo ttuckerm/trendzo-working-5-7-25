@@ -9,6 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+export const dynamic = 'force-dynamic';
 
 // Use service key (Phase 0: code-level separation)
 const supabase = createClient(

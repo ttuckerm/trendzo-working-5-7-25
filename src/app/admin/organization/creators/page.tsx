@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdminUserWithDevFallback } from '@/hooks/useAdminUser';
+export const dynamic = 'force-dynamic';
 
 type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'featured';
 

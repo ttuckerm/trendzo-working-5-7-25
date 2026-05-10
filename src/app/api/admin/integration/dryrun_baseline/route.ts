@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { startOfISOWeek, format } from 'date-fns'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const payload = {

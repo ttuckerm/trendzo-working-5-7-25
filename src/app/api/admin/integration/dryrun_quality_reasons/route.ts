@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { computeQualityReasons } from '@/lib/quality/anti_gaming'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const sample = computeQualityReasons({

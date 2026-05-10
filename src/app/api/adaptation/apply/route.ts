@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { applyProposedChange } from '@/lib/adaptation/apply'
 import { recordApply, recentChanges } from '@/lib/adaptation/store'
 import { promoteCandidate } from '@/lib/learning/store'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {

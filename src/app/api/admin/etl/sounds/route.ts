@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { soundEtl } from '@/lib/etl/soundEtl';
 import { handleApiError } from '@/lib/utils/apiHelpers';
 import { verifyAdminAuth } from '@/lib/utils/adminAuth';
+export const dynamic = 'force-dynamic';
 
 /**
  * POST method to trigger the TikTok sound ETL process

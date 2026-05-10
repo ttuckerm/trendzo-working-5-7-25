@@ -37,6 +37,7 @@ import {
 import { useStrategy } from '@/hooks/useStrategy';
 import { useVideoCreation } from '@/hooks/useVideoCreation';
 import type { ContentStrategy, ContentPurpose, StrategyVideoData } from '@/types/database';
+export const dynamic = 'force-dynamic';
 
 // ============================================
 // Video Creation State

@@ -20,6 +20,7 @@ import {
   TrendingUp,
   ChevronRight
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface ModelVersion {
   id: string;

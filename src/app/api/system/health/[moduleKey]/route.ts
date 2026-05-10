@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import IORedis from 'ioredis'
+export const dynamic = 'force-dynamic';
 
 let _redis: IORedis | null = null
 function getRedis() {

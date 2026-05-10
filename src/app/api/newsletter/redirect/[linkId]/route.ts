@@ -14,6 +14,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 import { cookies } from 'next/headers';
 import { trackNewsletterClick, trackTemplateView } from '@/lib/analytics/newsletterAnalytics';
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,

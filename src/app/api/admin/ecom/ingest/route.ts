@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
 import { isEcomForecastEnabled } from "@/lib/feature-flags";
+export const dynamic = 'force-dynamic';
 
 const ItemSchema = z.object({
   id: z.string().min(1, "id is required"),

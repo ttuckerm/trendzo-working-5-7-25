@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+export const dynamic = 'force-dynamic';
 
 function ok(data: any) {
   return NextResponse.json({ success: true, ...data }, { status: 200 })

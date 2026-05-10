@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation'
+export const dynamic = 'force-dynamic';
 
 /**
  * Brief review is now integrated into the Workspace dashboard (/agency/dashboard)

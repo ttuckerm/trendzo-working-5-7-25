@@ -27,6 +27,7 @@ import {
   Globe,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 // Types
 interface ServiceHealth {

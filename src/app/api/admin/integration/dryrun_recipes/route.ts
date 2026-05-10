@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { computeDailyRecipeBook } from '@/lib/services/recipes/compute'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const out = await computeDailyRecipeBook().catch(()=> ({ day: new Date().toISOString().slice(0,10), counts: { hot: 0, cooling: 0, new: 0 } }))

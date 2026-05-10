@@ -35,6 +35,7 @@ import {
   CheckCircle,
   XCircle,
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 interface PlanOutput {
   text?: string;

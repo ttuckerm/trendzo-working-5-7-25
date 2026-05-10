@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ensureExperimentTables, assignArm, computeUpliftIPW } from '@/lib/experiments/uplift'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   // Seed minimal experiment with two arms, assign subjects, write outcomes, run uplift

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+export const dynamic = 'force-dynamic';
 
 const NODE_TYPE_LABELS: Record<string, string> = {
   screen: 'Screen / Page',

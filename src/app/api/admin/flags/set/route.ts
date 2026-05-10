@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { setFlag } from '@/lib/moat/flags'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
 	const admin = req.headers.get('authorization') || req.headers.get('x-admin-token') || ''

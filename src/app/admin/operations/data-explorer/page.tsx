@@ -29,6 +29,7 @@ import {
   Calendar,
   Users
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // ============================================================================
 // TYPES

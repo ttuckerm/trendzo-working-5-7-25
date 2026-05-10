@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
+export const dynamic = 'force-dynamic';
 
 export default function AdminApiManagementPage() {
   const { user } = useAuth();

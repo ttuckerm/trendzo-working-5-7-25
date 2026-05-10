@@ -26,6 +26,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { saveCalibrationProfile, saveCreatorStage } from '@/lib/onboarding/calibration-db';
 import { calculateCreatorStage } from '@/lib/onboarding/creator-stage';
 import type { StagingResult, AudienceDiagnosticAnswers } from '@/lib/onboarding/creator-stage';
+export const dynamic = 'force-dynamic';
 
 // Phase definitions
 enum ViralStudioPhase {

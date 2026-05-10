@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { testEvolutionEngine } from '@/lib/services/evolutionEngine';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {

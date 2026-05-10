@@ -4,6 +4,7 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { FEATURE_SCHEMA_V1 } from '@/lib/features/schema'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
 import { putText } from '@/lib/storage/object_store'
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const auth = await requireRole(UserRole.ADMIN)(req)

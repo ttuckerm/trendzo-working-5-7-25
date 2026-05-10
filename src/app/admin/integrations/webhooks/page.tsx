@@ -18,6 +18,7 @@ import {
   Copy,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 type WebhookStatus = 'active' | 'inactive' | 'failing';
 type WebhookEvent = 

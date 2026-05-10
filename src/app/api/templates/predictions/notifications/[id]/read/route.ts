@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { supabaseClient as supabase } from '@/lib/supabase-client';
+export const dynamic = 'force-dynamic';
 
 /**
  * API endpoint to mark a trend prediction notification as read

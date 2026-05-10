@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { requireRole, UserRole } from '@/lib/security/auth-middleware'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const auth = await requireRole(UserRole.ADMIN)(req)

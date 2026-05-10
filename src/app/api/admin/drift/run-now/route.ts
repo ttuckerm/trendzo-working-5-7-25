@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyAdminAuth } from '@/lib/utils/adminAuth'
 import { computeFeatureImportance } from '@/lib/drift/feature-importance'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   const auth = await verifyAdminAuth(req)

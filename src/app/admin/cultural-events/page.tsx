@@ -5,6 +5,7 @@ import {
   CheckCircle, XCircle, Clock, Eye, TrendingUp,
   Filter, Zap, Globe, Tag, Calendar, Shield,
 } from 'lucide-react'
+export const dynamic = 'force-dynamic';
 
 interface CulturalEvent {
   id: number

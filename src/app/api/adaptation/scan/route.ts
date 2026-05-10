@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { planRetune } from '@/lib/adaptation/policy'
 import { recordProposal } from '@/lib/adaptation/store'
+export const dynamic = 'force-dynamic';
 
 export async function POST() {
   try {

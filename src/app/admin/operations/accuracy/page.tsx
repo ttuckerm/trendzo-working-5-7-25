@@ -28,6 +28,7 @@ import {
   Line,
   Cell,
 } from 'recharts';
+export const dynamic = 'force-dynamic';
 
 // ─── Types (matching API response) ──────────────────────────────────────────
 

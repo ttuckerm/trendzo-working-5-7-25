@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAuth, Permission } from '@/lib/security/auth-middleware'
 import { revokeTelemetryKey } from '@/lib/security/telemetry-keys'
+export const dynamic = 'force-dynamic';
 
 export async function POST(_req: NextRequest, { params }: { params: { id: string } }) {
   const { response } = await requireAuth([Permission.ADMIN_API_KEYS])(_req)

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+export const dynamic = 'force-dynamic';
 
 interface CreatorProfile {
   id: string;

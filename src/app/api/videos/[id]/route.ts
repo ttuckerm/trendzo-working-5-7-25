@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { source } from '@/lib/data'
 import { computeViral } from '@/lib/vit/compute'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   try {

@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import ABTestingSystem from '@/lib/services/abTestingSystem'
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {

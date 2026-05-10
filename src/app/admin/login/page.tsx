@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import { ChevronLeft, Shield } from "lucide-react"
 import Link from "next/link"
 import { useAuth } from "@/lib/hooks/useAuth"
+export const dynamic = 'force-dynamic';
 
 // Admin redirect destination - passed through OAuth URL, NOT localStorage
 const ADMIN_REDIRECT_PATH = '/admin/studio'

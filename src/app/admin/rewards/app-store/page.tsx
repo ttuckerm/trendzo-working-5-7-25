@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdminUser } from '@/hooks/useAdminUser';
+export const dynamic = 'force-dynamic';
 
 type AppCategory = 'all' | 'analytics' | 'editing' | 'automation' | 'ai' | 'other';
 type AppStatus = 'approved' | 'pending' | 'rejected';

@@ -3,6 +3,7 @@ import { runWithProgress } from '@/app/api/admin/jobs/runner'
 import { getSignedUrl } from '@/lib/storage/object_store'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const { job_id } = await runWithProgress('dryrun_scrape', { dryrun: true }, [

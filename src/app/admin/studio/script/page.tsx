@@ -13,6 +13,7 @@ import { save as persistSave, load as persistLoad } from '@/workflow/persist'
 import { useWorkflowStore } from '@/workflow/workflowStore'
 import { listPatterns } from '@/lib/script/patterns'
 import { exportSRT } from '@/app/sandbox/workflow/_services/exports'
+export const dynamic = 'force-dynamic';
 
 type DraftDoc = { id: string; title: string; body: string; hooks: string[]; cta: string; beats: string[]; shots: string[]; version: number; savedAtISO: string }
 

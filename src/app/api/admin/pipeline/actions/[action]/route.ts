@@ -4,6 +4,7 @@ import { getAdminDb, guardAdmin, rateLimitAction } from '../../_lib'
 import { computeDailyRecipeBook } from '@/lib/services/recipes/compute'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
+export const dynamic = 'force-dynamic';
 
 const Params = z.object({ action: z.enum(['pause','resume','restart','hotfix','rollback','qa-seed','recompute-discovery','warm-examples']) })
 

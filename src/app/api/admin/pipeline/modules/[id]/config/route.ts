@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { getAdminDb, guardAdmin, withCache } from '../../../_lib'
+export const dynamic = 'force-dynamic';
 
 const Params = z.object({ id: z.string().min(1) })
 const PatchSchema = z.object({ env_flags: z.record(z.any()).optional(), scale: z.number().int().min(0).max(100).optional(), enabled: z.boolean().optional() })

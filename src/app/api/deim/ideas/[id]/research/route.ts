@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getIdea, updateIdeaWithProposal } from "@/lib/server/deimStore";
+export const dynamic = 'force-dynamic';
 
 function base() {
   return process.env.NEXT_PUBLIC_BASE_URL || "";

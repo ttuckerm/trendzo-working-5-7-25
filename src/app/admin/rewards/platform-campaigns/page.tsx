@@ -20,6 +20,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+export const dynamic = 'force-dynamic';
 
 type CampaignStatus = 'active' | 'paused' | 'completed' | 'draft';
 

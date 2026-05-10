@@ -3,6 +3,7 @@ import { NextResponse as NRes } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
 import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { requireRole } from '@/lib/auth/server-auth'
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest){
   const guard = await requireRole(req, ['chairman'])

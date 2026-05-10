@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getAdminDb, guardAdmin, withCache } from '../../_lib'
+export const dynamic = 'force-dynamic';
 
 const Params = z.object({ id: z.string().min(1) })
 

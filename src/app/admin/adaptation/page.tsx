@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+export const dynamic = 'force-dynamic';
 
 export default function AdaptationCenterPage(){
   const [summary, setSummary] = React.useState<any|null>(null)

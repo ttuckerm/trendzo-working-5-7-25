@@ -1,5 +1,6 @@
 'use client'
 import React from 'react'
+export const dynamic = 'force-dynamic';
 
 export default function LearningLabPage(){
   const [sum, setSum] = React.useState<any|null>(null)

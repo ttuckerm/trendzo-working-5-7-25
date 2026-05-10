@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import useSWR from 'swr'
+export const dynamic = 'force-dynamic';
 
 const fetcher = (url: string) => fetch(url).then(r=>r.json())
 

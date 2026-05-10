@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ensureFiles, listCreators, listPlans, listSessions } from '@/lib/scale/store'
+export const dynamic = 'force-dynamic';
 
 function toCSV(rows: any[]): string {
 	if (!rows.length) return ''

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, AlertTriangle, RefreshCw, Play, Database, Video, Clock } from 'lucide-react';
 import { supabaseClient } from '@/lib/supabase/client';
 import useSWR from 'swr';
+export const dynamic = 'force-dynamic';
 
 export default function ApifyScraperPage() {
   const { user, isAdmin } = useAuth();

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getExperiment } from '@/lib/experiments/store'
 import { buildSummary } from '@/lib/experiments/summary'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }){
   try{

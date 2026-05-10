@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import * as path from 'path'
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   const demoPath = path.join(process.cwd(), 'storage', 'proof', 'demo_current.json')

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { initDemoMode, getFlagsFromEnv, persistFlags, applyFlagsToEnv, FlipboardFlags } from '@/lib/runtime/demo_mode'
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   await initDemoMode()

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { StatCard } from '@/components/admin/dashboard/StatCard';
+export const dynamic = 'force-dynamic';
 
 export default function RewardsOverviewPage() {
   // Mock data

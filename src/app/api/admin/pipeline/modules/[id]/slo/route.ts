@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { z } from 'zod'
 import { getAdminDb, guardAdmin, parseRange, withCache } from '../../../_lib'
 import { computeSloForModule, DEFAULT_THRESHOLDS } from '../../../_slo'
+export const dynamic = 'force-dynamic';
 
 const Params = z.object({ id: z.string().min(1) })
 

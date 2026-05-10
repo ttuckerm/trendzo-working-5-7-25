@@ -33,6 +33,7 @@ import {
   Trophy,
   Info,
 } from 'lucide-react';
+export const dynamic = 'force-dynamic';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 

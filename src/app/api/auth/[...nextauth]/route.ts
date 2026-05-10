@@ -6,6 +6,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { supabaseClient as supabase } from '@/lib/supabase-client';
 import type { JWT } from "next-auth/jwt";
 import type { Session } from "next-auth";
+export const dynamic = 'force-dynamic';
 
 // Extend the Session type to include the user id
 declare module "next-auth" {

@@ -4,6 +4,7 @@ import { SUPABASE_URL, SUPABASE_SERVICE_KEY } from '@/lib/env'
 import { checkPrereqs } from '@/lib/admin/flipboard_prereq'
 import { applyLive, applyMock } from '@/lib/admin/flipboard_apply'
 import { createHmac } from 'crypto'
+export const dynamic = 'force-dynamic';
 
 function verifyToken(payload: object, token: string): boolean {
   const key = process.env.NEXTAUTH_SECRET || 'local-dev'

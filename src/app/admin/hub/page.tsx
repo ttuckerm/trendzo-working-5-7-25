@@ -1,4 +1,5 @@
 import CopyLinkButton from './components/CopyLinkButton'
+export const dynamic = 'force-dynamic';
 
 interface HubTool {
   id: string

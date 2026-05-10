@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { isEcomForecastEnabled } from "@/lib/feature-flags";
 import { getServiceSupabase } from "@/lib/ecom/supabase";
 import { computeHealth, type LiveEvent } from "@/lib/ecom/session-health";
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   _request: NextRequest,

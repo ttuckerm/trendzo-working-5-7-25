@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { ScrapingScheduler } from '@/lib/services/viral-prediction/scraping-scheduler';
+export const dynamic = 'force-dynamic';
 
 // Global scheduler instance
 let scheduler: ScrapingScheduler | null = null;

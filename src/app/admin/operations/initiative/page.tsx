@@ -19,6 +19,7 @@ import {
 import { SignalCoverageBar } from '@/components/contracts/SignalCoverageBar';
 import { MetricStatCard } from '@/components/contracts/MetricStatCard';
 import { ResearchPromptCard } from '@/components/contracts/ResearchPromptCard';
+export const dynamic = 'force-dynamic';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 

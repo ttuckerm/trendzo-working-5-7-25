@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 import { isEcomForecastEnabled } from "@/lib/feature-flags";
 import { getServiceSupabase } from "@/lib/ecom/supabase";
+export const dynamic = 'force-dynamic';
 
 const EventSchema = z.object({
   viewers: z.number().int().min(0),

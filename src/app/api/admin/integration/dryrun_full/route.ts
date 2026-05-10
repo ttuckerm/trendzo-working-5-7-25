@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { promises as fs } from 'fs'
 import path from 'path'
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest) {
   const base = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'

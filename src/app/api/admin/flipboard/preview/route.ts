@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkPrereqs } from '@/lib/admin/flipboard_prereq'
 import { createHmac } from 'crypto'
+export const dynamic = 'force-dynamic';
 
 function signToken(payload: object): string {
   const key = process.env.NEXTAUTH_SECRET || 'local-dev'

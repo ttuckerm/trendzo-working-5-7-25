@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { resolveCanvasAuth } from '../../_lib/auth';
+export const dynamic = 'force-dynamic';
 
 /** Group an array of objects by a key, returning { [keyValue]: items[] } */
 function groupBy<T extends Record<string, any>>(items: T[], key: string): Record<string, T[]> {
