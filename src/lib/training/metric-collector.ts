@@ -18,14 +18,20 @@ import type {
   MetricCollectorItemResult,
 } from './training-ingest-types';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-  {
-    db: { schema: 'public' },
-    auth: { persistSession: false },
+let _supabaseClient: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabaseClient) {
+    _supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!,
+      {
+        db: { schema: 'public' },
+        auth: { persistSession: false },
+      }
+    );
   }
-);
+  return _supabaseClient;
+}
 
 interface CollectorOptions {
   /** Only process schedules for this specific run */
@@ -52,7 +58,7 @@ export async function runMetricCollector(
   );
 
   // 1. Query due schedules (include rows with null platform_video_id so we can fail them explicitly)
-  let query = supabase
+  let query = getSupabase()
     .from('metric_check_schedule')
     .select('id, prediction_run_id, video_id, platform, platform_video_id, check_type, scheduled_at, status')
     .in('status', ['pending', 'failed'])
@@ -108,7 +114,7 @@ export async function runMetricCollector(
 
     // Fallback: resolve from prediction_runs.source_meta
     if (!tiktokUrl) {
-      const { data: prRun } = await supabase
+      const { data: prRun } = await getSupabase()
         .from('prediction_runs')
         .select('source_meta')
         .eq('id', sched.prediction_run_id)
@@ -118,7 +124,7 @@ export async function runMetricCollector(
       // If we resolved a URL, backfill the schedule row so future runs don't need the lookup
       if (tiktokUrl) {
         console.log(`[MetricCollector] Backfilled platform_video_id for schedule ${sched.id}: ${tiktokUrl}`);
-        await supabase
+        await getSupabase()
           .from('metric_check_schedule')
           .update({ platform_video_id: tiktokUrl })
           .eq('id', sched.id);
@@ -131,7 +137,7 @@ export async function runMetricCollector(
       item.platform_video_id = rawPvid || '';
       failed++;
 
-      await supabase
+      await getSupabase()
         .from('metric_check_schedule')
         .update({
           status: 'failed',
@@ -170,7 +176,7 @@ export async function runMetricCollector(
         item.error = 'No data returned from Apify';
         failed++;
 
-        await supabase
+        await getSupabase()
           .from('metric_check_schedule')
           .update({
             status: 'failed',
@@ -183,7 +189,7 @@ export async function runMetricCollector(
         item.metrics = metrics;
         succeeded++;
 
-        await supabase
+        await getSupabase()
           .from('metric_check_schedule')
           .update({
             status: 'completed',
@@ -200,7 +206,7 @@ export async function runMetricCollector(
         // 5. Update prediction_runs with metrics_source + best checkpoint
         try {
           // Find the best completed checkpoint for this run (7d > 48h > 24h > 4h)
-          const { data: completedChecks } = await supabase
+          const { data: completedChecks } = await getSupabase()
             .from('metric_check_schedule')
             .select('check_type')
             .eq('prediction_run_id', sched.prediction_run_id)
@@ -210,7 +216,7 @@ export async function runMetricCollector(
           const bestCheckpoint = CHECKPOINT_PRIORITY.find((t) => completedTypes.has(t)) || sched.check_type;
 
           // Only set actual_checkpoint_used if currently NULL (don't downgrade)
-          const { data: currentRun } = await supabase
+          const { data: currentRun } = await getSupabase()
             .from('prediction_runs')
             .select('actual_checkpoint_used')
             .eq('id', sched.prediction_run_id)
@@ -224,7 +230,7 @@ export async function runMetricCollector(
             updatePayload.actual_checkpoint_used = bestCheckpoint;
           }
 
-          await supabase
+          await getSupabase()
             .from('prediction_runs')
             .update(updatePayload)
             .eq('id', sched.prediction_run_id);
@@ -242,7 +248,7 @@ export async function runMetricCollector(
 
       console.error(`[MetricCollector] Failed ${sched.check_type} for ${sched.platform_video_id}: ${errMsg}`);
 
-      await supabase
+      await getSupabase()
         .from('metric_check_schedule')
         .update({
           status: 'failed',

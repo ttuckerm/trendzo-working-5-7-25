@@ -182,7 +182,12 @@ class MemoryRateLimitStore {
 const MemoryStore = new MemoryRateLimitStore();
 
 // Cleanup memory store every 5 minutes
-setInterval(() => MemoryStore.cleanup(), 5 * 60 * 1000);
+let _cleanupTimer: NodeJS.Timeout | null = null;
+export function startMemoryStoreCleanup() {
+  if (_cleanupTimer) return _cleanupTimer;
+  _cleanupTimer = setInterval(() => MemoryStore.cleanup(), 5 * 60 * 1000);
+  return _cleanupTimer;
+}
 
 /**
  * Rate Limit Configurations for Different Tiers

@@ -58,14 +58,20 @@ import { resolveModelRoute, type ModelRoute } from '@/lib/prediction/model-route
 import { emitEvent } from '@/lib/events/emit';
 
 // Initialize Supabase with service key for writes
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-  {
-    db: { schema: 'public' },
-    auth: { persistSession: false }
+let _supabaseClient: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabaseClient) {
+    _supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!,
+      {
+        db: { schema: 'public' },
+        auth: { persistSession: false }
+      }
+    );
   }
-);
+  return _supabaseClient;
+}
 
 export interface PredictionPipelineOptions {
   mode?: 'standard' | 'validation';
@@ -909,7 +915,7 @@ export async function runPredictionPipeline(
           }).catch(() => {});
 
           // Atlas feedback hook: log every VPS prediction for future feedback collection
-          void supabase.from('prediction_log').insert({
+          void getSupabase().from('prediction_log').insert({
             prediction_id: runId,
             creator_id: (options.sourceMeta?.user_id as string) ?? null,
             content_id: videoId,

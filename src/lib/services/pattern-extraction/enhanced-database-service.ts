@@ -11,7 +11,13 @@ import type {
   VideoForDetailedExtraction,
 } from './types-enhanced';
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+let _supabaseClient: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabaseClient) {
+    _supabaseClient = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+  }
+  return _supabaseClient;
+}
 
 // =====================================================
 // Storage Operations
@@ -51,7 +57,7 @@ export async function storeVideoPattern(
       extraction_batch_id: batchId,
     };
 
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('viral_patterns')
       .upsert({
         niche: video.niche,
@@ -143,7 +149,7 @@ export async function getTopVideoPatterns(
   limit: number = 20
 ): Promise<VideoPatternDetailed[]> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('viral_patterns')
       .select('*')
       .eq('niche', niche)
@@ -173,7 +179,7 @@ export async function getVideoPattern(
   videoId: string
 ): Promise<VideoPatternDetailed | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('video_patterns_detailed')
       .select('*')
       .eq('video_id', videoId)
@@ -220,7 +226,7 @@ export async function queryVideosForDetailedExtraction(
     console.log('='.repeat(80) + '\n');
 
     // Check total count of high-DPS videos
-    const { count: totalCount } = await supabase
+    const { count: totalCount } = await getSupabase()
       .from('scraped_videos')
       .select('*', { count: 'exact', head: true })
       .gte('dps_score', minDpsScore);
@@ -231,7 +237,7 @@ export async function queryVideosForDetailedExtraction(
 
     // Query scraped_videos directly (dps metrics stored in same table)
     // NOTE: scraped_videos does NOT have a 'niche' column, so we don't filter by it
-    const { data, error, count } = await supabase
+    const { data, error, count } = await getSupabase()
       .from('scraped_videos')
       .select(`
         video_id,
@@ -271,25 +277,25 @@ export async function queryVideosForDetailedExtraction(
       console.log('Filter breakdown:');
       
       // Check each filter individually
-      const { count: dpsCount } = await supabase
+      const { count: dpsCount } = await getSupabase()
         .from('scraped_videos')
         .select('*', { count: 'exact', head: true })
         .gte('dps_score', minDpsScore);
       console.log(`  - Videos with dps_score >= ${minDpsScore}: ${dpsCount}`);
       
-      const { count: dateCount } = await supabase
+      const { count: dateCount } = await getSupabase()
         .from('scraped_videos')
         .select('*', { count: 'exact', head: true })
         .gte('scraped_at', cutoffDate.toISOString());
       console.log(`  - Videos with scraped_at >= ${cutoffDate.toISOString()}: ${dateCount}`);
       
-      const { count: transcriptCount } = await supabase
+      const { count: transcriptCount } = await getSupabase()
         .from('scraped_videos')
         .select('*', { count: 'exact', head: true })
         .not('transcript_text', 'is', null);
       console.log(`  - Videos with transcript_text: ${transcriptCount}`);
       
-      const { count: combinedCount } = await supabase
+      const { count: combinedCount } = await getSupabase()
         .from('scraped_videos')
         .select('*', { count: 'exact', head: true })
         .gte('dps_score', minDpsScore)
