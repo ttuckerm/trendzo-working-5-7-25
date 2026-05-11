@@ -76,7 +76,6 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   experimental: {
-    cpus: 2,
     // TEMPORARILY disabled 2026-04-21 — src/instrumentation.ts pulls the entire
     // scheduler chain (node-cron → fluent-ffmpeg → fresh-video-scanner) into
     // webpack's bundle target, which can't resolve Node built-ins (fs, path)
