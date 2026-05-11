@@ -1,10 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-  { auth: { persistSession: false } }
-);
+let _supabaseClient: ReturnType<typeof createClient> | null = null;
+function getSupabase() {
+  if (!_supabaseClient) {
+    _supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!,
+      { auth: { persistSession: false } }
+    );
+  }
+  return _supabaseClient;
+}
 
 export type EventActorType = 'user' | 'agent' | 'system' | 'cron';
 
@@ -19,7 +25,7 @@ export async function emitEvent(params: {
   entityId?: string;
 }): Promise<void> {
   try {
-    const { error } = await supabase.from('platform_events').insert({
+    const { error } = await getSupabase().from('platform_events').insert({
       event_type: params.eventType,
       payload: params.payload ?? {},
       actor_id: params.actorId ?? null,
@@ -52,7 +58,7 @@ export async function emitEventStrict(params: {
   entityType?: string;
   entityId?: string;
 }): Promise<void> {
-  const { error } = await supabase.from('platform_events').insert({
+  const { error } = await getSupabase().from('platform_events').insert({
     event_type: params.eventType,
     payload: params.payload ?? {},
     actor_id: params.actorId ?? null,
