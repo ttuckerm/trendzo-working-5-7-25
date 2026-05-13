@@ -1,0 +1,774 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/templateMiniUI/ab/ABEngine.ts",
+      "type": "file",
+      "name": "ABEngine.ts",
+      "filePath": "src/components/templateMiniUI/ab/ABEngine.ts",
+      "summary": "A/B testing engine for template variants: manages variant state, persistence, and active-variant selection for the template mini-UI.",
+      "tags": ["service", "ab-testing", "state-management", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/ab/ABEngine.ts:ABEngine",
+      "type": "class",
+      "name": "ABEngine",
+      "filePath": "src/components/templateMiniUI/ab/ABEngine.ts",
+      "lineRange": [20, 124],
+      "summary": "Manages A/B test variants for a template with create/delete/setActive operations and local persistence via storage keys.",
+      "tags": ["ab-testing", "engine", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/ABPanel.tsx",
+      "type": "file",
+      "name": "ABPanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/ABPanel.tsx",
+      "summary": "Right-rail panel UI exposing the ABEngine: lists variants, lets the operator create/select/delete variants, and triggers preview rendering.",
+      "tags": ["component", "panel", "ab-testing", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/ABPanel.tsx:ABPanel",
+      "type": "function",
+      "name": "ABPanel",
+      "filePath": "src/components/templateMiniUI/panels/ABPanel.tsx",
+      "lineRange": [15, 126],
+      "summary": "React component rendering the A/B variant management UI wired to ABEngine and URL state.",
+      "tags": ["component", "panel", "ab-testing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx",
+      "type": "file",
+      "name": "ABTestPanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/ABTestPanel.tsx",
+      "summary": "Full A/B test management panel: creates and tracks experiments with telemetry events, badges, and variant comparison for a template/platform/user.",
+      "tags": ["component", "panel", "ab-testing", "experimentation", "telemetry"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/ABTestPanel.tsx:ABTestPanel",
+      "type": "function",
+      "name": "ABTestPanel",
+      "filePath": "src/components/templateMiniUI/panels/ABTestPanel.tsx",
+      "lineRange": [47, 320],
+      "summary": "Renders the A/B test UI with experiment creation, variant selection, and metric display, emitting `recordAbEvent` calls for telemetry.",
+      "tags": ["component", "panel", "ab-testing", "experimentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/ABTestPanel.tsx:recordAbEvent",
+      "type": "function",
+      "name": "recordAbEvent",
+      "filePath": "src/components/templateMiniUI/panels/ABTestPanel.tsx",
+      "lineRange": [29, 45],
+      "summary": "Helper that funnels A/B test lifecycle events through the template telemetry bus.",
+      "tags": ["telemetry", "ab-testing", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx",
+      "type": "file",
+      "name": "DashboardPanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/DashboardPanel.tsx",
+      "summary": "Right-rail dashboard panel summarizing template status, recent actions, and quick links into other mini-UI panels.",
+      "tags": ["component", "panel", "dashboard", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/DashboardPanel.tsx:DashboardPanel",
+      "type": "function",
+      "name": "DashboardPanel",
+      "filePath": "src/components/templateMiniUI/panels/DashboardPanel.tsx",
+      "lineRange": [13, 83],
+      "summary": "React component rendering the template dashboard summary view in the right rail.",
+      "tags": ["component", "dashboard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "type": "file",
+      "name": "EnhancedValidatePanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "summary": "Enhanced validation panel showing calibration (ECE) status, prediction results, and slot validation for a template before publishing.",
+      "tags": ["component", "panel", "validation", "calibration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:EnhancedValidatePanel",
+      "type": "function",
+      "name": "EnhancedValidatePanel",
+      "filePath": "src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "lineRange": [130, 315],
+      "summary": "Main validation panel component combining calibration chip, prediction results, and slot validation actions for templates.",
+      "tags": ["component", "panel", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:CalibrationChip",
+      "type": "function",
+      "name": "CalibrationChip",
+      "filePath": "src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "lineRange": [43, 85],
+      "summary": "Displays the cohort calibration (ECE) badge with status and tooltip explaining model reliability.",
+      "tags": ["component", "calibration", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:PredictionResults",
+      "type": "function",
+      "name": "PredictionResults",
+      "filePath": "src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "lineRange": [87, 128],
+      "summary": "Renders the VPS prediction result block (score, tier, confidence) inside the validation panel.",
+      "tags": ["component", "prediction", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx",
+      "type": "file",
+      "name": "InceptionPanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/InceptionPanel.tsx",
+      "summary": "Initial template ideation panel that takes user prompts and platform context to seed a new template draft.",
+      "tags": ["component", "panel", "ideation", "ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/InceptionPanel.tsx:InceptionPanel",
+      "type": "function",
+      "name": "InceptionPanel",
+      "filePath": "src/components/templateMiniUI/panels/InceptionPanel.tsx",
+      "lineRange": [16, 210],
+      "summary": "React component for the template inception phase, capturing intent and platform for downstream optimization.",
+      "tags": ["component", "ideation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx",
+      "type": "file",
+      "name": "OptimizePanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/OptimizePanel.tsx",
+      "summary": "Optimization panel that surfaces fix suggestions, hashtag tuning, and editing-coach feedback (Pack 2) for the current template.",
+      "tags": ["component", "panel", "optimization", "editing-coach"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/OptimizePanel.tsx:OptimizePanel",
+      "type": "function",
+      "name": "OptimizePanel",
+      "filePath": "src/components/templateMiniUI/panels/OptimizePanel.tsx",
+      "lineRange": [23, 277],
+      "summary": "React component for template optimization: integrates fix runners, signal bridge events, and Pack 2 editing-coach results.",
+      "tags": ["component", "panel", "optimization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx",
+      "type": "file",
+      "name": "ScriptsPanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/ScriptsPanel.tsx",
+      "summary": "Panel that manages saved script variants for a template, exposing run/clone/delete actions and emitting telemetry events.",
+      "tags": ["component", "panel", "scripts", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/ScriptsPanel.tsx:ScriptsPanel",
+      "type": "function",
+      "name": "ScriptsPanel",
+      "filePath": "src/components/templateMiniUI/panels/ScriptsPanel.tsx",
+      "lineRange": [16, 151],
+      "summary": "React component listing the template's saved scripts with run/clone/delete affordances.",
+      "tags": ["component", "scripts"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx",
+      "type": "file",
+      "name": "ValidatePanel.tsx",
+      "filePath": "src/components/templateMiniUI/panels/ValidatePanel.tsx",
+      "summary": "Lightweight validation panel that runs the ValidationEngine over template slots and surfaces issues to the operator.",
+      "tags": ["component", "panel", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/panels/ValidatePanel.tsx:ValidatePanel",
+      "type": "function",
+      "name": "ValidatePanel",
+      "filePath": "src/components/templateMiniUI/panels/ValidatePanel.tsx",
+      "lineRange": [16, 90],
+      "summary": "React component that runs slot validation and presents issues, with sound and toast feedback.",
+      "tags": ["component", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/preview/PreviewKernel.ts",
+      "type": "file",
+      "name": "PreviewKernel.ts",
+      "filePath": "src/components/templateMiniUI/preview/PreviewKernel.ts",
+      "summary": "Headless preview rendering kernel that debounces updates, manages cancellation, and emits progress/result/error callbacks for the template preview.",
+      "tags": ["service", "preview", "kernel", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/preview/PreviewKernel.ts:PreviewKernel",
+      "type": "class",
+      "name": "PreviewKernel",
+      "filePath": "src/components/templateMiniUI/preview/PreviewKernel.ts",
+      "lineRange": [9, 100],
+      "summary": "Debounced/cancelable preview engine driving template render lifecycle with onProgress/onResult/onError hooks.",
+      "tags": ["kernel", "preview", "debounce"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts",
+      "type": "file",
+      "name": "usePreviewKernel.ts",
+      "filePath": "src/components/templateMiniUI/preview/usePreviewKernel.ts",
+      "summary": "React hook that wraps PreviewKernel, wiring its callbacks to component state and SignalBridge broadcasts.",
+      "tags": ["hook", "preview", "react"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/preview/usePreviewKernel.ts:usePreviewKernel",
+      "type": "function",
+      "name": "usePreviewKernel",
+      "filePath": "src/components/templateMiniUI/preview/usePreviewKernel.ts",
+      "lineRange": [8, 77],
+      "summary": "Hook returning preview state and an update function backed by a PreviewKernel instance.",
+      "tags": ["hook", "preview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/realtime/SignalBridge.ts",
+      "type": "file",
+      "name": "SignalBridge.ts",
+      "filePath": "src/components/templateMiniUI/realtime/SignalBridge.ts",
+      "summary": "Realtime signal bridge built on EventTarget for cross-component pub/sub of template lifecycle events.",
+      "tags": ["service", "realtime", "pub-sub", "event-bus"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/realtime/SignalBridge.ts:SignalBridge",
+      "type": "class",
+      "name": "SignalBridge",
+      "filePath": "src/components/templateMiniUI/realtime/SignalBridge.ts",
+      "lineRange": [41, 52],
+      "summary": "Public pub/sub facade for template realtime signals, delegating to an EventTargetAdapter.",
+      "tags": ["pub-sub", "event-bus", "facade"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/realtime/SignalBridge.ts:EventTargetAdapter",
+      "type": "class",
+      "name": "EventTargetAdapter",
+      "filePath": "src/components/templateMiniUI/realtime/SignalBridge.ts",
+      "lineRange": [16, 39],
+      "summary": "Adapter that wraps a browser EventTarget channel to provide connect/disconnect/broadcast/subscribe primitives.",
+      "tags": ["adapter", "event-bus", "realtime"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/router/urlState.ts",
+      "type": "file",
+      "name": "urlState.ts",
+      "filePath": "src/components/templateMiniUI/router/urlState.ts",
+      "summary": "URL hash encoder/decoder for mini-UI router state, persisting active mode/panel/template via the location hash.",
+      "tags": ["utility", "router", "url-state", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/router/urlState.ts:fromHash",
+      "type": "function",
+      "name": "fromHash",
+      "filePath": "src/components/templateMiniUI/router/urlState.ts",
+      "lineRange": [34, 57],
+      "summary": "Parses the URL hash into a typed mini-UI state object with safe fallbacks for malformed input.",
+      "tags": ["utility", "router", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/router/urlState.ts:toCanvasHash",
+      "type": "function",
+      "name": "toCanvasHash",
+      "filePath": "src/components/templateMiniUI/router/urlState.ts",
+      "lineRange": [66, 75],
+      "summary": "Encodes mini-UI state into the canonical canvas hash form for deep-linking.",
+      "tags": ["utility", "router", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/validation/ValidationEngine.ts",
+      "type": "file",
+      "name": "ValidationEngine.ts",
+      "filePath": "src/components/templateMiniUI/validation/ValidationEngine.ts",
+      "summary": "Slot-level validation engine that checks template slots for unresolved braces and other structural issues before publish.",
+      "tags": ["service", "validation", "engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/validation/ValidationEngine.ts:ValidationEngine",
+      "type": "class",
+      "name": "ValidationEngine",
+      "filePath": "src/components/templateMiniUI/validation/ValidationEngine.ts",
+      "lineRange": [36, 102],
+      "summary": "Runs configured rules over template slots and returns a list of validation issues with severity.",
+      "tags": ["validation", "engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/Breadcrumb.tsx",
+      "type": "file",
+      "name": "Breadcrumb.tsx",
+      "filePath": "src/components/templateMiniUI/Breadcrumb.tsx",
+      "summary": "Top-bar breadcrumb component for the template mini-UI showing the active template name and back navigation.",
+      "tags": ["component", "navigation", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/events.ts",
+      "type": "file",
+      "name": "events.ts",
+      "filePath": "src/components/templateMiniUI/events.ts",
+      "summary": "Telemetry helpers for the template mini-UI: logTemplateEvent for user actions and logTokenUsage for LLM cost tracking.",
+      "tags": ["utility", "telemetry", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/events.ts:logTemplateEvent",
+      "type": "function",
+      "name": "logTemplateEvent",
+      "filePath": "src/components/templateMiniUI/events.ts",
+      "lineRange": [29, 42],
+      "summary": "Posts a template lifecycle event to the telemetry endpoint with template/platform/user context.",
+      "tags": ["telemetry", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/events.ts:logTokenUsage",
+      "type": "function",
+      "name": "logTokenUsage",
+      "filePath": "src/components/templateMiniUI/events.ts",
+      "lineRange": [44, 62],
+      "summary": "Records LLM token usage (provider, model, tokens, cost) for the template mini-UI session.",
+      "tags": ["telemetry", "token-usage", "cost-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/fixes.ts",
+      "type": "file",
+      "name": "fixes.ts",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "summary": "Library of automated template fixes: hashtag trimming, first-3s cue seeding, hashtag optimization, fix dispatch, and a full optimization pipeline.",
+      "tags": ["utility", "optimization", "fixes", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/fixes.ts:trimHashtagsToPlatformLimit",
+      "type": "function",
+      "name": "trimHashtagsToPlatformLimit",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "lineRange": [24, 55],
+      "summary": "Trims a hashtag list to the per-platform maximum count, preserving order.",
+      "tags": ["utility", "hashtags", "platform"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/fixes.ts:seedFirst3sCue",
+      "type": "function",
+      "name": "seedFirst3sCue",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "lineRange": [61, 132],
+      "summary": "Generates a hook/first-3s cue suggestion for the template based on platform conventions.",
+      "tags": ["utility", "hook", "platform", "optimization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/fixes.ts:optimizeHashtags",
+      "type": "function",
+      "name": "optimizeHashtags",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "lineRange": [138, 182],
+      "summary": "Improves a hashtag list given platform rules and template context (dedupe, format, trim).",
+      "tags": ["utility", "hashtags", "optimization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/fixes.ts:applyFix",
+      "type": "function",
+      "name": "applyFix",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "lineRange": [187, 215],
+      "summary": "Dispatch helper that applies a named fix to the current template state and emits a telemetry event.",
+      "tags": ["utility", "fixes", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/fixes.ts:runOptimizationPipeline",
+      "type": "function",
+      "name": "runOptimizationPipeline",
+      "filePath": "src/components/templateMiniUI/fixes.ts",
+      "lineRange": [220, 251],
+      "summary": "Runs the full sequence of automatic fixes over template slots for a given platform, returning the optimized slots.",
+      "tags": ["pipeline", "optimization", "fixes"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/Hotkeys.tsx",
+      "type": "file",
+      "name": "Hotkeys.tsx",
+      "filePath": "src/components/templateMiniUI/Hotkeys.tsx",
+      "summary": "Global hotkey installer for the mini-UI that parses parity combos, ignores editable targets, and dispatches actions to the topmost window.",
+      "tags": ["component", "hotkeys", "accessibility", "ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/Hotkeys.tsx:useGlobalHotkeys",
+      "type": "function",
+      "name": "useGlobalHotkeys",
+      "filePath": "src/components/templateMiniUI/Hotkeys.tsx",
+      "lineRange": [89, 199],
+      "summary": "React hook that installs global keydown listeners, matches against ryos-reference combos, and routes actions to the active window.",
+      "tags": ["hook", "hotkeys", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/Hotkeys.tsx:buildComboCheck",
+      "type": "function",
+      "name": "buildComboCheck",
+      "filePath": "src/components/templateMiniUI/Hotkeys.tsx",
+      "lineRange": [29, 54],
+      "summary": "Builds a predicate function from a key-combo descriptor that tests against a KeyboardEvent.",
+      "tags": ["utility", "hotkeys"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/Hotkeys.tsx:parseParityCombos",
+      "type": "function",
+      "name": "parseParityCombos",
+      "filePath": "src/components/templateMiniUI/Hotkeys.tsx",
+      "lineRange": [56, 80],
+      "summary": "Loads and normalizes the ryos-reference keyboard combos into matchable predicates.",
+      "tags": ["utility", "hotkeys", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/components/templateMiniUI/index.ts",
+      "summary": "Barrel entry point re-exporting the templateMiniUI public surface (router, store, signals, validation, telemetry, provider, and root component).",
+      "tags": ["entry-point", "barrel", "exports"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/miniRouter.ts",
+      "type": "file",
+      "name": "miniRouter.ts",
+      "filePath": "src/components/templateMiniUI/miniRouter.ts",
+      "summary": "Hash-based mini router for the template UI with subscribe/setMode/setPanel/goBack semantics and a back-stack.",
+      "tags": ["service", "router", "state-management"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/components/templateMiniUI/miniRouter.ts:MiniRouter",
+      "type": "class",
+      "name": "MiniRouter",
+      "filePath": "src/components/templateMiniUI/miniRouter.ts",
+      "lineRange": [53, 129],
+      "summary": "Hash-backed router maintaining current state, listener registry, and back stack for the mini-UI navigation.",
+      "tags": ["router", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/miniRouter.ts:installMiniRouterShortcuts",
+      "type": "function",
+      "name": "installMiniRouterShortcuts",
+      "filePath": "src/components/templateMiniUI/miniRouter.ts",
+      "lineRange": [133, 165],
+      "summary": "Installs keyboard shortcuts that drive the MiniRouter (back, panel switching) and returns a teardown function.",
+      "tags": ["utility", "router", "hotkeys"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/PerfHUD.tsx",
+      "type": "file",
+      "name": "PerfHUD.tsx",
+      "filePath": "src/components/templateMiniUI/PerfHUD.tsx",
+      "summary": "Floating performance HUD that reads dev metrics from SignalBridge and devHudStore for in-app monitoring.",
+      "tags": ["component", "monitoring", "dev-tools", "hud"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/previewKernel.ts",
+      "type": "file",
+      "name": "previewKernel.ts",
+      "filePath": "src/components/templateMiniUI/previewKernel.ts",
+      "summary": "React hook + helpers for the multi-target preview renderer with token-usage accounting and debounced re-render of preview targets.",
+      "tags": ["hook", "preview", "token-usage", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/previewKernel.ts:usePreviewKernel",
+      "type": "function",
+      "name": "usePreviewKernel",
+      "filePath": "src/components/templateMiniUI/previewKernel.ts",
+      "lineRange": [39, 161],
+      "summary": "Hook orchestrating preview renders across multiple targets with cancellation tokens and telemetry.",
+      "tags": ["hook", "preview", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/previewKernel.ts:renderAllTargets",
+      "type": "function",
+      "name": "renderAllTargets",
+      "filePath": "src/components/templateMiniUI/previewKernel.ts",
+      "lineRange": [164, 175],
+      "summary": "Fans out preview render calls to every registered target using a shared cancellation token.",
+      "tags": ["preview", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/previewKernel.ts:renderSingleTarget",
+      "type": "function",
+      "name": "renderSingleTarget",
+      "filePath": "src/components/templateMiniUI/previewKernel.ts",
+      "lineRange": [178, 199],
+      "summary": "Renders a single preview target, accounting for tokens used and bailing out if the cancellation token changes.",
+      "tags": ["preview", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/previewKernel.ts:calculateTokenUsage",
+      "type": "function",
+      "name": "calculateTokenUsage",
+      "filePath": "src/components/templateMiniUI/previewKernel.ts",
+      "lineRange": [202, 221],
+      "summary": "Computes estimated LLM token usage for a preview target/reason pair for cost telemetry.",
+      "tags": ["token-usage", "telemetry", "cost-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/PreviewViewport.tsx",
+      "type": "file",
+      "name": "PreviewViewport.tsx",
+      "filePath": "src/components/templateMiniUI/PreviewViewport.tsx",
+      "summary": "Main preview viewport component rendering the current template preview output produced by usePreviewKernel.",
+      "tags": ["component", "preview", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/RightRailShell.tsx",
+      "type": "file",
+      "name": "RightRailShell.tsx",
+      "filePath": "src/components/templateMiniUI/RightRailShell.tsx",
+      "summary": "Right-rail container that hosts mini-UI panels (AB, Validate, etc.) with a focus trap and motion-aware transitions.",
+      "tags": ["component", "shell", "layout", "accessibility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/RightRailShell.tsx:RightRailShell",
+      "type": "function",
+      "name": "RightRailShell",
+      "filePath": "src/components/templateMiniUI/RightRailShell.tsx",
+      "lineRange": [110, 300],
+      "summary": "Right-rail shell component switching between mini-UI panels and managing visibility/focus and preview kernel state.",
+      "tags": ["component", "shell", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/RightRailShell.tsx:FocusTrap",
+      "type": "function",
+      "name": "FocusTrap",
+      "filePath": "src/components/templateMiniUI/RightRailShell.tsx",
+      "lineRange": [60, 108],
+      "summary": "Focus trap helper component keeping keyboard focus within the right-rail when it is open.",
+      "tags": ["component", "accessibility", "focus-trap"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/ShortcutsModal.tsx",
+      "type": "file",
+      "name": "ShortcutsModal.tsx",
+      "filePath": "src/components/templateMiniUI/ShortcutsModal.tsx",
+      "summary": "Modal that lists available keyboard shortcuts loaded from the ryos-reference doc, with an internal focus trap.",
+      "tags": ["component", "modal", "hotkeys", "documentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/ShortcutsModal.tsx:ShortcutsModal",
+      "type": "function",
+      "name": "ShortcutsModal",
+      "filePath": "src/components/templateMiniUI/ShortcutsModal.tsx",
+      "lineRange": [78, 136],
+      "summary": "Modal component displaying keyboard shortcut groups with a focus trap and close-on-escape handling.",
+      "tags": ["component", "modal", "hotkeys"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/components/templateMiniUI/ab/ABEngine.ts", "target": "class:src/components/templateMiniUI/ab/ABEngine.ts:ABEngine", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/ab/ABEngine.ts", "target": "class:src/components/templateMiniUI/ab/ABEngine.ts:ABEngine", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/ab/ABEngine.ts", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ABPanel.tsx:ABPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ABPanel.tsx:ABPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "target": "file:src/components/templateMiniUI/ab/ABEngine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "target": "file:src/components/templateMiniUI/router/urlState.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ABTestPanel.tsx:ABTestPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ABTestPanel.tsx:recordAbEvent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ABTestPanel.tsx:ABTestPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx", "target": "function:src/components/templateMiniUI/panels/DashboardPanel.tsx:DashboardPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx", "target": "function:src/components/templateMiniUI/panels/DashboardPanel.tsx:DashboardPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:EnhancedValidatePanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:CalibrationChip", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:PredictionResults", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx:EnhancedValidatePanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "file:src/components/templateMiniUI/validation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx", "target": "function:src/components/templateMiniUI/panels/InceptionPanel.tsx:InceptionPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx", "target": "function:src/components/templateMiniUI/panels/InceptionPanel.tsx:InceptionPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "function:src/components/templateMiniUI/panels/OptimizePanel.tsx:OptimizePanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "function:src/components/templateMiniUI/panels/OptimizePanel.tsx:OptimizePanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/components/templateMiniUI/fixes.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/components/templateMiniUI/signalBridge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx", "target": "file:src/lib/rubric-engine/editing-coach-types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ScriptsPanel.tsx:ScriptsPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx", "target": "function:src/components/templateMiniUI/panels/ScriptsPanel.tsx:ScriptsPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/ValidatePanel.tsx:ValidatePanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "function:src/components/templateMiniUI/panels/ValidatePanel.tsx:ValidatePanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "file:src/components/templateMiniUI/validation/ValidationEngine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "file:src/components/ui/use-toast.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "file:src/os/sound/useSound.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/preview/PreviewKernel.ts", "target": "class:src/components/templateMiniUI/preview/PreviewKernel.ts:PreviewKernel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/preview/PreviewKernel.ts", "target": "class:src/components/templateMiniUI/preview/PreviewKernel.ts:PreviewKernel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/preview/PreviewKernel.ts", "target": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/preview/PreviewKernel.ts", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "target": "function:src/components/templateMiniUI/preview/usePreviewKernel.ts:usePreviewKernel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "target": "function:src/components/templateMiniUI/preview/usePreviewKernel.ts:usePreviewKernel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "target": "file:src/components/templateMiniUI/preview/PreviewKernel.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "target": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "target": "class:src/components/templateMiniUI/realtime/SignalBridge.ts:SignalBridge", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "target": "class:src/components/templateMiniUI/realtime/SignalBridge.ts:EventTargetAdapter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "target": "class:src/components/templateMiniUI/realtime/SignalBridge.ts:SignalBridge", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/templateMiniUI/router/urlState.ts", "target": "function:src/components/templateMiniUI/router/urlState.ts:fromHash", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/router/urlState.ts", "target": "function:src/components/templateMiniUI/router/urlState.ts:toCanvasHash", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/router/urlState.ts", "target": "function:src/components/templateMiniUI/router/urlState.ts:fromHash", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/router/urlState.ts", "target": "function:src/components/templateMiniUI/router/urlState.ts:toCanvasHash", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/templateMiniUI/validation/ValidationEngine.ts", "target": "class:src/components/templateMiniUI/validation/ValidationEngine.ts:ValidationEngine", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/validation/ValidationEngine.ts", "target": "class:src/components/templateMiniUI/validation/ValidationEngine.ts:ValidationEngine", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/templateMiniUI/Breadcrumb.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Breadcrumb.tsx", "target": "file:src/components/templateMiniUI/router/urlState.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Breadcrumb.tsx", "target": "file:src/components/ui/use-toast.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Breadcrumb.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/events.ts", "target": "function:src/components/templateMiniUI/events.ts:logTemplateEvent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/events.ts", "target": "function:src/components/templateMiniUI/events.ts:logTokenUsage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/events.ts", "target": "function:src/components/templateMiniUI/events.ts:logTemplateEvent", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/events.ts", "target": "function:src/components/templateMiniUI/events.ts:logTokenUsage", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:trimHashtagsToPlatformLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:seedFirst3sCue", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:optimizeHashtags", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:applyFix", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:runOptimizationPipeline", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:trimHashtagsToPlatformLimit", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:seedFirst3sCue", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:optimizeHashtags", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:applyFix", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "function:src/components/templateMiniUI/fixes.ts:runOptimizationPipeline", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "file:src/components/templateMiniUI/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/fixes.ts", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "function:src/components/templateMiniUI/Hotkeys.tsx:useGlobalHotkeys", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "function:src/components/templateMiniUI/Hotkeys.tsx:buildComboCheck", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "function:src/components/templateMiniUI/Hotkeys.tsx:parseParityCombos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "function:src/components/templateMiniUI/Hotkeys.tsx:useGlobalHotkeys", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "file:docs/reference/ryos-reference.json", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "file:src/lib/state/devHudStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/Hotkeys.tsx", "target": "file:src/lib/state/windowStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/TemplateMiniUI.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/miniRouter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/router/urlState.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/signalBridge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/telemetry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/index.ts", "target": "file:src/components/templateMiniUI/validation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/miniRouter.ts", "target": "class:src/components/templateMiniUI/miniRouter.ts:MiniRouter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/miniRouter.ts", "target": "function:src/components/templateMiniUI/miniRouter.ts:installMiniRouterShortcuts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/miniRouter.ts", "target": "function:src/components/templateMiniUI/miniRouter.ts:installMiniRouterShortcuts", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/templateMiniUI/PerfHUD.tsx", "target": "file:src/components/templateMiniUI/realtime/SignalBridge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/PerfHUD.tsx", "target": "file:src/lib/state/devHudStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/PerfHUD.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "function:src/components/templateMiniUI/previewKernel.ts:usePreviewKernel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "function:src/components/templateMiniUI/previewKernel.ts:renderAllTargets", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "function:src/components/templateMiniUI/previewKernel.ts:renderSingleTarget", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "function:src/components/templateMiniUI/previewKernel.ts:calculateTokenUsage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "function:src/components/templateMiniUI/previewKernel.ts:usePreviewKernel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "file:src/components/templateMiniUI/telemetry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/previewKernel.ts", "target": "file:src/components/templateMiniUI/tokenMeter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/PreviewViewport.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/PreviewViewport.tsx", "target": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/PreviewViewport.tsx", "target": "file:src/os/sound/useSound.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/PreviewViewport.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "function:src/components/templateMiniUI/RightRailShell.tsx:RightRailShell", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "function:src/components/templateMiniUI/RightRailShell.tsx:FocusTrap", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "function:src/components/templateMiniUI/RightRailShell.tsx:RightRailShell", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/components/templateMiniUI/panels/ABPanel.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/components/templateMiniUI/panels/ValidatePanel.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/components/templateMiniUI/preview/usePreviewKernel.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/components/templateMiniUI/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/os/sound/useSound.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/RightRailShell.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/templateMiniUI/ShortcutsModal.tsx", "target": "function:src/components/templateMiniUI/ShortcutsModal.tsx:ShortcutsModal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/templateMiniUI/ShortcutsModal.tsx", "target": "function:src/components/templateMiniUI/ShortcutsModal.tsx:ShortcutsModal", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/templateMiniUI/ShortcutsModal.tsx", "target": "file:docs/reference/ryos-reference.json", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/ShortcutsModal.tsx", "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/templateMiniUI/ShortcutsModal.tsx", "target": "file:src/styles/motion.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

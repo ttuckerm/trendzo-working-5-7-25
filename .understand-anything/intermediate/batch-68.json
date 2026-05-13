@@ -1,0 +1,1691 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/integration/replay_apify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/replay_apify/route.ts",
+      "summary": "Admin endpoint that replays a previously captured Apify run against the unified viral-prediction engine for regression checks.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "integration-test",
+        "replay"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/replay_apify/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/replay_apify/route.ts",
+      "lineRange": [
+        9,
+        38
+      ],
+      "summary": "GET handler that loads a stored Apify payload by id and re-runs it through the unified prediction engine, returning the resulting prediction.",
+      "tags": [
+        "api-handler",
+        "replay",
+        "admin"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/status/route.ts",
+      "summary": "Large admin integration-status endpoint exposing health metrics (calibration, scheduler, prediction quality, storage, framework mapping) and supporting POST overrides for the operations dashboard.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "monitoring",
+        "integration-status"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Aggregates many service-layer modules behind a single GET — uses helper functions for precision@K, calibration error, and git metadata."
+    },
+    {
+      "id": "function:src/app/api/admin/integration/status/route.ts:precisionAtK",
+      "type": "function",
+      "name": "precisionAtK",
+      "filePath": "src/app/api/admin/integration/status/route.ts",
+      "lineRange": [
+        18,
+        22
+      ],
+      "summary": "Computes Precision@K for a ranked list of prediction outcomes.",
+      "tags": [
+        "metric",
+        "evaluation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/status/route.ts:expectedCalibrationError",
+      "type": "function",
+      "name": "expectedCalibrationError",
+      "filePath": "src/app/api/admin/integration/status/route.ts",
+      "lineRange": [
+        24,
+        30
+      ],
+      "summary": "Computes Expected Calibration Error (ECE) over bucketed predictions for model-calibration reporting.",
+      "tags": [
+        "metric",
+        "calibration",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/status/route.ts",
+      "lineRange": [
+        40,
+        878
+      ],
+      "summary": "Comprehensive GET handler that builds the integration-status payload by collecting calibration, demo mode, scheduler health, framework mapping, storage probes, and prediction-quality metrics.",
+      "tags": [
+        "api-handler",
+        "monitoring",
+        "aggregator"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/status/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/integration/status/route.ts",
+      "lineRange": [
+        880,
+        891
+      ],
+      "summary": "POST handler that lets operators toggle integration-status overrides such as forced demo mode for the admin dashboard.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "override"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/tests/plugins.spec.ts",
+      "type": "file",
+      "name": "plugins.spec.ts",
+      "filePath": "src/app/api/admin/integration/tests/plugins.spec.ts",
+      "summary": "Tiny placeholder spec file for the admin integration plugins subsystem.",
+      "tags": [
+        "test",
+        "spec",
+        "placeholder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/tests/security.spec.ts",
+      "type": "file",
+      "name": "security.spec.ts",
+      "filePath": "src/app/api/admin/integration/tests/security.spec.ts",
+      "summary": "Tiny placeholder spec covering admin integration security checks.",
+      "tags": [
+        "test",
+        "spec",
+        "security",
+        "placeholder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/jarvis/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/jarvis/status/route.ts",
+      "summary": "Admin endpoint exposing the current status of the Jarvis orchestrator (background AI assistant).",
+      "tags": [
+        "api-handler",
+        "admin",
+        "jarvis",
+        "status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/jarvis/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/jarvis/status/route.ts",
+      "lineRange": [
+        7,
+        18
+      ],
+      "summary": "GET handler returning Jarvis orchestrator health and queue state.",
+      "tags": [
+        "api-handler",
+        "jarvis",
+        "status"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/jobs/cancel/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/jobs/cancel/route.ts",
+      "summary": "Admin endpoint that cancels a background job by id via the in-memory job store.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "jobs",
+        "cancel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/jobs/cancel/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/jobs/cancel/route.ts",
+      "lineRange": [
+        7,
+        13
+      ],
+      "summary": "POST handler that cancels the specified job using the job store.",
+      "tags": [
+        "api-handler",
+        "jobs",
+        "admin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/jobs/enqueue/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/jobs/enqueue/route.ts",
+      "summary": "Admin endpoint that enqueues a new background job for execution.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "jobs",
+        "enqueue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/jobs/enqueue/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/jobs/enqueue/route.ts",
+      "lineRange": [
+        10,
+        16
+      ],
+      "summary": "POST handler that creates and enqueues a job based on the request payload.",
+      "tags": [
+        "api-handler",
+        "jobs",
+        "admin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/jobs/list/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/jobs/list/route.ts",
+      "summary": "Admin endpoint that lists currently tracked background jobs and their statuses.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "jobs",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/jobs/list/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/jobs/list/route.ts",
+      "lineRange": [
+        10,
+        14
+      ],
+      "summary": "GET handler returning the current jobs list from the job store.",
+      "tags": [
+        "api-handler",
+        "jobs",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/jobs/runner.ts",
+      "type": "file",
+      "name": "runner.ts",
+      "filePath": "src/app/api/admin/jobs/runner.ts",
+      "summary": "Helper that drives a job's execution while reporting progress back to the job store.",
+      "tags": [
+        "utility",
+        "jobs",
+        "runner"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/jobs/runner.ts:runWithProgress",
+      "type": "function",
+      "name": "runWithProgress",
+      "filePath": "src/app/api/admin/jobs/runner.ts",
+      "lineRange": [
+        3,
+        19
+      ],
+      "summary": "Executes a job function while emitting progress updates and final status to the job store.",
+      "tags": [
+        "jobs",
+        "runner",
+        "progress"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/keys/issue/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/keys/issue/route.ts",
+      "summary": "Admin endpoint that issues a new API/moat key.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "keys",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/issue/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/keys/issue/route.ts",
+      "lineRange": [
+        7,
+        20
+      ],
+      "summary": "POST handler that issues a new API key via the moat keys service.",
+      "tags": [
+        "api-handler",
+        "keys",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/keys/list/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/keys/list/route.ts",
+      "summary": "Admin endpoint that lists currently issued moat API keys.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "keys",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/list/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/keys/list/route.ts",
+      "lineRange": [
+        7,
+        18
+      ],
+      "summary": "GET handler returning the list of issued moat keys.",
+      "tags": [
+        "api-handler",
+        "keys",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/keys/revoke/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/keys/revoke/route.ts",
+      "summary": "Admin endpoint that revokes an existing moat API key by id.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "keys",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/revoke/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/keys/revoke/route.ts",
+      "lineRange": [
+        7,
+        22
+      ],
+      "summary": "POST handler that revokes the specified moat API key.",
+      "tags": [
+        "api-handler",
+        "keys",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/keys/rotate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/keys/rotate/route.ts",
+      "summary": "Admin endpoint that rotates moat API keys after verifying caller authorization.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "keys",
+        "rotation",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/rotate/route.ts:isAuthorized",
+      "type": "function",
+      "name": "isAuthorized",
+      "filePath": "src/app/api/admin/keys/rotate/route.ts",
+      "lineRange": [
+        8,
+        14
+      ],
+      "summary": "Authorization guard for the key-rotation endpoint.",
+      "tags": [
+        "auth",
+        "security",
+        "guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/rotate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/keys/rotate/route.ts",
+      "lineRange": [
+        16,
+        35
+      ],
+      "summary": "POST handler that performs a moat key rotation using the security key_rotation service.",
+      "tags": [
+        "api-handler",
+        "rotation",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/keys/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/keys/route.ts",
+      "summary": "Admin keys CRUD endpoint that creates/lists API keys with random-key generation and billing enforcement.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "keys",
+        "billing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/keys/route.ts",
+      "lineRange": [
+        13,
+        30
+      ],
+      "summary": "POST handler that creates a new API key after billing-quota enforcement.",
+      "tags": [
+        "api-handler",
+        "keys",
+        "billing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/keys/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/keys/route.ts",
+      "lineRange": [
+        32,
+        37
+      ],
+      "summary": "GET handler returning the active API key listing.",
+      "tags": [
+        "api-handler",
+        "keys",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/label-dps/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "summary": "Admin endpoint that triggers and parses output from the DPS labeling pipeline script, writing labels to Supabase.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "dps",
+        "labeling",
+        "pipeline"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Shells out to a Python labeling script and parses stdout into structured records before persisting."
+    },
+    {
+      "id": "function:src/app/api/admin/label-dps/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "lineRange": [
+        10,
+        15
+      ],
+      "summary": "Lazily constructs a service-role Supabase client for the label-DPS route.",
+      "tags": [
+        "supabase",
+        "client",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/label-dps/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "lineRange": [
+        19,
+        38
+      ],
+      "summary": "GET handler returning the current DPS labeling job status and recent results.",
+      "tags": [
+        "api-handler",
+        "dps",
+        "status"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/label-dps/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "lineRange": [
+        42,
+        87
+      ],
+      "summary": "POST handler that kicks off the DPS labeling script and persists parsed labels into Supabase.",
+      "tags": [
+        "api-handler",
+        "dps",
+        "labeling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/label-dps/route.ts:executeLabelScript",
+      "type": "function",
+      "name": "executeLabelScript",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "lineRange": [
+        91,
+        190
+      ],
+      "summary": "Spawns the external DPS labeling script as a child process and streams stdout/stderr into a buffered result.",
+      "tags": [
+        "subprocess",
+        "scripting",
+        "labeling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/label-dps/route.ts:parseScriptOutput",
+      "type": "function",
+      "name": "parseScriptOutput",
+      "filePath": "src/app/api/admin/label-dps/route.ts",
+      "lineRange": [
+        194,
+        214
+      ],
+      "summary": "Parses the DPS labeling script's stdout into structured label records ready for Supabase insertion.",
+      "tags": [
+        "parser",
+        "labeling",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/limited-users/activities/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/limited-users/activities/route.ts",
+      "summary": "Admin endpoint listing recent activities for limited-access users.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "users",
+        "activity-log"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/limited-users/activities/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/limited-users/activities/route.ts",
+      "lineRange": [
+        7,
+        35
+      ],
+      "summary": "GET handler that queries Supabase for recent limited-user activity events.",
+      "tags": [
+        "api-handler",
+        "activity-log",
+        "users"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "summary": "Admin endpoint that bulk-grants limited-user access to a list of email addresses, creating or updating Supabase records.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "users",
+        "bulk-operation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/limited-users/bulk-grant/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "lineRange": [
+        7,
+        93
+      ],
+      "summary": "POST handler that processes a CSV/email list and creates/upserts limited-user access rows in Supabase.",
+      "tags": [
+        "api-handler",
+        "users",
+        "bulk-upsert"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/limited-users/stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/limited-users/stats/route.ts",
+      "summary": "Admin endpoint returning aggregate statistics about limited-user accounts.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "users",
+        "statistics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/limited-users/stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/limited-users/stats/route.ts",
+      "lineRange": [
+        7,
+        65
+      ],
+      "summary": "GET handler that computes counts and breakdowns of limited-user accounts from Supabase.",
+      "tags": [
+        "api-handler",
+        "statistics",
+        "users"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/limited-users/update/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/limited-users/update/route.ts",
+      "summary": "Admin endpoint for updating an individual limited-user's metadata and access state.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "users",
+        "update"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/limited-users/update/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/limited-users/update/route.ts",
+      "lineRange": [
+        7,
+        70
+      ],
+      "summary": "PATCH handler that updates a limited-user record by id, validating input and persisting to Supabase.",
+      "tags": [
+        "api-handler",
+        "users",
+        "update"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/limited-users/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/limited-users/route.ts",
+      "summary": "Admin endpoint that lists limited-user accounts with pagination/filtering.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "users",
+        "listing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/limited-users/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/limited-users/route.ts",
+      "lineRange": [
+        7,
+        35
+      ],
+      "summary": "GET handler that returns the paginated limited-user listing from Supabase.",
+      "tags": [
+        "api-handler",
+        "users",
+        "pagination"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/master-orchestrator/route.ts",
+      "summary": "Admin endpoint that controls the master agent orchestrator (status via GET, command dispatch via POST).",
+      "tags": [
+        "api-handler",
+        "admin",
+        "orchestrator",
+        "agents"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/master-orchestrator/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/master-orchestrator/route.ts",
+      "lineRange": [
+        12,
+        59
+      ],
+      "summary": "GET handler returning the master agent orchestrator's status, queued tasks, and recent activity.",
+      "tags": [
+        "api-handler",
+        "orchestrator",
+        "status"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/master-orchestrator/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/master-orchestrator/route.ts",
+      "lineRange": [
+        61,
+        147
+      ],
+      "summary": "POST handler dispatching commands (start, stop, run-task) to the master agent orchestrator.",
+      "tags": [
+        "api-handler",
+        "orchestrator",
+        "dispatch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/metric-attach/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/metric-attach/route.ts",
+      "summary": "Admin endpoint that attaches collected metrics to predictions using the training metric-attacher pipeline.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "training",
+        "metrics",
+        "attach"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/metric-attach/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/metric-attach/route.ts",
+      "lineRange": [
+        19,
+        71
+      ],
+      "summary": "POST handler that runs the metric-attacher to bind collected post-publish metrics to prediction runs.",
+      "tags": [
+        "api-handler",
+        "metrics",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/metric-collector/run/route.ts",
+      "summary": "Admin endpoint that triggers a one-off run of the training metric-collector (Apify-based ground-truth fetcher).",
+      "tags": [
+        "api-handler",
+        "admin",
+        "training",
+        "metrics",
+        "collector"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/metric-collector/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/metric-collector/run/route.ts",
+      "lineRange": [
+        21,
+        58
+      ],
+      "summary": "POST handler that invokes the metric-collector to gather post-publish video metrics for queued runs.",
+      "tags": [
+        "api-handler",
+        "metrics",
+        "collector"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/metric-schedule/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/metric-schedule/route.ts",
+      "summary": "Admin endpoint managing the training metric-scheduler: GET returns upcoming pulls, POST schedules new collection windows.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "training",
+        "metrics",
+        "scheduler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/metric-schedule/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/metric-schedule/route.ts",
+      "lineRange": [
+        17,
+        23
+      ],
+      "summary": "Lazily constructs a service-role Supabase client for metric-schedule queries.",
+      "tags": [
+        "supabase",
+        "client",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/metric-schedule/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/metric-schedule/route.ts",
+      "lineRange": [
+        30,
+        134
+      ],
+      "summary": "GET handler returning scheduled metric-collection runs, their statuses, and feature-availability projections.",
+      "tags": [
+        "api-handler",
+        "scheduler",
+        "metrics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/metric-schedule/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/metric-schedule/route.ts",
+      "lineRange": [
+        142,
+        214
+      ],
+      "summary": "POST handler that schedules new metric-collection windows for a prediction run via the training metric-scheduler.",
+      "tags": [
+        "api-handler",
+        "scheduler",
+        "metrics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/mission-control/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/mission-control/metrics/route.ts",
+      "summary": "Admin Mission Control endpoint that returns aggregated platform metrics for the operator dashboard.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "mission-control",
+        "metrics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/mission-control/metrics/route.ts",
+      "lineRange": [
+        7,
+        60
+      ],
+      "summary": "GET handler aggregating Supabase-backed metrics for the Mission Control overview panel.",
+      "tags": [
+        "api-handler",
+        "dashboard",
+        "metrics"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/api/admin/integration/replay_apify/route.ts",
+      "target": "function:src/app/api/admin/integration/replay_apify/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/integration/replay_apify/route.ts",
+      "target": "function:src/app/api/admin/integration/replay_apify/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/integration/replay_apify/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/replay_apify/route.ts",
+      "target": "file:src/lib/services/viral-prediction/unified-prediction-engine.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:precisionAtK",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:expectedCalibrationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "function:src/app/api/admin/integration/status/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/audit/audit_utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/calibration/calibration.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/cron/scheduler.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/frameworks/mapping_guide.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/runtime/demo_mode.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/services/viral-prediction/dps-baselines.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/services/viral-prediction/unified-prediction-engine.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/integration/status/route.ts",
+      "target": "file:src/lib/storage/object_store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/jarvis/status/route.ts",
+      "target": "function:src/app/api/admin/jarvis/status/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/jarvis/status/route.ts",
+      "target": "function:src/app/api/admin/jarvis/status/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/jarvis/status/route.ts",
+      "target": "file:src/lib/jarvis/orchestrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/cancel/route.ts",
+      "target": "function:src/app/api/admin/jobs/cancel/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/cancel/route.ts",
+      "target": "function:src/app/api/admin/jobs/cancel/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/cancel/route.ts",
+      "target": "file:src/lib/jobs/job_store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/enqueue/route.ts",
+      "target": "function:src/app/api/admin/jobs/enqueue/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/enqueue/route.ts",
+      "target": "function:src/app/api/admin/jobs/enqueue/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/enqueue/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/list/route.ts",
+      "target": "function:src/app/api/admin/jobs/list/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/list/route.ts",
+      "target": "function:src/app/api/admin/jobs/list/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/list/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/runner.ts",
+      "target": "function:src/app/api/admin/jobs/runner.ts:runWithProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/runner.ts",
+      "target": "function:src/app/api/admin/jobs/runner.ts:runWithProgress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/jobs/runner.ts",
+      "target": "file:src/lib/jobs/job_store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/issue/route.ts",
+      "target": "function:src/app/api/admin/keys/issue/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/issue/route.ts",
+      "target": "function:src/app/api/admin/keys/issue/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/issue/route.ts",
+      "target": "file:src/lib/moat/keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/list/route.ts",
+      "target": "function:src/app/api/admin/keys/list/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/list/route.ts",
+      "target": "function:src/app/api/admin/keys/list/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/list/route.ts",
+      "target": "file:src/lib/moat/keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/revoke/route.ts",
+      "target": "function:src/app/api/admin/keys/revoke/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/revoke/route.ts",
+      "target": "function:src/app/api/admin/keys/revoke/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/revoke/route.ts",
+      "target": "file:src/lib/moat/keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/rotate/route.ts",
+      "target": "function:src/app/api/admin/keys/rotate/route.ts:isAuthorized",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/rotate/route.ts",
+      "target": "function:src/app/api/admin/keys/rotate/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/rotate/route.ts",
+      "target": "function:src/app/api/admin/keys/rotate/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/rotate/route.ts",
+      "target": "file:src/lib/moat/keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/rotate/route.ts",
+      "target": "file:src/lib/security/key_rotation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "function:src/app/api/admin/keys/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "function:src/app/api/admin/keys/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "function:src/app/api/admin/keys/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "function:src/app/api/admin/keys/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "file:src/lib/billing/enforcement.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/keys/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:getSupabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:executeLabelScript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:parseScriptOutput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/label-dps/route.ts",
+      "target": "function:src/app/api/admin/label-dps/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/activities/route.ts",
+      "target": "function:src/app/api/admin/limited-users/activities/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/activities/route.ts",
+      "target": "function:src/app/api/admin/limited-users/activities/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/activities/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "target": "function:src/app/api/admin/limited-users/bulk-grant/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "target": "function:src/app/api/admin/limited-users/bulk-grant/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/bulk-grant/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/stats/route.ts",
+      "target": "function:src/app/api/admin/limited-users/stats/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/stats/route.ts",
+      "target": "function:src/app/api/admin/limited-users/stats/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/stats/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/update/route.ts",
+      "target": "function:src/app/api/admin/limited-users/update/route.ts:PATCH",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/update/route.ts",
+      "target": "function:src/app/api/admin/limited-users/update/route.ts:PATCH",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/update/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/route.ts",
+      "target": "function:src/app/api/admin/limited-users/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/route.ts",
+      "target": "function:src/app/api/admin/limited-users/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/limited-users/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "target": "function:src/app/api/admin/master-orchestrator/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "target": "function:src/app/api/admin/master-orchestrator/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "target": "function:src/app/api/admin/master-orchestrator/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "target": "function:src/app/api/admin/master-orchestrator/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/master-orchestrator/route.ts",
+      "target": "file:src/lib/services/master-agent-orchestrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "function:src/app/api/admin/metric-attach/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "function:src/app/api/admin/metric-attach/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "file:src/lib/training/feature-availability-matrix.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "file:src/lib/training/metric-attacher.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "file:src/lib/training/training-ingest-types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-attach/route.ts",
+      "target": "file:src/lib/utils/adminAuth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "function:src/app/api/admin/metric-collector/run/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "function:src/app/api/admin/metric-collector/run/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "file:src/lib/training/feature-availability-matrix.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "file:src/lib/training/metric-collector.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "file:src/lib/training/training-ingest-types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-collector/run/route.ts",
+      "target": "file:src/lib/utils/adminAuth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "function:src/app/api/admin/metric-schedule/route.ts:getSupabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "function:src/app/api/admin/metric-schedule/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "function:src/app/api/admin/metric-schedule/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "function:src/app/api/admin/metric-schedule/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "function:src/app/api/admin/metric-schedule/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "file:src/lib/training/feature-availability-matrix.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "file:src/lib/training/metric-scheduler.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "file:src/lib/training/training-ingest-types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/metric-schedule/route.ts",
+      "target": "file:src/lib/utils/adminAuth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/mission-control/metrics/route.ts",
+      "target": "function:src/app/api/admin/mission-control/metrics/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/admin/mission-control/metrics/route.ts",
+      "target": "function:src/app/api/admin/mission-control/metrics/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/mission-control/metrics/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

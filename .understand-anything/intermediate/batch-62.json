@@ -1,0 +1,448 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/agency/AuthGate.tsx",
+      "type": "file",
+      "name": "AuthGate.tsx",
+      "filePath": "src/app/agency/AuthGate.tsx",
+      "summary": "Thin wrapper that gates the /agency route subtree behind ProtectedRoute, restricting access to the 'agency' role.",
+      "tags": ["component", "middleware", "auth", "agency"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/agency/layout.tsx",
+      "summary": "Next.js layout for the agency console — wraps children in AgencyAuthGate plus the AgencySidebar shell.",
+      "tags": ["component", "layout", "agency", "next-app-router"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/agency/page.tsx",
+      "summary": "Server component for the agency dashboard — resolves the current user's agency, aggregates creators / briefs / agent cards / generated scripts from Supabase, and hands the rolled-up data to AgencyClient.",
+      "tags": ["api-handler", "data-aggregation", "supabase", "agency", "server-component"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of Supabase service-role queries and Promise.all fanout to assemble dashboard KPIs in a single render."
+    },
+    {
+      "id": "file:src/app/analytics/advanced-insights/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/analytics/advanced-insights/page.tsx",
+      "summary": "Legacy /analytics/advanced-insights URL that client-side redirects to the canonical insights route.",
+      "tags": ["component", "redirect", "analytics", "legacy-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/analytics/performance/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/analytics/performance/page.tsx",
+      "summary": "Legacy /analytics/performance URL that client-side redirects to the canonical performance dashboard.",
+      "tags": ["component", "redirect", "analytics", "legacy-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/analytics/remix-stats/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/analytics/remix-stats/page.tsx",
+      "summary": "Legacy /analytics/remix-stats URL that client-side redirects (with timeout fallback) to the canonical remix analytics view.",
+      "tags": ["component", "redirect", "analytics", "legacy-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/analytics/trend-insights/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/analytics/trend-insights/page.tsx",
+      "summary": "Legacy /analytics/trend-insights URL that client-side redirects to the canonical trend insights dashboard.",
+      "tags": ["component", "redirect", "analytics", "legacy-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ab/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ab/[id]/route.ts",
+      "summary": "Admin-only A/B test status endpoint — returns synthetic progress data for a given test id (placeholder before the real ABTestingSystem read-through).",
+      "tags": ["api-handler", "route", "ab-testing", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ab/start/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ab/start/route.ts",
+      "summary": "POST endpoint that mints an A/B test id, rate-limits/admins the caller, and records the start action in pipeline_control_actions.",
+      "tags": ["api-handler", "route", "ab-testing", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/adaptation/apply/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/adaptation/apply/route.ts",
+      "summary": "Applies a proposed adaptation change by id — records the apply event and optionally promotes the candidate via the learning store.",
+      "tags": ["api-handler", "route", "adaptation", "learning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/adaptation/scan/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/adaptation/scan/route.ts",
+      "summary": "Triggers the adaptation policy planner to compute a retune proposal and persists it to the adaptation store.",
+      "tags": ["api-handler", "route", "adaptation", "scheduler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/adaptation/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/adaptation/status/route.ts",
+      "summary": "Lightweight health probe that reports the adaptation subsystem is running.",
+      "tags": ["api-handler", "route", "adaptation", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/adaptation/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/adaptation/summary/route.ts",
+      "summary": "Returns the current adaptation health summary — drift signals (PSI, dECE), regime label (Stable / Shifting / Storm), and the most recent proposal/apply timestamps.",
+      "tags": ["api-handler", "route", "adaptation", "drift-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/ab-testing/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ab-testing/route.ts",
+      "summary": "Multiplexed admin endpoint for the ABTestingSystem singleton — POST dispatches create/start/update/analyze/pause/resume/cancel actions, GET returns status, lists, individual test detail, and results.",
+      "tags": ["api-handler", "route", "ab-testing", "admin", "dispatch"],
+      "complexity": "complex",
+      "languageNotes": "Action-style dispatch on a JSON 'action' field rather than separate routes — keeps singleton orchestration in one place."
+    },
+    {
+      "id": "file:src/app/api/admin/accuracy-dashboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/accuracy-dashboard/route.ts",
+      "summary": "Admin accuracy dashboard endpoint — GET aggregates calibration / accuracy metrics from Supabase for prediction runs, POST handles related management actions.",
+      "tags": ["api-handler", "route", "admin", "accuracy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/active-label-queue/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/active-label-queue/route.ts",
+      "summary": "Active-learning label queue endpoint — GET returns items pending human labeling, POST records label decisions back into calibration.",
+      "tags": ["api-handler", "route", "admin", "calibration", "active-learning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/agencies/[id]/preload-patterns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/agencies/[id]/preload-patterns/route.ts",
+      "summary": "Admin endpoint that warms the per-agency pattern memory by invoking preload-agency-patterns for the supplied agency id.",
+      "tags": ["api-handler", "route", "admin", "agency", "memory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/agent/diag/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/agent/diag/route.ts",
+      "summary": "Diagnostic endpoint that surfaces internal Jarvis agent store state for support / debugging.",
+      "tags": ["api-handler", "route", "admin", "jarvis", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/agent/kill-switch/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/agent/kill-switch/route.ts",
+      "summary": "Kill-switch endpoint for the Jarvis agent — GET reports the current armed/disarmed state, POST flips it with admin auth.",
+      "tags": ["api-handler", "route", "admin", "jarvis", "kill-switch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/agent/tasks/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/agent/tasks/route.ts",
+      "summary": "CRUD endpoint for Jarvis agent task records — GET lists tasks, POST creates a task, PATCH updates one, all gated by admin auth.",
+      "tags": ["api-handler", "route", "admin", "jarvis", "task-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/ai-brain/apply/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ai-brain/apply/route.ts",
+      "summary": "Applies an AI-brain framework decision after admin auth — dispatches the chosen framework to downstream consumers.",
+      "tags": ["api-handler", "route", "admin", "ai-brain"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/ai-brain/frameworks/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ai-brain/frameworks/route.ts",
+      "summary": "Returns the catalogue of AI-brain framework options (heuristics, prompt strategies, reasoning recipes) for admin selection.",
+      "tags": ["api-handler", "route", "admin", "ai-brain", "catalog"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/ai-brain/history/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ai-brain/history/route.ts",
+      "summary": "Returns the recent history of AI-brain framework selections and outcomes for the admin console.",
+      "tags": ["api-handler", "route", "admin", "ai-brain", "history"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/ai-brain/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ai-brain/route.ts",
+      "summary": "Root admin AI-brain endpoint — POST runs an AI-brain action; includes a helper to sample a random framework component for experimentation.",
+      "tags": ["api-handler", "route", "admin", "ai-brain"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "summary": "Admin endpoint that runs gradient-style optimization of prediction algorithm weights against training data and persists the result.",
+      "tags": ["api-handler", "route", "admin", "algorithm", "ml-training"],
+      "complexity": "complex",
+      "languageNotes": "Implements a hand-rolled gradient descent (calculateGradients + calculateAccuracy) rather than calling an ML service."
+    },
+    {
+      "id": "function:src/app/agency/page.tsx:AgencyPage",
+      "type": "function",
+      "name": "AgencyPage",
+      "filePath": "src/app/agency/page.tsx",
+      "lineRange": [8, 132],
+      "summary": "Server component that loads the signed-in agency owner, fans out Supabase queries for creators, briefs, agent cards, and generated scripts, then composes the dashboard data set for AgencyClient.",
+      "tags": ["server-component", "data-aggregation", "agency", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/ab-testing/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/ab-testing/route.ts",
+      "lineRange": [12, 191],
+      "summary": "Dispatches A/B testing actions (create / start / update / analyze / pause / resume / cancel) against the ABTestingSystem singleton based on the request body's action field.",
+      "tags": ["api-handler", "dispatch", "ab-testing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/ab-testing/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/ab-testing/route.ts",
+      "lineRange": [193, 305],
+      "summary": "Serves A/B testing read queries — system status, test list, individual test detail, and per-test results — based on query parameters.",
+      "tags": ["api-handler", "ab-testing", "read"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/accuracy-dashboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/accuracy-dashboard/route.ts",
+      "lineRange": [38, 156],
+      "summary": "Returns the admin accuracy dashboard payload — aggregates calibration metrics and per-component accuracy from Supabase prediction tables.",
+      "tags": ["api-handler", "accuracy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/accuracy-dashboard/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/accuracy-dashboard/route.ts",
+      "lineRange": [161, 301],
+      "summary": "Handles accuracy-dashboard management actions (label submission / recompute / refresh) and writes back to the calibration tables.",
+      "tags": ["api-handler", "accuracy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/agent/tasks/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/agent/tasks/route.ts",
+      "lineRange": [36, 67],
+      "summary": "Creates a Jarvis agent task after admin auth and validation, persisting it via the jarvis store.",
+      "tags": ["api-handler", "jarvis", "task-create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/agent/tasks/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/agent/tasks/route.ts",
+      "lineRange": [69, 96],
+      "summary": "Updates an existing Jarvis agent task (status / payload) after admin auth, returning the merged record.",
+      "tags": ["api-handler", "jarvis", "task-update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/ai-brain/apply/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/ai-brain/apply/route.ts",
+      "lineRange": [7, 44],
+      "summary": "Applies an AI-brain framework choice after admin auth validation, recording the decision for downstream consumers.",
+      "tags": ["api-handler", "ai-brain", "apply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/ai-brain/frameworks/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/ai-brain/frameworks/route.ts",
+      "lineRange": [7, 117],
+      "summary": "Returns the static catalogue of AI-brain frameworks (heuristics, prompt strategies, reasoning recipes) plus their metadata for admin selection.",
+      "tags": ["api-handler", "ai-brain", "catalog"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/ai-brain/history/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/ai-brain/history/route.ts",
+      "lineRange": [7, 72],
+      "summary": "Returns the recent history of AI-brain framework selections and their outcomes for the admin console.",
+      "tags": ["api-handler", "ai-brain", "history"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/ai-brain/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/ai-brain/route.ts",
+      "lineRange": [6, 51],
+      "summary": "Root AI-brain action handler — runs the requested AI-brain operation after admin auth and returns the resulting framework decision.",
+      "tags": ["api-handler", "ai-brain"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "lineRange": [17, 112],
+      "summary": "Loads training data from Supabase, runs gradient-style weight optimization, evaluates accuracy delta, and persists the new weights.",
+      "tags": ["api-handler", "ml-training", "algorithm"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:optimizeWeights",
+      "type": "function",
+      "name": "optimizeWeights",
+      "filePath": "src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "lineRange": [117, 151],
+      "summary": "Runs a fixed-step gradient-descent loop over the training data to update the prediction weight vector, returning the optimized weights.",
+      "tags": ["ml-training", "gradient-descent", "algorithm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateGradients",
+      "type": "function",
+      "name": "calculateGradients",
+      "filePath": "src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "lineRange": [156, 184],
+      "summary": "Computes the per-weight gradient by summing prediction-error contributions across the training dataset.",
+      "tags": ["ml-training", "gradient", "algorithm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateAccuracy",
+      "type": "function",
+      "name": "calculateAccuracy",
+      "filePath": "src/app/api/admin/algorithm/optimize-weights/route.ts",
+      "lineRange": [189, 207],
+      "summary": "Evaluates classification accuracy of a candidate weight vector against the labeled training data.",
+      "tags": ["ml-training", "evaluation", "algorithm"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/agency/AuthGate.tsx", "target": "file:src/components/auth/ProtectedRoute.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/layout.tsx", "target": "file:src/app/agency/AuthGate.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/layout.tsx", "target": "file:src/app/agency/components/AgencySidebar.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/page.tsx", "target": "file:src/app/agency/AgencyClient.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/page.tsx", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/page.tsx", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/page.tsx", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ab/[id]/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ab/start/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ab/start/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ab/start/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/apply/route.ts", "target": "file:src/lib/adaptation/apply.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/apply/route.ts", "target": "file:src/lib/adaptation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/apply/route.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/scan/route.ts", "target": "file:src/lib/adaptation/policy.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/scan/route.ts", "target": "file:src/lib/adaptation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/summary/route.ts", "target": "file:src/lib/adaptation/signals.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/adaptation/summary/route.ts", "target": "file:src/lib/adaptation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ab-testing/route.ts", "target": "file:src/lib/services/abTestingSystem.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/active-label-queue/route.ts", "target": "file:src/lib/calibration/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/active-label-queue/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agencies/[id]/preload-patterns/route.ts", "target": "file:src/lib/memory/preload-agency-patterns.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agent/diag/route.ts", "target": "file:src/lib/jarvis/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agent/kill-switch/route.ts", "target": "file:src/lib/jarvis/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agent/kill-switch/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "file:src/lib/jarvis/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ai-brain/apply/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ai-brain/frameworks/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ai-brain/history/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ai-brain/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/page.tsx", "target": "function:src/app/agency/page.tsx:AgencyPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/page.tsx", "target": "function:src/app/agency/page.tsx:AgencyPage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ab-testing/route.ts", "target": "function:src/app/api/admin/ab-testing/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ab-testing/route.ts", "target": "function:src/app/api/admin/ab-testing/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ab-testing/route.ts", "target": "function:src/app/api/admin/ab-testing/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ab-testing/route.ts", "target": "function:src/app/api/admin/ab-testing/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/accuracy-dashboard/route.ts", "target": "function:src/app/api/admin/accuracy-dashboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/accuracy-dashboard/route.ts", "target": "function:src/app/api/admin/accuracy-dashboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/accuracy-dashboard/route.ts", "target": "function:src/app/api/admin/accuracy-dashboard/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/accuracy-dashboard/route.ts", "target": "function:src/app/api/admin/accuracy-dashboard/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "function:src/app/api/admin/agent/tasks/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "function:src/app/api/admin/agent/tasks/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "function:src/app/api/admin/agent/tasks/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/agent/tasks/route.ts", "target": "function:src/app/api/admin/agent/tasks/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ai-brain/apply/route.ts", "target": "function:src/app/api/admin/ai-brain/apply/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ai-brain/apply/route.ts", "target": "function:src/app/api/admin/ai-brain/apply/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ai-brain/frameworks/route.ts", "target": "function:src/app/api/admin/ai-brain/frameworks/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ai-brain/frameworks/route.ts", "target": "function:src/app/api/admin/ai-brain/frameworks/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ai-brain/history/route.ts", "target": "function:src/app/api/admin/ai-brain/history/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ai-brain/history/route.ts", "target": "function:src/app/api/admin/ai-brain/history/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ai-brain/route.ts", "target": "function:src/app/api/admin/ai-brain/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ai-brain/route.ts", "target": "function:src/app/api/admin/ai-brain/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:optimizeWeights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateGradients", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/algorithm/optimize-weights/route.ts", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateAccuracy", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:POST", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:optimizeWeights", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:POST", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateAccuracy", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:optimizeWeights", "target": "function:src/app/api/admin/algorithm/optimize-weights/route.ts:calculateGradients", "type": "calls", "direction": "forward", "weight": 0.8}
+  ]
+}

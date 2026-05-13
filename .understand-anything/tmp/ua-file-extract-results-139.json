@@ -1,0 +1,3611 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/lib/freedom-agent/append-message.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 62,
+      "nonEmptyLines": 52,
+      "functions": [
+        {
+          "name": "getServerSupabase",
+          "startLine": 10,
+          "endLine": 19,
+          "params": []
+        },
+        {
+          "name": "normalize",
+          "startLine": 21,
+          "endLine": 32,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "appendMessages",
+          "startLine": 34,
+          "endLine": 62,
+          "params": [
+            "assessmentId",
+            "newMessages"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "appendMessages",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServerSupabase",
+          "callee": "createClient",
+          "lineNumber": 18
+        },
+        {
+          "caller": "normalize",
+          "callee": "Array.isArray",
+          "lineNumber": 22
+        },
+        {
+          "caller": "normalize",
+          "callee": "raw.filter",
+          "lineNumber": 23
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "getServerSupabase",
+          "lineNumber": 38
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('messages')\n    .eq('assessment_id', assessmentId)\n    .maybeSingle",
+          "lineNumber": 41
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('messages')\n    .eq",
+          "lineNumber": 41
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select",
+          "lineNumber": 41
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from",
+          "lineNumber": 41
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "normalize",
+          "lineNumber": 49
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "combined.slice",
+          "lineNumber": 52
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .update({ messages: capped, message_count: capped.length })\n    .eq",
+          "lineNumber": 55
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .update",
+          "lineNumber": 55
+        },
+        {
+          "caller": "appendMessages",
+          "callee": "supabase\n    .from",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/build-system-prompt.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 58,
+      "nonEmptyLines": 52,
+      "functions": [
+        {
+          "name": "computeCurrentSprintDay",
+          "startLine": 8,
+          "endLine": 27,
+          "params": [
+            "startDateIso"
+          ]
+        },
+        {
+          "name": "buildFreedomAgentSystemPrompt",
+          "startLine": 29,
+          "endLine": 58,
+          "params": [
+            "payload",
+            "sprintProgress"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "buildFreedomAgentSystemPrompt",
+          "line": 29,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "new Date(`${startDateIso}T00:00:00Z`).getTime",
+          "lineNumber": 13
+        },
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "Date.UTC",
+          "lineNumber": 15
+        },
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "now.getUTCFullYear",
+          "lineNumber": 16
+        },
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "now.getUTCMonth",
+          "lineNumber": 17
+        },
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "now.getUTCDate",
+          "lineNumber": 18
+        },
+        {
+          "caller": "computeCurrentSprintDay",
+          "callee": "Math.floor",
+          "lineNumber": 21
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 33
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "new Date().toISOString",
+          "lineNumber": 33
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "computeCurrentSprintDay",
+          "lineNumber": 34
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "payload.sprint.days.map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "String",
+          "lineNumber": 43
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE\n    .replace('{{ASSESSMENT_PAYLOAD_JSON}}', JSON.stringify(augmentedPayload, null, 2))\n    .replace('{{TODAY}}', today)\n    .replace('{{SPRINT_START_DATE}}', payload.sprint.startDate)\n    .replace",
+          "lineNumber": 53
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE\n    .replace('{{ASSESSMENT_PAYLOAD_JSON}}', JSON.stringify(augmentedPayload, null, 2))\n    .replace('{{TODAY}}', today)\n    .replace",
+          "lineNumber": 53
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE\n    .replace('{{ASSESSMENT_PAYLOAD_JSON}}', JSON.stringify(augmentedPayload, null, 2))\n    .replace",
+          "lineNumber": 53
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE\n    .replace",
+          "lineNumber": 53
+        },
+        {
+          "caller": "buildFreedomAgentSystemPrompt",
+          "callee": "JSON.stringify",
+          "lineNumber": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/fetch-conversation.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 99,
+      "functions": [
+        {
+          "name": "getServerSupabase",
+          "startLine": 11,
+          "endLine": 20,
+          "params": []
+        },
+        {
+          "name": "normalizeMessages",
+          "startLine": 31,
+          "endLine": 49,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "rowToConversation",
+          "startLine": 51,
+          "endLine": 60,
+          "params": [
+            "row"
+          ]
+        },
+        {
+          "name": "fetchOrCreateConversation",
+          "startLine": 62,
+          "endLine": 97,
+          "params": [
+            "assessmentId"
+          ]
+        },
+        {
+          "name": "fetchConversation",
+          "startLine": 99,
+          "endLine": 111,
+          "params": [
+            "assessmentId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "fetchOrCreateConversation",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "fetchConversation",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServerSupabase",
+          "callee": "createClient",
+          "lineNumber": 19
+        },
+        {
+          "caller": "normalizeMessages",
+          "callee": "Array.isArray",
+          "lineNumber": 32
+        },
+        {
+          "caller": "normalizeMessages",
+          "callee": "out.push",
+          "lineNumber": 42
+        },
+        {
+          "caller": "rowToConversation",
+          "callee": "normalizeMessages",
+          "lineNumber": 55
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "getServerSupabase",
+          "lineNumber": 65
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq('assessment_id', assessmentId)\n    .maybeSingle",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "rowToConversation",
+          "lineNumber": 75
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .insert({ assessment_id: assessmentId, messages: [], message_count: 0 })\n    .select('*')\n    .single",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .insert({ assessment_id: assessmentId, messages: [], message_count: 0 })\n    .select",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .insert",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "rowToConversation",
+          "lineNumber": 85
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq('assessment_id', assessmentId)\n    .maybeSingle",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchOrCreateConversation",
+          "callee": "rowToConversation",
+          "lineNumber": 96
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "getServerSupabase",
+          "lineNumber": 102
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq('assessment_id', assessmentId)\n    .maybeSingle",
+          "lineNumber": 104
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select('*')\n    .eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "supabase\n    .from('freedom_agent_conversations')\n    .select",
+          "lineNumber": 104
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 104
+        },
+        {
+          "caller": "fetchConversation",
+          "callee": "rowToConversation",
+          "lineNumber": 110
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/load-plan-for-session.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 92,
+      "nonEmptyLines": 82,
+      "functions": [
+        {
+          "name": "apiRowInputsToSegmentRaw",
+          "startLine": 9,
+          "endLine": 23,
+          "params": [
+            "inputs"
+          ]
+        },
+        {
+          "name": "loadFreedomPlanById",
+          "startLine": 37,
+          "endLine": 92,
+          "params": [
+            "supabase",
+            "planId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "loadFreedomPlanById",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "Number",
+          "lineNumber": 11
+        },
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "String",
+          "lineNumber": 12
+        },
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "String",
+          "lineNumber": 13
+        },
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "String",
+          "lineNumber": 14
+        },
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "String",
+          "lineNumber": 15
+        },
+        {
+          "caller": "apiRowInputsToSegmentRaw",
+          "callee": "String",
+          "lineNumber": 19
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_plans')\r\n    .select('inputs, plan')\r\n    .eq('id', planId)\r\n    .maybeSingle",
+          "lineNumber": 41
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_plans')\r\n    .select('inputs, plan')\r\n    .eq",
+          "lineNumber": 41
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_plans')\r\n    .select",
+          "lineNumber": 41
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 41
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "Array.isArray",
+          "lineNumber": 50
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "classifyLead",
+          "lineNumber": 52
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "mapInputsForSegmentation",
+          "lineNumber": 52
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "apiRowInputsToSegmentRaw",
+          "lineNumber": 52
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "apiRowInputsToSegmentRaw",
+          "lineNumber": 55
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_saved_plans')\r\n    .select('plan, segment')\r\n    .eq('id', planId)\r\n    .maybeSingle",
+          "lineNumber": 63
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_saved_plans')\r\n    .select('plan, segment')\r\n    .eq",
+          "lineNumber": 63
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from('freedom_os_saved_plans')\r\n    .select",
+          "lineNumber": 63
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 63
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "Array.isArray",
+          "lineNumber": 74
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "['A', 'B', 'C', 'D'].includes",
+          "lineNumber": 78
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "classifyLead",
+          "lineNumber": 81
+        },
+        {
+          "caller": "loadFreedomPlanById",
+          "callee": "mapInputsForSegmentation",
+          "lineNumber": 81
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/niche-templates.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 385,
+      "nonEmptyLines": 350,
+      "functions": [
+        {
+          "name": "matchNiche",
+          "startLine": 342,
+          "endLine": 365,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "matchBusinessType",
+          "startLine": 367,
+          "endLine": 375,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "getNicheTemplate",
+          "startLine": 377,
+          "endLine": 385,
+          "params": [
+            "nicheInterest",
+            "businessType"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getNicheTemplate",
+          "line": 377,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "matchNiche",
+          "callee": "input.toLowerCase().trim",
+          "lineNumber": 343
+        },
+        {
+          "caller": "matchNiche",
+          "callee": "input.toLowerCase",
+          "lineNumber": 343
+        },
+        {
+          "caller": "matchNiche",
+          "callee": "normalized.includes",
+          "lineNumber": 353
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "(input || '').toLowerCase().trim",
+          "lineNumber": 368
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "(input || '').toLowerCase",
+          "lineNumber": 368
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 369
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 370
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 370
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 370
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 371
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 371
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 371
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 372
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 372
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 372
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 372
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 373
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 373
+        },
+        {
+          "caller": "matchBusinessType",
+          "callee": "normalized.includes",
+          "lineNumber": 373
+        },
+        {
+          "caller": "getNicheTemplate",
+          "callee": "matchNiche",
+          "lineNumber": 378
+        },
+        {
+          "caller": "getNicheTemplate",
+          "callee": "matchBusinessType",
+          "lineNumber": 381
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/plan-prompt-section.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 69,
+      "nonEmptyLines": 61,
+      "functions": [
+        {
+          "name": "buildFreedomPlanPromptSection",
+          "startLine": 6,
+          "endLine": 69,
+          "params": [
+            "bundle"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "buildFreedomPlanPromptSection",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "Array.isArray",
+          "lineNumber": 19
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "sprint\r\n    .slice(0, 4)\r\n    .map((block: unknown) => {\r\n      const s = block as Record<string, unknown>\r\n      const days = s.days != null ? String(s.days) : ''\r\n      const tasks = Array.isArray(s.tasks) ? (s.tasks as string[]).map(t => `    - ${t}`).join('\\n') : ''\r\n      return days ? `${days}\\n${tasks}` : tasks\r\n    })\r\n    .filter(Boolean)\r\n    .join",
+          "lineNumber": 39
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "sprint\r\n    .slice(0, 4)\r\n    .map((block: unknown) => {\r\n      const s = block as Record<string, unknown>\r\n      const days = s.days != null ? String(s.days) : ''\r\n      const tasks = Array.isArray(s.tasks) ? (s.tasks as string[]).map(t => `    - ${t}`).join('\\n') : ''\r\n      return days ? `${days}\\n${tasks}` : tasks\r\n    })\r\n    .filter",
+          "lineNumber": 39
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "sprint\r\n    .slice(0, 4)\r\n    .map",
+          "lineNumber": 39
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "sprint\r\n    .slice",
+          "lineNumber": 39
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "String",
+          "lineNumber": 43
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "Array.isArray",
+          "lineNumber": 44
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "(s.tasks as string[]).map(t => `    - ${t}`).join",
+          "lineNumber": 44
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "(s.tasks as string[]).map",
+          "lineNumber": 44
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "Number(freedomNumber).toLocaleString",
+          "lineNumber": 61
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "Number",
+          "lineNumber": 61
+        },
+        {
+          "caller": "buildFreedomPlanPromptSection",
+          "callee": "String",
+          "lineNumber": 62
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/progress-tracker.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 105,
+      "nonEmptyLines": 89,
+      "functions": [
+        {
+          "name": "updateProgress",
+          "startLine": 24,
+          "endLine": 65,
+          "params": [
+            "currentState",
+            "userMessage",
+            "_assistantMessage"
+          ]
+        },
+        {
+          "name": "matchesAny",
+          "startLine": 67,
+          "endLine": 69,
+          "params": [
+            "text",
+            "keywords"
+          ]
+        },
+        {
+          "name": "buildProgressContext",
+          "startLine": 71,
+          "endLine": 105,
+          "params": [
+            "progress"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "updateProgress",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "buildProgressContext",
+          "line": 71,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "updateProgress",
+          "callee": "userMessage.toLowerCase",
+          "lineNumber": 29
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 36
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 39
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 42
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 45
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 48
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 51
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "matchesAny",
+          "lineNumber": 55
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "userMessage.slice(0, 50).trim",
+          "lineNumber": 61
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "userMessage.slice",
+          "lineNumber": 61
+        },
+        {
+          "caller": "updateProgress",
+          "callee": "(updated.lastTopics || []).slice",
+          "lineNumber": 62
+        },
+        {
+          "caller": "matchesAny",
+          "callee": "keywords.some",
+          "lineNumber": 68
+        },
+        {
+          "caller": "matchesAny",
+          "callee": "text.includes",
+          "lineNumber": 68
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.push",
+          "lineNumber": 77
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.push",
+          "lineNumber": 78
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.push",
+          "lineNumber": 79
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.push",
+          "lineNumber": 80
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.push",
+          "lineNumber": 81
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "milestones.join",
+          "lineNumber": 87
+        },
+        {
+          "caller": "buildProgressContext",
+          "callee": "progress.lastTopics.join",
+          "lineNumber": 100
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-agent/soft-sell-arc.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 134,
+      "functions": [
+        {
+          "name": "getWeekDirective",
+          "startLine": 14,
+          "endLine": 127,
+          "params": [
+            "week",
+            "progress",
+            "_nicheKey"
+          ]
+        },
+        {
+          "name": "getWeekOpener",
+          "startLine": 129,
+          "endLine": 150,
+          "params": [
+            "week",
+            "progress"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getWeekDirective",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "getWeekOpener",
+          "line": 129,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-os/parse-claude-plan-json.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "extractJsonObject",
+          "startLine": 4,
+          "endLine": 13,
+          "params": [
+            "text"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extractJsonObject",
+          "line": 4,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extractJsonObject",
+          "callee": "text.trim",
+          "lineNumber": 5
+        },
+        {
+          "caller": "extractJsonObject",
+          "callee": "/^```(?:json)?\\s*([\\s\\S]*?)```/m.exec",
+          "lineNumber": 6
+        },
+        {
+          "caller": "extractJsonObject",
+          "callee": "fence[1].trim",
+          "lineNumber": 7
+        },
+        {
+          "caller": "extractJsonObject",
+          "callee": "JSON.parse",
+          "lineNumber": 8
+        },
+        {
+          "caller": "extractJsonObject",
+          "callee": "Array.isArray",
+          "lineNumber": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/freedom-os/rate-limit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 38,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "checkIpRateLimit",
+          "startLine": 12,
+          "endLine": 27,
+          "params": [
+            "ip",
+            "maxPerWindow"
+          ]
+        },
+        {
+          "name": "getClientIp",
+          "startLine": 29,
+          "endLine": 38,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkIpRateLimit",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "getClientIp",
+          "line": 29,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkIpRateLimit",
+          "callee": "Date.now",
+          "lineNumber": 16
+        },
+        {
+          "caller": "checkIpRateLimit",
+          "callee": "store.get",
+          "lineNumber": 17
+        },
+        {
+          "caller": "checkIpRateLimit",
+          "callee": "store.set",
+          "lineNumber": 20
+        },
+        {
+          "caller": "checkIpRateLimit",
+          "callee": "Math.ceil",
+          "lineNumber": 23
+        },
+        {
+          "caller": "getClientIp",
+          "callee": "request.headers.get",
+          "lineNumber": 30
+        },
+        {
+          "caller": "getClientIp",
+          "callee": "xf.split(',')[0]?.trim",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getClientIp",
+          "callee": "xf.split",
+          "lineNumber": 32
+        },
+        {
+          "caller": "getClientIp",
+          "callee": "request.headers.get",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getClientIp",
+          "callee": "real.trim",
+          "lineNumber": 36
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/funnel/nurture-sequences.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 779,
+      "nonEmptyLines": 755,
+      "functions": [
+        {
+          "name": "p",
+          "startLine": 29,
+          "endLine": 31,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "heading",
+          "startLine": 33,
+          "endLine": 35,
+          "params": [
+            "text"
+          ]
+        },
+        {
+          "name": "cta",
+          "startLine": 37,
+          "endLine": 42,
+          "params": [
+            "url",
+            "label"
+          ]
+        },
+        {
+          "name": "sig",
+          "startLine": 44,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "footer",
+          "startLine": 48,
+          "endLine": 52,
+          "params": [
+            "email"
+          ]
+        },
+        {
+          "name": "email",
+          "startLine": 54,
+          "endLine": 56,
+          "params": [
+            "parts"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "NURTURE_SEQUENCES",
+          "line": 772,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "email",
+          "callee": "parts.join",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/funnel/segment.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 264,
+      "nonEmptyLines": 243,
+      "functions": [
+        {
+          "name": "classifyLead",
+          "startLine": 28,
+          "endLine": 55,
+          "params": [
+            "inputs"
+          ]
+        },
+        {
+          "name": "mapInputsForSegmentation",
+          "startLine": 61,
+          "endLine": 75,
+          "params": [
+            "raw"
+          ]
+        },
+        {
+          "name": "isPlaceholderText",
+          "startLine": 114,
+          "endLine": 127,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "hasEstablishedPlatform",
+          "startLine": 150,
+          "endLine": 153,
+          "params": [
+            "audience"
+          ]
+        },
+        {
+          "name": "extractAudienceCount",
+          "startLine": 158,
+          "endLine": 181,
+          "params": [
+            "audience"
+          ]
+        },
+        {
+          "name": "classifyEscapeAssessment",
+          "startLine": 211,
+          "endLine": 264,
+          "params": [
+            "inputs"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SEGMENT_LABELS",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "classifyLead",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "mapInputsForSegmentation",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "classifyEscapeAssessment",
+          "line": 211,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 63
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "String",
+          "lineNumber": 64
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "String",
+          "lineNumber": 65
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "String",
+          "lineNumber": 66
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "String",
+          "lineNumber": 67
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 68
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 69
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 70
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "String",
+          "lineNumber": 71
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 72
+        },
+        {
+          "caller": "mapInputsForSegmentation",
+          "callee": "Number",
+          "lineNumber": 73
+        },
+        {
+          "caller": "isPlaceholderText",
+          "callee": "s.trim().toLowerCase",
+          "lineNumber": 116
+        },
+        {
+          "caller": "isPlaceholderText",
+          "callee": "s.trim",
+          "lineNumber": 116
+        },
+        {
+          "caller": "hasEstablishedPlatform",
+          "callee": "audience.toLowerCase",
+          "lineNumber": 151
+        },
+        {
+          "caller": "hasEstablishedPlatform",
+          "callee": "PLATFORM_KEYWORDS.some",
+          "lineNumber": 152
+        },
+        {
+          "caller": "hasEstablishedPlatform",
+          "callee": "lower.includes",
+          "lineNumber": 152
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "audience.match",
+          "lineNumber": 159
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "raw.replace",
+          "lineNumber": 163
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "cleaned.slice(-1).toLowerCase",
+          "lineNumber": 164
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "cleaned.slice",
+          "lineNumber": 164
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "cleaned.slice",
+          "lineNumber": 169
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "cleaned.slice",
+          "lineNumber": 172
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "Number",
+          "lineNumber": 174
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "Number.isFinite",
+          "lineNumber": 175
+        },
+        {
+          "caller": "extractAudienceCount",
+          "callee": "Math.round",
+          "lineNumber": 176
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "Number.isFinite",
+          "lineNumber": 214
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "(inputs.skillProfile ?? '').trim",
+          "lineNumber": 215
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "isPlaceholderText",
+          "lineNumber": 219
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "isPlaceholderText",
+          "lineNumber": 220
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "extractAudienceCount",
+          "lineNumber": 221
+        },
+        {
+          "caller": "classifyEscapeAssessment",
+          "callee": "hasEstablishedPlatform",
+          "lineNumber": 224
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/audiovisual/useBeatDetection.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 128,
+      "nonEmptyLines": 110,
+      "functions": [
+        {
+          "name": "useBeatDetection",
+          "startLine": 33,
+          "endLine": 126,
+          "params": [
+            "audioUrl",
+            "options"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 37
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 38
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 39
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 40
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 41
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useState",
+          "lineNumber": 42
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useCallback",
+          "lineNumber": 55
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setError",
+          "lineNumber": 57
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setLoading",
+          "lineNumber": 62
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setError",
+          "lineNumber": 63
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setTimeout",
+          "lineNumber": 73
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "Array.from",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "simulatedBeats.map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setBeats",
+          "lineNumber": 91
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setBpm",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setTimeSignature",
+          "lineNumber": 93
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setStrength",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setLoading",
+          "lineNumber": 96
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "console.error",
+          "lineNumber": 98
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setError",
+          "lineNumber": 99
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setLoading",
+          "lineNumber": 100
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "useEffect",
+          "lineNumber": 105
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "detectBeats",
+          "lineNumber": 107
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setBeats",
+          "lineNumber": 110
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setBpm",
+          "lineNumber": 111
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setTimeSignature",
+          "lineNumber": 112
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setStrength",
+          "lineNumber": 113
+        },
+        {
+          "caller": "useBeatDetection",
+          "callee": "setError",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/audiovisual/useEmotionalToneMapping.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 211,
+      "nonEmptyLines": 187,
+      "functions": [
+        {
+          "name": "useEmotionalToneMapping",
+          "startLine": 83,
+          "endLine": 208,
+          "params": [
+            "sound",
+            "options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AudioCharacteristics",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "ToneMapping",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "EmotionalToneMappingOptions",
+          "line": 210,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "useState",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "useState",
+          "lineNumber": 93
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "useState",
+          "lineNumber": 94
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "useCallback",
+          "lineNumber": 104
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setToneMapping",
+          "lineNumber": 106
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setLoading",
+          "lineNumber": 111
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setError",
+          "lineNumber": 112
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setTimeout",
+          "lineNumber": 120
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.floor",
+          "lineNumber": 128
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 128
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 129
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 130
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 131
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 132
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 133
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 134
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones.find",
+          "lineNumber": 154
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 155
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones.find",
+          "lineNumber": 157
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 158
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones.find",
+          "lineNumber": 160
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 161
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones.find",
+          "lineNumber": 163
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 164
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones.find",
+          "lineNumber": 166
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 167
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones\r\n        .filter(tone => tone.id !== bestMatch.id)\r\n        .sort",
+          "lineNumber": 171
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "tones\r\n        .filter",
+          "lineNumber": 171
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "Math.random",
+          "lineNumber": 173
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setToneMapping",
+          "lineNumber": 183
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setLoading",
+          "lineNumber": 184
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "console.error",
+          "lineNumber": 186
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setError",
+          "lineNumber": 187
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setLoading",
+          "lineNumber": 188
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "useEffect",
+          "lineNumber": 193
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "analyzeAndMap",
+          "lineNumber": 195
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setToneMapping",
+          "lineNumber": 197
+        },
+        {
+          "caller": "useEmotionalToneMapping",
+          "callee": "setError",
+          "lineNumber": 198
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 41,
+      "exports": [
+        {
+          "name": "useDebounce",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "useMediaQuery",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "useDragDrop",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "useAnimation",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "useOptimizedAnimation",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "useConfetti",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "useFocusManagement",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "useHapticFeedback",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "useDataFetch",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "useInfiniteScroll",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "useOptimizedDataFetching",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "useAudio",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "useSound",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "useSoundCollection",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "useTemplateSound",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "useBeatSyncAnimation",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "useAuth",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "usePlatformDPS",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "useAuditLog",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "useAISuggestions",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "useMLSuggestions",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "useTemplateIntegration",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "useTemplatesDiscovery",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "useWorkflowPersistence",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "UseWorkflowPersistenceOptions",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "UseWorkflowPersistenceReturn",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "SaveStatus",
+          "line": 44,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 23,
+        "exportCount": 27,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useAISuggestions.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 122,
+      "nonEmptyLines": 107,
+      "functions": [
+        {
+          "name": "useAISuggestions",
+          "startLine": 12,
+          "endLine": 122,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useAISuggestions",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useAISuggestions",
+          "callee": "useTemplateEditor",
+          "lineNumber": 13
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useState",
+          "lineNumber": 14
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useState",
+          "lineNumber": 15
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useState",
+          "lineNumber": 16
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useCallback",
+          "lineNumber": 21
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setIsPremiumUser",
+          "lineNumber": 22
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useCallback",
+          "lineNumber": 28
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 31
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 37
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setIsLoading",
+          "lineNumber": 41
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 42
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 51
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setIsLoading",
+          "lineNumber": 52
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "aiSuggestionService.getTextSuggestions",
+          "lineNumber": 56
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "aiSuggestionService.getLayoutSuggestions",
+          "lineNumber": 63
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "aiSuggestionService.getPerformanceTips",
+          "lineNumber": 67
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "console.log",
+          "lineNumber": 74
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 88
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setError",
+          "lineNumber": 91
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "setIsLoading",
+          "lineNumber": 93
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "useCallback",
+          "lineNumber": 100
+        },
+        {
+          "caller": "useAISuggestions",
+          "callee": "console.log",
+          "lineNumber": 103
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useAnimation.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 250,
+      "nonEmptyLines": 218,
+      "functions": [
+        {
+          "name": "useAnimation",
+          "startLine": 52,
+          "endLine": 248,
+          "params": [
+            "options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useAnimation",
+          "line": 52,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useAnimation",
+          "callee": "useAnimationSettings",
+          "lineNumber": 79
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "useState",
+          "lineNumber": 81
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "useState",
+          "lineNumber": 82
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getAnimationDuration",
+          "lineNumber": 94
+        },
+        {
+          "caller": "play",
+          "callee": "setIsPlaying",
+          "lineNumber": 219
+        },
+        {
+          "caller": "reset",
+          "callee": "setIsPlaying",
+          "lineNumber": 223
+        },
+        {
+          "caller": "reset",
+          "callee": "setTimeout",
+          "lineNumber": 225
+        },
+        {
+          "caller": "reset",
+          "callee": "setKey",
+          "lineNumber": 226
+        },
+        {
+          "caller": "reset",
+          "callee": "setIsPlaying",
+          "lineNumber": 227
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "useEffect",
+          "lineNumber": 232
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "reset",
+          "lineNumber": 233
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getInitialProps",
+          "lineNumber": 238
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getAnimateProps",
+          "lineNumber": 239
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getInitialProps",
+          "lineNumber": 239
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getExitProps",
+          "lineNumber": 240
+        },
+        {
+          "caller": "useAnimation",
+          "callee": "getTransitionProps",
+          "lineNumber": 241
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useAudio.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 127,
+      "nonEmptyLines": 104,
+      "functions": [
+        {
+          "name": "useAudio",
+          "startLine": 22,
+          "endLine": 127,
+          "params": [
+            "url",
+            "autoPlay"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useAudio",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useAudio",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "useAudio",
+          "callee": "useState",
+          "lineNumber": 24
+        },
+        {
+          "caller": "useAudio",
+          "callee": "useState",
+          "lineNumber": 25
+        },
+        {
+          "caller": "useAudio",
+          "callee": "useRef",
+          "lineNumber": 26
+        },
+        {
+          "caller": "useAudio",
+          "callee": "useEffect",
+          "lineNumber": 28
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.addEventListener",
+          "lineNumber": 34
+        },
+        {
+          "caller": "useAudio",
+          "callee": "setDuration",
+          "lineNumber": 35
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.addEventListener",
+          "lineNumber": 38
+        },
+        {
+          "caller": "useAudio",
+          "callee": "setCurrentTimeState",
+          "lineNumber": 39
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.addEventListener",
+          "lineNumber": 42
+        },
+        {
+          "caller": "useAudio",
+          "callee": "setPlaying",
+          "lineNumber": 43
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.play().catch",
+          "lineNumber": 48
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.play",
+          "lineNumber": 48
+        },
+        {
+          "caller": "useAudio",
+          "callee": "console.error",
+          "lineNumber": 49
+        },
+        {
+          "caller": "useAudio",
+          "callee": "setPlaying",
+          "lineNumber": 51
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.pause",
+          "lineNumber": 56
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.removeEventListener",
+          "lineNumber": 59
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.removeEventListener",
+          "lineNumber": 60
+        },
+        {
+          "caller": "useAudio",
+          "callee": "audio.removeEventListener",
+          "lineNumber": 61
+        },
+        {
+          "caller": "toggle",
+          "callee": "audioRef.current.pause",
+          "lineNumber": 70
+        },
+        {
+          "caller": "toggle",
+          "callee": "audioRef.current.play().catch",
+          "lineNumber": 72
+        },
+        {
+          "caller": "toggle",
+          "callee": "audioRef.current.play",
+          "lineNumber": 72
+        },
+        {
+          "caller": "toggle",
+          "callee": "console.error",
+          "lineNumber": 73
+        },
+        {
+          "caller": "toggle",
+          "callee": "setPlaying",
+          "lineNumber": 77
+        },
+        {
+          "caller": "play",
+          "callee": "audioRef.current.play().catch",
+          "lineNumber": 84
+        },
+        {
+          "caller": "play",
+          "callee": "audioRef.current.play",
+          "lineNumber": 84
+        },
+        {
+          "caller": "play",
+          "callee": "console.error",
+          "lineNumber": 85
+        },
+        {
+          "caller": "play",
+          "callee": "setPlaying",
+          "lineNumber": 88
+        },
+        {
+          "caller": "pause",
+          "callee": "audioRef.current.pause",
+          "lineNumber": 95
+        },
+        {
+          "caller": "pause",
+          "callee": "setPlaying",
+          "lineNumber": 96
+        },
+        {
+          "caller": "stop",
+          "callee": "audioRef.current.pause",
+          "lineNumber": 103
+        },
+        {
+          "caller": "stop",
+          "callee": "setPlaying",
+          "lineNumber": 105
+        },
+        {
+          "caller": "stop",
+          "callee": "setCurrentTimeState",
+          "lineNumber": 106
+        },
+        {
+          "caller": "setCurrentTime",
+          "callee": "setCurrentTimeState",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useAuditLog.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "useAuditLog",
+          "startLine": 14,
+          "endLine": 51,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useAuditLog",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useAuditLog",
+          "callee": "useAuth",
+          "lineNumber": 15
+        },
+        {
+          "caller": "logAuditEvent",
+          "callee": "console.warn",
+          "lineNumber": 20
+        },
+        {
+          "caller": "logAuditEvent",
+          "callee": "Promise.resolve",
+          "lineNumber": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useAuth.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 7,
+      "functions": [
+        {
+          "name": "useAuth",
+          "startLine": 4,
+          "endLine": 7,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useAuth",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "AuthUser",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useAuth",
+          "callee": "useContext",
+          "lineNumber": 5
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 320,
+      "nonEmptyLines": 272,
+      "functions": [
+        {
+          "name": "useBeatSyncAnimation",
+          "startLine": 34,
+          "endLine": 182,
+          "params": [
+            "options"
+          ]
+        },
+        {
+          "name": "getAllElementsFromTemplate",
+          "startLine": 185,
+          "endLine": 196,
+          "params": [
+            "editorState"
+          ]
+        },
+        {
+          "name": "getElementById",
+          "startLine": 199,
+          "endLine": 207,
+          "params": [
+            "editorState",
+            "elementId"
+          ]
+        },
+        {
+          "name": "getValidSoundUrl",
+          "startLine": 210,
+          "endLine": 224,
+          "params": [
+            "sound"
+          ]
+        },
+        {
+          "name": "applyBeatAnimation",
+          "startLine": 227,
+          "endLine": 309,
+          "params": [
+            "point",
+            "element",
+            "updateElement",
+            "intensity",
+            "editorState"
+          ]
+        },
+        {
+          "name": "getSectionIdForElement",
+          "startLine": 312,
+          "endLine": 320,
+          "params": [
+            "editorState",
+            "elementId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useBeatSyncAnimation",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useAudio",
+          "lineNumber": 41
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useEditor",
+          "lineNumber": 42
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useRef",
+          "lineNumber": 45
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useState",
+          "lineNumber": 48
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useState",
+          "lineNumber": 49
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useState",
+          "lineNumber": 50
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useState",
+          "lineNumber": 51
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useEffect",
+          "lineNumber": 54
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setAudioBuffer",
+          "lineNumber": 56
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "getValidSoundUrl",
+          "lineNumber": 60
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setError",
+          "lineNumber": 62
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setAudioBuffer",
+          "lineNumber": 63
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "loadAudioBuffer",
+          "lineNumber": 69
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "setAudioBuffer",
+          "lineNumber": 70
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "setError",
+          "lineNumber": 71
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "console.error",
+          "lineNumber": 73
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "setError",
+          "lineNumber": 74
+        },
+        {
+          "caller": "loadBuffer",
+          "callee": "setAudioBuffer",
+          "lineNumber": 75
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "loadBuffer",
+          "lineNumber": 79
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useCallback",
+          "lineNumber": 83
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setIsSyncing",
+          "lineNumber": 89
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "getAllElementsFromTemplate",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "elements.map",
+          "lineNumber": 93
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setSyncPoints",
+          "lineNumber": 96
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setIsSyncing",
+          "lineNumber": 97
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "getValidSoundUrl",
+          "lineNumber": 105
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "createSyncPointsFromBeats",
+          "lineNumber": 111
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setSyncPoints",
+          "lineNumber": 116
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setError",
+          "lineNumber": 117
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "console.error",
+          "lineNumber": 119
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setError",
+          "lineNumber": 120
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setSyncPoints",
+          "lineNumber": 121
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setIsSyncing",
+          "lineNumber": 123
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useEffect",
+          "lineNumber": 128
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "generateSyncPoints",
+          "lineNumber": 131
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useEffect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "syncPoints.filter",
+          "lineNumber": 148
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "Math.abs",
+          "lineNumber": 149
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "activeAnimationsRef.current.has",
+          "lineNumber": 150
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "triggeredPoints.forEach",
+          "lineNumber": 154
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "getElementById",
+          "lineNumber": 155
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "activeAnimationsRef.current.set",
+          "lineNumber": 159
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "window.setTimeout",
+          "lineNumber": 159
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "activeAnimationsRef.current.delete",
+          "lineNumber": 160
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "applyBeatAnimation",
+          "lineNumber": 164
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "useCallback",
+          "lineNumber": 170
+        },
+        {
+          "caller": "useBeatSyncAnimation",
+          "callee": "setSyncPoints",
+          "lineNumber": 171
+        },
+        {
+          "caller": "getAllElementsFromTemplate",
+          "callee": "editorState.template.sections.forEach",
+          "lineNumber": 189
+        },
+        {
+          "caller": "getAllElementsFromTemplate",
+          "callee": "Array.isArray",
+          "lineNumber": 190
+        },
+        {
+          "caller": "getAllElementsFromTemplate",
+          "callee": "elements.push",
+          "lineNumber": 191
+        },
+        {
+          "caller": "getElementById",
+          "callee": "section.elements.find",
+          "lineNumber": 203
+        },
+        {
+          "caller": "applyBeatAnimation",
+          "callee": "getSectionIdForElement",
+          "lineNumber": 299
+        },
+        {
+          "caller": "applyBeatAnimation",
+          "callee": "updateElement",
+          "lineNumber": 301
+        },
+        {
+          "caller": "applyBeatAnimation",
+          "callee": "updateElement",
+          "lineNumber": 303
+        },
+        {
+          "caller": "applyBeatAnimation",
+          "callee": "console.error",
+          "lineNumber": 306
+        },
+        {
+          "caller": "getSectionIdForElement",
+          "callee": "section.elements.some",
+          "lineNumber": 316
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useConfetti.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "useConfetti",
+          "startLine": 5,
+          "endLine": 48,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "useConfetti",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useConfetti",
+          "callee": "useCallback",
+          "lineNumber": 6
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "setTimeout",
+          "lineNumber": 11
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "document.createElement",
+          "lineNumber": 12
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "Math.floor",
+          "lineNumber": 17
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "Math.random",
+          "lineNumber": 17
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "Math.random",
+          "lineNumber": 18
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "document.body.appendChild",
+          "lineNumber": 25
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "setTimeout",
+          "lineNumber": 27
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "confetti.remove",
+          "lineNumber": 27
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "document.querySelector",
+          "lineNumber": 32
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "document.createElement",
+          "lineNumber": 33
+        },
+        {
+          "caller": "useConfetti",
+          "callee": "document.head.appendChild",
+          "lineNumber": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useDataFetching.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 242,
+      "nonEmptyLines": 201,
+      "functions": [
+        {
+          "name": "useDataFetch",
+          "startLine": 52,
+          "endLine": 131,
+          "params": [
+            "url",
+            "options"
+          ]
+        },
+        {
+          "name": "useInfiniteScroll",
+          "startLine": 137,
+          "endLine": 242,
+          "params": [
+            "getPageUrl",
+            "options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useDataFetch",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "useInfiniteScroll",
+          "line": 137,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useDataFetch",
+          "callee": "useState",
+          "lineNumber": 66
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "useState",
+          "lineNumber": 67
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "useState",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "useRef",
+          "lineNumber": 71
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "useCallback",
+          "lineNumber": 75
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setIsLoading",
+          "lineNumber": 76
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setData",
+          "lineNumber": 79
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setError",
+          "lineNumber": 82
+        },
+        {
+          "caller": "fetchFn",
+          "callee": "fetch",
+          "lineNumber": 86
+        },
+        {
+          "caller": "fetchFn",
+          "callee": "response.json",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "await cachedFetch",
+          "lineNumber": 95
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setData",
+          "lineNumber": 104
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "String",
+          "lineNumber": 106
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setError",
+          "lineNumber": 107
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "optionsRef.current.onError",
+          "lineNumber": 110
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "setIsLoading",
+          "lineNumber": 113
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "useEffect",
+          "lineNumber": 118
+        },
+        {
+          "caller": "useDataFetch",
+          "callee": "fetchData",
+          "lineNumber": 120
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useState",
+          "lineNumber": 151
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useState",
+          "lineNumber": 152
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useState",
+          "lineNumber": 153
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useState",
+          "lineNumber": 154
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useState",
+          "lineNumber": 155
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useCallback",
+          "lineNumber": 158
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "getPageUrl",
+          "lineNumber": 159
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setIsLoadingMore",
+          "lineNumber": 162
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setError",
+          "lineNumber": 163
+        },
+        {
+          "caller": "fetchFn",
+          "callee": "fetch",
+          "lineNumber": 167
+        },
+        {
+          "caller": "fetchFn",
+          "callee": "response.json",
+          "lineNumber": 173
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "await cachedFetch",
+          "lineNumber": 176
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setPages",
+          "lineNumber": 185
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "getNextPageParam",
+          "lineNumber": 188
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setHasNextPage",
+          "lineNumber": 189
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setCurrentPage",
+          "lineNumber": 192
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "String",
+          "lineNumber": 197
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setError",
+          "lineNumber": 198
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "fetchOptions.onError",
+          "lineNumber": 201
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setIsLoadingMore",
+          "lineNumber": 206
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useEffect",
+          "lineNumber": 211
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setPages",
+          "lineNumber": 212
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setCurrentPage",
+          "lineNumber": 213
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setHasNextPage",
+          "lineNumber": 214
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "fetchPage",
+          "lineNumber": 216
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "useCallback",
+          "lineNumber": 221
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "fetchPage",
+          "lineNumber": 226
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setPages",
+          "lineNumber": 236
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setCurrentPage",
+          "lineNumber": 237
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "setHasNextPage",
+          "lineNumber": 238
+        },
+        {
+          "caller": "useInfiniteScroll",
+          "callee": "fetchPage",
+          "lineNumber": 239
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useDebounce.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 23,
+      "functions": [
+        {
+          "name": "useDebounce",
+          "startLine": 11,
+          "endLine": 27,
+          "params": [
+            "value",
+            "delay"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useDebounce",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useDebounce",
+          "callee": "useState",
+          "lineNumber": 12
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "useEffect",
+          "lineNumber": 14
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "setTimeout",
+          "lineNumber": 16
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "setDebouncedValue",
+          "lineNumber": 17
+        },
+        {
+          "caller": "useDebounce",
+          "callee": "clearTimeout",
+          "lineNumber": 22
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/hooks/useDragDrop.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 147,
+      "nonEmptyLines": 125,
+      "functions": [
+        {
+          "name": "useDragDrop",
+          "startLine": 21,
+          "endLine": 147,
+          "params": [
+            "options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "useDragDrop",
+          "line": 21,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "useDragDrop",
+          "callee": "useState",
+          "lineNumber": 22
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useState",
+          "lineNumber": 23
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useRef",
+          "lineNumber": 24
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useCallback",
+          "lineNumber": 27
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "setIsDragging",
+          "lineNumber": 28
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "setCurrentItem",
+          "lineNumber": 29
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "options.onDragStart",
+          "lineNumber": 33
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "document.body.classList.add",
+          "lineNumber": 37
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useCallback",
+          "lineNumber": 43
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "setIsDragging",
+          "lineNumber": 44
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "setCurrentItem",
+          "lineNumber": 45
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "options.onDragEnd",
+          "lineNumber": 48
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "document.body.classList.remove",
+          "lineNumber": 52
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useCallback",
+          "lineNumber": 57
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.dataTransfer.setData",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "JSON.stringify",
+          "lineNumber": 68
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "target.querySelector",
+          "lineNumber": 72
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.dataTransfer.setDragImage",
+          "lineNumber": 74
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "startDrag",
+          "lineNumber": 77
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "endDrag",
+          "lineNumber": 79
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useCallback",
+          "lineNumber": 84
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "acceptTypes.join",
+          "lineNumber": 90
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.preventDefault",
+          "lineNumber": 92
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "acceptTypes.includes",
+          "lineNumber": 95
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.currentTarget.classList.add",
+          "lineNumber": 97
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.currentTarget.classList.remove",
+          "lineNumber": 103
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.preventDefault",
+          "lineNumber": 106
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.currentTarget.classList.remove",
+          "lineNumber": 107
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "JSON.parse",
+          "lineNumber": 110
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "e.dataTransfer.getData",
+          "lineNumber": 110
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "acceptTypes.includes",
+          "lineNumber": 114
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "onItemDropped",
+          "lineNumber": 116
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "options.onDrop",
+          "lineNumber": 120
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "endDrag",
+          "lineNumber": 123
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "console.error",
+          "lineNumber": 126
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "useEffect",
+          "lineNumber": 133
+        },
+        {
+          "caller": "useDragDrop",
+          "callee": "document.body.classList.remove",
+          "lineNumber": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

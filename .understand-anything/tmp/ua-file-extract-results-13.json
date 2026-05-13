@@ -1,0 +1,2641 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "docs/framework-1-viral-scraping-workflow.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 394,
+      "nonEmptyLines": 322,
+      "sections": [
+        {
+          "heading": "Framework 1: Viral Scraping & Prediction Workflow",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Components",
+          "level": 2,
+          "line": 24
+        },
+        {
+          "heading": "1. Viral Scraping Workflow",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "2. Apify Integration",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "3. The Donna Reasoning Engine",
+          "level": 3,
+          "line": 44
+        },
+        {
+          "heading": "4. Tracking System",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "Database Schema",
+          "level": 2,
+          "line": 62
+        },
+        {
+          "heading": "`prediction_validations`",
+          "level": 3,
+          "line": 64
+        },
+        {
+          "heading": "`tracking_checkpoints`",
+          "level": 3,
+          "line": 72
+        },
+        {
+          "heading": "`viral_creators`",
+          "level": 3,
+          "line": 79
+        },
+        {
+          "heading": "`accuracy_metrics`",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "API Endpoints",
+          "level": 2,
+          "line": 91
+        },
+        {
+          "heading": "Start Workflow",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "Stop Workflow",
+          "level": 3,
+          "line": 99
+        },
+        {
+          "heading": "Get Status",
+          "level": 3,
+          "line": 105
+        },
+        {
+          "heading": "Run Single Cycle (Cron)",
+          "level": 3,
+          "line": 123
+        },
+        {
+          "heading": "Process Checkpoints (Cron)",
+          "level": 3,
+          "line": 129
+        },
+        {
+          "heading": "Cron Jobs",
+          "level": 2,
+          "line": 135
+        },
+        {
+          "heading": "Configuration",
+          "level": 2,
+          "line": 154
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 3,
+          "line": 156
+        },
+        {
+          "heading": "Viral Creators Configuration",
+          "level": 3,
+          "line": 172
+        },
+        {
+          "heading": "Viral Hashtags Configuration",
+          "level": 3,
+          "line": 181
+        },
+        {
+          "heading": "Usage",
+          "level": 2,
+          "line": 188
+        },
+        {
+          "heading": "Manual Start/Stop",
+          "level": 3,
+          "line": 190
+        },
+        {
+          "heading": "Automated (Production)",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "Workflow Lifecycle",
+          "level": 2,
+          "line": 207
+        },
+        {
+          "heading": "Phase 1: Discovery (Every 5 minutes)",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "Phase 2: Prediction (Immediate)",
+          "level": 3,
+          "line": 217
+        },
+        {
+          "heading": "Phase 3: Tracking (Scheduled)",
+          "level": 3,
+          "line": 226
+        },
+        {
+          "heading": "Phase 4: Validation (After 24hr/7day)",
+          "level": 3,
+          "line": 248
+        },
+        {
+          "heading": "Accuracy Tracking",
+          "level": 2,
+          "line": 261
+        },
+        {
+          "heading": "Individual Video Accuracy",
+          "level": 3,
+          "line": 263
+        },
+        {
+          "heading": "Aggregate Accuracy",
+          "level": 3,
+          "line": 280
+        },
+        {
+          "heading": "Performance Expectations",
+          "level": 2,
+          "line": 297
+        },
+        {
+          "heading": "Scraping Volume",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "Prediction Accuracy (Target)",
+          "level": 3,
+          "line": 304
+        },
+        {
+          "heading": "System Reliability",
+          "level": 3,
+          "line": 310
+        },
+        {
+          "heading": "Monitoring & Debugging",
+          "level": 2,
+          "line": 315
+        },
+        {
+          "heading": "View Logs",
+          "level": 3,
+          "line": 317
+        },
+        {
+          "heading": "Check Database",
+          "level": 3,
+          "line": 326
+        },
+        {
+          "heading": "Common Issues",
+          "level": 3,
+          "line": 345
+        },
+        {
+          "heading": "Next Steps",
+          "level": 2,
+          "line": 362
+        },
+        {
+          "heading": "Immediate Enhancements",
+          "level": 3,
+          "line": 364
+        },
+        {
+          "heading": "Phase 2: Advanced Features",
+          "level": 3,
+          "line": 370
+        },
+        {
+          "heading": "Phase 3: Self-Learning",
+          "level": 3,
+          "line": 376
+        },
+        {
+          "heading": "Related Documentation",
+          "level": 2,
+          "line": 382
+        },
+        {
+          "heading": "Support",
+          "level": 2,
+          "line": 389
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 49
+      }
+    },
+    {
+      "path": "docs/framework-2-testing-validation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 398,
+      "nonEmptyLines": 317,
+      "sections": [
+        {
+          "heading": "Framework 2: Testing & Validation Framework",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "The 5 Testing Methods",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "1. Historical Test",
+          "level": 3,
+          "line": 9
+        },
+        {
+          "heading": "2. Live Tracking Test",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "3. Synthetic A/B Test",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "4. Cross-Platform Test",
+          "level": 3,
+          "line": 60
+        },
+        {
+          "heading": "5. Temporal Consistency Test",
+          "level": 3,
+          "line": 77
+        },
+        {
+          "heading": "Implementation Status",
+          "level": 2,
+          "line": 93
+        },
+        {
+          "heading": "Usage",
+          "level": 2,
+          "line": 103
+        },
+        {
+          "heading": "Run All Tests",
+          "level": 3,
+          "line": 105
+        },
+        {
+          "heading": "Run Historical Test Only",
+          "level": 3,
+          "line": 114
+        },
+        {
+          "heading": "Run Live Tracking Test",
+          "level": 3,
+          "line": 128
+        },
+        {
+          "heading": "Test Results Structure",
+          "level": 2,
+          "line": 142
+        },
+        {
+          "heading": "Database Schema",
+          "level": 2,
+          "line": 185
+        },
+        {
+          "heading": "`test_results` Table",
+          "level": 3,
+          "line": 187
+        },
+        {
+          "heading": "Querying Test Results",
+          "level": 2,
+          "line": 223
+        },
+        {
+          "heading": "Get Latest Test Results",
+          "level": 3,
+          "line": 225
+        },
+        {
+          "heading": "Get Historical Test Trend",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "Compare Test Types",
+          "level": 3,
+          "line": 254
+        },
+        {
+          "heading": "Accuracy Metrics Explained",
+          "level": 2,
+          "line": 268
+        },
+        {
+          "heading": "Mean Absolute Error (MAE)",
+          "level": 3,
+          "line": 270
+        },
+        {
+          "heading": "Root Mean Squared Error (RMSE)",
+          "level": 3,
+          "line": 276
+        },
+        {
+          "heading": "R² Score (Coefficient of Determination)",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "Classification Accuracy",
+          "level": 3,
+          "line": 289
+        },
+        {
+          "heading": "Within Range Percent",
+          "level": 3,
+          "line": 295
+        },
+        {
+          "heading": "Integration with Framework 1",
+          "level": 2,
+          "line": 301
+        },
+        {
+          "heading": "Testing Schedule",
+          "level": 2,
+          "line": 309
+        },
+        {
+          "heading": "Before Beta Launch",
+          "level": 3,
+          "line": 311
+        },
+        {
+          "heading": "After Beta Launch",
+          "level": 3,
+          "line": 317
+        },
+        {
+          "heading": "Troubleshooting",
+          "level": 2,
+          "line": 324
+        },
+        {
+          "heading": "Low Classification Accuracy",
+          "level": 3,
+          "line": 326
+        },
+        {
+          "heading": "High MAE but Good Classification",
+          "level": 3,
+          "line": 339
+        },
+        {
+          "heading": "Low R² Score",
+          "level": 3,
+          "line": 349
+        },
+        {
+          "heading": "Next Steps",
+          "level": 2,
+          "line": 362
+        },
+        {
+          "heading": "Implement Tests 3-5",
+          "level": 3,
+          "line": 364
+        },
+        {
+          "heading": "Advanced Features",
+          "level": 3,
+          "line": 380
+        },
+        {
+          "heading": "Related Documentation",
+          "level": 2,
+          "line": 386
+        },
+        {
+          "heading": "Support",
+          "level": 2,
+          "line": 392
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 39
+      }
+    },
+    {
+      "path": "docs/growth-analytics.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 13,
+      "nonEmptyLines": 7,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "docs/hashtag-timing-framework-integration.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 493,
+      "nonEmptyLines": 393,
+      "sections": [
+        {
+          "heading": "Hashtag & Timing Framework Algorithm Integration - BMAD Analysis",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "🎯 **ALGORITHM INTEGRATION ARCHITECTURE**",
+          "level": 2,
+          "line": 8
+        },
+        {
+          "heading": "**Enhanced Prediction Pipeline with Hashtag & Timing Intelligence**",
+          "level": 3,
+          "line": 10
+        },
+        {
+          "heading": "🚀 **CRITICAL ACCURACY IMPROVEMENTS - TECHNICAL ANALYSIS**",
+          "level": 2,
+          "line": 54
+        },
+        {
+          "heading": "**1. Hashtag Semantic Validation (Most Impactful for Accuracy)**",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "**2. Niche-Density Scoring (Research-Validated)**",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "**3. Optimal Mix Validation (Buffer 2025 Research)**",
+          "level": 3,
+          "line": 145
+        },
+        {
+          "heading": "**4. Timing Optimization Intelligence (Dual Research Validation)**",
+          "level": 3,
+          "line": 180
+        },
+        {
+          "heading": "**5. Community Alignment Intelligence**",
+          "level": 3,
+          "line": 246
+        },
+        {
+          "heading": "📊 **ENHANCED ACCURACY PROGRESSION & OUTLOOK**",
+          "level": 2,
+          "line": 296
+        },
+        {
+          "heading": "**Updated Algorithm Accuracy Targets**:",
+          "level": 3,
+          "line": 298
+        },
+        {
+          "heading": "🔬 **ACCURACY IMPROVEMENT MECHANISMS - DETAILED ANALYSIS**",
+          "level": 2,
+          "line": 315
+        },
+        {
+          "heading": "**1. Training Data Quality Enhancement**",
+          "level": 3,
+          "line": 317
+        },
+        {
+          "heading": "**2. Feature Engineering Enhancement**",
+          "level": 3,
+          "line": 328
+        },
+        {
+          "heading": "**3. Platform Algorithm Alignment**",
+          "level": 3,
+          "line": 343
+        },
+        {
+          "heading": "**4. Reduced False Positives**",
+          "level": 3,
+          "line": 355
+        },
+        {
+          "heading": "🎯 **SPECIFIC RESEARCH VALIDATION**",
+          "level": 2,
+          "line": 366
+        },
+        {
+          "heading": "**Buffer 2025 Study Integration**:",
+          "level": 3,
+          "line": 368
+        },
+        {
+          "heading": "**Hootsuite Q1 2025 Study Integration**:",
+          "level": 3,
+          "line": 380
+        },
+        {
+          "heading": "**TikTok Business Guidelines Integration**:",
+          "level": 3,
+          "line": 390
+        },
+        {
+          "heading": "📈 **COMPETITIVE ADVANTAGE ANALYSIS**",
+          "level": 2,
+          "line": 401
+        },
+        {
+          "heading": "**Unique Algorithm Advantages**:",
+          "level": 3,
+          "line": 403
+        },
+        {
+          "heading": "**Expected Market Position**:",
+          "level": 3,
+          "line": 415
+        },
+        {
+          "heading": "🔧 **IMPLEMENTATION INTEGRATION**",
+          "level": 2,
+          "line": 421
+        },
+        {
+          "heading": "**Algorithm Pipeline Enhancement**:",
+          "level": 3,
+          "line": 423
+        },
+        {
+          "heading": "📋 **HONEST ACCURACY ASSESSMENT**",
+          "level": 2,
+          "line": 464
+        },
+        {
+          "heading": "**Conservative Estimates**:",
+          "level": 3,
+          "line": 466
+        },
+        {
+          "heading": "**Realistic Projections**:",
+          "level": 3,
+          "line": 474
+        },
+        {
+          "heading": "**Risk Factors**:",
+          "level": 3,
+          "line": 479
+        },
+        {
+          "heading": "✅ **CONCLUSION**",
+          "level": 2,
+          "line": 484
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 30
+      }
+    },
+    {
+      "path": "docs/hybrid-pipeline-architecture.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 438,
+      "nonEmptyLines": 354,
+      "sections": [
+        {
+          "heading": "Hybrid XGBoost → GPT-4 Pipeline Architecture",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Architecture Diagram",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Stage Details",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "Stage 1: Feature Extraction (✅ Already Built)",
+          "level": 3,
+          "line": 53
+        },
+        {
+          "heading": "Stage 2: XGBoost Prediction (🔨 To Build)",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "Stage 3: GPT-4 Refinement Layer (🔨 To Build)",
+          "level": 3,
+          "line": 118
+        },
+        {
+          "heading": "Stage 4: Final Prediction (🔨 To Build)",
+          "level": 3,
+          "line": 191
+        },
+        {
+          "heading": "API Design",
+          "level": 2,
+          "line": 246
+        },
+        {
+          "heading": "Prediction Endpoint",
+          "level": 3,
+          "line": 248
+        },
+        {
+          "heading": "Training Pipeline",
+          "level": 2,
+          "line": 284
+        },
+        {
+          "heading": "Step 1: Train XGBoost Model",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "Step 2: Test GPT-4 Refinement",
+          "level": 3,
+          "line": 305
+        },
+        {
+          "heading": "Step 3: End-to-End Test",
+          "level": 3,
+          "line": 318
+        },
+        {
+          "heading": "Performance Targets",
+          "level": 2,
+          "line": 334
+        },
+        {
+          "heading": "Accuracy",
+          "level": 3,
+          "line": 336
+        },
+        {
+          "heading": "Speed",
+          "level": 3,
+          "line": 341
+        },
+        {
+          "heading": "Cost",
+          "level": 3,
+          "line": 347
+        },
+        {
+          "heading": "Evaluation Metrics",
+          "level": 2,
+          "line": 354
+        },
+        {
+          "heading": "Quantitative (XGBoost)",
+          "level": 3,
+          "line": 356
+        },
+        {
+          "heading": "Qualitative (GPT-4)",
+          "level": 3,
+          "line": 362
+        },
+        {
+          "heading": "Hybrid Performance",
+          "level": 3,
+          "line": 368
+        },
+        {
+          "heading": "File Structure",
+          "level": 2,
+          "line": 375
+        },
+        {
+          "heading": "Next Steps",
+          "level": 2,
+          "line": 405
+        },
+        {
+          "heading": "Decision: Python or TypeScript?",
+          "level": 2,
+          "line": 417
+        },
+        {
+          "heading": "Option 1: Python (Recommended for XGBoost)",
+          "level": 3,
+          "line": 419
+        },
+        {
+          "heading": "Option 2: TypeScript Only",
+          "level": 3,
+          "line": 429
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/instant_analysis.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 29,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "Instant Analysis Engine",
+          "level": 2,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/integrations-zapier-make.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 14,
+      "nonEmptyLines": 8,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "docs/jobs.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 9,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "Background Jobs & Resilience",
+          "level": 3,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/keys.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 9,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "API Keys",
+          "level": 3,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/KEYWORD-EXPANSION-FIX-COMPLETE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 186,
+      "nonEmptyLines": 150,
+      "sections": [
+        {
+          "heading": "Keyword Expansion API - All 5 Sources Fixed ✅",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Problem Summary",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Solution Implemented",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Complete Rewrite of `/api/admin/expand-keywords/route.ts`",
+          "level": 3,
+          "line": 13
+        },
+        {
+          "heading": "1. TikTok Autocomplete ✅",
+          "level": 3,
+          "line": 17
+        },
+        {
+          "heading": "2. Google Autocomplete ✅",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "3. YouTube Autocomplete ✅",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "4. LLM Expansion (GPT-4) ✅",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "5. Competitor Hashtag Analysis ✅",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "Test Results",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "API Call:",
+          "level": 3,
+          "line": 61
+        },
+        {
+          "heading": "Results:",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Sample Keywords Generated",
+          "level": 2,
+          "line": 85
+        },
+        {
+          "heading": "From Google (High Confidence - 0.80):",
+          "level": 3,
+          "line": 87
+        },
+        {
+          "heading": "From LLM (Medium Confidence - 0.65):",
+          "level": 3,
+          "line": 93
+        },
+        {
+          "heading": "From Competitors (High Confidence - 0.60-0.90):",
+          "level": 3,
+          "line": 99
+        },
+        {
+          "heading": "Key Improvements",
+          "level": 2,
+          "line": 105
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 131
+        },
+        {
+          "heading": "Next Steps",
+          "level": 2,
+          "line": 154
+        },
+        {
+          "heading": "Files Modified",
+          "level": 2,
+          "line": 161
+        },
+        {
+          "heading": "Success Criteria ✅",
+          "level": 2,
+          "line": 165
+        },
+        {
+          "heading": "Deployment Status",
+          "level": 2,
+          "line": 177
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 22
+      }
+    },
+    {
+      "path": "docs/KEYWORD-RESEARCH-TOOL-COMPLETE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 417,
+      "nonEmptyLines": 331,
+      "sections": [
+        {
+          "heading": "✅ Hybrid Keyword Research Tool - COMPLETE",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "What We Built",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "🎯 Core Features",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "1. Automated Keyword Expansion",
+          "level": 3,
+          "line": 11
+        },
+        {
+          "heading": "2. Confidence Scoring",
+          "level": 3,
+          "line": 18
+        },
+        {
+          "heading": "3. Human-in-Loop Approval",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "4. Niche-Specific Expansion",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "📁 Files Created",
+          "level": 2,
+          "line": 37
+        },
+        {
+          "heading": "1. API Endpoint",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "2. UI Integration",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "3. Report API",
+          "level": 3,
+          "line": 82
+        },
+        {
+          "heading": "🚀 How to Use",
+          "level": 2,
+          "line": 89
+        },
+        {
+          "heading": "Step 1: Open Research Review Dashboard",
+          "level": 3,
+          "line": 91
+        },
+        {
+          "heading": "Step 2: Select a Niche",
+          "level": 3,
+          "line": 94
+        },
+        {
+          "heading": "Step 3: Switch to Keyword Research Tab",
+          "level": 3,
+          "line": 97
+        },
+        {
+          "heading": "Step 4: Expand Keywords",
+          "level": 3,
+          "line": 100
+        },
+        {
+          "heading": "Step 5: Review & Approve",
+          "level": 3,
+          "line": 110
+        },
+        {
+          "heading": "Step 6: Save Approved Keywords",
+          "level": 3,
+          "line": 117
+        },
+        {
+          "heading": "📊 Example Output",
+          "level": 2,
+          "line": 129
+        },
+        {
+          "heading": "🎨 UI Features",
+          "level": 2,
+          "line": 176
+        },
+        {
+          "heading": "Expansion Summary Card (Blue)",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "Keyword List",
+          "level": 3,
+          "line": 185
+        },
+        {
+          "heading": "Action Buttons",
+          "level": 3,
+          "line": 192
+        },
+        {
+          "heading": "🔧 Technical Details",
+          "level": 2,
+          "line": 198
+        },
+        {
+          "heading": "Rate Limiting",
+          "level": 3,
+          "line": 200
+        },
+        {
+          "heading": "LLM Prompt",
+          "level": 3,
+          "line": 205
+        },
+        {
+          "heading": "Deduplication",
+          "level": 3,
+          "line": 218
+        },
+        {
+          "heading": "🎯 Integration with Niche Configs",
+          "level": 2,
+          "line": 223
+        },
+        {
+          "heading": "Current Config Format",
+          "level": 3,
+          "line": 225
+        },
+        {
+          "heading": "After Keyword Research",
+          "level": 3,
+          "line": 241
+        },
+        {
+          "heading": "Then Re-run Scraping",
+          "level": 3,
+          "line": 263
+        },
+        {
+          "heading": "💡 Why This Works",
+          "level": 2,
+          "line": 272
+        },
+        {
+          "heading": "Problem with Manual Keyword Research:",
+          "level": 3,
+          "line": 274
+        },
+        {
+          "heading": "Solution with Hybrid Approach:",
+          "level": 3,
+          "line": 280
+        },
+        {
+          "heading": "Expected Results:",
+          "level": 3,
+          "line": 286
+        },
+        {
+          "heading": "🔗 Connection to Viral Research Pipeline",
+          "level": 2,
+          "line": 294
+        },
+        {
+          "heading": "Workflow:",
+          "level": 3,
+          "line": 296
+        },
+        {
+          "heading": "Continuous Improvement Loop:",
+          "level": 3,
+          "line": 306
+        },
+        {
+          "heading": "🚨 Current Limitations",
+          "level": 2,
+          "line": 317
+        },
+        {
+          "heading": "1. TikTok Autocomplete May Fail",
+          "level": 3,
+          "line": 319
+        },
+        {
+          "heading": "2. No Competitor Hashtag Analysis Yet",
+          "level": 3,
+          "line": 324
+        },
+        {
+          "heading": "3. Manual Config Update",
+          "level": 3,
+          "line": 329
+        },
+        {
+          "heading": "4. No Historical Tracking",
+          "level": 3,
+          "line": 334
+        },
+        {
+          "heading": "🎉 What Makes This Special",
+          "level": 2,
+          "line": 341
+        },
+        {
+          "heading": "📈 Next Steps",
+          "level": 2,
+          "line": 366
+        },
+        {
+          "heading": "Immediate (Today):",
+          "level": 3,
+          "line": 368
+        },
+        {
+          "heading": "Short-term (This Week):",
+          "level": 3,
+          "line": 378
+        },
+        {
+          "heading": "Medium-term (Next 2 Weeks):",
+          "level": 3,
+          "line": 384
+        },
+        {
+          "heading": "📞 Testing",
+          "level": 2,
+          "line": 392
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 49
+      }
+    },
+    {
+      "path": "docs/learning.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 162,
+      "nonEmptyLines": 20,
+      "sections": [
+        {
+          "heading": "Exponential Learning System",
+          "level": 2,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/LIVE_REUSE_MAP.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 50,
+      "nonEmptyLines": 38,
+      "sections": [
+        {
+          "heading": "LIVE Reuse Map — Starter Pack Path (Step 1)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Gallery / Recipe Book",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "UI Tokens / Components",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "Workflow (existing references)",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Starter Path Routes (allowed)",
+          "level": 2,
+          "line": 23
+        },
+        {
+          "heading": "Feature Flags",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Persistence",
+          "level": 2,
+          "line": 36
+        },
+        {
+          "heading": "URL Helpers",
+          "level": 2,
+          "line": 39
+        },
+        {
+          "heading": "Route Guard",
+          "level": 2,
+          "line": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 9
+      }
+    },
+    {
+      "path": "docs/MANUAL_ANNOTATION_SCHEMA.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 613,
+      "nonEmptyLines": 446,
+      "sections": [
+        {
+          "heading": "Manual Annotation Schema: Creator-Led Short-Form (Side Hustles / Making Money Online)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "1. Benchmark Purpose",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "2. Sampling Design",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "2.1 Tier Definitions",
+          "level": 3,
+          "line": 29
+        },
+        {
+          "heading": "2.2 Creator Diversity",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "2.3 Selection Process",
+          "level": 3,
+          "line": 56
+        },
+        {
+          "heading": "2.4 Same-Creator Contrast Example",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "3. Annotation Rubric",
+          "level": 2,
+          "line": 76
+        },
+        {
+          "heading": "3.0 General Instructions",
+          "level": 3,
+          "line": 78
+        },
+        {
+          "heading": "3.1 Hook Strength",
+          "level": 3,
+          "line": 88
+        },
+        {
+          "heading": "3.2 Trust",
+          "level": 3,
+          "line": 107
+        },
+        {
+          "heading": "3.3 Authority",
+          "level": 3,
+          "line": 126
+        },
+        {
+          "heading": "3.4 Conviction",
+          "level": 3,
+          "line": 145
+        },
+        {
+          "heading": "3.5 Clarity",
+          "level": 3,
+          "line": 164
+        },
+        {
+          "heading": "3.6 Utility",
+          "level": 3,
+          "line": 183
+        },
+        {
+          "heading": "3.7 Emotional Congruence",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "3.8 Share Impulse",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "3.9 Save Impulse",
+          "level": 3,
+          "line": 240
+        },
+        {
+          "heading": "3.10 Novelty of Angle",
+          "level": 3,
+          "line": 259
+        },
+        {
+          "heading": "3.11 Specificity of Promise",
+          "level": 3,
+          "line": 278
+        },
+        {
+          "heading": "3.12 Payoff Clarity",
+          "level": 3,
+          "line": 297
+        },
+        {
+          "heading": "3.13 Teacher Energy",
+          "level": 3,
+          "line": 316
+        },
+        {
+          "heading": "3.14 Eye Contact Quality",
+          "level": 3,
+          "line": 335
+        },
+        {
+          "heading": "3.15 Delivery Confidence vs. Hesitation",
+          "level": 3,
+          "line": 355
+        },
+        {
+          "heading": "4. Annotation Instructions for Raters",
+          "level": 2,
+          "line": 374
+        },
+        {
+          "heading": "4.1 Before Starting",
+          "level": 3,
+          "line": 376
+        },
+        {
+          "heading": "4.2 Per-Video Workflow",
+          "level": 3,
+          "line": 382
+        },
+        {
+          "heading": "4.3 Session Management",
+          "level": 3,
+          "line": 391
+        },
+        {
+          "heading": "5. Inter-Rater Consistency",
+          "level": 2,
+          "line": 400
+        },
+        {
+          "heading": "5.1 Target Agreement",
+          "level": 3,
+          "line": 402
+        },
+        {
+          "heading": "5.2 Achieving Consistency",
+          "level": 3,
+          "line": 411
+        },
+        {
+          "heading": "5.3 Which Dimensions to Watch",
+          "level": 3,
+          "line": 419
+        },
+        {
+          "heading": "6. Metadata Columns",
+          "level": 2,
+          "line": 436
+        },
+        {
+          "heading": "7. Export Format",
+          "level": 2,
+          "line": 458
+        },
+        {
+          "heading": "7.1 CSV Schema",
+          "level": 3,
+          "line": 460
+        },
+        {
+          "heading": "7.2 Aggregated View",
+          "level": 3,
+          "line": 489
+        },
+        {
+          "heading": "7.3 Hidden Labels Join",
+          "level": 3,
+          "line": 499
+        },
+        {
+          "heading": "8. Preventing Benchmark Contamination",
+          "level": 2,
+          "line": 511
+        },
+        {
+          "heading": "8.1 Rules",
+          "level": 3,
+          "line": 515
+        },
+        {
+          "heading": "8.2 What the Benchmark CAN Inform",
+          "level": 3,
+          "line": 525
+        },
+        {
+          "heading": "8.3 What the Benchmark Must NOT Inform",
+          "level": 3,
+          "line": 533
+        },
+        {
+          "heading": "9. How This Benchmark Feeds Steps 2 and 3",
+          "level": 2,
+          "line": 542
+        },
+        {
+          "heading": "9.1 Step 2: Gap Analysis (How to use the benchmark)",
+          "level": 3,
+          "line": 549
+        },
+        {
+          "heading": "9.2 Step 3: Feature Design (What comes after)",
+          "level": 3,
+          "line": 590
+        },
+        {
+          "heading": "10. Source Files",
+          "level": 2,
+          "line": 603
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 45
+      }
+    },
+    {
+      "path": "docs/Master Playbook System Prompt 3-10-26.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 845,
+      "nonEmptyLines": 670,
+      "sections": [
+        {
+          "heading": "MASTER PLAYBOOK SYSTEM PROMPT v2.0",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "HOW TO USE THIS PLAYBOOK",
+          "level": 2,
+          "line": 9
+        },
+        {
+          "heading": "OBJ-## Canon — [Name]",
+          "level": 1,
+          "line": 143
+        },
+        {
+          "heading": "CAP-### — [Capability Name]",
+          "level": 1,
+          "line": 157
+        },
+        {
+          "heading": "FEAT-### — [Feature Name]",
+          "level": 1,
+          "line": 372
+        },
+        {
+          "heading": "1. Purpose & Objective",
+          "level": 2,
+          "line": 374
+        },
+        {
+          "heading": "2. User Stories & Edge Cases",
+          "level": 2,
+          "line": 379
+        },
+        {
+          "heading": "3. UI Contract",
+          "level": 2,
+          "line": 384
+        },
+        {
+          "heading": "4. Contracts (Spec-as-Code)",
+          "level": 2,
+          "line": 393
+        },
+        {
+          "heading": "5. Data Model & Events",
+          "level": 2,
+          "line": 399
+        },
+        {
+          "heading": "6. Acceptance Checks (Observable)",
+          "level": 2,
+          "line": 404
+        },
+        {
+          "heading": "7. Permissions / RBAC & Audit",
+          "level": 2,
+          "line": 412
+        },
+        {
+          "heading": "8. Non-Functionals (Locked)",
+          "level": 2,
+          "line": 418
+        },
+        {
+          "heading": "9. Failure Modes & Runbook",
+          "level": 2,
+          "line": 426
+        },
+        {
+          "heading": "10. Rollout & Versioning",
+          "level": 2,
+          "line": 431
+        },
+        {
+          "heading": "11. RACI & Approvals",
+          "level": 2,
+          "line": 438
+        },
+        {
+          "heading": "12. ADRs & Dependencies",
+          "level": 2,
+          "line": 441
+        },
+        {
+          "heading": "13. Security & Privacy Mini-Threat Model (STRIDE-Lite)",
+          "level": 2,
+          "line": 445
+        },
+        {
+          "heading": "UF-### — [Flow Name]",
+          "level": 1,
+          "line": 461
+        },
+        {
+          "heading": "SF-### — [Flow Name]",
+          "level": 1,
+          "line": 491
+        },
+        {
+          "heading": "ALG-### — [Model Name] v[#.#]",
+          "level": 1,
+          "line": 509
+        },
+        {
+          "heading": "EVT.[Domain].[Action] v1",
+          "level": 1,
+          "line": 549
+        },
+        {
+          "heading": "AT-OBJ##-## — \"[Observable outcome in <X time]\"",
+          "level": 1,
+          "line": 575
+        },
+        {
+          "heading": "ADR-### — [Decision]",
+          "level": 1,
+          "line": 693
+        },
+        {
+          "heading": "WHAT CHANGED FROM v1.0",
+          "level": 2,
+          "line": 794
+        },
+        {
+          "heading": "QUICK REFERENCE — ALL 9 PHASES",
+          "level": 2,
+          "line": 810
+        },
+        {
+          "heading": "THE SEQUENCE FOR EVERY NEW FEATURE",
+          "level": 2,
+          "line": 825
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 27
+      }
+    },
+    {
+      "path": "docs/master-agent-orchestrator-implementation-guide.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 344,
+      "nonEmptyLines": 271,
+      "sections": [
+        {
+          "heading": "Master Agent Orchestrator System - Implementation Guide",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "🎯 EXECUTIVE SUMMARY",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "🏗️ SYSTEM ARCHITECTURE",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Core Components",
+          "level": 3,
+          "line": 9
+        },
+        {
+          "heading": "API Endpoints",
+          "level": 3,
+          "line": 26
+        },
+        {
+          "heading": "🎭 15 VIRAL PREDICTION OBJECTIVES MAPPED",
+          "level": 2,
+          "line": 32
+        },
+        {
+          "heading": "Discovery Capabilities (3 Objectives)",
+          "level": 3,
+          "line": 34
+        },
+        {
+          "heading": "Analysis Capabilities (4 Objectives)",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "Replication Capabilities (3 Objectives)",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "Prediction Capabilities (2 Objectives)",
+          "level": 3,
+          "line": 87
+        },
+        {
+          "heading": "Learning Capabilities (3 Objectives)",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "🚀 IMPLEMENTATION PLAN",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "Phase 1: System Setup (Day 1)",
+          "level": 3,
+          "line": 116
+        },
+        {
+          "heading": "Phase 2: Integration Testing (Days 2-3)",
+          "level": 3,
+          "line": 138
+        },
+        {
+          "heading": "Phase 3: Daily Workflow Implementation (Days 4-5)",
+          "level": 3,
+          "line": 160
+        },
+        {
+          "heading": "📊 TESTING WORKFLOWS",
+          "level": 2,
+          "line": 177
+        },
+        {
+          "heading": "Complete System Validation",
+          "level": 3,
+          "line": 179
+        },
+        {
+          "heading": "Expected Performance Metrics",
+          "level": 3,
+          "line": 188
+        },
+        {
+          "heading": "🎛️ DAILY WORKFLOW RECOMMENDATION",
+          "level": 2,
+          "line": 194
+        },
+        {
+          "heading": "Morning Validation (15 minutes)",
+          "level": 3,
+          "line": 196
+        },
+        {
+          "heading": "Afternoon Deep Testing (30 minutes)",
+          "level": 3,
+          "line": 208
+        },
+        {
+          "heading": "Evening Review (15 minutes)",
+          "level": 3,
+          "line": 221
+        },
+        {
+          "heading": "🔗 UI NAVIGATION MAP",
+          "level": 2,
+          "line": 232
+        },
+        {
+          "heading": "Primary Dashboards",
+          "level": 3,
+          "line": 234
+        },
+        {
+          "heading": "Individual Service Dashboards",
+          "level": 3,
+          "line": 251
+        },
+        {
+          "heading": "⚡ QUICK START COMMANDS",
+          "level": 2,
+          "line": 254
+        },
+        {
+          "heading": "Test System Coordination",
+          "level": 3,
+          "line": 256
+        },
+        {
+          "heading": "Execute Complete Workflow",
+          "level": 3,
+          "line": 263
+        },
+        {
+          "heading": "Get System Status",
+          "level": 3,
+          "line": 270
+        },
+        {
+          "heading": "Run Integration Validation",
+          "level": 3,
+          "line": 275
+        },
+        {
+          "heading": "🎯 SUCCESS CRITERIA VALIDATION",
+          "level": 2,
+          "line": 282
+        },
+        {
+          "heading": "System Readiness Checklist",
+          "level": 3,
+          "line": 284
+        },
+        {
+          "heading": "Performance Benchmarks",
+          "level": 3,
+          "line": 294
+        },
+        {
+          "heading": "🔧 TROUBLESHOOTING",
+          "level": 2,
+          "line": 301
+        },
+        {
+          "heading": "Common Issues",
+          "level": 3,
+          "line": 303
+        },
+        {
+          "heading": "Monitoring Commands",
+          "level": 3,
+          "line": 320
+        },
+        {
+          "heading": "📈 NEXT STEPS",
+          "level": 2,
+          "line": 332
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 37
+      }
+    },
+    {
+      "path": "docs/moat.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 58,
+      "nonEmptyLines": 42,
+      "sections": [
+        {
+          "heading": "Moat Mechanics",
+          "level": 2,
+          "line": 1
+        },
+        {
+          "heading": "Keys, Plans, Quotas",
+          "level": 3,
+          "line": 3
+        },
+        {
+          "heading": "Feature Flags",
+          "level": 3,
+          "line": 14
+        },
+        {
+          "heading": "Rate Limiting",
+          "level": 3,
+          "line": 19
+        },
+        {
+          "heading": "Public API (MOCK-friendly)",
+          "level": 3,
+          "line": 24
+        },
+        {
+          "heading": "Insights Criteria",
+          "level": 3,
+          "line": 31
+        },
+        {
+          "heading": "Benchmark",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "Demo and Acceptance (MOCK=1)",
+          "level": 3,
+          "line": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 8
+      }
+    },
+    {
+      "path": "docs/mock_mode.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 20,
+      "nonEmptyLines": 13,
+      "sections": [
+        {
+          "heading": "Mock Mode",
+          "level": 2,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/models.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 7,
+      "nonEmptyLines": 5,
+      "sections": [
+        {
+          "heading": "Model Registry & Release Channels",
+          "level": 2,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/NEXT_FEATURE_QUEUE.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 333,
+      "nonEmptyLines": 250,
+      "sections": [
+        {
+          "heading": "Next Pre-Publication Feature Queue — Side-Hustles Niche",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Decision Framework",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Group 1: Visual / Pacing",
+          "level": 2,
+          "line": 28
+        },
+        {
+          "heading": "1.1 `visual_proof_ratio` — KEEP (Priority: 1)",
+          "level": 3,
+          "line": 30
+        },
+        {
+          "heading": "1.2 `pacing_acceleration_score` — DROP",
+          "level": 3,
+          "line": 42
+        },
+        {
+          "heading": "1.3 `motion_distribution_evenness` — DEFER",
+          "level": 3,
+          "line": 50
+        },
+        {
+          "heading": "Group 2: Subtitles / Overlays",
+          "level": 2,
+          "line": 60
+        },
+        {
+          "heading": "2.1 `text_overlay_density` — KEEP (Priority: 3)",
+          "level": 3,
+          "line": 62
+        },
+        {
+          "heading": "2.2 `caption_spam_score` — DROP",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "Group 3: Trust / Authority",
+          "level": 2,
+          "line": 84
+        },
+        {
+          "heading": "3.1 `specificity_score` — KEEP (Priority: 2)",
+          "level": 3,
+          "line": 86
+        },
+        {
+          "heading": "3.2 `credential_type` — DEFER",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "3.3 `hedge_word_density` — KEEP (Priority: 5)",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "Group 4: Delivery / Confidence",
+          "level": 2,
+          "line": 120
+        },
+        {
+          "heading": "4.1 `vocal_confidence_composite` — KEEP (Priority: 4)",
+          "level": 3,
+          "line": 122
+        },
+        {
+          "heading": "4.2 `vocal_energy_arc` — DROP",
+          "level": 3,
+          "line": 134
+        },
+        {
+          "heading": "4.3 `filler_word_rate` — DEFER",
+          "level": 3,
+          "line": 142
+        },
+        {
+          "heading": "Group 5: Structure / Payoff",
+          "level": 2,
+          "line": 152
+        },
+        {
+          "heading": "5.1 `instructional_density` — KEEP (Priority: 2, tied with specificity_score)",
+          "level": 3,
+          "line": 154
+        },
+        {
+          "heading": "5.2 `hook_payoff_coherence` — DEFER",
+          "level": 3,
+          "line": 166
+        },
+        {
+          "heading": "5.3 `content_arc_type` — DROP",
+          "level": 3,
+          "line": 175
+        },
+        {
+          "heading": "Group 6: Counterfactual Differentiators",
+          "level": 2,
+          "line": 185
+        },
+        {
+          "heading": "6.1 `visual_to_verbal_ratio` — KEEP (Priority: 1, tied with visual_proof_ratio)",
+          "level": 3,
+          "line": 189
+        },
+        {
+          "heading": "6.2 `curiosity_gap_visual` — DEFER",
+          "level": 3,
+          "line": 202
+        },
+        {
+          "heading": "6.3 `show_dont_tell_score` — DROP (absorbed by 6.1)",
+          "level": 3,
+          "line": 210
+        },
+        {
+          "heading": "6.4 `anti_spam_signal_score` — DROP",
+          "level": 3,
+          "line": 218
+        },
+        {
+          "heading": "Summary Table",
+          "level": 2,
+          "line": 228
+        },
+        {
+          "heading": "Implementation Dependencies",
+          "level": 2,
+          "line": 255
+        },
+        {
+          "heading": "Top 5 Highest-Leverage Pre-Pub Features To Build Next",
+          "level": 2,
+          "line": 293
+        },
+        {
+          "heading": "1. `visual_to_verbal_ratio` (Group 6.1)",
+          "level": 3,
+          "line": 295
+        },
+        {
+          "heading": "2. `visual_proof_ratio` (Group 1.1)",
+          "level": 3,
+          "line": 299
+        },
+        {
+          "heading": "3. `specificity_score` + `instructional_density` (Groups 3.1 + 5.1, tied)",
+          "level": 3,
+          "line": 303
+        },
+        {
+          "heading": "4. `vocal_confidence_composite` (Group 4.1)",
+          "level": 3,
+          "line": 307
+        },
+        {
+          "heading": "5. `hedge_word_density` (Group 3.3)",
+          "level": 3,
+          "line": 311
+        },
+        {
+          "heading": "Implementation Order",
+          "level": 3,
+          "line": 317
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 35
+      }
+    },
+    {
+      "path": "docs/niche-keywords-system-design.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 803,
+      "nonEmptyLines": 592,
+      "sections": [
+        {
+          "heading": "Niche Keywords System: Database Design",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 10
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 16
+        },
+        {
+          "heading": "Four Tables + Three Views",
+          "level": 3,
+          "line": 18
+        },
+        {
+          "heading": "Table 1: `niches` (Reference Table)",
+          "level": 2,
+          "line": 59
+        },
+        {
+          "heading": "Schema",
+          "level": 3,
+          "line": 63
+        },
+        {
+          "heading": "Example Data",
+          "level": 3,
+          "line": 75
+        },
+        {
+          "heading": "Why This Design?",
+          "level": 3,
+          "line": 85
+        },
+        {
+          "heading": "Table 2: `niche_keywords` (Main Keywords Table)",
+          "level": 2,
+          "line": 93
+        },
+        {
+          "heading": "Schema",
+          "level": 3,
+          "line": 97
+        },
+        {
+          "heading": "Status Lifecycle",
+          "level": 3,
+          "line": 128
+        },
+        {
+          "heading": "Key Metrics Explained",
+          "level": 3,
+          "line": 149
+        },
+        {
+          "heading": "1. `trending_score` (0.00 - 1.00)",
+          "level": 4,
+          "line": 151
+        },
+        {
+          "heading": "2. `virality_correlation` (0.00 - 1.00)",
+          "level": 4,
+          "line": 177
+        },
+        {
+          "heading": "3. `scrape_success_rate` (0.00 - 1.00)",
+          "level": 4,
+          "line": 195
+        },
+        {
+          "heading": "Table 3: `keyword_performance_snapshots` (Time-Series)",
+          "level": 2,
+          "line": 209
+        },
+        {
+          "heading": "Schema",
+          "level": 3,
+          "line": 213
+        },
+        {
+          "heading": "Unique Constraint",
+          "level": 3,
+          "line": 229
+        },
+        {
+          "heading": "Use Cases",
+          "level": 3,
+          "line": 237
+        },
+        {
+          "heading": "Example Query: Keywords with Rising Velocity",
+          "level": 3,
+          "line": 244
+        },
+        {
+          "heading": "Table 4: `keyword_rotation_log` (Audit Trail)",
+          "level": 2,
+          "line": 261
+        },
+        {
+          "heading": "Schema",
+          "level": 3,
+          "line": 265
+        },
+        {
+          "heading": "Use Cases",
+          "level": 3,
+          "line": 282
+        },
+        {
+          "heading": "Example Rotation Entry",
+          "level": 3,
+          "line": 289
+        },
+        {
+          "heading": "Views (Read-Only)",
+          "level": 2,
+          "line": 309
+        },
+        {
+          "heading": "View 1: `active_keywords_by_niche`",
+          "level": 3,
+          "line": 311
+        },
+        {
+          "heading": "View 2: `keyword_health_dashboard`",
+          "level": 3,
+          "line": 337
+        },
+        {
+          "heading": "View 3: `keywords_needing_rotation`",
+          "level": 3,
+          "line": 358
+        },
+        {
+          "heading": "Automated Functions",
+          "level": 2,
+          "line": 383
+        },
+        {
+          "heading": "Function 1: `update_keyword_trending_scores()`",
+          "level": 3,
+          "line": 385
+        },
+        {
+          "heading": "Function 2: `auto_archive_underperforming_keywords()`",
+          "level": 3,
+          "line": 406
+        },
+        {
+          "heading": "Keyword Lifecycle Workflow",
+          "level": 2,
+          "line": 439
+        },
+        {
+          "heading": "Phase 1: Discovery",
+          "level": 3,
+          "line": 441
+        },
+        {
+          "heading": "Phase 2: Testing (Status = 'testing')",
+          "level": 3,
+          "line": 457
+        },
+        {
+          "heading": "Phase 3: Active Use (Status = 'active')",
+          "level": 3,
+          "line": 472
+        },
+        {
+          "heading": "Phase 4: Archive Decision",
+          "level": 3,
+          "line": 492
+        },
+        {
+          "heading": "Phase 5: Replacement",
+          "level": 3,
+          "line": 514
+        },
+        {
+          "heading": "Migration Plan: 250 → 1000+ Keywords",
+          "level": 2,
+          "line": 538
+        },
+        {
+          "heading": "Current State (as of 2025-11-18)",
+          "level": 3,
+          "line": 540
+        },
+        {
+          "heading": "Target State",
+          "level": 3,
+          "line": 552
+        },
+        {
+          "heading": "Migration Strategy",
+          "level": 3,
+          "line": 558
+        },
+        {
+          "heading": "Step 1: Import Existing 250 Keywords",
+          "level": 4,
+          "line": 560
+        },
+        {
+          "heading": "Step 2: Generate 750 New Keywords (16 niches × ~47 keywords each)",
+          "level": 4,
+          "line": 601
+        },
+        {
+          "heading": "Step 3: Continuous Improvement",
+          "level": 4,
+          "line": 625
+        },
+        {
+          "heading": "Performance Considerations",
+          "level": 2,
+          "line": 644
+        },
+        {
+          "heading": "Indexes",
+          "level": 3,
+          "line": 646
+        },
+        {
+          "heading": "Full-Text Search",
+          "level": 3,
+          "line": 668
+        },
+        {
+          "heading": "Integration with Scraping System",
+          "level": 2,
+          "line": 689
+        },
+        {
+          "heading": "Current Scraping Workflow",
+          "level": 3,
+          "line": 691
+        },
+        {
+          "heading": "New Scraping Workflow (Post-Migration)",
+          "level": 3,
+          "line": 706
+        },
+        {
+          "heading": "Admin Interface (Future)",
+          "level": 2,
+          "line": 753
+        },
+        {
+          "heading": "Keywords Dashboard",
+          "level": 3,
+          "line": 755
+        },
+        {
+          "heading": "Summary",
+          "level": 2,
+          "line": 768
+        },
+        {
+          "heading": "What This System Solves",
+          "level": 3,
+          "line": 770
+        },
+        {
+          "heading": "Key Metrics",
+          "level": 3,
+          "line": 781
+        },
+        {
+          "heading": "Next Steps",
+          "level": 3,
+          "line": 791
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 56
+      }
+    },
+    {
+      "path": "docs/notifications.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 5,
+      "nonEmptyLines": 3,
+      "sections": [
+        {
+          "heading": "Notifications & Dunning",
+          "level": 2,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/objectives-matrix.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 22,
+      "nonEmptyLines": 17,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 0
+      }
+    },
+    {
+      "path": "docs/observability.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 9,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "Observability & SLOs",
+          "level": 3,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/ops-readiness.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 27,
+      "nonEmptyLines": 20,
+      "sections": [
+        {
+          "heading": "Operations Center Readiness (Objective 1)",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "SLOs (defaults)",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Synthetic vs Live",
+          "level": 2,
+          "line": 11
+        },
+        {
+          "heading": "QA Seed",
+          "level": 2,
+          "line": 15
+        },
+        {
+          "heading": "Alerts",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "Exports",
+          "level": 2,
+          "line": 22
+        },
+        {
+          "heading": "Runbooks",
+          "level": 2,
+          "line": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    }
+  ]
+}

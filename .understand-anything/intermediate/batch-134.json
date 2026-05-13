@@ -1,0 +1,1025 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/content/adversarial-evaluator.ts",
+      "type": "file",
+      "name": "adversarial-evaluator.ts",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "summary": "Two-stage adversarial brief evaluation pipeline (critic + synthesizer LLM passes) with niche-aware VPS thresholds and client memory loading; persists evaluation rounds for audit.",
+      "tags": ["service", "llm", "evaluation", "content-brief", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:getNicheThresholds",
+      "type": "function",
+      "name": "getNicheThresholds",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [89, 147],
+      "summary": "Resolves per-niche VPS pass/fail thresholds for the adversarial evaluator.",
+      "tags": ["utility", "configuration", "niche"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:loadClientMemory",
+      "type": "function",
+      "name": "loadClientMemory",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [151, 182],
+      "summary": "Loads cached client memory snapshot used to ground the critic and synthesizer prompts.",
+      "tags": ["utility", "memory", "data-access"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:runCritic",
+      "type": "function",
+      "name": "runCritic",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [186, 274],
+      "summary": "Runs the LLM critic pass that scores and challenges a draft brief against niche thresholds and prior memory.",
+      "tags": ["llm", "critic", "evaluation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:runSynthesizer",
+      "type": "function",
+      "name": "runSynthesizer",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [278, 364],
+      "summary": "Runs the LLM synthesizer pass that revises the brief in response to critic findings.",
+      "tags": ["llm", "synthesizer", "evaluation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:adversarialEvaluateBrief",
+      "type": "function",
+      "name": "adversarialEvaluateBrief",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [379, 495],
+      "summary": "Top-level orchestrator that loops critic and synthesizer rounds until the brief converges or hits the round limit.",
+      "tags": ["orchestrator", "llm", "content-brief"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/adversarial-evaluator.ts:storeEvaluationRounds",
+      "type": "function",
+      "name": "storeEvaluationRounds",
+      "filePath": "src/lib/content/adversarial-evaluator.ts",
+      "lineRange": [503, 522],
+      "summary": "Persists every critic/synthesizer round to Supabase for downstream auditing and learning.",
+      "tags": ["persistence", "audit", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/content/calendar-refresh.ts",
+      "type": "file",
+      "name": "calendar-refresh.ts",
+      "filePath": "src/lib/content/calendar-refresh.ts",
+      "summary": "Cron-style job that finds active content calendars and refreshes upcoming briefs against latest creator context and pattern metrics.",
+      "tags": ["scheduler", "service", "content-calendar", "background-job"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/calendar-refresh.ts:refreshActiveCalendars",
+      "type": "function",
+      "name": "refreshActiveCalendars",
+      "filePath": "src/lib/content/calendar-refresh.ts",
+      "lineRange": [39, 118],
+      "summary": "Iterates active users with content calendars and triggers a per-user refresh, aggregating outcomes.",
+      "tags": ["scheduler", "iteration", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/calendar-refresh.ts:refreshCalendarForUser",
+      "type": "function",
+      "name": "refreshCalendarForUser",
+      "filePath": "src/lib/content/calendar-refresh.ts",
+      "lineRange": [124, 253],
+      "summary": "Refreshes a single user's content calendar by recomputing pattern adjusted scores and rebuilding upcoming briefs.",
+      "tags": ["content-calendar", "service", "scheduler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/content/content-calendar.ts",
+      "type": "file",
+      "name": "content-calendar.ts",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "summary": "Generates a diverse content calendar of brief proposals by combining pattern performance signals, creator preferences, and LLM brief drafting.",
+      "tags": ["service", "content-calendar", "llm", "pattern-selection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:generateContentCalendar",
+      "type": "function",
+      "name": "generateContentCalendar",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [112, 196],
+      "summary": "Builds a multi-day content calendar by ranking patterns, selecting diverse picks, and generating LLM-backed brief content for each slot.",
+      "tags": ["orchestrator", "content-calendar", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:buildPerformanceMap",
+      "type": "function",
+      "name": "buildPerformanceMap",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [202, 222],
+      "summary": "Builds a pattern-id keyed map of historical performance metrics used to weight calendar candidate scoring.",
+      "tags": ["utility", "performance", "data-transform"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:computeAdjustedScore",
+      "type": "function",
+      "name": "computeAdjustedScore",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [224, 249],
+      "summary": "Adjusts a pattern's base score using historical performance, recency, and creator preference signals.",
+      "tags": ["scoring", "utility", "calendar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:selectDiversePatterns",
+      "type": "function",
+      "name": "selectDiversePatterns",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [259, 310],
+      "summary": "Picks a diversified set of patterns for the calendar avoiding repeats of the same hook or format clusters.",
+      "tags": ["selection", "diversity", "calendar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:generateBriefContent",
+      "type": "function",
+      "name": "generateBriefContent",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [321, 407],
+      "summary": "Calls the LLM to draft hook, beats, and CTA for a single calendar slot brief grounded in creator context.",
+      "tags": ["llm", "brief", "content-calendar"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:parseBriefResponse",
+      "type": "function",
+      "name": "parseBriefResponse",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [409, 438],
+      "summary": "Parses and validates the LLM brief response into the structured brief shape used downstream.",
+      "tags": ["parsing", "validation", "llm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:suggestFormat",
+      "type": "function",
+      "name": "suggestFormat",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [455, 478],
+      "summary": "Suggests a content format string for a brief based on niche, prior performance, and pattern hints.",
+      "tags": ["utility", "format", "heuristic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/content-calendar.ts:buildFallbackHook",
+      "type": "function",
+      "name": "buildFallbackHook",
+      "filePath": "src/lib/content/content-calendar.ts",
+      "lineRange": [480, 505],
+      "summary": "Constructs a deterministic fallback hook line when the LLM brief generation fails or omits a hook.",
+      "tags": ["utility", "fallback", "hook"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/content/pattern-performance-tracker.ts",
+      "type": "file",
+      "name": "pattern-performance-tracker.ts",
+      "filePath": "src/lib/content/pattern-performance-tracker.ts",
+      "summary": "Records realized VPS and engagement outcomes against the pattern/brief that produced them so the calendar engine can learn over time.",
+      "tags": ["service", "telemetry", "pattern", "learning"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/pattern-performance-tracker.ts:trackPatternPerformance",
+      "type": "function",
+      "name": "trackPatternPerformance",
+      "filePath": "src/lib/content/pattern-performance-tracker.ts",
+      "lineRange": [35, 116],
+      "summary": "Writes per-pattern realized performance metrics (VPS, views, retention) for use by the calendar's adjusted score.",
+      "tags": ["service", "metrics", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/content/variant-generator.ts",
+      "type": "file",
+      "name": "variant-generator.ts",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "summary": "Generates alternative hook/format/CTA variants for an existing brief and persists/selects between them.",
+      "tags": ["service", "variant", "content-brief", "experimentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:inferHookType",
+      "type": "function",
+      "name": "inferHookType",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [52, 62],
+      "summary": "Classifies a hook string into one of the known hook types using keyword heuristics.",
+      "tags": ["utility", "classification", "hook"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:inferFormat",
+      "type": "function",
+      "name": "inferFormat",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [82, 92],
+      "summary": "Classifies a brief into a content format bucket from its structure and hook style.",
+      "tags": ["utility", "classification", "format"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:generateVariantBrief",
+      "type": "function",
+      "name": "generateVariantBrief",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [123, 201],
+      "summary": "Generates a single alternative brief variant by swapping hook type or format and rewriting via the LLM.",
+      "tags": ["llm", "variant", "brief"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:generateBriefVariants",
+      "type": "function",
+      "name": "generateBriefVariants",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [214, 284],
+      "summary": "Generates a fan-out of brief variants for a given base brief and returns them ranked.",
+      "tags": ["service", "variant", "experimentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:storeVariants",
+      "type": "function",
+      "name": "storeVariants",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [292, 312],
+      "summary": "Persists generated variants to Supabase keyed by the originating brief id.",
+      "tags": ["persistence", "variant", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:selectVariant",
+      "type": "function",
+      "name": "selectVariant",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [317, 334],
+      "summary": "Marks a specific variant as selected and updates the parent brief reference.",
+      "tags": ["service", "variant", "state-update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/content/variant-generator.ts:getVariantsForBriefs",
+      "type": "function",
+      "name": "getVariantsForBriefs",
+      "filePath": "src/lib/content/variant-generator.ts",
+      "lineRange": [339, 365],
+      "summary": "Batch-loads all stored variants for a set of brief ids.",
+      "tags": ["data-access", "variant", "batch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx",
+      "type": "file",
+      "name": "AudioVisualContext.tsx",
+      "filePath": "src/lib/contexts/audiovisual/AudioVisualContext.tsx",
+      "summary": "Thin React context bundling audio and visual cross-cutting state for the studio surface.",
+      "tags": ["context", "react", "studio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/contexts/audiovisual/AudioVisualContext.tsx:AudioVisualProvider",
+      "type": "function",
+      "name": "AudioVisualProvider",
+      "filePath": "src/lib/contexts/audiovisual/AudioVisualContext.tsx",
+      "lineRange": [30, 57],
+      "summary": "Provider component composing audio/visual sub-state and exposing it to descendants.",
+      "tags": ["context-provider", "react"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/contexts/AnimationContext.tsx",
+      "type": "file",
+      "name": "AnimationContext.tsx",
+      "filePath": "src/lib/contexts/AnimationContext.tsx",
+      "summary": "Tiny React context wrapping global animation settings (reduced-motion, durations) for the app.",
+      "tags": ["context", "react", "animation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/contexts/AudioContext.tsx",
+      "type": "file",
+      "name": "AudioContext.tsx",
+      "filePath": "src/lib/contexts/AudioContext.tsx",
+      "summary": "Large React context managing TikTok sound state: library browsing, selection, playback, and trend metadata.",
+      "tags": ["context", "react", "audio", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/AudioContext.tsx:AudioProvider",
+      "type": "function",
+      "name": "AudioProvider",
+      "filePath": "src/lib/contexts/AudioContext.tsx",
+      "lineRange": [154, 683],
+      "summary": "Provider implementing the entire audio state machine for the studio (selection, playback, trending sound queries).",
+      "tags": ["context-provider", "react", "audio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/AuthContext.tsx",
+      "type": "file",
+      "name": "AuthContext.tsx",
+      "filePath": "src/lib/contexts/AuthContext.tsx",
+      "summary": "React context wrapping Supabase auth state, session refresh, and login/logout actions for the whole app.",
+      "tags": ["context", "react", "auth", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/AuthContext.tsx:AuthProvider",
+      "type": "function",
+      "name": "AuthProvider",
+      "filePath": "src/lib/contexts/AuthContext.tsx",
+      "lineRange": [64, 320],
+      "summary": "Provider that subscribes to Supabase auth state changes and exposes user, session, and auth actions to the tree.",
+      "tags": ["context-provider", "auth", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/ComponentIntegrationContext.tsx",
+      "type": "file",
+      "name": "ComponentIntegrationContext.tsx",
+      "filePath": "src/lib/contexts/ComponentIntegrationContext.tsx",
+      "summary": "Coordinates cross-component integration state (selection, focus, side-panel routing) between editor surfaces.",
+      "tags": ["context", "react", "integration", "editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/ComponentIntegrationContext.tsx:ComponentIntegrationProvider",
+      "type": "function",
+      "name": "ComponentIntegrationProvider",
+      "filePath": "src/lib/contexts/ComponentIntegrationContext.tsx",
+      "lineRange": [95, 356],
+      "summary": "Provider that synchronizes selected component, side-panel and navigation hooks for cross-pane integration.",
+      "tags": ["context-provider", "integration", "editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/DeepgramContext.tsx",
+      "type": "file",
+      "name": "DeepgramContext.tsx",
+      "filePath": "src/lib/contexts/DeepgramContext.tsx",
+      "summary": "React context wrapping a Deepgram live-transcription socket: key fetch, connection lifecycle, and event re-exports.",
+      "tags": ["context", "react", "deepgram", "transcription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/DeepgramContext.tsx:DeepgramContextProvider",
+      "type": "function",
+      "name": "DeepgramContextProvider",
+      "filePath": "src/lib/contexts/DeepgramContext.tsx",
+      "lineRange": [34, 117],
+      "summary": "Provider that opens and manages a Deepgram live-transcription socket and exposes transcript events.",
+      "tags": ["context-provider", "deepgram", "websocket"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/EditorContext.tsx",
+      "type": "file",
+      "name": "EditorContext.tsx",
+      "filePath": "src/lib/contexts/EditorContext.tsx",
+      "summary": "Primary editor state container: template, UI state, undo/redo history, and section-level actions for the studio editor.",
+      "tags": ["context", "react", "editor", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/EditorContext.tsx:createDefaultTemplate",
+      "type": "function",
+      "name": "createDefaultTemplate",
+      "filePath": "src/lib/contexts/EditorContext.tsx",
+      "lineRange": [32, 61],
+      "summary": "Builds the default empty template the editor uses when no content has been loaded.",
+      "tags": ["utility", "factory", "template"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/EditorContext.tsx:createInitialUIState",
+      "type": "function",
+      "name": "createInitialUIState",
+      "filePath": "src/lib/contexts/EditorContext.tsx",
+      "lineRange": [64, 79],
+      "summary": "Returns the default UI state (active tool, panels, zoom) for a freshly-opened editor.",
+      "tags": ["utility", "factory", "ui-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/EditorContext.tsx:createInitialEditorState",
+      "type": "function",
+      "name": "createInitialEditorState",
+      "filePath": "src/lib/contexts/EditorContext.tsx",
+      "lineRange": [82, 101],
+      "summary": "Composes the initial editor state by combining default template and UI state.",
+      "tags": ["utility", "factory", "editor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/EditorContext.tsx:EditorProvider",
+      "type": "function",
+      "name": "EditorProvider",
+      "filePath": "src/lib/contexts/EditorContext.tsx",
+      "lineRange": [149, 727],
+      "summary": "Provider implementing the full editor reducer, undo/redo, section mutations, and side effects.",
+      "tags": ["context-provider", "editor", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/FeatureContext.tsx",
+      "type": "file",
+      "name": "FeatureContext.tsx",
+      "filePath": "src/lib/contexts/FeatureContext.tsx",
+      "summary": "React context exposing remote feature flags loaded from Firebase, with helper hook for individual flags.",
+      "tags": ["context", "react", "feature-flags", "firebase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/FeatureContext.tsx:FeatureProvider",
+      "type": "function",
+      "name": "FeatureProvider",
+      "filePath": "src/lib/contexts/FeatureContext.tsx",
+      "lineRange": [37, 154],
+      "summary": "Provider that loads feature flag config from Firebase and keeps it in sync for descendants.",
+      "tags": ["context-provider", "feature-flags", "firebase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/MLSuggestionsContext.tsx",
+      "type": "file",
+      "name": "MLSuggestionsContext.tsx",
+      "filePath": "src/lib/contexts/MLSuggestionsContext.tsx",
+      "summary": "Manages AI-driven editor suggestion fetching, accept/reject state, and UI surfacing for ML-suggested template edits.",
+      "tags": ["context", "react", "ml-suggestions", "editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/MLSuggestionsContext.tsx:suggestionsReducer",
+      "type": "function",
+      "name": "suggestionsReducer",
+      "filePath": "src/lib/contexts/MLSuggestionsContext.tsx",
+      "lineRange": [55, 68],
+      "summary": "Reducer handling add/remove/accept/reject events for the ML suggestion list.",
+      "tags": ["reducer", "ml-suggestions", "state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/MLSuggestionsContext.tsx:uiStateReducer",
+      "type": "function",
+      "name": "uiStateReducer",
+      "filePath": "src/lib/contexts/MLSuggestionsContext.tsx",
+      "lineRange": [71, 98],
+      "summary": "Reducer handling panel-open, focused suggestion, and loading flags for the suggestions UI.",
+      "tags": ["reducer", "ui-state", "ml-suggestions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/MLSuggestionsContext.tsx:MLSuggestionsProvider",
+      "type": "function",
+      "name": "MLSuggestionsProvider",
+      "filePath": "src/lib/contexts/MLSuggestionsContext.tsx",
+      "lineRange": [104, 299],
+      "summary": "Provider wiring the suggestion service to the editor: fetches suggestions when state changes and exposes accept/reject handlers.",
+      "tags": ["context-provider", "ml-suggestions", "editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/NavigationContext.tsx",
+      "type": "file",
+      "name": "NavigationContext.tsx",
+      "filePath": "src/lib/contexts/NavigationContext.tsx",
+      "summary": "Centralizes app navigation: breadcrumbs, transition state, deep links, and a PageTransition wrapper component.",
+      "tags": ["context", "react", "navigation", "router"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/NavigationContext.tsx:NavigationProvider",
+      "type": "function",
+      "name": "NavigationProvider",
+      "filePath": "src/lib/contexts/NavigationContext.tsx",
+      "lineRange": [82, 293],
+      "summary": "Provider tracking current route, breadcrumbs, and transitions; exposes navigation actions to descendants.",
+      "tags": ["context-provider", "navigation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/NavigationContext.tsx:PageTransition",
+      "type": "function",
+      "name": "PageTransition",
+      "filePath": "src/lib/contexts/NavigationContext.tsx",
+      "lineRange": [300, 362],
+      "summary": "Wrapper component that drives in/out animations around route changes using the navigation context.",
+      "tags": ["component", "transition", "navigation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/StateContext.tsx",
+      "type": "file",
+      "name": "StateContext.tsx",
+      "filePath": "src/lib/contexts/StateContext.tsx",
+      "summary": "Minimal generic state context used as a lightweight cross-component store for the studio shell.",
+      "tags": ["context", "react", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/contexts/SubscriptionContext.tsx",
+      "type": "file",
+      "name": "SubscriptionContext.tsx",
+      "filePath": "src/lib/contexts/SubscriptionContext.tsx",
+      "summary": "Loads the user's subscription tier and entitlement flags and exposes them for plan-gated UI.",
+      "tags": ["context", "react", "subscription", "billing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/SubscriptionContext.tsx:SubscriptionProvider",
+      "type": "function",
+      "name": "SubscriptionProvider",
+      "filePath": "src/lib/contexts/SubscriptionContext.tsx",
+      "lineRange": [37, 144],
+      "summary": "Provider that fetches the active user's subscription record and exposes plan, limits, and entitlement helpers.",
+      "tags": ["context-provider", "subscription", "billing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/TemplateEditorContext.tsx",
+      "type": "file",
+      "name": "TemplateEditorContext.tsx",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "summary": "Comprehensive template editor state: reducer-driven section/element mutations, history, and selection for the template authoring surface.",
+      "tags": ["context", "react", "template-editor", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/TemplateEditorContext.tsx:createDefaultTemplate",
+      "type": "function",
+      "name": "createDefaultTemplate",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "lineRange": [30, 65],
+      "summary": "Creates the default empty template used to seed the template editor.",
+      "tags": ["utility", "factory", "template"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/TemplateEditorContext.tsx:createInitialUIState",
+      "type": "function",
+      "name": "createInitialUIState",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "lineRange": [68, 95],
+      "summary": "Returns the initial UI state (selected ids, zoom, side-panels) for the template editor.",
+      "tags": ["utility", "factory", "ui-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/TemplateEditorContext.tsx:createInitialEditorState",
+      "type": "function",
+      "name": "createInitialEditorState",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "lineRange": [106, 120],
+      "summary": "Composes the full initial editor state from template, UI state, and an empty history entry.",
+      "tags": ["utility", "factory", "editor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/contexts/TemplateEditorContext.tsx:editorReducer",
+      "type": "function",
+      "name": "editorReducer",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "lineRange": [126, 496],
+      "summary": "Central reducer handling every section/element mutation, undo/redo, and selection event for the template editor.",
+      "tags": ["reducer", "template-editor", "state"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/TemplateEditorContext.tsx:TemplateEditorProvider",
+      "type": "function",
+      "name": "TemplateEditorProvider",
+      "filePath": "src/lib/contexts/TemplateEditorContext.tsx",
+      "lineRange": [533, 822],
+      "summary": "Provider that wires the editor reducer with persistence, autosave, and exposes action helpers to descendants.",
+      "tags": ["context-provider", "template-editor", "editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/contexts/ThemeContext.tsx",
+      "type": "file",
+      "name": "ThemeContext.tsx",
+      "filePath": "src/lib/contexts/ThemeContext.tsx",
+      "summary": "Theme provider wrapping next-themes with a local hook plus light/dark toggle for the app shell.",
+      "tags": ["context", "react", "theme", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/contexts/UsabilityTestContext.tsx",
+      "type": "file",
+      "name": "UsabilityTestContext.tsx",
+      "filePath": "src/lib/contexts/UsabilityTestContext.tsx",
+      "summary": "Runs in-app usability test sessions: assigns scenarios, captures task results, and persists session telemetry.",
+      "tags": ["context", "react", "usability-test", "telemetry"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/contexts/UsabilityTestContext.tsx:UsabilityTestProvider",
+      "type": "function",
+      "name": "UsabilityTestProvider",
+      "filePath": "src/lib/contexts/UsabilityTestContext.tsx",
+      "lineRange": [166, 547],
+      "summary": "Provider that runs an active usability test session, tracking tasks, timing, and emitting telemetry events.",
+      "tags": ["context-provider", "usability-test", "telemetry"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/context/assemble-context.ts",
+      "type": "file",
+      "name": "assemble-context.ts",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "summary": "Assembles a token-budgeted runtime context for AI calls by fetching hot/warm memory, skill config, cultural events, accuracy stats, and agency niches.",
+      "tags": ["service", "context-assembly", "memory", "llm"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchHotMemory",
+      "type": "function",
+      "name": "fetchHotMemory",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [131, 146],
+      "summary": "Loads the most-recent hot-tier memory records to prepend to AI prompts.",
+      "tags": ["memory", "data-access", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchWarmMemory",
+      "type": "function",
+      "name": "fetchWarmMemory",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [148, 165],
+      "summary": "Loads warm-tier memory (older, condensed summaries) used when hot memory is insufficient.",
+      "tags": ["memory", "data-access", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchSkillSetConfig",
+      "type": "function",
+      "name": "fetchSkillSetConfig",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [167, 205],
+      "summary": "Loads the active skill-set configuration that controls which prompts and tools are wired into the runtime context.",
+      "tags": ["configuration", "data-access", "skill-set"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchCulturalEvents",
+      "type": "function",
+      "name": "fetchCulturalEvents",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [207, 233],
+      "summary": "Loads upcoming cultural events relevant to the agency niche set for context grounding.",
+      "tags": ["cultural-events", "data-access", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchAccuracyStats",
+      "type": "function",
+      "name": "fetchAccuracyStats",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [235, 263],
+      "summary": "Loads recent prediction accuracy stats per niche for the context preamble.",
+      "tags": ["analytics", "data-access", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:fetchAgencyNiches",
+      "type": "function",
+      "name": "fetchAgencyNiches",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [265, 278],
+      "summary": "Loads the niches associated with the active agency to scope downstream queries.",
+      "tags": ["data-access", "agency", "niche"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:trimMemoryToBudget",
+      "type": "function",
+      "name": "trimMemoryToBudget",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [283, 300],
+      "summary": "Trims merged memory records down to fit within the configured token budget for the prompt.",
+      "tags": ["utility", "token-budget", "memory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:assembleContext",
+      "type": "function",
+      "name": "assembleContext",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [314, 457],
+      "summary": "Top-level orchestrator that fetches every context source in parallel, applies the token budget, and returns the final assembled context.",
+      "tags": ["orchestrator", "context-assembly", "llm"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:emptyContext",
+      "type": "function",
+      "name": "emptyContext",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [461, 474],
+      "summary": "Returns an empty default context shape used when the user has no agency or memory configured.",
+      "tags": ["utility", "factory", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/context/assemble-context.ts:logContextAssembly",
+      "type": "function",
+      "name": "logContextAssembly",
+      "filePath": "src/lib/context/assemble-context.ts",
+      "lineRange": [478, 509],
+      "summary": "Persists a context-assembly log row capturing source sizes and token totals for observability.",
+      "tags": ["telemetry", "logging", "observability"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/control-center/component-status-checker.ts",
+      "type": "file",
+      "name": "component-status-checker.ts",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "summary": "Health-check engine for the operations control center: pulls per-component prediction stats, pings the Python service, and rolls everything into status summaries.",
+      "tags": ["service", "control-center", "health-check", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:getComponentStatsFromDatabase",
+      "type": "function",
+      "name": "getComponentStatsFromDatabase",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [89, 162],
+      "summary": "Queries Supabase for recent per-component run stats (success rate, latency, last-run) used by the dashboard.",
+      "tags": ["data-access", "supabase", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:checkPythonService",
+      "type": "function",
+      "name": "checkPythonService",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [167, 187],
+      "summary": "Pings the Python XGBoost prediction service and returns reachability and version info.",
+      "tags": ["health-check", "http", "python-service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:formatTimeAgo",
+      "type": "function",
+      "name": "formatTimeAgo",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [192, 206],
+      "summary": "Formats a timestamp as a human-friendly relative duration for the dashboard.",
+      "tags": ["utility", "formatting", "time"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:checkAllComponentsHealth",
+      "type": "function",
+      "name": "checkAllComponentsHealth",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [218, 284],
+      "summary": "Fans out per-component checks against the registry and aggregates their stats and statuses.",
+      "tags": ["orchestrator", "health-check", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:checkEnhancementsStatus",
+      "type": "function",
+      "name": "checkEnhancementsStatus",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [293, 338],
+      "summary": "Inspects whether prediction enhancements (e.g. Pack V, calibration) are active and returns badges for the dashboard.",
+      "tags": ["health-check", "enhancements", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:getComponentCountByStatus",
+      "type": "function",
+      "name": "getComponentCountByStatus",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [347, 359],
+      "summary": "Tallies components grouped by health status for the dashboard summary cards.",
+      "tags": ["utility", "aggregation", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/component-status-checker.ts:getComponentSummaryStats",
+      "type": "function",
+      "name": "getComponentSummaryStats",
+      "filePath": "src/lib/control-center/component-status-checker.ts",
+      "lineRange": [373, 417],
+      "summary": "Computes summary stats (active count, failure count, average latency) across all components for the dashboard header.",
+      "tags": ["aggregation", "metrics", "dashboard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/control-center/constants.ts",
+      "type": "file",
+      "name": "constants.ts",
+      "filePath": "src/lib/control-center/constants.ts",
+      "summary": "Declarative registry of pages, components, and thresholds rendered by the operations control center dashboard.",
+      "tags": ["constants", "control-center", "registry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/control-center/page-health-checker.ts",
+      "type": "file",
+      "name": "page-health-checker.ts",
+      "filePath": "src/lib/control-center/page-health-checker.ts",
+      "summary": "Runs workflow- and route-level health checks for the operations control center page status grid.",
+      "tags": ["service", "control-center", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/page-health-checker.ts:checkWorkflowHealth",
+      "type": "function",
+      "name": "checkWorkflowHealth",
+      "filePath": "src/lib/control-center/page-health-checker.ts",
+      "lineRange": [44, 54],
+      "summary": "Checks a single workflow's recent run status to derive a health verdict.",
+      "tags": ["health-check", "workflow"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/page-health-checker.ts:checkAllPagesHealth",
+      "type": "function",
+      "name": "checkAllPagesHealth",
+      "filePath": "src/lib/control-center/page-health-checker.ts",
+      "lineRange": [64, 93],
+      "summary": "Iterates every registered control-center page and aggregates per-page health status.",
+      "tags": ["orchestrator", "health-check", "control-center"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/control-center/page-health-checker.ts:checkPageHealth",
+      "type": "function",
+      "name": "checkPageHealth",
+      "filePath": "src/lib/control-center/page-health-checker.ts",
+      "lineRange": [96, 122],
+      "summary": "Runs the workflow checks bound to a single dashboard page and returns its status verdict.",
+      "tags": ["health-check", "control-center"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/control-center/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/lib/control-center/types.ts",
+      "summary": "Type definitions for control-center pages, components, statuses, and aggregate stats consumed by the dashboard.",
+      "tags": ["type-definition", "control-center"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:getNicheThresholds", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:loadClientMemory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:runCritic", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:runSynthesizer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:adversarialEvaluateBrief", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:storeEvaluationRounds", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:loadClientMemory", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:adversarialEvaluateBrief", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "function:src/lib/content/adversarial-evaluator.ts:storeEvaluationRounds", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/content/calendar-refresh.ts", "target": "function:src/lib/content/calendar-refresh.ts:refreshActiveCalendars", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/calendar-refresh.ts", "target": "function:src/lib/content/calendar-refresh.ts:refreshCalendarForUser", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/calendar-refresh.ts", "target": "function:src/lib/content/calendar-refresh.ts:refreshActiveCalendars", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:generateContentCalendar", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:buildPerformanceMap", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:computeAdjustedScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:selectDiversePatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:generateBriefContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:parseBriefResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:suggestFormat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:buildFallbackHook", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "function:src/lib/content/content-calendar.ts:generateContentCalendar", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/content/pattern-performance-tracker.ts", "target": "function:src/lib/content/pattern-performance-tracker.ts:trackPatternPerformance", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/pattern-performance-tracker.ts", "target": "function:src/lib/content/pattern-performance-tracker.ts:trackPatternPerformance", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:inferHookType", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:inferFormat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:generateVariantBrief", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:generateBriefVariants", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:storeVariants", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:selectVariant", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:getVariantsForBriefs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:generateBriefVariants", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:storeVariants", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:selectVariant", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/content/variant-generator.ts", "target": "function:src/lib/content/variant-generator.ts:getVariantsForBriefs", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "target": "function:src/lib/contexts/audiovisual/AudioVisualContext.tsx:AudioVisualProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "target": "function:src/lib/contexts/audiovisual/AudioVisualContext.tsx:AudioVisualProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/AudioContext.tsx", "target": "function:src/lib/contexts/AudioContext.tsx:AudioProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/AudioContext.tsx", "target": "function:src/lib/contexts/AudioContext.tsx:AudioProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/AuthContext.tsx", "target": "function:src/lib/contexts/AuthContext.tsx:AuthProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/AuthContext.tsx", "target": "function:src/lib/contexts/AuthContext.tsx:AuthProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/ComponentIntegrationContext.tsx", "target": "function:src/lib/contexts/ComponentIntegrationContext.tsx:ComponentIntegrationProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/ComponentIntegrationContext.tsx", "target": "function:src/lib/contexts/ComponentIntegrationContext.tsx:ComponentIntegrationProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/DeepgramContext.tsx", "target": "function:src/lib/contexts/DeepgramContext.tsx:DeepgramContextProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/DeepgramContext.tsx", "target": "function:src/lib/contexts/DeepgramContext.tsx:DeepgramContextProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/EditorContext.tsx", "target": "function:src/lib/contexts/EditorContext.tsx:createDefaultTemplate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/EditorContext.tsx", "target": "function:src/lib/contexts/EditorContext.tsx:createInitialUIState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/EditorContext.tsx", "target": "function:src/lib/contexts/EditorContext.tsx:createInitialEditorState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/EditorContext.tsx", "target": "function:src/lib/contexts/EditorContext.tsx:EditorProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/EditorContext.tsx", "target": "function:src/lib/contexts/EditorContext.tsx:EditorProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/FeatureContext.tsx", "target": "function:src/lib/contexts/FeatureContext.tsx:FeatureProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/FeatureContext.tsx", "target": "function:src/lib/contexts/FeatureContext.tsx:FeatureProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "function:src/lib/contexts/MLSuggestionsContext.tsx:suggestionsReducer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "function:src/lib/contexts/MLSuggestionsContext.tsx:uiStateReducer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "function:src/lib/contexts/MLSuggestionsContext.tsx:MLSuggestionsProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "function:src/lib/contexts/MLSuggestionsContext.tsx:MLSuggestionsProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/NavigationContext.tsx", "target": "function:src/lib/contexts/NavigationContext.tsx:NavigationProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/NavigationContext.tsx", "target": "function:src/lib/contexts/NavigationContext.tsx:PageTransition", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/NavigationContext.tsx", "target": "function:src/lib/contexts/NavigationContext.tsx:NavigationProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/contexts/NavigationContext.tsx", "target": "function:src/lib/contexts/NavigationContext.tsx:PageTransition", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/SubscriptionContext.tsx", "target": "function:src/lib/contexts/SubscriptionContext.tsx:SubscriptionProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/SubscriptionContext.tsx", "target": "function:src/lib/contexts/SubscriptionContext.tsx:SubscriptionProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:createDefaultTemplate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:createInitialUIState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:createInitialEditorState", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:editorReducer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:TemplateEditorProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/TemplateEditorContext.tsx", "target": "function:src/lib/contexts/TemplateEditorContext.tsx:TemplateEditorProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/contexts/UsabilityTestContext.tsx", "target": "function:src/lib/contexts/UsabilityTestContext.tsx:UsabilityTestProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/contexts/UsabilityTestContext.tsx", "target": "function:src/lib/contexts/UsabilityTestContext.tsx:UsabilityTestProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchHotMemory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchWarmMemory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchSkillSetConfig", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchCulturalEvents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchAccuracyStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:fetchAgencyNiches", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:trimMemoryToBudget", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:assembleContext", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:emptyContext", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:logContextAssembly", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/context/assemble-context.ts", "target": "function:src/lib/context/assemble-context.ts:assembleContext", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:getComponentStatsFromDatabase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:checkPythonService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:formatTimeAgo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:checkAllComponentsHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:checkEnhancementsStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:getComponentCountByStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:getComponentSummaryStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:checkAllComponentsHealth", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:checkEnhancementsStatus", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:getComponentCountByStatus", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "function:src/lib/control-center/component-status-checker.ts:getComponentSummaryStats", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "function:src/lib/control-center/page-health-checker.ts:checkWorkflowHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "function:src/lib/control-center/page-health-checker.ts:checkAllPagesHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "function:src/lib/control-center/page-health-checker.ts:checkPageHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "function:src/lib/control-center/page-health-checker.ts:checkAllPagesHealth", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "function:src/lib/control-center/page-health-checker.ts:checkPageHealth", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/content/adversarial-evaluator.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/content/calendar-refresh.ts", "target": "file:src/lib/patterns/pattern-metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/content/calendar-refresh.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "file:src/lib/patterns/pattern-metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/content/content-calendar.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/content/pattern-performance-tracker.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/AudioContext.tsx", "target": "file:src/lib/types/tiktok.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/AuthContext.tsx", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/ComponentIntegrationContext.tsx", "target": "file:src/lib/contexts/NavigationContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/FeatureContext.tsx", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "file:src/lib/contexts/TemplateEditorContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "file:src/lib/services/aiSuggestionService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/MLSuggestionsContext.tsx", "target": "file:src/lib/types/templateEditor.types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/contexts/SubscriptionContext.tsx", "target": "file:src/lib/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/control-center/component-status-checker.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/control-center/constants.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "file:src/lib/control-center/constants.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/control-center/page-health-checker.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

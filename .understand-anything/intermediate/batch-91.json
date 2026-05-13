@@ -1,0 +1,424 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/scale/reset/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/reset/route.ts",
+      "summary": "POST endpoint that resets the in-memory scale-simulation store back to its initial state.",
+      "tags": ["api-handler", "scale", "reset", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/run-30d/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/run-30d/route.ts",
+      "summary": "POST endpoint that runs a 30-day scale simulation by repeatedly invoking the per-day simulator and persisting results.",
+      "tags": ["api-handler", "scale", "simulation", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/run-day/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/run-day/route.ts",
+      "summary": "POST endpoint that advances the scale simulator by one day and writes the new state to the scale store.",
+      "tags": ["api-handler", "scale", "simulation", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/status/route.ts",
+      "summary": "GET endpoint exposing the current readiness/health status of the scale simulation subsystem.",
+      "tags": ["api-handler", "scale", "status", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/summary/route.ts",
+      "summary": "GET endpoint that aggregates scale-store snapshots through the metrics module to return a summary payload.",
+      "tags": ["api-handler", "scale", "metrics", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/schedule/ics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/schedule/ics/route.ts",
+      "summary": "POST endpoint that builds an .ics calendar payload from the schedule-service for a requested posting plan.",
+      "tags": ["api-handler", "schedule", "calendar", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/schedule/suggest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/schedule/suggest/route.ts",
+      "summary": "GET endpoint that returns suggested posting times by delegating to the schedule-service heuristics.",
+      "tags": ["api-handler", "schedule", "recommendation", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scoring/branches/evaluate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scoring/branches/evaluate/route.ts",
+      "summary": "POST endpoint that evaluates carousel or longform branch scoring for a video and persists features+score to scoring_branch_run.",
+      "tags": ["api-handler", "scoring", "evaluation", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scoring/branches/evaluate/route.ts:evaluateCarousel",
+      "type": "function",
+      "name": "evaluateCarousel",
+      "filePath": "src/app/api/scoring/branches/evaluate/route.ts",
+      "lineRange": [12, 22],
+      "summary": "Computes a carousel-branch score and feature bundle (frames, decay, hook strength, diversity) from a video id.",
+      "tags": ["scoring", "carousel", "heuristic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scoring/branches/evaluate/route.ts:evaluateLongform",
+      "type": "function",
+      "name": "evaluateLongform",
+      "filePath": "src/app/api/scoring/branches/evaluate/route.ts",
+      "lineRange": [24, 32],
+      "summary": "Computes a longform-branch score and feature bundle (minute-1 velocity, mid drop, outro retention) for a video.",
+      "tags": ["scoring", "longform", "heuristic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scraping/insights/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scraping/insights/route.ts",
+      "summary": "GET endpoint returning aggregated scraping insights (pattern signals, niche breakdowns) for the admin dashboard.",
+      "tags": ["api-handler", "scraping", "insights", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scraping/jobs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scraping/jobs/route.ts",
+      "summary": "GET endpoint that lists scraping job records with status, progress, and metadata for monitoring.",
+      "tags": ["api-handler", "scraping", "jobs", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scraping/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scraping/metrics/route.ts",
+      "summary": "GET endpoint that returns rollups of scraping throughput, success rates, and per-platform metrics.",
+      "tags": ["api-handler", "scraping", "metrics", "route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/scraping/start/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "summary": "Large API route that kicks off a scraping job (channel or keyword), drives background scraping and analysis via the Kai orchestrator, and feeds resulting patterns into the learning loop.",
+      "tags": ["api-handler", "scraping", "orchestration", "background-job"],
+      "complexity": "complex",
+      "languageNotes": "Long single-file route mixing HTTP handler with multiple in-file pattern analyzers (hook/length/timing/keyword/hashtag) and a feed-to-Bloomberg step."
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [30, 86],
+      "summary": "HTTP POST handler that validates target input, inserts a scraping_jobs row, and triggers background scraping without awaiting completion.",
+      "tags": ["api-handler", "scraping", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:processScraping",
+      "type": "function",
+      "name": "processScraping",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [91, 335],
+      "summary": "Background routine that drives the end-to-end scraping pipeline: fetches videos, runs Kai orchestration and immediate analysis, updates job status, and triggers pattern learning.",
+      "tags": ["background-job", "scraping", "orchestration", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:updateLearningLoop",
+      "type": "function",
+      "name": "updateLearningLoop",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [343, 374],
+      "summary": "Persists newly observed patterns and metrics from a scraping run back into the learning-loop tables for downstream prediction tuning.",
+      "tags": ["learning-loop", "scraping", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzePatterns",
+      "type": "function",
+      "name": "analyzePatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [379, 436],
+      "summary": "Top-level pattern analyzer that fans out hook, length, timing, keyword, and hashtag analyses across a batch of scraped videos.",
+      "tags": ["pattern-analysis", "scraping", "aggregator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzeHookPatterns",
+      "type": "function",
+      "name": "analyzeHookPatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [441, 483],
+      "summary": "Detects common hook archetypes and opening-line structures across the scraped video set.",
+      "tags": ["pattern-analysis", "hook", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzeLengthPatterns",
+      "type": "function",
+      "name": "analyzeLengthPatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [488, 520],
+      "summary": "Buckets video durations and computes performance-by-length statistics for the scraped sample.",
+      "tags": ["pattern-analysis", "length", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzeTimingPatterns",
+      "type": "function",
+      "name": "analyzeTimingPatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [525, 566],
+      "summary": "Surfaces best-performing posting windows (day-of-week / hour) from the scraped videos.",
+      "tags": ["pattern-analysis", "timing", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzeKeywordPatterns",
+      "type": "function",
+      "name": "analyzeKeywordPatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [571, 617],
+      "summary": "Extracts high-signal keywords and phrase n-grams from titles and captions across the scraped batch.",
+      "tags": ["pattern-analysis", "keywords", "nlp"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:analyzeHashtagPatterns",
+      "type": "function",
+      "name": "analyzeHashtagPatterns",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [622, 648],
+      "summary": "Aggregates hashtag co-occurrence and engagement-weighted hashtag rankings from scraped videos.",
+      "tags": ["pattern-analysis", "hashtags", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/scraping/start/route.ts:feedPatternsToBloomberg",
+      "type": "function",
+      "name": "feedPatternsToBloomberg",
+      "filePath": "src/app/api/scraping/start/route.ts",
+      "lineRange": [653, 670],
+      "summary": "Forwards distilled patterns from a scrape run into the Bloomberg-style trend feed for downstream consumers.",
+      "tags": ["pattern-analysis", "bloomberg-feed", "scraping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/analyze/route.ts",
+      "summary": "POST endpoint that runs script feature extraction, pattern matching, scoring, and recommendation generation on a submitted script.",
+      "tags": ["api-handler", "script", "analysis", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/script/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/script/analyze/route.ts",
+      "lineRange": [11, 27],
+      "summary": "Reads script text from the request body, runs the feature/match/score/recommend pipeline, and optionally logs to NDJSON in mock mode.",
+      "tags": ["api-handler", "script", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/elements/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/elements/route.ts",
+      "summary": "GET endpoint that returns aggregated script elements (hooks/CTAs/beats) via the scriptElementsAggregator service.",
+      "tags": ["api-handler", "script", "elements", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/exports/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/exports/route.ts",
+      "summary": "POST endpoint that formats a generated script for export (e.g., copy/share payloads) without persistence.",
+      "tags": ["api-handler", "script", "export", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/fill-beats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/fill-beats/route.ts",
+      "summary": "POST endpoint that asks the script-intelligence service to fill in missing beats for a partial script skeleton.",
+      "tags": ["api-handler", "script", "beats", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/generate-hooks/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/generate-hooks/route.ts",
+      "summary": "POST endpoint that requests fresh hook variations for a topic via the script-intelligence service.",
+      "tags": ["api-handler", "script", "hooks", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/generate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/generate/route.ts",
+      "summary": "POST endpoint that generates a script draft from a seed idea, then re-features and pattern-matches the output before returning it.",
+      "tags": ["api-handler", "script", "generation", "route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/script/generate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/script/generate/route.ts",
+      "lineRange": [10, 24],
+      "summary": "Validates seed idea + platform, calls generateScript, then re-runs feature extraction and pattern matching on the draft.",
+      "tags": ["api-handler", "script", "generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/intel/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/intel/route.ts",
+      "summary": "POST/GET endpoints returning script-intel summaries (signals about scripts, patterns, and source intelligence).",
+      "tags": ["api-handler", "script", "intelligence", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/script/intel/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/script/intel/route.ts",
+      "lineRange": [6, 29],
+      "summary": "Handles script-intelligence POST requests, returning enriched intel based on the supplied script context.",
+      "tags": ["api-handler", "script", "intelligence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/metrics/route.ts",
+      "summary": "GET endpoint exposing aggregated script metrics (analyses, generations, scores) computed in lib/script/metrics.",
+      "tags": ["api-handler", "script", "metrics", "route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/script/patterns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/patterns/route.ts",
+      "summary": "GET endpoint that returns the current catalog of script patterns from the script-patterns library and template cache.",
+      "tags": ["api-handler", "script", "patterns", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/script/regenerate-hooks/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/script/regenerate-hooks/route.ts",
+      "summary": "POST endpoint that regenerates hook variants for an existing script via the script-intelligence service.",
+      "tags": ["api-handler", "script", "hooks", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scripts/patterns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scripts/patterns/route.ts",
+      "summary": "GET endpoint returning a minimal placeholder list of script patterns under the /scripts namespace.",
+      "tags": ["api-handler", "scripts", "patterns", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scripts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scripts/route.ts",
+      "summary": "GET endpoint stub for the /api/scripts collection used by the legacy scripts UI.",
+      "tags": ["api-handler", "scripts", "stub", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/security/scan/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/security/scan/status/route.ts",
+      "summary": "GET endpoint returning the current status of the security-scan subsystem for the admin operations dashboard.",
+      "tags": ["api-handler", "security", "status", "route"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/scale/run-30d/route.ts", "target": "file:src/lib/scale/simulate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/run-30d/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/run-day/route.ts", "target": "file:src/lib/scale/simulate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/run-day/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/summary/route.ts", "target": "file:src/lib/scale/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/summary/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/schedule/ics/route.ts", "target": "file:src/lib/services/schedule-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/schedule/suggest/route.ts", "target": "file:src/lib/services/schedule-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scoring/branches/evaluate/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "file:src/lib/orchestration/kai-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "file:src/lib/services/immediate-video-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "file:src/lib/script/features.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "file:src/lib/script/match.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "file:src/lib/script/recommend.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "file:src/lib/script/score.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "file:src/lib/script/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/elements/route.ts", "target": "file:src/lib/services/scriptElementsAggregator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/fill-beats/route.ts", "target": "file:src/lib/services/script-intelligence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/generate-hooks/route.ts", "target": "file:src/lib/services/script-intelligence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/generate/route.ts", "target": "file:src/lib/script/features.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/generate/route.ts", "target": "file:src/lib/script/generate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/generate/route.ts", "target": "file:src/lib/script/match.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/generate/route.ts", "target": "file:src/lib/script/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/metrics/route.ts", "target": "file:src/lib/script/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/patterns/route.ts", "target": "file:src/lib/script/patterns.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/patterns/route.ts", "target": "file:src/lib/templates/cache.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/script/regenerate-hooks/route.ts", "target": "file:src/lib/services/script-intelligence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scoring/branches/evaluate/route.ts", "target": "function:src/app/api/scoring/branches/evaluate/route.ts:evaluateCarousel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scoring/branches/evaluate/route.ts", "target": "function:src/app/api/scoring/branches/evaluate/route.ts:evaluateLongform", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:processScraping", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:updateLearningLoop", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzePatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzeHookPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzeLengthPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzeTimingPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzeKeywordPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:analyzeHashtagPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scraping/start/route.ts", "target": "function:src/app/api/scraping/start/route.ts:feedPatternsToBloomberg", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/script/analyze/route.ts", "target": "function:src/app/api/script/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/script/generate/route.ts", "target": "function:src/app/api/script/generate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/script/intel/route.ts", "target": "function:src/app/api/script/intel/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0}
+  ]
+}

@@ -1,0 +1,822 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/check-latest-calculations.js",
+      "type": "file",
+      "name": "check-latest-calculations.js",
+      "filePath": "scripts/check-latest-calculations.js",
+      "summary": "Operational script that queries Supabase for the latest DPS calculations to verify the pipeline is writing fresh scores.",
+      "tags": ["script", "diagnostic", "supabase", "dps", "operational"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-latest-calculations.js:checkLatestCalculations",
+      "type": "function",
+      "name": "checkLatestCalculations",
+      "filePath": "scripts/check-latest-calculations.js",
+      "lineRange": [10, 74],
+      "summary": "Fetches and prints the most recent DPS calculation rows from Supabase for spot-checking.",
+      "tags": ["diagnostic", "supabase-query", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-latest-prediction.ts",
+      "type": "file",
+      "name": "check-latest-prediction.ts",
+      "filePath": "scripts/check-latest-prediction.ts",
+      "summary": "Verifies the latest prediction row in Supabase to confirm Gemini features were stored correctly during the prediction pipeline.",
+      "tags": ["script", "diagnostic", "supabase", "prediction", "verification"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-latest-prediction.ts:checkLatestPrediction",
+      "type": "function",
+      "name": "checkLatestPrediction",
+      "filePath": "scripts/check-latest-prediction.ts",
+      "lineRange": [13, 136],
+      "summary": "Loads the most recent prediction run and prints stored Gemini feature data for inspection.",
+      "tags": ["diagnostic", "prediction", "supabase-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-license.js",
+      "type": "file",
+      "name": "check-license.js",
+      "filePath": "scripts/check-license.js",
+      "summary": "Source license/branding compliance scanner that walks src/ and flags disallowed terms (e.g. ryOS, ryokun) before commits.",
+      "tags": ["script", "validation", "linting", "ci", "compliance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-license.js:collectFilesRecursively",
+      "type": "function",
+      "name": "collectFilesRecursively",
+      "filePath": "scripts/check-license.js",
+      "lineRange": [26, 40],
+      "summary": "Recursively walks a directory tree and returns a flat list of source files to scan.",
+      "tags": ["filesystem", "recursion", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-license.js:scanFile",
+      "type": "function",
+      "name": "scanFile",
+      "filePath": "scripts/check-license.js",
+      "lineRange": [46, 67],
+      "summary": "Reads a single file and matches disallowed branding patterns, reporting line numbers for any hits.",
+      "tags": ["validation", "pattern-matching", "linting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-license.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-license.js",
+      "lineRange": [69, 95],
+      "summary": "Entry point that orchestrates the recursive scan and exits non-zero when any forbidden term is found.",
+      "tags": ["entry-point", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-pattern-schema.js",
+      "type": "file",
+      "name": "check-pattern-schema.js",
+      "filePath": "scripts/check-pattern-schema.js",
+      "summary": "Diagnostic script that prints the column structure of the viral_patterns table by sampling one row from Supabase.",
+      "tags": ["script", "diagnostic", "supabase", "schema-inspection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-pattern-schema.js:checkSchema",
+      "type": "function",
+      "name": "checkSchema",
+      "filePath": "scripts/check-pattern-schema.js",
+      "lineRange": [8, 39],
+      "summary": "Fetches a sample row from viral_patterns and logs its keys for schema inspection.",
+      "tags": ["diagnostic", "schema-inspection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-patterns-table.js",
+      "type": "file",
+      "name": "check-patterns-table.js",
+      "filePath": "scripts/check-patterns-table.js",
+      "summary": "Quick health-check that counts and previews rows in the viral_patterns table.",
+      "tags": ["script", "diagnostic", "supabase", "pattern"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-patterns-table.js:checkPatternsTable",
+      "type": "function",
+      "name": "checkPatternsTable",
+      "filePath": "scripts/check-patterns-table.js",
+      "lineRange": [10, 30],
+      "summary": "Queries viral_patterns for a row count and sample, printing the result for verification.",
+      "tags": ["diagnostic", "supabase-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-pipeline-status.py",
+      "type": "file",
+      "name": "check-pipeline-status.py",
+      "filePath": "scripts/check-pipeline-status.py",
+      "summary": "Python health probe that connects to Supabase and verifies TikTok scraping and transcription pipeline state.",
+      "tags": ["script", "diagnostic", "supabase", "pipeline", "python"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-predictions-schema.js",
+      "type": "file",
+      "name": "check-predictions-schema.js",
+      "filePath": "scripts/check-predictions-schema.js",
+      "summary": "Inspects the predictions table schema by retrieving a sample row and logging its column structure.",
+      "tags": ["script", "diagnostic", "supabase", "schema-inspection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-predictions-schema.js:checkPredictionsSchema",
+      "type": "function",
+      "name": "checkPredictionsSchema",
+      "filePath": "scripts/check-predictions-schema.js",
+      "lineRange": [8, 73],
+      "summary": "Pulls a prediction row from Supabase and prints field shape for schema verification.",
+      "tags": ["diagnostic", "schema-inspection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-proof.ts",
+      "type": "file",
+      "name": "check-proof.ts",
+      "filePath": "scripts/check-proof.ts",
+      "summary": "Spot-checks validation_predictions for rows where actuals have been backfilled, used to audit prediction-vs-actual proof points.",
+      "tags": ["script", "diagnostic", "supabase", "validation", "audit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-schema.js",
+      "type": "file",
+      "name": "check-schema.js",
+      "filePath": "scripts/check-schema.js",
+      "summary": "Attempts a minimal insert to probe which columns Supabase recognizes on a given table, used to debug schema drift.",
+      "tags": ["script", "diagnostic", "supabase", "schema-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-schema.js:checkSchema",
+      "type": "function",
+      "name": "checkSchema",
+      "filePath": "scripts/check-schema.js",
+      "lineRange": [8, 29],
+      "summary": "Issues a probing insert with minimal columns to discover which fields the target table accepts.",
+      "tags": ["diagnostic", "schema-probe"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-scraped-videos-data.ts",
+      "type": "file",
+      "name": "check-scraped-videos-data.ts",
+      "filePath": "scripts/check-scraped-videos-data.ts",
+      "summary": "Inspects what data exists in the scraped_videos table to verify scraping outputs landed as expected.",
+      "tags": ["script", "diagnostic", "supabase", "scraping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-scraped-videos-data.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-scraped-videos-data.ts",
+      "lineRange": [13, 47],
+      "summary": "Queries scraped_videos for recent rows and prints field-level data for verification.",
+      "tags": ["diagnostic", "supabase-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-scraped-videos.ts",
+      "type": "file",
+      "name": "check-scraped-videos.ts",
+      "filePath": "scripts/check-scraped-videos.ts",
+      "summary": "TSX diagnostic that reports the population state of the scraped_videos table, useful for confirming Apify ingestion.",
+      "tags": ["script", "diagnostic", "supabase", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-scraped-videos.ts:checkScrapedVideos",
+      "type": "function",
+      "name": "checkScrapedVideos",
+      "filePath": "scripts/check-scraped-videos.ts",
+      "lineRange": [11, 88],
+      "summary": "Counts and samples rows from scraped_videos and prints summary metrics about scraping coverage.",
+      "tags": ["diagnostic", "supabase-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-transcript-lengths.js",
+      "type": "file",
+      "name": "check-transcript-lengths.js",
+      "filePath": "scripts/check-transcript-lengths.js",
+      "summary": "Reports transcript length distribution for high-DPS videos to diagnose whether transcription coverage is adequate.",
+      "tags": ["script", "diagnostic", "transcript", "dps", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-transcript-lengths.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-transcript-lengths.js",
+      "lineRange": [18, 63],
+      "summary": "Pulls high-DPS videos and aggregates transcript-length statistics for inspection.",
+      "tags": ["diagnostic", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-video-fields.ts",
+      "type": "file",
+      "name": "check-video-fields.ts",
+      "filePath": "scripts/check-video-fields.ts",
+      "summary": "Tiny diagnostic that prints the available fields of a single scraped video row to confirm schema.",
+      "tags": ["script", "diagnostic", "supabase", "schema-inspection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-video-urls.py",
+      "type": "file",
+      "name": "check-video-urls.py",
+      "filePath": "scripts/check-video-urls.py",
+      "summary": "Python micro-script that prints the keys available in scraped_videos.raw_scraping_data to discover URL field names.",
+      "tags": ["script", "diagnostic", "supabase", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/clean-training-data.py",
+      "type": "file",
+      "name": "clean-training-data.py",
+      "filePath": "scripts/clean-training-data.py",
+      "summary": "Applies three filters to training_features (failed ffmpeg, sub-1K creators, >=20% NULL features) to mark rows training_eligible=false without deleting data, then reports comprehensive statistics on the eligible population.",
+      "tags": ["script", "training-data", "data-cleaning", "supabase", "python"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/clean-training-data.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/clean-training-data.py",
+      "lineRange": [20, 28],
+      "summary": "Loads environment variables from .env files for Supabase credentials.",
+      "tags": ["bootstrap", "config", "env-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clean-training-data.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/clean-training-data.py",
+      "lineRange": [55, 62],
+      "summary": "Maps a DPS score to a tier label used for stratified reporting.",
+      "tags": ["classification", "dps", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clean-training-data.py:follower_bucket",
+      "type": "function",
+      "name": "follower_bucket",
+      "filePath": "scripts/clean-training-data.py",
+      "lineRange": [64, 70],
+      "summary": "Buckets a log10 follower count into discrete creator-size segments for reporting.",
+      "tags": ["bucketing", "creator-size", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clean-training-data.py:paginated_fetch",
+      "type": "function",
+      "name": "paginated_fetch",
+      "filePath": "scripts/clean-training-data.py",
+      "lineRange": [72, 87],
+      "summary": "Paginates a Supabase SELECT query past the default row-limit to fetch full table contents.",
+      "tags": ["supabase", "pagination", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clean-training-data.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/clean-training-data.py",
+      "lineRange": [89, 408],
+      "summary": "Orchestrates the three eligibility filters, updates training_eligible flags, and prints tiered/bucketed coverage stats for the surviving population.",
+      "tags": ["entry-point", "orchestration", "data-cleaning"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/clear-old-patterns.js",
+      "type": "file",
+      "name": "clear-old-patterns.js",
+      "filePath": "scripts/clear-old-patterns.js",
+      "summary": "Operational script that deletes stale rows from the viral_patterns table to reset pattern extraction state.",
+      "tags": ["script", "maintenance", "supabase", "pattern", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clear-old-patterns.js:clearOldPatterns",
+      "type": "function",
+      "name": "clearOldPatterns",
+      "filePath": "scripts/clear-old-patterns.js",
+      "lineRange": [10, 42],
+      "summary": "Deletes old patterns from the database with confirmation logging.",
+      "tags": ["maintenance", "supabase-mutation", "cleanup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/clone-site-firecrawl.js",
+      "type": "file",
+      "name": "clone-site-firecrawl.js",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "summary": "End-to-end Firecrawl REST API client that clones a website to local disk via homepage scrape, sitemap discovery, batch crawl, and result writing.",
+      "tags": ["script", "scraping", "firecrawl", "site-clone", "http-client"],
+      "complexity": "complex",
+      "languageNotes": "Node script with 22 helpers spanning HTTP, filesystem, URL normalization, sitemap parsing, and polling — designed to run start/poll/scrape subcommands."
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:urlToFilePath",
+      "type": "function",
+      "name": "urlToFilePath",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [42, 51],
+      "summary": "Maps a URL to a deterministic local file path under the output directory.",
+      "tags": ["url", "filesystem", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:apiFetch",
+      "type": "function",
+      "name": "apiFetch",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [53, 73],
+      "summary": "Authenticated fetch wrapper for Firecrawl endpoints that injects API key, handles errors, and returns parsed JSON.",
+      "tags": ["http-client", "firecrawl", "wrapper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:extractField",
+      "type": "function",
+      "name": "extractField",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [75, 84],
+      "summary": "Safely pulls a named field from a possibly-nested Firecrawl response object.",
+      "tags": ["utility", "data-access"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:scrapeHomepage",
+      "type": "function",
+      "name": "scrapeHomepage",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [86, 101],
+      "summary": "Scrapes a single homepage URL via Firecrawl and writes the markdown/HTML output to the host directory.",
+      "tags": ["scraping", "firecrawl", "io"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:startCrawl",
+      "type": "function",
+      "name": "startCrawl",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [103, 167],
+      "summary": "Kicks off a Firecrawl crawl job for the target URL with configured limits and stores the crawl id for polling.",
+      "tags": ["scraping", "firecrawl", "job-submission"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:pollCrawlStatus",
+      "type": "function",
+      "name": "pollCrawlStatus",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [169, 211],
+      "summary": "Polls Firecrawl crawl status until completion, surfacing progress and handling terminal states.",
+      "tags": ["polling", "firecrawl", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:fetchCrawlResults",
+      "type": "function",
+      "name": "fetchCrawlResults",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [213, 225],
+      "summary": "Retrieves paginated crawl results for a completed Firecrawl job.",
+      "tags": ["firecrawl", "http-client", "pagination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:saveCrawlResults",
+      "type": "function",
+      "name": "saveCrawlResults",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [229, 255],
+      "summary": "Writes Firecrawl crawl pages to disk and records a manifest summarizing the job output.",
+      "tags": ["io", "filesystem", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:parseSitemapXml",
+      "type": "function",
+      "name": "parseSitemapXml",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [284, 293],
+      "summary": "Parses sitemap XML and returns the list of URLs to seed batch crawling.",
+      "tags": ["sitemap", "xml-parsing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:discoverSitemaps",
+      "type": "function",
+      "name": "discoverSitemaps",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [295, 343],
+      "summary": "Probes the target site's robots.txt and common sitemap paths to find URL lists to crawl.",
+      "tags": ["discovery", "sitemap", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:batchFromUrlList",
+      "type": "function",
+      "name": "batchFromUrlList",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [345, 378],
+      "summary": "Runs Firecrawl scrape across an explicit URL list with throttling and writes each result to disk.",
+      "tags": ["scraping", "batch", "firecrawl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:batchFromHomepageLinks",
+      "type": "function",
+      "name": "batchFromHomepageLinks",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [380, 424],
+      "summary": "Extracts internal links from the scraped homepage and scrapes each one as a fallback when no sitemap is found.",
+      "tags": ["scraping", "fallback", "firecrawl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-site-firecrawl.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/clone-site-firecrawl.js",
+      "lineRange": [426, 497],
+      "summary": "CLI entry point that dispatches start/poll/scrape subcommands and orchestrates the full site-clone flow.",
+      "tags": ["entry-point", "cli", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/collect-side-hustles.ts",
+      "type": "file",
+      "name": "collect-side-hustles.ts",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "summary": "Apify-driven side-hustles data collector that scrapes TikTok videos for keywords/hashtags, stores them in scraped_videos + scraped_video_metrics with tiktok_id dedup, and enqueues each new video for the prediction pipeline.",
+      "tags": ["script", "scraping", "apify", "tiktok", "data-collection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [45, 84],
+      "summary": "Parses CLI flags like --limit, --days, --hashtag/--keyword and self-test into a typed options object.",
+      "tags": ["cli", "parsing", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:runApifyScraper",
+      "type": "function",
+      "name": "runApifyScraper",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [150, 189],
+      "summary": "Invokes the Apify TikTok scraper actor with the resolved queries and returns the raw item list.",
+      "tags": ["apify", "scraping", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:parseItem",
+      "type": "function",
+      "name": "parseItem",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [216, 257],
+      "summary": "Normalizes an Apify TikTok payload into the scraped_videos + metrics row shape used downstream.",
+      "tags": ["normalization", "tiktok", "data-shaping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:enqueuePrediction",
+      "type": "function",
+      "name": "enqueuePrediction",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [268, 298],
+      "summary": "Enqueues a video id for prediction by posting to the internal queue endpoint with auth.",
+      "tags": ["queue", "prediction", "http-client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [302, 482],
+      "summary": "Drives the full collection workflow: parse args, run Apify, dedupe, insert into scraped_videos/metrics, and enqueue predictions with error/metric accounting.",
+      "tags": ["entry-point", "orchestration", "data-collection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:printSummary",
+      "type": "function",
+      "name": "printSummary",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [484, 502],
+      "summary": "Prints final counts for collected/deduped/stored/enqueued items and any errors hit during the run.",
+      "tags": ["reporting", "logging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/collect-side-hustles.ts:selfTest",
+      "type": "function",
+      "name": "selfTest",
+      "filePath": "scripts/collect-side-hustles.ts",
+      "lineRange": [508, 551],
+      "summary": "Runs a self-test that exercises arg parsing and item parsing without hitting Apify, used for smoke verification.",
+      "tags": ["self-test", "verification"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/compare-dps-scores.js",
+      "type": "file",
+      "name": "compare-dps-scores.js",
+      "filePath": "scripts/compare-dps-scores.js",
+      "summary": "Diagnostic comparison between dps_score on scraped_videos and rows in dps_calculations to surface staleness or mismatches across the two stores.",
+      "tags": ["script", "diagnostic", "dps", "supabase", "audit"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/compare-dps-scores.js:compareDPSScores",
+      "type": "function",
+      "name": "compareDPSScores",
+      "filePath": "scripts/compare-dps-scores.js",
+      "lineRange": [5, 214],
+      "summary": "Joins scraped_videos and dps_calculations rows by video id and prints differences, missing entries, and summary stats.",
+      "tags": ["diagnostic", "comparison", "dps"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/comprehensive-diagnostic.js",
+      "type": "file",
+      "name": "comprehensive-diagnostic.js",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "summary": "Multi-section system health probe that walks row counts, data quality, DPS distribution, test contamination, scraper status, pattern extraction, dependencies, and env vars to surface pipeline issues in one run.",
+      "tags": ["script", "diagnostic", "health-check", "supabase", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check1_1_rowCounts",
+      "type": "function",
+      "name": "check1_1_rowCounts",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [29, 58],
+      "summary": "Counts rows across core Supabase tables and reports population state.",
+      "tags": ["diagnostic", "row-count"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check1_2_dataQuality",
+      "type": "function",
+      "name": "check1_2_dataQuality",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [60, 102],
+      "summary": "Validates required-field population and flags rows missing critical metadata in scraped_videos.",
+      "tags": ["diagnostic", "data-quality"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check1_3_dpsDistribution",
+      "type": "function",
+      "name": "check1_3_dpsDistribution",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [104, 179],
+      "summary": "Bins DPS scores across tiers and prints distribution statistics to detect bias or collapse.",
+      "tags": ["diagnostic", "dps", "distribution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check1_4_testContamination",
+      "type": "function",
+      "name": "check1_4_testContamination",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [181, 206],
+      "summary": "Looks for synthetic/test rows that may have leaked into production tables.",
+      "tags": ["diagnostic", "contamination", "data-quality"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check2_1_scraperStatus",
+      "type": "function",
+      "name": "check2_1_scraperStatus",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [212, 257],
+      "summary": "Reports recent scraper run health (last success, error rate) by inspecting status tables.",
+      "tags": ["diagnostic", "scraper", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check2_3_patternExtraction",
+      "type": "function",
+      "name": "check2_3_patternExtraction",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [259, 305],
+      "summary": "Audits pattern extraction throughput by counting recent viral_patterns inserts and flagging stalls.",
+      "tags": ["diagnostic", "pattern", "throughput"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check4_1_dependencies",
+      "type": "function",
+      "name": "check4_1_dependencies",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [311, 340],
+      "summary": "Verifies presence and version sanity of critical npm dependencies for the pipeline.",
+      "tags": ["diagnostic", "dependencies", "environment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:check4_2_envVars",
+      "type": "function",
+      "name": "check4_2_envVars",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [342, 376],
+      "summary": "Checks that all required environment variables are set and surfaces missing credentials.",
+      "tags": ["diagnostic", "env-vars", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/comprehensive-diagnostic.js:runAllChecks",
+      "type": "function",
+      "name": "runAllChecks",
+      "filePath": "scripts/comprehensive-diagnostic.js",
+      "lineRange": [382, 436],
+      "summary": "Orchestrates all section probes in order and emits a final pass/fail summary.",
+      "tags": ["entry-point", "orchestration", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/convert-scaler-to-json.py",
+      "type": "file",
+      "name": "convert-scaler-to-json.py",
+      "filePath": "scripts/convert-scaler-to-json.py",
+      "summary": "One-shot utility that converts the XGBoost v7 StandardScaler pickle to a JSON file consumable by the TypeScript prediction runtime.",
+      "tags": ["script", "ml", "xgboost", "scaler", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/create-core-tables.js",
+      "type": "file",
+      "name": "create-core-tables.js",
+      "filePath": "scripts/create-core-tables.js",
+      "summary": "Generates the SQL to create missing core tables in Supabase as a copy-pasteable script for the SQL dashboard.",
+      "tags": ["script", "supabase", "schema", "sql-generator", "migration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/create-core-tables.js:generateCoreTablesSQL",
+      "type": "function",
+      "name": "generateCoreTablesSQL",
+      "filePath": "scripts/create-core-tables.js",
+      "lineRange": [13, 196],
+      "summary": "Builds the full CREATE TABLE SQL string for the project's core missing tables and writes it to a file.",
+      "tags": ["sql-generator", "schema", "migration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/create-creator-tables.ts",
+      "type": "file",
+      "name": "create-creator-tables.ts",
+      "filePath": "scripts/create-creator-tables.ts",
+      "summary": "Manually creates the creator personalization tables in Supabase since SQL migrations cannot be run directly from this script.",
+      "tags": ["script", "supabase", "schema", "creator", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/create-creator-tables.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/create-creator-tables.ts",
+      "lineRange": [15, 71],
+      "summary": "Drives sequential creation of creator-personalization tables by issuing schema operations through the Supabase client.",
+      "tags": ["entry-point", "schema", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/create-env-local.js",
+      "type": "file",
+      "name": "create-env-local.js",
+      "filePath": "scripts/create-env-local.js",
+      "summary": "Interactive bootstrap helper that prompts the user for Supabase credentials and writes a fresh .env.local file from the example template.",
+      "tags": ["script", "bootstrap", "configuration", "env-loading", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/create-env-local.js:createEnvLocal",
+      "type": "function",
+      "name": "createEnvLocal",
+      "filePath": "scripts/create-env-local.js",
+      "lineRange": [35, 96],
+      "summary": "Reads the example env file, prompts the user for required values, and writes them to .env.local.",
+      "tags": ["bootstrap", "configuration", "io"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/create-holdout-set.py",
+      "type": "file",
+      "name": "create-holdout-set.py",
+      "filePath": "scripts/create-holdout-set.py",
+      "summary": "Selects 50 videos from the 863-video side-hustles training set, stratified across 5 DPS tiers, to use as the holdout benchmark excluded from XGBoost v7 training.",
+      "tags": ["script", "training-data", "holdout", "ml", "python"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/create-holdout-set.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/create-holdout-set.py",
+      "lineRange": [51, 60],
+      "summary": "Loads environment variables for Supabase access.",
+      "tags": ["bootstrap", "config", "env-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/create-holdout-set.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/create-holdout-set.py",
+      "lineRange": [63, 219],
+      "summary": "Pulls the full side-hustles training pool, stratifies by DPS tier, samples 10 per tier, and marks the chosen rows as holdout in Supabase.",
+      "tags": ["entry-point", "stratified-sampling", "training-data"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/check-latest-calculations.js", "target": "function:scripts/check-latest-calculations.js:checkLatestCalculations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-latest-prediction.ts", "target": "function:scripts/check-latest-prediction.ts:checkLatestPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-license.js", "target": "function:scripts/check-license.js:collectFilesRecursively", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-license.js", "target": "function:scripts/check-license.js:scanFile", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-license.js", "target": "function:scripts/check-license.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-pattern-schema.js", "target": "function:scripts/check-pattern-schema.js:checkSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-patterns-table.js", "target": "function:scripts/check-patterns-table.js:checkPatternsTable", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-predictions-schema.js", "target": "function:scripts/check-predictions-schema.js:checkPredictionsSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-schema.js", "target": "function:scripts/check-schema.js:checkSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-scraped-videos-data.ts", "target": "function:scripts/check-scraped-videos-data.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-scraped-videos.ts", "target": "function:scripts/check-scraped-videos.ts:checkScrapedVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/check-transcript-lengths.js", "target": "function:scripts/check-transcript-lengths.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:classify_tier", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:follower_bucket", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:paginated_fetch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:load_env", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:classify_tier", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:follower_bucket", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:paginated_fetch", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/clean-training-data.py", "target": "function:scripts/clean-training-data.py:main", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/clear-old-patterns.js", "target": "function:scripts/clear-old-patterns.js:clearOldPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:urlToFilePath", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:apiFetch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:extractField", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:scrapeHomepage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:startCrawl", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:pollCrawlStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:fetchCrawlResults", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:saveCrawlResults", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:parseSitemapXml", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:discoverSitemaps", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:batchFromUrlList", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:batchFromHomepageLinks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-site-firecrawl.js", "target": "function:scripts/clone-site-firecrawl.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:parseArgs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:runApifyScraper", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:parseItem", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:enqueuePrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:printSummary", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/collect-side-hustles.ts", "target": "function:scripts/collect-side-hustles.ts:selfTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/compare-dps-scores.js", "target": "function:scripts/compare-dps-scores.js:compareDPSScores", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check1_1_rowCounts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check1_2_dataQuality", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check1_3_dpsDistribution", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check1_4_testContamination", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check2_1_scraperStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check2_3_patternExtraction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check4_1_dependencies", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:check4_2_envVars", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/comprehensive-diagnostic.js", "target": "function:scripts/comprehensive-diagnostic.js:runAllChecks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-core-tables.js", "target": "function:scripts/create-core-tables.js:generateCoreTablesSQL", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-creator-tables.ts", "target": "function:scripts/create-creator-tables.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-env-local.js", "target": "function:scripts/create-env-local.js:createEnvLocal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-holdout-set.py", "target": "function:scripts/create-holdout-set.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-holdout-set.py", "target": "function:scripts/create-holdout-set.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/create-holdout-set.py", "target": "function:scripts/create-holdout-set.py:load_env", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:scripts/create-holdout-set.py", "target": "function:scripts/create-holdout-set.py:main", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

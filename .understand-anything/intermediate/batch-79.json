@@ -1,0 +1,1932 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/clay/action/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/clay/action/route.ts",
+      "summary": "Clay component action executor: resolves user/agency context, gates write proposals via dual-confirm hash check, dispatches to handleComponentAction, and emits agent.action telemetry.",
+      "tags": [
+        "api-handler",
+        "clay",
+        "agent",
+        "action-dispatch",
+        "authorization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/clay/action/route.ts:resolveContext",
+      "type": "function",
+      "name": "resolveContext",
+      "filePath": "src/app/api/clay/action/route.ts",
+      "lineRange": [
+        22,
+        56
+      ],
+      "summary": "Resolves the operating user and agency, preferring real Supabase auth and falling back to NEXT_PUBLIC_ADMIN_EMAIL owner lookup when the dev auth bypass is on.",
+      "tags": [
+        "auth",
+        "agency-resolution",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/clay/action/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/clay/action/route.ts",
+      "lineRange": [
+        58,
+        190
+      ],
+      "summary": "Next.js POST handler that executes a Clay component action: validates the proposal hash, calls the handler, and emits success/error events.",
+      "tags": [
+        "api-handler",
+        "post",
+        "action-execution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/clay/classify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/clay/classify/route.ts",
+      "summary": "Clay intent classifier endpoint: maps a free-text user message to a known Clay component using the intent classifier and component registry.",
+      "tags": [
+        "api-handler",
+        "clay",
+        "intent-classification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/clay/classify/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/clay/classify/route.ts",
+      "lineRange": [
+        17,
+        58
+      ],
+      "summary": "Next.js POST handler that classifies an incoming intent string into a Clay component id.",
+      "tags": [
+        "api-handler",
+        "post",
+        "classification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/clay/component-data/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/clay/component-data/route.ts",
+      "summary": "Clay component data fetcher endpoint: returns the data payload required to render a given Clay component for the current agency.",
+      "tags": [
+        "api-handler",
+        "clay",
+        "data-fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/clay/component-data/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/clay/component-data/route.ts",
+      "lineRange": [
+        12,
+        65
+      ],
+      "summary": "Next.js POST handler that resolves agency context and fetches the component-specific data payload.",
+      "tags": [
+        "api-handler",
+        "post",
+        "data-fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/coach/apply/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/coach/apply/route.ts",
+      "summary": "Coach apply endpoint: records that a coach-suggested edit has been applied to a variant in the experiments store.",
+      "tags": [
+        "api-handler",
+        "coach",
+        "experiment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/coach/apply/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/coach/apply/route.ts",
+      "lineRange": [
+        9,
+        36
+      ],
+      "summary": "Applies a coach suggestion to an experiment variant via the coach apply service.",
+      "tags": [
+        "api-handler",
+        "post",
+        "apply"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/coach/examples/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/coach/examples/route.ts",
+      "summary": "Returns canned example prompts/snippets used by the coach UI to seed user input.",
+      "tags": [
+        "api-handler",
+        "coach",
+        "examples"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/coach/examples/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/coach/examples/route.ts",
+      "lineRange": [
+        8,
+        23
+      ],
+      "summary": "Returns a list of canned coach example prompts.",
+      "tags": [
+        "api-handler",
+        "get",
+        "examples"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/coach/generate_variants/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/coach/generate_variants/route.ts",
+      "summary": "Coach variant generator endpoint: produces alternate phrasings or edits for a given input snippet.",
+      "tags": [
+        "api-handler",
+        "coach",
+        "variant-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/coach/generate_variants/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/coach/generate_variants/route.ts",
+      "lineRange": [
+        14,
+        24
+      ],
+      "summary": "Generates coach variant suggestions for an input snippet.",
+      "tags": [
+        "api-handler",
+        "post",
+        "variants"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/coach/suggest_edits/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/coach/suggest_edits/route.ts",
+      "summary": "Coach edit-suggestion endpoint that scores tokens against a framework mapping guide and proposes targeted edits.",
+      "tags": [
+        "api-handler",
+        "coach",
+        "edit-suggestions",
+        "framework"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/coach/suggest_edits/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/coach/suggest_edits/route.ts",
+      "lineRange": [
+        20,
+        83
+      ],
+      "summary": "Returns scored edit suggestions for an input transcript using the framework mapping guide.",
+      "tags": [
+        "api-handler",
+        "post",
+        "suggest-edits"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/coach/suggest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/coach/suggest/route.ts",
+      "summary": "Coach suggestion endpoint: GET fetches existing suggestions for an experiment, POST asks the coach service to generate new ones.",
+      "tags": [
+        "api-handler",
+        "coach",
+        "suggestions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/coach/suggest/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/coach/suggest/route.ts",
+      "lineRange": [
+        8,
+        20
+      ],
+      "summary": "Fetches existing coach suggestions for an experiment.",
+      "tags": [
+        "api-handler",
+        "get",
+        "suggestions"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/coach/suggest/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/coach/suggest/route.ts",
+      "lineRange": [
+        22,
+        42
+      ],
+      "summary": "Generates new coach suggestions for a given prompt or experiment.",
+      "tags": [
+        "api-handler",
+        "post",
+        "suggestions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/commerce/event/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/commerce/event/route.ts",
+      "summary": "Commerce telemetry event endpoint: ingests storefront events (view, add-to-cart, etc.) with telemetry-key auth and stores them via the commerce ensure helper.",
+      "tags": [
+        "api-handler",
+        "commerce",
+        "telemetry",
+        "event-ingestion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/commerce/event/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/commerce/event/route.ts",
+      "lineRange": [
+        13,
+        36
+      ],
+      "summary": "Ingests a commerce telemetry event after validating the telemetry key.",
+      "tags": [
+        "api-handler",
+        "post",
+        "ingestion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/commerce/order/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/commerce/order/route.ts",
+      "summary": "Commerce order endpoint: ingests order/purchase events with telemetry-key authentication.",
+      "tags": [
+        "api-handler",
+        "commerce",
+        "order",
+        "ingestion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/commerce/order/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/commerce/order/route.ts",
+      "lineRange": [
+        13,
+        38
+      ],
+      "summary": "Ingests a commerce order event after validating the telemetry key.",
+      "tags": [
+        "api-handler",
+        "post",
+        "order"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/commerce/pixel/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/commerce/pixel/route.ts",
+      "summary": "Commerce pixel endpoint: serves or records pixel beacons used for in-browser commerce tracking.",
+      "tags": [
+        "api-handler",
+        "commerce",
+        "pixel",
+        "telemetry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/commerce/pixel/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/commerce/pixel/route.ts",
+      "lineRange": [
+        9,
+        32
+      ],
+      "summary": "Handles a commerce pixel beacon request gated by the telemetry key.",
+      "tags": [
+        "api-handler",
+        "post",
+        "pixel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/commerce/webhook/shopify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/commerce/webhook/shopify/route.ts",
+      "summary": "Shopify webhook receiver: validates the telemetry secret and forwards events into the commerce pipeline.",
+      "tags": [
+        "api-handler",
+        "commerce",
+        "webhook",
+        "shopify"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/commerce/webhook/shopify/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/commerce/webhook/shopify/route.ts",
+      "lineRange": [
+        9,
+        34
+      ],
+      "summary": "Receives a Shopify webhook payload and ingests it into the commerce pipeline.",
+      "tags": [
+        "api-handler",
+        "post",
+        "webhook"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "summary": "TikTok Shop webhook receiver: validates the telemetry secret and forwards events into the commerce pipeline.",
+      "tags": [
+        "api-handler",
+        "commerce",
+        "webhook",
+        "tiktok-shop"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/commerce/webhook/tiktok_shop/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "lineRange": [
+        9,
+        34
+      ],
+      "summary": "Receives a TikTok Shop webhook payload and ingests it into the commerce pipeline.",
+      "tags": [
+        "api-handler",
+        "post",
+        "webhook"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/content-calendar/accept/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/content-calendar/accept/route.ts",
+      "summary": "Accepts a content-calendar suggestion: marks the calendar item as accepted, persists creator decisions, and triggers downstream pattern tracking.",
+      "tags": [
+        "api-handler",
+        "content-calendar",
+        "accept"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/content-calendar/accept/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/content-calendar/accept/route.ts",
+      "lineRange": [
+        25,
+        164
+      ],
+      "summary": "Marks a content-calendar suggestion as accepted and persists creator decision metadata.",
+      "tags": [
+        "api-handler",
+        "post",
+        "content-calendar",
+        "accept"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/content-calendar/performance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/content-calendar/performance/route.ts",
+      "summary": "Returns content-calendar performance analytics: rollup of accepted vs declined items, predicted vs actual VPS, and per-pattern conversion.",
+      "tags": [
+        "api-handler",
+        "content-calendar",
+        "analytics",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/content-calendar/performance/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/content-calendar/performance/route.ts",
+      "lineRange": [
+        22,
+        173
+      ],
+      "summary": "Aggregates calendar performance metrics across recent suggestions and returns the rollup.",
+      "tags": [
+        "api-handler",
+        "get",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/content-calendar/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/content-calendar/route.ts",
+      "summary": "Primary content-calendar feed endpoint: returns upcoming suggestion slots for the creator, blended with pattern metrics and creator context.",
+      "tags": [
+        "api-handler",
+        "content-calendar",
+        "feed",
+        "creator"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/content-calendar/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/content-calendar/route.ts",
+      "lineRange": [
+        35,
+        244
+      ],
+      "summary": "Builds and returns the personalized content-calendar feed for the current creator.",
+      "tags": [
+        "api-handler",
+        "get",
+        "feed"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/creator-attribution/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "summary": "Creator attribution API: action-dispatched POST/GET endpoint that registers creators, creates attribution links, executes attribution events, and serves analytics dashboards.",
+      "tags": [
+        "api-handler",
+        "creator-attribution",
+        "analytics",
+        "dashboard"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        15,
+        49
+      ],
+      "summary": "Routes POST actions to the appropriate creator-attribution handler (register, create, execute, track).",
+      "tags": [
+        "api-handler",
+        "post",
+        "dispatch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        52,
+        76
+      ],
+      "summary": "Routes GET actions to creator-attribution analytics or dashboard handlers.",
+      "tags": [
+        "api-handler",
+        "get",
+        "dispatch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleRegisterCreator",
+      "type": "function",
+      "name": "handleRegisterCreator",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        81,
+        131
+      ],
+      "summary": "Registers a new creator for attribution tracking via the creator attribution service.",
+      "tags": [
+        "handler",
+        "creator",
+        "registration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleCreateAttribution",
+      "type": "function",
+      "name": "handleCreateAttribution",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        136,
+        188
+      ],
+      "summary": "Creates a new attribution record linking a creator to an audience or campaign.",
+      "tags": [
+        "handler",
+        "attribution",
+        "create"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleExecuteAttribution",
+      "type": "function",
+      "name": "handleExecuteAttribution",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        193,
+        232
+      ],
+      "summary": "Executes an attribution event for a creator, applying the configured attribution model.",
+      "tags": [
+        "handler",
+        "attribution",
+        "execute"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleTrackResponse",
+      "type": "function",
+      "name": "handleTrackResponse",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        237,
+        271
+      ],
+      "summary": "Records a response/engagement event against an existing attribution.",
+      "tags": [
+        "handler",
+        "attribution",
+        "tracking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleGetAnalytics",
+      "type": "function",
+      "name": "handleGetAnalytics",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        276,
+        312
+      ],
+      "summary": "Returns aggregate attribution analytics for a creator or campaign.",
+      "tags": [
+        "handler",
+        "analytics",
+        "attribution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-attribution/route.ts:handleGetDashboard",
+      "type": "function",
+      "name": "handleGetDashboard",
+      "filePath": "src/app/api/creator-attribution/route.ts",
+      "lineRange": [
+        317,
+        398
+      ],
+      "summary": "Builds the creator attribution dashboard payload with breakdowns and performance rollups.",
+      "tags": [
+        "handler",
+        "dashboard",
+        "attribution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/creator-workflow/discover/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflow/discover/route.ts",
+      "summary": "Creator-workflow discover endpoint: invokes the discover server action to fetch trending niches/topics for a creator.",
+      "tags": [
+        "api-handler",
+        "creator-workflow",
+        "discover"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflow/discover/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-workflow/discover/route.ts",
+      "lineRange": [
+        11,
+        44
+      ],
+      "summary": "Invokes the discover server action and returns the discovery result.",
+      "tags": [
+        "api-handler",
+        "post",
+        "discover"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflow/goals/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflow/goals/route.ts",
+      "summary": "Returns the predefined list of creator-workflow goals selectable in onboarding.",
+      "tags": [
+        "api-handler",
+        "creator-workflow",
+        "goals",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflow/goals/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-workflow/goals/route.ts",
+      "lineRange": [
+        10,
+        25
+      ],
+      "summary": "Returns the static list of creator-workflow goals.",
+      "tags": [
+        "api-handler",
+        "get",
+        "goals"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/creator-workflow/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflow/predict/route.ts",
+      "summary": "Creator-workflow predict endpoint: delegates to the predict server action to compute the workflow prediction.",
+      "tags": [
+        "api-handler",
+        "creator-workflow",
+        "predict"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflow/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-workflow/predict/route.ts",
+      "lineRange": [
+        11,
+        44
+      ],
+      "summary": "Invokes the predict server action and returns the prediction result.",
+      "tags": [
+        "api-handler",
+        "post",
+        "predict"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflow/select-goal/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflow/select-goal/route.ts",
+      "summary": "Persists the creator-selected workflow goal via the select-goal server action.",
+      "tags": [
+        "api-handler",
+        "creator-workflow",
+        "select-goal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflow/select-goal/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-workflow/select-goal/route.ts",
+      "lineRange": [
+        11,
+        39
+      ],
+      "summary": "Saves the creator chosen workflow goal.",
+      "tags": [
+        "api-handler",
+        "post",
+        "select-goal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflow/suggest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflow/suggest/route.ts",
+      "summary": "Creator-workflow suggest endpoint: invokes the suggest server action to produce next-step recommendations.",
+      "tags": [
+        "api-handler",
+        "creator-workflow",
+        "suggest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflow/suggest/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-workflow/suggest/route.ts",
+      "lineRange": [
+        11,
+        44
+      ],
+      "summary": "Invokes the suggest server action and returns recommended next steps.",
+      "tags": [
+        "api-handler",
+        "post",
+        "suggest"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "summary": "Per-phase step CRUD for a creator workflow: GET returns the phase state, PUT updates the step payload.",
+      "tags": [
+        "api-handler",
+        "creator-workflows",
+        "phase",
+        "crud"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:getDevUserId",
+      "type": "function",
+      "name": "getDevUserId",
+      "filePath": "src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "lineRange": [
+        18,
+        28
+      ],
+      "summary": "Dev fallback resolver that returns the admin user id when auth is disabled.",
+      "tags": [
+        "auth",
+        "dev-bypass",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "lineRange": [
+        31,
+        88
+      ],
+      "summary": "Returns the saved step state for a given workflow phase.",
+      "tags": [
+        "api-handler",
+        "get",
+        "phase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:PUT",
+      "type": "function",
+      "name": "PUT",
+      "filePath": "src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "lineRange": [
+        91,
+        179
+      ],
+      "summary": "Persists updates to a workflow phase step payload after agency/ownership checks.",
+      "tags": [
+        "api-handler",
+        "put",
+        "phase",
+        "update"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflows/[id]/route.ts",
+      "summary": "Creator workflow record API: GET fetches a workflow, PATCH updates metadata, DELETE removes it (with auth/ownership gating).",
+      "tags": [
+        "api-handler",
+        "creator-workflows",
+        "crud"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/route.ts:getDevUserId",
+      "type": "function",
+      "name": "getDevUserId",
+      "filePath": "src/app/api/creator-workflows/[id]/route.ts",
+      "lineRange": [
+        18,
+        28
+      ],
+      "summary": "Dev fallback resolver that returns the admin user id when auth is disabled.",
+      "tags": [
+        "auth",
+        "dev-bypass",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-workflows/[id]/route.ts",
+      "lineRange": [
+        31,
+        76
+      ],
+      "summary": "Returns a specific creator workflow record after ownership check.",
+      "tags": [
+        "api-handler",
+        "get",
+        "workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/creator-workflows/[id]/route.ts",
+      "lineRange": [
+        79,
+        133
+      ],
+      "summary": "Updates metadata fields on a creator workflow record.",
+      "tags": [
+        "api-handler",
+        "patch",
+        "workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/[id]/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/creator-workflows/[id]/route.ts",
+      "lineRange": [
+        136,
+        178
+      ],
+      "summary": "Deletes a creator workflow record after ownership check.",
+      "tags": [
+        "api-handler",
+        "delete",
+        "workflow"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/creator-workflows/recent/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflows/recent/route.ts",
+      "summary": "Returns the most recently edited creator workflows for the current user with a human-friendly last-edited label.",
+      "tags": [
+        "api-handler",
+        "creator-workflows",
+        "recent",
+        "listing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/recent/route.ts:getDevUserId",
+      "type": "function",
+      "name": "getDevUserId",
+      "filePath": "src/app/api/creator-workflows/recent/route.ts",
+      "lineRange": [
+        18,
+        28
+      ],
+      "summary": "Dev fallback resolver that returns the admin user id when auth is disabled.",
+      "tags": [
+        "auth",
+        "dev-bypass",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/recent/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-workflows/recent/route.ts",
+      "lineRange": [
+        31,
+        80
+      ],
+      "summary": "Returns the user's most recently edited workflows with formatted labels.",
+      "tags": [
+        "api-handler",
+        "get",
+        "recent"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/recent/route.ts:getLastEditedLabel",
+      "type": "function",
+      "name": "getLastEditedLabel",
+      "filePath": "src/app/api/creator-workflows/recent/route.ts",
+      "lineRange": [
+        83,
+        98
+      ],
+      "summary": "Formats a recent timestamp into a human-friendly last-edited label.",
+      "tags": [
+        "utility",
+        "formatting"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "function:src/app/api/clay/action/route.ts:resolveContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "function:src/app/api/clay/action/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "function:src/app/api/clay/action/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "function:src/app/api/clay/classify/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "function:src/app/api/clay/classify/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "function:src/app/api/clay/component-data/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "function:src/app/api/clay/component-data/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/apply/route.ts",
+      "target": "function:src/app/api/coach/apply/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/apply/route.ts",
+      "target": "function:src/app/api/coach/apply/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/examples/route.ts",
+      "target": "function:src/app/api/coach/examples/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/examples/route.ts",
+      "target": "function:src/app/api/coach/examples/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/generate_variants/route.ts",
+      "target": "function:src/app/api/coach/generate_variants/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/generate_variants/route.ts",
+      "target": "function:src/app/api/coach/generate_variants/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/suggest_edits/route.ts",
+      "target": "function:src/app/api/coach/suggest_edits/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/suggest_edits/route.ts",
+      "target": "function:src/app/api/coach/suggest_edits/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "function:src/app/api/coach/suggest/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "function:src/app/api/coach/suggest/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "function:src/app/api/coach/suggest/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "function:src/app/api/coach/suggest/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "function:src/app/api/commerce/event/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "function:src/app/api/commerce/event/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "function:src/app/api/commerce/order/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "function:src/app/api/commerce/order/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/commerce/pixel/route.ts",
+      "target": "function:src/app/api/commerce/pixel/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/commerce/pixel/route.ts",
+      "target": "function:src/app/api/commerce/pixel/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/shopify/route.ts",
+      "target": "function:src/app/api/commerce/webhook/shopify/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/shopify/route.ts",
+      "target": "function:src/app/api/commerce/webhook/shopify/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "target": "function:src/app/api/commerce/webhook/tiktok_shop/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "target": "function:src/app/api/commerce/webhook/tiktok_shop/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/content-calendar/accept/route.ts",
+      "target": "function:src/app/api/content-calendar/accept/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/content-calendar/accept/route.ts",
+      "target": "function:src/app/api/content-calendar/accept/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/content-calendar/performance/route.ts",
+      "target": "function:src/app/api/content-calendar/performance/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/content-calendar/performance/route.ts",
+      "target": "function:src/app/api/content-calendar/performance/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/content-calendar/route.ts",
+      "target": "function:src/app/api/content-calendar/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/content-calendar/route.ts",
+      "target": "function:src/app/api/content-calendar/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleRegisterCreator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleCreateAttribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleExecuteAttribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleTrackResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleGetAnalytics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "function:src/app/api/creator-attribution/route.ts:handleGetDashboard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/discover/route.ts",
+      "target": "function:src/app/api/creator-workflow/discover/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/discover/route.ts",
+      "target": "function:src/app/api/creator-workflow/discover/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/goals/route.ts",
+      "target": "function:src/app/api/creator-workflow/goals/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/goals/route.ts",
+      "target": "function:src/app/api/creator-workflow/goals/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/predict/route.ts",
+      "target": "function:src/app/api/creator-workflow/predict/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/predict/route.ts",
+      "target": "function:src/app/api/creator-workflow/predict/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/select-goal/route.ts",
+      "target": "function:src/app/api/creator-workflow/select-goal/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/select-goal/route.ts",
+      "target": "function:src/app/api/creator-workflow/select-goal/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/suggest/route.ts",
+      "target": "function:src/app/api/creator-workflow/suggest/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/suggest/route.ts",
+      "target": "function:src/app/api/creator-workflow/suggest/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:getDevUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:PUT",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts:PUT",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:getDevUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:PATCH",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:PATCH",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:DELETE",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "function:src/app/api/creator-workflows/[id]/route.ts:DELETE",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/recent/route.ts",
+      "target": "function:src/app/api/creator-workflows/recent/route.ts:getDevUserId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/recent/route.ts",
+      "target": "function:src/app/api/creator-workflows/recent/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/recent/route.ts",
+      "target": "function:src/app/api/creator-workflows/recent/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/recent/route.ts",
+      "target": "function:src/app/api/creator-workflows/recent/route.ts:getLastEditedLabel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/agent/correlation-context.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/agent/proposal-gate.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/auth/agency-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/clay/action-handler.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/events/emit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/action/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "file:src/lib/auth/agency-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "file:src/lib/clay/component-registry.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "file:src/lib/clay/intent-classifier.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/classify/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "file:src/lib/auth/agency-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "file:src/lib/clay/component-data-fetcher.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "file:src/lib/clay/component-registry.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/clay/component-data/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/apply/route.ts",
+      "target": "file:src/lib/coach/apply.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/apply/route.ts",
+      "target": "file:src/lib/coach/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/apply/route.ts",
+      "target": "file:src/lib/experiments/store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/suggest_edits/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/suggest_edits/route.ts",
+      "target": "file:src/lib/frameworks/mapping_guide.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "file:src/lib/coach/service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/coach/suggest/route.ts",
+      "target": "file:src/lib/coach/types.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "file:src/lib/commerce/ensure.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "file:src/lib/commerce/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/event/route.ts",
+      "target": "file:src/lib/security/telemetry-keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "file:src/lib/commerce/ensure.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "file:src/lib/commerce/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/order/route.ts",
+      "target": "file:src/lib/security/telemetry-keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/pixel/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/pixel/route.ts",
+      "target": "file:src/lib/security/telemetry-keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/shopify/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/shopify/route.ts",
+      "target": "file:src/lib/security/telemetry-keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/commerce/webhook/tiktok_shop/route.ts",
+      "target": "file:src/lib/security/telemetry-keys.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/accept/route.ts",
+      "target": "file:src/lib/content/content-calendar.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/accept/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/performance/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/route.ts",
+      "target": "file:src/lib/patterns/pattern-metrics.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/route.ts",
+      "target": "file:src/lib/prediction/creator-context.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/content-calendar/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "file:src/lib/services/creatorAttributionService.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-attribution/route.ts",
+      "target": "file:src/lib/types/database.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/discover/route.ts",
+      "target": "file:src/app/actions/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/discover/route.ts",
+      "target": "file:src/types/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/goals/route.ts",
+      "target": "file:src/types/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/predict/route.ts",
+      "target": "file:src/app/actions/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/predict/route.ts",
+      "target": "file:src/types/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/select-goal/route.ts",
+      "target": "file:src/app/actions/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/select-goal/route.ts",
+      "target": "file:src/types/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/suggest/route.ts",
+      "target": "file:src/app/actions/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflow/suggest/route.ts",
+      "target": "file:src/types/creator-workflow.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/steps/[phase]/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/[id]/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/creator-workflows/recent/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

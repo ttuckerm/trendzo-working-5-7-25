@@ -1,0 +1,695 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/calibration/diagnose/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/calibration/diagnose/route.ts",
+      "summary": "POST endpoint for the Calibration Lab that runs the real KaiOrchestrator across 11 text-based components, applies score calibration and negative signals, and returns per-component diagnostics.",
+      "tags": ["api-handler", "calibration", "diagnostics", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/calibration/diagnose/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/calibration/diagnose/route.ts",
+      "lineRange": [81, 301],
+      "summary": "Accepts a transcript plus expected DPS, runs each calibration component through KaiOrchestrator, applies negative signals + score calibrator, and returns scored + weighted diagnostic output.",
+      "tags": ["api-handler", "post", "calibration", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/calibration/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/calibration/metrics/route.ts",
+      "summary": "Thin GET endpoint that proxies recommendation calibration metrics from the recs/calibration helper.",
+      "tags": ["api-handler", "calibration", "metrics", "recommendations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/calibration/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/calibration/metrics/route.ts",
+      "lineRange": [7, 16],
+      "summary": "Returns the latest recommendation calibration metrics as a JSON payload.",
+      "tags": ["api-handler", "get", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/calibration/refresh/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/calibration/refresh/route.ts",
+      "summary": "POST endpoint that triggers a refresh of recommendation calibration state via the recs/calibration helper.",
+      "tags": ["api-handler", "calibration", "refresh", "recommendations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/calibration/refresh/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/calibration/refresh/route.ts",
+      "lineRange": [7, 14],
+      "summary": "Invokes the calibration refresh routine and returns the resulting status JSON.",
+      "tags": ["api-handler", "post", "refresh"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/calibration/validate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/calibration/validate/route.ts",
+      "summary": "Validation endpoint for the prediction learning loop: stores predicted vs actual DPS comparisons in Supabase, surfaces aggregate stats, and triggers downstream learning updates.",
+      "tags": ["api-handler", "calibration", "validation", "learning-loop"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/calibration/validate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/calibration/validate/route.ts",
+      "lineRange": [12, 103],
+      "summary": "Persists a validation record (predicted vs actual DPS, component scores, negative signals, transcript hash) to prediction_accuracy and queues a learning update.",
+      "tags": ["api-handler", "post", "validation", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/calibration/validate/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/calibration/validate/route.ts",
+      "lineRange": [108, 153],
+      "summary": "Returns the most recent validation entries plus aggregate accuracy statistics for the dashboard.",
+      "tags": ["api-handler", "get", "validation", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/calibration/validate/route.ts:calculateValidationStats",
+      "type": "function",
+      "name": "calculateValidationStats",
+      "filePath": "src/app/api/calibration/validate/route.ts",
+      "lineRange": [159, 181],
+      "summary": "Computes aggregate accuracy/error statistics across a batch of validation entries.",
+      "tags": ["utility", "statistics", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/calibration/validate/route.ts:triggerLearningUpdate",
+      "type": "function",
+      "name": "triggerLearningUpdate",
+      "filePath": "src/app/api/calibration/validate/route.ts",
+      "lineRange": [183, 205],
+      "summary": "Fires the downstream learning-loop update after a new validation record lands.",
+      "tags": ["utility", "learning-loop", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/canvas/_lib/auth.ts",
+      "type": "file",
+      "name": "auth.ts",
+      "filePath": "src/app/api/canvas/_lib/auth.ts",
+      "summary": "Shared Canvas API auth helper that resolves the active user and returns a scoped Supabase client or a 401 error response.",
+      "tags": ["utility", "authentication", "canvas", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/canvas/_lib/auth.ts:resolveCanvasAuth",
+      "type": "function",
+      "name": "resolveCanvasAuth",
+      "filePath": "src/app/api/canvas/_lib/auth.ts",
+      "lineRange": [11, 30],
+      "summary": "Resolves the authenticated Canvas user from the anon Supabase client, returning userId + service client, or an errorResponse for downstream handlers to short-circuit on.",
+      "tags": ["utility", "authentication", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/canvas/ai/chat/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/canvas/ai/chat/route.ts",
+      "summary": "Canvas AI chat POST endpoint: authenticates the user, loads contextual knowledge via the file-reader, applies the Canvas system prompt, and proxies the conversation to the selected LLM provider/model.",
+      "tags": ["api-handler", "canvas", "ai", "chat"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/canvas/ai/chat/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/canvas/ai/chat/route.ts",
+      "lineRange": [22, 341],
+      "summary": "Handles Canvas chat requests end-to-end: auth gate, model selection, knowledge-base file lookup via extracted search terms, system-prompt assembly, and streaming response back to the client.",
+      "tags": ["api-handler", "post", "chat", "ai"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/canvas/export/[nodeId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/canvas/export/[nodeId]/route.ts",
+      "summary": "POST endpoint that exports a single Canvas node payload (likely to file/share format) using a server Supabase client.",
+      "tags": ["api-handler", "canvas", "export", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/canvas/export/[nodeId]/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/canvas/export/[nodeId]/route.ts",
+      "lineRange": [16, 135],
+      "summary": "Fetches the requested Canvas node from Supabase and produces an export payload for download/share.",
+      "tags": ["api-handler", "post", "export"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/canvas/projects/[id]/beacon/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/canvas/projects/[id]/beacon/route.ts",
+      "summary": "POST mirror of the Canvas project save handler designed for navigator.sendBeacon flushes on tab close / visibility-hidden.",
+      "tags": ["api-handler", "canvas", "beacon", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/[id]/beacon/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/canvas/projects/[id]/beacon/route.ts",
+      "lineRange": [13, 161],
+      "summary": "Saves the inbound Canvas project payload via the same upsert flow as PUT, accepting POST so sendBeacon can persist unsaved state on unload.",
+      "tags": ["api-handler", "post", "save", "beacon"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/canvas/projects/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/canvas/projects/[id]/route.ts",
+      "summary": "Per-project Canvas CRUD endpoint exposing GET (load), PUT (full save with nodes/connections/chats), PATCH (partial update), and DELETE handlers.",
+      "tags": ["api-handler", "canvas", "crud", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/canvas/projects/[id]/route.ts",
+      "lineRange": [21, 116],
+      "summary": "Loads a Canvas project plus its nodes, connections, and chats, grouped for the UI.",
+      "tags": ["api-handler", "get", "canvas", "load"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/[id]/route.ts:PUT",
+      "type": "function",
+      "name": "PUT",
+      "filePath": "src/app/api/canvas/projects/[id]/route.ts",
+      "lineRange": [122, 322],
+      "summary": "Full save handler: upserts the Canvas project plus its nodes, connections, and chats, surfacing per-section errors back to the client.",
+      "tags": ["api-handler", "put", "save", "upsert"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/[id]/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/canvas/projects/[id]/route.ts",
+      "lineRange": [328, 374],
+      "summary": "Partial-update handler for Canvas project metadata.",
+      "tags": ["api-handler", "patch", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/[id]/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/canvas/projects/[id]/route.ts",
+      "lineRange": [380, 407],
+      "summary": "Deletes the Canvas project (and cascades) for the authenticated user.",
+      "tags": ["api-handler", "delete", "canvas"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/canvas/projects/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/canvas/projects/route.ts",
+      "summary": "Collection-level Canvas projects endpoint: GET lists projects for the user, POST creates a new project record.",
+      "tags": ["api-handler", "canvas", "projects", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/canvas/projects/route.ts",
+      "lineRange": [12, 38],
+      "summary": "Lists Canvas projects owned by the authenticated user.",
+      "tags": ["api-handler", "get", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/canvas/projects/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/canvas/projects/route.ts",
+      "lineRange": [44, 79],
+      "summary": "Creates a new Canvas project for the authenticated user and returns the resulting row.",
+      "tags": ["api-handler", "post", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/captions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/captions/route.ts",
+      "summary": "Thin GET endpoint for retrieving generated captions (stub-like wrapper).",
+      "tags": ["api-handler", "captions", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/captions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/captions/route.ts",
+      "lineRange": [6, 16],
+      "summary": "Returns captions for the requested resource.",
+      "tags": ["api-handler", "get", "captions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/cards/[shareId]/chat/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cards/[shareId]/chat/route.ts",
+      "summary": "Shareable-card chat endpoint that loads the card + latest brief, assembles a niche-specific Anthropic system prompt, and proxies the conversation against per-session and history caps.",
+      "tags": ["api-handler", "cards", "chat", "anthropic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cards/[shareId]/chat/route.ts:buildCardSystemPrompt",
+      "type": "function",
+      "name": "buildCardSystemPrompt",
+      "filePath": "src/app/api/cards/[shareId]/chat/route.ts",
+      "lineRange": [27, 69],
+      "summary": "Builds the system prompt for a shareable-card chat using the card metadata, niche template, and latest brief context.",
+      "tags": ["utility", "prompt", "cards"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/[shareId]/chat/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/cards/[shareId]/chat/route.ts",
+      "lineRange": [71, 278],
+      "summary": "Handles a card chat request end-to-end: loads card + brief, enforces session/history caps, assembles context, and proxies to Anthropic.",
+      "tags": ["api-handler", "post", "chat"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/cards/[shareId]/lead/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cards/[shareId]/lead/route.ts",
+      "summary": "Captures a lead submission against a shareable card (email/contact data) via a service-role Supabase client.",
+      "tags": ["api-handler", "cards", "leads", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/[shareId]/lead/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/cards/[shareId]/lead/route.ts",
+      "lineRange": [15, 104],
+      "summary": "Persists a lead submission for the given shareable card after validating input and looking up the card record.",
+      "tags": ["api-handler", "post", "leads"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/cards/[shareId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cards/[shareId]/route.ts",
+      "summary": "Per-card endpoint exposing GET (public card fetch by shareId) and PATCH (owner-guarded updates via api-guard).",
+      "tags": ["api-handler", "cards", "crud", "share"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/[shareId]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cards/[shareId]/route.ts",
+      "lineRange": [13, 42],
+      "summary": "Fetches the public card payload identified by shareId.",
+      "tags": ["api-handler", "get", "cards"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/[shareId]/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/cards/[shareId]/route.ts",
+      "lineRange": [44, 82],
+      "summary": "Updates a card record after enforcing owner auth via the shared api-guard helper.",
+      "tags": ["api-handler", "patch", "cards", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/cards/create/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cards/create/route.ts",
+      "summary": "Creates a new shareable card for the authenticated user via the api-guard wrapper.",
+      "tags": ["api-handler", "cards", "create", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/create/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/cards/create/route.ts",
+      "lineRange": [15, 89],
+      "summary": "Creates a new card row for the authenticated user after validating payload and generating share metadata.",
+      "tags": ["api-handler", "post", "cards"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/cards/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cards/route.ts",
+      "summary": "Collection-level cards endpoint: GET lists the user's cards, POST creates a card (both guarded via api-guard).",
+      "tags": ["api-handler", "cards", "crud", "collection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cards/route.ts",
+      "lineRange": [15, 45],
+      "summary": "Lists cards owned by the authenticated user.",
+      "tags": ["api-handler", "get", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cards/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/cards/route.ts",
+      "lineRange": [47, 115],
+      "summary": "Creates a card row after enforcing api-guard auth, returning the persisted record.",
+      "tags": ["api-handler", "post", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/chairman-chat/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/chairman-chat/route.ts",
+      "summary": "Chairman OS chat endpoint that exposes Vercel AI SDK tool-calling against Anthropic, with Supabase-backed tools for skill status updates and other Chairman dashboard mutations.",
+      "tags": ["api-handler", "chairman", "chat", "ai-sdk", "tools"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/chairman-chat/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/chairman-chat/route.ts",
+      "lineRange": [127, 160],
+      "summary": "Streams an Anthropic chat response with Chairman OS tool definitions wired into Supabase mutations.",
+      "tags": ["api-handler", "post", "streaming", "tools"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/chairman/performance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/chairman/performance/route.ts",
+      "summary": "Returns a small set of recent published content briefs with predicted-vs-actual performance for the Chairman dashboard.",
+      "tags": ["api-handler", "chairman", "performance", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/chairman/performance/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/chairman/performance/route.ts",
+      "lineRange": [7, 49],
+      "summary": "Fetches the 10 most recent published content_briefs with predicted_vps and actual_views for performance reporting.",
+      "tags": ["api-handler", "get", "performance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/channel/me/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/channel/me/route.ts",
+      "summary": "Returns the current user's connected channel info, leaning on the onboarding channel-verifier and system-registry.",
+      "tags": ["api-handler", "channel", "me", "onboarding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/channel/me/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/channel/me/route.ts",
+      "lineRange": [16, 55],
+      "summary": "Loads the authenticated user's channel verification + registry-driven configuration and returns it as JSON.",
+      "tags": ["api-handler", "get", "channel"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/channel/verify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/channel/verify/route.ts",
+      "summary": "POST endpoint that drives the channel verification flow (e.g. YouTube ownership) via the onboarding channel-verifier and persists the result through Supabase.",
+      "tags": ["api-handler", "channel", "verify", "onboarding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/channel/verify/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/channel/verify/route.ts",
+      "lineRange": [24, 95],
+      "summary": "Runs the channel verification routine for the inbound URL/handle and stores the verification record against the user.",
+      "tags": ["api-handler", "post", "verify"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/checkout/create-session/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/checkout/create-session/route.ts",
+      "summary": "Creates a Stripe checkout session for the authenticated user using the admin + client Stripe helpers.",
+      "tags": ["api-handler", "checkout", "stripe", "billing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/checkout/create-session/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/checkout/create-session/route.ts",
+      "lineRange": [10, 86],
+      "summary": "Builds a Stripe checkout session with the configured price and returns the redirect URL to the client.",
+      "tags": ["api-handler", "post", "stripe", "checkout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/checkout/verify-session/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/checkout/verify-session/route.ts",
+      "summary": "Thin GET endpoint that verifies a returning Stripe checkout session via the stripe/verify helper.",
+      "tags": ["api-handler", "checkout", "stripe", "verify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/checkout/verify-session/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/checkout/verify-session/route.ts",
+      "lineRange": [7, 14],
+      "summary": "Verifies a Stripe checkout session id and returns its resolved status.",
+      "tags": ["api-handler", "get", "verify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/checkout/webhook/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/checkout/webhook/route.ts",
+      "summary": "Stripe webhook receiver that verifies the signed payload and dispatches checkout/billing events through the stripe admin and client helpers.",
+      "tags": ["api-handler", "stripe", "webhook", "billing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/checkout/webhook/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/checkout/webhook/route.ts",
+      "lineRange": [9, 63],
+      "summary": "Verifies the Stripe signature and dispatches the event to the appropriate billing handler.",
+      "tags": ["api-handler", "post", "webhook", "stripe"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/ci/mock-pass/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ci/mock-pass/route.ts",
+      "summary": "Local CI helper endpoint that records a synthetic passing CI run for harness / smoke flows.",
+      "tags": ["api-handler", "ci", "mock", "tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ci/mock-pass/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ci/mock-pass/route.ts",
+      "lineRange": [8, 22],
+      "summary": "Writes a mocked CI 'pass' status file for local testing harnesses.",
+      "tags": ["api-handler", "post", "ci", "mock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ci/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ci/status/route.ts",
+      "summary": "GET endpoint that reads the local CI status JSON file (if present) and returns it for dashboards / harness checks.",
+      "tags": ["api-handler", "ci", "status", "tooling"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/calibration/diagnose/route.ts", "target": "function:src/app/api/calibration/diagnose/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/diagnose/route.ts", "target": "function:src/app/api/calibration/diagnose/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/calibration/diagnose/route.ts", "target": "file:src/lib/calibration/negative-signals.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/calibration/diagnose/route.ts", "target": "file:src/lib/calibration/score-calibrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/calibration/diagnose/route.ts", "target": "file:src/lib/orchestration/kai-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/calibration/metrics/route.ts", "target": "function:src/app/api/calibration/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/metrics/route.ts", "target": "function:src/app/api/calibration/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/calibration/metrics/route.ts", "target": "file:src/lib/recs/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/calibration/refresh/route.ts", "target": "function:src/app/api/calibration/refresh/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/refresh/route.ts", "target": "function:src/app/api/calibration/refresh/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/calibration/refresh/route.ts", "target": "file:src/lib/recs/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:calculateValidationStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:triggerLearningUpdate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/calibration/validate/route.ts", "target": "function:src/app/api/calibration/validate/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/canvas/_lib/auth.ts", "target": "function:src/app/api/canvas/_lib/auth.ts:resolveCanvasAuth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/_lib/auth.ts", "target": "function:src/app/api/canvas/_lib/auth.ts:resolveCanvasAuth", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "function:src/app/api/canvas/ai/chat/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "function:src/app/api/canvas/ai/chat/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "file:src/app/api/canvas/_lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "file:src/lib/canvas/ai-system-prompt.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "file:src/lib/canvas/knowledge/file-reader.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/ai/chat/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/canvas/export/[nodeId]/route.ts", "target": "function:src/app/api/canvas/export/[nodeId]/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/export/[nodeId]/route.ts", "target": "function:src/app/api/canvas/export/[nodeId]/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/export/[nodeId]/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/canvas/projects/[id]/beacon/route.ts", "target": "function:src/app/api/canvas/projects/[id]/beacon/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/[id]/beacon/route.ts", "target": "function:src/app/api/canvas/projects/[id]/beacon/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/[id]/beacon/route.ts", "target": "file:src/app/api/canvas/_lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/projects/[id]/beacon/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:PUT", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:PUT", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "function:src/app/api/canvas/projects/[id]/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "file:src/app/api/canvas/_lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/projects/[id]/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "function:src/app/api/canvas/projects/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "function:src/app/api/canvas/projects/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "function:src/app/api/canvas/projects/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "function:src/app/api/canvas/projects/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "file:src/app/api/canvas/_lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/canvas/projects/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/captions/route.ts", "target": "function:src/app/api/captions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/captions/route.ts", "target": "function:src/app/api/captions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/cards/[shareId]/chat/route.ts", "target": "function:src/app/api/cards/[shareId]/chat/route.ts:buildCardSystemPrompt", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/[shareId]/chat/route.ts", "target": "function:src/app/api/cards/[shareId]/chat/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/[shareId]/chat/route.ts", "target": "function:src/app/api/cards/[shareId]/chat/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/[shareId]/chat/route.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cards/[shareId]/chat/route.ts", "target": "file:src/lib/freedom-agent/niche-templates.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cards/[shareId]/lead/route.ts", "target": "function:src/app/api/cards/[shareId]/lead/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/[shareId]/lead/route.ts", "target": "function:src/app/api/cards/[shareId]/lead/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/cards/[shareId]/route.ts", "target": "function:src/app/api/cards/[shareId]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/[shareId]/route.ts", "target": "function:src/app/api/cards/[shareId]/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/[shareId]/route.ts", "target": "function:src/app/api/cards/[shareId]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/[shareId]/route.ts", "target": "function:src/app/api/cards/[shareId]/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/[shareId]/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cards/create/route.ts", "target": "function:src/app/api/cards/create/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/create/route.ts", "target": "function:src/app/api/cards/create/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/create/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cards/route.ts", "target": "function:src/app/api/cards/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/route.ts", "target": "function:src/app/api/cards/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cards/route.ts", "target": "function:src/app/api/cards/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/route.ts", "target": "function:src/app/api/cards/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cards/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/chairman-chat/route.ts", "target": "function:src/app/api/chairman-chat/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/chairman-chat/route.ts", "target": "function:src/app/api/chairman-chat/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/chairman-chat/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/chairman/performance/route.ts", "target": "function:src/app/api/chairman/performance/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/chairman/performance/route.ts", "target": "function:src/app/api/chairman/performance/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/chairman/performance/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/channel/me/route.ts", "target": "function:src/app/api/channel/me/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/channel/me/route.ts", "target": "function:src/app/api/channel/me/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/channel/me/route.ts", "target": "file:src/lib/onboarding/channel-verifier.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/channel/me/route.ts", "target": "file:src/lib/prediction/system-registry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/channel/me/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/channel/verify/route.ts", "target": "function:src/app/api/channel/verify/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/channel/verify/route.ts", "target": "function:src/app/api/channel/verify/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/channel/verify/route.ts", "target": "file:src/lib/onboarding/channel-verifier.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/channel/verify/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/checkout/create-session/route.ts", "target": "function:src/app/api/checkout/create-session/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/checkout/create-session/route.ts", "target": "function:src/app/api/checkout/create-session/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/checkout/create-session/route.ts", "target": "file:src/lib/stripe/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/checkout/create-session/route.ts", "target": "file:src/lib/stripe/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/checkout/verify-session/route.ts", "target": "function:src/app/api/checkout/verify-session/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/checkout/verify-session/route.ts", "target": "function:src/app/api/checkout/verify-session/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/checkout/verify-session/route.ts", "target": "file:src/lib/stripe/verify.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/checkout/webhook/route.ts", "target": "function:src/app/api/checkout/webhook/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/checkout/webhook/route.ts", "target": "function:src/app/api/checkout/webhook/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/checkout/webhook/route.ts", "target": "file:src/lib/stripe/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/checkout/webhook/route.ts", "target": "file:src/lib/stripe/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ci/mock-pass/route.ts", "target": "function:src/app/api/ci/mock-pass/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ci/mock-pass/route.ts", "target": "function:src/app/api/ci/mock-pass/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ci/status/route.ts", "target": "function:src/app/api/ci/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ci/status/route.ts", "target": "function:src/app/api/ci/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

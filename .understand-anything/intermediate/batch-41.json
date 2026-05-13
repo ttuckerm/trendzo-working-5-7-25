@@ -1,0 +1,810 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/train-xgboost-v7-full-backfill.py",
+      "type": "file",
+      "name": "train-xgboost-v7-full-backfill.py",
+      "filePath": "scripts/train-xgboost-v7-full-backfill.py",
+      "summary": "Standalone training script for XGBoost v7 viral prediction model using a full backfill of feature data from Supabase; trains and evaluates on the complete dataset with no holdout split.",
+      "tags": ["ml-training", "xgboost", "script", "data-pipeline", "evaluation"],
+      "complexity": "complex",
+      "languageNotes": "Python ML training script that fetches feature rows from Supabase REST API, runs train_and_evaluate over multiple feature sets, and writes a trained model artifact."
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-full-backfill.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-full-backfill.py",
+      "lineRange": [109, 162],
+      "summary": "Fetches paginated feature rows for completed prediction runs from the Supabase REST API, normalizing fields for downstream training.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-full-backfill.py:check_coverage",
+      "type": "function",
+      "name": "check_coverage",
+      "filePath": "scripts/train-xgboost-v7-full-backfill.py",
+      "lineRange": [165, 201],
+      "summary": "Reports per-feature non-null coverage across the loaded training rows to surface sparsely-populated columns before training.",
+      "tags": ["data-quality", "diagnostics", "feature-engineering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-full-backfill.py:train_and_evaluate",
+      "type": "function",
+      "name": "train_and_evaluate",
+      "filePath": "scripts/train-xgboost-v7-full-backfill.py",
+      "lineRange": [204, 278],
+      "summary": "Trains an XGBoost regressor on the supplied feature columns and labels, then evaluates with Spearman rank correlation and prints feature importances.",
+      "tags": ["model-training", "xgboost", "evaluation", "spearman"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-full-backfill.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-full-backfill.py",
+      "lineRange": [281, 619],
+      "summary": "Driver that loads env, fetches all rows, runs coverage checks, executes multiple training experiments across feature sets, and persists the final model.",
+      "tags": ["entry-point", "orchestration", "training", "experiment-runner"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v7-holdout.py",
+      "type": "file",
+      "name": "train-xgboost-v7-holdout.py",
+      "filePath": "scripts/train-xgboost-v7-holdout.py",
+      "summary": "XGBoost v7 training script that pulls features from Supabase, splits into train/holdout sets, and evaluates generalization on the held-out portion.",
+      "tags": ["ml-training", "xgboost", "holdout", "evaluation", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-holdout.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-holdout.py",
+      "lineRange": [104, 161],
+      "summary": "Paginates Supabase REST endpoint to load prediction-run features used as training inputs for the holdout run.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-holdout.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-holdout.py",
+      "lineRange": [164, 451],
+      "summary": "Orchestrates the v7 holdout experiment: loads env, pulls rows, performs train/holdout split, fits XGBoost, and reports holdout Spearman ρ.",
+      "tags": ["entry-point", "orchestration", "training", "holdout"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v7-phase1-final.py",
+      "type": "file",
+      "name": "train-xgboost-v7-phase1-final.py",
+      "filePath": "scripts/train-xgboost-v7-phase1-final.py",
+      "summary": "Final Phase-1 XGBoost v7 training script that consolidates the agreed feature set and produces the production candidate model artifact.",
+      "tags": ["ml-training", "xgboost", "phase-1", "production-candidate", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-phase1-final.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-phase1-final.py",
+      "lineRange": [118, 171],
+      "summary": "Pulls completed prediction-run feature rows from Supabase, paginated to bypass row limits, for the Phase-1 final training corpus.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-phase1-final.py:train_and_evaluate",
+      "type": "function",
+      "name": "train_and_evaluate",
+      "filePath": "scripts/train-xgboost-v7-phase1-final.py",
+      "lineRange": [174, 248],
+      "summary": "Trains XGBoost on the Phase-1 final feature set and reports Spearman rank correlation plus feature importances.",
+      "tags": ["model-training", "xgboost", "evaluation", "spearman"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-phase1-final.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-phase1-final.py",
+      "lineRange": [251, 570],
+      "summary": "Drives the Phase-1 final pipeline: data fetch, feature selection, fit, evaluation, and serialization of the candidate v7 model.",
+      "tags": ["entry-point", "orchestration", "training", "model-export"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v7-phase1.py",
+      "type": "file",
+      "name": "train-xgboost-v7-phase1.py",
+      "filePath": "scripts/train-xgboost-v7-phase1.py",
+      "summary": "Phase-1 exploratory XGBoost v7 training script that iterates over multiple feature subsets to probe which signals carry predictive lift.",
+      "tags": ["ml-training", "xgboost", "phase-1", "exploration", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-phase1.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-phase1.py",
+      "lineRange": [121, 503],
+      "summary": "Runs multiple Phase-1 experiments, comparing baseline and expanded feature sets on Spearman ρ to inform the next v7 iteration.",
+      "tags": ["entry-point", "experiment-runner", "training", "evaluation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-phase1.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-phase1.py",
+      "lineRange": [506, 583],
+      "summary": "Paginated Supabase REST loader returning the Phase-1 training rows with all candidate feature columns.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v7-with-segment.py",
+      "type": "file",
+      "name": "train-xgboost-v7-with-segment.py",
+      "filePath": "scripts/train-xgboost-v7-with-segment.py",
+      "summary": "XGBoost v7 variant that augments the feature set with segment-level (intra-video) statistics to evaluate whether segmentation features improve ρ.",
+      "tags": ["ml-training", "xgboost", "segmentation", "feature-engineering", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-with-segment.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-with-segment.py",
+      "lineRange": [103, 156],
+      "summary": "Loads completed prediction-run features (including segment-aware columns) from Supabase REST in paginated batches.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-with-segment.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-with-segment.py",
+      "lineRange": [159, 446],
+      "summary": "Runs the segment-augmented v7 experiment, training and reporting Spearman ρ to compare against the no-segment baseline.",
+      "tags": ["entry-point", "orchestration", "training", "experiment-runner"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v7-with-vision.py",
+      "type": "file",
+      "name": "train-xgboost-v7-with-vision.py",
+      "filePath": "scripts/train-xgboost-v7-with-vision.py",
+      "summary": "XGBoost v7 variant adding Gemini-Vision-derived features (Pack V scores) to the training matrix to test whether vision signals improve viral prediction.",
+      "tags": ["ml-training", "xgboost", "vision-features", "experiment", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-with-vision.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-with-vision.py",
+      "lineRange": [111, 164],
+      "summary": "Pulls feature rows joined with Pack V (vision rubric) outputs from Supabase REST, paginated for full coverage.",
+      "tags": ["data-loader", "supabase", "rest-api", "vision-features"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-with-vision.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-with-vision.py",
+      "lineRange": [167, 450],
+      "summary": "Drives the vision-augmented experiment: trains XGBoost on baseline + vision features and compares Spearman ρ to the no-vision run.",
+      "tags": ["entry-point", "orchestration", "training", "experiment-runner"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/train-xgboost-v8.py",
+      "type": "file",
+      "name": "train-xgboost-v8.py",
+      "filePath": "scripts/train-xgboost-v8.py",
+      "summary": "XGBoost v8 training script that supersedes v7 with refined feature handling and expanded backfilled columns; produces the next-gen viral prediction model.",
+      "tags": ["ml-training", "xgboost", "v8", "production-candidate", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v8.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v8.py",
+      "lineRange": [124, 487],
+      "summary": "Orchestrates the v8 training run: feature selection, model fit, Spearman evaluation, importance reporting, and model serialization.",
+      "tags": ["entry-point", "orchestration", "training", "model-export"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v8.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v8.py",
+      "lineRange": [490, 568],
+      "summary": "Paginated Supabase REST loader for v8 training rows, with broader column coverage than the v7 variants.",
+      "tags": ["data-loader", "supabase", "rest-api", "pagination"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/transcribe-videos.py",
+      "type": "file",
+      "name": "transcribe-videos.py",
+      "filePath": "scripts/transcribe-videos.py",
+      "summary": "Whisper-based transcription pipeline that downloads videos missing transcripts from Supabase, extracts audio with ffmpeg, transcribes locally, and writes results back.",
+      "tags": ["transcription", "whisper", "ffmpeg", "data-pipeline", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:get_videos_without_transcripts",
+      "type": "function",
+      "name": "get_videos_without_transcripts",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [58, 72],
+      "summary": "Queries Supabase for video rows that are missing transcripts and returns them for processing.",
+      "tags": ["data-loader", "supabase", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:download_video",
+      "type": "function",
+      "name": "download_video",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [75, 104],
+      "summary": "Downloads a video file from its source URL to a local temp path for downstream audio extraction.",
+      "tags": ["download", "io", "video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:extract_audio",
+      "type": "function",
+      "name": "extract_audio",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [107, 134],
+      "summary": "Invokes ffmpeg to extract a WAV audio track from the downloaded video, suitable for Whisper input.",
+      "tags": ["ffmpeg", "audio", "extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:transcribe_audio",
+      "type": "function",
+      "name": "transcribe_audio",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [137, 155],
+      "summary": "Runs Whisper on the extracted audio and returns the transcript text.",
+      "tags": ["whisper", "transcription", "asr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:update_transcript",
+      "type": "function",
+      "name": "update_transcript",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [158, 171],
+      "summary": "Persists the transcript text back to the source video row in Supabase via REST PATCH.",
+      "tags": ["supabase", "writer", "persistence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:process_video",
+      "type": "function",
+      "name": "process_video",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [174, 208],
+      "summary": "End-to-end per-video pipeline: download, extract audio, transcribe, update transcript, and clean up temp files.",
+      "tags": ["orchestration", "pipeline", "transcription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/transcribe-videos.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/transcribe-videos.py",
+      "lineRange": [211, 266],
+      "summary": "Top-level driver that loops over untranscribed videos and runs the per-video pipeline with logging and error handling.",
+      "tags": ["entry-point", "orchestration", "batch-processing"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/update-audio-samples.js",
+      "type": "file",
+      "name": "update-audio-samples.js",
+      "filePath": "scripts/update-audio-samples.js",
+      "summary": "One-shot Node script that updates audio sample rows in Supabase and verifies that all expected entries are present.",
+      "tags": ["script", "supabase", "data-fix", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/update-audio-samples.js:checkAllCompleted",
+      "type": "function",
+      "name": "checkAllCompleted",
+      "filePath": "scripts/update-audio-samples.js",
+      "lineRange": [66, 91],
+      "summary": "Queries Supabase to confirm every expected audio sample row exists and reports any gaps.",
+      "tags": ["validation", "supabase", "audit"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/v12-step1-export-data.py",
+      "type": "file",
+      "name": "v12-step1-export-data.py",
+      "filePath": "scripts/v12-step1-export-data.py",
+      "summary": "Step 1 of the v12 training pipeline — exports labeled prediction-run features from Supabase to local CSV for offline training.",
+      "tags": ["ml-pipeline", "data-export", "supabase", "v12", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/v12-step1-export-data.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/v12-step1-export-data.py",
+      "lineRange": [54, 191],
+      "summary": "Loads env, pages through Supabase to fetch labeled feature rows, flattens nested fields, and writes a CSV ready for v12 training.",
+      "tags": ["entry-point", "data-export", "csv", "supabase"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/v12-step2-train.js",
+      "type": "file",
+      "name": "v12-step2-train.js",
+      "filePath": "scripts/v12-step2-train.js",
+      "summary": "Pure-JavaScript gradient boosted tree trainer for the v12 model that consumes the step-1 CSV and reports Spearman ρ on a held-out split.",
+      "tags": ["ml-training", "gbm", "from-scratch", "v12", "script"],
+      "complexity": "complex",
+      "languageNotes": "Implements histogram-binned regression trees and a small GBM loop in pure JS, with seeded PRNG (mulberry32) for reproducibility."
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:rankArray",
+      "type": "function",
+      "name": "rankArray",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [54, 68],
+      "summary": "Returns the rank vector of a numeric array, handling ties via average ranks, used as input to Spearman ρ.",
+      "tags": ["statistics", "ranking", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:spearmanRho",
+      "type": "function",
+      "name": "spearmanRho",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [70, 88],
+      "summary": "Computes Spearman rank correlation between two numeric arrays as the model evaluation metric.",
+      "tags": ["statistics", "evaluation", "spearman"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:evaluate",
+      "type": "function",
+      "name": "evaluate",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [90, 124],
+      "summary": "Evaluates a trained model against a holdout split, reporting Spearman ρ and additional diagnostic metrics.",
+      "tags": ["evaluation", "metrics", "spearman"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:scripts/v12-step2-train.js:HistBin",
+      "type": "class",
+      "name": "HistBin",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [127, 167],
+      "summary": "Histogram-bin helper that buckets feature values for fast split-finding during regression-tree training.",
+      "tags": ["data-structure", "histogram", "ml"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:buildTree",
+      "type": "function",
+      "name": "buildTree",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [169, 261],
+      "summary": "Builds a single regression decision tree by recursively choosing the best split across binned features, with depth and min-samples constraints.",
+      "tags": ["ml", "decision-tree", "training-core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:trainGBM",
+      "type": "function",
+      "name": "trainGBM",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [272, 308],
+      "summary": "Boosts an ensemble of regression trees against residuals with a learning rate to produce the final v12 GBM model.",
+      "tags": ["ml", "gbm", "boosting", "training-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/v12-step2-train.js",
+      "lineRange": [325, 608],
+      "summary": "Driver that parses CLI args, loads the CSV, builds train/holdout matrices, fits the GBM, evaluates, and writes the model JSON.",
+      "tags": ["entry-point", "orchestration", "training", "model-export"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/v12-step2-train.py",
+      "type": "file",
+      "name": "v12-step2-train.py",
+      "filePath": "scripts/v12-step2-train.py",
+      "summary": "Python reference implementation of v12 training (paired with the JS version) that uses NumPy and reports Spearman ρ; useful for cross-checking the JS trainer.",
+      "tags": ["ml-training", "v12", "reference-impl", "numpy", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.py:rank_array",
+      "type": "function",
+      "name": "rank_array",
+      "filePath": "scripts/v12-step2-train.py",
+      "lineRange": [45, 58],
+      "summary": "Computes the rank vector of an input array with tie averaging, mirroring the JS implementation.",
+      "tags": ["statistics", "ranking", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.py:evaluate",
+      "type": "function",
+      "name": "evaluate",
+      "filePath": "scripts/v12-step2-train.py",
+      "lineRange": [94, 106],
+      "summary": "Evaluates predictions against ground truth with Spearman ρ and side metrics, used to confirm parity with the JS trainer.",
+      "tags": ["evaluation", "metrics", "spearman"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/v12-step2-train.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/v12-step2-train.py",
+      "lineRange": [109, 304],
+      "summary": "Orchestrates the Python v12 training run: loads CSV, builds matrices, standardizes features, fits a model, and reports ρ.",
+      "tags": ["entry-point", "orchestration", "training"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/validate-new-features.ts",
+      "type": "file",
+      "name": "validate-new-features.ts",
+      "filePath": "scripts/validate-new-features.ts",
+      "summary": "TypeScript validator that pulls feature rows and ground-truth labels, then ranks newly added features by Spearman ρ to decide which to keep.",
+      "tags": ["validation", "feature-engineering", "spearman", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/validate-new-features.ts:spearmanR",
+      "type": "function",
+      "name": "spearmanR",
+      "filePath": "scripts/validate-new-features.ts",
+      "lineRange": [41, 69],
+      "summary": "Computes Spearman rank correlation between two number arrays (handles ties) as the core ranking metric.",
+      "tags": ["statistics", "spearman", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/validate-new-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/validate-new-features.ts",
+      "lineRange": [85, 259],
+      "summary": "Loads labeled rows, computes per-feature Spearman ρ vs. ground truth, and prints a ranked report of new feature usefulness.",
+      "tags": ["entry-point", "validation", "feature-engineering"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/validate-prediction-accuracy.ts",
+      "type": "file",
+      "name": "validate-prediction-accuracy.ts",
+      "filePath": "scripts/validate-prediction-accuracy.ts",
+      "summary": "End-to-end TypeScript validator that compares predicted VPS against actual post-publication VPS to report calibration and Spearman ρ.",
+      "tags": ["validation", "vps", "accuracy", "spearman", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/validate-prediction-accuracy.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/validate-prediction-accuracy.ts",
+      "lineRange": [84, 327],
+      "summary": "Pulls prediction runs with measured outcomes, joins predicted vs actual VPS, computes ρ and tier accuracy, and prints the calibration report.",
+      "tags": ["entry-point", "validation", "vps", "calibration"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/validate-predictions.js",
+      "type": "file",
+      "name": "validate-predictions.js",
+      "filePath": "scripts/validate-predictions.js",
+      "summary": "Node CLI that walks recent prediction runs and validates that scores, tiers, and explanations are internally consistent before being shown to users.",
+      "tags": ["validation", "predictions", "qa", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/validate-predictions.js:validatePredictions",
+      "type": "function",
+      "name": "validatePredictions",
+      "filePath": "scripts/validate-predictions.js",
+      "lineRange": [4, 218],
+      "summary": "Loads recent prediction-run records and asserts a series of invariants (VPS vs tier, presence of recommendations, etc.), printing pass/fail per check.",
+      "tags": ["validation", "invariants", "predictions"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/verify_integration.ts",
+      "type": "file",
+      "name": "verify_integration.ts",
+      "filePath": "scripts/verify_integration.ts",
+      "summary": "Integration sanity check that runs a fixed prediction through the live pipeline and asserts the response shape, score ranges, and component outputs match expectations.",
+      "tags": ["integration-test", "verification", "pipeline", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify_integration.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/verify_integration.ts",
+      "lineRange": [28, 219],
+      "summary": "Drives the integration check: loads env, executes the prediction flow, and runs structural and value assertions on the result.",
+      "tags": ["entry-point", "integration-test", "assertions"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/verify-classifications.js",
+      "type": "file",
+      "name": "verify-classifications.js",
+      "filePath": "scripts/verify-classifications.js",
+      "summary": "Node script that verifies classification labels assigned to videos in Supabase are well-formed and self-consistent across related tables.",
+      "tags": ["verification", "classifications", "supabase", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/verify-classifications.js:verifyClassifications",
+      "type": "function",
+      "name": "verifyClassifications",
+      "filePath": "scripts/verify-classifications.js",
+      "lineRange": [10, 99],
+      "summary": "Loads classification rows, checks for missing/mismatched labels, and prints a per-record verification report.",
+      "tags": ["verification", "data-quality", "classifications"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/verify-completion.ts",
+      "type": "file",
+      "name": "verify-completion.ts",
+      "filePath": "scripts/verify-completion.ts",
+      "summary": "Generic milestone-completion verifier that runs a battery of structural and runtime checks (files exist, exports present, env vars set) for a project phase.",
+      "tags": ["verification", "completion-check", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify-completion.ts:runCheck",
+      "type": "function",
+      "name": "runCheck",
+      "filePath": "scripts/verify-completion.ts",
+      "lineRange": [31, 53],
+      "summary": "Executes a single named check function, formats pass/fail output, and aggregates totals into the verification report.",
+      "tags": ["verification", "test-harness", "utility"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/verify-dps-formula-correct.js",
+      "type": "file",
+      "name": "verify-dps-formula-correct.js",
+      "filePath": "scripts/verify-dps-formula-correct.js",
+      "summary": "Verifies the corrected DPS (Dynamic Percentile System) formula against a curated sample of videos and prints discrepancies between expected and computed scores.",
+      "tags": ["verification", "dps", "formula", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify-dps-formula-correct.js:verifyDPSFormulaCorrect",
+      "type": "function",
+      "name": "verifyDPSFormulaCorrect",
+      "filePath": "scripts/verify-dps-formula-correct.js",
+      "lineRange": [5, 206],
+      "summary": "Loads sample videos, recomputes DPS with the corrected formula, and reports diffs vs the values stored in Supabase.",
+      "tags": ["verification", "dps", "formula", "diagnostics"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/verify-dps-formula.js",
+      "type": "file",
+      "name": "verify-dps-formula.js",
+      "filePath": "scripts/verify-dps-formula.js",
+      "summary": "Legacy DPS formula verifier that recomputes percentile-based scores from raw inputs and compares them to stored values for regression checks.",
+      "tags": ["verification", "dps", "formula", "legacy", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify-dps-formula.js:verifyDPSFormula",
+      "type": "function",
+      "name": "verifyDPSFormula",
+      "filePath": "scripts/verify-dps-formula.js",
+      "lineRange": [5, 176],
+      "summary": "Recomputes DPS from raw row inputs using the legacy formula and prints mismatches against the persisted scores.",
+      "tags": ["verification", "dps", "formula", "diagnostics"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/verify-dps-results.ts",
+      "type": "file",
+      "name": "verify-dps-results.ts",
+      "filePath": "scripts/verify-dps-results.ts",
+      "summary": "Lightweight TypeScript checker that samples recent DPS results and asserts each lies within the expected bounds and tiering rules.",
+      "tags": ["verification", "dps", "qa", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/verify-dps-results.ts:verifyResults",
+      "type": "function",
+      "name": "verifyResults",
+      "filePath": "scripts/verify-dps-results.ts",
+      "lineRange": [11, 83],
+      "summary": "Reads recent DPS result rows and validates each against bound and tier-mapping rules, logging any violations.",
+      "tags": ["verification", "dps", "validation"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:scripts/verify-env.js",
+      "type": "file",
+      "name": "verify-env.js",
+      "filePath": "scripts/verify-env.js",
+      "summary": "Tiny CLI that checks the presence of required environment variables and exits non-zero if any are missing, used as a pre-flight gate.",
+      "tags": ["verification", "env", "preflight", "script"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:scripts/verify-evolution-engine-completion.js",
+      "type": "file",
+      "name": "verify-evolution-engine-completion.js",
+      "filePath": "scripts/verify-evolution-engine-completion.js",
+      "summary": "Verifies the Evolution Engine milestone is fully wired by checking for expected files, key code patterns, and registry entries.",
+      "tags": ["verification", "milestone-check", "evolution-engine", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify-evolution-engine-completion.js:verifyEvolutionEngineCompletion",
+      "type": "function",
+      "name": "verifyEvolutionEngineCompletion",
+      "filePath": "scripts/verify-evolution-engine-completion.js",
+      "lineRange": [44, 269],
+      "summary": "Runs a battery of file-existence and content-pattern checks proving each Evolution Engine sub-feature is implemented.",
+      "tags": ["verification", "milestone-check", "evolution-engine"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:scripts/verify-feedback-loader.ts",
+      "type": "file",
+      "name": "verify-feedback-loader.ts",
+      "filePath": "scripts/verify-feedback-loader.ts",
+      "summary": "Smoke test that imports the trainer-engine feedback loader and exercises it end-to-end to confirm it returns the expected training rows.",
+      "tags": ["verification", "feedback-loop", "trainer-engine", "script"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:scripts/verify-frameworks-setup.ts",
+      "type": "file",
+      "name": "verify-frameworks-setup.ts",
+      "filePath": "scripts/verify-frameworks-setup.ts",
+      "summary": "Verifies the prediction frameworks (packs, registry, schedulers) are correctly registered and reachable, used after framework setup changes.",
+      "tags": ["verification", "frameworks", "setup-check", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/verify-frameworks-setup.ts:verifySetup",
+      "type": "function",
+      "name": "verifySetup",
+      "filePath": "scripts/verify-frameworks-setup.ts",
+      "lineRange": [16, 208],
+      "summary": "Walks the framework registry, verifies each pack/component is wired and reachable, and prints a pass/fail summary.",
+      "tags": ["verification", "frameworks", "registry"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    { "source": "file:scripts/train-xgboost-v7-full-backfill.py", "target": "function:scripts/train-xgboost-v7-full-backfill.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-full-backfill.py", "target": "function:scripts/train-xgboost-v7-full-backfill.py:check_coverage", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-full-backfill.py", "target": "function:scripts/train-xgboost-v7-full-backfill.py:train_and_evaluate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-full-backfill.py", "target": "function:scripts/train-xgboost-v7-full-backfill.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v7-holdout.py", "target": "function:scripts/train-xgboost-v7-holdout.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-holdout.py", "target": "function:scripts/train-xgboost-v7-holdout.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v7-phase1-final.py", "target": "function:scripts/train-xgboost-v7-phase1-final.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-phase1-final.py", "target": "function:scripts/train-xgboost-v7-phase1-final.py:train_and_evaluate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-phase1-final.py", "target": "function:scripts/train-xgboost-v7-phase1-final.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v7-phase1.py", "target": "function:scripts/train-xgboost-v7-phase1.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-phase1.py", "target": "function:scripts/train-xgboost-v7-phase1.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v7-with-segment.py", "target": "function:scripts/train-xgboost-v7-with-segment.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-with-segment.py", "target": "function:scripts/train-xgboost-v7-with-segment.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v7-with-vision.py", "target": "function:scripts/train-xgboost-v7-with-vision.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v7-with-vision.py", "target": "function:scripts/train-xgboost-v7-with-vision.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/train-xgboost-v8.py", "target": "function:scripts/train-xgboost-v8.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/train-xgboost-v8.py", "target": "function:scripts/train-xgboost-v8.py:fetch_from_supabase", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:get_videos_without_transcripts", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:download_video", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:extract_audio", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:transcribe_audio", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:update_transcript", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:process_video", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/transcribe-videos.py", "target": "function:scripts/transcribe-videos.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/update-audio-samples.js", "target": "function:scripts/update-audio-samples.js:checkAllCompleted", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/v12-step1-export-data.py", "target": "function:scripts/v12-step1-export-data.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:rankArray", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:spearmanRho", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:evaluate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "class:scripts/v12-step2-train.js:HistBin", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:buildTree", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:trainGBM", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.js", "target": "function:scripts/v12-step2-train.js:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/v12-step2-train.py", "target": "function:scripts/v12-step2-train.py:rank_array", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.py", "target": "function:scripts/v12-step2-train.py:evaluate", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/v12-step2-train.py", "target": "function:scripts/v12-step2-train.py:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/validate-new-features.ts", "target": "function:scripts/validate-new-features.ts:spearmanR", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/validate-new-features.ts", "target": "function:scripts/validate-new-features.ts:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/validate-prediction-accuracy.ts", "target": "function:scripts/validate-prediction-accuracy.ts:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/validate-predictions.js", "target": "function:scripts/validate-predictions.js:validatePredictions", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify_integration.ts", "target": "function:scripts/verify_integration.ts:main", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:scripts/verify_integration.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:scripts/verify-classifications.js", "target": "function:scripts/verify-classifications.js:verifyClassifications", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-completion.ts", "target": "function:scripts/verify-completion.ts:runCheck", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-dps-formula-correct.js", "target": "function:scripts/verify-dps-formula-correct.js:verifyDPSFormulaCorrect", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-dps-formula.js", "target": "function:scripts/verify-dps-formula.js:verifyDPSFormula", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-dps-results.ts", "target": "function:scripts/verify-dps-results.ts:verifyResults", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-evolution-engine-completion.js", "target": "function:scripts/verify-evolution-engine-completion.js:verifyEvolutionEngineCompletion", "type": "contains", "direction": "forward", "weight": 1.0 },
+
+    { "source": "file:scripts/verify-feedback-loader.ts", "target": "file:src/lib/training/trainer-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+
+    { "source": "file:scripts/verify-frameworks-setup.ts", "target": "function:scripts/verify-frameworks-setup.ts:verifySetup", "type": "contains", "direction": "forward", "weight": 1.0 }
+  ]
+}

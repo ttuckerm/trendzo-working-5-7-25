@@ -1,0 +1,1180 @@
+{
+  "nodes": [
+    {
+      "id": "file:dashboard-fix/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "dashboard-fix/page.tsx",
+      "summary": "Standalone Next.js dashboard view (App Router client component) rendering tabbed stats (templates, views, viral, audience) with mock data, intended as a fixed/replacement layout for the main dashboard.",
+      "tags": [
+        "component",
+        "dashboard",
+        "next-app-router",
+        "client-component"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:dashboard-fix/page.tsx:DashboardViewPage",
+      "type": "function",
+      "name": "DashboardViewPage",
+      "filePath": "dashboard-fix/page.tsx",
+      "lineRange": [
+        17,
+        254
+      ],
+      "summary": "Default-exported page component that holds the active tab state and renders the dashboard overview, templates, viral, and audience tabs with stat cards.",
+      "tags": [
+        "component",
+        "page",
+        "react",
+        "client-component"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:database/add_metadata_column_migration.sql",
+      "type": "table",
+      "name": "add_metadata_column_migration.sql",
+      "filePath": "database/add_metadata_column_migration.sql",
+      "summary": "Migration that adds a metadata JSONB column to prediction_validation and creates a GIN index over it.",
+      "tags": [
+        "database",
+        "migration",
+        "jsonb"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:database/algorithm_optimizations_table.sql",
+      "type": "table",
+      "name": "algorithm_optimizations_table.sql",
+      "filePath": "database/algorithm_optimizations_table.sql",
+      "summary": "Defines the algorithm_optimizations table that records weight optimization runs (current/optimized weights, accuracies, improvement percentage, deployment status) plus supporting indexes.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "training-pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/algorithm_optimizations_table.sql:algorithm_optimizations",
+      "type": "table",
+      "name": "algorithm_optimizations",
+      "filePath": "database/algorithm_optimizations_table.sql",
+      "summary": "Defines the algorithm_optimizations table with 11 columns: id, optimization_id, training_data_points, current_weights, optimized_weights, current_accuracy, optimized_accuracy, improvement_percentage, optimization_timestamp, algorithm_version....",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:database/pipeline_ops.sql",
+      "type": "table",
+      "name": "pipeline_ops.sql",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Pipeline operations schema: 14 tables and a view backing module/DAG management, run/log history, scheduler logs, scraping jobs, engagement windows, alerts, and ops changelog.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "pipeline-ops",
+        "observability"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_modules",
+      "type": "table",
+      "name": "pipeline_modules",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_modules table with 7 columns: id, name, version, description, enabled, created_at, updated_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_module_config",
+      "type": "table",
+      "name": "pipeline_module_config",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_module_config table with 5 columns: module_id, env_flags, scale, enabled, updated_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_dag_nodes",
+      "type": "table",
+      "name": "pipeline_dag_nodes",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_dag_nodes table with 4 columns: id, label, module_id, created_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_dag_edges",
+      "type": "table",
+      "name": "pipeline_dag_edges",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_dag_edges table with 6 columns: id, upstream_node_id, downstream_node_id, last_health, last_run_at, created_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:module_runs",
+      "type": "table",
+      "name": "module_runs",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the module_runs table with 9 columns: id, module_id, status, started_at, completed_at, duration_ms, error, meta, created_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:module_logs",
+      "type": "table",
+      "name": "module_logs",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the module_logs table with 8 columns: id, module_id, run_id, ts, level, message, file_url, meta.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:scheduler_logs",
+      "type": "table",
+      "name": "scheduler_logs",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the scheduler_logs table with 10 columns: id, job_name, status, scheduled_at, started_at, completed_at, miss, error, meta, created_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:scraping_jobs",
+      "type": "table",
+      "name": "scraping_jobs",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the scraping_jobs table with 8 columns: id, source, status, queued_at, started_at, completed_at, params, error.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:video_engagement_windows",
+      "type": "table",
+      "name": "video_engagement_windows",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the video_engagement_windows table with 8 columns: id, video_id, captured_at, views, likes, comments, shares, updated_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:authors",
+      "type": "table",
+      "name": "authors",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the authors table with 5 columns: id, username, platform, median_views_30d, updated_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_alerts",
+      "type": "table",
+      "name": "pipeline_alerts",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_alerts table with 8 columns: id, type, severity, title, description, created_at, resolved_at, meta.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:pipeline_control_actions",
+      "type": "table",
+      "name": "pipeline_control_actions",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the pipeline_control_actions table with 8 columns: id, action, module_id, user_id, params, status, result, created_at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:ops_changelog",
+      "type": "table",
+      "name": "ops_changelog",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the ops_changelog table with 6 columns: id, who, what, category, created_at, meta.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:videos_write_log",
+      "type": "table",
+      "name": "videos_write_log",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "Defines the videos_write_log table with 4 columns: id, video_id, op, at.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:database/pipeline_ops.sql:validation_labels_24h",
+      "type": "table",
+      "name": "validation_labels_24h",
+      "filePath": "database/pipeline_ops.sql",
+      "summary": "SQL view validation_labels_24h derived from underlying pipeline tables.",
+      "tags": [
+        "database",
+        "view",
+        "derived"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:database/prediction_validation_table.sql",
+      "type": "table",
+      "name": "prediction_validation_table.sql",
+      "filePath": "database/prediction_validation_table.sql",
+      "summary": "Defines the prediction_validation table comparing predicted vs actual viral scores/views/probabilities with platform and confidence metadata, plus indexes for status/accuracy/video lookups.",
+      "tags": [
+        "database",
+        "schema-definition",
+        "prediction-validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:database/prediction_validation_table.sql:prediction_validation",
+      "type": "table",
+      "name": "prediction_validation",
+      "filePath": "database/prediction_validation_table.sql",
+      "summary": "Defines the prediction_validation table with 15 columns: id, prediction_id, video_id, predicted_viral_score, predicted_views, predicted_viral_probability, actual_viral_score, actual_views, actual_viral_probability, accuracy_percentage....",
+      "tags": [
+        "database",
+        "schema-definition",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:docker/alertmanager/alertmanager.yml",
+      "type": "config",
+      "name": "alertmanager.yml",
+      "filePath": "docker/alertmanager/alertmanager.yml",
+      "summary": "Alertmanager configuration defining global SMTP settings, routing tree, inhibition rules, receivers (Slack, PagerDuty, email, webhook), and time-interval mutes for Trendzo monitoring alerts.",
+      "tags": [
+        "configuration",
+        "monitoring",
+        "alerting",
+        "observability"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:docker/environment/env.template",
+      "type": "config",
+      "name": "env.template",
+      "filePath": "docker/environment/env.template",
+      "summary": "Environment-variable template enumerating every variable (DB, Redis, AI providers, monitoring secrets, deployment toggles) required to bring up a Trendzo Docker deployment.",
+      "tags": [
+        "configuration",
+        "deployment",
+        "env-template",
+        "secrets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docker/environment/validate-env.js",
+      "type": "file",
+      "name": "validate-env.js",
+      "filePath": "docker/environment/validate-env.js",
+      "summary": "Node CLI script that loads .env files and validates every required environment variable (presence, type, pattern, AI provider availability) before deploying Trendzo to production.",
+      "tags": [
+        "script",
+        "validation",
+        "deployment",
+        "env-template"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:docker/environment/validate-env.js:validateEnvVar",
+      "type": "function",
+      "name": "validateEnvVar",
+      "filePath": "docker/environment/validate-env.js",
+      "lineRange": [
+        68,
+        112
+      ],
+      "summary": "Validates a single env variable against its config: required flag, pattern, numeric/boolean coercion, with colored success/error logging.",
+      "tags": [
+        "validation",
+        "script",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:docker/environment/validate-env.js:validateAIServices",
+      "type": "function",
+      "name": "validateAIServices",
+      "filePath": "docker/environment/validate-env.js",
+      "lineRange": [
+        117,
+        135
+      ],
+      "summary": "Asserts at least one AI provider env var (OpenAI/Anthropic/Google AI/Replicate/HuggingFace) is configured and warns when none are present.",
+      "tags": [
+        "validation",
+        "script",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:docker/environment/validate-env.js:loadEnvFile",
+      "type": "function",
+      "name": "loadEnvFile",
+      "filePath": "docker/environment/validate-env.js",
+      "lineRange": [
+        140,
+        160
+      ],
+      "summary": "Reads a .env-style file from disk and returns a key/value object, ignoring blank lines and comments.",
+      "tags": [
+        "validation",
+        "script",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:docker/environment/validate-env.js:validateEnvironment",
+      "type": "function",
+      "name": "validateEnvironment",
+      "filePath": "docker/environment/validate-env.js",
+      "lineRange": [
+        165,
+        235
+      ],
+      "summary": "Top-level entry point that loads env files, iterates the required-var catalog, validates AI services, and prints a final pass/fail summary.",
+      "tags": [
+        "validation",
+        "script",
+        "deployment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/grafana/dashboards/trendzo-application.json",
+      "type": "config",
+      "name": "trendzo-application.json",
+      "filePath": "docker/grafana/dashboards/trendzo-application.json",
+      "summary": "Grafana dashboard JSON model for the Trendzo application: panels, templating, annotations, and time controls visualizing app metrics scraped by Prometheus.",
+      "tags": [
+        "configuration",
+        "monitoring",
+        "dashboard",
+        "grafana"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:docker/grafana/provisioning/dashboards/dashboards.yml",
+      "type": "config",
+      "name": "dashboards.yml",
+      "filePath": "docker/grafana/provisioning/dashboards/dashboards.yml",
+      "summary": "Grafana dashboard provisioning config that auto-loads JSON dashboards from the mounted dashboards folder on startup.",
+      "tags": [
+        "configuration",
+        "grafana",
+        "provisioning"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:docker/grafana/provisioning/datasources/datasources.yml",
+      "type": "config",
+      "name": "datasources.yml",
+      "filePath": "docker/grafana/provisioning/datasources/datasources.yml",
+      "summary": "Grafana datasource provisioning declaring Prometheus, Loki, and other backends so Grafana wires them up automatically on startup.",
+      "tags": [
+        "configuration",
+        "grafana",
+        "datasources",
+        "provisioning"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:docker/loki/loki.yml",
+      "type": "config",
+      "name": "loki.yml",
+      "filePath": "docker/loki/loki.yml",
+      "summary": "Loki log aggregator config: server, storage schema, query limits, compactor, ruler, and table manager settings used inside the monitoring stack.",
+      "tags": [
+        "configuration",
+        "monitoring",
+        "logging",
+        "loki"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/nginx/conf.d/trendzo.conf",
+      "type": "config",
+      "name": "trendzo.conf",
+      "filePath": "docker/nginx/conf.d/trendzo.conf",
+      "summary": "Site-level nginx config for Trendzo: upstream blocks, server vhosts, TLS, gzip, proxy headers, and route-specific timeouts for the Next.js app.",
+      "tags": [
+        "configuration",
+        "reverse-proxy",
+        "nginx",
+        "deployment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/nginx/nginx.conf",
+      "type": "config",
+      "name": "nginx.conf",
+      "filePath": "docker/nginx/nginx.conf",
+      "summary": "Top-level nginx config (events, http core, logging, gzip, security headers, worker tuning) that includes the per-site configs under conf.d.",
+      "tags": [
+        "configuration",
+        "reverse-proxy",
+        "nginx",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/prometheus/prometheus.yml",
+      "type": "config",
+      "name": "prometheus.yml",
+      "filePath": "docker/prometheus/prometheus.yml",
+      "summary": "Prometheus config defining global scrape settings, alerting rule files, and scrape_configs for every monitoring target in the stack.",
+      "tags": [
+        "configuration",
+        "monitoring",
+        "prometheus",
+        "metrics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/promtail/promtail.yml",
+      "type": "config",
+      "name": "promtail.yml",
+      "filePath": "docker/promtail/promtail.yml",
+      "summary": "Promtail agent config: server, positions, clients, and scrape_configs that ship container/application logs into Loki.",
+      "tags": [
+        "configuration",
+        "monitoring",
+        "logging",
+        "promtail"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:docker/security/docker-security.conf",
+      "type": "config",
+      "name": "docker-security.conf",
+      "filePath": "docker/security/docker-security.conf",
+      "summary": "Docker daemon / runtime security hardening settings (seccomp, AppArmor, ulimits, network policies) applied to the Trendzo stack.",
+      "tags": [
+        "configuration",
+        "security",
+        "docker",
+        "hardening"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:docker/ssl/generate-certs.ps1",
+      "type": "file",
+      "name": "generate-certs.ps1",
+      "filePath": "docker/ssl/generate-certs.ps1",
+      "summary": "PowerShell helper that generates a self-signed TLS certificate chain for local Trendzo deployments on Windows.",
+      "tags": [
+        "script",
+        "security",
+        "tls",
+        "powershell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:docker/ssl/generate-certs.sh",
+      "type": "file",
+      "name": "generate-certs.sh",
+      "filePath": "docker/ssl/generate-certs.sh",
+      "summary": "Bash helper that generates a self-signed TLS certificate chain for local Trendzo deployments on Linux/macOS.",
+      "tags": [
+        "script",
+        "security",
+        "tls",
+        "shell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml",
+      "type": "service",
+      "name": "monitoring-stack.yml",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "docker-compose stack that brings up the full Trendzo observability platform (Prometheus, Grafana, Alertmanager, Loki, Promtail, Jaeger, exporters, blackbox, VictoriaMetrics, dashboard).",
+      "tags": [
+        "infrastructure",
+        "orchestration",
+        "monitoring",
+        "docker-compose"
+      ],
+      "complexity": "complex",
+      "languageNotes": "docker-compose v3 manifest using named networks and volumes."
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:prometheus",
+      "type": "service",
+      "name": "prometheus",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Prometheus metrics server scraping all stack targets and evaluating alert rules.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:grafana",
+      "type": "service",
+      "name": "grafana",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Grafana visualization layer with provisioned datasources and dashboards.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:alertmanager",
+      "type": "service",
+      "name": "alertmanager",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Alertmanager routing/silencing/deduplicating alerts to Slack, PagerDuty, and email.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:node-exporter",
+      "type": "service",
+      "name": "node-exporter",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Prometheus node_exporter for host-level CPU/memory/disk/network metrics.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:cadvisor",
+      "type": "service",
+      "name": "cadvisor",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "cAdvisor exporting per-container resource usage to Prometheus.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:loki",
+      "type": "service",
+      "name": "loki",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Loki log aggregator receiving log streams from Promtail.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:promtail",
+      "type": "service",
+      "name": "promtail",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Promtail agent shipping container and host logs into Loki.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:redis-monitoring",
+      "type": "service",
+      "name": "redis-monitoring",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Dedicated Redis instance backing the monitoring stack state.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:redis-exporter",
+      "type": "service",
+      "name": "redis-exporter",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Redis exporter publishing Redis metrics to Prometheus.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:jaeger",
+      "type": "service",
+      "name": "jaeger",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Jaeger all-in-one collector and UI for distributed tracing.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:blackbox-exporter",
+      "type": "service",
+      "name": "blackbox-exporter",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Prometheus blackbox_exporter probing HTTP/TCP/ICMP endpoints for synthetic monitoring.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:victoriametrics",
+      "type": "service",
+      "name": "victoriametrics",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "VictoriaMetrics long-term metrics store used as a remote_write sink for Prometheus.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:webhook-relay",
+      "type": "service",
+      "name": "webhook-relay",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Internal webhook relay forwarding Alertmanager notifications to external endpoints.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:docker/monitoring-stack.yml:monitoring-dashboard",
+      "type": "service",
+      "name": "monitoring-dashboard",
+      "filePath": "docker/monitoring-stack.yml",
+      "summary": "Internal status dashboard service rendering health/status of the monitoring stack.",
+      "tags": [
+        "monitoring",
+        "docker-compose",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/assurance/viral-recipe-book_preflight/workflows/SF_AB_Test.md",
+      "type": "document",
+      "name": "SF_AB_Test.md",
+      "filePath": "docs/assurance/viral-recipe-book_preflight/workflows/SF_AB_Test.md",
+      "summary": "Mermaid workflow diagram describing the A/B-test flow: UI POSTs to /api/ab/start, polls /api/ab/:id, and renders the winner.",
+      "tags": [
+        "documentation",
+        "workflow",
+        "mermaid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/assurance/viral-recipe-book_preflight/workflows/SF_Analyzer.md",
+      "type": "document",
+      "name": "SF_Analyzer.md",
+      "filePath": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Analyzer.md",
+      "summary": "Mermaid workflow diagram for the draft analyzer flow: /api/drafts/analyze extracts features, scores the draft, and returns recommendations.",
+      "tags": [
+        "documentation",
+        "workflow",
+        "mermaid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/assurance/viral-recipe-book_preflight/workflows/SF_Dashboard.md",
+      "type": "document",
+      "name": "SF_Dashboard.md",
+      "filePath": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Dashboard.md",
+      "summary": "Mermaid workflow diagram for the discovery dashboard: /api/discovery/rollups feeds the discovery and decay charts.",
+      "tags": [
+        "documentation",
+        "workflow",
+        "mermaid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/assurance/viral-recipe-book_preflight/workflows/SF_Inception.md",
+      "type": "document",
+      "name": "SF_Inception.md",
+      "filePath": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Inception.md",
+      "summary": "Mermaid workflow diagram for the inception screen: GET /api/templates/discovery renders the inception queue.",
+      "tags": [
+        "documentation",
+        "workflow",
+        "mermaid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:docs/assurance/viral-recipe-book_preflight/workflows/SF_Optimize.md",
+      "type": "document",
+      "name": "SF_Optimize.md",
+      "filePath": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Optimize.md",
+      "summary": "Mermaid workflow diagram for the optimize flow: POST /api/optimize/schedule and GET /api/optimize/entities feed the opt-entities view.",
+      "tags": [
+        "documentation",
+        "workflow",
+        "mermaid"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:dashboard-fix/page.tsx",
+      "target": "function:dashboard-fix/page.tsx:DashboardViewPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:dashboard-fix/page.tsx",
+      "target": "function:dashboard-fix/page.tsx:DashboardViewPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:dashboard-fix/page.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:dashboard-fix/page.tsx",
+      "target": "file:src/components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:dashboard-fix/page.tsx",
+      "target": "file:src/components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/algorithm_optimizations_table.sql",
+      "target": "table:database/algorithm_optimizations_table.sql:algorithm_optimizations",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_modules",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_module_config",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_dag_nodes",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_dag_edges",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:module_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:module_logs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:scheduler_logs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:scraping_jobs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:video_engagement_windows",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:authors",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_alerts",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:pipeline_control_actions",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:ops_changelog",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:videos_write_log",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/pipeline_ops.sql",
+      "target": "table:database/pipeline_ops.sql:validation_labels_24h",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:database/prediction_validation_table.sql",
+      "target": "table:database/prediction_validation_table.sql:prediction_validation",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:docker/environment/validate-env.js",
+      "target": "function:docker/environment/validate-env.js:validateEnvVar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:docker/environment/validate-env.js",
+      "target": "function:docker/environment/validate-env.js:validateAIServices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:docker/environment/validate-env.js",
+      "target": "function:docker/environment/validate-env.js:loadEnvFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:docker/environment/validate-env.js",
+      "target": "function:docker/environment/validate-env.js:validateEnvironment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "config:docker/grafana/provisioning/dashboards/dashboards.yml",
+      "target": "config:docker/grafana/dashboards/trendzo-application.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:docker/nginx/nginx.conf",
+      "target": "config:docker/nginx/conf.d/trendzo.conf",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:docker/promtail/promtail.yml",
+      "target": "config:docker/loki/loki.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:prometheus",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:grafana",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:alertmanager",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:node-exporter",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:cadvisor",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:loki",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:promtail",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:redis-monitoring",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:redis-exporter",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:jaeger",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:blackbox-exporter",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:victoriametrics",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:webhook-relay",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml",
+      "target": "service:docker/monitoring-stack.yml:monitoring-dashboard",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:prometheus",
+      "target": "config:docker/prometheus/prometheus.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:alertmanager",
+      "target": "config:docker/alertmanager/alertmanager.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:loki",
+      "target": "config:docker/loki/loki.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:promtail",
+      "target": "config:docker/promtail/promtail.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:grafana",
+      "target": "config:docker/grafana/provisioning/dashboards/dashboards.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:docker/monitoring-stack.yml:grafana",
+      "target": "config:docker/grafana/provisioning/datasources/datasources.yml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

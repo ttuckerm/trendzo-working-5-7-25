@@ -1,0 +1,1209 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "summary": "Admin API route that returns prediction accuracy metrics by joining the latest predictions with actual outcomes from Supabase.",
+      "tags": ["api-handler", "admin", "prediction", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/accuracy/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "lineRange": [7, 46],
+      "summary": "GET handler that computes prediction accuracy by joining recent predictions with their actual outcomes and returning aggregated metrics.",
+      "tags": ["api-handler", "accuracy", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-validation/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-validation/metrics/route.ts",
+      "summary": "Admin API route returning aggregated prediction validation metrics (precision, recall, calibration) over recent runs.",
+      "tags": ["api-handler", "admin", "validation", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction-validation/metrics/route.ts",
+      "lineRange": [12, 106],
+      "summary": "GET handler computing aggregate validation metrics (count, accuracy, calibration error) from Supabase prediction history.",
+      "tags": ["api-handler", "metrics", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-validation/start-test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-validation/start-test/route.ts",
+      "summary": "Admin API route that kicks off a prediction validation test run by invoking the engine and persisting results to Supabase.",
+      "tags": ["api-handler", "admin", "validation", "test-runner"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/start-test/route.ts:runPredictionEngine",
+      "type": "function",
+      "name": "runPredictionEngine",
+      "filePath": "src/app/api/admin/prediction-validation/start-test/route.ts",
+      "lineRange": [72, 105],
+      "summary": "Invokes the prediction engine for a single video input and returns its scored result for test validation.",
+      "tags": ["prediction", "engine", "test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/start-test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction-validation/start-test/route.ts",
+      "lineRange": [111, 202],
+      "summary": "POST handler that starts a prediction-validation test session, runs predictions over a sample set and writes results to the database.",
+      "tags": ["api-handler", "validation", "test-runner"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-validation/trigger/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-validation/trigger/route.ts",
+      "summary": "Admin API route that triggers post-publish validation by joining predictions to scraped actuals and computing accuracy.",
+      "tags": ["api-handler", "admin", "validation", "actuals"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/trigger/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction-validation/trigger/route.ts",
+      "lineRange": [14, 93],
+      "summary": "POST handler that pairs predictions with actuals via the validation join, computes accuracy, and persists the rolled-up result.",
+      "tags": ["api-handler", "validation", "join"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-validation/validations/route.ts",
+      "summary": "Admin API route supporting CRUD-style GET/POST for prediction-validation entries stored in Supabase.",
+      "tags": ["api-handler", "admin", "validation", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/validations/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction-validation/validations/route.ts",
+      "lineRange": [7, 50],
+      "summary": "GET handler returning a paginated list of prediction-validation records with filtering support.",
+      "tags": ["api-handler", "list", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-validation/validations/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction-validation/validations/route.ts",
+      "lineRange": [53, 89],
+      "summary": "POST handler that creates a new prediction-validation record in Supabase from the request body.",
+      "tags": ["api-handler", "create", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "summary": "Admin API route returning audit evidence (component results, raw inputs) for a single prediction by id.",
+      "tags": ["api-handler", "admin", "prediction", "audit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/[id]/evidence/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "lineRange": [7, 32],
+      "summary": "GET handler that loads stored audit evidence for the prediction matching the URL id parameter.",
+      "tags": ["api-handler", "audit", "evidence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction/analyze-video/route.ts",
+      "summary": "Admin API route that analyzes a video URL through the main prediction engine and returns its scored components.",
+      "tags": ["api-handler", "admin", "prediction", "video-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/analyze-video/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction/analyze-video/route.ts",
+      "lineRange": [7, 55],
+      "summary": "POST handler that runs the main prediction engine on a submitted video and returns predicted virality with components.",
+      "tags": ["api-handler", "prediction", "engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/analyze-video/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction/analyze-video/route.ts",
+      "lineRange": [57, 82],
+      "summary": "GET handler exposing analyzer status / metadata about the prediction engine.",
+      "tags": ["api-handler", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction/baselines/recompute/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction/baselines/recompute/route.ts",
+      "summary": "Admin API route that triggers recomputation of DPS baselines used by the dynamic percentile system.",
+      "tags": ["api-handler", "admin", "baselines", "dps"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction/test-engine/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction/test-engine/route.ts",
+      "summary": "Admin API route used to smoke-test the main prediction engine end-to-end with a sample input.",
+      "tags": ["api-handler", "admin", "prediction", "test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/test-engine/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction/test-engine/route.ts",
+      "lineRange": [6, 35],
+      "summary": "GET handler that runs the prediction engine with a fixture input and returns the scored result for sanity testing.",
+      "tags": ["api-handler", "test", "engine"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction/unified-predict/route.ts",
+      "summary": "Admin API route that runs unified-prediction (single source of truth) and optionally executes a dual runner against legacy engines.",
+      "tags": ["api-handler", "admin", "prediction", "unified-engine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/unified-predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction/unified-predict/route.ts",
+      "lineRange": [10, 194],
+      "summary": "POST handler that invokes the unified prediction engine for an input video, optionally running the dual runner for parity checking.",
+      "tags": ["api-handler", "prediction", "unified", "dual-runner"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction/unified-predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction/unified-predict/route.ts",
+      "lineRange": [196, 230],
+      "summary": "GET handler returning engine status and configuration for unified prediction operations.",
+      "tags": ["api-handler", "status", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/predict/route.ts",
+      "summary": "Admin prediction API route invoking the canonical runPredictionPipeline for arbitrary videos with hashing, TikTok download and persistence.",
+      "tags": ["api-handler", "admin", "prediction", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/predict/route.ts",
+      "lineRange": [33, 199],
+      "summary": "POST handler that runs the canonical prediction pipeline (download → hash → run) for an input video and stores the result.",
+      "tags": ["api-handler", "prediction", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/predict/route.ts",
+      "lineRange": [204, 229],
+      "summary": "GET handler exposing prediction status or echoing a previously stored prediction by id.",
+      "tags": ["api-handler", "lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/preview/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/preview/route.ts",
+      "summary": "Admin feature-flag preview route that evaluates Corteza-backed flags against a synthetic user context.",
+      "tags": ["api-handler", "admin", "feature-flags", "preview"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/proof-tiles/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/proof-tiles/route.ts",
+      "summary": "Admin API route returning curated proof tiles (success stories / metrics) for marketing pages.",
+      "tags": ["api-handler", "admin", "marketing", "content"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/proof-tiles/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/proof-tiles/route.ts",
+      "lineRange": [10, 19],
+      "summary": "GET handler returning the proof-tiles list for admin preview.",
+      "tags": ["api-handler", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/quality/recent/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/quality/recent/route.ts",
+      "summary": "Admin API route returning recent anti-gaming quality events with auth and rate-limit guards.",
+      "tags": ["api-handler", "admin", "quality", "anti-gaming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/quality/recent/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/quality/recent/route.ts",
+      "lineRange": [9, 34],
+      "summary": "GET handler returning recent anti-gaming quality events after auth and rate-limit checks.",
+      "tags": ["api-handler", "quality", "anti-gaming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/real-creators/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/real-creators/route.ts",
+      "summary": "Admin API route listing real creator profiles harvested into Supabase for analytics.",
+      "tags": ["api-handler", "admin", "creators", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/real-creators/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/real-creators/route.ts",
+      "lineRange": [7, 54],
+      "summary": "GET handler that pulls real-creator records from Supabase with optional niche filtering.",
+      "tags": ["api-handler", "creators", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/real-urls/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/real-urls/route.ts",
+      "summary": "Admin API route returning curated real video URLs from Supabase for use in admin pages.",
+      "tags": ["api-handler", "admin", "urls", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/real-urls/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/real-urls/route.ts",
+      "lineRange": [7, 48],
+      "summary": "GET handler that loads stored real video URLs from Supabase for admin tooling.",
+      "tags": ["api-handler", "urls", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/reprocess-queue/route.ts",
+      "summary": "Admin API route managing a reprocess queue, re-running runPredictionPipeline for failed or stale predictions in batches.",
+      "tags": ["api-handler", "admin", "queue", "reprocess"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/reprocess-queue/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/reprocess-queue/route.ts",
+      "lineRange": [48, 106],
+      "summary": "GET handler listing pending entries in the reprocess queue with status and last error information.",
+      "tags": ["api-handler", "queue", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/reprocess-queue/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/reprocess-queue/route.ts",
+      "lineRange": [110, 323],
+      "summary": "POST handler that drains the reprocess queue by re-running the canonical prediction pipeline for each queued item.",
+      "tags": ["api-handler", "queue", "reprocess", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/research-reports/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/research-reports/route.ts",
+      "summary": "Admin API route returning generated research reports for internal viewing.",
+      "tags": ["api-handler", "admin", "research", "reports"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/research-reports/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/research-reports/route.ts",
+      "lineRange": [8, 31],
+      "summary": "GET handler returning a list of research reports with metadata for admin consumption.",
+      "tags": ["api-handler", "reports", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/run-apify-scraper/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-apify-scraper/route.ts",
+      "summary": "Admin API route that triggers the Apify scraper service for TikTok creator/video data on demand.",
+      "tags": ["api-handler", "admin", "scraper", "apify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/run-apify-scraper/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-apify-scraper/route.ts",
+      "lineRange": [7, 46],
+      "summary": "POST handler that invokes apifyScraper with parameters from the request body and returns the scraped payload.",
+      "tags": ["api-handler", "scraper", "apify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/run-feature-decomposer/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-feature-decomposer/route.ts",
+      "summary": "Admin API route running the feature-decomposer service over a video and persisting the result to Supabase.",
+      "tags": ["api-handler", "admin", "feature-decomposer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/run-feature-decomposer/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-feature-decomposer/route.ts",
+      "lineRange": [9, 76],
+      "summary": "POST handler that decomposes a video into structured features and writes the result back to Supabase.",
+      "tags": ["api-handler", "feature-decomposer", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/run-gene-tagger/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-gene-tagger/route.ts",
+      "summary": "Admin API route invoking the geneTagger service to classify videos with content genes for downstream prediction features.",
+      "tags": ["api-handler", "admin", "gene-tagger", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/run-gene-tagger/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-gene-tagger/route.ts",
+      "lineRange": [7, 55],
+      "summary": "POST handler that tags an input video with content genes via the geneTagger service.",
+      "tags": ["api-handler", "gene-tagger", "tagging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/run-migration/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-migration/route.ts",
+      "summary": "Admin API route that runs ad-hoc SQL migrations against Supabase with safety guards and structured logging.",
+      "tags": ["api-handler", "admin", "migration", "database"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/run-migration/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-migration/route.ts",
+      "lineRange": [112, 143],
+      "summary": "POST handler that executes a posted SQL migration block against Supabase with admin auth gating.",
+      "tags": ["api-handler", "migration", "sql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/run-migration/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/run-migration/route.ts",
+      "lineRange": [145, 184],
+      "summary": "GET handler that lists migration status and historical migration results.",
+      "tags": ["api-handler", "migration", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/run-test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-test/route.ts",
+      "summary": "Admin API route that runs the ETL template-analyzer test harness behind an authorization gate.",
+      "tags": ["api-handler", "admin", "test-runner", "etl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/run-test/route.ts:isAuthorized",
+      "type": "function",
+      "name": "isAuthorized",
+      "filePath": "src/app/api/admin/run-test/route.ts",
+      "lineRange": [8, 17],
+      "summary": "Helper that verifies the caller is an admin via headers/cookies before allowing the test run.",
+      "tags": ["auth", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/run-test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-test/route.ts",
+      "lineRange": [19, 103],
+      "summary": "POST handler that invokes the ETL test-template-analyzer with the posted parameters and returns its analysis.",
+      "tags": ["api-handler", "test", "etl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/run-viral-filter/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/run-viral-filter/route.ts",
+      "summary": "Admin API route that runs the viral-filter service against fetched video metrics and returns filtered videos.",
+      "tags": ["api-handler", "admin", "viral-filter", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/run-viral-filter/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/run-viral-filter/route.ts",
+      "lineRange": [12, 61],
+      "summary": "POST handler that fetches metrics for videos and applies the viral-filter service to select viral candidates.",
+      "tags": ["api-handler", "viral-filter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/run-viral-filter/route.ts:fetchVideoMetrics",
+      "type": "function",
+      "name": "fetchVideoMetrics",
+      "filePath": "src/app/api/admin/run-viral-filter/route.ts",
+      "lineRange": [67, 124],
+      "summary": "Fetches engagement and view metrics for the supplied videos via Apify/Supabase before filtering.",
+      "tags": ["metrics", "fetch", "videos"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/safe-scrape/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/safe-scrape/route.ts",
+      "summary": "Admin API route exposing a rate-limited, safety-gated wrapper around the Apify scraper service.",
+      "tags": ["api-handler", "admin", "scraper", "safety"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/safe-scrape/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/safe-scrape/route.ts",
+      "lineRange": [13, 53],
+      "summary": "POST handler that performs a guarded scrape via apifyScraper with environment-tuned rate limits.",
+      "tags": ["api-handler", "scraper", "safety"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/accuracy/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/accuracy/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/metrics/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/metrics/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/metrics/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/metrics/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/metrics/route.ts",
+      "target": "file:src/lib/supabase-server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/start-test/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/start-test/route.ts:runPredictionEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/start-test/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/start-test/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/start-test/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/start-test/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/start-test/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/trigger/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/trigger/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/trigger/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/trigger/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/trigger/route.ts",
+      "target": "file:src/lib/supabase-server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/trigger/route.ts",
+      "target": "file:src/lib/validation/actuals_join.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/validations/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/validations/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/validations/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "target": "function:src/app/api/admin/prediction-validation/validations/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction-validation/validations/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "target": "function:src/app/api/admin/prediction/[id]/evidence/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "target": "function:src/app/api/admin/prediction/[id]/evidence/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "target": "file:src/lib/audit/audit_utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "target": "function:src/app/api/admin/prediction/analyze-video/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "target": "function:src/app/api/admin/prediction/analyze-video/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "target": "function:src/app/api/admin/prediction/analyze-video/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "target": "function:src/app/api/admin/prediction/analyze-video/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/analyze-video/route.ts",
+      "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/baselines/recompute/route.ts",
+      "target": "file:src/lib/services/viral-prediction/dps-baselines.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/test-engine/route.ts",
+      "target": "function:src/app/api/admin/prediction/test-engine/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/test-engine/route.ts",
+      "target": "function:src/app/api/admin/prediction/test-engine/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/test-engine/route.ts",
+      "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "function:src/app/api/admin/prediction/unified-predict/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "function:src/app/api/admin/prediction/unified-predict/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "function:src/app/api/admin/prediction/unified-predict/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "function:src/app/api/admin/prediction/unified-predict/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "file:src/lib/services/dual_runner.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/prediction/unified-predict/route.ts",
+      "target": "file:src/lib/services/viral-prediction/unified-prediction-engine.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "function:src/app/api/admin/predict/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "function:src/app/api/admin/predict/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "function:src/app/api/admin/predict/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "function:src/app/api/admin/predict/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "file:src/lib/prediction/runPredictionPipeline.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "file:src/lib/services/prediction-hash.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/predict/route.ts",
+      "target": "file:src/lib/services/tiktok-downloader.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/preview/route.ts",
+      "target": "file:src/lib/auth/server-auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/preview/route.ts",
+      "target": "file:src/server/flags/evaluator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/preview/route.ts",
+      "target": "file:src/server/flags/providers/corteza.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/proof-tiles/route.ts",
+      "target": "function:src/app/api/admin/proof-tiles/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/proof-tiles/route.ts",
+      "target": "function:src/app/api/admin/proof-tiles/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/quality/recent/route.ts",
+      "target": "function:src/app/api/admin/quality/recent/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/quality/recent/route.ts",
+      "target": "function:src/app/api/admin/quality/recent/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/quality/recent/route.ts",
+      "target": "file:src/lib/quality/anti_gaming.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/quality/recent/route.ts",
+      "target": "file:src/lib/security/auth-middleware.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/quality/recent/route.ts",
+      "target": "file:src/lib/security/rate-limiter.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/real-creators/route.ts",
+      "target": "function:src/app/api/admin/real-creators/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/real-creators/route.ts",
+      "target": "function:src/app/api/admin/real-creators/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/real-creators/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/real-urls/route.ts",
+      "target": "function:src/app/api/admin/real-urls/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/real-urls/route.ts",
+      "target": "function:src/app/api/admin/real-urls/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/real-urls/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "target": "function:src/app/api/admin/reprocess-queue/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "target": "function:src/app/api/admin/reprocess-queue/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "target": "function:src/app/api/admin/reprocess-queue/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "target": "function:src/app/api/admin/reprocess-queue/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/reprocess-queue/route.ts",
+      "target": "file:src/lib/prediction/runPredictionPipeline.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/research-reports/route.ts",
+      "target": "function:src/app/api/admin/research-reports/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/research-reports/route.ts",
+      "target": "function:src/app/api/admin/research-reports/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-apify-scraper/route.ts",
+      "target": "function:src/app/api/admin/run-apify-scraper/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-apify-scraper/route.ts",
+      "target": "function:src/app/api/admin/run-apify-scraper/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-apify-scraper/route.ts",
+      "target": "file:src/lib/services/apifyScraper.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/run-feature-decomposer/route.ts",
+      "target": "function:src/app/api/admin/run-feature-decomposer/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-feature-decomposer/route.ts",
+      "target": "function:src/app/api/admin/run-feature-decomposer/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-feature-decomposer/route.ts",
+      "target": "file:src/lib/services/featureDecomposer.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/run-feature-decomposer/route.ts",
+      "target": "file:src/lib/supabase/client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/run-gene-tagger/route.ts",
+      "target": "function:src/app/api/admin/run-gene-tagger/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-gene-tagger/route.ts",
+      "target": "function:src/app/api/admin/run-gene-tagger/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-gene-tagger/route.ts",
+      "target": "file:src/lib/services/geneTagger.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/run-migration/route.ts",
+      "target": "function:src/app/api/admin/run-migration/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-migration/route.ts",
+      "target": "function:src/app/api/admin/run-migration/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-migration/route.ts",
+      "target": "function:src/app/api/admin/run-migration/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-migration/route.ts",
+      "target": "function:src/app/api/admin/run-migration/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-test/route.ts",
+      "target": "function:src/app/api/admin/run-test/route.ts:isAuthorized",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-test/route.ts",
+      "target": "function:src/app/api/admin/run-test/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-test/route.ts",
+      "target": "function:src/app/api/admin/run-test/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-test/route.ts",
+      "target": "file:src/lib/etl/test-template-analyzer.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/run-viral-filter/route.ts",
+      "target": "function:src/app/api/admin/run-viral-filter/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-viral-filter/route.ts",
+      "target": "function:src/app/api/admin/run-viral-filter/route.ts:fetchVideoMetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/run-viral-filter/route.ts",
+      "target": "function:src/app/api/admin/run-viral-filter/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/run-viral-filter/route.ts",
+      "target": "file:src/lib/services/viralFilter.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/admin/safe-scrape/route.ts",
+      "target": "function:src/app/api/admin/safe-scrape/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/admin/safe-scrape/route.ts",
+      "target": "function:src/app/api/admin/safe-scrape/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/admin/safe-scrape/route.ts",
+      "target": "file:src/lib/services/apifyScraper.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

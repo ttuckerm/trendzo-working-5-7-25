@@ -1,0 +1,685 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/template-generator/runs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-generator/runs/route.ts",
+      "summary": "Admin API endpoint listing recent template-generator pipeline runs with mock fallback data when storage is unavailable.",
+      "tags": ["api-handler", "admin", "template-generator", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/runs/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-generator/runs/route.ts",
+      "lineRange": [8, 42],
+      "summary": "GET handler returning the list of template generator runs for the admin dashboard.",
+      "tags": ["api-handler", "get", "template-generator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/template-generator/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-generator/run/route.ts",
+      "summary": "Admin endpoint that triggers a template-generator pipeline run by delegating to the templateGenerator service.",
+      "tags": ["api-handler", "admin", "template-generator", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/template-generator/run/route.ts",
+      "lineRange": [10, 47],
+      "summary": "POST handler that kicks off a template-generator run with configurable inputs and returns run results.",
+      "tags": ["api-handler", "post", "template-generator", "pipeline-trigger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/run/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-generator/run/route.ts",
+      "lineRange": [49, 61],
+      "summary": "GET handler returning health/info metadata for the template generator run endpoint.",
+      "tags": ["api-handler", "get", "template-generator", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/template-generator/stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-generator/stats/route.ts",
+      "summary": "Admin endpoint returning aggregate statistics for the template generator (run counts, success rates, latency).",
+      "tags": ["api-handler", "admin", "template-generator", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-generator/stats/route.ts",
+      "lineRange": [8, 68],
+      "summary": "GET handler that computes and returns template-generator stats with safe defaults when storage is empty.",
+      "tags": ["api-handler", "stats", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/template-generator/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-generator/templates/route.ts",
+      "summary": "Admin endpoint that lists generated templates with pagination-friendly mock fallback.",
+      "tags": ["api-handler", "admin", "template-generator", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/templates/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-generator/templates/route.ts",
+      "lineRange": [8, 42],
+      "summary": "GET handler returning the list of generated templates for admin inspection.",
+      "tags": ["api-handler", "get", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/template-generator/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-generator/test/route.ts",
+      "summary": "Diagnostic admin endpoint that exercises the template-generator service to validate end-to-end wiring.",
+      "tags": ["api-handler", "admin", "template-generator", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/template-generator/test/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-generator/test/route.ts",
+      "lineRange": [8, 55],
+      "summary": "GET handler that runs a self-test of the template generator and returns structured diagnostic output.",
+      "tags": ["api-handler", "diagnostic", "test-endpoint"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/templates/aggregate/run-now/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/templates/aggregate/run-now/route.ts",
+      "summary": "Admin endpoint that manually triggers the templates aggregation job using the job runner with admin-auth gating.",
+      "tags": ["api-handler", "admin", "templates", "aggregation", "job-trigger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/templates/aggregate/run-now/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/templates/aggregate/run-now/route.ts",
+      "lineRange": [9, 23],
+      "summary": "POST handler that authenticates the admin and invokes the templates aggregation job via the runner.",
+      "tags": ["api-handler", "post", "job-trigger", "admin-auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/tenants/[tenantId]/keys/[keyId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/tenants/[tenantId]/keys/[keyId]/route.ts",
+      "summary": "Admin endpoint to delete a specific API key for a tenant by tenantId and keyId.",
+      "tags": ["api-handler", "admin", "tenants", "api-keys", "delete"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/tenants/[tenantId]/keys/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/tenants/[tenantId]/keys/route.ts",
+      "summary": "Admin endpoint to list and create API keys belonging to a specific tenant.",
+      "tags": ["api-handler", "admin", "tenants", "api-keys"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/tenants/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/tenants/route.ts",
+      "summary": "Admin endpoint to list existing tenants and create new tenants.",
+      "tags": ["api-handler", "admin", "tenants", "multi-tenant"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/test-database-connection/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/test-database-connection/route.ts",
+      "summary": "Admin diagnostic endpoint verifying Supabase database connectivity, schema visibility, and alert service health.",
+      "tags": ["api-handler", "admin", "diagnostic", "database", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-database-connection/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/test-database-connection/route.ts",
+      "lineRange": [14, 149],
+      "summary": "GET handler that runs a battery of connection and schema probes and returns a detailed diagnostic report.",
+      "tags": ["api-handler", "diagnostic", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/test-gene-tagger/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/test-gene-tagger/route.ts",
+      "summary": "Admin diagnostic endpoint that exercises the gene-tagger service across text analysis, definitions, and comprehensive scenarios.",
+      "tags": ["api-handler", "admin", "diagnostic", "gene-tagger", "test-endpoint"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/test-gene-tagger/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/test-gene-tagger/route.ts",
+      "lineRange": [10, 40],
+      "summary": "GET handler dispatching to gene-tagger subtests based on query parameters.",
+      "tags": ["api-handler", "diagnostic", "dispatcher"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/test-gene-tagger/route.ts:runComprehensiveTest",
+      "type": "function",
+      "name": "runComprehensiveTest",
+      "filePath": "src/app/api/admin/test-gene-tagger/route.ts",
+      "lineRange": [42, 124],
+      "summary": "Executes a comprehensive multi-step gene-tagger test and aggregates per-step results.",
+      "tags": ["diagnostic", "test-runner", "gene-tagger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-gene-tagger/route.ts:testTextAnalysis",
+      "type": "function",
+      "name": "testTextAnalysis",
+      "filePath": "src/app/api/admin/test-gene-tagger/route.ts",
+      "lineRange": [126, 190],
+      "summary": "Runs gene-tagger text-analysis scenarios against canned inputs and returns scored output.",
+      "tags": ["diagnostic", "text-analysis", "gene-tagger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-gene-tagger/route.ts:testGeneDefinitions",
+      "type": "function",
+      "name": "testGeneDefinitions",
+      "filePath": "src/app/api/admin/test-gene-tagger/route.ts",
+      "lineRange": [192, 235],
+      "summary": "Validates that gene-tagger definitions load correctly and exposes the catalog metadata.",
+      "tags": ["diagnostic", "validation", "gene-tagger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/test-master-algorithm/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/test-master-algorithm/route.ts",
+      "summary": "Admin endpoint that runs the master viral algorithm against test inputs to validate pipeline outputs.",
+      "tags": ["api-handler", "admin", "diagnostic", "viral-algorithm", "test-endpoint"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-master-algorithm/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/test-master-algorithm/route.ts",
+      "lineRange": [8, 73],
+      "summary": "POST handler accepting a test payload and invoking the master viral algorithm for diagnostic output.",
+      "tags": ["api-handler", "diagnostic", "viral-algorithm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-master-algorithm/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/test-master-algorithm/route.ts",
+      "lineRange": [75, 87],
+      "summary": "GET handler returning info/usage about the master-algorithm test endpoint.",
+      "tags": ["api-handler", "get", "info"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/test-ui-integration/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/test-ui-integration/route.ts",
+      "summary": "Admin diagnostic endpoint that exercises the UI-integration surfaces with synthetic data to verify wiring end-to-end.",
+      "tags": ["api-handler", "admin", "diagnostic", "ui-integration", "test-endpoint"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/test-ui-integration/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/test-ui-integration/route.ts",
+      "lineRange": [6, 140],
+      "summary": "GET handler that runs UI-integration probes and returns a structured diagnostic payload.",
+      "tags": ["api-handler", "diagnostic", "ui-integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/test-viral-filter/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/test-viral-filter/route.ts",
+      "summary": "Admin endpoint that exercises the viral-filter service against sample inputs and returns filter decisions.",
+      "tags": ["api-handler", "admin", "diagnostic", "viral-filter", "test-endpoint"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/test-viral-filter/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/test-viral-filter/route.ts",
+      "lineRange": [6, 45],
+      "summary": "GET handler that calls the viralFilter service and returns its decisions for diagnostic review.",
+      "tags": ["api-handler", "diagnostic", "viral-filter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/testing-coordinator/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/testing-coordinator/route.ts",
+      "summary": "Admin endpoint that orchestrates and reports on the testing-coordination service for cross-component test runs.",
+      "tags": ["api-handler", "admin", "testing-coordinator", "diagnostic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/testing-coordinator/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/testing-coordinator/route.ts",
+      "lineRange": [7, 79],
+      "summary": "GET handler returning current testing coordinator state and recent run summaries.",
+      "tags": ["api-handler", "get", "coordinator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/testing-coordinator/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/testing-coordinator/route.ts",
+      "lineRange": [81, 150],
+      "summary": "POST handler invoking the testing-coordination service to start or update a coordinated test run.",
+      "tags": ["api-handler", "post", "coordinator", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/trainer/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/trainer/route.ts",
+      "summary": "Long-running admin endpoint that drives the trainer-engine: GET reports training state and model metrics; POST runs training/promotion workflows including post-promotion validation and model-router updates.",
+      "tags": ["api-handler", "admin", "trainer", "training-pipeline", "model-router"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/trainer/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/trainer/route.ts",
+      "lineRange": [40, 145],
+      "summary": "POST handler that dispatches trainer actions (train, evaluate, promote) and applies post-promotion validation before updating the active model router.",
+      "tags": ["api-handler", "post", "training", "model-promotion"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/trainer/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/trainer/route.ts",
+      "lineRange": [147, 393],
+      "summary": "GET handler aggregating trainer engine status, latest runs, candidate vs. baseline metrics, and active model wiring into a single admin dashboard payload.",
+      "tags": ["api-handler", "get", "trainer", "metrics-aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/training-command/config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training-command/config/route.ts",
+      "summary": "Admin endpoint to read and update training-command configuration backed by the system registry and Supabase storage.",
+      "tags": ["api-handler", "admin", "training-command", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/config/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/training-command/config/route.ts",
+      "lineRange": [12, 18],
+      "summary": "Lazily instantiates a service-role Supabase client for training-command config operations.",
+      "tags": ["utility", "supabase", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/config/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training-command/config/route.ts",
+      "lineRange": [20, 111],
+      "summary": "POST handler that validates and persists updates to training-command configuration, consulting the system registry.",
+      "tags": ["api-handler", "post", "configuration", "training-command"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training-command/trigger/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training-command/trigger/route.ts",
+      "summary": "Admin endpoint that triggers fresh-video scanning and scheduler runs as part of the training-command workflow.",
+      "tags": ["api-handler", "admin", "training-command", "scheduler-trigger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/trigger/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/training-command/trigger/route.ts",
+      "lineRange": [9, 15],
+      "summary": "Lazily instantiates a service-role Supabase client for trigger operations.",
+      "tags": ["utility", "supabase", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/trigger/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training-command/trigger/route.ts",
+      "lineRange": [17, 79],
+      "summary": "POST handler invoking fresh-video scanner and cron scheduler to start a training-command run.",
+      "tags": ["api-handler", "post", "trigger", "scheduler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training-command/video/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training-command/video/[id]/route.ts",
+      "summary": "Admin endpoint returning training-command details for a single video by id.",
+      "tags": ["api-handler", "admin", "training-command", "video-detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/video/[id]/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/training-command/video/[id]/route.ts",
+      "lineRange": [8, 14],
+      "summary": "Lazily instantiates a service-role Supabase client for video-detail queries.",
+      "tags": ["utility", "supabase", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/video/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/training-command/video/[id]/route.ts",
+      "lineRange": [16, 72],
+      "summary": "GET handler returning enriched training-command details for a specific video including labels and run history.",
+      "tags": ["api-handler", "get", "video-detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training-command/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training-command/route.ts",
+      "summary": "Admin training-command dashboard endpoint that aggregates queue, run history, and readiness signals from Supabase.",
+      "tags": ["api-handler", "admin", "training-command", "dashboard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/route.ts:getSupabase",
+      "type": "function",
+      "name": "getSupabase",
+      "filePath": "src/app/api/admin/training-command/route.ts",
+      "lineRange": [9, 15],
+      "summary": "Lazily instantiates a service-role Supabase client for training-command dashboard queries.",
+      "tags": ["utility", "supabase", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training-command/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/training-command/route.ts",
+      "lineRange": [17, 168],
+      "summary": "GET handler that aggregates training-command metrics, queue state, and recent activity for the admin dashboard.",
+      "tags": ["api-handler", "get", "dashboard", "aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/training-ingest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training-ingest/route.ts",
+      "summary": "Admin endpoint that ingests fresh videos into the training pipeline, running prediction, feature-availability checks, and metric scheduling.",
+      "tags": ["api-handler", "admin", "training", "ingestion", "pipeline-trigger"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/training-ingest/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training-ingest/route.ts",
+      "lineRange": [16, 149],
+      "summary": "POST handler that validates input, runs the prediction pipeline for fresh videos, records feature availability, and schedules metric collection.",
+      "tags": ["api-handler", "post", "ingestion", "prediction-pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/training/designate-holdout/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/designate-holdout/route.ts",
+      "summary": "Admin endpoint that designates a scraped video as part of the holdout evaluation set, gated by api-guard.",
+      "tags": ["api-handler", "admin", "training", "holdout", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/designate-holdout/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/designate-holdout/route.ts",
+      "lineRange": [10, 25],
+      "summary": "POST handler that authenticates the admin and delegates to designate-scraped-holdout to mark videos as holdout.",
+      "tags": ["api-handler", "post", "holdout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/training/export-data/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/export-data/route.ts",
+      "summary": "Admin endpoint to export scraped training data via export-scraped-training-data, gated by api-guard.",
+      "tags": ["api-handler", "admin", "training", "export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/export-data/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/export-data/route.ts",
+      "lineRange": [10, 24],
+      "summary": "POST handler that authenticates the admin and triggers export of the scraped training dataset.",
+      "tags": ["api-handler", "post", "export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/training/prepare/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/prepare/route.ts",
+      "summary": "Admin endpoint that prepares the training dataset (POST) and exposes status (GET), with long-running maxDuration configured.",
+      "tags": ["api-handler", "admin", "training", "data-preparation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/training/prepare/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/prepare/route.ts",
+      "lineRange": [12, 93],
+      "summary": "POST handler that authenticates the admin and runs the dataset preparation workflow for training.",
+      "tags": ["api-handler", "post", "data-preparation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training/quality-gate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/quality-gate/route.ts",
+      "summary": "Admin endpoint backing the data-quality-gate: GET returns current quality metrics; POST runs the gate evaluation for promotion decisions.",
+      "tags": ["api-handler", "admin", "training", "quality-gate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/training/quality-gate/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/training/quality-gate/route.ts",
+      "lineRange": [13, 33],
+      "summary": "GET handler returning the latest data-quality-gate status for the training dataset.",
+      "tags": ["api-handler", "get", "quality-gate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/quality-gate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/quality-gate/route.ts",
+      "lineRange": [35, 75],
+      "summary": "POST handler that runs the data-quality-gate evaluation and returns pass/fail with detailed signals.",
+      "tags": ["api-handler", "post", "quality-gate", "evaluation"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/template-generator/runs/route.ts", "target": "function:src/app/api/admin/template-generator/runs/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/runs/route.ts", "target": "function:src/app/api/admin/template-generator/runs/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/template-generator/run/route.ts", "target": "function:src/app/api/admin/template-generator/run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/run/route.ts", "target": "function:src/app/api/admin/template-generator/run/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/run/route.ts", "target": "function:src/app/api/admin/template-generator/run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/template-generator/run/route.ts", "target": "function:src/app/api/admin/template-generator/run/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/template-generator/run/route.ts", "target": "file:src/lib/services/templateGenerator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/template-generator/stats/route.ts", "target": "function:src/app/api/admin/template-generator/stats/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/stats/route.ts", "target": "function:src/app/api/admin/template-generator/stats/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/template-generator/templates/route.ts", "target": "function:src/app/api/admin/template-generator/templates/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/templates/route.ts", "target": "function:src/app/api/admin/template-generator/templates/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/template-generator/test/route.ts", "target": "function:src/app/api/admin/template-generator/test/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-generator/test/route.ts", "target": "function:src/app/api/admin/template-generator/test/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/template-generator/test/route.ts", "target": "file:src/lib/services/templateGenerator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "function:src/app/api/admin/templates/aggregate/run-now/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "function:src/app/api/admin/templates/aggregate/run-now/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "file:src/app/api/admin/jobs/runner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "file:src/lib/templates/aggregate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/templates/aggregate/run-now/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/tenants/[tenantId]/keys/[keyId]/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/tenants/[tenantId]/keys/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/tenants/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/test-database-connection/route.ts", "target": "function:src/app/api/admin/test-database-connection/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-database-connection/route.ts", "target": "function:src/app/api/admin/test-database-connection/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/test-database-connection/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/test-database-connection/route.ts", "target": "file:src/lib/services/alertService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "function:src/app/api/admin/test-gene-tagger/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "function:src/app/api/admin/test-gene-tagger/route.ts:runComprehensiveTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "function:src/app/api/admin/test-gene-tagger/route.ts:testTextAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "function:src/app/api/admin/test-gene-tagger/route.ts:testGeneDefinitions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "function:src/app/api/admin/test-gene-tagger/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/test-gene-tagger/route.ts", "target": "file:src/lib/services/geneTagger.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/test-master-algorithm/route.ts", "target": "function:src/app/api/admin/test-master-algorithm/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-master-algorithm/route.ts", "target": "function:src/app/api/admin/test-master-algorithm/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-master-algorithm/route.ts", "target": "function:src/app/api/admin/test-master-algorithm/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/test-master-algorithm/route.ts", "target": "function:src/app/api/admin/test-master-algorithm/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/test-master-algorithm/route.ts", "target": "file:src/lib/services/master-viral-algorithm.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/test-ui-integration/route.ts", "target": "function:src/app/api/admin/test-ui-integration/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-ui-integration/route.ts", "target": "function:src/app/api/admin/test-ui-integration/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/test-viral-filter/route.ts", "target": "function:src/app/api/admin/test-viral-filter/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/test-viral-filter/route.ts", "target": "function:src/app/api/admin/test-viral-filter/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/test-viral-filter/route.ts", "target": "file:src/lib/services/viralFilter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/testing-coordinator/route.ts", "target": "function:src/app/api/admin/testing-coordinator/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/testing-coordinator/route.ts", "target": "function:src/app/api/admin/testing-coordinator/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/testing-coordinator/route.ts", "target": "function:src/app/api/admin/testing-coordinator/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/testing-coordinator/route.ts", "target": "function:src/app/api/admin/testing-coordinator/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/testing-coordinator/route.ts", "target": "file:src/lib/services/testing-coordination-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "function:src/app/api/admin/trainer/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "function:src/app/api/admin/trainer/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "function:src/app/api/admin/trainer/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "function:src/app/api/admin/trainer/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "file:src/lib/prediction/model-router.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "file:src/lib/training/post-promotion-validator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/trainer/route.ts", "target": "file:src/lib/training/trainer-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training-command/config/route.ts", "target": "function:src/app/api/admin/training-command/config/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training-command/config/route.ts", "target": "function:src/app/api/admin/training-command/config/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training-command/config/route.ts", "target": "file:src/lib/prediction/system-registry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training-command/trigger/route.ts", "target": "function:src/app/api/admin/training-command/trigger/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training-command/trigger/route.ts", "target": "function:src/app/api/admin/training-command/trigger/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training-command/trigger/route.ts", "target": "file:src/lib/cron/scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training-command/trigger/route.ts", "target": "file:src/lib/training/fresh-video-scanner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training-command/video/[id]/route.ts", "target": "function:src/app/api/admin/training-command/video/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training-command/video/[id]/route.ts", "target": "function:src/app/api/admin/training-command/video/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/training-command/route.ts", "target": "function:src/app/api/admin/training-command/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training-command/route.ts", "target": "function:src/app/api/admin/training-command/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "function:src/app/api/admin/training-ingest/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "function:src/app/api/admin/training-ingest/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "file:src/lib/training/feature-availability-matrix.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "file:src/lib/training/metric-scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "file:src/lib/training/training-ingest-types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training-ingest/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/designate-holdout/route.ts", "target": "function:src/app/api/admin/training/designate-holdout/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/designate-holdout/route.ts", "target": "function:src/app/api/admin/training/designate-holdout/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/designate-holdout/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training/designate-holdout/route.ts", "target": "file:src/lib/training/designate-scraped-holdout.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/export-data/route.ts", "target": "function:src/app/api/admin/training/export-data/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/export-data/route.ts", "target": "function:src/app/api/admin/training/export-data/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/export-data/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training/export-data/route.ts", "target": "file:src/lib/training/export-scraped-training-data.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/prepare/route.ts", "target": "function:src/app/api/admin/training/prepare/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/prepare/route.ts", "target": "function:src/app/api/admin/training/prepare/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/prepare/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "function:src/app/api/admin/training/quality-gate/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "function:src/app/api/admin/training/quality-gate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "function:src/app/api/admin/training/quality-gate/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "function:src/app/api/admin/training/quality-gate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training/quality-gate/route.ts", "target": "file:src/lib/training/data-quality-gate.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

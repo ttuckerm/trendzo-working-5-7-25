@@ -1,0 +1,482 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/debug/seed-p1-demo/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/debug/seed-p1-demo/route.ts",
+      "summary": "Debug API endpoint that seeds the P1 demo dataset with synthetic predictions and outcomes using seeded RNG distributions (mulberry32, beta sampling) to generate realistic mock data.",
+      "tags": ["api-handler", "debug", "data-seeding", "synthetic-data"],
+      "complexity": "moderate",
+      "languageNotes": "Implements custom RNG primitives (mulberry32, beta, gamma) for deterministic mock data generation."
+    },
+    {
+      "id": "function:src/app/api/debug/seed-p1-demo/route.ts:mulberry32",
+      "type": "function",
+      "name": "mulberry32",
+      "filePath": "src/app/api/debug/seed-p1-demo/route.ts",
+      "lineRange": [19, 26],
+      "summary": "Implements the mulberry32 deterministic pseudo-random number generator from a 32-bit seed.",
+      "tags": ["utility", "rng", "seeded-random"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/debug/seed-p1-demo/route.ts:stdNormal",
+      "type": "function",
+      "name": "stdNormal",
+      "filePath": "src/app/api/debug/seed-p1-demo/route.ts",
+      "lineRange": [35, 41],
+      "summary": "Samples from a standard normal distribution using the Box-Muller transform.",
+      "tags": ["utility", "statistics", "sampling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/debug/seed-p1-demo/route.ts:synthOutcomeMetrics",
+      "type": "function",
+      "name": "synthOutcomeMetrics",
+      "filePath": "src/app/api/debug/seed-p1-demo/route.ts",
+      "lineRange": [67, 87],
+      "summary": "Synthesises a realistic outcome metrics object for a given platform and predicted probability using gamma/beta sampling.",
+      "tags": ["synthetic-data", "metrics", "sampling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/debug/seed-p1-demo/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/debug/seed-p1-demo/route.ts",
+      "lineRange": [89, 175],
+      "summary": "POST handler that seeds demo predictions and outcomes into the calibration/accuracy stores, wiring them through the outcomes-ingest pipeline.",
+      "tags": ["api-handler", "debug", "seed", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/deepgram/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/deepgram/route.ts",
+      "summary": "Minimal API endpoint that returns the Deepgram speech-to-text service status placeholder.",
+      "tags": ["api-handler", "stub", "transcription"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/deim/ideas/[id]/research/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/deim/ideas/[id]/research/route.ts",
+      "summary": "DEIM research trigger endpoint that kicks off background research for an idea by id via the DEIM in-memory store.",
+      "tags": ["api-handler", "deim", "research", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/deim/ideas/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/deim/ideas/route.ts",
+      "summary": "DEIM ideas collection endpoint exposing list (GET) and create (POST) operations backed by the DEIM store.",
+      "tags": ["api-handler", "deim", "ideas", "crud"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/dev/calibration/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/dev/calibration/route.ts",
+      "summary": "Developer endpoint that returns the current accuracy/calibration store snapshot for inspection in dev tooling.",
+      "tags": ["api-handler", "dev-tools", "calibration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/dev/reset/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/dev/reset/route.ts",
+      "summary": "Developer endpoint that resets the in-memory accuracy store, used for local testing of the prediction pipeline.",
+      "tags": ["api-handler", "dev-tools", "reset"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/dev/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/dev/status/route.ts",
+      "summary": "Developer endpoint reporting accuracy store status counters used by local dashboards and smoke tests.",
+      "tags": ["api-handler", "dev-tools", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/discovery/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/discovery/metrics/route.ts",
+      "summary": "Discovery metrics endpoint returning rollup counters used by the trend discovery dashboard.",
+      "tags": ["api-handler", "discovery", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/discovery/qa-seed/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/discovery/qa-seed/route.ts",
+      "summary": "QA seeding endpoint that ensures discovery tables exist and inserts synthetic creator/video rows for testing the discovery readiness pipeline.",
+      "tags": ["api-handler", "discovery", "qa-seeding", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/discovery/qa-seed/route.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/app/api/discovery/qa-seed/route.ts",
+      "lineRange": [15, 63],
+      "summary": "Creates the discovery-related Postgres tables and indexes idempotently if they do not yet exist.",
+      "tags": ["database", "migration", "ddl", "idempotent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/discovery/qa-seed/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/discovery/qa-seed/route.ts",
+      "lineRange": [68, 165],
+      "summary": "POST handler that authenticates the request, ensures tables, and seeds randomized discovery fixtures for QA runs.",
+      "tags": ["api-handler", "qa-seeding", "post", "auth"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/discovery/readiness/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/discovery/readiness/route.ts",
+      "summary": "Discovery readiness endpoint exposing the trend-discovery health/readiness score consumed by the admin dashboard.",
+      "tags": ["api-handler", "discovery", "readiness"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/discovery/rollups/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/discovery/rollups/route.ts",
+      "summary": "Discovery rollups endpoint returning aggregated trend metrics over a configurable time window for dashboards.",
+      "tags": ["api-handler", "discovery", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/discovery/rollups/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/discovery/rollups/route.ts",
+      "lineRange": [8, 52],
+      "summary": "GET handler that queries Postgres for time-windowed discovery rollups and shapes them into the dashboard response payload.",
+      "tags": ["api-handler", "get", "aggregation", "discovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/discovery/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/discovery/route.ts",
+      "summary": "Top-level discovery API root endpoint returning a status/welcome payload for the discovery subsystem.",
+      "tags": ["api-handler", "discovery", "root"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/dna-detective/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/dna-detective/predict/route.ts",
+      "summary": "DNA Detective prediction endpoint that runs the dna-detective module on candidate content and records prediction results to the prediction store.",
+      "tags": ["api-handler", "prediction", "dna-detective", "ml"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/dna-detective/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/dna-detective/predict/route.ts",
+      "lineRange": [62, 161],
+      "summary": "POST handler running the dna-detective predictor against an input payload, persisting the resulting score via the prediction record store.",
+      "tags": ["api-handler", "post", "prediction", "dna-detective"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/dna-detective/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/dna-detective/predict/route.ts",
+      "lineRange": [163, 198],
+      "summary": "GET handler returning DNA Detective module metadata and capability descriptors for client probing.",
+      "tags": ["api-handler", "get", "metadata", "dna-detective"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/docs/admin/v1/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/docs/admin/v1/route.ts",
+      "summary": "Serves the admin OpenAPI v1 specification document to authenticated admin users.",
+      "tags": ["api-handler", "docs", "openapi", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/docs/index/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/docs/index/route.ts",
+      "summary": "Documentation index endpoint that lists available API doc surfaces with environment-aware visibility.",
+      "tags": ["api-handler", "docs", "index"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/docs/index/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/docs/index/route.ts",
+      "lineRange": [12, 34],
+      "summary": "GET handler that assembles and returns the documentation index of available API specs.",
+      "tags": ["api-handler", "get", "docs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/docs/public/v1/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/docs/public/v1/route.ts",
+      "summary": "Serves the public OpenAPI v1 specification consumed by external integrators.",
+      "tags": ["api-handler", "docs", "openapi", "public"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/docs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/docs/route.ts",
+      "summary": "Root docs endpoint redirecting or describing the available documentation surfaces under /api/docs.",
+      "tags": ["api-handler", "docs", "root"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/donna/reason/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/reason/route.ts",
+      "summary": "Donna reasoning endpoint that runs heuristic VPS prediction over a video payload, supporting multiple reasoning modes for the Donna agent.",
+      "tags": ["api-handler", "donna", "reasoning", "prediction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/donna/reason/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/reason/route.ts",
+      "lineRange": [18, 55],
+      "summary": "POST handler that accepts a video payload, dispatches to the predictVideo reasoner and returns the structured prediction.",
+      "tags": ["api-handler", "post", "donna"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/reason/route.ts:predictVideo",
+      "type": "function",
+      "name": "predictVideo",
+      "filePath": "src/app/api/donna/reason/route.ts",
+      "lineRange": [60, 168],
+      "summary": "Heuristic predictor that scores a video across hook strength, pacing, engagement signals and returns an explained virality estimate.",
+      "tags": ["prediction", "heuristic", "donna", "scoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/donna/test/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/test/run/route.ts",
+      "summary": "Donna test-run endpoint that executes a canned reasoning sequence for verifying agent wiring end-to-end.",
+      "tags": ["api-handler", "donna", "test", "smoke"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/test/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/test/run/route.ts",
+      "lineRange": [24, 70],
+      "summary": "POST handler running a scripted Donna test scenario and reporting per-step results for QA.",
+      "tags": ["api-handler", "post", "test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/donna/tracking/process/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/tracking/process/route.ts",
+      "summary": "Donna tracking-process endpoint that advances the viral-scraping workflow tracker after external scrape callbacks.",
+      "tags": ["api-handler", "donna", "tracking", "workflow"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/donna/tracking/process/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/tracking/process/route.ts",
+      "lineRange": [15, 37],
+      "summary": "POST handler that hands off tracking events to the viral-scraping workflow processor.",
+      "tags": ["api-handler", "post", "workflow"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/donna/workflow/cycle/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/workflow/cycle/route.ts",
+      "summary": "Donna workflow cycle endpoint that advances the viral-scraping workflow by one cycle, used by orchestration loops.",
+      "tags": ["api-handler", "donna", "workflow", "scheduler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/workflow/cycle/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/workflow/cycle/route.ts",
+      "lineRange": [18, 54],
+      "summary": "POST handler driving one cycle of the viral-scraping workflow state machine.",
+      "tags": ["api-handler", "post", "workflow"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/donna/workflow/start/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/workflow/start/route.ts",
+      "summary": "Donna workflow start endpoint that initializes a new viral-scraping workflow run with the supplied parameters.",
+      "tags": ["api-handler", "donna", "workflow", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/workflow/start/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/workflow/start/route.ts",
+      "lineRange": [16, 50],
+      "summary": "POST handler that boots a viral-scraping workflow instance and returns its run identifier.",
+      "tags": ["api-handler", "post", "workflow-start"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/donna/workflow/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/workflow/status/route.ts",
+      "summary": "Donna workflow status endpoint returning the current state of a viral-scraping workflow run.",
+      "tags": ["api-handler", "donna", "workflow", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/workflow/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/donna/workflow/status/route.ts",
+      "lineRange": [14, 33],
+      "summary": "GET handler that fetches and returns the live status payload for a viral-scraping workflow run.",
+      "tags": ["api-handler", "get", "workflow"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/donna/workflow/stop/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/donna/workflow/stop/route.ts",
+      "summary": "Donna workflow stop endpoint that halts an in-progress viral-scraping workflow run.",
+      "tags": ["api-handler", "donna", "workflow", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/donna/workflow/stop/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/donna/workflow/stop/route.ts",
+      "lineRange": [15, 49],
+      "summary": "POST handler that signals the viral-scraping workflow to terminate cleanly and reports its final state.",
+      "tags": ["api-handler", "post", "workflow-stop"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/drafts/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/drafts/analyze/route.ts",
+      "summary": "Draft analysis endpoint that rate-limits and runs analysis over user-submitted draft content using env-gated providers.",
+      "tags": ["api-handler", "drafts", "analysis", "rate-limited"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/drafts/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/drafts/analyze/route.ts",
+      "lineRange": [9, 33],
+      "summary": "POST handler that applies rate limiting, validates input, and returns analysis results for a submitted draft.",
+      "tags": ["api-handler", "post", "drafts"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "function:src/app/api/debug/seed-p1-demo/route.ts:mulberry32", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "function:src/app/api/debug/seed-p1-demo/route.ts:stdNormal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "function:src/app/api/debug/seed-p1-demo/route.ts:synthOutcomeMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "function:src/app/api/debug/seed-p1-demo/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "function:src/app/api/debug/seed-p1-demo/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "function:src/app/api/discovery/qa-seed/route.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "function:src/app/api/discovery/qa-seed/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "function:src/app/api/discovery/qa-seed/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/discovery/rollups/route.ts", "target": "function:src/app/api/discovery/rollups/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/discovery/rollups/route.ts", "target": "function:src/app/api/discovery/rollups/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "function:src/app/api/dna-detective/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "function:src/app/api/dna-detective/predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "function:src/app/api/dna-detective/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "function:src/app/api/dna-detective/predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/docs/index/route.ts", "target": "function:src/app/api/docs/index/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/docs/index/route.ts", "target": "function:src/app/api/docs/index/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/reason/route.ts", "target": "function:src/app/api/donna/reason/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/reason/route.ts", "target": "function:src/app/api/donna/reason/route.ts:predictVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/reason/route.ts", "target": "function:src/app/api/donna/reason/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/test/run/route.ts", "target": "function:src/app/api/donna/test/run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/test/run/route.ts", "target": "function:src/app/api/donna/test/run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/tracking/process/route.ts", "target": "function:src/app/api/donna/tracking/process/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/tracking/process/route.ts", "target": "function:src/app/api/donna/tracking/process/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/workflow/cycle/route.ts", "target": "function:src/app/api/donna/workflow/cycle/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/workflow/cycle/route.ts", "target": "function:src/app/api/donna/workflow/cycle/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/workflow/start/route.ts", "target": "function:src/app/api/donna/workflow/start/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/workflow/start/route.ts", "target": "function:src/app/api/donna/workflow/start/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/workflow/status/route.ts", "target": "function:src/app/api/donna/workflow/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/workflow/status/route.ts", "target": "function:src/app/api/donna/workflow/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/donna/workflow/stop/route.ts", "target": "function:src/app/api/donna/workflow/stop/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/donna/workflow/stop/route.ts", "target": "function:src/app/api/donna/workflow/stop/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/drafts/analyze/route.ts", "target": "function:src/app/api/drafts/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/drafts/analyze/route.ts", "target": "function:src/app/api/drafts/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/app/api/outcomes/ingest/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/lib/calibration/thresholds.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/lib/db/ensure.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/debug/seed-p1-demo/route.ts", "target": "file:src/lib/prediction/record.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/deim/ideas/[id]/research/route.ts", "target": "file:src/lib/server/deimStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/deim/ideas/route.ts", "target": "file:src/lib/server/deimStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/dev/calibration/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/dev/reset/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/dev/status/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "file:src/lib/discovery/discovery_readiness.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/qa-seed/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/readiness/route.ts", "target": "file:src/lib/discovery/discovery_readiness.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/discovery/rollups/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "file:src/lib/modules/dna-detective.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/dna-detective/predict/route.ts", "target": "file:src/lib/prediction/record.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/docs/index/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/donna/tracking/process/route.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/donna/workflow/cycle/route.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/donna/workflow/start/route.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/donna/workflow/status/route.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/donna/workflow/stop/route.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/drafts/analyze/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/drafts/analyze/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,749 @@
+{
+  "nodes": [
+    {
+      "id": "file:.vercelignore",
+      "type": "file",
+      "name": ".vercelignore",
+      "filePath": ".vercelignore",
+      "summary": "Vercel deploy ignore list excluding tests, scripts, planning docs, and supabase migrations from production bundle uploads.",
+      "tags": ["configuration", "deployment", "vercel"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:agent.py",
+      "type": "file",
+      "name": "agent.py",
+      "filePath": "agent.py",
+      "summary": "LiveKit-based voice agent entrypoint that wires the Assistant LLM, OpenAI TTS, Deepgram STT, and Silero VAD together for real-time spoken sessions.",
+      "tags": ["entry-point", "voice-agent", "livekit", "ai-integration"],
+      "complexity": "simple",
+      "languageNotes": "Uses async entrypoint pattern typical of LiveKit Python agents."
+    },
+    {
+      "id": "class:agent.py:Assistant",
+      "type": "class",
+      "name": "Assistant",
+      "filePath": "agent.py",
+      "lineRange": [18, 20],
+      "summary": "LiveKit Agent subclass holding the system instructions for the voice assistant persona.",
+      "tags": ["agent", "voice-assistant", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:agent.py:entrypoint",
+      "type": "function",
+      "name": "entrypoint",
+      "filePath": "agent.py",
+      "lineRange": [23, 47],
+      "summary": "Async entrypoint that connects to the LiveKit room, instantiates the AgentSession with Deepgram STT / OpenAI LLM+TTS / Silero VAD, and greets the user.",
+      "tags": ["entry-point", "async", "livekit", "session-bootstrap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:AnimationShowcase.tsx.fixed",
+      "type": "file",
+      "name": "AnimationShowcase.tsx.fixed",
+      "filePath": "AnimationShowcase.tsx.fixed",
+      "summary": "Orphaned backup copy of an AnimationShowcase React component left at the repo root with the `.fixed` suffix; not part of the active build.",
+      "tags": ["backup", "dead-code", "orphan"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:AnimationShowcase.tsx.temp",
+      "type": "file",
+      "name": "AnimationShowcase.tsx.temp",
+      "filePath": "AnimationShowcase.tsx.temp",
+      "summary": "Temporary scratch copy of the AnimationShowcase React component left at the repo root; not part of the active build.",
+      "tags": ["backup", "dead-code", "orphan"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:check-real-progress.js",
+      "type": "file",
+      "name": "check-real-progress.js",
+      "filePath": "check-real-progress.js",
+      "summary": "Ad-hoc Supabase script that queries the most recent video_jobs row and prints its current stage / progress state to the console.",
+      "tags": ["script", "diagnostics", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:check-real-progress.js:checkRealProgress",
+      "type": "function",
+      "name": "checkRealProgress",
+      "filePath": "check-real-progress.js",
+      "lineRange": [8, 47],
+      "summary": "Fetches the latest video_jobs record from Supabase and logs status, progress, and error fields for manual inspection.",
+      "tags": ["diagnostics", "supabase", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:check-subtitles.js",
+      "type": "file",
+      "name": "check-subtitles.js",
+      "filePath": "check-subtitles.js",
+      "summary": "Ad-hoc Supabase script that inspects the latest job's subtitle artifacts to verify caption generation worked.",
+      "tags": ["script", "diagnostics", "subtitles"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:check-subtitles.js:checkSubtitles",
+      "type": "function",
+      "name": "checkSubtitles",
+      "filePath": "check-subtitles.js",
+      "lineRange": [8, 47],
+      "summary": "Reads subtitle-related columns from the most recent video job in Supabase and logs them for manual debugging.",
+      "tags": ["diagnostics", "subtitles", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:check-video-urls.js",
+      "type": "file",
+      "name": "check-video-urls.js",
+      "filePath": "check-video-urls.js",
+      "summary": "Tiny diagnostic that lists video URLs from Supabase to sanity-check storage paths.",
+      "tags": ["script", "diagnostics", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:check-video-urls.js:checkURLs",
+      "type": "function",
+      "name": "checkURLs",
+      "filePath": "check-video-urls.js",
+      "lineRange": [8, 24],
+      "summary": "Pulls video URL columns from Supabase and logs them, used to verify generated assets are reachable.",
+      "tags": ["diagnostics", "supabase", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:CleanCopy",
+      "type": "file",
+      "name": "CleanCopy",
+      "filePath": "CleanCopy",
+      "summary": "Stray extensionless file at the project root left behind by an interrupted command; not referenced by the build.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:comprehensive-database-report.js",
+      "type": "file",
+      "name": "comprehensive-database-report.js",
+      "filePath": "comprehensive-database-report.js",
+      "summary": "Diagnostic script that probes the Supabase schema, analyzes viral-prediction workflow gaps, and prints recommendations for the database layout.",
+      "tags": ["script", "diagnostics", "database", "audit"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:comprehensive-database-report.js:getExistingTables",
+      "type": "function",
+      "name": "getExistingTables",
+      "filePath": "comprehensive-database-report.js",
+      "lineRange": [127, 143],
+      "summary": "Returns the set of project tables that respond to a Supabase HEAD query, used to discover the live schema.",
+      "tags": ["database", "introspection", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:comprehensive-database-report.js:getTableDetails",
+      "type": "function",
+      "name": "getTableDetails",
+      "filePath": "comprehensive-database-report.js",
+      "lineRange": [145, 174],
+      "summary": "Fetches a sample row and column metadata for a single table to feed the comprehensive report.",
+      "tags": ["database", "introspection", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:comprehensive-database-report.js:analyzeWorkflowGaps",
+      "type": "function",
+      "name": "analyzeWorkflowGaps",
+      "filePath": "comprehensive-database-report.js",
+      "lineRange": [176, 228],
+      "summary": "Cross-references discovered tables against the expected viral-prediction workflow to flag missing or under-populated steps.",
+      "tags": ["analysis", "workflow", "viral-prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:comprehensive-database-report.js:generateRecommendations",
+      "type": "function",
+      "name": "generateRecommendations",
+      "filePath": "comprehensive-database-report.js",
+      "lineRange": [230, 313],
+      "summary": "Synthesizes prioritized DBA recommendations from the table set and workflow gap analysis.",
+      "tags": ["analysis", "recommendations", "report"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:comprehensive-database-report.js:generateComprehensiveReport",
+      "type": "function",
+      "name": "generateComprehensiveReport",
+      "filePath": "comprehensive-database-report.js",
+      "lineRange": [315, 471],
+      "summary": "Top-level orchestrator that introspects the schema, runs the gap analysis, prints a formatted report, and emits recommendations.",
+      "tags": ["entry-point", "report", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:database-audit.js",
+      "type": "file",
+      "name": "database-audit.js",
+      "filePath": "database-audit.js",
+      "summary": "Older diagnostic that walks the Supabase schema, audits the viral-prediction workflow tables, and prints a long-form report.",
+      "tags": ["script", "diagnostics", "database", "audit"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:database-audit.js:getAllTables",
+      "type": "function",
+      "name": "getAllTables",
+      "filePath": "database-audit.js",
+      "lineRange": [56, 97],
+      "summary": "Probes a hardcoded list of expected tables and returns those that respond, building a snapshot of the live schema.",
+      "tags": ["database", "introspection", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:database-audit.js:getTableInfo",
+      "type": "function",
+      "name": "getTableInfo",
+      "filePath": "database-audit.js",
+      "lineRange": [99, 136],
+      "summary": "Gathers a single table's row count and a sample row for the audit report.",
+      "tags": ["database", "introspection", "async"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:database-audit.js:auditViralPredictionWorkflow",
+      "type": "function",
+      "name": "auditViralPredictionWorkflow",
+      "filePath": "database-audit.js",
+      "lineRange": [138, 170],
+      "summary": "Checks each step of the viral-prediction pipeline against the live schema and reports missing pieces.",
+      "tags": ["analysis", "workflow", "viral-prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:database-audit.js:checkDataFlow",
+      "type": "function",
+      "name": "checkDataFlow",
+      "filePath": "database-audit.js",
+      "lineRange": [172, 207],
+      "summary": "Traces a sample record through related tables to verify joins between scraped data, predictions, and outputs.",
+      "tags": ["analysis", "data-flow", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:database-audit.js:generateReport",
+      "type": "function",
+      "name": "generateReport",
+      "filePath": "database-audit.js",
+      "lineRange": [209, 299],
+      "summary": "Prints the formatted audit report combining table inventory, workflow audit, and data-flow checks.",
+      "tags": ["report", "orchestration", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:database-detailed-audit.js",
+      "type": "file",
+      "name": "database-detailed-audit.js",
+      "filePath": "database-detailed-audit.js",
+      "summary": "Deeper diagnostic that drills into scraped data, Apify runs, hook frameworks, and data quality to surface workflow gaps.",
+      "tags": ["script", "diagnostics", "database", "audit"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:database-detailed-audit.js:examineScrapedData",
+      "type": "function",
+      "name": "examineScrapedData",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [15, 61],
+      "summary": "Inspects the scraped_data table for shape, freshness, and platform coverage.",
+      "tags": ["analysis", "scraping", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:database-detailed-audit.js:examineApifyRuns",
+      "type": "function",
+      "name": "examineApifyRuns",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [63, 91],
+      "summary": "Reviews recent Apify run records to confirm scrapers are firing and saving results.",
+      "tags": ["analysis", "apify", "scraping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:database-detailed-audit.js:examineHookFrameworks",
+      "type": "function",
+      "name": "examineHookFrameworks",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [93, 146],
+      "summary": "Audits the hook_frameworks table content distribution to validate the viral hook taxonomy.",
+      "tags": ["analysis", "hooks", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:database-detailed-audit.js:checkDataQuality",
+      "type": "function",
+      "name": "checkDataQuality",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [148, 207],
+      "summary": "Runs spot checks on null rates, duplicates, and join integrity across the prediction-related tables.",
+      "tags": ["analysis", "data-quality", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:database-detailed-audit.js:checkWorkflowGaps",
+      "type": "function",
+      "name": "checkWorkflowGaps",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [209, 255],
+      "summary": "Identifies records that should have progressed to the next workflow stage but didn't, isolating pipeline stalls.",
+      "tags": ["analysis", "workflow", "diagnostics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:database-detailed-audit.js:runDetailedAudit",
+      "type": "function",
+      "name": "runDetailedAudit",
+      "filePath": "database-detailed-audit.js",
+      "lineRange": [257, 270],
+      "summary": "Top-level orchestrator that runs each examine/check helper in sequence and prints the combined detailed audit.",
+      "tags": ["entry-point", "orchestration", "report"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:e HEAD",
+      "type": "file",
+      "name": "e HEAD",
+      "filePath": "e HEAD",
+      "summary": "Stray file created when a shell command (likely `git log --no-patc`e HEAD`) was mistyped at the repo root; not part of the build.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:et GIT_PAGER=cat",
+      "type": "file",
+      "name": "et GIT_PAGER=cat",
+      "filePath": "et GIT_PAGER=cat",
+      "summary": "Large stray file created by a mistyped shell command (`s`et GIT_PAGER=cat ...`); captures truncated terminal output and is not part of the build.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:firestore.rules",
+      "type": "config",
+      "name": "firestore.rules",
+      "filePath": "firestore.rules",
+      "summary": "Firestore security rules controlling read/write access to the project's Firestore collections.",
+      "tags": ["configuration", "security", "firestore", "rules"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:full_codebase_snapshot.patch",
+      "type": "file",
+      "name": "full_codebase_snapshot.patch",
+      "filePath": "full_codebase_snapshot.patch",
+      "summary": "Empty placeholder for a full-codebase patch snapshot; carries no diff content.",
+      "tags": ["orphan", "dead-code", "patch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:get-pip.py",
+      "type": "file",
+      "name": "get-pip.py",
+      "filePath": "get-pip.py",
+      "summary": "Vendored copy of the upstream pip bootstrap installer used to install pip into a Python environment from a single self-contained script.",
+      "tags": ["vendored", "bootstrap", "python", "installer"],
+      "complexity": "complex",
+      "languageNotes": "The bulk of the 28K-line file is a base85-encoded pip zipapp embedded in the script body."
+    },
+    {
+      "id": "function:get-pip.py:include_setuptools",
+      "type": "function",
+      "name": "include_setuptools",
+      "filePath": "get-pip.py",
+      "lineRange": [46, 54],
+      "summary": "Decides whether to install setuptools alongside pip based on the parsed installer arguments.",
+      "tags": ["bootstrap", "installer", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:get-pip.py:include_wheel",
+      "type": "function",
+      "name": "include_wheel",
+      "filePath": "get-pip.py",
+      "lineRange": [57, 65],
+      "summary": "Decides whether to install the wheel package alongside pip based on the parsed installer arguments.",
+      "tags": ["bootstrap", "installer", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:get-pip.py:determine_pip_install_arguments",
+      "type": "function",
+      "name": "determine_pip_install_arguments",
+      "filePath": "get-pip.py",
+      "lineRange": [68, 82],
+      "summary": "Builds the argv list passed to the embedded pip zipapp's install command, including conditional setuptools/wheel additions.",
+      "tags": ["bootstrap", "installer", "argument-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:get-pip.py:monkeypatch_for_cert",
+      "type": "function",
+      "name": "monkeypatch_for_cert",
+      "filePath": "get-pip.py",
+      "lineRange": [85, 109],
+      "summary": "Patches pip's HTTPS adapter to use the bundled CA cert bundle when running under older Pythons missing modern roots.",
+      "tags": ["bootstrap", "ssl", "monkeypatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:get-pip.py:bootstrap",
+      "type": "function",
+      "name": "bootstrap",
+      "filePath": "get-pip.py",
+      "lineRange": [112, 119],
+      "summary": "Materializes the embedded pip zipapp on disk and invokes its install entry point with the determined arguments.",
+      "tags": ["bootstrap", "installer", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:get-pip.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "get-pip.py",
+      "lineRange": [122, 141],
+      "summary": "Script entry point that extracts the embedded zipapp into a temp dir, applies cert monkeypatch, and delegates to bootstrap.",
+      "tags": ["entry-point", "bootstrap", "installer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:h origin fixed-advanced-prediction",
+      "type": "file",
+      "name": "h origin fixed-advanced-prediction",
+      "filePath": "h origin fixed-advanced-prediction",
+      "summary": "Stray file created when a shell command (likely `git pus`h origin fixed-advanced-prediction`) was mistyped at the repo root; captures terminal output.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:how v0.5.0-verified --no-patch --pretty=fuller",
+      "type": "file",
+      "name": "how v0.5.0-verified --no-patch --pretty=fuller",
+      "filePath": "how v0.5.0-verified --no-patch --pretty=fuller",
+      "summary": "Stray file created by a mistyped `git s`how ... command; captures terminal output and is not part of the build.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:how v0.7.0-moat2 --decorate=full --no-patch",
+      "type": "file",
+      "name": "how v0.7.0-moat2 --decorate=full --no-patch",
+      "filePath": "how v0.7.0-moat2 --decorate=full --no-patch",
+      "summary": "Stray file created by a mistyped `git s`how ... command; captures a few lines of terminal output and is not part of the build.",
+      "tags": ["orphan", "dead-code", "stray-file"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:jest.config.js",
+      "type": "config",
+      "name": "jest.config.js",
+      "filePath": "jest.config.js",
+      "summary": "Jest configuration for the project's unit-test suite, wiring transformers and module-name mappers for the Next.js codebase.",
+      "tags": ["configuration", "testing", "jest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:jest.rtl.config.js",
+      "type": "config",
+      "name": "jest.rtl.config.js",
+      "filePath": "jest.rtl.config.js",
+      "summary": "Secondary Jest configuration tuned for React Testing Library component tests with a JSDOM environment.",
+      "tags": ["configuration", "testing", "jest", "react-testing-library"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:next.config.mjs",
+      "type": "config",
+      "name": "next.config.mjs",
+      "filePath": "next.config.mjs",
+      "summary": "Next.js App Router configuration controlling experimental flags, image domains, webpack tweaks, redirects, and build-time externals for the Trendzo platform.",
+      "tags": ["configuration", "nextjs", "build-system", "deployment"],
+      "complexity": "complex",
+      "languageNotes": "ESM module config with conditional flags driven by environment variables."
+    },
+    {
+      "id": "file:package.json.backup",
+      "type": "file",
+      "name": "package.json.backup",
+      "filePath": "package.json.backup",
+      "summary": "Backup copy of a prior package.json kept at the repo root; not consumed by any build tool.",
+      "tags": ["backup", "dead-code", "package-manifest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:playwright.config.ts",
+      "type": "config",
+      "name": "playwright.config.ts",
+      "filePath": "playwright.config.ts",
+      "summary": "Playwright end-to-end test configuration declaring the test directory, base URL, and browser projects.",
+      "tags": ["configuration", "testing", "playwright", "e2e"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:postcss.config.mjs",
+      "type": "config",
+      "name": "postcss.config.mjs",
+      "filePath": "postcss.config.mjs",
+      "summary": "PostCSS configuration enabling Tailwind CSS and Autoprefixer for the Next.js build pipeline.",
+      "tags": ["configuration", "postcss", "tailwind", "build-system"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:agent.py",
+      "target": "class:agent.py:Assistant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:agent.py",
+      "target": "function:agent.py:entrypoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:agent.py",
+      "target": "class:agent.py:Assistant",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:agent.py",
+      "target": "function:agent.py:entrypoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:check-real-progress.js",
+      "target": "function:check-real-progress.js:checkRealProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:check-subtitles.js",
+      "target": "function:check-subtitles.js:checkSubtitles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:check-video-urls.js",
+      "target": "function:check-video-urls.js:checkURLs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:comprehensive-database-report.js",
+      "target": "function:comprehensive-database-report.js:getExistingTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:comprehensive-database-report.js",
+      "target": "function:comprehensive-database-report.js:getTableDetails",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:comprehensive-database-report.js",
+      "target": "function:comprehensive-database-report.js:analyzeWorkflowGaps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:comprehensive-database-report.js",
+      "target": "function:comprehensive-database-report.js:generateRecommendations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:comprehensive-database-report.js",
+      "target": "function:comprehensive-database-report.js:generateComprehensiveReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-audit.js",
+      "target": "function:database-audit.js:getAllTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-audit.js",
+      "target": "function:database-audit.js:getTableInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-audit.js",
+      "target": "function:database-audit.js:auditViralPredictionWorkflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-audit.js",
+      "target": "function:database-audit.js:checkDataFlow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-audit.js",
+      "target": "function:database-audit.js:generateReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:examineScrapedData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:examineApifyRuns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:examineHookFrameworks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:checkDataQuality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:checkWorkflowGaps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:database-detailed-audit.js",
+      "target": "function:database-detailed-audit.js:runDetailedAudit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:include_setuptools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:include_wheel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:determine_pip_install_arguments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:monkeypatch_for_cert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:bootstrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:include_setuptools",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:include_wheel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:determine_pip_install_arguments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:monkeypatch_for_cert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:bootstrap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:get-pip.py",
+      "target": "function:get-pip.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

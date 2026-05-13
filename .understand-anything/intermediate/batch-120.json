@@ -1,0 +1,2501 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/templateMiniUI/signalBridge.ts",
+      "type": "file",
+      "name": "signalBridge.ts",
+      "filePath": "src/components/templateMiniUI/signalBridge.ts",
+      "summary": "Subscribes to Supabase realtime channels for a template to apply debounced slot, suggestion, and validation-hint updates into the local Zustand store, and publishes outbound signal events.",
+      "tags": [
+        "signal-bridge",
+        "realtime",
+        "supabase",
+        "debounce",
+        "template-mini-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/store.ts",
+      "type": "file",
+      "name": "store.ts",
+      "filePath": "src/components/templateMiniUI/store.ts",
+      "summary": "Zustand-style per-instance store factory holding template editor state (slots, suggestions, validation hints, AB variants, calibration metadata) with pure-function setters.",
+      "tags": [
+        "store",
+        "state-management",
+        "zustand",
+        "template-mini-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/telemetry.ts",
+      "type": "file",
+      "name": "telemetry.ts",
+      "filePath": "src/components/templateMiniUI/telemetry.ts",
+      "summary": "Thin emit helper that fires Mini-UI telemetry events through a registered logger callback or window.console fallback.",
+      "tags": [
+        "telemetry",
+        "utility",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "type": "file",
+      "name": "TemplateMiniUI.tsx",
+      "filePath": "src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "summary": "Top-level Mini-UI shell that wires the signal bridge, preview kernel, keyboard router, and right-rail panels (Dashboard, Scripts, Optimize, A/B, Inception, Validate) for a single template and platform.",
+      "tags": [
+        "component",
+        "entry-point",
+        "template-mini-ui",
+        "shell"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "type": "file",
+      "name": "TemplateMiniUIProvider.tsx",
+      "filePath": "src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "summary": "React context provider that exposes the Mini-UI store, router, and signal bridge to descendants and syncs the open-panel state with the URL hash.",
+      "tags": [
+        "provider",
+        "context",
+        "template-mini-ui",
+        "router"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/tokenMeter.ts",
+      "type": "file",
+      "name": "tokenMeter.ts",
+      "filePath": "src/components/templateMiniUI/tokenMeter.ts",
+      "summary": "Tracks AI token usage budgets per template editing session and emits warnings when the configured cap is approached or exceeded.",
+      "tags": [
+        "token-meter",
+        "budget",
+        "ai",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templateMiniUI/validation.ts",
+      "type": "file",
+      "name": "validation.ts",
+      "filePath": "src/components/templateMiniUI/validation.ts",
+      "summary": "Pure validation engine that runs the Mini-UI rule set across all seven template slots and returns structured hints with severity, slot, and suggested fix.",
+      "tags": [
+        "validation",
+        "rules",
+        "template-mini-ui",
+        "pure-function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/components/templateMiniUI/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/components/templateMiniUI/README.md",
+      "summary": "Comprehensive Mini-UI v1 architecture document covering signal bridge, preview kernel, panels, keyboard shortcuts, accessibility, feature flag, and integration contract.",
+      "tags": [
+        "documentation",
+        "architecture",
+        "template-mini-ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/CustomCursor.tsx",
+      "type": "file",
+      "name": "CustomCursor.tsx",
+      "filePath": "src/components/templates/CustomCursor.tsx",
+      "summary": "Mouse-following decorative cursor component used in template gallery hero areas to create a tactile drag-and-explore feel.",
+      "tags": [
+        "component",
+        "cursor",
+        "ui-effect",
+        "templates"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templates/EditorHeader.tsx",
+      "type": "file",
+      "name": "EditorHeader.tsx",
+      "filePath": "src/components/templates/EditorHeader.tsx",
+      "summary": "Header bar for the template editor with save, undo, preview-mode toggles, fullscreen, AI-suggest entry points, and unsaved-changes indicator.",
+      "tags": [
+        "component",
+        "editor-header",
+        "templates",
+        "toolbar"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "type": "file",
+      "name": "EnhancedTemplateBrowser.tsx",
+      "filePath": "src/components/templates/EnhancedTemplateBrowser.tsx",
+      "summary": "Richer template browser with category filters, sort modes, an AI-recommended row, search, and grid/list view switching wired to the templates store.",
+      "tags": [
+        "component",
+        "browser",
+        "templates",
+        "discovery"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "type": "file",
+      "name": "EnhancedTemplateCard.tsx",
+      "filePath": "src/components/templates/EnhancedTemplateCard.tsx",
+      "summary": "Visually richer template card with hover preview, metric badges, premium gating indicator, and trending/engagement adornments.",
+      "tags": [
+        "component",
+        "card",
+        "templates",
+        "preview"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "type": "file",
+      "name": "EnhancedTemplateEditor.tsx",
+      "filePath": "src/components/templates/EnhancedTemplateEditor.tsx",
+      "summary": "Enhanced template editor experience layering AI suggestions, performance prediction, and a more guided sidebar over the base template editor.",
+      "tags": [
+        "component",
+        "editor",
+        "templates",
+        "ai-assisted"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "type": "file",
+      "name": "FeatureGatedTemplateBrowser.tsx",
+      "filePath": "src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "summary": "Template browser wrapper that gates premium templates behind subscription tier and shows upgrade prompts when a locked template is selected.",
+      "tags": [
+        "component",
+        "browser",
+        "templates",
+        "feature-gating",
+        "subscription"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/FloatingOrbs.tsx",
+      "type": "file",
+      "name": "FloatingOrbs.tsx",
+      "filePath": "src/components/templates/FloatingOrbs.tsx",
+      "summary": "Animated background orbs component that renders soft drifting gradient blobs as a decorative backdrop for hero sections.",
+      "tags": [
+        "component",
+        "animation",
+        "background",
+        "templates"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templates/GalleryPhase.tsx",
+      "type": "file",
+      "name": "GalleryPhase.tsx",
+      "filePath": "src/components/templates/GalleryPhase.tsx",
+      "summary": "Top-level template gallery phase that fetches templates by niche, computes engagement scores, renders preview cards, and tracks viewer interactions.",
+      "tags": [
+        "component",
+        "gallery",
+        "phase",
+        "templates",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/LoadingIndicator.tsx",
+      "type": "file",
+      "name": "LoadingIndicator.tsx",
+      "filePath": "src/components/templates/LoadingIndicator.tsx",
+      "summary": "Simple animated loading spinner with optional label, used while template lists or previews are fetching.",
+      "tags": [
+        "component",
+        "loading",
+        "utility",
+        "templates"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templates/SimilarTemplatesSection.tsx",
+      "type": "file",
+      "name": "SimilarTemplatesSection.tsx",
+      "filePath": "src/components/templates/SimilarTemplatesSection.tsx",
+      "summary": "Renders a horizontal strip of templates similar to the currently selected one, sourced from a similarity API call.",
+      "tags": [
+        "component",
+        "recommendations",
+        "templates"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/templates/SoundRemixModal.tsx",
+      "type": "file",
+      "name": "SoundRemixModal.tsx",
+      "filePath": "src/components/templates/SoundRemixModal.tsx",
+      "summary": "Modal dialog letting the user swap or remix the audio track on a template, kicking off a sound-remix job.",
+      "tags": [
+        "component",
+        "modal",
+        "audio",
+        "templates"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templates/TemplateBrowser.tsx",
+      "type": "file",
+      "name": "TemplateBrowser.tsx",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "summary": "Primary template browser with search, multi-facet filtering, sort controls, infinite scroll, and view-mode switching across the template catalog.",
+      "tags": [
+        "component",
+        "browser",
+        "templates",
+        "search",
+        "filter"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/TemplateCard.tsx",
+      "type": "file",
+      "name": "TemplateCard.tsx",
+      "filePath": "src/components/templates/TemplateCard.tsx",
+      "summary": "Core template card showing thumbnail, title, metrics, premium gating, action buttons, and a slug helper used across browsers.",
+      "tags": [
+        "component",
+        "card",
+        "templates",
+        "core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/TemplateEditor.tsx",
+      "type": "file",
+      "name": "TemplateEditor.tsx",
+      "filePath": "src/components/templates/TemplateEditor.tsx",
+      "summary": "Full-featured template editor with header, preview canvas, audio controls, text overlay editing, and per-section state management for multi-shot templates.",
+      "tags": [
+        "component",
+        "editor",
+        "templates",
+        "core",
+        "canvas"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "type": "file",
+      "name": "TemplateEditorSidebar.tsx",
+      "filePath": "src/components/templates/TemplateEditorSidebar.tsx",
+      "summary": "Right-side panel for the template editor exposing section list, slot inspectors, AI suggestions, and quick property edits.",
+      "tags": [
+        "component",
+        "sidebar",
+        "editor",
+        "templates"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/templates/TemplateGrid.tsx",
+      "type": "file",
+      "name": "TemplateGrid.tsx",
+      "filePath": "src/components/templates/TemplateGrid.tsx",
+      "summary": "Plain grid layout renderer that maps a templates array onto TemplateCard components with responsive columns.",
+      "tags": [
+        "component",
+        "grid",
+        "layout",
+        "templates"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "type": "file",
+      "name": "TemplateLibraryEditorConnector.tsx",
+      "filePath": "src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "summary": "Bridge component that hands a chosen library template into the editor by loading template detail and seeding editor state.",
+      "tags": [
+        "component",
+        "connector",
+        "editor",
+        "templates"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/signalBridge.ts:bindTemplateSignals",
+      "type": "function",
+      "name": "bindTemplateSignals",
+      "filePath": "src/components/templateMiniUI/signalBridge.ts",
+      "lineRange": [
+        43,
+        84
+      ],
+      "summary": "Subscribes a Supabase realtime channel for a template id and routes incoming slot, suggestion, and validation events into the store with debouncing.",
+      "tags": [
+        "realtime",
+        "subscribe",
+        "supabase",
+        "template-mini-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/signalBridge.ts:publishSlotUpdate",
+      "type": "function",
+      "name": "publishSlotUpdate",
+      "filePath": "src/components/templateMiniUI/signalBridge.ts",
+      "lineRange": [
+        86,
+        93
+      ],
+      "summary": "Publishes an outbound slot-update payload on the template realtime channel.",
+      "tags": [
+        "publisher",
+        "realtime",
+        "supabase",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/signalBridge.ts:publishSuggestionUpdate",
+      "type": "function",
+      "name": "publishSuggestionUpdate",
+      "filePath": "src/components/templateMiniUI/signalBridge.ts",
+      "lineRange": [
+        95,
+        102
+      ],
+      "summary": "Publishes an outbound suggestion-update payload on the template realtime channel.",
+      "tags": [
+        "publisher",
+        "realtime",
+        "supabase",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/signalBridge.ts:publishValidationHint",
+      "type": "function",
+      "name": "publishValidationHint",
+      "filePath": "src/components/templateMiniUI/signalBridge.ts",
+      "lineRange": [
+        104,
+        111
+      ],
+      "summary": "Publishes an outbound validation-hint payload on the template realtime channel.",
+      "tags": [
+        "publisher",
+        "realtime",
+        "supabase",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/store.ts:createTemplateStore",
+      "type": "function",
+      "name": "createTemplateStore",
+      "filePath": "src/components/templateMiniUI/store.ts",
+      "lineRange": [
+        49,
+        140
+      ],
+      "summary": "Factory that builds an isolated Zustand-style store instance for one template, exposing setters for slots, suggestions, validation hints, AB variants, and calibration metadata.",
+      "tags": [
+        "store-factory",
+        "state",
+        "zustand",
+        "template-mini-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/telemetry.ts:emitTelemetry",
+      "type": "function",
+      "name": "emitTelemetry",
+      "filePath": "src/components/templateMiniUI/telemetry.ts",
+      "lineRange": [
+        15,
+        27
+      ],
+      "summary": "Routes a telemetry event to the registered logger or a console fallback, attaching a timestamp and source tag.",
+      "tags": [
+        "telemetry",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/TemplateMiniUI.tsx:TemplateMiniUI",
+      "type": "function",
+      "name": "TemplateMiniUI",
+      "filePath": "src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "lineRange": [
+        28,
+        332
+      ],
+      "summary": "Top-level Mini-UI component that mounts the provider, signal bridge, keyboard router, and conditionally renders the six right-rail panels.",
+      "tags": [
+        "component",
+        "entry-point",
+        "template-mini-ui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:TemplateMiniUIProvider",
+      "type": "function",
+      "name": "TemplateMiniUIProvider",
+      "filePath": "src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "lineRange": [
+        40,
+        164
+      ],
+      "summary": "Provider that creates the per-instance store and exposes it, along with the active panel parsed from the URL hash, through React context.",
+      "tags": [
+        "provider",
+        "context",
+        "template-mini-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:useTemplateMiniUI",
+      "type": "function",
+      "name": "useTemplateMiniUI",
+      "filePath": "src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "lineRange": [
+        166,
+        170
+      ],
+      "summary": "React hook that returns the current Mini-UI context value (store, router, signal bridge) for descendant components.",
+      "tags": [
+        "hook",
+        "context",
+        "template-mini-ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/tokenMeter.ts:createTokenMeter",
+      "type": "function",
+      "name": "createTokenMeter",
+      "filePath": "src/components/templateMiniUI/tokenMeter.ts",
+      "lineRange": [
+        23,
+        47
+      ],
+      "summary": "Returns a token-meter object with add/reset/warn methods that tracks AI token consumption against a configured cap and fires warnings near the cap.",
+      "tags": [
+        "factory",
+        "budget",
+        "ai"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templateMiniUI/validation.ts:validateTemplate",
+      "type": "function",
+      "name": "validateTemplate",
+      "filePath": "src/components/templateMiniUI/validation.ts",
+      "lineRange": [
+        23,
+        120
+      ],
+      "summary": "Runs every Mini-UI validation rule against a template and returns an array of structured hints (severity, slot, message, suggestion).",
+      "tags": [
+        "validation",
+        "rules-engine",
+        "pure-function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/CustomCursor.tsx:CustomCursor",
+      "type": "function",
+      "name": "CustomCursor",
+      "filePath": "src/components/templates/CustomCursor.tsx",
+      "lineRange": [
+        6,
+        87
+      ],
+      "summary": "React component that renders a custom cursor following mouse position, with smoothed offsets and click-state visual feedback.",
+      "tags": [
+        "component",
+        "cursor",
+        "ui-effect"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/EditorHeader.tsx:EditorHeader",
+      "type": "function",
+      "name": "EditorHeader",
+      "filePath": "src/components/templates/EditorHeader.tsx",
+      "lineRange": [
+        73,
+        634
+      ],
+      "summary": "Header bar for the template editor with save/undo, preview-device toggles, AI-suggest entry, fullscreen toggle, and unsaved-changes indicator.",
+      "tags": [
+        "component",
+        "header",
+        "editor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/EnhancedTemplateBrowser.tsx:EnhancedTemplateBrowser",
+      "type": "function",
+      "name": "EnhancedTemplateBrowser",
+      "filePath": "src/components/templates/EnhancedTemplateBrowser.tsx",
+      "lineRange": [
+        51,
+        748
+      ],
+      "summary": "Browser that adds AI-recommended rows, category filters, and richer interaction states atop the base template list.",
+      "tags": [
+        "component",
+        "browser",
+        "discovery"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/EnhancedTemplateCard.tsx:EnhancedTemplateCard",
+      "type": "function",
+      "name": "EnhancedTemplateCard",
+      "filePath": "src/components/templates/EnhancedTemplateCard.tsx",
+      "lineRange": [
+        40,
+        169
+      ],
+      "summary": "Card variant with hover preview video, metric badges, premium gating, and engagement adornments.",
+      "tags": [
+        "component",
+        "card",
+        "preview"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/EnhancedTemplateEditor.tsx:EnhancedTemplateEditor",
+      "type": "function",
+      "name": "EnhancedTemplateEditor",
+      "filePath": "src/components/templates/EnhancedTemplateEditor.tsx",
+      "lineRange": [
+        69,
+        635
+      ],
+      "summary": "Editor wrapper that layers AI suggestions, prediction badges, and guided steps over the base editor experience.",
+      "tags": [
+        "component",
+        "editor",
+        "ai-assisted"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/FeatureGatedTemplateBrowser.tsx:FeatureGatedTemplateBrowser",
+      "type": "function",
+      "name": "FeatureGatedTemplateBrowser",
+      "filePath": "src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "lineRange": [
+        40,
+        486
+      ],
+      "summary": "Browser that gates premium templates behind subscription tier and routes locked picks to an upgrade prompt.",
+      "tags": [
+        "component",
+        "gating",
+        "subscription"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/FloatingOrbs.tsx:FloatingOrbs",
+      "type": "function",
+      "name": "FloatingOrbs",
+      "filePath": "src/components/templates/FloatingOrbs.tsx",
+      "lineRange": [
+        6,
+        111
+      ],
+      "summary": "Renders animated drifting gradient orbs as a decorative background using Framer Motion springs.",
+      "tags": [
+        "component",
+        "animation",
+        "background"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/GalleryPhase.tsx:calculateEngagementScore",
+      "type": "function",
+      "name": "calculateEngagementScore",
+      "filePath": "src/components/templates/GalleryPhase.tsx",
+      "lineRange": [
+        36,
+        50
+      ],
+      "summary": "Computes a normalized engagement score from likes, views, comments, and shares using weighted ratios.",
+      "tags": [
+        "scoring",
+        "engagement",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templates/GalleryPhase.tsx:getNicheKey",
+      "type": "function",
+      "name": "getNicheKey",
+      "filePath": "src/components/templates/GalleryPhase.tsx",
+      "lineRange": [
+        106,
+        130
+      ],
+      "summary": "Maps a free-form niche label to a canonical niche key used for template filtering and analytics.",
+      "tags": [
+        "mapper",
+        "niche",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/GalleryPhase.tsx:PreviewComponent",
+      "type": "function",
+      "name": "PreviewComponent",
+      "filePath": "src/components/templates/GalleryPhase.tsx",
+      "lineRange": [
+        139,
+        241
+      ],
+      "summary": "Inline preview card sub-component that hover-plays a template video and shows metric overlays on demand.",
+      "tags": [
+        "component",
+        "preview",
+        "gallery"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/GalleryPhase.tsx:GalleryPhase",
+      "type": "function",
+      "name": "GalleryPhase",
+      "filePath": "src/components/templates/GalleryPhase.tsx",
+      "lineRange": [
+        243,
+        954
+      ],
+      "summary": "Top-level gallery phase that fetches templates by niche, renders preview cards, handles selection, and emits view/click analytics.",
+      "tags": [
+        "component",
+        "phase",
+        "gallery"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/LoadingIndicator.tsx:LoadingIndicator",
+      "type": "function",
+      "name": "LoadingIndicator",
+      "filePath": "src/components/templates/LoadingIndicator.tsx",
+      "lineRange": [
+        6,
+        36
+      ],
+      "summary": "Animated spinner with optional label used while template lists or previews are loading.",
+      "tags": [
+        "component",
+        "loading",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/SimilarTemplatesSection.tsx:SimilarTemplatesSection",
+      "type": "function",
+      "name": "SimilarTemplatesSection",
+      "filePath": "src/components/templates/SimilarTemplatesSection.tsx",
+      "lineRange": [
+        26,
+        61
+      ],
+      "summary": "Renders a horizontal strip of templates similar to the current one based on a similarity API response.",
+      "tags": [
+        "component",
+        "recommendations"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/SoundRemixModal.tsx:SoundRemixModal",
+      "type": "function",
+      "name": "SoundRemixModal",
+      "filePath": "src/components/templates/SoundRemixModal.tsx",
+      "lineRange": [
+        22,
+        62
+      ],
+      "summary": "Modal that prompts the user to swap or remix a template audio track and submits a sound-remix job.",
+      "tags": [
+        "component",
+        "modal",
+        "audio"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateBrowser.tsx:EnhancedSearchInput",
+      "type": "function",
+      "name": "EnhancedSearchInput",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "lineRange": [
+        35,
+        93
+      ],
+      "summary": "Search input sub-component with debounced query, focus animations, and clear-button affordance.",
+      "tags": [
+        "component",
+        "search",
+        "input"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateBrowser.tsx:FilterButton",
+      "type": "function",
+      "name": "FilterButton",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "lineRange": [
+        96,
+        137
+      ],
+      "summary": "Sub-component that renders a filter toggle with active state, icon, and badge for selected facet counts.",
+      "tags": [
+        "component",
+        "filter",
+        "ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateBrowser.tsx:ViewModeButtons",
+      "type": "function",
+      "name": "ViewModeButtons",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "lineRange": [
+        140,
+        175
+      ],
+      "summary": "Sub-component letting the user switch between grid and list views in the template browser.",
+      "tags": [
+        "component",
+        "view-mode",
+        "toggle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateBrowser.tsx:EmptyState",
+      "type": "function",
+      "name": "EmptyState",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "lineRange": [
+        178,
+        204
+      ],
+      "summary": "Sub-component shown when the template list is empty, prompting the user to broaden filters or import.",
+      "tags": [
+        "component",
+        "empty-state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateBrowser.tsx:TemplateBrowser",
+      "type": "function",
+      "name": "TemplateBrowser",
+      "filePath": "src/components/templates/TemplateBrowser.tsx",
+      "lineRange": [
+        206,
+        849
+      ],
+      "summary": "Main template catalog browser with search, facet filters, sort controls, infinite scroll, and view-mode switching.",
+      "tags": [
+        "component",
+        "browser",
+        "search",
+        "filter"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateCard.tsx:generateSlug",
+      "type": "function",
+      "name": "generateSlug",
+      "filePath": "src/components/templates/TemplateCard.tsx",
+      "lineRange": [
+        45,
+        47
+      ],
+      "summary": "Generates a URL-safe slug from a template title for use in template detail routes.",
+      "tags": [
+        "utility",
+        "slug",
+        "string"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/components/templates/TemplateCard.tsx:TemplateCard",
+      "type": "function",
+      "name": "TemplateCard",
+      "filePath": "src/components/templates/TemplateCard.tsx",
+      "lineRange": [
+        56,
+        664
+      ],
+      "summary": "Core template card showing thumbnail, title, metrics, premium gating, and quick-action buttons used across browsers.",
+      "tags": [
+        "component",
+        "card",
+        "core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateEditor.tsx:EditorHeader",
+      "type": "function",
+      "name": "EditorHeader",
+      "filePath": "src/components/templates/TemplateEditor.tsx",
+      "lineRange": [
+        114,
+        409
+      ],
+      "summary": "Internal header bar for the full template editor with save/undo, preview-device toggles, and section navigation.",
+      "tags": [
+        "component",
+        "header",
+        "editor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateEditor.tsx:PreviewCanvas",
+      "type": "function",
+      "name": "PreviewCanvas",
+      "filePath": "src/components/templates/TemplateEditor.tsx",
+      "lineRange": [
+        426,
+        739
+      ],
+      "summary": "Live preview canvas that renders the current section with all text overlays positioned and animated.",
+      "tags": [
+        "component",
+        "canvas",
+        "preview"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateEditor.tsx:AudioControls",
+      "type": "function",
+      "name": "AudioControls",
+      "filePath": "src/components/templates/TemplateEditor.tsx",
+      "lineRange": [
+        755,
+        1250
+      ],
+      "summary": "Audio panel for the template editor with track selection, volume sliders, trim handles, and waveform scrubbing.",
+      "tags": [
+        "component",
+        "audio",
+        "editor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateEditor.tsx:TemplateEditor",
+      "type": "function",
+      "name": "TemplateEditor",
+      "filePath": "src/components/templates/TemplateEditor.tsx",
+      "lineRange": [
+        1252,
+        1668
+      ],
+      "summary": "Full-featured template editor coordinating header, preview canvas, audio controls, and section management for multi-shot templates.",
+      "tags": [
+        "component",
+        "editor",
+        "core"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateEditorSidebar.tsx:TemplateEditorSidebar",
+      "type": "function",
+      "name": "TemplateEditorSidebar",
+      "filePath": "src/components/templates/TemplateEditorSidebar.tsx",
+      "lineRange": [
+        40,
+        345
+      ],
+      "summary": "Right-side editor panel exposing section list, slot inspectors, AI suggestions, and quick property edits.",
+      "tags": [
+        "component",
+        "sidebar",
+        "editor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/templates/TemplateGrid.tsx:TemplateGrid",
+      "type": "function",
+      "name": "TemplateGrid",
+      "filePath": "src/components/templates/TemplateGrid.tsx",
+      "lineRange": [
+        32,
+        125
+      ],
+      "summary": "Responsive grid layout that maps a list of templates onto TemplateCard components.",
+      "tags": [
+        "component",
+        "grid",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/templates/TemplateLibraryEditorConnector.tsx:TemplateLibraryEditorConnector",
+      "type": "function",
+      "name": "TemplateLibraryEditorConnector",
+      "filePath": "src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "lineRange": [
+        18,
+        175
+      ],
+      "summary": "Bridge component that loads a library template by id and seeds the editor state before rendering the editor.",
+      "tags": [
+        "component",
+        "connector",
+        "editor"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:bindTemplateSignals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:bindTemplateSignals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishSlotUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishSlotUpdate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishSuggestionUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishSuggestionUpdate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishValidationHint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "function:src/components/templateMiniUI/signalBridge.ts:publishValidationHint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/store.ts",
+      "target": "function:src/components/templateMiniUI/store.ts:createTemplateStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/store.ts",
+      "target": "function:src/components/templateMiniUI/store.ts:createTemplateStore",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/telemetry.ts",
+      "target": "function:src/components/templateMiniUI/telemetry.ts:emitTelemetry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/telemetry.ts",
+      "target": "function:src/components/templateMiniUI/telemetry.ts:emitTelemetry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUI.tsx:TemplateMiniUI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUI.tsx:TemplateMiniUI",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:TemplateMiniUIProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:TemplateMiniUIProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:useTemplateMiniUI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "function:src/components/templateMiniUI/TemplateMiniUIProvider.tsx:useTemplateMiniUI",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/tokenMeter.ts",
+      "target": "function:src/components/templateMiniUI/tokenMeter.ts:createTokenMeter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/tokenMeter.ts",
+      "target": "function:src/components/templateMiniUI/tokenMeter.ts:createTokenMeter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/validation.ts",
+      "target": "function:src/components/templateMiniUI/validation.ts:validateTemplate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templateMiniUI/validation.ts",
+      "target": "function:src/components/templateMiniUI/validation.ts:validateTemplate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/CustomCursor.tsx",
+      "target": "function:src/components/templates/CustomCursor.tsx:CustomCursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/CustomCursor.tsx",
+      "target": "function:src/components/templates/CustomCursor.tsx:CustomCursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "function:src/components/templates/EditorHeader.tsx:EditorHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "function:src/components/templates/EditorHeader.tsx:EditorHeader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateBrowser.tsx:EnhancedTemplateBrowser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateBrowser.tsx:EnhancedTemplateBrowser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateCard.tsx:EnhancedTemplateCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateCard.tsx:EnhancedTemplateCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateEditor.tsx:EnhancedTemplateEditor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "function:src/components/templates/EnhancedTemplateEditor.tsx:EnhancedTemplateEditor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "function:src/components/templates/FeatureGatedTemplateBrowser.tsx:FeatureGatedTemplateBrowser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "function:src/components/templates/FeatureGatedTemplateBrowser.tsx:FeatureGatedTemplateBrowser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/FloatingOrbs.tsx",
+      "target": "function:src/components/templates/FloatingOrbs.tsx:FloatingOrbs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/FloatingOrbs.tsx",
+      "target": "function:src/components/templates/FloatingOrbs.tsx:FloatingOrbs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "function:src/components/templates/GalleryPhase.tsx:calculateEngagementScore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "function:src/components/templates/GalleryPhase.tsx:getNicheKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "function:src/components/templates/GalleryPhase.tsx:PreviewComponent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "function:src/components/templates/GalleryPhase.tsx:GalleryPhase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "function:src/components/templates/GalleryPhase.tsx:GalleryPhase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/LoadingIndicator.tsx",
+      "target": "function:src/components/templates/LoadingIndicator.tsx:LoadingIndicator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/LoadingIndicator.tsx",
+      "target": "function:src/components/templates/LoadingIndicator.tsx:LoadingIndicator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/SimilarTemplatesSection.tsx",
+      "target": "function:src/components/templates/SimilarTemplatesSection.tsx:SimilarTemplatesSection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/SoundRemixModal.tsx",
+      "target": "function:src/components/templates/SoundRemixModal.tsx:SoundRemixModal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/SoundRemixModal.tsx",
+      "target": "function:src/components/templates/SoundRemixModal.tsx:SoundRemixModal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:EnhancedSearchInput",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:FilterButton",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:ViewModeButtons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:EmptyState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:TemplateBrowser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "function:src/components/templates/TemplateBrowser.tsx:TemplateBrowser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "function:src/components/templates/TemplateCard.tsx:generateSlug",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "function:src/components/templates/TemplateCard.tsx:generateSlug",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "function:src/components/templates/TemplateCard.tsx:TemplateCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "function:src/components/templates/TemplateCard.tsx:TemplateCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "function:src/components/templates/TemplateEditor.tsx:EditorHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "function:src/components/templates/TemplateEditor.tsx:PreviewCanvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "function:src/components/templates/TemplateEditor.tsx:AudioControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "function:src/components/templates/TemplateEditor.tsx:TemplateEditor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "function:src/components/templates/TemplateEditorSidebar.tsx:TemplateEditorSidebar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "function:src/components/templates/TemplateEditorSidebar.tsx:TemplateEditorSidebar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateGrid.tsx",
+      "target": "function:src/components/templates/TemplateGrid.tsx:TemplateGrid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateGrid.tsx",
+      "target": "function:src/components/templates/TemplateGrid.tsx:TemplateGrid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "target": "function:src/components/templates/TemplateLibraryEditorConnector.tsx:TemplateLibraryEditorConnector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "target": "function:src/components/templates/TemplateLibraryEditorConnector.tsx:TemplateLibraryEditorConnector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "file:src/components/templateMiniUI/store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/signalBridge.ts",
+      "target": "file:src/lib/supabase-client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/events.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/miniRouter.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/ABTestPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/DashboardPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/EnhancedValidatePanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/InceptionPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/OptimizePanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/panels/ScriptsPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/previewKernel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/signalBridge.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/templateMiniUI/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "target": "file:src/config/flags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "file:src/components/templateMiniUI/events.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "file:src/components/templateMiniUI/preview/PreviewKernel.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "file:src/components/templateMiniUI/realtime/SignalBridge.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "target": "file:src/components/templateMiniUI/router/urlState.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/popover.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/separator.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/components/ui/tooltip.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/lib/design-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EditorHeader.tsx",
+      "target": "file:src/lib/hooks/useTemplateIntegration.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/templates/TemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/PageTransition.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/checkbox.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/slider.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/tooltip.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/lib/contexts/ComponentIntegrationContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/lib/contexts/UsabilityTestContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateBrowser.tsx",
+      "target": "file:src/lib/design-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/components/ui/reveal-on-hover.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/lib/contexts/FeatureContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/lib/types/tiktok.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/lib/types/trendingTemplate.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "target": "file:src/lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/PageTransition.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/slider.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/lib/contexts/ComponentIntegrationContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/lib/contexts/UsabilityTestContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/EnhancedTemplateEditor.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/components/templates/EnhancedTemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/checkbox.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/lib/contexts/FeatureContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/lib/services/soundService.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/lib/services/trendingTemplateService.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/lib/types/tiktok.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "target": "file:src/lib/types/trendingTemplate.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/components/common/VideoCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/components/ui/switch.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/components/ui/tooltip.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/config/flags.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/lib/state/workflowStore.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/workflow/routeGuards.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/workflow/starterSelect.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/workflow/url.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/workflow/useStarterSurfaceCheck.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/GalleryPhase.tsx",
+      "target": "file:src/workflow/workflowStore.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/SimilarTemplatesSection.tsx",
+      "target": "file:src/components/admin/SimilarTemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/SoundRemixModal.tsx",
+      "target": "file:src/components/sounds/SoundRemixPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/SoundRemixModal.tsx",
+      "target": "file:src/components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/SoundRemixModal.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/templates/TemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/checkbox.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/popover.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/scroll-area.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/skeleton.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/lib/design-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateBrowser.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/components/ui/AnimatedContainer.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/lib/contexts/AudioContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/lib/design-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/lib/hooks/useHapticFeedback.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/lib/types/audio.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateCard.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/audio/AudioButton.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/audio/EditorSoundPanel.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/audio/InlinePlayer.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/editor/PropertyEditor.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/radio-group.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/separator.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/slider.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/switch.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/toast.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/components/ui/tooltip.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/lib/contexts/AudioContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/lib/contexts/SubscriptionContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/lib/design-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/lib/types/audio.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditor.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/components/templates/TemplateSoundSelector.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/components/ui/card-component.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/components/ui/separator.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/lib/hooks/useTemplateSound.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateEditorSidebar.tsx",
+      "target": "file:src/lib/types/template.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateGrid.tsx",
+      "target": "file:src/components/templates/ViralTemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateGrid.tsx",
+      "target": "file:src/components/ui/skeleton.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "target": "file:src/components/templates/TemplateCard.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "target": "file:src/lib/contexts/ComponentIntegrationContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "target": "file:src/lib/contexts/UsabilityTestContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/signalBridge.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/store.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/validation.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/tokenMeter.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:src/components/templateMiniUI/README.md",
+      "target": "file:src/components/templateMiniUI/telemetry.ts",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

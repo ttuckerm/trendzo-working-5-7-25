@@ -1,0 +1,742 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/ab/events.ts",
+      "type": "file",
+      "name": "events.ts",
+      "filePath": "src/lib/ab/events.ts",
+      "summary": "Records A/B test events (variant_created, variant_switched, variant_promoted) into the Supabase `ab_events` table, ensuring required tables exist first.",
+      "tags": ["analytics", "ab-testing", "event-handler", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/ab/events.ts:recordAbEvent",
+      "type": "function",
+      "name": "recordAbEvent",
+      "filePath": "src/lib/ab/events.ts",
+      "lineRange": [7, 12],
+      "summary": "Inserts an A/B test event row (templateId, variantId, eventType, payload) into Supabase, silently no-oping if credentials are missing.",
+      "tags": ["event-handler", "ab-testing", "supabase-insert"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/account-manager/auto-nudge.ts",
+      "type": "file",
+      "name": "auto-nudge.ts",
+      "filePath": "src/lib/account-manager/auto-nudge.ts",
+      "summary": "Auto-nudge logic that drives reminder emails for stalled briefs based on age, priority, and engagement signals.",
+      "tags": ["account-manager", "automation", "email", "scheduling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/account-manager/auto-nudge.ts:runNudgeForBrief",
+      "type": "function",
+      "name": "runNudgeForBrief",
+      "filePath": "src/lib/account-manager/auto-nudge.ts",
+      "lineRange": [20, 73],
+      "summary": "Evaluates a single brief and sends a nudge email when stall conditions are met, then records the nudge so the brief is not repeatedly pinged.",
+      "tags": ["account-manager", "email", "stale-brief", "automation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/adaptation/apply.ts",
+      "type": "file",
+      "name": "apply.ts",
+      "filePath": "src/lib/adaptation/apply.ts",
+      "summary": "Applies a proposed adaptation change to the learning store, committing tuning updates that came out of the policy planner.",
+      "tags": ["adaptation", "policy", "learning", "mutation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/apply.ts:applyProposedChange",
+      "type": "function",
+      "name": "applyProposedChange",
+      "filePath": "src/lib/adaptation/apply.ts",
+      "lineRange": [6, 21],
+      "summary": "Persists a proposed adaptation (weights or thresholds) by writing it to the learning store, returning an apply result.",
+      "tags": ["adaptation", "apply", "learning-store"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/adaptation/policy.ts",
+      "type": "file",
+      "name": "policy.ts",
+      "filePath": "src/lib/adaptation/policy.ts",
+      "summary": "Adaptation policy that converts drift/quality signals into a retune plan (classify weather then propose change) for the learning pipeline.",
+      "tags": ["adaptation", "policy", "drift-detection", "retune"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/adaptation/policy.ts:planRetune",
+      "type": "function",
+      "name": "planRetune",
+      "filePath": "src/lib/adaptation/policy.ts",
+      "lineRange": [27, 61],
+      "summary": "Builds a retune proposal from current signals: classifies environmental conditions and chooses an adaptation strategy from the learning trainer.",
+      "tags": ["adaptation", "policy", "planning"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/adaptation/signals.ts",
+      "type": "file",
+      "name": "signals.ts",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "summary": "Statistical signal extractor for adaptation — computes PSI, Jensen-Shannon divergence, and bucketized probability drift between recent and prior windows.",
+      "tags": ["adaptation", "statistics", "drift-detection", "psi"],
+      "complexity": "moderate",
+      "languageNotes": "Implements population stability index and JS divergence from primitives — no external stats dependency."
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:populationStabilityIndex",
+      "type": "function",
+      "name": "populationStabilityIndex",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [28, 38],
+      "summary": "Computes the population stability index between two binned probability distributions, the canonical drift metric.",
+      "tags": ["statistics", "psi", "drift"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:safeFeatureView",
+      "type": "function",
+      "name": "safeFeatureView",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [50, 62],
+      "summary": "Loads a safe feature view from the validation store, defensively guarding against missing or malformed records.",
+      "tags": ["validation", "feature-store", "defensive"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:psiOnCategorical",
+      "type": "function",
+      "name": "psiOnCategorical",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [64, 76],
+      "summary": "Computes PSI for categorical distributions by counting category frequencies in recent versus prior windows.",
+      "tags": ["statistics", "psi", "categorical"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:psiOnNumeric",
+      "type": "function",
+      "name": "psiOnNumeric",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [78, 94],
+      "summary": "Computes PSI for numeric distributions by bucketizing values into equal-width bins before comparing recent vs prior windows.",
+      "tags": ["statistics", "psi", "numeric"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:jensenShannonDivergence",
+      "type": "function",
+      "name": "jensenShannonDivergence",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [96, 109],
+      "summary": "Computes Jensen-Shannon divergence between two probability vectors as a bounded symmetric drift metric.",
+      "tags": ["statistics", "divergence", "drift"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:computeSignals",
+      "type": "function",
+      "name": "computeSignals",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [111, 166],
+      "summary": "Top-level entry that loads validation metrics, splits into windows, and returns the aggregated drift signal package consumed by the adaptation policy.",
+      "tags": ["adaptation", "signals", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:splitWindows",
+      "type": "function",
+      "name": "splitWindows",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [15, 26],
+      "summary": "Partitions a time-series of records into a recent and a prior comparison window based on hour offsets.",
+      "tags": ["utility", "windowing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/adaptation/signals.ts:bucketizeProbabilities",
+      "type": "function",
+      "name": "bucketizeProbabilities",
+      "filePath": "src/lib/adaptation/signals.ts",
+      "lineRange": [40, 48],
+      "summary": "Groups raw probabilities into evenly spaced bins so they can be compared with PSI.",
+      "tags": ["utility", "binning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/adaptation/store.ts",
+      "type": "file",
+      "name": "store.ts",
+      "filePath": "src/lib/adaptation/store.ts",
+      "summary": "Lightweight file-backed store recording proposed and applied adaptation changes plus a list of recent changes for audit.",
+      "tags": ["adaptation", "storage", "audit-log"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/adapters/authAdapter.tsx",
+      "type": "file",
+      "name": "authAdapter.tsx",
+      "filePath": "src/lib/adapters/authAdapter.tsx",
+      "summary": "React adapter that exposes the project auth hook through a stable provider/context surface so legacy components keep working.",
+      "tags": ["adapter", "auth", "react", "context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/adapters/authAdapter.tsx:AuthAdapter",
+      "type": "function",
+      "name": "AuthAdapter",
+      "filePath": "src/lib/adapters/authAdapter.tsx",
+      "lineRange": [15, 87],
+      "summary": "Provider component wrapping children with a normalized auth context derived from the project's useAuth hook.",
+      "tags": ["adapter", "auth", "provider", "react"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/admin/flipboard_apply.ts",
+      "type": "file",
+      "name": "flipboard_apply.ts",
+      "filePath": "src/lib/admin/flipboard_apply.ts",
+      "summary": "Admin flipboard handlers that read feature-switch states and apply changes in either live or mock mode against the cron scheduler.",
+      "tags": ["admin", "feature-flags", "scheduler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/admin/flipboard_apply.ts:getSwitchStates",
+      "type": "function",
+      "name": "getSwitchStates",
+      "filePath": "src/lib/admin/flipboard_apply.ts",
+      "lineRange": [10, 19],
+      "summary": "Returns the current state of admin flipboard switches sourced from env-driven configuration.",
+      "tags": ["admin", "feature-flags", "config-read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/admin/flipboard_apply.ts:applyLive",
+      "type": "function",
+      "name": "applyLive",
+      "filePath": "src/lib/admin/flipboard_apply.ts",
+      "lineRange": [21, 37],
+      "summary": "Applies an admin switch change against the live scheduler, enabling or disabling production cron jobs.",
+      "tags": ["admin", "feature-flags", "live"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/admin/flipboard_apply.ts:applyMock",
+      "type": "function",
+      "name": "applyMock",
+      "filePath": "src/lib/admin/flipboard_apply.ts",
+      "lineRange": [39, 55],
+      "summary": "Mirrors applyLive but routes through an in-memory mock so admins can dry-run switch changes.",
+      "tags": ["admin", "feature-flags", "mock"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/admin/flipboard_prereq.ts",
+      "type": "file",
+      "name": "flipboard_prereq.ts",
+      "filePath": "src/lib/admin/flipboard_prereq.ts",
+      "summary": "Validates prerequisites for each admin flipboard switch — required env, secrets, and telemetry endpoints — before allowing apply.",
+      "tags": ["admin", "feature-flags", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/admin/flipboard_prereq.ts:checkPrereqs",
+      "type": "function",
+      "name": "checkPrereqs",
+      "filePath": "src/lib/admin/flipboard_prereq.ts",
+      "lineRange": [7, 61],
+      "summary": "Runs the prerequisite checklist for a given switch id, returning a structured pass/fail report (env, secrets, scheduler, telemetry).",
+      "tags": ["admin", "validation", "prereq-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/agents/agent-personas.ts",
+      "type": "file",
+      "name": "agent-personas.ts",
+      "filePath": "src/lib/agents/agent-personas.ts",
+      "summary": "Defines the named AI agent personas and helpers that map UI cards/messages to a persona for attribution in briefs and morning summaries.",
+      "tags": ["agents", "persona", "ui-formatter", "attribution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/agents/agent-personas.ts:getAgentForBriefCard",
+      "type": "function",
+      "name": "getAgentForBriefCard",
+      "filePath": "src/lib/agents/agent-personas.ts",
+      "lineRange": [64, 77],
+      "summary": "Maps a brief priority type to the persona that should be credited for that card.",
+      "tags": ["agents", "persona", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/agents/agent-personas.ts:getAgentForMorningCard",
+      "type": "function",
+      "name": "getAgentForMorningCard",
+      "filePath": "src/lib/agents/agent-personas.ts",
+      "lineRange": [87, 98],
+      "summary": "Maps morning-summary card types (events, schedule, performance, etc.) to a persona for byline attribution.",
+      "tags": ["agents", "persona", "routing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/agents/agent-personas.ts:formatAttributionTime",
+      "type": "function",
+      "name": "formatAttributionTime",
+      "filePath": "src/lib/agents/agent-personas.ts",
+      "lineRange": [118, 129],
+      "summary": "Renders an attribution phrase with a relative timestamp (e.g. 'flagged 5 min ago by Atlas').",
+      "tags": ["formatter", "attribution", "time"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/agents/AgentController.ts",
+      "type": "file",
+      "name": "AgentController.ts",
+      "filePath": "src/lib/agents/AgentController.ts",
+      "summary": "Central agent controller that queues tasks, executes them by type (viral prediction, content analysis, template generation), and exposes system health.",
+      "tags": ["agents", "controller", "task-queue", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/agents/AgentController.ts:AgentController",
+      "type": "class",
+      "name": "AgentController",
+      "filePath": "src/lib/agents/AgentController.ts",
+      "lineRange": [25, 214],
+      "summary": "Queue-backed coordinator that accepts AgentTasks, dispatches them to the appropriate handler (viral prediction, content analysis, template generation), and tracks queue health.",
+      "tags": ["agents", "controller", "task-queue", "dispatch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/agent/correlation-context.ts",
+      "type": "file",
+      "name": "correlation-context.ts",
+      "filePath": "src/lib/agent/correlation-context.ts",
+      "summary": "AsyncLocalStorage-backed context carrier so every agent action shares a single correlation id, agencyId, and userId across async boundaries.",
+      "tags": ["agent", "context", "async-local-storage", "correlation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/agent/handler-adapters.ts",
+      "type": "file",
+      "name": "handler-adapters.ts",
+      "filePath": "src/lib/agent/handler-adapters.ts",
+      "summary": "Stage 3 Phase 2 (v2) thin adapters around handleComponentAction — declares zod schemas, human descriptions, and consequence renderers for the 12 propose/confirm write actions exposed to the agent.",
+      "tags": ["agent", "adapter", "schema-validation", "actions"],
+      "complexity": "complex",
+      "languageNotes": "Uses zod schemas paired with a uniform AdapterResult so the tool-registry can synthesize propose_<id> tools."
+    },
+    {
+      "id": "file:src/lib/agent/proposal-gate.ts",
+      "type": "file",
+      "name": "proposal-gate.ts",
+      "filePath": "src/lib/agent/proposal-gate.ts",
+      "summary": "Proposal hash gate that canonicalizes a payload, hashes it, and verifies+consumes the matching proposal via Supabase RPC before any write is allowed.",
+      "tags": ["agent", "security", "hashing", "rpc-gate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/agent/proposal-gate.ts:verifyAndConsumeProposal",
+      "type": "function",
+      "name": "verifyAndConsumeProposal",
+      "filePath": "src/lib/agent/proposal-gate.ts",
+      "lineRange": [40, 51],
+      "summary": "Calls the Supabase RPC that verifies a proposal id matches the supplied payload hash and atomically consumes it.",
+      "tags": ["agent", "security", "rpc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/agent/tool-registry.ts",
+      "type": "file",
+      "name": "tool-registry.ts",
+      "filePath": "src/lib/agent/tool-registry.ts",
+      "summary": "Builds the agent's tool list from handler-adapters — each adapter becomes a propose_<id> tool with description, schema, and a runner that emits an agent.proposal event.",
+      "tags": ["agent", "registry", "tool-building"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/agent/tool-registry.ts:buildToolsFromRegistry",
+      "type": "function",
+      "name": "buildToolsFromRegistry",
+      "filePath": "src/lib/agent/tool-registry.ts",
+      "lineRange": [52, 121],
+      "summary": "Iterates ADAPTERS and assembles the agent's tool list: each tool validates input via zod, emits a proposal event with payload hash, and returns the consequence string for confirmation.",
+      "tags": ["agent", "registry", "factory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/analysis/features.ts",
+      "type": "file",
+      "name": "features.ts",
+      "filePath": "src/lib/analysis/features.ts",
+      "summary": "Feature extractor for video drafts — derives pacing, cuts, caption density, CTA detection, and hook strength from script/caption inputs.",
+      "tags": ["analysis", "feature-extraction", "video", "heuristic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analysis/features.ts:extractFeatures",
+      "type": "function",
+      "name": "extractFeatures",
+      "filePath": "src/lib/analysis/features.ts",
+      "lineRange": [77, 118],
+      "summary": "Top-level entry that aggregates all per-feature helpers into a unified feature record for downstream scoring.",
+      "tags": ["analysis", "feature-extraction", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/analysis/recommender.ts",
+      "type": "file",
+      "name": "recommender.ts",
+      "filePath": "src/lib/analysis/recommender.ts",
+      "summary": "Generates platform-aware recommendations (pacing, CTA, hook fixes) from extracted draft features.",
+      "tags": ["analysis", "recommender", "advice"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analysis/recommender.ts:generateRecommendations",
+      "type": "function",
+      "name": "generateRecommendations",
+      "filePath": "src/lib/analysis/recommender.ts",
+      "lineRange": [9, 66],
+      "summary": "Inspects feature thresholds and returns a list of actionable recommendations tailored to the target platform.",
+      "tags": ["analysis", "recommender", "rule-based"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/analysis/scorer.ts",
+      "type": "file",
+      "name": "scorer.ts",
+      "filePath": "src/lib/analysis/scorer.ts",
+      "summary": "Draft scorer that combines extracted features, viral thresholds, learning store deltas, and VIT components into a single viral probability score.",
+      "tags": ["analysis", "scoring", "viral-prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analysis/scorer.ts:scoreDraft",
+      "type": "function",
+      "name": "scoreDraft",
+      "filePath": "src/lib/analysis/scorer.ts",
+      "lineRange": [23, 74],
+      "summary": "Computes a 0-1 viral score from extracted features by weighting components against learned thresholds and applying a sigmoid.",
+      "tags": ["analysis", "scoring", "sigmoid"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/analysis/sla.ts",
+      "type": "file",
+      "name": "sla.ts",
+      "filePath": "src/lib/analysis/sla.ts",
+      "summary": "Tiny stopwatch helper used by analysis pipelines to record elapsed time for SLA reporting.",
+      "tags": ["analysis", "timing", "sla", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/analysis/sla.ts:startStopwatch",
+      "type": "function",
+      "name": "startStopwatch",
+      "filePath": "src/lib/analysis/sla.ts",
+      "lineRange": [1, 10],
+      "summary": "Returns a stopwatch closure capturing the start time so callers can read elapsed ms later.",
+      "tags": ["timing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/analytics/discovery.ts",
+      "type": "file",
+      "name": "discovery.ts",
+      "filePath": "src/lib/analytics/discovery.ts",
+      "summary": "Template Discovery Engine — analyzes viral video performance data to extract sound/hashtag patterns and assemble daily content recipes stored in Supabase.",
+      "tags": ["analytics", "discovery", "viral-patterns", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/analytics/discovery.ts:TemplateDiscoveryEngine",
+      "type": "class",
+      "name": "TemplateDiscoveryEngine",
+      "filePath": "src/lib/analytics/discovery.ts",
+      "lineRange": [38, 240],
+      "summary": "Engine that pulls viral videos, mines sound and hashtag patterns, and persists daily content recipes to power the 'Recipe Book' feature.",
+      "tags": ["analytics", "discovery", "engine", "pattern-mining"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/analytics/expertAnalyticsPipeline.ts",
+      "type": "file",
+      "name": "expertAnalyticsPipeline.ts",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "summary": "Expert vs automated content analytics pipeline — computes engagement, conversion, and share metrics per template and produces comparative insights backed by Firebase.",
+      "tags": ["analytics", "pipeline", "expert-content", "firebase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateExpertContentMetrics",
+      "type": "function",
+      "name": "calculateExpertContentMetrics",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "lineRange": [103, 223],
+      "summary": "Aggregates clicks, edits, saves, conversions, and share metrics for a single expert template link over a given period.",
+      "tags": ["analytics", "metrics", "expert-content"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateAutomatedContentMetrics",
+      "type": "function",
+      "name": "calculateAutomatedContentMetrics",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "lineRange": [232, 246],
+      "summary": "Aggregates the same metric set as the expert pipeline but for AI-generated content, keyed by generator id.",
+      "tags": ["analytics", "metrics", "automated-content"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/analytics/expertAnalyticsPipeline.ts:generateContentComparison",
+      "type": "function",
+      "name": "generateContentComparison",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "lineRange": [253, 311],
+      "summary": "Builds the head-to-head expert-vs-automated comparison report with per-funnel deltas and an insight summary.",
+      "tags": ["analytics", "comparison", "reporting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analytics/expertAnalyticsPipeline.ts:generateInsights",
+      "type": "function",
+      "name": "generateInsights",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "lineRange": [337, 362],
+      "summary": "Converts the comparison deltas into narrative insight strings (e.g. 'experts convert 18% better than automated').",
+      "tags": ["analytics", "insights", "narrative"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analytics/expertAnalyticsPipeline.ts:tagTemplateSource",
+      "type": "function",
+      "name": "tagTemplateSource",
+      "filePath": "src/lib/analytics/expertAnalyticsPipeline.ts",
+      "lineRange": [373, 394],
+      "summary": "Marks a template document with its source (expert or automated) plus creator id and optional notes for downstream attribution.",
+      "tags": ["analytics", "tagging", "metadata"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/analytics/newsletterAnalytics.ts",
+      "type": "file",
+      "name": "newsletterAnalytics.ts",
+      "filePath": "src/lib/analytics/newsletterAnalytics.ts",
+      "summary": "Newsletter analytics tracker — records clicks, template views, and aggregate newsletter actions into Firebase for funnel reporting.",
+      "tags": ["analytics", "newsletter", "tracking", "firebase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterClick",
+      "type": "function",
+      "name": "trackNewsletterClick",
+      "filePath": "src/lib/analytics/newsletterAnalytics.ts",
+      "lineRange": [16, 55],
+      "summary": "Records a newsletter link click with user, source, and campaign metadata to Firebase analytics tables.",
+      "tags": ["analytics", "newsletter", "click-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analytics/newsletterAnalytics.ts:trackTemplateView",
+      "type": "function",
+      "name": "trackTemplateView",
+      "filePath": "src/lib/analytics/newsletterAnalytics.ts",
+      "lineRange": [63, 100],
+      "summary": "Records a template-view event when a user opens a template linked from a newsletter, including referring link metadata.",
+      "tags": ["analytics", "template", "view-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterAnalytics",
+      "type": "function",
+      "name": "trackNewsletterAnalytics",
+      "filePath": "src/lib/analytics/newsletterAnalytics.ts",
+      "lineRange": [108, 146],
+      "summary": "Catch-all event recorder for newsletter actions (open, dismiss, save) keyed by templateId and linkId.",
+      "tags": ["analytics", "newsletter", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/api/client.ts",
+      "type": "file",
+      "name": "client.ts",
+      "filePath": "src/lib/api/client.ts",
+      "summary": "Thin fetch wrapper that issues JSON API requests, normalizes errors, and emits structured logs via the project logger.",
+      "tags": ["api-client", "fetch", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/api/client.ts:apiRequest",
+      "type": "function",
+      "name": "apiRequest",
+      "filePath": "src/lib/api/client.ts",
+      "lineRange": [4, 34],
+      "summary": "Performs a JSON fetch (method, body) and returns parsed data or throws with structured logging when the response is not ok.",
+      "tags": ["api-client", "fetch", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/api/openapi.ts",
+      "type": "file",
+      "name": "openapi.ts",
+      "filePath": "src/lib/api/openapi.ts",
+      "summary": "Re-exports the v1 and v2 public OpenAPI JSON specs so route handlers and docs share a single import path.",
+      "tags": ["api-schema", "openapi", "barrel"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/assessment/build-input-from-form.ts",
+      "type": "file",
+      "name": "build-input-from-form.ts",
+      "filePath": "src/lib/assessment/build-input-from-form.ts",
+      "summary": "Form-to-domain mapper that converts the assessment intake form (raw text + numeric fields) into the structured AssessmentInput consumed by the scorer.",
+      "tags": ["assessment", "form-parsing", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/assessment/build-input-from-form.ts:buildInputFromForm",
+      "type": "function",
+      "name": "buildInputFromForm",
+      "filePath": "src/lib/assessment/build-input-from-form.ts",
+      "lineRange": [43, 144],
+      "summary": "Coerces raw form fields into typed AssessmentInput, applying a freedom multiplier and defensively parsing numeric strings.",
+      "tags": ["assessment", "form-parsing", "mapping"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/lib/ab/events.ts", "target": "function:src/lib/ab/events.ts:recordAbEvent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ab/events.ts", "target": "function:src/lib/ab/events.ts:recordAbEvent", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/ab/events.ts", "target": "file:src/lib/db/ensure.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/ab/events.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/account-manager/auto-nudge.ts", "target": "function:src/lib/account-manager/auto-nudge.ts:runNudgeForBrief", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/account-manager/auto-nudge.ts", "target": "function:src/lib/account-manager/auto-nudge.ts:runNudgeForBrief", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/account-manager/auto-nudge.ts", "target": "file:src/lib/email/send-brief.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/adaptation/apply.ts", "target": "function:src/lib/adaptation/apply.ts:applyProposedChange", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/apply.ts", "target": "function:src/lib/adaptation/apply.ts:applyProposedChange", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/adaptation/apply.ts", "target": "file:src/lib/adaptation/policy.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/adaptation/apply.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/adaptation/policy.ts", "target": "function:src/lib/adaptation/policy.ts:planRetune", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/policy.ts", "target": "function:src/lib/adaptation/policy.ts:planRetune", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/adaptation/policy.ts", "target": "file:src/lib/adaptation/signals.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/adaptation/policy.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/adaptation/policy.ts", "target": "file:src/lib/learning/trainer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:populationStabilityIndex", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:safeFeatureView", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:psiOnCategorical", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:psiOnNumeric", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:jensenShannonDivergence", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:computeSignals", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:splitWindows", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:bucketizeProbabilities", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "function:src/lib/adaptation/signals.ts:computeSignals", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "file:src/lib/validation/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/adaptation/signals.ts", "target": "file:src/lib/validation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/adapters/authAdapter.tsx", "target": "function:src/lib/adapters/authAdapter.tsx:AuthAdapter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/adapters/authAdapter.tsx", "target": "function:src/lib/adapters/authAdapter.tsx:AuthAdapter", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/adapters/authAdapter.tsx", "target": "file:src/lib/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:getSwitchStates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:applyLive", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:applyMock", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:getSwitchStates", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:applyLive", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "function:src/lib/admin/flipboard_apply.ts:applyMock", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "file:src/lib/cron/scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/admin/flipboard_apply.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "function:src/lib/admin/flipboard_prereq.ts:checkPrereqs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "function:src/lib/admin/flipboard_prereq.ts:checkPrereqs", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "file:src/app/api/telemetry/first_hour/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "file:src/lib/cron/scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/admin/flipboard_prereq.ts", "target": "file:src/lib/security/secret_vault.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:getAgentForBriefCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:getAgentForMorningCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:formatAttributionTime", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:getAgentForBriefCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:getAgentForMorningCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "function:src/lib/agents/agent-personas.ts:formatAttributionTime", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/agents/agent-personas.ts", "target": "file:src/lib/clay/index.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/agents/AgentController.ts", "target": "class:src/lib/agents/AgentController.ts:AgentController", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agents/AgentController.ts", "target": "class:src/lib/agents/AgentController.ts:AgentController", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/agent/handler-adapters.ts", "target": "file:src/lib/agent/correlation-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/agent/handler-adapters.ts", "target": "file:src/lib/clay/action-handler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/agent/proposal-gate.ts", "target": "function:src/lib/agent/proposal-gate.ts:verifyAndConsumeProposal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agent/proposal-gate.ts", "target": "function:src/lib/agent/proposal-gate.ts:verifyAndConsumeProposal", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/agent/proposal-gate.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "function:src/lib/agent/tool-registry.ts:buildToolsFromRegistry", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "function:src/lib/agent/tool-registry.ts:buildToolsFromRegistry", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "file:src/lib/agent/correlation-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "file:src/lib/agent/handler-adapters.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "file:src/lib/agent/proposal-gate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/agent/tool-registry.ts", "target": "file:src/lib/events/emit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/analysis/features.ts", "target": "function:src/lib/analysis/features.ts:extractFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analysis/features.ts", "target": "function:src/lib/analysis/features.ts:extractFeatures", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analysis/features.ts", "target": "file:src/lib/templates/extract.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/analysis/features.ts", "target": "file:src/lib/vit/vit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/analysis/recommender.ts", "target": "function:src/lib/analysis/recommender.ts:generateRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analysis/recommender.ts", "target": "function:src/lib/analysis/recommender.ts:generateRecommendations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analysis/recommender.ts", "target": "file:src/lib/analysis/features.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "function:src/lib/analysis/scorer.ts:scoreDraft", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "function:src/lib/analysis/scorer.ts:scoreDraft", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "file:src/config/viral-thresholds.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "file:src/lib/analysis/features.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "file:src/lib/learning/apply.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "file:src/lib/vit/compute.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/analysis/scorer.ts", "target": "file:src/lib/vit/vit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/analysis/sla.ts", "target": "function:src/lib/analysis/sla.ts:startStopwatch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analysis/sla.ts", "target": "function:src/lib/analysis/sla.ts:startStopwatch", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/analytics/discovery.ts", "target": "class:src/lib/analytics/discovery.ts:TemplateDiscoveryEngine", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/discovery.ts", "target": "class:src/lib/analytics/discovery.ts:TemplateDiscoveryEngine", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateExpertContentMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateAutomatedContentMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:generateContentComparison", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:generateInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:tagTemplateSource", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateExpertContentMetrics", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:calculateAutomatedContentMetrics", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:generateContentComparison", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "function:src/lib/analytics/expertAnalyticsPipeline.ts:tagTemplateSource", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterClick", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackTemplateView", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterAnalytics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterClick", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackTemplateView", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "function:src/lib/analytics/newsletterAnalytics.ts:trackNewsletterAnalytics", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/analytics/newsletterAnalytics.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/api/client.ts", "target": "function:src/lib/api/client.ts:apiRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/api/client.ts", "target": "function:src/lib/api/client.ts:apiRequest", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/api/client.ts", "target": "file:src/lib/utils/logger.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/api/openapi.ts", "target": "file:openapi/public_v1.json", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/api/openapi.ts", "target": "file:openapi/public_v2.json", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/assessment/build-input-from-form.ts", "target": "function:src/lib/assessment/build-input-from-form.ts:buildInputFromForm", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/assessment/build-input-from-form.ts", "target": "function:src/lib/assessment/build-input-from-form.ts:buildInputFromForm", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/assessment/build-input-from-form.ts", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

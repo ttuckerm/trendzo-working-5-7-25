@@ -1,0 +1,649 @@
+{
+  "nodes": [
+    {
+      "id": "file:nine-attributes-framework/services/ranker/src/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "nine-attributes-framework/services/ranker/src/__init__.py",
+      "summary": "Package marker for the Nine Attributes ranker service Python module; trivial init with no exports.",
+      "tags": ["entry-point", "barrel", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "type": "file",
+      "name": "main.py",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "summary": "FastAPI ranker microservice that computes prior probabilities and re-ranks recommendation items using the Nine Attributes framework, with isotonic calibration per cohort and Prometheus metrics.",
+      "tags": ["api-handler", "service", "ranking", "calibration", "fastapi"],
+      "complexity": "complex",
+      "languageNotes": "Uses Pydantic BaseModel request/response schemas, FastAPI route decorators, and IsotonicRegression cohort calibrators persisted via pickle."
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:PriorRequest",
+      "type": "class",
+      "name": "PriorRequest",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [32, 37],
+      "summary": "Pydantic request schema for the /priors endpoint carrying nine-attribute scores, creator/platform identifiers, and optional cohort hints.",
+      "tags": ["data-model", "type-definition", "pydantic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:PriorResponse",
+      "type": "class",
+      "name": "PriorResponse",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [40, 48],
+      "summary": "Pydantic response schema returning calibrated priors (watch time, share probability, regret) with confidence intervals and version identifiers.",
+      "tags": ["data-model", "type-definition", "pydantic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:RankRequest",
+      "type": "class",
+      "name": "RankRequest",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [51, 55],
+      "summary": "Pydantic request schema for the /rank endpoint bundling candidate items, user features, and contextual signals.",
+      "tags": ["data-model", "type-definition", "pydantic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:RankResponse",
+      "type": "class",
+      "name": "RankResponse",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [58, 62],
+      "summary": "Pydantic response schema returning ranked items, raw scores, and exploration bonuses for the recommendation ranker.",
+      "tags": ["data-model", "type-definition", "pydantic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:CohortCalibration",
+      "type": "class",
+      "name": "CohortCalibration",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [66, 75],
+      "summary": "Dataclass holding per-cohort isotonic regression models for watch time, share, and regret, with calibration metadata (MAPE, ECE, sample count).",
+      "tags": ["data-model", "calibration", "dataclass"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:nine-attributes-framework/services/ranker/src/main.py:NineAttributesRanker",
+      "type": "class",
+      "name": "NineAttributesRanker",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [78, 273],
+      "summary": "Core ranker that loads cohort calibrations from disk/Redis, computes attribute-derived priors, applies exploration policy and satisfaction guardrails, and updates calibrations online.",
+      "tags": ["service", "ranking", "calibration", "exploration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:nine-attributes-framework/services/ranker/src/main.py:compute_priors",
+      "type": "function",
+      "name": "compute_priors",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [280, 286],
+      "summary": "FastAPI POST /priors handler that delegates to NineAttributesRanker.compute_priors and returns the calibrated PriorResponse.",
+      "tags": ["api-handler", "endpoint", "priors"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:nine-attributes-framework/services/ranker/src/main.py:rank_items",
+      "type": "function",
+      "name": "rank_items",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [290, 322],
+      "summary": "FastAPI POST /rank handler that scores candidate items via prior probabilities and exploration bonuses, sorts them, and returns the ordered list.",
+      "tags": ["api-handler", "endpoint", "ranking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:nine-attributes-framework/services/ranker/src/main.py:update_calibration",
+      "type": "function",
+      "name": "update_calibration",
+      "filePath": "nine-attributes-framework/services/ranker/src/main.py",
+      "lineRange": [326, 333],
+      "summary": "FastAPI POST handler that ingests observed outcomes and refits the isotonic calibration models for the relevant cohort.",
+      "tags": ["api-handler", "endpoint", "calibration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:nine-attributes-framework/services/ranker/requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "nine-attributes-framework/services/ranker/requirements.txt",
+      "summary": "Python dependency manifest pinning packages required by the ranker service (FastAPI, numpy, pandas, sklearn, redis, prometheus-client).",
+      "tags": ["configuration", "dependencies", "python"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:nine-attributes-framework/services/ranker/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "nine-attributes-framework/services/ranker/Dockerfile",
+      "summary": "Builds a slim Python 3.10 image for the Nine Attributes ranker service and starts it via uvicorn on port 8001.",
+      "tags": ["containerization", "infrastructure", "deployment", "python"],
+      "complexity": "simple",
+      "languageNotes": "Standard single-stage Python Dockerfile with build-essential for native deps and uvicorn entrypoint."
+    },
+    {
+      "id": "file:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "type": "file",
+      "name": "test_nine_attrs_pipeline.py",
+      "filePath": "nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "summary": "Async end-to-end pytest suite hitting /api/v1/analyze and /api/v1/rank against a local Nine Attributes API, asserting payload shape and p95 latency budget.",
+      "tags": ["test", "e2e", "pytest", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py:TestNineAttributesPipeline",
+      "type": "class",
+      "name": "TestNineAttributesPipeline",
+      "filePath": "nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "lineRange": [14, 88],
+      "summary": "End-to-end test class covering analysis, ranking, and performance budgets for the Nine Attributes pipeline via httpx against the public API.",
+      "tags": ["test", "e2e", "integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "endpoint:openapi/public_v1.json:POST-/public/score",
+      "type": "endpoint",
+      "name": "POST /public/score",
+      "filePath": "openapi/public_v1.json",
+      "summary": "Public v1 score endpoint that returns a 200 OK to score content payloads; minimal stub spec.",
+      "tags": ["api-schema", "endpoint", "public"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:openapi/public_v1.json",
+      "type": "config",
+      "name": "public_v1.json",
+      "filePath": "openapi/public_v1.json",
+      "summary": "OpenAPI 3.0.3 spec for the ViralLab Public API v1 declaring the /public/score POST endpoint.",
+      "tags": ["api-schema", "openapi", "documentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:openapi/public_v2.json",
+      "type": "config",
+      "name": "public_v2.json",
+      "filePath": "openapi/public_v2.json",
+      "summary": "OpenAPI 3.0.3 spec for the ViralLab Public API v2 (next-generation surface) with a single declared endpoint.",
+      "tags": ["api-schema", "openapi", "documentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:packages/shared/src/schemas/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "packages/shared/src/schemas/index.ts",
+      "summary": "Schema barrel re-exporting VITSchema and TemplateSpecSchema for downstream consumers of the shared package.",
+      "tags": ["barrel", "entry-point", "schema-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:packages/shared/src/vit_v1/vit.ts",
+      "type": "file",
+      "name": "vit.ts",
+      "filePath": "packages/shared/src/vit_v1/vit.ts",
+      "summary": "Legacy v1 Video Ingress Tuple (VIT) Zod schema retained for backward compatibility with older ingest payloads.",
+      "tags": ["schema-definition", "type-definition", "zod", "legacy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:packages/shared/src/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "packages/shared/src/index.ts",
+      "summary": "Top-level barrel for the shared package that exposes the IngressVITSchema by unioning templateSpec, current VIT, and the v1 VIT schemas.",
+      "tags": ["barrel", "entry-point", "schema-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:packages/shared/src/templateSpec.ts",
+      "type": "file",
+      "name": "templateSpec.ts",
+      "filePath": "packages/shared/src/templateSpec.ts",
+      "summary": "Defines the canonical TemplateSpec Zod schema and view-model projectors (toPublicCard, toAnalystCard, toScriptCard, toLabCard, toAdminRow) for template surfaces.",
+      "tags": ["schema-definition", "type-definition", "zod", "view-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:packages/shared/src/templateSpec.ts:toPublicCard",
+      "type": "function",
+      "name": "toPublicCard",
+      "filePath": "packages/shared/src/templateSpec.ts",
+      "lineRange": [27, 37],
+      "summary": "Projects a full TemplateSpec down to the public-facing card view model with framework, niche, success rate, and key patterns.",
+      "tags": ["view-model", "projection", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:packages/shared/src/templateSpec.ts:toAnalystCard",
+      "type": "function",
+      "name": "toAnalystCard",
+      "filePath": "packages/shared/src/templateSpec.ts",
+      "lineRange": [39, 50],
+      "summary": "Projects a TemplateSpec into the analyst card view model including usage counts and trend deltas for internal dashboards.",
+      "tags": ["view-model", "projection", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:packages/shared/src/vit.ts",
+      "type": "file",
+      "name": "vit.ts",
+      "filePath": "packages/shared/src/vit.ts",
+      "summary": "Current Video Ingress Tuple (VIT) Zod schema with engagement, derived signals, predictions, validation, and provenance, plus a deterministic vitHash function for upserts.",
+      "tags": ["schema-definition", "type-definition", "zod", "data-model"],
+      "complexity": "complex",
+      "languageNotes": "Defines a deeply nested Zod object schema acting as the canonical inter-service data contract for video ingestion."
+    },
+    {
+      "id": "function:packages/shared/src/vit.ts:vitHash",
+      "type": "function",
+      "name": "vitHash",
+      "filePath": "packages/shared/src/vit.ts",
+      "lineRange": [102, 118],
+      "summary": "Computes a deterministic SHA-256 hash over the canonical fields of a VIT for idempotent upsert keys across the ingestion pipeline.",
+      "tags": ["utility", "hashing", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:packages/shared/package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "packages/shared/package.json",
+      "summary": "NPM manifest for the @trendzo/shared workspace package declaring entry points, build scripts, and Zod dependency.",
+      "tags": ["configuration", "package", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:packages/shared/tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "packages/shared/tsconfig.json",
+      "summary": "TypeScript compiler configuration for the shared package enabling strict mode and emitting declaration files for cross-package consumption.",
+      "tags": ["configuration", "typescript", "build-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:paths/chat.md",
+      "type": "document",
+      "name": "chat.md",
+      "filePath": "paths/chat.md",
+      "summary": "Implementation guide for building an AI chat application with the Vercel AI SDK supporting OpenAI and Anthropic models, streaming responses, and persistent history.",
+      "tags": ["documentation", "specification", "ai-chat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:paths/image-generation.md",
+      "type": "document",
+      "name": "image-generation.md",
+      "filePath": "paths/image-generation.md",
+      "summary": "Implementation path describing how to build the image generation feature, including provider selection and UI affordances.",
+      "tags": ["documentation", "specification", "image-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:paths/social-media.md",
+      "type": "document",
+      "name": "social-media.md",
+      "filePath": "paths/social-media.md",
+      "summary": "Short implementation path for the social-media feature surface outlining required integrations and UI flow.",
+      "tags": ["documentation", "specification", "social-media"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:paths/voice-notes.md",
+      "type": "document",
+      "name": "voice-notes.md",
+      "filePath": "paths/voice-notes.md",
+      "summary": "Implementation path describing the voice notes capture and transcription flow across capture, processing, and storage stages.",
+      "tags": ["documentation", "specification", "voice"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/accuracy.spec.ts",
+      "type": "file",
+      "name": "accuracy.spec.ts",
+      "filePath": "playwright/tests/accuracy.spec.ts",
+      "summary": "Playwright E2E spec verifying prediction accuracy surfaces render expected scores and content on critical pages.",
+      "tags": ["test", "e2e", "playwright"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/criticalFlows.spec.ts",
+      "type": "file",
+      "name": "criticalFlows.spec.ts",
+      "filePath": "playwright/tests/criticalFlows.spec.ts",
+      "summary": "Playwright suite exercising mission-critical user journeys (template library, editor, dashboards) via the dev-mode auth bypass, with page-error capture.",
+      "tags": ["test", "e2e", "playwright", "critical-flows"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:playwright/tests/criticalFlows.spec.ts:loginAsDeveloper",
+      "type": "function",
+      "name": "loginAsDeveloper",
+      "filePath": "playwright/tests/criticalFlows.spec.ts",
+      "lineRange": [6, 11],
+      "summary": "Test helper that navigates the Playwright page to the auth bypass route and clicks into the developer dashboard.",
+      "tags": ["test", "helper", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/engine-room-ops.spec.ts",
+      "type": "file",
+      "name": "engine-room-ops.spec.ts",
+      "filePath": "playwright/tests/engine-room-ops.spec.ts",
+      "summary": "Playwright spec covering operator flows in the Engine Room admin surface (status panels, control actions).",
+      "tags": ["test", "e2e", "playwright", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/feature-flags.spec.ts",
+      "type": "file",
+      "name": "feature-flags.spec.ts",
+      "filePath": "playwright/tests/feature-flags.spec.ts",
+      "summary": "Playwright spec asserting feature-flag gating shows or hides experimental surfaces correctly across environments.",
+      "tags": ["test", "e2e", "playwright", "feature-flags"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/os-canvas-a11y.spec.ts",
+      "type": "file",
+      "name": "os-canvas-a11y.spec.ts",
+      "filePath": "playwright/tests/os-canvas-a11y.spec.ts",
+      "summary": "Playwright accessibility checks for the OS Canvas surface verifying ARIA roles, focus order, and keyboard interactions.",
+      "tags": ["test", "e2e", "accessibility", "playwright"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/os-canvas-hooks.spec.ts",
+      "type": "file",
+      "name": "os-canvas-hooks.spec.ts",
+      "filePath": "playwright/tests/os-canvas-hooks.spec.ts",
+      "summary": "Playwright spec exercising OS Canvas hook lifecycles (mount, update, persistence) through the UI.",
+      "tags": ["test", "e2e", "playwright", "canvas"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:playwright/tests/recipeBookCanvas.spec.ts",
+      "type": "file",
+      "name": "recipeBookCanvas.spec.ts",
+      "filePath": "playwright/tests/recipeBookCanvas.spec.ts",
+      "summary": "Playwright spec covering the Recipe Book canvas flow including navigation, recipe selection, and canvas rendering.",
+      "tags": ["test", "e2e", "playwright", "canvas"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:PriorRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:PriorResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:RankRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:RankResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:CohortCalibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:NineAttributesRanker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:compute_priors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:rank_items",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:update_calibration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:PriorRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:PriorResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:RankRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:RankResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:CohortCalibration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "class:nine-attributes-framework/services/ranker/src/main.py:NineAttributesRanker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:compute_priors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:rank_items",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "function:nine-attributes-framework/services/ranker/src/main.py:update_calibration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "service:nine-attributes-framework/services/ranker/Dockerfile",
+      "target": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:nine-attributes-framework/services/ranker/Dockerfile",
+      "target": "file:nine-attributes-framework/services/ranker/requirements.txt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "target": "class:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py:TestNineAttributesPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "target": "class:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py:TestNineAttributesPipeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:nine-attributes-framework/services/ranker/src/main.py",
+      "target": "file:nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:openapi/public_v1.json",
+      "target": "endpoint:openapi/public_v1.json:POST-/public/score",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:packages/shared/src/schemas/index.ts",
+      "target": "file:packages/shared/src/templateSpec.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:packages/shared/src/schemas/index.ts",
+      "target": "file:packages/shared/src/vit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:packages/shared/src/index.ts",
+      "target": "file:packages/shared/src/templateSpec.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:packages/shared/src/index.ts",
+      "target": "file:packages/shared/src/vit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:packages/shared/src/index.ts",
+      "target": "file:packages/shared/src/vit_v1/vit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:packages/shared/src/templateSpec.ts",
+      "target": "function:packages/shared/src/templateSpec.ts:toPublicCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:packages/shared/src/templateSpec.ts",
+      "target": "function:packages/shared/src/templateSpec.ts:toAnalystCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:packages/shared/src/templateSpec.ts",
+      "target": "function:packages/shared/src/templateSpec.ts:toPublicCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:packages/shared/src/templateSpec.ts",
+      "target": "function:packages/shared/src/templateSpec.ts:toAnalystCard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:packages/shared/src/vit.ts",
+      "target": "function:packages/shared/src/vit.ts:vitHash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:packages/shared/src/vit.ts",
+      "target": "function:packages/shared/src/vit.ts:vitHash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:packages/shared/tsconfig.json",
+      "target": "file:packages/shared/src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:packages/shared/package.json",
+      "target": "file:packages/shared/src/index.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:playwright/tests/criticalFlows.spec.ts",
+      "target": "function:playwright/tests/criticalFlows.spec.ts:loginAsDeveloper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

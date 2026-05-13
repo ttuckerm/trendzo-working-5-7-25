@@ -1,0 +1,334 @@
+{
+  "nodes": [
+    {
+      "id": "document:public/images/reference/trending-sounds-library.md",
+      "type": "document",
+      "name": "trending-sounds-library.md",
+      "filePath": "public/images/reference/trending-sounds-library.md",
+      "summary": "Reference library catalog of trending sounds for viral video templates, used as static documentation for the trends/audio research workflow.",
+      "tags": ["documentation", "reference", "trending-sounds", "audio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:public/postman/virallab_sandbox.json",
+      "type": "config",
+      "name": "virallab_sandbox.json",
+      "filePath": "public/postman/virallab_sandbox.json",
+      "summary": "Postman environment definition exposing sandbox base URL and auth tokens for testing the ViralLab API.",
+      "tags": ["configuration", "postman", "api-testing", "sandbox"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:public/sdk/trendzo.js",
+      "type": "file",
+      "name": "trendzo.js",
+      "filePath": "public/sdk/trendzo.js",
+      "summary": "Browser-side Trendzo SDK that exposes window.TrendzoSDK with pixel() and telemetry() helpers, posting to /api/pixel/collect and /api/telemetry/ingest via sendBeacon with fetch fallback.",
+      "tags": ["sdk", "client", "telemetry", "pixel", "browser"],
+      "complexity": "simple",
+      "languageNotes": "IIFE pattern with sendBeacon-first transport for reliable unload-time delivery; reads template/sku/campaign data attributes off the loading <script>."
+    },
+    {
+      "id": "config:public/sounds/ryos-like/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "public/sounds/ryos-like/manifest.json",
+      "summary": "Manifest describing the ryos-like sound pack (id, title, BPM, hot-zone timings) consumed by the audio-driven video editor.",
+      "tags": ["configuration", "audio", "sound-pack", "manifest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:public/sounds/trendzo-default/manifest.json",
+      "type": "config",
+      "name": "manifest.json",
+      "filePath": "public/sounds/trendzo-default/manifest.json",
+      "summary": "Manifest for the default Trendzo sound pack defining BPM, sections, and metadata used by the beat-sync pipeline.",
+      "tags": ["configuration", "audio", "sound-pack", "manifest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:public/sounds/test-beat-info.txt",
+      "type": "document",
+      "name": "test-beat-info.txt",
+      "filePath": "public/sounds/test-beat-info.txt",
+      "summary": "Plain-text note describing the test beat asset (origin, BPM, intended use) bundled for beat-sync verification.",
+      "tags": ["documentation", "audio", "test-fixture", "reference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:public/admin-dashboard.js",
+      "type": "file",
+      "name": "admin-dashboard.js",
+      "filePath": "public/admin-dashboard.js",
+      "summary": "Tiny client-side redirect shim that forwards browser navigation from /admin-dashboard.js to /admin-dashboard.html.",
+      "tags": ["redirect", "compatibility-shim", "client", "legacy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:public/deploy-database.html",
+      "type": "file",
+      "name": "deploy-database.html",
+      "filePath": "public/deploy-database.html",
+      "summary": "Standalone admin HTML page used to drive Supabase database deployment / migration steps from the browser.",
+      "tags": ["admin", "deployment", "database", "static-page"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:public/index.html",
+      "type": "file",
+      "name": "index.html",
+      "filePath": "public/index.html",
+      "summary": "Static fallback landing HTML served from /public, primarily for environments not booted through the Next.js renderer.",
+      "tags": ["static-page", "landing", "fallback", "html"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:public/verify-beat-sync.html",
+      "type": "file",
+      "name": "verify-beat-sync.html",
+      "filePath": "public/verify-beat-sync.html",
+      "summary": "Lightweight static page used to QA beat-sync timing of the audio packs against a reference waveform.",
+      "tags": ["qa", "audio", "beat-sync", "static-page"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:python-services/main.py",
+      "type": "file",
+      "name": "main.py",
+      "filePath": "python-services/main.py",
+      "summary": "FastAPI entry point for the CleanCopy ML training microservice; exposes /train, /train/status, /predict, and /models endpoints that delegate to TrainingService.",
+      "tags": ["entry-point", "api-handler", "fastapi", "ml-service"],
+      "complexity": "moderate",
+      "languageNotes": "Manually parses the Next.js .env.local at startup so the Python service shares the same Supabase / API credentials."
+    },
+    {
+      "id": "class:python-services/main.py:TrainRequest",
+      "type": "class",
+      "name": "TrainRequest",
+      "filePath": "python-services/main.py",
+      "lineRange": [42, 44],
+      "summary": "Pydantic request body for kicking off a training job, carrying a job_id and an optional training config dict.",
+      "tags": ["data-model", "pydantic", "request"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python-services/main.py:PredictRequest",
+      "type": "class",
+      "name": "PredictRequest",
+      "filePath": "python-services/main.py",
+      "lineRange": [46, 47],
+      "summary": "Pydantic request body for /predict; carries a feature dict mapping feature names to float values.",
+      "tags": ["data-model", "pydantic", "request"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python-services/main.py:start_training",
+      "type": "function",
+      "name": "start_training",
+      "filePath": "python-services/main.py",
+      "lineRange": [58, 72],
+      "summary": "POST /train endpoint that schedules a TrainingService training run as a FastAPI BackgroundTask and returns the job_id.",
+      "tags": ["api-handler", "background-task", "training"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:python-services/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "python-services/README.md",
+      "summary": "Getting-started guide for the python-services FastAPI training microservice, covering setup, env vars, endpoints, and Docker run instructions.",
+      "tags": ["documentation", "entry-point", "ml-service", "setup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:python-services/requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "python-services/requirements.txt",
+      "summary": "Pinned Python dependency list for the FastAPI training service (FastAPI, uvicorn, XGBoost, scikit-learn, supabase, etc.).",
+      "tags": ["dependencies", "python", "ml-service", "requirements"],
+      "complexity": "simple"
+    },
+    {
+      "id": "service:python-services/Dockerfile",
+      "type": "service",
+      "name": "Dockerfile",
+      "filePath": "python-services/Dockerfile",
+      "summary": "Builds the python-services container on python:3.11-slim, installing ffmpeg/OpenCV system libs, pip-installing requirements, and running uvicorn main:app on port 8000.",
+      "tags": ["containerization", "infrastructure", "ml-service", "deployment"],
+      "complexity": "simple",
+      "languageNotes": "System packages (libgl1-mesa-glx, ffmpeg, libxrender) installed to support OpenCV and audio processing inside the container."
+    },
+    {
+      "id": "config:research-reports/personal-finance-report.json",
+      "type": "config",
+      "name": "personal-finance-report.json",
+      "filePath": "research-reports/personal-finance-report.json",
+      "summary": "Structured research report payload for the personal-finance niche, used as seed/reference data for niche-specific prediction tuning.",
+      "tags": ["data", "research-report", "niche", "personal-finance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:results-autoresearch/auto-001/features.json",
+      "type": "config",
+      "name": "features.json",
+      "filePath": "results-autoresearch/auto-001/features.json",
+      "summary": "Feature manifest for autoresearch experiment auto-001, listing the input columns used to train the candidate XGBoost model.",
+      "tags": ["data", "ml-artifact", "features", "experiment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:results-autoresearch/auto-001/model.json",
+      "type": "config",
+      "name": "model.json",
+      "filePath": "results-autoresearch/auto-001/model.json",
+      "summary": "Serialized XGBoost model payload for autoresearch experiment auto-001 (single-line JSON dump of the booster).",
+      "tags": ["data", "ml-artifact", "model", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:results-autoresearch/auto-001/results.json",
+      "type": "config",
+      "name": "results.json",
+      "filePath": "results-autoresearch/auto-001/results.json",
+      "summary": "Evaluation results for autoresearch experiment auto-001 — Spearman CV/holdout scores, MAE, hypothesis metadata, and feature importances.",
+      "tags": ["data", "ml-artifact", "evaluation", "experiment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:results-autoresearch/auto-001/scaler.json",
+      "type": "config",
+      "name": "scaler.json",
+      "filePath": "results-autoresearch/auto-001/scaler.json",
+      "summary": "Serialized feature scaler (mean/std per column) used to normalize inputs before scoring with the auto-001 model.",
+      "tags": ["data", "ml-artifact", "scaler", "preprocessing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:results-autoresearch/auto-002/features.json",
+      "type": "config",
+      "name": "features.json",
+      "filePath": "results-autoresearch/auto-002/features.json",
+      "summary": "Feature manifest for autoresearch experiment auto-002 listing the columns fed into the candidate model.",
+      "tags": ["data", "ml-artifact", "features", "experiment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:results-autoresearch/auto-002/model.json",
+      "type": "config",
+      "name": "model.json",
+      "filePath": "results-autoresearch/auto-002/model.json",
+      "summary": "Serialized XGBoost model payload for autoresearch experiment auto-002.",
+      "tags": ["data", "ml-artifact", "model", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:results-autoresearch/auto-002/results.json",
+      "type": "config",
+      "name": "results.json",
+      "filePath": "results-autoresearch/auto-002/results.json",
+      "summary": "Evaluation results for autoresearch experiment auto-002 with cross-validation and holdout metrics plus the experiment hypothesis.",
+      "tags": ["data", "ml-artifact", "evaluation", "experiment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:results-autoresearch/auto-002/scaler.json",
+      "type": "config",
+      "name": "scaler.json",
+      "filePath": "results-autoresearch/auto-002/scaler.json",
+      "summary": "Feature scaler artifact (per-column means and scales) paired with the auto-002 candidate model.",
+      "tags": ["data", "ml-artifact", "scaler", "preprocessing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:results-autoresearch/auto-003/features.json",
+      "type": "config",
+      "name": "features.json",
+      "filePath": "results-autoresearch/auto-003/features.json",
+      "summary": "Feature manifest for autoresearch experiment auto-003 enumerating the model's input columns.",
+      "tags": ["data", "ml-artifact", "features", "experiment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:results-autoresearch/auto-003/model.json",
+      "type": "config",
+      "name": "model.json",
+      "filePath": "results-autoresearch/auto-003/model.json",
+      "summary": "Serialized XGBoost model payload for autoresearch experiment auto-003.",
+      "tags": ["data", "ml-artifact", "model", "xgboost"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:python-services/main.py",
+      "target": "class:python-services/main.py:TrainRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python-services/main.py",
+      "target": "class:python-services/main.py:PredictRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python-services/main.py",
+      "target": "function:python-services/main.py:start_training",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python-services/main.py",
+      "target": "class:python-services/main.py:TrainRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python-services/main.py",
+      "target": "class:python-services/main.py:PredictRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python-services/main.py",
+      "target": "function:python-services/main.py:start_training",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "service:python-services/Dockerfile",
+      "target": "file:python-services/main.py",
+      "type": "deploys",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "service:python-services/Dockerfile",
+      "target": "document:python-services/requirements.txt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:python-services/README.md",
+      "target": "file:python-services/main.py",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:python-services/README.md",
+      "target": "service:python-services/Dockerfile",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

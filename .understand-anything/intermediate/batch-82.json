@@ -1,0 +1,624 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/drift/alerts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/drift/alerts/route.ts",
+      "summary": "GET handler returning the 50 most recent drift_alert rows from Supabase; swallows errors and returns an empty array on failure.",
+      "tags": ["api-handler", "drift", "monitoring", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/drift/alerts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/drift/alerts/route.ts",
+      "lineRange": [12, 20],
+      "summary": "Reads the latest 50 drift_alert records from Supabase ordered by created_at desc and returns them as JSON.",
+      "tags": ["api-handler", "read", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/drift/importance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/drift/importance/route.ts",
+      "summary": "GET handler returning recent feature_importance records from Supabase for drift monitoring dashboards.",
+      "tags": ["api-handler", "drift", "monitoring", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/drift/importance/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/drift/importance/route.ts",
+      "lineRange": [12, 20],
+      "summary": "Fetches the latest feature_importance entries used to surface model importance drift in the ops UI.",
+      "tags": ["api-handler", "read", "drift"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/drift/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/drift/summary/route.ts",
+      "summary": "GET handler returning an aggregated drift summary payload for the monitoring dashboard.",
+      "tags": ["api-handler", "drift", "monitoring", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/drift/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/drift/summary/route.ts",
+      "lineRange": [1, 30],
+      "summary": "Builds a drift summary response combining alert counts and importance snapshots for dashboard consumers.",
+      "tags": ["api-handler", "summary", "drift"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/etl/ai-template-analysis/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/ai-template-analysis/route.ts",
+      "summary": "POST endpoint that runs the AI template analysis ETL pipeline to enrich trending templates with model-derived metadata.",
+      "tags": ["api-handler", "etl", "template-analysis", "ai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/etl/ai-template-analysis/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/etl/ai-template-analysis/route.ts",
+      "lineRange": [1, 101],
+      "summary": "Triggers the AI template analysis ETL by invoking aiTemplateAnalysisEtl with the requested batch parameters and returns the job result.",
+      "tags": ["api-handler", "etl", "template-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/etl/analyze-video/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/analyze-video/route.ts",
+      "summary": "POST endpoint that analyzes a single TikTok video via advancedTemplateAnalysisService, persists results, and falls back to MOCK_ANALYSIS_RESULT when the Claude API key is missing.",
+      "tags": ["api-handler", "etl", "video-analysis", "template-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/etl/analyze-video/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/etl/analyze-video/route.ts",
+      "lineRange": [41, 149],
+      "summary": "Validates a TikTokVideo payload, runs advancedTemplateAnalysisService to produce template structure and viral metrics, stores the template, and returns analysis (or a mock result in development).",
+      "tags": ["api-handler", "video-analysis", "template-storage"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/etl/analyze-video/route.ts:validateTikTokVideo",
+      "type": "function",
+      "name": "validateTikTokVideo",
+      "filePath": "src/app/api/etl/analyze-video/route.ts",
+      "lineRange": [150, 183],
+      "summary": "Sanitizes and validates an incoming TikTokVideo body, ensuring required ids, stats, and metadata are present before analysis.",
+      "tags": ["validation", "etl", "video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/etl/fetch-videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/fetch-videos/route.ts",
+      "summary": "POST endpoint that fetches TikTok videos through apifyService for ETL ingestion, with a comprehensive in-file MOCK_VIDEOS fallback for development.",
+      "tags": ["api-handler", "etl", "apify", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/etl/fetch-videos/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/etl/fetch-videos/route.ts",
+      "lineRange": [140, 217],
+      "summary": "Invokes apifyService to scrape TikTok videos for the requested hashtags or accounts, returning either fresh data or the embedded MOCK_VIDEOS in dev mode.",
+      "tags": ["api-handler", "etl", "apify"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/etl/job-status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/job-status/route.ts",
+      "summary": "GET endpoint that returns ETL job status records from Supabase, falling back to a curated set of mock jobs when no rows are available.",
+      "tags": ["api-handler", "etl", "job-status", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/etl/job-status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/etl/job-status/route.ts",
+      "lineRange": [1, 70],
+      "summary": "Queries the etl_jobs table for recent job statuses and shapes them for the monitoring dashboard, using getMockJobs when the table is empty.",
+      "tags": ["api-handler", "etl", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/etl/job-status/route.ts:getMockJobs",
+      "type": "function",
+      "name": "getMockJobs",
+      "filePath": "src/app/api/etl/job-status/route.ts",
+      "lineRange": [71, 110],
+      "summary": "Returns a hard-coded list of representative ETL job rows used as a dev/test fallback for the job-status endpoint.",
+      "tags": ["utility", "etl", "mock-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/etl/run-tiktok-etl/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/run-tiktok-etl/route.ts",
+      "summary": "POST endpoint that kicks off the full TikTok template ETL pipeline by delegating to tiktokTemplateEtl.",
+      "tags": ["api-handler", "etl", "tiktok", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/etl/run-tiktok-etl/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/etl/run-tiktok-etl/route.ts",
+      "lineRange": [1, 76],
+      "summary": "Starts the TikTok template ETL run with caller-provided params (hashtags, limits) and returns the resulting job summary.",
+      "tags": ["api-handler", "etl", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/etl/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/etl/test/route.ts",
+      "summary": "POST endpoint that executes the ETL integration test harness (Apify, Firestore, error handling, alerts) and reports pass/fail.",
+      "tags": ["api-handler", "etl", "integration-test", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/etl/test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/etl/test/route.ts",
+      "lineRange": [1, 54],
+      "summary": "Runs the etl-integration-test suite with optional cleanup and alert-testing flags, returning structured results to the caller.",
+      "tags": ["api-handler", "integration-test", "etl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:src/app/api/etl/test/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/app/api/etl/test/README.md",
+      "summary": "Documents the ETL integration test endpoint, covering what is tested (Apify, Firestore fields, error handling, alerts) and how to invoke it via curl or the bundled test script.",
+      "tags": ["documentation", "etl", "integration-test", "api-schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/experiments/[id]/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/[id]/summary/route.ts",
+      "summary": "GET endpoint returning a single experiment's summary stats (arms, winner, lift) sourced from the experiment store and summary helper.",
+      "tags": ["api-handler", "experiments", "summary", "ab-testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/[id]/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/experiments/[id]/summary/route.ts",
+      "lineRange": [1, 17],
+      "summary": "Loads an experiment by id and produces its summary stats using the experiments summary module.",
+      "tags": ["api-handler", "experiments", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/experiments/assign/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/assign/route.ts",
+      "summary": "POST endpoint that assigns a unit to an experiment arm using either deterministic A/B hashing or a multi-armed bandit policy.",
+      "tags": ["api-handler", "experiments", "assignment", "bandit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/assign/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/assign/route.ts",
+      "lineRange": [1, 33],
+      "summary": "Routes assignment requests to ab.ts or bandit.ts based on the experiment policy and returns the chosen arm.",
+      "tags": ["api-handler", "experiments", "ab-testing", "bandit"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/experiments/create/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/create/route.ts",
+      "summary": "POST endpoint that creates a new experiment definition in the experiment store.",
+      "tags": ["api-handler", "experiments", "create"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/create/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/create/route.ts",
+      "lineRange": [1, 28],
+      "summary": "Validates the experiment payload against the types module and persists it via the experiments store.",
+      "tags": ["api-handler", "experiments", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/experiments/leaderboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/leaderboard/route.ts",
+      "summary": "GET endpoint returning a ranked leaderboard of experiments based on simulated/observed lift summaries.",
+      "tags": ["api-handler", "experiments", "leaderboard", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/leaderboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/experiments/leaderboard/route.ts",
+      "lineRange": [1, 30],
+      "summary": "Aggregates summaries from every experiment in the store, optionally augmenting with simulator output, and returns a ranked leaderboard.",
+      "tags": ["api-handler", "experiments", "ranking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/experiments/report/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/report/route.ts",
+      "summary": "POST endpoint accepting outcome reports for an experiment unit and persisting them via the experiments store.",
+      "tags": ["api-handler", "experiments", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/report/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/report/route.ts",
+      "lineRange": [1, 19],
+      "summary": "Records an experiment outcome event (conversion, metric) for the given experiment/arm/unit.",
+      "tags": ["api-handler", "experiments", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/experiments/simulate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/simulate/route.ts",
+      "summary": "POST endpoint that runs the experiments simulator over an experiment definition to forecast lift and produce a summary.",
+      "tags": ["api-handler", "experiments", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/simulate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/simulate/route.ts",
+      "lineRange": [1, 23],
+      "summary": "Loads an experiment, runs the simulator with the supplied parameters, and returns a summary of the simulated arms.",
+      "tags": ["api-handler", "experiments", "simulation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/experiments/start/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/start/route.ts",
+      "summary": "POST endpoint that marks an experiment as started, ensuring required Supabase rows exist before flipping state.",
+      "tags": ["api-handler", "experiments", "lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/start/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/start/route.ts",
+      "lineRange": [1, 37],
+      "summary": "Transitions an experiment to the running state after the ensure() helper has provisioned backing rows.",
+      "tags": ["api-handler", "experiments", "lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/start/route.ts:ensure",
+      "type": "function",
+      "name": "ensure",
+      "filePath": "src/app/api/experiments/start/route.ts",
+      "lineRange": [1, 30],
+      "summary": "Ensures the Supabase rows needed for an experiment to start exist, creating them if missing.",
+      "tags": ["utility", "experiments", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/experiments/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/status/route.ts",
+      "summary": "GET endpoint reporting current lifecycle status (running, stopped, draft) of one or all experiments from Supabase.",
+      "tags": ["api-handler", "experiments", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/experiments/status/route.ts",
+      "lineRange": [1, 29],
+      "summary": "Reads experiment lifecycle metadata from Supabase and returns it for dashboard consumption.",
+      "tags": ["api-handler", "experiments", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/experiments/stop/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experiments/stop/route.ts",
+      "summary": "POST endpoint that stops a running experiment by delegating to the experiments store.",
+      "tags": ["api-handler", "experiments", "lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/experiments/stop/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experiments/stop/route.ts",
+      "lineRange": [1, 15],
+      "summary": "Marks an experiment as stopped in the experiments store and returns the updated status.",
+      "tags": ["api-handler", "experiments", "lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/experts/performance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/experts/performance/route.ts",
+      "summary": "Experts performance API with GET (read expert profiles, top performers, audit trail) and POST (record performance, log verifications) backed by expertPerformanceService and Firebase auth.",
+      "tags": ["api-handler", "experts", "performance", "firebase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/experts/performance/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/experts/performance/route.ts",
+      "lineRange": [14, 80],
+      "summary": "Returns a single expert profile, the top performers list, or path-specific performance data depending on query params.",
+      "tags": ["api-handler", "experts", "read"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/experts/performance/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/experts/performance/route.ts",
+      "lineRange": [81, 248],
+      "summary": "Handles authenticated POSTs to record expert performance metrics, persist AdjustmentVerification audit entries, and enforce isExpertUser role gating via Firebase auth.",
+      "tags": ["api-handler", "experts", "audit", "auth"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/exports/metrics.json/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/exports/metrics.json/route.ts",
+      "summary": "GET endpoint that exports the platform's current metrics as a downloadable JSON payload.",
+      "tags": ["api-handler", "exports", "metrics", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/exports/metrics.json/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/exports/metrics.json/route.ts",
+      "lineRange": [1, 17],
+      "summary": "Streams the latest aggregated metrics as JSON for downstream tooling and dashboards.",
+      "tags": ["api-handler", "exports", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/exports/sheets/append/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/exports/sheets/append/route.ts",
+      "summary": "POST endpoint that appends rows to a Google Sheet export target using configured service credentials.",
+      "tags": ["api-handler", "exports", "google-sheets"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/exports/sheets/append/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/exports/sheets/append/route.ts",
+      "lineRange": [1, 17],
+      "summary": "Appends a row set to the configured Google Sheet, returning the API response or error to the caller.",
+      "tags": ["api-handler", "exports", "google-sheets"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/exports/slack/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/exports/slack/test/route.ts",
+      "summary": "POST endpoint that sends a test message to the configured Slack webhook to validate the export integration.",
+      "tags": ["api-handler", "exports", "slack", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/exports/slack/test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/exports/slack/test/route.ts",
+      "lineRange": [1, 14],
+      "summary": "Posts a canned test message to the Slack webhook and reports back delivery success.",
+      "tags": ["api-handler", "exports", "slack"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/exports/templates.csv/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/exports/templates.csv/route.ts",
+      "summary": "GET endpoint that exports the current template catalog as a CSV download.",
+      "tags": ["api-handler", "exports", "templates", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/exports/templates.csv/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/exports/templates.csv/route.ts",
+      "lineRange": [1, 19],
+      "summary": "Builds a CSV representation of the templates list and returns it with appropriate content-disposition headers.",
+      "tags": ["api-handler", "exports", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/features/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/features/route.ts",
+      "summary": "GET endpoint that returns the current feature-flag configuration from src/config/flags.ts for client consumers.",
+      "tags": ["api-handler", "feature-flags", "config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/features/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/features/route.ts",
+      "lineRange": [1, 17],
+      "summary": "Reads the feature flags module and returns the active flag set so the front end can gate UI features.",
+      "tags": ["api-handler", "feature-flags"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/drift/alerts/route.ts", "target": "function:src/app/api/drift/alerts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/drift/alerts/route.ts", "target": "function:src/app/api/drift/alerts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/drift/alerts/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/drift/importance/route.ts", "target": "function:src/app/api/drift/importance/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/drift/importance/route.ts", "target": "function:src/app/api/drift/importance/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/drift/importance/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/drift/summary/route.ts", "target": "function:src/app/api/drift/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/drift/summary/route.ts", "target": "function:src/app/api/drift/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/etl/ai-template-analysis/route.ts", "target": "function:src/app/api/etl/ai-template-analysis/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/ai-template-analysis/route.ts", "target": "function:src/app/api/etl/ai-template-analysis/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/ai-template-analysis/route.ts", "target": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "function:src/app/api/etl/analyze-video/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "function:src/app/api/etl/analyze-video/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "function:src/app/api/etl/analyze-video/route.ts:validateTikTokVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "file:src/lib/services/advancedTemplateAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "file:src/lib/services/templateStorageService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/etl/analyze-video/route.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/etl/fetch-videos/route.ts", "target": "function:src/app/api/etl/fetch-videos/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/fetch-videos/route.ts", "target": "function:src/app/api/etl/fetch-videos/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/fetch-videos/route.ts", "target": "file:src/lib/services/apifyService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/etl/job-status/route.ts", "target": "function:src/app/api/etl/job-status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/job-status/route.ts", "target": "function:src/app/api/etl/job-status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/job-status/route.ts", "target": "function:src/app/api/etl/job-status/route.ts:getMockJobs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/job-status/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/etl/run-tiktok-etl/route.ts", "target": "function:src/app/api/etl/run-tiktok-etl/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/run-tiktok-etl/route.ts", "target": "function:src/app/api/etl/run-tiktok-etl/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/run-tiktok-etl/route.ts", "target": "file:src/lib/etl/tiktokTemplateEtl.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/etl/test/route.ts", "target": "function:src/app/api/etl/test/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/etl/test/route.ts", "target": "function:src/app/api/etl/test/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/etl/test/route.ts", "target": "file:src/lib/test/etl-integration-test.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "document:src/app/api/etl/test/README.md", "target": "file:src/app/api/etl/test/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+
+    {"source": "file:src/app/api/experiments/[id]/summary/route.ts", "target": "function:src/app/api/experiments/[id]/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/[id]/summary/route.ts", "target": "function:src/app/api/experiments/[id]/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/[id]/summary/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/[id]/summary/route.ts", "target": "file:src/lib/experiments/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/assign/route.ts", "target": "function:src/app/api/experiments/assign/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/assign/route.ts", "target": "function:src/app/api/experiments/assign/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/assign/route.ts", "target": "file:src/lib/experiments/ab.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/assign/route.ts", "target": "file:src/lib/experiments/bandit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/assign/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/create/route.ts", "target": "function:src/app/api/experiments/create/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/create/route.ts", "target": "function:src/app/api/experiments/create/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/create/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/create/route.ts", "target": "file:src/lib/experiments/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/leaderboard/route.ts", "target": "function:src/app/api/experiments/leaderboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/leaderboard/route.ts", "target": "function:src/app/api/experiments/leaderboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/leaderboard/route.ts", "target": "file:src/lib/experiments/simulator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/leaderboard/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/leaderboard/route.ts", "target": "file:src/lib/experiments/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/report/route.ts", "target": "function:src/app/api/experiments/report/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/report/route.ts", "target": "function:src/app/api/experiments/report/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/report/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/simulate/route.ts", "target": "function:src/app/api/experiments/simulate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/simulate/route.ts", "target": "function:src/app/api/experiments/simulate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/simulate/route.ts", "target": "file:src/lib/experiments/simulator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/simulate/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experiments/simulate/route.ts", "target": "file:src/lib/experiments/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/start/route.ts", "target": "function:src/app/api/experiments/start/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/start/route.ts", "target": "function:src/app/api/experiments/start/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/start/route.ts", "target": "function:src/app/api/experiments/start/route.ts:ensure", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/start/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/status/route.ts", "target": "function:src/app/api/experiments/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/status/route.ts", "target": "function:src/app/api/experiments/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/status/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experiments/stop/route.ts", "target": "function:src/app/api/experiments/stop/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experiments/stop/route.ts", "target": "function:src/app/api/experiments/stop/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experiments/stop/route.ts", "target": "file:src/lib/experiments/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "function:src/app/api/experts/performance/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "function:src/app/api/experts/performance/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "function:src/app/api/experts/performance/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "function:src/app/api/experts/performance/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "file:src/lib/services/expertPerformanceService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "file:src/lib/types/expert.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/experts/performance/route.ts", "target": "file:src/lib/types/user.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/exports/metrics.json/route.ts", "target": "function:src/app/api/exports/metrics.json/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/exports/metrics.json/route.ts", "target": "function:src/app/api/exports/metrics.json/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/exports/metrics.json/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/exports/sheets/append/route.ts", "target": "function:src/app/api/exports/sheets/append/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/exports/sheets/append/route.ts", "target": "function:src/app/api/exports/sheets/append/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/exports/sheets/append/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/exports/slack/test/route.ts", "target": "function:src/app/api/exports/slack/test/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/exports/slack/test/route.ts", "target": "function:src/app/api/exports/slack/test/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/exports/templates.csv/route.ts", "target": "function:src/app/api/exports/templates.csv/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/exports/templates.csv/route.ts", "target": "function:src/app/api/exports/templates.csv/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/exports/templates.csv/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/features/route.ts", "target": "function:src/app/api/features/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/features/route.ts", "target": "function:src/app/api/features/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/features/route.ts", "target": "file:src/config/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,625 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/webhooks/deliver/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/webhooks/deliver/route.ts",
+      "summary": "Next.js API route that delivers a signed webhook payload to a target URL using an HMAC-SHA256 signature header.",
+      "tags": ["api-handler", "webhook", "signing", "delivery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/webhooks/deliver/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/webhooks/deliver/route.ts",
+      "lineRange": [14, 40],
+      "summary": "Handles POST requests by signing the JSON payload with HMAC-SHA256 and forwarding it to the supplied target URL with retry-friendly error reporting.",
+      "tags": ["api-handler", "webhook", "http-client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/webhooks/endpoints/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/webhooks/endpoints/route.ts",
+      "summary": "CRUD-style API route for webhook endpoints, ensuring backing tables exist and verifying outgoing HMAC signatures.",
+      "tags": ["api-handler", "webhook", "registry", "schema-bootstrap"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/webhooks/endpoints/route.ts:ensureWebhookTables",
+      "type": "function",
+      "name": "ensureWebhookTables",
+      "filePath": "src/app/api/webhooks/endpoints/route.ts",
+      "lineRange": [9, 38],
+      "summary": "Lazily creates the webhook_endpoints and webhook_deliveries tables if they are missing so the route can be self-bootstrapping.",
+      "tags": ["migration", "schema-bootstrap", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/webhooks/endpoints/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/webhooks/endpoints/route.ts",
+      "lineRange": [45, 53],
+      "summary": "Returns the list of registered webhook endpoints after ensuring the underlying tables exist.",
+      "tags": ["api-handler", "webhook", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/webhooks/endpoints/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/webhooks/endpoints/route.ts",
+      "lineRange": [55, 81],
+      "summary": "Registers a new webhook endpoint, validating the URL and stowing a shared secret used for HMAC signing.",
+      "tags": ["api-handler", "webhook", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/windows/[...slug]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/windows/[...slug]/route.ts",
+      "summary": "Catch-all API route that dispatches GET/POST requests for the dynamic 'windows' slug namespace and returns a uniform success envelope.",
+      "tags": ["api-handler", "catch-all", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/windows/[...slug]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/windows/[...slug]/route.ts",
+      "lineRange": [8, 25],
+      "summary": "Handles GET requests for arbitrary window slugs and echoes the resolved slug path in the response envelope.",
+      "tags": ["api-handler", "catch-all"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/windows/[...slug]/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/windows/[...slug]/route.ts",
+      "lineRange": [27, 36],
+      "summary": "Handles POST requests for arbitrary window slugs, echoing the request body inside the standard success envelope.",
+      "tags": ["api-handler", "catch-all"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ws/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ws/route.ts",
+      "summary": "WebSocket gateway route that exposes a WebSocketManager singleton for module status, user activity, and prediction-metric broadcasts.",
+      "tags": ["api-handler", "websocket", "realtime", "broadcast"],
+      "complexity": "complex",
+      "languageNotes": "Implements an in-process pub/sub manager with ping intervals and periodic data fan-out instead of relying on an external broker."
+    },
+    {
+      "id": "class:src/app/api/ws/route.ts:WebSocketManager",
+      "type": "class",
+      "name": "WebSocketManager",
+      "filePath": "src/app/api/ws/route.ts",
+      "lineRange": [13, 172],
+      "summary": "In-memory WebSocket connection manager that tracks clients, dispatches inbound messages, and periodically broadcasts module status, activity, and prediction metrics.",
+      "tags": ["websocket", "realtime", "singleton", "pub-sub"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/ws/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ws/route.ts",
+      "lineRange": [176, 196],
+      "summary": "Returns WebSocket gateway metadata and current client count, since Next.js Edge routes cannot directly upgrade to a WebSocket here.",
+      "tags": ["api-handler", "websocket", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/app/api/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/app/api/README.md",
+      "summary": "Reference documentation that catalogs the App Router API routes, their HTTP contracts, and conventions for handlers under src/app/api.",
+      "tags": ["documentation", "api-reference", "developer-guide"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/app/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/app/layout.tsx",
+      "summary": "Trivial App Router layout that renders its children for the /app segment without adding chrome.",
+      "tags": ["layout", "app-router", "shell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/app/not-found.tsx",
+      "type": "file",
+      "name": "not-found.tsx",
+      "filePath": "src/app/app/not-found.tsx",
+      "summary": "Custom 404 screen for the /app segment that offers a styled CTA button back to the home page.",
+      "tags": ["not-found", "app-router", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/app/not-found.tsx:NotFound",
+      "type": "function",
+      "name": "NotFound",
+      "filePath": "src/app/app/not-found.tsx",
+      "lineRange": [5, 25],
+      "summary": "React component rendered when the /app route subtree has no matching page; presents an error card with a button back home.",
+      "tags": ["component", "not-found", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/app/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/app/page.tsx",
+      "summary": "Index page for the /app segment that introduces the application shell with a static landing card.",
+      "tags": ["page", "app-router", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/assessment/[assessmentId]/loading.tsx",
+      "type": "file",
+      "name": "loading.tsx",
+      "filePath": "src/app/assessment/[assessmentId]/loading.tsx",
+      "summary": "Skeleton loading screen for assessment pages, composing zoned placeholders during data fetch.",
+      "tags": ["loading", "skeleton", "app-router", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/assessment/[assessmentId]/loading.tsx:AssessmentLoading",
+      "type": "function",
+      "name": "AssessmentLoading",
+      "filePath": "src/app/assessment/[assessmentId]/loading.tsx",
+      "lineRange": [6, 54],
+      "summary": "Renders the multi-zone skeleton scaffold shown while an assessment page is loading.",
+      "tags": ["component", "loading", "skeleton"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/assessment/[assessmentId]/loading.tsx:SkeletonZone",
+      "type": "function",
+      "name": "SkeletonZone",
+      "filePath": "src/app/assessment/[assessmentId]/loading.tsx",
+      "lineRange": [56, 68],
+      "summary": "Helper component that draws a styled animated skeleton block at a given inline style position.",
+      "tags": ["component", "skeleton", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/assessment/[assessmentId]/not-found.tsx",
+      "type": "file",
+      "name": "not-found.tsx",
+      "filePath": "src/app/assessment/[assessmentId]/not-found.tsx",
+      "summary": "Branded 404 page rendered when an assessment ID cannot be resolved, with navigation back to assessment list and home.",
+      "tags": ["not-found", "app-router", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/assessment/[assessmentId]/not-found.tsx:AssessmentNotFound",
+      "type": "function",
+      "name": "AssessmentNotFound",
+      "filePath": "src/app/assessment/[assessmentId]/not-found.tsx",
+      "lineRange": [3, 79],
+      "summary": "Renders the assessment-specific 404 screen with action buttons routing the user back to discovery or home.",
+      "tags": ["component", "not-found", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/assessment/[assessmentId]/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/assessment/[assessmentId]/page.tsx",
+      "summary": "Dynamic assessment detail page that resolves the assessmentId param and hands rendering off to the AssessmentHUD client component.",
+      "tags": ["page", "app-router", "assessment", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/assessment/[assessmentId]/page.tsx:AssessmentPage",
+      "type": "function",
+      "name": "AssessmentPage",
+      "filePath": "src/app/assessment/[assessmentId]/page.tsx",
+      "lineRange": [31, 46],
+      "summary": "Server component that reads the assessmentId param and renders AssessmentHUD inside the page shell.",
+      "tags": ["component", "page", "server-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/auth/callback-handler/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/auth/callback-handler/page.tsx",
+      "summary": "Client page that completes a Supabase OAuth/magic-link callback by exchanging the URL hash for a session.",
+      "tags": ["page", "auth", "callback", "client-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/callback-handler/page.tsx:CallbackHandlerPage",
+      "type": "function",
+      "name": "CallbackHandlerPage",
+      "filePath": "src/app/auth/callback-handler/page.tsx",
+      "lineRange": [32, 45],
+      "summary": "Top-level callback page that wraps the suspense boundary around the CallbackHandlerContent logic.",
+      "tags": ["component", "auth", "callback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/callback-handler/page.tsx:CallbackHandlerContent",
+      "type": "function",
+      "name": "CallbackHandlerContent",
+      "filePath": "src/app/auth/callback-handler/page.tsx",
+      "lineRange": [7, 30],
+      "summary": "Reads search params, finishes the Supabase auth callback exchange, and redirects the user to the proper post-login route.",
+      "tags": ["component", "auth", "callback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/auth/callback/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/auth/callback/route.ts",
+      "summary": "Server route that exchanges Supabase auth codes for sessions, lazily provisioning a profile row for new users before redirecting.",
+      "tags": ["api-handler", "auth", "callback", "profile-bootstrap"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/auth/callback/route.ts:ensureProfile",
+      "type": "function",
+      "name": "ensureProfile",
+      "filePath": "src/app/auth/callback/route.ts",
+      "lineRange": [17, 56],
+      "summary": "Ensures a profiles row exists for the authenticated user, creating one with sensible defaults on first sign-in.",
+      "tags": ["auth", "profile", "database", "idempotent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/auth/callback/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/auth/callback/route.ts",
+      "lineRange": [58, 109],
+      "summary": "Handles the OAuth/magic-link callback GET, exchanging the code for a session, ensuring a profile, and redirecting to the next URL.",
+      "tags": ["api-handler", "auth", "callback", "oauth"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/auth/error/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/auth/error/page.tsx",
+      "summary": "Auth error page that surfaces friendly error copy from query params with recovery actions.",
+      "tags": ["page", "auth", "error", "client-component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/auth/error/page.tsx:AuthErrorPage",
+      "type": "function",
+      "name": "AuthErrorPage",
+      "filePath": "src/app/auth/error/page.tsx",
+      "lineRange": [9, 73],
+      "summary": "Renders the auth error screen with messages selected from query params and recovery CTAs.",
+      "tags": ["component", "auth", "error"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/auth/magic-link/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/auth/magic-link/page.tsx",
+      "summary": "Client page that requests a magic sign-in link via the magicLink service, handling cooldown and analytics around the email send.",
+      "tags": ["page", "auth", "magic-link", "client-component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/auth/magic-link/page.tsx:MagicLinkPage",
+      "type": "function",
+      "name": "MagicLinkPage",
+      "filePath": "src/app/auth/magic-link/page.tsx",
+      "lineRange": [10, 134],
+      "summary": "Component that drives the magic-link request flow, including email entry, send, status banners, and resend cooldown.",
+      "tags": ["component", "auth", "magic-link"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/auth/save-template/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/auth/save-template/page.tsx",
+      "summary": "Save-template gate page that prompts the visitor to sign in via magic link in order to persist a template against their account.",
+      "tags": ["page", "auth", "template-save", "client-component"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/auth/save-template/page.tsx:SaveTemplatePage",
+      "type": "function",
+      "name": "SaveTemplatePage",
+      "filePath": "src/app/auth/save-template/page.tsx",
+      "lineRange": [10, 159],
+      "summary": "Handles the save-template auth flow, dispatching analytics events and sending a magic link tied to the pending template id.",
+      "tags": ["component", "auth", "template-save", "analytics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/auth/AuthForm.tsx",
+      "type": "file",
+      "name": "AuthForm.tsx",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "summary": "Composable client-side authentication form supporting email/password, Google, and anonymous sign-in with branded chrome and error handling.",
+      "tags": ["component", "auth", "form", "ui"],
+      "complexity": "complex",
+      "languageNotes": "Module is composed of many small presentational sub-components but exports none — they are consumed only by the top-level AuthForm in the same file."
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:AuthForm",
+      "type": "function",
+      "name": "AuthForm",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [41, 146],
+      "summary": "Top-level auth form component that orchestrates sign-in vs sign-up state, Supabase calls via useAuth, and inline error/success surfacing.",
+      "tags": ["component", "auth", "form"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:getErrorMessage",
+      "type": "function",
+      "name": "getErrorMessage",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [12, 39],
+      "summary": "Maps Supabase auth error codes/messages onto user-friendly copy displayed in the form.",
+      "tags": ["utility", "auth", "error-mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:Button",
+      "type": "function",
+      "name": "Button",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [158, 169],
+      "summary": "Styled primary button used inside the auth form with disabled-state visuals.",
+      "tags": ["component", "ui", "button"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:Header",
+      "type": "function",
+      "name": "Header",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [186, 201],
+      "summary": "Renders the auth card header and the toggle between sign-in and sign-up modes.",
+      "tags": ["component", "auth", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:SocialButtons",
+      "type": "function",
+      "name": "SocialButtons",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [209, 218],
+      "summary": "Renders Google and anonymous sign-in buttons that delegate to the supplied auth handlers.",
+      "tags": ["component", "auth", "oauth", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:SocialButton",
+      "type": "function",
+      "name": "SocialButton",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [228, 244],
+      "summary": "Generic social provider button used for Google and anonymous auth options.",
+      "tags": ["component", "ui", "button", "oauth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:LoginForm",
+      "type": "function",
+      "name": "LoginForm",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [266, 345],
+      "summary": "Email and password form section, including labels, validation cues, error/success banners, and submit affordance.",
+      "tags": ["component", "auth", "form"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/auth/AuthForm.tsx:BackgroundDecoration",
+      "type": "function",
+      "name": "BackgroundDecoration",
+      "filePath": "src/app/auth/AuthForm.tsx",
+      "lineRange": [360, 385],
+      "summary": "Renders the gradient blobs and decorative grid layer behind the auth card.",
+      "tags": ["component", "ui", "decoration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/auth/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/auth/page.tsx",
+      "summary": "Top-level /auth route that mounts the shared AuthForm inside a suspense boundary.",
+      "tags": ["page", "auth", "app-router"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/baseline/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/baseline/page.tsx",
+      "summary": "Static /baseline route used as a minimal control surface for baseline measurement comparisons.",
+      "tags": ["page", "app-router", "baseline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/basic/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/basic/page.tsx",
+      "summary": "Static /basic route serving as a deliberately minimal page, typically used for smoke tests and Pretext baselines.",
+      "tags": ["page", "app-router", "smoke-test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/campaign/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/campaign/page.tsx",
+      "summary": "Campaign launcher page that guides creators through configuring and starting a new viral campaign run.",
+      "tags": ["page", "app-router", "campaign", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/campaign/page.tsx:CampaignLauncher",
+      "type": "function",
+      "name": "CampaignLauncher",
+      "filePath": "src/app/campaign/page.tsx",
+      "lineRange": [21, 141],
+      "summary": "Drives the campaign launch wizard, managing user inputs, step state, and the kickoff submission.",
+      "tags": ["component", "campaign", "wizard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/chairman/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/chairman/layout.tsx",
+      "summary": "Layout wrapper for the /chairman route that renders nested chairman pages unchanged.",
+      "tags": ["layout", "app-router", "chairman"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/chairman/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/chairman/page.tsx",
+      "summary": "Stub /chairman index page that currently renders a placeholder dashboard entry point.",
+      "tags": ["page", "app-router", "chairman", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx",
+      "type": "file",
+      "name": "AdjustmentTypeImpactChart.tsx",
+      "filePath": "src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx",
+      "summary": "Visualization component charting historical impact by adjustment type or category for the expert dashboard.",
+      "tags": ["component", "chart", "analytics", "expert-dashboard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx:AdjustmentTypeImpactChart",
+      "type": "function",
+      "name": "AdjustmentTypeImpactChart",
+      "filePath": "src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx",
+      "lineRange": [24, 173],
+      "summary": "Renders the adjustment-type impact chart with toggleable category aggregation and per-series styling.",
+      "tags": ["component", "chart", "analytics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx",
+      "type": "file",
+      "name": "ExpertPerformanceComparison.tsx",
+      "filePath": "src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx",
+      "summary": "Component that compares expert performance metrics side-by-side using historical impact data.",
+      "tags": ["component", "chart", "analytics", "expert-dashboard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx:ExpertPerformanceComparison",
+      "type": "function",
+      "name": "ExpertPerformanceComparison",
+      "filePath": "src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx",
+      "lineRange": [26, 179],
+      "summary": "Renders the side-by-side expert performance comparison view with derived per-expert stats.",
+      "tags": ["component", "chart", "analytics"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/webhooks/deliver/route.ts", "target": "function:src/app/api/webhooks/deliver/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/webhooks/deliver/route.ts", "target": "function:src/app/api/webhooks/deliver/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/webhooks/deliver/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "function:src/app/api/webhooks/endpoints/route.ts:ensureWebhookTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "function:src/app/api/webhooks/endpoints/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "function:src/app/api/webhooks/endpoints/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "function:src/app/api/webhooks/endpoints/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "function:src/app/api/webhooks/endpoints/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/webhooks/endpoints/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/windows/[...slug]/route.ts", "target": "function:src/app/api/windows/[...slug]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/windows/[...slug]/route.ts", "target": "function:src/app/api/windows/[...slug]/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/windows/[...slug]/route.ts", "target": "function:src/app/api/windows/[...slug]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/windows/[...slug]/route.ts", "target": "function:src/app/api/windows/[...slug]/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ws/route.ts", "target": "class:src/app/api/ws/route.ts:WebSocketManager", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ws/route.ts", "target": "function:src/app/api/ws/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ws/route.ts", "target": "function:src/app/api/ws/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ws/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "document:src/app/api/README.md", "target": "file:src/app/api/webhooks/deliver/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/app/api/README.md", "target": "file:src/app/api/webhooks/endpoints/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/app/api/README.md", "target": "file:src/app/api/windows/[...slug]/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/app/api/README.md", "target": "file:src/app/api/ws/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+
+    {"source": "file:src/app/app/not-found.tsx", "target": "function:src/app/app/not-found.tsx:NotFound", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/app/not-found.tsx", "target": "function:src/app/app/not-found.tsx:NotFound", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/app/not-found.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/assessment/[assessmentId]/loading.tsx", "target": "function:src/app/assessment/[assessmentId]/loading.tsx:AssessmentLoading", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/assessment/[assessmentId]/loading.tsx", "target": "function:src/app/assessment/[assessmentId]/loading.tsx:SkeletonZone", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/assessment/[assessmentId]/loading.tsx", "target": "function:src/app/assessment/[assessmentId]/loading.tsx:AssessmentLoading", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/assessment/[assessmentId]/not-found.tsx", "target": "function:src/app/assessment/[assessmentId]/not-found.tsx:AssessmentNotFound", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/assessment/[assessmentId]/not-found.tsx", "target": "function:src/app/assessment/[assessmentId]/not-found.tsx:AssessmentNotFound", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/assessment/[assessmentId]/page.tsx", "target": "function:src/app/assessment/[assessmentId]/page.tsx:AssessmentPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/assessment/[assessmentId]/page.tsx", "target": "function:src/app/assessment/[assessmentId]/page.tsx:AssessmentPage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/assessment/[assessmentId]/page.tsx", "target": "file:src/components/assessment/AssessmentHUD.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/auth/callback-handler/page.tsx", "target": "function:src/app/auth/callback-handler/page.tsx:CallbackHandlerContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/callback-handler/page.tsx", "target": "function:src/app/auth/callback-handler/page.tsx:CallbackHandlerPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/callback-handler/page.tsx", "target": "function:src/app/auth/callback-handler/page.tsx:CallbackHandlerPage", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/auth/callback/route.ts", "target": "function:src/app/auth/callback/route.ts:ensureProfile", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/callback/route.ts", "target": "function:src/app/auth/callback/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/callback/route.ts", "target": "function:src/app/auth/callback/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/auth/error/page.tsx", "target": "function:src/app/auth/error/page.tsx:AuthErrorPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/error/page.tsx", "target": "function:src/app/auth/error/page.tsx:AuthErrorPage", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/auth/magic-link/page.tsx", "target": "function:src/app/auth/magic-link/page.tsx:MagicLinkPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/magic-link/page.tsx", "target": "function:src/app/auth/magic-link/page.tsx:MagicLinkPage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/auth/magic-link/page.tsx", "target": "file:src/lib/services/magicLink.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/auth/magic-link/page.tsx", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/auth/save-template/page.tsx", "target": "function:src/app/auth/save-template/page.tsx:SaveTemplatePage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/save-template/page.tsx", "target": "function:src/app/auth/save-template/page.tsx:SaveTemplatePage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/auth/save-template/page.tsx", "target": "file:src/lib/services/analytics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/auth/save-template/page.tsx", "target": "file:src/lib/services/magicLink.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:getErrorMessage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:AuthForm", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:Button", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:Header", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:SocialButtons", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:SocialButton", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:LoginForm", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "function:src/app/auth/AuthForm.tsx:BackgroundDecoration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/auth/AuthForm.tsx", "target": "file:src/lib/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/campaign/page.tsx", "target": "function:src/app/campaign/page.tsx:CampaignLauncher", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/campaign/page.tsx", "target": "function:src/app/campaign/page.tsx:CampaignLauncher", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx", "target": "function:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx:AdjustmentTypeImpactChart", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx", "target": "function:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx:AdjustmentTypeImpactChart", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/components/HistoricalImpact/AdjustmentTypeImpactChart.tsx", "target": "file:src/lib/types/expertDashboard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx", "target": "function:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx:ExpertPerformanceComparison", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx", "target": "function:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx:ExpertPerformanceComparison", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/components/HistoricalImpact/ExpertPerformanceComparison.tsx", "target": "file:src/lib/types/expertDashboard.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

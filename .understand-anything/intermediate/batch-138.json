@@ -1,0 +1,577 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/features/format_features.ts",
+      "type": "file",
+      "name": "format_features.ts",
+      "filePath": "src/lib/features/format_features.ts",
+      "summary": "Feature extractors that compute carousel and long-form (3m+) metrics from raw video objects for downstream prediction.",
+      "tags": ["feature-extraction", "utility", "prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/format_features.ts:extractCarouselFeatures",
+      "type": "function",
+      "name": "extractCarouselFeatures",
+      "filePath": "src/lib/features/format_features.ts",
+      "lineRange": [20, 31],
+      "summary": "Computes carousel-specific feature vector (slide count, swipe-through, contrast hints) from raw video payload.",
+      "tags": ["feature-extraction", "carousel", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/format_features.ts:extractLong3mFeatures",
+      "type": "function",
+      "name": "extractLong3mFeatures",
+      "filePath": "src/lib/features/format_features.ts",
+      "lineRange": [33, 52],
+      "summary": "Computes long-form (3m+) video features such as pacing, retention proxies, and chapter density.",
+      "tags": ["feature-extraction", "long-form", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/features/quality_gate.ts",
+      "type": "file",
+      "name": "quality_gate.ts",
+      "filePath": "src/lib/features/quality_gate.ts",
+      "summary": "Quality-gate checks that validate extracted feature vectors against the canonical FEATURE_SCHEMA_V1 before persistence.",
+      "tags": ["validation", "feature-extraction", "quality-gate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/features/quality_gate.ts:runQualityChecks",
+      "type": "function",
+      "name": "runQualityChecks",
+      "filePath": "src/lib/features/quality_gate.ts",
+      "lineRange": [7, 54],
+      "summary": "Runs schema- and range-based quality checks against a feature vector and returns a pass/fail report with diagnostics.",
+      "tags": ["validation", "quality-gate", "feature-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/features/schema.ts",
+      "type": "file",
+      "name": "schema.ts",
+      "filePath": "src/lib/features/schema.ts",
+      "summary": "Canonical FEATURE_SCHEMA_V1 definition plus a deterministic schema hash helper used to track feature-set versions.",
+      "tags": ["schema-definition", "feature-extraction", "type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/schema.ts:computeSchemaHash",
+      "type": "function",
+      "name": "computeSchemaHash",
+      "filePath": "src/lib/features/schema.ts",
+      "lineRange": [22, 25],
+      "summary": "Computes a stable hash of the feature schema definition for versioning and drift detection.",
+      "tags": ["schema-definition", "hashing", "versioning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/features/store.ts",
+      "type": "file",
+      "name": "store.ts",
+      "filePath": "src/lib/features/store.ts",
+      "summary": "Supabase-backed feature store: ensures storage tables exist and provides read/write helpers for feature vectors keyed by video.",
+      "tags": ["data-access", "feature-store", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/store.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/lib/features/store.ts",
+      "lineRange": [5, 27],
+      "summary": "Creates the feature-store table in Supabase if it doesn't exist, registering the active schema hash.",
+      "tags": ["data-access", "migration", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/store.ts:writeFeatures",
+      "type": "function",
+      "name": "writeFeatures",
+      "filePath": "src/lib/features/store.ts",
+      "lineRange": [29, 34],
+      "summary": "Upserts a feature vector row to the feature store keyed by video id.",
+      "tags": ["data-access", "feature-store", "write"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/features/store.ts:readFeatures",
+      "type": "function",
+      "name": "readFeatures",
+      "filePath": "src/lib/features/store.ts",
+      "lineRange": [36, 41],
+      "summary": "Reads the most recent feature vector for a given video id from the feature store.",
+      "tags": ["data-access", "feature-store", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/federated/aggregate.ts",
+      "type": "file",
+      "name": "aggregate.ts",
+      "filePath": "src/lib/federated/aggregate.ts",
+      "summary": "Federated-learning round aggregator: L2-clips per-client deltas, adds Gaussian noise, and combines them into a new global model version.",
+      "tags": ["federated-learning", "aggregation", "privacy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/federated/aggregate.ts:aggregateRound",
+      "type": "function",
+      "name": "aggregateRound",
+      "filePath": "src/lib/federated/aggregate.ts",
+      "lineRange": [29, 62],
+      "summary": "Aggregates a federated training round by clipping client deltas, adding Gaussian noise for DP, averaging, and bumping the global model version in object storage.",
+      "tags": ["federated-learning", "aggregation", "differential-privacy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/federated/ensure.ts",
+      "type": "file",
+      "name": "ensure.ts",
+      "filePath": "src/lib/federated/ensure.ts",
+      "summary": "Bootstraps Supabase tables required by the federated-learning pipeline (rounds, deltas, model versions).",
+      "tags": ["federated-learning", "migration", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/federated/ensure.ts:ensureFederatedTables",
+      "type": "function",
+      "name": "ensureFederatedTables",
+      "filePath": "src/lib/federated/ensure.ts",
+      "lineRange": [4, 41],
+      "summary": "Creates the federated-learning rounds, deltas, and model-version tables in Supabase when missing.",
+      "tags": ["federated-learning", "migration", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/federated/validator.ts",
+      "type": "file",
+      "name": "validator.ts",
+      "filePath": "src/lib/federated/validator.ts",
+      "summary": "Validates incoming federated-learning delta payloads for shape, magnitude, and required fields before aggregation.",
+      "tags": ["federated-learning", "validation", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/federated/validator.ts:validateDeltaPayload",
+      "type": "function",
+      "name": "validateDeltaPayload",
+      "filePath": "src/lib/federated/validator.ts",
+      "lineRange": [1, 19],
+      "summary": "Validates a client-submitted federated-learning delta payload, rejecting malformed or oversized contributions.",
+      "tags": ["federated-learning", "validation", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/firebase/__tests__/firebase.test.ts",
+      "type": "file",
+      "name": "firebase.test.ts",
+      "filePath": "src/lib/firebase/__tests__/firebase.test.ts",
+      "summary": "Unit tests for Firebase client wiring, covering app initialization and auth helper behavior.",
+      "tags": ["test", "firebase", "unit-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/firebase/auth-helpers.ts",
+      "type": "file",
+      "name": "auth-helpers.ts",
+      "filePath": "src/lib/firebase/auth-helpers.ts",
+      "summary": "Helpers for resolving the current Firebase user on both client and admin paths.",
+      "tags": ["auth", "firebase", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/firebase/auth-helpers.ts:getCurrentUser",
+      "type": "function",
+      "name": "getCurrentUser",
+      "filePath": "src/lib/firebase/auth-helpers.ts",
+      "lineRange": [9, 37],
+      "summary": "Resolves the currently authenticated Firebase user via the client or admin SDK depending on execution context.",
+      "tags": ["auth", "firebase", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/firebase/client.js",
+      "type": "file",
+      "name": "client.js",
+      "filePath": "src/lib/firebase/client.js",
+      "summary": "Legacy JS Firebase client shim exposing lazy getters for app/auth/firestore plus disabled sign-in stubs.",
+      "tags": ["firebase", "client", "legacy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/firebase/firebase.ts",
+      "type": "file",
+      "name": "firebase.ts",
+      "filePath": "src/lib/firebase/firebase.ts",
+      "summary": "Initializes and exports Firebase client singletons (app, auth, db, storage, analytics, crashlytics, remoteConfig) plus small ops helpers.",
+      "tags": ["firebase", "client", "singleton"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/firebase/firebaseAdmin.ts",
+      "type": "file",
+      "name": "firebaseAdmin.ts",
+      "filePath": "src/lib/firebase/firebaseAdmin.ts",
+      "summary": "Server-side Firebase admin shim exposing initializeApp/cert/getApps plus a mock token verifier for local dev.",
+      "tags": ["firebase", "admin", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/firebase/firebaseAdmin.ts:mockVerifyToken",
+      "type": "function",
+      "name": "mockVerifyToken",
+      "filePath": "src/lib/firebase/firebaseAdmin.ts",
+      "lineRange": [21, 32],
+      "summary": "Local mock Firebase ID-token verifier used when admin credentials are not configured.",
+      "tags": ["firebase", "auth", "mock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/firebase/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/lib/firebase/types.ts",
+      "summary": "TypeScript type definitions shared across the Firebase integration (user, session, claims).",
+      "tags": ["type-definition", "firebase", "types"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/flags/client.tsx",
+      "type": "file",
+      "name": "client.tsx",
+      "filePath": "src/lib/flags/client.tsx",
+      "summary": "React provider, hook, and gate component for consuming feature flags on the client.",
+      "tags": ["feature-flags", "react", "provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/flags/client.tsx:FlagProvider",
+      "type": "function",
+      "name": "FlagProvider",
+      "filePath": "src/lib/flags/client.tsx",
+      "lineRange": [6, 28],
+      "summary": "React context provider that fetches and exposes feature-flag evaluations to descendants.",
+      "tags": ["feature-flags", "react", "provider"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/flags/evaluator.ts",
+      "type": "file",
+      "name": "evaluator.ts",
+      "filePath": "src/lib/flags/evaluator.ts",
+      "summary": "Server-side feature-flag evaluator that loads flag definitions from Supabase and resolves them with rollout hashing.",
+      "tags": ["feature-flags", "evaluation", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/flags/evaluator.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/lib/flags/evaluator.ts",
+      "lineRange": [13, 41],
+      "summary": "Creates the feature-flag definition and overrides tables in Supabase when missing.",
+      "tags": ["feature-flags", "migration", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/flags/evaluator.ts:evaluateFlags",
+      "type": "function",
+      "name": "evaluateFlags",
+      "filePath": "src/lib/flags/evaluator.ts",
+      "lineRange": [43, 86],
+      "summary": "Evaluates the full set of feature flags for a user/context using stored rules and consistent rollout hashing.",
+      "tags": ["feature-flags", "evaluation", "rollout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/flags/liveStarterPack.ts",
+      "type": "file",
+      "name": "liveStarterPack.ts",
+      "filePath": "src/lib/flags/liveStarterPack.ts",
+      "summary": "Thin convenience hook wrapping useFeature for the liveStarterPack flag.",
+      "tags": ["feature-flags", "hook", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/flags/liveStarterPack.ts:useLiveStarterPackEnabled",
+      "type": "function",
+      "name": "useLiveStarterPackEnabled",
+      "filePath": "src/lib/flags/liveStarterPack.ts",
+      "lineRange": [4, 14],
+      "summary": "React hook that returns whether the liveStarterPack feature flag is enabled for the current user.",
+      "tags": ["feature-flags", "hook", "react"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/flags/requireFeature.ts",
+      "type": "file",
+      "name": "requireFeature.ts",
+      "filePath": "src/lib/flags/requireFeature.ts",
+      "summary": "Server helper that throws/redirects when a required feature flag is disabled for the current request.",
+      "tags": ["feature-flags", "middleware", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/flags/requireFeature.ts:requireFeature",
+      "type": "function",
+      "name": "requireFeature",
+      "filePath": "src/lib/flags/requireFeature.ts",
+      "lineRange": [4, 15],
+      "summary": "Server-side guard that evaluates a feature flag and short-circuits the request if it is disabled.",
+      "tags": ["feature-flags", "guard", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/formats/detection.ts",
+      "type": "file",
+      "name": "detection.ts",
+      "filePath": "src/lib/formats/detection.ts",
+      "summary": "Detects a video's format bucket (short, long, carousel, etc.) and ensures the matching Supabase columns exist for storage.",
+      "tags": ["format-detection", "feature-extraction", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/formats/detection.ts:detectFormat",
+      "type": "function",
+      "name": "detectFormat",
+      "filePath": "src/lib/formats/detection.ts",
+      "lineRange": [6, 23],
+      "summary": "Classifies a video into a format bucket (short, long, carousel) using duration, dimensions, and metadata heuristics.",
+      "tags": ["format-detection", "classification", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/formats/detection.ts:ensureFormatColumns",
+      "type": "function",
+      "name": "ensureFormatColumns",
+      "filePath": "src/lib/formats/detection.ts",
+      "lineRange": [25, 38],
+      "summary": "Ensures the Supabase video tables include the columns required to persist the detected format.",
+      "tags": ["format-detection", "migration", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/frameworks/loader.ts",
+      "type": "file",
+      "name": "loader.ts",
+      "filePath": "src/lib/frameworks/loader.ts",
+      "summary": "Loads and synchronizes the viral-prediction framework markdown documents into the database, extracting prompt tokens for downstream use.",
+      "tags": ["framework", "loader", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/frameworks/loader.ts:loadAllFrameworks",
+      "type": "function",
+      "name": "loadAllFrameworks",
+      "filePath": "src/lib/frameworks/loader.ts",
+      "lineRange": [29, 63],
+      "summary": "Reads all bundled framework markdown files from disk and returns their parsed contents and metadata.",
+      "tags": ["framework", "loader", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/frameworks/loader.ts:syncFrameworks",
+      "type": "function",
+      "name": "syncFrameworks",
+      "filePath": "src/lib/frameworks/loader.ts",
+      "lineRange": [65, 82],
+      "summary": "Syncs the loaded framework documents into the database so the prediction pipeline can reference them by id.",
+      "tags": ["framework", "synchronization", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/frameworks/loader.ts:extractAllTokens",
+      "type": "function",
+      "name": "extractAllTokens",
+      "filePath": "src/lib/frameworks/loader.ts",
+      "lineRange": [84, 92],
+      "summary": "Extracts all bracketed prompt tokens from the loaded frameworks for downstream substitution.",
+      "tags": ["framework", "tokenization", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/frameworks/mapping_guide.ts",
+      "type": "file",
+      "name": "mapping_guide.ts",
+      "filePath": "src/lib/frameworks/mapping_guide.ts",
+      "summary": "Mapping guide that pairs framework tokens with expected first-hour performance baselines and computes alignment factors.",
+      "tags": ["framework", "prediction", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/frameworks/mapping_guide.ts:mergeExpectedFirstHourForTokens",
+      "type": "function",
+      "name": "mergeExpectedFirstHourForTokens",
+      "filePath": "src/lib/frameworks/mapping_guide.ts",
+      "lineRange": [63, 85],
+      "summary": "Merges per-token expected first-hour performance baselines into a single combined expectation vector.",
+      "tags": ["framework", "prediction", "calibration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/frameworks/mapping_guide.ts:computeAlignmentFactor",
+      "type": "function",
+      "name": "computeAlignmentFactor",
+      "filePath": "src/lib/frameworks/mapping_guide.ts",
+      "lineRange": [99, 138],
+      "summary": "Computes an alignment multiplier from token overlap and weights, used to boost or dampen a base prediction.",
+      "tags": ["framework", "prediction", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/frameworks/video-styles-24.ts",
+      "type": "file",
+      "name": "video-styles-24.ts",
+      "filePath": "src/lib/frameworks/video-styles-24.ts",
+      "summary": "Catalogue of 24 canonical viral video styles with metadata, platform fit, and detection helpers used across the prediction stack.",
+      "tags": ["framework", "video-styles", "catalog"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/frameworks/video-styles-24.ts:detectVideoStyle",
+      "type": "function",
+      "name": "detectVideoStyle",
+      "filePath": "src/lib/frameworks/video-styles-24.ts",
+      "lineRange": [460, 497],
+      "summary": "Heuristically detects which of the 24 canonical video styles a given video best matches based on its features.",
+      "tags": ["video-styles", "classification", "detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/frameworks/video-styles-24.ts:getStylesForPlatform",
+      "type": "function",
+      "name": "getStylesForPlatform",
+      "filePath": "src/lib/frameworks/video-styles-24.ts",
+      "lineRange": [448, 454],
+      "summary": "Returns the subset of video styles applicable to a given platform (TikTok, YouTube, Instagram).",
+      "tags": ["video-styles", "platform", "filter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/lib/frameworks/master-viral-prediction-framework-v1.md",
+      "type": "document",
+      "name": "master-viral-prediction-framework-v1.md",
+      "filePath": "src/lib/frameworks/master-viral-prediction-framework-v1.md",
+      "summary": "Master viral-prediction framework v1 spec covering scoring axes, tokens, and per-style heuristics across 47 sections.",
+      "tags": ["documentation", "framework", "prediction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:src/lib/frameworks/social-media-growth-framework-v1.md",
+      "type": "document",
+      "name": "social-media-growth-framework-v1.md",
+      "filePath": "src/lib/frameworks/social-media-growth-framework-v1.md",
+      "summary": "Comprehensive v1 social-media growth playbook (1298 lines, 41 sections) describing hooks, retention, distribution, and creator strategy.",
+      "tags": ["documentation", "framework", "growth-strategy"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:src/lib/frameworks/social-media-growth-framework-v2-august-2025.md",
+      "type": "document",
+      "name": "social-media-growth-framework-v2-august-2025.md",
+      "filePath": "src/lib/frameworks/social-media-growth-framework-v2-august-2025.md",
+      "summary": "August 2025 v2 refresh of the social-media growth framework with updated platform tactics and 27 sections.",
+      "tags": ["documentation", "framework", "growth-strategy"],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:src/lib/frameworks/viral-style-compendium-v2.md",
+      "type": "document",
+      "name": "viral-style-compendium-v2.md",
+      "filePath": "src/lib/frameworks/viral-style-compendium-v2.md",
+      "summary": "Viral-style compendium v2 cataloguing video archetypes, hook patterns, and execution notes across 42 sections.",
+      "tags": ["documentation", "framework", "video-styles"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/lib/features/format_features.ts", "target": "function:src/lib/features/format_features.ts:extractCarouselFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/format_features.ts", "target": "function:src/lib/features/format_features.ts:extractLong3mFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/format_features.ts", "target": "function:src/lib/features/format_features.ts:extractCarouselFeatures", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/features/format_features.ts", "target": "function:src/lib/features/format_features.ts:extractLong3mFeatures", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/features/quality_gate.ts", "target": "function:src/lib/features/quality_gate.ts:runQualityChecks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/quality_gate.ts", "target": "function:src/lib/features/quality_gate.ts:runQualityChecks", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/features/quality_gate.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/features/quality_gate.ts", "target": "file:src/lib/features/schema.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/features/schema.ts", "target": "function:src/lib/features/schema.ts:computeSchemaHash", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/schema.ts", "target": "function:src/lib/features/schema.ts:computeSchemaHash", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/features/store.ts", "target": "function:src/lib/features/store.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/store.ts", "target": "function:src/lib/features/store.ts:writeFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/store.ts", "target": "function:src/lib/features/store.ts:readFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/features/store.ts", "target": "function:src/lib/features/store.ts:writeFeatures", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/features/store.ts", "target": "function:src/lib/features/store.ts:readFeatures", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/features/store.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/features/store.ts", "target": "file:src/lib/features/schema.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/federated/aggregate.ts", "target": "function:src/lib/federated/aggregate.ts:aggregateRound", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/federated/aggregate.ts", "target": "function:src/lib/federated/aggregate.ts:aggregateRound", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/federated/aggregate.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/federated/aggregate.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/federated/ensure.ts", "target": "function:src/lib/federated/ensure.ts:ensureFederatedTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/federated/ensure.ts", "target": "function:src/lib/federated/ensure.ts:ensureFederatedTables", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/federated/ensure.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/federated/validator.ts", "target": "function:src/lib/federated/validator.ts:validateDeltaPayload", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/federated/validator.ts", "target": "function:src/lib/federated/validator.ts:validateDeltaPayload", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/firebase/auth-helpers.ts", "target": "function:src/lib/firebase/auth-helpers.ts:getCurrentUser", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/firebase/auth-helpers.ts", "target": "function:src/lib/firebase/auth-helpers.ts:getCurrentUser", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/firebase/auth-helpers.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/firebase/auth-helpers.ts", "target": "file:src/lib/firebase/firebaseAdmin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/firebase/firebaseAdmin.ts", "target": "function:src/lib/firebase/firebaseAdmin.ts:mockVerifyToken", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/firebase/firebaseAdmin.ts", "target": "function:src/lib/firebase/firebaseAdmin.ts:mockVerifyToken", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/firebase/firebase.ts", "target": "file:src/lib/firebase/__tests__/firebase.test.ts", "type": "tested_by", "direction": "forward", "weight": 0.5},
+
+    {"source": "file:src/lib/flags/client.tsx", "target": "function:src/lib/flags/client.tsx:FlagProvider", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/flags/client.tsx", "target": "function:src/lib/flags/client.tsx:FlagProvider", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/flags/evaluator.ts", "target": "function:src/lib/flags/evaluator.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/flags/evaluator.ts", "target": "function:src/lib/flags/evaluator.ts:evaluateFlags", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/flags/evaluator.ts", "target": "function:src/lib/flags/evaluator.ts:evaluateFlags", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/flags/evaluator.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/flags/liveStarterPack.ts", "target": "function:src/lib/flags/liveStarterPack.ts:useLiveStarterPackEnabled", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/flags/liveStarterPack.ts", "target": "function:src/lib/flags/liveStarterPack.ts:useLiveStarterPackEnabled", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/flags/liveStarterPack.ts", "target": "file:src/hooks/useFeature.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/flags/requireFeature.ts", "target": "function:src/lib/flags/requireFeature.ts:requireFeature", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/flags/requireFeature.ts", "target": "function:src/lib/flags/requireFeature.ts:requireFeature", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/flags/requireFeature.ts", "target": "file:src/lib/flags/evaluator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/formats/detection.ts", "target": "function:src/lib/formats/detection.ts:detectFormat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/formats/detection.ts", "target": "function:src/lib/formats/detection.ts:ensureFormatColumns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/formats/detection.ts", "target": "function:src/lib/formats/detection.ts:detectFormat", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/formats/detection.ts", "target": "function:src/lib/formats/detection.ts:ensureFormatColumns", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/formats/detection.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:loadAllFrameworks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:syncFrameworks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:extractAllTokens", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:loadAllFrameworks", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:syncFrameworks", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/frameworks/loader.ts", "target": "function:src/lib/frameworks/loader.ts:extractAllTokens", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/frameworks/mapping_guide.ts", "target": "function:src/lib/frameworks/mapping_guide.ts:mergeExpectedFirstHourForTokens", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/mapping_guide.ts", "target": "function:src/lib/frameworks/mapping_guide.ts:computeAlignmentFactor", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/mapping_guide.ts", "target": "function:src/lib/frameworks/mapping_guide.ts:mergeExpectedFirstHourForTokens", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/frameworks/mapping_guide.ts", "target": "function:src/lib/frameworks/mapping_guide.ts:computeAlignmentFactor", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/frameworks/video-styles-24.ts", "target": "function:src/lib/frameworks/video-styles-24.ts:detectVideoStyle", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/video-styles-24.ts", "target": "function:src/lib/frameworks/video-styles-24.ts:getStylesForPlatform", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/frameworks/video-styles-24.ts", "target": "function:src/lib/frameworks/video-styles-24.ts:detectVideoStyle", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/frameworks/video-styles-24.ts", "target": "function:src/lib/frameworks/video-styles-24.ts:getStylesForPlatform", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "document:src/lib/frameworks/master-viral-prediction-framework-v1.md", "target": "file:src/lib/frameworks/loader.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/lib/frameworks/social-media-growth-framework-v1.md", "target": "file:src/lib/frameworks/loader.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/lib/frameworks/social-media-growth-framework-v2-august-2025.md", "target": "file:src/lib/frameworks/loader.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/lib/frameworks/viral-style-compendium-v2.md", "target": "file:src/lib/frameworks/video-styles-24.ts", "type": "documents", "direction": "forward", "weight": 0.5}
+  ]
+}

@@ -1,0 +1,1259 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/assessment/fetch-assessment.ts",
+      "type": "file",
+      "name": "fetch-assessment.ts",
+      "filePath": "src/lib/assessment/fetch-assessment.ts",
+      "summary": "Fetches stored assessment records from Supabase by display id or share id, with constant-time share-token verification and payload validation.",
+      "tags": ["service", "validation", "supabase", "share-token"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/assessment/fetch-assessment.ts:parseShareIdParam",
+      "type": "function",
+      "name": "parseShareIdParam",
+      "filePath": "src/lib/assessment/fetch-assessment.ts",
+      "lineRange": [47, 61],
+      "summary": "Parses a combined share-id query param into its display-id and share-token components after regex validation.",
+      "tags": ["parsing", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/assessment/fetch-assessment.ts:isSprintProgressMap",
+      "type": "function",
+      "name": "isSprintProgressMap",
+      "filePath": "src/lib/assessment/fetch-assessment.ts",
+      "lineRange": [74, 83],
+      "summary": "Type guard that checks whether a value is a record-shaped sprint progress map with numeric values.",
+      "tags": ["type-guard", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessment",
+      "type": "function",
+      "name": "fetchAssessment",
+      "filePath": "src/lib/assessment/fetch-assessment.ts",
+      "lineRange": [88, 138],
+      "summary": "Loads an assessment row from Supabase by display id and reconstructs the validated payload plus stored sprint progress.",
+      "tags": ["service", "supabase", "fetch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessmentByShareId",
+      "type": "function",
+      "name": "fetchAssessmentByShareId",
+      "filePath": "src/lib/assessment/fetch-assessment.ts",
+      "lineRange": [143, 155],
+      "summary": "Authenticates a public share request by comparing tokens in constant time before delegating to fetchAssessment.",
+      "tags": ["service", "share-token", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/assessment/generate.ts",
+      "type": "file",
+      "name": "generate.ts",
+      "filePath": "src/lib/assessment/generate.ts",
+      "summary": "Calls Claude with the escape-assessment prompt to generate a personalized financial-escape assessment, applies server-side transforms, validates, and returns a typed payload.",
+      "tags": ["service", "llm", "anthropic", "assessment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/assessment/generate.ts:formatHumanDate",
+      "type": "function",
+      "name": "formatHumanDate",
+      "filePath": "src/lib/assessment/generate.ts",
+      "lineRange": [36, 46],
+      "summary": "Formats an ISO date string as a human-readable American date for use in assessment copy.",
+      "tags": ["utility", "date", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/assessment/generate.ts:extractJson",
+      "type": "function",
+      "name": "extractJson",
+      "filePath": "src/lib/assessment/generate.ts",
+      "lineRange": [55, 66],
+      "summary": "Strips surrounding prose and code fences to extract the first JSON object from an LLM response.",
+      "tags": ["utility", "llm", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/assessment/generate.ts:callClaude",
+      "type": "function",
+      "name": "callClaude",
+      "filePath": "src/lib/assessment/generate.ts",
+      "lineRange": [68, 105],
+      "summary": "Posts a system+user message pair to the Anthropic Messages API and extracts the text response with error handling.",
+      "tags": ["api-client", "anthropic", "llm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/assessment/generate.ts:applyServerSideTransforms",
+      "type": "function",
+      "name": "applyServerSideTransforms",
+      "filePath": "src/lib/assessment/generate.ts",
+      "lineRange": [112, 175],
+      "summary": "Augments the candidate assessment with computed economics, brand defaults, and start-date fields the LLM cannot reliably produce.",
+      "tags": ["transform", "post-processing", "assessment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/assessment/generate.ts:generateAssessment",
+      "type": "function",
+      "name": "generateAssessment",
+      "filePath": "src/lib/assessment/generate.ts",
+      "lineRange": [181, 311],
+      "summary": "Orchestrates assessment generation: prompts Claude, retries on validation failure or fabricated dates, and returns a validated payload with a fresh display id.",
+      "tags": ["service", "llm", "orchestration", "retry"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/assessment/validate-payload.ts",
+      "type": "file",
+      "name": "validate-payload.ts",
+      "filePath": "src/lib/assessment/validate-payload.ts",
+      "summary": "Deep structural validator for the Financial Escape Assessment JSON payload — enumerates every required field across all assessment sections and returns either the typed payload or a list of issues.",
+      "tags": ["validation", "type-guard", "schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/assessment/validate-payload.ts:describeAssessmentPayload",
+      "type": "function",
+      "name": "describeAssessmentPayload",
+      "filePath": "src/lib/assessment/validate-payload.ts",
+      "lineRange": [49, 316],
+      "summary": "Validates every nested field of an assessment payload and accumulates a list of issues describing schema or type violations.",
+      "tags": ["validation", "schema", "deep-check"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/assets/asset-manager.ts",
+      "type": "file",
+      "name": "asset-manager.ts",
+      "filePath": "src/lib/assets/asset-manager.ts",
+      "summary": "Singleton manager for the platform's asset catalog — looks up logos, images, audio, and template thumbnails, builds responsive image URLs, and preloads critical assets.",
+      "tags": ["singleton", "asset-catalog", "service", "media"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/assets/asset-manager.ts:AssetManager",
+      "type": "class",
+      "name": "AssetManager",
+      "filePath": "src/lib/assets/asset-manager.ts",
+      "lineRange": [271, 549],
+      "summary": "Singleton class providing search, lookup, responsive URL generation, and preload helpers over the registered asset catalog.",
+      "tags": ["singleton", "asset-catalog", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/assets/asset-manager.ts:getAssetPath",
+      "type": "function",
+      "name": "getAssetPath",
+      "filePath": "src/lib/assets/asset-manager.ts",
+      "lineRange": [563, 566],
+      "summary": "Convenience helper that resolves an asset id to its file path via the singleton AssetManager.",
+      "tags": ["utility", "asset-catalog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/audit/audit_utils.ts",
+      "type": "file",
+      "name": "audit_utils.ts",
+      "filePath": "src/lib/audit/audit_utils.ts",
+      "summary": "Audit-evidence utilities: ensures audit tables exist, computes SHA-256/HMAC hashes and CRC32 checksums, and writes a per-prediction evidence ZIP archive.",
+      "tags": ["audit", "hashing", "evidence", "zip"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/audit/audit_utils.ts:ensureAuditTables",
+      "type": "function",
+      "name": "ensureAuditTables",
+      "filePath": "src/lib/audit/audit_utils.ts",
+      "lineRange": [7, 32],
+      "summary": "Creates the audit_events and evidence_bundles Postgres tables if they do not exist.",
+      "tags": ["migration", "audit", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/audit/audit_utils.ts:writeEvidenceZip",
+      "type": "function",
+      "name": "writeEvidenceZip",
+      "filePath": "src/lib/audit/audit_utils.ts",
+      "lineRange": [53, 124],
+      "summary": "Hand-rolled ZIP writer that packs per-prediction evidence files with stored compression and CRC32 checksums.",
+      "tags": ["zip", "archive", "evidence", "binary"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/auth/admin-auth-options.ts",
+      "type": "file",
+      "name": "admin-auth-options.ts",
+      "filePath": "src/lib/auth/admin-auth-options.ts",
+      "summary": "Stub admin auth options object and a request-scoped admin auth check helper that delegates to the shared adminAuth utility.",
+      "tags": ["auth", "admin", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/auth/agency-utils.ts",
+      "type": "file",
+      "name": "agency-utils.ts",
+      "filePath": "src/lib/auth/agency-utils.ts",
+      "summary": "Supabase-backed helpers that look up the creators belonging to an agency and the agency id owning a given user.",
+      "tags": ["auth", "agency", "supabase", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/auth/api-guard.ts",
+      "type": "file",
+      "name": "api-guard.ts",
+      "filePath": "src/lib/auth/api-guard.ts",
+      "summary": "Server-side API route guard that resolves the current admin user, enforces required actions via the permissions map, and returns 401/403 responses on failure.",
+      "tags": ["auth", "api-handler", "middleware", "guard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/api-guard.ts:requireAuth",
+      "type": "function",
+      "name": "requireAuth",
+      "filePath": "src/lib/auth/api-guard.ts",
+      "lineRange": [28, 93],
+      "summary": "Higher-order function returning an auth-checking wrapper that loads the user, optionally enforces a permission, and short-circuits with an error response.",
+      "tags": ["middleware", "auth", "guard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/auth/auth-service.js",
+      "type": "file",
+      "name": "auth-service.js",
+      "filePath": "src/lib/auth/auth-service.js",
+      "summary": "Unified Supabase auth service exposing sign-in/out, current-user, and auth-state helpers with a JS-side UnifiedUser conversion shim.",
+      "tags": ["auth", "service", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/auth-service.js:convertToUnifiedUser",
+      "type": "function",
+      "name": "convertToUnifiedUser",
+      "filePath": "src/lib/auth/auth-service.js",
+      "lineRange": [28, 52],
+      "summary": "Normalizes a Supabase user object into the app-wide UnifiedUser shape with role and metadata defaults.",
+      "tags": ["adapter", "auth", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/auth-service.js:signInWithEmailAndPassword",
+      "type": "function",
+      "name": "signInWithEmailAndPassword",
+      "filePath": "src/lib/auth/auth-service.js",
+      "lineRange": [60, 91],
+      "summary": "Performs Supabase email+password sign-in and returns either a converted UnifiedUser or a structured error.",
+      "tags": ["auth", "supabase", "sign-in"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/auth-service.js:getAuthState",
+      "type": "function",
+      "name": "getAuthState",
+      "filePath": "src/lib/auth/auth-service.js",
+      "lineRange": [130, 157],
+      "summary": "Subscribes to Supabase auth state changes and returns an unsubscribe function plus the current user.",
+      "tags": ["auth", "subscription", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/auth/permissions.ts",
+      "type": "file",
+      "name": "permissions.ts",
+      "filePath": "src/lib/auth/permissions.ts",
+      "summary": "Defines the role-feature permission matrix and helpers for checking role-based and resource-owner-based access.",
+      "tags": ["auth", "permissions", "rbac"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/permissions.ts:canAccessResource",
+      "type": "function",
+      "name": "canAccessResource",
+      "filePath": "src/lib/auth/permissions.ts",
+      "lineRange": [72, 84],
+      "summary": "Checks role-based permission and additionally allows access when the requesting user owns the resource.",
+      "tags": ["auth", "permissions", "rbac", "ownership"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/auth/provider-switcher.js",
+      "type": "file",
+      "name": "provider-switcher.js",
+      "filePath": "src/lib/auth/provider-switcher.js",
+      "summary": "Compatibility shim exposing Supabase auth hooks/info under a legacy provider-switcher API so callers can migrate gradually.",
+      "tags": ["auth", "shim", "compat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/auth/server-auth.ts",
+      "type": "file",
+      "name": "server-auth.ts",
+      "filePath": "src/lib/auth/server-auth.ts",
+      "summary": "Server-side authentication helpers: resolves the authenticated user from a request, enforces role and permission requirements, and provides route-to-role mapping.",
+      "tags": ["auth", "server", "rbac", "middleware"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/server-auth.ts:getAuthenticatedUser",
+      "type": "function",
+      "name": "getAuthenticatedUser",
+      "filePath": "src/lib/auth/server-auth.ts",
+      "lineRange": [38, 91],
+      "summary": "Reads the auth cookie/header from a Next.js request and resolves it to an authenticated user object or null.",
+      "tags": ["auth", "server", "request"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/server-auth.ts:requireRole",
+      "type": "function",
+      "name": "requireRole",
+      "filePath": "src/lib/auth/server-auth.ts",
+      "lineRange": [97, 115],
+      "summary": "Guard that resolves the user and rejects with 401/403 unless their role is in the allowed list.",
+      "tags": ["auth", "guard", "rbac"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/server-auth.ts:requirePermission",
+      "type": "function",
+      "name": "requirePermission",
+      "filePath": "src/lib/auth/server-auth.ts",
+      "lineRange": [120, 136],
+      "summary": "Guard that checks the user has the requested resource/action permission, returning the user or an error response.",
+      "tags": ["auth", "guard", "permissions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/auth/server-auth.ts:isRoleAllowedForRoute",
+      "type": "function",
+      "name": "isRoleAllowedForRoute",
+      "filePath": "src/lib/auth/server-auth.ts",
+      "lineRange": [141, 153],
+      "summary": "Looks up the role allow-list for a given route pattern and returns whether the role may access it.",
+      "tags": ["auth", "routing", "rbac"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/auth/supabase-auth.ts",
+      "type": "file",
+      "name": "supabase-auth.ts",
+      "filePath": "src/lib/auth/supabase-auth.ts",
+      "summary": "Thin wrappers around the Supabase auth client for sign-up, sign-in, sign-out, password reset, session, user, and auth-state-change subscriptions.",
+      "tags": ["auth", "supabase", "client", "wrapper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/backfill/backfill-actual-performance.ts",
+      "type": "file",
+      "name": "backfill-actual-performance.ts",
+      "filePath": "src/lib/backfill/backfill-actual-performance.ts",
+      "summary": "Backfill job that hydrates the actual_performance JSON column on past prediction_runs by joining tiktok video metrics by post URL.",
+      "tags": ["backfill", "supabase", "metrics", "job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-actual-performance.ts:backfillActualPerformance",
+      "type": "function",
+      "name": "backfillActualPerformance",
+      "filePath": "src/lib/backfill/backfill-actual-performance.ts",
+      "lineRange": [19, 107],
+      "summary": "Scans prediction_runs missing actual_performance and writes back metrics derived from the latest tiktok video snapshot.",
+      "tags": ["backfill", "metrics", "job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/backfill/backfill-follower-counts.ts",
+      "type": "file",
+      "name": "backfill-follower-counts.ts",
+      "filePath": "src/lib/backfill/backfill-follower-counts.ts",
+      "summary": "Backfill job that fills missing follower counts on prediction_runs by joining creator handles to the creator_metrics table.",
+      "tags": ["backfill", "supabase", "metrics", "job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-follower-counts.ts:backfillFollowerCounts",
+      "type": "function",
+      "name": "backfillFollowerCounts",
+      "filePath": "src/lib/backfill/backfill-follower-counts.ts",
+      "lineRange": [28, 108],
+      "summary": "Iterates prediction_runs lacking follower counts and updates each with the most recent metric for the normalized handle.",
+      "tags": ["backfill", "metrics", "job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/backfill/backfill-training-features.ts",
+      "type": "file",
+      "name": "backfill-training-features.ts",
+      "filePath": "src/lib/backfill/backfill-training-features.ts",
+      "summary": "Re-computes audience-quality, creator-trajectory, cultural-momentum, and distribution-signal features for eligible prediction_runs and persists them as a training feature snapshot.",
+      "tags": ["backfill", "training", "features", "job"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-training-features.ts:fetchEligibleRuns",
+      "type": "function",
+      "name": "fetchEligibleRuns",
+      "filePath": "src/lib/backfill/backfill-training-features.ts",
+      "lineRange": [35, 77],
+      "summary": "Queries Supabase for prediction_runs eligible for training-feature backfill, paging through results with filters on labeling state.",
+      "tags": ["query", "supabase", "training"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-training-features.ts:resolveNiches",
+      "type": "function",
+      "name": "resolveNiches",
+      "filePath": "src/lib/backfill/backfill-training-features.ts",
+      "lineRange": [79, 103],
+      "summary": "Resolves creator ids to their canonical niche labels for use as a cultural-momentum lookup key.",
+      "tags": ["query", "niche", "lookup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-training-features.ts:hasPriorCulturalEvent",
+      "type": "function",
+      "name": "hasPriorCulturalEvent",
+      "filePath": "src/lib/backfill/backfill-training-features.ts",
+      "lineRange": [105, 129],
+      "summary": "Returns whether a cultural event existed for a given niche before a candidate post date — used by cultural-momentum features.",
+      "tags": ["query", "cultural", "feature"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/backfill/backfill-training-features.ts:backfillTrainingFeatures",
+      "type": "function",
+      "name": "backfillTrainingFeatures",
+      "filePath": "src/lib/backfill/backfill-training-features.ts",
+      "lineRange": [131, 235],
+      "summary": "Main backfill driver that loops eligible runs, recomputes four feature families per run, and writes the merged training feature blob back to Supabase.",
+      "tags": ["backfill", "training", "features", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/bandit/orchestrator.ts",
+      "type": "file",
+      "name": "orchestrator.ts",
+      "filePath": "src/lib/bandit/orchestrator.ts",
+      "summary": "Multi-armed bandit orchestrator: scores arms with a reward function, allocates traffic, and updates posterior statistics from observed outcomes.",
+      "tags": ["bandit", "orchestrator", "exploration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:src/lib/bandit/orchestrator.ts:BanditOrchestrator",
+      "type": "class",
+      "name": "BanditOrchestrator",
+      "filePath": "src/lib/bandit/orchestrator.ts",
+      "lineRange": [27, 82],
+      "summary": "Encapsulates bandit arm state, reward computation, allocation policy, and online update for experiment routing.",
+      "tags": ["bandit", "exploration", "orchestrator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/beehiiv/notify.ts",
+      "type": "file",
+      "name": "notify.ts",
+      "filePath": "src/lib/beehiiv/notify.ts",
+      "summary": "Sends assessment and lifecycle notifications to the Beehiiv newsletter API with retry-friendly error handling.",
+      "tags": ["integration", "beehiiv", "notification", "api-client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/beehiiv/notify.ts:notifyBeehiiv",
+      "type": "function",
+      "name": "notifyBeehiiv",
+      "filePath": "src/lib/beehiiv/notify.ts",
+      "lineRange": [66, 215],
+      "summary": "Posts an event payload to the configured Beehiiv endpoint with subscriber lookup, retry on transient errors, and structured response parsing.",
+      "tags": ["integration", "beehiiv", "http", "retry"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/benchmark/report.ts",
+      "type": "file",
+      "name": "report.ts",
+      "filePath": "src/lib/benchmark/report.ts",
+      "summary": "Builds a benchmark report over stored validation records, computing calibration error, Brier score, precision@k, coverage at FPR, and threshold accuracy.",
+      "tags": ["benchmark", "metrics", "calibration", "report"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/benchmark/report.ts:expectedCalibrationError",
+      "type": "function",
+      "name": "expectedCalibrationError",
+      "filePath": "src/lib/benchmark/report.ts",
+      "lineRange": [22, 36],
+      "summary": "Computes expected calibration error by binning predictions and comparing mean confidence to empirical accuracy.",
+      "tags": ["metric", "calibration", "statistics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/benchmark/report.ts:coverageAtFpr",
+      "type": "function",
+      "name": "coverageAtFpr",
+      "filePath": "src/lib/benchmark/report.ts",
+      "lineRange": [53, 75],
+      "summary": "Finds the maximum coverage achievable at or below a target false-positive rate by sweeping the decision threshold.",
+      "tags": ["metric", "roc", "statistics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/benchmark/report.ts:buildBenchmarkReport",
+      "type": "function",
+      "name": "buildBenchmarkReport",
+      "filePath": "src/lib/benchmark/report.ts",
+      "lineRange": [104, 137],
+      "summary": "Reads validation records and emits a benchmark report comparing current vs baseline metrics across all configured statistics.",
+      "tags": ["benchmark", "report", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/billing/enforcement.ts",
+      "type": "file",
+      "name": "enforcement.ts",
+      "filePath": "src/lib/billing/enforcement.ts",
+      "summary": "Billing enforcement: ensures billing tables exist, then validates an API key, plan, and per-route quota — consuming a credit on success.",
+      "tags": ["billing", "quota", "enforcement", "api-guard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/billing/enforcement.ts:ensureBillingTables",
+      "type": "function",
+      "name": "ensureBillingTables",
+      "filePath": "src/lib/billing/enforcement.ts",
+      "lineRange": [7, 55],
+      "summary": "Creates the api_keys and quota_usage Postgres tables if missing so billing enforcement can run on a fresh database.",
+      "tags": ["migration", "billing", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/billing/enforcement.ts:checkAndConsume",
+      "type": "function",
+      "name": "checkAndConsume",
+      "filePath": "src/lib/billing/enforcement.ts",
+      "lineRange": [57, 138],
+      "summary": "Validates the API key, looks up its plan, checks the per-route quota window, and atomically consumes one unit if available.",
+      "tags": ["billing", "quota", "enforcement"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/billing/plans.ts",
+      "type": "file",
+      "name": "plans.ts",
+      "filePath": "src/lib/billing/plans.ts",
+      "summary": "Defines the static catalog of billing plans and helpers that resolve a plan by id and compute the quota for a given API route.",
+      "tags": ["billing", "plans", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/brain/orchestrator.ts",
+      "type": "file",
+      "name": "orchestrator.ts",
+      "filePath": "src/lib/brain/orchestrator.ts",
+      "summary": "Tiny stub orchestrator that routes a brain input to the first registered provider — placeholder for the brain abstraction.",
+      "tags": ["stub", "orchestrator", "brain"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/brain/providers.ts",
+      "type": "file",
+      "name": "providers.ts",
+      "filePath": "src/lib/brain/providers.ts",
+      "summary": "Stub providers array exported for the brain orchestrator placeholder.",
+      "tags": ["stub", "providers", "brain"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/branding/trendzo-brand.ts",
+      "type": "file",
+      "name": "trendzo-brand.ts",
+      "filePath": "src/lib/branding/trendzo-brand.ts",
+      "summary": "Single source of truth for Trendzo brand tokens — colors, gradients, typography, component styles, and helpers to resolve them by path.",
+      "tags": ["branding", "design-tokens", "configuration", "constants"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/branding/trendzo-brand.ts:getBrandColor",
+      "type": "function",
+      "name": "getBrandColor",
+      "filePath": "src/lib/branding/trendzo-brand.ts",
+      "lineRange": [249, 258],
+      "summary": "Resolves a dotted brand color path against the trendzoBrand token tree and returns the matching color value.",
+      "tags": ["branding", "utility", "lookup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/calibration/__tests__/metrics.test.ts",
+      "type": "file",
+      "name": "metrics.test.ts",
+      "filePath": "src/lib/calibration/__tests__/metrics.test.ts",
+      "summary": "Minimal unit test scaffolding for the calibration metrics module.",
+      "tags": ["test", "calibration", "unit-test"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:parseShareIdParam",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:isSprintProgressMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessmentByShareId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:parseShareIdParam",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "function:src/lib/assessment/fetch-assessment.ts:fetchAssessmentByShareId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assessment/fetch-assessment.ts",
+      "target": "file:src/lib/assessment/validate-payload.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:formatHumanDate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:extractJson",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:callClaude",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:applyServerSideTransforms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:generateAssessment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:generateAssessment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "function:src/lib/assessment/generate.ts:formatHumanDate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "file:src/lib/assessment/validate-payload.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/assessment/generate.ts",
+      "target": "file:src/lib/prompts/escape-assessment-prompt.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/assessment/validate-payload.ts",
+      "target": "function:src/lib/assessment/validate-payload.ts:describeAssessmentPayload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assessment/validate-payload.ts",
+      "target": "function:src/lib/assessment/validate-payload.ts:describeAssessmentPayload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assets/asset-manager.ts",
+      "target": "class:src/lib/assets/asset-manager.ts:AssetManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assets/asset-manager.ts",
+      "target": "function:src/lib/assets/asset-manager.ts:getAssetPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/assets/asset-manager.ts",
+      "target": "class:src/lib/assets/asset-manager.ts:AssetManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assets/asset-manager.ts",
+      "target": "function:src/lib/assets/asset-manager.ts:getAssetPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/assets/asset-manager.ts",
+      "target": "file:src/lib/branding/trendzo-brand.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/audit/audit_utils.ts",
+      "target": "function:src/lib/audit/audit_utils.ts:ensureAuditTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/audit/audit_utils.ts",
+      "target": "function:src/lib/audit/audit_utils.ts:writeEvidenceZip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/audit/audit_utils.ts",
+      "target": "function:src/lib/audit/audit_utils.ts:ensureAuditTables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/audit/audit_utils.ts",
+      "target": "function:src/lib/audit/audit_utils.ts:writeEvidenceZip",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/audit/audit_utils.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/admin-auth-options.ts",
+      "target": "file:src/lib/utils/adminAuth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/agency-utils.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/api-guard.ts",
+      "target": "function:src/lib/auth/api-guard.ts:requireAuth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/api-guard.ts",
+      "target": "function:src/lib/auth/api-guard.ts:requireAuth",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/api-guard.ts",
+      "target": "file:src/lib/auth/permissions.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/api-guard.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/api-guard.ts",
+      "target": "file:src/types/admin.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "function:src/lib/auth/auth-service.js:convertToUnifiedUser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "function:src/lib/auth/auth-service.js:signInWithEmailAndPassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "function:src/lib/auth/auth-service.js:getAuthState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "function:src/lib/auth/auth-service.js:signInWithEmailAndPassword",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "function:src/lib/auth/auth-service.js:getAuthState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "file:src/lib/auth/provider-switcher.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "file:src/lib/firebase/client.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/auth-service.js",
+      "target": "file:src/lib/utils/env.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/permissions.ts",
+      "target": "function:src/lib/auth/permissions.ts:canAccessResource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/permissions.ts",
+      "target": "function:src/lib/auth/permissions.ts:canAccessResource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/permissions.ts",
+      "target": "file:src/types/admin.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/provider-switcher.js",
+      "target": "file:src/lib/utils/env.js",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:getAuthenticatedUser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:requireRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:requirePermission",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:isRoleAllowedForRoute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:getAuthenticatedUser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:requireRole",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:requirePermission",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "function:src/lib/auth/server-auth.ts:isRoleAllowedForRoute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "file:src/lib/permissions/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/server-auth.ts",
+      "target": "file:src/types/admin.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/auth/supabase-auth.ts",
+      "target": "file:src/lib/supabase-client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-actual-performance.ts",
+      "target": "function:src/lib/backfill/backfill-actual-performance.ts:backfillActualPerformance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-actual-performance.ts",
+      "target": "function:src/lib/backfill/backfill-actual-performance.ts:backfillActualPerformance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-follower-counts.ts",
+      "target": "function:src/lib/backfill/backfill-follower-counts.ts:backfillFollowerCounts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-follower-counts.ts",
+      "target": "function:src/lib/backfill/backfill-follower-counts.ts:backfillFollowerCounts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "function:src/lib/backfill/backfill-training-features.ts:fetchEligibleRuns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "function:src/lib/backfill/backfill-training-features.ts:resolveNiches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "function:src/lib/backfill/backfill-training-features.ts:hasPriorCulturalEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "function:src/lib/backfill/backfill-training-features.ts:backfillTrainingFeatures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "function:src/lib/backfill/backfill-training-features.ts:backfillTrainingFeatures",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "file:src/lib/features/audience-quality.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "file:src/lib/features/creator-trajectory.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "file:src/lib/features/cultural-momentum.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/backfill/backfill-training-features.ts",
+      "target": "file:src/lib/features/distribution-signals.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/bandit/orchestrator.ts",
+      "target": "class:src/lib/bandit/orchestrator.ts:BanditOrchestrator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/bandit/orchestrator.ts",
+      "target": "class:src/lib/bandit/orchestrator.ts:BanditOrchestrator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/beehiiv/notify.ts",
+      "target": "function:src/lib/beehiiv/notify.ts:notifyBeehiiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/beehiiv/notify.ts",
+      "target": "function:src/lib/beehiiv/notify.ts:notifyBeehiiv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "function:src/lib/benchmark/report.ts:expectedCalibrationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "function:src/lib/benchmark/report.ts:coverageAtFpr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "function:src/lib/benchmark/report.ts:buildBenchmarkReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "function:src/lib/benchmark/report.ts:buildBenchmarkReport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "file:src/lib/validation/metrics.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/benchmark/report.ts",
+      "target": "file:src/lib/validation/store.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "function:src/lib/billing/enforcement.ts:ensureBillingTables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "function:src/lib/billing/enforcement.ts:checkAndConsume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "function:src/lib/billing/enforcement.ts:ensureBillingTables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "function:src/lib/billing/enforcement.ts:checkAndConsume",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "file:src/lib/billing/plans.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/billing/enforcement.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/brain/orchestrator.ts",
+      "target": "file:src/lib/brain/providers.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/branding/trendzo-brand.ts",
+      "target": "function:src/lib/branding/trendzo-brand.ts:getBrandColor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/lib/branding/trendzo-brand.ts",
+      "target": "function:src/lib/branding/trendzo-brand.ts:getBrandColor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/lib/calibration/__tests__/metrics.test.ts",
+      "target": "file:src/lib/calibration/metrics.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/lib/calibration/metrics.ts",
+      "target": "file:src/lib/calibration/__tests__/metrics.test.ts",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

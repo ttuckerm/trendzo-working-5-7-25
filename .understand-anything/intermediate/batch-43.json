@@ -1,0 +1,3581 @@
+{
+  "nodes": [
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql",
+      "type": "table",
+      "name": "add-viral-prediction-tables.sql",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "summary": "Foundational migration adding 26 viral-prediction tables (videos, engagement snapshots, hook frameworks, pattern matches, cultural timing, creator authority, marketing automation) with supporting indexes.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:videos",
+      "type": "table",
+      "name": "videos",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        16,
+        54
+      ],
+      "summary": "Table videos (21 columns: id, tiktok_id, creator_id, creator_username, creator_followers, like_count, +15 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:engagement_snapshots",
+      "type": "table",
+      "name": "engagement_snapshots",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        57,
+        75
+      ],
+      "summary": "Table engagement_snapshots (12 columns: id, video_id, snapshot_timestamp, hours_since_upload, view_count, like_count, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:hook_frameworks",
+      "type": "table",
+      "name": "hook_frameworks",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        78,
+        89
+      ],
+      "summary": "Table hook_frameworks (10 columns: id, name, category, description, success_rate, usage_count, +4 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:video_hooks",
+      "type": "table",
+      "name": "video_hooks",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        92,
+        100
+      ],
+      "summary": "Table video_hooks (7 columns: id, video_id, hook_id, confidence_score, detected_elements, performance_impact, +1 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:content_series",
+      "type": "table",
+      "name": "content_series",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        103,
+        114
+      ],
+      "summary": "Table content_series (10 columns: id, creator_id, series_name, total_episodes, episode_schedule, average_retention_rate, +4 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:series_episodes",
+      "type": "table",
+      "name": "series_episodes",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        116,
+        124
+      ],
+      "summary": "Table series_episodes (7 columns: id, series_id, video_id, episode_number, cliffhanger_score, retention_to_next, +1 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:cross_platform_signals",
+      "type": "table",
+      "name": "cross_platform_signals",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        131,
+        141
+      ],
+      "summary": "Table cross_platform_signals (9 columns: id, video_id, platform, platform_post_id, engagement_metrics, virality_indicator, +3 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:comment_analysis",
+      "type": "table",
+      "name": "comment_analysis",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        144,
+        157
+      ],
+      "summary": "Table comment_analysis (12 columns: id, video_id, total_comments_analyzed, positive_sentiment_ratio, engagement_sentiment_score, full_watch_indicators, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:pattern_matches",
+      "type": "table",
+      "name": "pattern_matches",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        160,
+        170
+      ],
+      "summary": "Table pattern_matches (9 columns: id, video_id, pattern_type, matched_pattern_id, similarity_score, pattern_metadata, +3 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:ai_conversations",
+      "type": "table",
+      "name": "ai_conversations",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        177,
+        185
+      ],
+      "summary": "Table ai_conversations (7 columns: id, conversation_type, messages, context, system_updates_made, parameters_adjusted, +1 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:system_learnings",
+      "type": "table",
+      "name": "system_learnings",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        188,
+        199
+      ],
+      "summary": "Table system_learnings (10 columns: id, learning_type, discovery_context, improvement_metrics, applied_to_system, approval_status, +4 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:performance_metrics",
+      "type": "table",
+      "name": "performance_metrics",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        202,
+        216
+      ],
+      "summary": "Table performance_metrics (13 columns: id, metric_date, predictions_made, correct_predictions, false_positives, false_negatives, +7 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:system_configurations",
+      "type": "table",
+      "name": "system_configurations",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        219,
+        230
+      ],
+      "summary": "Table system_configurations (10 columns: id, config_version, viral_thresholds, decay_parameters, platform_weights, hook_effectiveness_scores, +4 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:psychological_engagement",
+      "type": "table",
+      "name": "psychological_engagement",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        237,
+        253
+      ],
+      "summary": "Table psychological_engagement (15 columns: id, video_id, emotional_arousal_score, arousal_type, arousal_intensity, social_currency_score, +9 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:production_quality",
+      "type": "table",
+      "name": "production_quality",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        256,
+        276
+      ],
+      "summary": "Table production_quality (19 columns: id, video_id, shot_pacing_score, average_shot_duration, rapid_cut_percentage, pattern_interrupt_count, +13 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:perspective_analysis",
+      "type": "table",
+      "name": "perspective_analysis",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        279,
+        288
+      ],
+      "summary": "Table perspective_analysis (8 columns: id, video_id, second_person_usage_count, second_person_percentage, you_references, viewer_addressing_score, +2 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:participation_potential",
+      "type": "table",
+      "name": "participation_potential",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        291,
+        307
+      ],
+      "summary": "Table participation_potential (15 columns: id, video_id, duet_potential_score, stitch_potential_score, recreation_ease_score, is_challenge_format, +9 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:series_strategy_enhanced",
+      "type": "table",
+      "name": "series_strategy_enhanced",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        310,
+        323
+      ],
+      "summary": "Table series_strategy_enhanced (12 columns: id, series_id, cliffhanger_type, cliffhanger_effectiveness_score, part_two_request_count, target_return_rate, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:cultural_timing",
+      "type": "table",
+      "name": "cultural_timing",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        326,
+        341
+      ],
+      "summary": "Table cultural_timing (14 columns: id, video_id, trend_position, trend_age_hours, optimal_window_alignment, cultural_events, +8 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:creator_authority",
+      "type": "table",
+      "name": "creator_authority",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        344,
+        357
+      ],
+      "summary": "Table creator_authority (12 columns: id, creator_id, overall_authority_score, niche_authority_score, consistency_score, historical_viral_rate, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:authenticity_paradox",
+      "type": "table",
+      "name": "authenticity_paradox",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        360,
+        372
+      ],
+      "summary": "Table authenticity_paradox (11 columns: id, video_id, spontaneity_appearance_score, strategic_planning_indicators, authenticity_strategy_balance, personal_story_present, +5 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:algorithm_state",
+      "type": "table",
+      "name": "algorithm_state",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        375,
+        386
+      ],
+      "summary": "Table algorithm_state (10 columns: id, detected_change_date, change_type, change_magnitude, affected_metrics, performance_impact, +4 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:marketing_templates",
+      "type": "table",
+      "name": "marketing_templates",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        393,
+        410
+      ],
+      "summary": "Table marketing_templates (16 columns: id, template_name, template_type, source_video_id, source_viral_score, source_engagement_rate, +10 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:one_click_optimizations",
+      "type": "table",
+      "name": "one_click_optimizations",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        413,
+        426
+      ],
+      "summary": "Table one_click_optimizations (12 columns: id, optimization_name, optimization_type, before_pattern, after_pattern, expected_improvement, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:inception_analytics",
+      "type": "table",
+      "name": "inception_analytics",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        429,
+        445
+      ],
+      "summary": "Table inception_analytics (15 columns: id, content_id, content_type, views, engagement_rate, share_count, +9 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/add-viral-prediction-tables.sql:marketing_queue",
+      "type": "table",
+      "name": "marketing_queue",
+      "filePath": "scripts/add-viral-prediction-tables.sql",
+      "lineRange": [
+        448,
+        461
+      ],
+      "summary": "Table marketing_queue (12 columns: id, content_title, content_type, target_platform, original_score, optimized_score, +6 more) defined in add-viral-prediction-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/cleanup-unified-schema.sql",
+      "type": "table",
+      "name": "cleanup-unified-schema.sql",
+      "filePath": "scripts/cleanup-unified-schema.sql",
+      "summary": "Cleanup migration that backs up legacy viral_predictions data, drops conflicting indexes/triggers, recreates a unified viral_predictions table, and exposes a viral_predictions_clean view.",
+      "tags": [
+        "database",
+        "migration",
+        "cleanup",
+        "schema-evolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/cleanup-unified-schema.sql:viral_predictions_backup",
+      "type": "table",
+      "name": "viral_predictions_backup",
+      "filePath": "scripts/cleanup-unified-schema.sql",
+      "lineRange": [
+        15,
+        137
+      ],
+      "summary": "Table viral_predictions_backup (43 columns: will, video_id, caption, niche, hashtags, viral_score, +37 more) defined in cleanup-unified-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/cleanup-unified-schema.sql:viral_predictions",
+      "type": "table",
+      "name": "viral_predictions",
+      "filePath": "scripts/cleanup-unified-schema.sql",
+      "lineRange": [
+        36,
+        137
+      ],
+      "summary": "Table viral_predictions (43 columns: id, video_id, caption, niche, hashtags, viral_score, +37 more) defined in cleanup-unified-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/cleanup-unified-schema.sql:viral_predictions_clean",
+      "type": "table",
+      "name": "viral_predictions_clean",
+      "filePath": "scripts/cleanup-unified-schema.sql",
+      "lineRange": [
+        188,
+        188
+      ],
+      "summary": "View viral_predictions_clean exposing a denormalized query result, defined in cleanup-unified-schema.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-ab-testing-schema.sql",
+      "type": "table",
+      "name": "create-ab-testing-schema.sql",
+      "filePath": "scripts/create-ab-testing-schema.sql",
+      "summary": "A/B testing schema defining ab_tests, ab_test_assignments, ab_test_events, and ab_test_results plus performance indexes and RLS bootstrapping for MVP experimentation.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-ab-testing-schema.sql:ab_tests",
+      "type": "table",
+      "name": "ab_tests",
+      "filePath": "scripts/create-ab-testing-schema.sql",
+      "lineRange": [
+        5,
+        22
+      ],
+      "summary": "Table ab_tests (16 columns: id, name, description, type, status, variants, +10 more) defined in create-ab-testing-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-ab-testing-schema.sql:ab_test_assignments",
+      "type": "table",
+      "name": "ab_test_assignments",
+      "filePath": "scripts/create-ab-testing-schema.sql",
+      "lineRange": [
+        25,
+        32
+      ],
+      "summary": "Table ab_test_assignments (5 columns: id, test_id, user_id, variant_id, assigned_at) defined in create-ab-testing-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-ab-testing-schema.sql:ab_test_events",
+      "type": "table",
+      "name": "ab_test_events",
+      "filePath": "scripts/create-ab-testing-schema.sql",
+      "lineRange": [
+        35,
+        45
+      ],
+      "summary": "Table ab_test_events (9 columns: id, test_id, variant_id, user_id, event_type, conversion_type, +3 more) defined in create-ab-testing-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-ab-testing-schema.sql:ab_test_results",
+      "type": "table",
+      "name": "ab_test_results",
+      "filePath": "scripts/create-ab-testing-schema.sql",
+      "lineRange": [
+        48,
+        60
+      ],
+      "summary": "Table ab_test_results (10 columns: id, test_id, variant_id, impressions, conversions, conversion_rate, +4 more) defined in create-ab-testing-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-apify-scraper-tables.sql",
+      "type": "table",
+      "name": "create-apify-scraper-tables.sql",
+      "filePath": "scripts/create-apify-scraper-tables.sql",
+      "summary": "Apify scraping pipeline schema: scraping_jobs queue, scraped_videos store, download_queue, and scraping_keywords with supporting indexes.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-apify-scraper-tables.sql:scraping_jobs",
+      "type": "table",
+      "name": "scraping_jobs",
+      "filePath": "scripts/create-apify-scraper-tables.sql",
+      "lineRange": [
+        5,
+        20
+      ],
+      "summary": "Table scraping_jobs (8 columns: job_id, total_videos_scraped, total_videos_downloaded, total_errors, apify_actor_id, started_at, +2 more) defined in create-apify-scraper-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-apify-scraper-tables.sql:scraped_videos",
+      "type": "table",
+      "name": "scraped_videos",
+      "filePath": "scripts/create-apify-scraper-tables.sql",
+      "lineRange": [
+        23,
+        80
+      ],
+      "summary": "Table scraped_videos (24 columns: video_id, scraping_job_id, description, original_url, platform, platform_video_id, +18 more) defined in create-apify-scraper-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-apify-scraper-tables.sql:download_queue",
+      "type": "table",
+      "name": "download_queue",
+      "filePath": "scripts/create-apify-scraper-tables.sql",
+      "lineRange": [
+        83,
+        97
+      ],
+      "summary": "Table download_queue (11 columns: queue_id, video_id, video_url, priority, max_retries, error_message, +5 more) defined in create-apify-scraper-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-apify-scraper-tables.sql:scraping_keywords",
+      "type": "table",
+      "name": "scraping_keywords",
+      "filePath": "scripts/create-apify-scraper-tables.sql",
+      "lineRange": [
+        100,
+        111
+      ],
+      "summary": "Table scraping_keywords (6 columns: category, scraping_frequency, last_scraped_at, total_videos_scraped, created_at, updated_at) defined in create-apify-scraper-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql",
+      "type": "table",
+      "name": "create-bridge-tables-fixed.sql",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "summary": "Fixed bridge tables connecting templates to video analysis: template_video_analysis, user_viral_preferences, sound_viral_history, expert_insight_enhancements, plus four reporting views.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:template_video_analysis",
+      "type": "table",
+      "name": "template_video_analysis",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        100,
+        107
+      ],
+      "summary": "Table template_video_analysis (3 columns: id, template_id, analysis_type) defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:user_viral_preferences",
+      "type": "table",
+      "name": "user_viral_preferences",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        110,
+        121
+      ],
+      "summary": "Table user_viral_preferences (9 columns: id, user_id, god_mode_enabled, inception_mode_access, target_accuracy_threshold, auto_optimization_enabled, +3 more) defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:sound_viral_history",
+      "type": "table",
+      "name": "sound_viral_history",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        124,
+        134
+      ],
+      "summary": "Table sound_viral_history (8 columns: id, sound_id, video_count, viral_video_count, total_views, viral_effectiveness, +2 more) defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:expert_insight_enhancements",
+      "type": "table",
+      "name": "expert_insight_enhancements",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        137,
+        145
+      ],
+      "summary": "Table expert_insight_enhancements (6 columns: id, expert_insight_id, god_mode_factors, prediction_impact, accuracy_improvement, created_at) defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:video_complete_analysis",
+      "type": "table",
+      "name": "video_complete_analysis",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        152,
+        152
+      ],
+      "summary": "View video_complete_analysis exposing a denormalized query result, defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:viral_performance_dashboard",
+      "type": "table",
+      "name": "viral_performance_dashboard",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        179,
+        179
+      ],
+      "summary": "View viral_performance_dashboard exposing a denormalized query result, defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:hook_effectiveness_analysis",
+      "type": "table",
+      "name": "hook_effectiveness_analysis",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        198,
+        198
+      ],
+      "summary": "View hook_effectiveness_analysis exposing a denormalized query result, defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-fixed.sql:god_mode_summary",
+      "type": "table",
+      "name": "god_mode_summary",
+      "filePath": "scripts/create-bridge-tables-fixed.sql",
+      "lineRange": [
+        218,
+        218
+      ],
+      "summary": "View god_mode_summary exposing a denormalized query result, defined in create-bridge-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql",
+      "type": "table",
+      "name": "create-bridge-tables-minimal.sql",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "summary": "Minimal variant of the bridge tables migration creating the four bridge tables and three reporting views without the heaviest view.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:template_video_analysis",
+      "type": "table",
+      "name": "template_video_analysis",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        103,
+        110
+      ],
+      "summary": "Table template_video_analysis (3 columns: id, template_id, analysis_type) defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:user_viral_preferences",
+      "type": "table",
+      "name": "user_viral_preferences",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        113,
+        124
+      ],
+      "summary": "Table user_viral_preferences (9 columns: id, user_id, god_mode_enabled, inception_mode_access, target_accuracy_threshold, auto_optimization_enabled, +3 more) defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:sound_viral_history",
+      "type": "table",
+      "name": "sound_viral_history",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        127,
+        137
+      ],
+      "summary": "Table sound_viral_history (8 columns: id, sound_id, video_count, viral_video_count, total_views, viral_effectiveness, +2 more) defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:expert_insight_enhancements",
+      "type": "table",
+      "name": "expert_insight_enhancements",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        140,
+        148
+      ],
+      "summary": "Table expert_insight_enhancements (6 columns: id, expert_insight_id, god_mode_factors, prediction_impact, accuracy_improvement, created_at) defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:viral_performance_dashboard",
+      "type": "table",
+      "name": "viral_performance_dashboard",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        155,
+        155
+      ],
+      "summary": "View viral_performance_dashboard exposing a denormalized query result, defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:hook_effectiveness_analysis",
+      "type": "table",
+      "name": "hook_effectiveness_analysis",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        174,
+        174
+      ],
+      "summary": "View hook_effectiveness_analysis exposing a denormalized query result, defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables-minimal.sql:god_mode_summary",
+      "type": "table",
+      "name": "god_mode_summary",
+      "filePath": "scripts/create-bridge-tables-minimal.sql",
+      "lineRange": [
+        194,
+        194
+      ],
+      "summary": "View god_mode_summary exposing a denormalized query result, defined in create-bridge-tables-minimal.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql",
+      "type": "table",
+      "name": "create-bridge-tables.sql",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "summary": "Original bridge tables migration linking templates, users, and viral analytics across four bridge tables and four reporting views.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:template_video_analysis",
+      "type": "table",
+      "name": "template_video_analysis",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        100,
+        107
+      ],
+      "summary": "Table template_video_analysis (3 columns: id, template_id, analysis_type) defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:user_viral_preferences",
+      "type": "table",
+      "name": "user_viral_preferences",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        110,
+        121
+      ],
+      "summary": "Table user_viral_preferences (9 columns: id, user_id, god_mode_enabled, inception_mode_access, target_accuracy_threshold, auto_optimization_enabled, +3 more) defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:sound_viral_history",
+      "type": "table",
+      "name": "sound_viral_history",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        124,
+        134
+      ],
+      "summary": "Table sound_viral_history (8 columns: id, sound_id, video_count, viral_video_count, total_views, viral_effectiveness, +2 more) defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:expert_insight_enhancements",
+      "type": "table",
+      "name": "expert_insight_enhancements",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        137,
+        145
+      ],
+      "summary": "Table expert_insight_enhancements (6 columns: id, expert_insight_id, god_mode_factors, prediction_impact, accuracy_improvement, created_at) defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:video_complete_analysis",
+      "type": "table",
+      "name": "video_complete_analysis",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        152,
+        152
+      ],
+      "summary": "View video_complete_analysis exposing a denormalized query result, defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:viral_performance_dashboard",
+      "type": "table",
+      "name": "viral_performance_dashboard",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        179,
+        179
+      ],
+      "summary": "View viral_performance_dashboard exposing a denormalized query result, defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:hook_effectiveness_analysis",
+      "type": "table",
+      "name": "hook_effectiveness_analysis",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        198,
+        198
+      ],
+      "summary": "View hook_effectiveness_analysis exposing a denormalized query result, defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-bridge-tables.sql:god_mode_summary",
+      "type": "table",
+      "name": "god_mode_summary",
+      "filePath": "scripts/create-bridge-tables.sql",
+      "lineRange": [
+        218,
+        218
+      ],
+      "summary": "View god_mode_summary exposing a denormalized query result, defined in create-bridge-tables.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-evolution-engine-tables.sql",
+      "type": "table",
+      "name": "create-evolution-engine-tables.sql",
+      "filePath": "scripts/create-evolution-engine-tables.sql",
+      "summary": "Evolution Engine schema: evolution_runs, template_status_history, and negative_pool with supporting indexes for template lifecycle tracking.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-evolution-engine-tables.sql:evolution_runs",
+      "type": "table",
+      "name": "evolution_runs",
+      "filePath": "scripts/create-evolution-engine-tables.sql",
+      "lineRange": [
+        5,
+        16
+      ],
+      "summary": "Table evolution_runs (10 columns: run_id, hot_count, cooling_count, new_count, stable_count, total_templates_analyzed, +4 more) defined in create-evolution-engine-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-evolution-engine-tables.sql:template_status_history",
+      "type": "table",
+      "name": "template_status_history",
+      "filePath": "scripts/create-evolution-engine-tables.sql",
+      "lineRange": [
+        19,
+        32
+      ],
+      "summary": "Table template_status_history (12 columns: history_id, template_id, run_id, status, trend_pct, current_rate, +6 more) defined in create-evolution-engine-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-evolution-engine-tables.sql:negative_pool",
+      "type": "table",
+      "name": "negative_pool",
+      "filePath": "scripts/create-evolution-engine-tables.sql",
+      "lineRange": [
+        35,
+        46
+      ],
+      "summary": "Table negative_pool (9 columns: video_id, follower_bucket, platform, views, likes, creator_id, +3 more) defined in create-evolution-engine-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-feature-decomposer-tables.sql",
+      "type": "table",
+      "name": "create-feature-decomposer-tables.sql",
+      "filePath": "scripts/create-feature-decomposer-tables.sql",
+      "summary": "Feature Decomposer schema: video_features, feature_extraction_runs, and raw_videos with supporting indexes for feature pipeline inputs/outputs.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-feature-decomposer-tables.sql:video_features",
+      "type": "table",
+      "name": "video_features",
+      "filePath": "scripts/create-feature-decomposer-tables.sql",
+      "lineRange": [
+        5,
+        60
+      ],
+      "summary": "Table video_features (27 columns: video_id, title, description, duration, likes, shares, +21 more) defined in create-feature-decomposer-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-feature-decomposer-tables.sql:feature_extraction_runs",
+      "type": "table",
+      "name": "feature_extraction_runs",
+      "filePath": "scripts/create-feature-decomposer-tables.sql",
+      "lineRange": [
+        63,
+        73
+      ],
+      "summary": "Table feature_extraction_runs (5 columns: run_id, video_id, extraction_type, file_paths, run_timestamp) defined in create-feature-decomposer-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-feature-decomposer-tables.sql:raw_videos",
+      "type": "table",
+      "name": "raw_videos",
+      "filePath": "scripts/create-feature-decomposer-tables.sql",
+      "lineRange": [
+        76,
+        87
+      ],
+      "summary": "Table raw_videos (7 columns: video_id, original_url, local_file_path, file_name, mime_type, file_hash, +1 more) defined in create-feature-decomposer-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-gene-tagger-tables.sql",
+      "type": "table",
+      "name": "create-gene-tagger-tables.sql",
+      "filePath": "scripts/create-gene-tagger-tables.sql",
+      "summary": "Gene Tagger schema: video_genes, gene_analysis_runs, and framework_genes with indexes powering the 48-dimension gene vector analysis.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-gene-tagger-tables.sql:video_genes",
+      "type": "table",
+      "name": "video_genes",
+      "filePath": "scripts/create-gene-tagger-tables.sql",
+      "lineRange": [
+        5,
+        12
+      ],
+      "summary": "Table video_genes (4 columns: video_id, genes, transcript, updated_at) defined in create-gene-tagger-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-gene-tagger-tables.sql:gene_analysis_runs",
+      "type": "table",
+      "name": "gene_analysis_runs",
+      "filePath": "scripts/create-gene-tagger-tables.sql",
+      "lineRange": [
+        15,
+        25
+      ],
+      "summary": "Table gene_analysis_runs (7 columns: run_id, video_id, status, processing_time_ms, framework_version, features_processed, +1 more) defined in create-gene-tagger-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-gene-tagger-tables.sql:framework_genes",
+      "type": "table",
+      "name": "framework_genes",
+      "filePath": "scripts/create-gene-tagger-tables.sql",
+      "lineRange": [
+        28,
+        44
+      ],
+      "summary": "Table framework_genes (14 columns: gene_id, name, description, type, pattern, text_pattern, +8 more) defined in create-gene-tagger-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-functions.sql",
+      "type": "table",
+      "name": "create-mvp-functions.sql",
+      "filePath": "scripts/create-mvp-functions.sql",
+      "summary": "PL/pgSQL helper functions backing the MVP template engine (analytics aggregation, conversion-rate calculators, template scoring) with their supporting indexes.",
+      "tags": [
+        "database",
+        "function",
+        "migration",
+        "plpgsql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-mvp-rls-policies.sql",
+      "type": "table",
+      "name": "create-mvp-rls-policies.sql",
+      "filePath": "scripts/create-mvp-rls-policies.sql",
+      "summary": "Row Level Security policies for the MVP schema gating access to users, templates, user-templates, creator attributions, and email captures by Supabase auth identity.",
+      "tags": [
+        "database",
+        "security",
+        "rls",
+        "migration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql",
+      "type": "table",
+      "name": "create-mvp-schema.sql",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "summary": "Core MVP schema: users, templates, landing_pages, campaign_analytics, user_templates, creator_attributions, and email_captures with performance indexes.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:users",
+      "type": "table",
+      "name": "users",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        15,
+        26
+      ],
+      "summary": "Table users (10 columns: id, email, created_at, last_active, conversion_source, entry_niche, +4 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:templates",
+      "type": "table",
+      "name": "templates",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        29,
+        45
+      ],
+      "summary": "Table templates (13 columns: id, name, category, niche, platform, viral_score, +7 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:landing_pages",
+      "type": "table",
+      "name": "landing_pages",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        48,
+        59
+      ],
+      "summary": "Table landing_pages (8 columns: id, niche, platform, content, ab_variant, is_active, +2 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:campaign_analytics",
+      "type": "table",
+      "name": "campaign_analytics",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        62,
+        75
+      ],
+      "summary": "Table campaign_analytics (10 columns: id, landing_page_id, visitor_id, event_type, metadata, utm_medium, +4 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:user_templates",
+      "type": "table",
+      "name": "user_templates",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        78,
+        88
+      ],
+      "summary": "Table user_templates (8 columns: id, user_id, template_id, customization, attribution_given, export_count, +2 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:creator_attributions",
+      "type": "table",
+      "name": "creator_attributions",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        91,
+        101
+      ],
+      "summary": "Table creator_attributions (8 columns: id, user_id, template_id, creator_username, creator_platform, comment_text, +2 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-mvp-schema.sql:email_captures",
+      "type": "table",
+      "name": "email_captures",
+      "filePath": "scripts/create-mvp-schema.sql",
+      "lineRange": [
+        104,
+        115
+      ],
+      "summary": "Table email_captures (10 columns: id, email, capture_source, niche, platform, template_id, +4 more) defined in create-mvp-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-recipe-book-table.sql",
+      "type": "table",
+      "name": "create-recipe-book-table.sql",
+      "filePath": "scripts/create-recipe-book-table.sql",
+      "summary": "Single-table migration for recipe_book_daily storing the daily viral recipe rotation.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-recipe-book-table.sql:recipe_book_daily",
+      "type": "table",
+      "name": "recipe_book_daily",
+      "filePath": "scripts/create-recipe-book-table.sql",
+      "lineRange": [
+        3,
+        23
+      ],
+      "summary": "Table recipe_book_daily (3 columns: created_at, description, success_rate) defined in create-recipe-book-table.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-system-alerts-table.sql",
+      "type": "table",
+      "name": "create-system-alerts-table.sql",
+      "filePath": "scripts/create-system-alerts-table.sql",
+      "summary": "Single-table migration for system_alerts capturing operational alerts emitted by background jobs.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-system-alerts-table.sql:system_alerts",
+      "type": "table",
+      "name": "system_alerts",
+      "filePath": "scripts/create-system-alerts-table.sql",
+      "lineRange": [
+        4,
+        11
+      ],
+      "summary": "Table system_alerts (6 columns: id, created_at, severity, source, message, is_read) defined in create-system-alerts-table.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-tables.sql",
+      "type": "table",
+      "name": "create-tables.sql",
+      "filePath": "scripts/create-tables.sql",
+      "summary": "Initial TikTok templates schema: tiktok_templates, template_expert_insights, and template_audit_logs.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-tables.sql:tiktok_templates",
+      "type": "table",
+      "name": "tiktok_templates",
+      "filePath": "scripts/create-tables.sql",
+      "lineRange": [
+        2,
+        16
+      ],
+      "summary": "Table tiktok_templates (13 columns: id, title, description, category, duration, thumbnail_url, +7 more) defined in create-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-tables.sql:template_expert_insights",
+      "type": "table",
+      "name": "template_expert_insights",
+      "filePath": "scripts/create-tables.sql",
+      "lineRange": [
+        21,
+        31
+      ],
+      "summary": "Table template_expert_insights (9 columns: id, template_id, tags, notes, manual_adjustment, adjustment_reason, +3 more) defined in create-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-tables.sql:template_audit_logs",
+      "type": "table",
+      "name": "template_audit_logs",
+      "filePath": "scripts/create-tables.sql",
+      "lineRange": [
+        36,
+        43
+      ],
+      "summary": "Table template_audit_logs (6 columns: id, template_id, action, changes, created_at, created_by) defined in create-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables-fixed.sql",
+      "type": "table",
+      "name": "create-template-generator-tables-fixed.sql",
+      "filePath": "scripts/create-template-generator-tables-fixed.sql",
+      "summary": "Fixed Template Generator schema: template_library, template_membership, and template_generation_runs with supporting indexes.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables-fixed.sql:template_library",
+      "type": "table",
+      "name": "template_library",
+      "filePath": "scripts/create-template-generator-tables-fixed.sql",
+      "lineRange": [
+        5,
+        15
+      ],
+      "summary": "Table template_library (5 columns: template_id, name, centroid, videos, updated_at) defined in create-template-generator-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables-fixed.sql:template_membership",
+      "type": "table",
+      "name": "template_membership",
+      "filePath": "scripts/create-template-generator-tables-fixed.sql",
+      "lineRange": [
+        18,
+        24
+      ],
+      "summary": "Table template_membership (3 columns: video_id, template_id, similarity_score) defined in create-template-generator-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables-fixed.sql:template_generation_runs",
+      "type": "table",
+      "name": "template_generation_runs",
+      "filePath": "scripts/create-template-generator-tables-fixed.sql",
+      "lineRange": [
+        27,
+        37
+      ],
+      "summary": "Table template_generation_runs (7 columns: run_id, status, videos_processed, clusters_found, duration_ms, algorithm_params, +1 more) defined in create-template-generator-tables-fixed.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables.sql",
+      "type": "table",
+      "name": "create-template-generator-tables.sql",
+      "filePath": "scripts/create-template-generator-tables.sql",
+      "summary": "Original Template Generator schema: template_library, template_membership, and template_generation_runs with supporting indexes.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables.sql:template_library",
+      "type": "table",
+      "name": "template_library",
+      "filePath": "scripts/create-template-generator-tables.sql",
+      "lineRange": [
+        5,
+        15
+      ],
+      "summary": "Table template_library (5 columns: template_id, name, centroid, videos, updated_at) defined in create-template-generator-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables.sql:template_membership",
+      "type": "table",
+      "name": "template_membership",
+      "filePath": "scripts/create-template-generator-tables.sql",
+      "lineRange": [
+        18,
+        24
+      ],
+      "summary": "Table template_membership (3 columns: video_id, template_id, similarity_score) defined in create-template-generator-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-template-generator-tables.sql:template_generation_runs",
+      "type": "table",
+      "name": "template_generation_runs",
+      "filePath": "scripts/create-template-generator-tables.sql",
+      "lineRange": [
+        27,
+        37
+      ],
+      "summary": "Table template_generation_runs (7 columns: run_id, status, videos_processed, clusters_found, duration_ms, algorithm_params, +1 more) defined in create-template-generator-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql",
+      "type": "table",
+      "name": "create-trendzo-schema.sql",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "summary": "Top-level Trendzo schema: viral_templates, prediction_accuracy, module_health, script_patterns, and recipe_book_daily.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql:viral_templates",
+      "type": "table",
+      "name": "viral_templates",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "lineRange": [
+        10,
+        20
+      ],
+      "summary": "Table viral_templates (9 columns: id, name, description, success_rate, status, usage_count, +3 more) defined in create-trendzo-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql:prediction_accuracy",
+      "type": "table",
+      "name": "prediction_accuracy",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "lineRange": [
+        26,
+        36
+      ],
+      "summary": "Table prediction_accuracy (9 columns: id, video_id, predicted_score, actual_views, actual_likes, actual_shares, +3 more) defined in create-trendzo-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql:module_health",
+      "type": "table",
+      "name": "module_health",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "lineRange": [
+        39,
+        47
+      ],
+      "summary": "Table module_health (7 columns: id, module_name, status, last_heartbeat, processed_count, error_message, +1 more) defined in create-trendzo-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql:script_patterns",
+      "type": "table",
+      "name": "script_patterns",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "lineRange": [
+        50,
+        59
+      ],
+      "summary": "Table script_patterns (8 columns: id, video_id, transcript_text, viral_score, framework_type, pattern_keywords, +2 more) defined in create-trendzo-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-trendzo-schema.sql:recipe_book_daily",
+      "type": "table",
+      "name": "recipe_book_daily",
+      "filePath": "scripts/create-trendzo-schema.sql",
+      "lineRange": [
+        62,
+        71
+      ],
+      "summary": "Table recipe_book_daily (8 columns: id, date, hot_templates, cooling_templates, new_templates, total_videos_analyzed, +2 more) defined in create-trendzo-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-video-genes-table.sql",
+      "type": "table",
+      "name": "create-video-genes-table.sql",
+      "filePath": "scripts/create-video-genes-table.sql",
+      "summary": "Creates the video_genes table storing 48-dimensional gene vectors plus the video_genes_analysis view that joins gene density with raw video metadata.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-video-genes-table.sql:video_genes",
+      "type": "table",
+      "name": "video_genes",
+      "filePath": "scripts/create-video-genes-table.sql",
+      "lineRange": [
+        2,
+        11
+      ],
+      "summary": "Table video_genes (4 columns: id, video_id, genes, updated_at) defined in create-video-genes-table.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-video-genes-table.sql:video_genes_analysis",
+      "type": "table",
+      "name": "video_genes_analysis",
+      "filePath": "scripts/create-video-genes-table.sql",
+      "lineRange": [
+        55,
+        55
+      ],
+      "summary": "View video_genes_analysis exposing a denormalized query result, defined in create-video-genes-table.sql.",
+      "tags": [
+        "database",
+        "view",
+        "reporting",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-video-intelligence-table.sql",
+      "type": "table",
+      "name": "create-video-intelligence-table.sql",
+      "filePath": "scripts/create-video-intelligence-table.sql",
+      "summary": "Single-table migration for video_intelligence storing aggregated AI analysis output per video.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-video-intelligence-table.sql:video_intelligence",
+      "type": "table",
+      "name": "video_intelligence",
+      "filePath": "scripts/create-video-intelligence-table.sql",
+      "lineRange": [
+        4,
+        32
+      ],
+      "summary": "Table video_intelligence (7 columns: created_at, platform, thumbnail_url, comment_count, share_count, view_count, +1 more) defined in create-video-intelligence-table.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-dna-tables.sql",
+      "type": "table",
+      "name": "create-viral-dna-tables.sql",
+      "filePath": "scripts/create-viral-dna-tables.sql",
+      "summary": "Viral DNA schema: viral_dna_reports, viral_dna_analytics, and viral_patterns powering the public DNA report product.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/create-viral-dna-tables.sql:viral_dna_reports",
+      "type": "table",
+      "name": "viral_dna_reports",
+      "filePath": "scripts/create-viral-dna-tables.sql",
+      "lineRange": [
+        5,
+        14
+      ],
+      "summary": "Table viral_dna_reports (8 columns: id, user_handle, email, report_data, viral_score, generated_at, +2 more) defined in create-viral-dna-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-dna-tables.sql:viral_dna_analytics",
+      "type": "table",
+      "name": "viral_dna_analytics",
+      "filePath": "scripts/create-viral-dna-tables.sql",
+      "lineRange": [
+        23,
+        32
+      ],
+      "summary": "Table viral_dna_analytics (8 columns: id, user_handle, email, generated_at, source, ip_address, +2 more) defined in create-viral-dna-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-dna-tables.sql:viral_patterns",
+      "type": "table",
+      "name": "viral_patterns",
+      "filePath": "scripts/create-viral-dna-tables.sql",
+      "lineRange": [
+        40,
+        54
+      ],
+      "summary": "Table viral_patterns (13 columns: id, pattern_id, pattern_name, framework_id, framework_name, description, +7 more) defined in create-viral-dna-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-filter-tables.sql",
+      "type": "table",
+      "name": "create-viral-filter-tables.sql",
+      "filePath": "scripts/create-viral-filter-tables.sql",
+      "summary": "Viral Filter schema: viral_pool, negative_pool, and viral_filter_runs with indexes supporting the filter pipeline.",
+      "tags": [
+        "database",
+        "migration",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-filter-tables.sql:viral_pool",
+      "type": "table",
+      "name": "viral_pool",
+      "filePath": "scripts/create-viral-filter-tables.sql",
+      "lineRange": [
+        4,
+        14
+      ],
+      "summary": "Table viral_pool (8 columns: id, video_id, follower_bucket, engagement_score, views_1h, likes_1h, +2 more) defined in create-viral-filter-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-filter-tables.sql:negative_pool",
+      "type": "table",
+      "name": "negative_pool",
+      "filePath": "scripts/create-viral-filter-tables.sql",
+      "lineRange": [
+        17,
+        27
+      ],
+      "summary": "Table negative_pool (8 columns: id, video_id, follower_bucket, engagement_score, views_1h, likes_1h, +2 more) defined in create-viral-filter-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/create-viral-filter-tables.sql:viral_filter_runs",
+      "type": "table",
+      "name": "viral_filter_runs",
+      "filePath": "scripts/create-viral-filter-tables.sql",
+      "lineRange": [
+        30,
+        39
+      ],
+      "summary": "Table viral_filter_runs (8 columns: id, run_id, total_processed, viral_count, neg_count, run_timestamp, +2 more) defined in create-viral-filter-tables.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql",
+      "type": "table",
+      "name": "deploy-clean-schema.sql",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "summary": "Clean-deploy migration provisioning 13 core Trendzo tables (alerts, viral DNA, generators, intelligence, recipe book, validation, marketing, health logs, decomposers, taggers) in one pass.",
+      "tags": [
+        "database",
+        "migration",
+        "deployment",
+        "schema"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:system_alerts",
+      "type": "table",
+      "name": "system_alerts",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        26,
+        37
+      ],
+      "summary": "Table system_alerts (10 columns: id, alert_id, level, source, message, details, +4 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:viral_dna_sequences",
+      "type": "table",
+      "name": "viral_dna_sequences",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        40,
+        48
+      ],
+      "summary": "Table viral_dna_sequences (7 columns: id, video_id, sequence_data, pattern_scores, viral_indicators, confidence_score, +1 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:template_generators",
+      "type": "table",
+      "name": "template_generators",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        51,
+        60
+      ],
+      "summary": "Table template_generators (8 columns: id, template_name, source_videos, pattern_data, success_rate, usage_count, +2 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:script_intelligence_data",
+      "type": "table",
+      "name": "script_intelligence_data",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        63,
+        71
+      ],
+      "summary": "Table script_intelligence_data (7 columns: id, video_id, transcript, linguistic_patterns, emotional_markers, viral_script_score, +1 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:viral_recipe_book",
+      "type": "table",
+      "name": "viral_recipe_book",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        74,
+        85
+      ],
+      "summary": "Table viral_recipe_book (10 columns: id, recipe_name, template_type, viral_elements, success_metrics, usage_frequency, +4 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:prediction_validation",
+      "type": "table",
+      "name": "prediction_validation",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        88,
+        100
+      ],
+      "summary": "Table prediction_validation (11 columns: id, prediction_id, video_id, predicted_viral_score, actual_viral_score, predicted_views, +5 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:marketing_campaigns",
+      "type": "table",
+      "name": "marketing_campaigns",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        103,
+        111
+      ],
+      "summary": "Table marketing_campaigns (7 columns: id, campaign_name, content_type, generated_content, performance_metrics, viral_success, +1 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:system_health_logs",
+      "type": "table",
+      "name": "system_health_logs",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        114,
+        121
+      ],
+      "summary": "Table system_health_logs (6 columns: id, module_name, status, metrics, error_details, timestamp) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:process_intelligence",
+      "type": "table",
+      "name": "process_intelligence",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        124,
+        132
+      ],
+      "summary": "Table process_intelligence (7 columns: id, user_session, process_step, step_data, duration_ms, success, +1 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:viral_filters",
+      "type": "table",
+      "name": "viral_filters",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        135,
+        143
+      ],
+      "summary": "Table viral_filters (7 columns: id, filter_name, filter_criteria, videos_processed, viral_videos_found, effectiveness_rate, +1 more) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:evolution_engines",
+      "type": "table",
+      "name": "evolution_engines",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        145,
+        152
+      ],
+      "summary": "Table evolution_engines (6 columns: id, algorithm_version, performance_data, accuracy_improvement, deployment_status, created_at) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:feature_decomposers",
+      "type": "table",
+      "name": "feature_decomposers",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        154,
+        161
+      ],
+      "summary": "Table feature_decomposers (6 columns: id, video_id, extracted_features, feature_scores, processing_time_ms, created_at) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-clean-schema.sql:gene_taggers",
+      "type": "table",
+      "name": "gene_taggers",
+      "filePath": "scripts/deploy-clean-schema.sql",
+      "lineRange": [
+        163,
+        170
+      ],
+      "summary": "Table gene_taggers (6 columns: id, video_id, detected_genes, gene_confidence, tagging_accuracy, created_at) defined in deploy-clean-schema.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql",
+      "type": "table",
+      "name": "deploy-complete-database.sql",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "summary": "Complete-deploy migration provisioning 15 core Trendzo tables (clean schema plus viral video gallery and framework mapping) used for fresh environment bootstrap.",
+      "tags": [
+        "database",
+        "migration",
+        "deployment",
+        "schema"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:system_alerts",
+      "type": "table",
+      "name": "system_alerts",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        27,
+        38
+      ],
+      "summary": "Table system_alerts (10 columns: id, alert_id, level, source, message, details, +4 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:viral_dna_sequences",
+      "type": "table",
+      "name": "viral_dna_sequences",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        41,
+        49
+      ],
+      "summary": "Table viral_dna_sequences (7 columns: id, video_id, sequence_data, pattern_scores, viral_indicators, confidence_score, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:template_generators",
+      "type": "table",
+      "name": "template_generators",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        52,
+        61
+      ],
+      "summary": "Table template_generators (8 columns: id, template_name, source_videos, pattern_data, success_rate, usage_count, +2 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:script_intelligence_data",
+      "type": "table",
+      "name": "script_intelligence_data",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        64,
+        72
+      ],
+      "summary": "Table script_intelligence_data (7 columns: id, video_id, transcript, linguistic_patterns, emotional_markers, viral_script_score, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:viral_recipe_book",
+      "type": "table",
+      "name": "viral_recipe_book",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        75,
+        86
+      ],
+      "summary": "Table viral_recipe_book (10 columns: id, recipe_name, template_type, viral_elements, success_metrics, usage_frequency, +4 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:viral_video_gallery",
+      "type": "table",
+      "name": "viral_video_gallery",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        89,
+        103
+      ],
+      "summary": "Table viral_video_gallery (13 columns: id, title, creator_name, thumbnail_url, view_count, viral_score, +7 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:video_framework_mapping",
+      "type": "table",
+      "name": "video_framework_mapping",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        106,
+        114
+      ],
+      "summary": "Table video_framework_mapping (7 columns: id, video_id, framework_id, mapping_confidence, workspace_config_cached, created_at, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:prediction_validation",
+      "type": "table",
+      "name": "prediction_validation",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        117,
+        129
+      ],
+      "summary": "Table prediction_validation (11 columns: id, prediction_id, video_id, predicted_viral_score, actual_viral_score, predicted_views, +5 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:marketing_campaigns",
+      "type": "table",
+      "name": "marketing_campaigns",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        132,
+        140
+      ],
+      "summary": "Table marketing_campaigns (7 columns: id, campaign_name, content_type, generated_content, performance_metrics, viral_success, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:system_health_logs",
+      "type": "table",
+      "name": "system_health_logs",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        143,
+        150
+      ],
+      "summary": "Table system_health_logs (6 columns: id, module_name, status, metrics, error_details, timestamp) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:process_intelligence",
+      "type": "table",
+      "name": "process_intelligence",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        153,
+        161
+      ],
+      "summary": "Table process_intelligence (7 columns: id, user_session, process_step, step_data, duration_ms, success, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:viral_filters",
+      "type": "table",
+      "name": "viral_filters",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        164,
+        172
+      ],
+      "summary": "Table viral_filters (7 columns: id, filter_name, filter_criteria, videos_processed, viral_videos_found, effectiveness_rate, +1 more) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:evolution_engines",
+      "type": "table",
+      "name": "evolution_engines",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        174,
+        181
+      ],
+      "summary": "Table evolution_engines (6 columns: id, algorithm_version, performance_data, accuracy_improvement, deployment_status, created_at) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:feature_decomposers",
+      "type": "table",
+      "name": "feature_decomposers",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        183,
+        190
+      ],
+      "summary": "Table feature_decomposers (6 columns: id, video_id, extracted_features, feature_scores, processing_time_ms, created_at) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/deploy-complete-database.sql:gene_taggers",
+      "type": "table",
+      "name": "gene_taggers",
+      "filePath": "scripts/deploy-complete-database.sql",
+      "lineRange": [
+        192,
+        199
+      ],
+      "summary": "Table gene_taggers (6 columns: id, video_id, detected_genes, gene_confidence, tagging_accuracy, created_at) defined in deploy-complete-database.sql.",
+      "tags": [
+        "database",
+        "table",
+        "schema-definition",
+        "sql"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:videos",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:engagement_snapshots",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:hook_frameworks",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:video_hooks",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:content_series",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:series_episodes",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:cross_platform_signals",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:comment_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:pattern_matches",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:ai_conversations",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:system_learnings",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:performance_metrics",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:system_configurations",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:psychological_engagement",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:production_quality",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:perspective_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:participation_potential",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:series_strategy_enhanced",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:cultural_timing",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:creator_authority",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:authenticity_paradox",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:algorithm_state",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:marketing_templates",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:one_click_optimizations",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:inception_analytics",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/add-viral-prediction-tables.sql",
+      "target": "table:scripts/add-viral-prediction-tables.sql:marketing_queue",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/cleanup-unified-schema.sql",
+      "target": "table:scripts/cleanup-unified-schema.sql:viral_predictions_backup",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/cleanup-unified-schema.sql",
+      "target": "table:scripts/cleanup-unified-schema.sql:viral_predictions",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/cleanup-unified-schema.sql",
+      "target": "table:scripts/cleanup-unified-schema.sql:viral_predictions_clean",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-ab-testing-schema.sql",
+      "target": "table:scripts/create-ab-testing-schema.sql:ab_tests",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-ab-testing-schema.sql",
+      "target": "table:scripts/create-ab-testing-schema.sql:ab_test_assignments",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-ab-testing-schema.sql",
+      "target": "table:scripts/create-ab-testing-schema.sql:ab_test_events",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-ab-testing-schema.sql",
+      "target": "table:scripts/create-ab-testing-schema.sql:ab_test_results",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-apify-scraper-tables.sql",
+      "target": "table:scripts/create-apify-scraper-tables.sql:scraping_jobs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-apify-scraper-tables.sql",
+      "target": "table:scripts/create-apify-scraper-tables.sql:scraped_videos",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-apify-scraper-tables.sql",
+      "target": "table:scripts/create-apify-scraper-tables.sql:download_queue",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-apify-scraper-tables.sql",
+      "target": "table:scripts/create-apify-scraper-tables.sql:scraping_keywords",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:template_video_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:user_viral_preferences",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:sound_viral_history",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:expert_insight_enhancements",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:video_complete_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:viral_performance_dashboard",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:hook_effectiveness_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-fixed.sql",
+      "target": "table:scripts/create-bridge-tables-fixed.sql:god_mode_summary",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:template_video_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:user_viral_preferences",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:sound_viral_history",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:expert_insight_enhancements",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:viral_performance_dashboard",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:hook_effectiveness_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables-minimal.sql",
+      "target": "table:scripts/create-bridge-tables-minimal.sql:god_mode_summary",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:template_video_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:user_viral_preferences",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:sound_viral_history",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:expert_insight_enhancements",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:video_complete_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:viral_performance_dashboard",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:hook_effectiveness_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-bridge-tables.sql",
+      "target": "table:scripts/create-bridge-tables.sql:god_mode_summary",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-evolution-engine-tables.sql",
+      "target": "table:scripts/create-evolution-engine-tables.sql:evolution_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-evolution-engine-tables.sql",
+      "target": "table:scripts/create-evolution-engine-tables.sql:template_status_history",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-evolution-engine-tables.sql",
+      "target": "table:scripts/create-evolution-engine-tables.sql:negative_pool",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-feature-decomposer-tables.sql",
+      "target": "table:scripts/create-feature-decomposer-tables.sql:video_features",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-feature-decomposer-tables.sql",
+      "target": "table:scripts/create-feature-decomposer-tables.sql:feature_extraction_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-feature-decomposer-tables.sql",
+      "target": "table:scripts/create-feature-decomposer-tables.sql:raw_videos",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-gene-tagger-tables.sql",
+      "target": "table:scripts/create-gene-tagger-tables.sql:video_genes",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-gene-tagger-tables.sql",
+      "target": "table:scripts/create-gene-tagger-tables.sql:gene_analysis_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-gene-tagger-tables.sql",
+      "target": "table:scripts/create-gene-tagger-tables.sql:framework_genes",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:users",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:templates",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:landing_pages",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:campaign_analytics",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:user_templates",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:creator_attributions",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-mvp-schema.sql",
+      "target": "table:scripts/create-mvp-schema.sql:email_captures",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-recipe-book-table.sql",
+      "target": "table:scripts/create-recipe-book-table.sql:recipe_book_daily",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-system-alerts-table.sql",
+      "target": "table:scripts/create-system-alerts-table.sql:system_alerts",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-tables.sql",
+      "target": "table:scripts/create-tables.sql:tiktok_templates",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-tables.sql",
+      "target": "table:scripts/create-tables.sql:template_expert_insights",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-tables.sql",
+      "target": "table:scripts/create-tables.sql:template_audit_logs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables-fixed.sql",
+      "target": "table:scripts/create-template-generator-tables-fixed.sql:template_library",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables-fixed.sql",
+      "target": "table:scripts/create-template-generator-tables-fixed.sql:template_membership",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables-fixed.sql",
+      "target": "table:scripts/create-template-generator-tables-fixed.sql:template_generation_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables.sql",
+      "target": "table:scripts/create-template-generator-tables.sql:template_library",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables.sql",
+      "target": "table:scripts/create-template-generator-tables.sql:template_membership",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-template-generator-tables.sql",
+      "target": "table:scripts/create-template-generator-tables.sql:template_generation_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-trendzo-schema.sql",
+      "target": "table:scripts/create-trendzo-schema.sql:viral_templates",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-trendzo-schema.sql",
+      "target": "table:scripts/create-trendzo-schema.sql:prediction_accuracy",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-trendzo-schema.sql",
+      "target": "table:scripts/create-trendzo-schema.sql:module_health",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-trendzo-schema.sql",
+      "target": "table:scripts/create-trendzo-schema.sql:script_patterns",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-trendzo-schema.sql",
+      "target": "table:scripts/create-trendzo-schema.sql:recipe_book_daily",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-video-genes-table.sql",
+      "target": "table:scripts/create-video-genes-table.sql:video_genes",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-video-genes-table.sql",
+      "target": "table:scripts/create-video-genes-table.sql:video_genes_analysis",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-video-intelligence-table.sql",
+      "target": "table:scripts/create-video-intelligence-table.sql:video_intelligence",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-dna-tables.sql",
+      "target": "table:scripts/create-viral-dna-tables.sql:viral_dna_reports",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-dna-tables.sql",
+      "target": "table:scripts/create-viral-dna-tables.sql:viral_dna_analytics",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-dna-tables.sql",
+      "target": "table:scripts/create-viral-dna-tables.sql:viral_patterns",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-filter-tables.sql",
+      "target": "table:scripts/create-viral-filter-tables.sql:viral_pool",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-filter-tables.sql",
+      "target": "table:scripts/create-viral-filter-tables.sql:negative_pool",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/create-viral-filter-tables.sql",
+      "target": "table:scripts/create-viral-filter-tables.sql:viral_filter_runs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:system_alerts",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:viral_dna_sequences",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:template_generators",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:script_intelligence_data",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:viral_recipe_book",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:prediction_validation",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:marketing_campaigns",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:system_health_logs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:process_intelligence",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:viral_filters",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:evolution_engines",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:feature_decomposers",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-clean-schema.sql",
+      "target": "table:scripts/deploy-clean-schema.sql:gene_taggers",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:system_alerts",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:viral_dna_sequences",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:template_generators",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:script_intelligence_data",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:viral_recipe_book",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:viral_video_gallery",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:video_framework_mapping",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:prediction_validation",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:marketing_campaigns",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:system_health_logs",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:process_intelligence",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:viral_filters",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:evolution_engines",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:feature_decomposers",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "table:scripts/deploy-complete-database.sql",
+      "target": "table:scripts/deploy-complete-database.sql:gene_taggers",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,811 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/analyze-creator-baselines.py",
+      "type": "file",
+      "name": "analyze-creator-baselines.py",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "summary": "Side-hustles niche analysis script that separates content-quality signals from creator-authority signals by measuring whether videos outperform their creator's own DPS baseline, joining training_features to scraped_videos.",
+      "tags": ["script", "analysis", "training-data", "correlation", "side-hustles"],
+      "complexity": "complex",
+      "languageNotes": "Single 549-line main() drives the entire report; uses scipy.stats spearmanr/mannwhitneyu and pandas for ranked correlation between raw DPS and creator-relative DPS."
+    },
+    {
+      "id": "file:scripts/analyze-feature-correlations.py",
+      "type": "file",
+      "name": "analyze-feature-correlations.py",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "summary": "Ranked feature-to-DPS correlation analysis that produces a definitive Spearman/Mann-Whitney report identifying which training_features actually predict real DPS scores from scraped_videos.",
+      "tags": ["script", "analysis", "spearman", "training-data", "feature-engineering"],
+      "complexity": "complex",
+      "languageNotes": "Mixes continuous (Spearman) and binary (Mann-Whitney) tests, with mega-vs-under and duration-bucket sub-analyses; emits a 140-line markdown report builder."
+    },
+    {
+      "id": "file:scripts/analyze-one-video.ts",
+      "type": "file",
+      "name": "analyze-one-video.ts",
+      "filePath": "scripts/analyze-one-video.ts",
+      "summary": "CLI utility that takes a single video URL/path and prints FFmpeg-derived visual metrics plus a DPS visual sub-score, used as a quick smoke test for the visual-intelligence pipeline.",
+      "tags": ["script", "cli", "ffmpeg", "diagnostic", "visual-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/analyze-post-pub-signals.py",
+      "type": "file",
+      "name": "analyze-post-pub-signals.py",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "summary": "Read-only observational study of post-publication engagement signals (views, likes, shares, saves, sound origin, posting time) on side-hustles shorts, explicitly walled off from prediction features.",
+      "tags": ["script", "analysis", "post-publication", "observational", "side-hustles"],
+      "complexity": "complex",
+      "languageNotes": "Documents an explicit contamination boundary in the module docstring; main() is 583 lines and drives the entire markdown report build."
+    },
+    {
+      "id": "file:scripts/analyze-response-stacks.py",
+      "type": "file",
+      "name": "analyze-response-stacks.py",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "summary": "Classifies side-hustles videos into share-heavy / save-heavy / comment-heavy / shallow-view response stacks and surfaces which pre-pub content signals predict each audience reaction pattern.",
+      "tags": ["script", "analysis", "engagement", "segmentation", "side-hustles"],
+      "complexity": "complex",
+      "languageNotes": "Largest script in the batch (855 lines, main() = 673); uses regex caption_signals() to pull lexical features and joins to training_features for content-side correlation."
+    },
+    {
+      "id": "file:scripts/analyze-templates.js",
+      "type": "file",
+      "name": "analyze-templates.js",
+      "filePath": "scripts/analyze-templates.js",
+      "summary": "Thin CLI wrapper around the template-analyzer ETL tests (structure, similarity, processing, all) with --samples and --help options for ad-hoc template debugging.",
+      "tags": ["script", "cli", "etl", "templates", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/analyze-tier-breakdown.py",
+      "type": "file",
+      "name": "analyze-tier-breakdown.py",
+      "filePath": "scripts/analyze-tier-breakdown.py",
+      "summary": "Computes what separates each DPS tier from the next using Mann-Whitney across 863 side-hustle videos, producing the TIER_ANALYSIS_REPORT.md with directional advice per feature.",
+      "tags": ["script", "analysis", "tier-breakdown", "training-data", "side-hustles"],
+      "complexity": "complex",
+      "languageNotes": "Excludes account-bias and proxy features from TOP_FEATURES list to keep tier guidance content-driven."
+    },
+    {
+      "id": "file:scripts/apply_atlas_migrations.ts",
+      "type": "file",
+      "name": "apply_atlas_migrations.ts",
+      "filePath": "scripts/apply_atlas_migrations.ts",
+      "summary": "One-shot Atlas migration runner that applies cultural_scan_results unique-constraint and related schema changes via Supabase exec_sql RPC, with per-step verification.",
+      "tags": ["script", "migration", "supabase", "atlas", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/apply-20260417-triage-migrations.ts",
+      "type": "file",
+      "name": "apply-20260417-triage-migrations.ts",
+      "filePath": "scripts/apply-20260417-triage-migrations.ts",
+      "summary": "Applies the three 20260417 agency-triage SQL migrations (triage tables, content-briefs email tracking, phase-1 action scaffolding) directly via the Postgres connection.",
+      "tags": ["script", "migration", "agency", "triage", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-dps-migrations.js",
+      "type": "file",
+      "name": "apply-dps-migrations.js",
+      "filePath": "scripts/apply-dps-migrations.js",
+      "summary": "Applies DPS-related SQL migrations to the scraped_videos table using the Supabase service client.",
+      "tags": ["script", "migration", "dps", "supabase", "scraped-videos"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-feat070-migration.js",
+      "type": "file",
+      "name": "apply-feat070-migration.js",
+      "filePath": "scripts/apply-feat070-migration.js",
+      "summary": "Applies the FEAT-070 migration set to Supabase, executing the bundled SQL file via the service-role client.",
+      "tags": ["script", "migration", "supabase", "feat-070"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-features-migration.ts",
+      "type": "file",
+      "name": "apply-features-migration.ts",
+      "filePath": "scripts/apply-features-migration.ts",
+      "summary": "Applies the training_features schema migration to Supabase, splitting the SQL file into statements and executing them sequentially.",
+      "tags": ["script", "migration", "training-features", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-inconclusive-migration.ts",
+      "type": "file",
+      "name": "apply-inconclusive-migration.ts",
+      "filePath": "scripts/apply-inconclusive-migration.ts",
+      "summary": "Applies the inconclusive-prediction migration (adds the inconclusive tier handling) directly through the Postgres client.",
+      "tags": ["script", "migration", "predictions", "inconclusive", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-migration-direct.js",
+      "type": "file",
+      "name": "apply-migration-direct.js",
+      "filePath": "scripts/apply-migration-direct.js",
+      "summary": "Direct-Postgres migration runner that bypasses Supabase RPC by opening a pg Client on SUPABASE_DB_PASSWORD and executing a target SQL file.",
+      "tags": ["script", "migration", "postgres", "supabase", "direct-db"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/apply-migration-safe.js",
+      "type": "file",
+      "name": "apply-migration-safe.js",
+      "filePath": "scripts/apply-migration-safe.js",
+      "summary": "Safety-checked migration runner that splits the SQL into statements, prompts/validates per step, and only proceeds when each statement succeeds.",
+      "tags": ["script", "migration", "safe", "supabase", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/apply-migration.js",
+      "type": "file",
+      "name": "apply-migration.js",
+      "filePath": "scripts/apply-migration.js",
+      "summary": "Generic Supabase migration runner that reads a SQL file from a CLI argument and applies it via the service-role client.",
+      "tags": ["script", "migration", "supabase", "generic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-morning-briefs-agent-attribution.ts",
+      "type": "file",
+      "name": "apply-morning-briefs-agent-attribution.ts",
+      "filePath": "scripts/apply-morning-briefs-agent-attribution.ts",
+      "summary": "Applies the morning_briefs agent-attribution migration (adds generated_by_agent column) and prints column metadata plus recent rows for verification.",
+      "tags": ["script", "migration", "morning-briefs", "agent-attribution", "verification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-predictions-migration-fix.js",
+      "type": "file",
+      "name": "apply-predictions-migration-fix.js",
+      "filePath": "scripts/apply-predictions-migration-fix.js",
+      "summary": "Hotfix variant of the predictions-table migration runner, applying corrective schema changes after a partially failed prior migration.",
+      "tags": ["script", "migration", "predictions", "hotfix", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-predictions-migration.js",
+      "type": "file",
+      "name": "apply-predictions-migration.js",
+      "filePath": "scripts/apply-predictions-migration.js",
+      "summary": "Applies the predictions-table migration to Supabase via the service-role client.",
+      "tags": ["script", "migration", "predictions", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-prompt42-migration.ts",
+      "type": "file",
+      "name": "apply-prompt42-migration.ts",
+      "filePath": "scripts/apply-prompt42-migration.ts",
+      "summary": "Applies the Prompt 42 SQL migration directly via pg Client, used as part of the prompt-numbered roadmap migration set.",
+      "tags": ["script", "migration", "prompt-42", "postgres"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-prompt43-migration.ts",
+      "type": "file",
+      "name": "apply-prompt43-migration.ts",
+      "filePath": "scripts/apply-prompt43-migration.ts",
+      "summary": "Applies the Prompt 43 MCP migration (mcp_api_keys + mcp_call_log) and prints post-apply row counts for verification.",
+      "tags": ["script", "migration", "prompt-43", "mcp", "postgres"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/apply-prompt44-migration.ts",
+      "type": "file",
+      "name": "apply-prompt44-migration.ts",
+      "filePath": "scripts/apply-prompt44-migration.ts",
+      "summary": "Applies the Prompt 44 SQL migration directly via pg Client as part of the prompt-numbered roadmap migration sequence.",
+      "tags": ["script", "migration", "prompt-44", "postgres"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/audit-training-features-export.ts",
+      "type": "file",
+      "name": "audit-training-features-export.ts",
+      "filePath": "scripts/audit-training-features-export.ts",
+      "summary": "STEP 1 audit script that inspects training_features schema and join coverage against scraped_videos via direct Postgres queries.",
+      "tags": ["script", "audit", "training-features", "schema", "postgres"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/backfill-content-strategy-features.ts",
+      "type": "file",
+      "name": "backfill-content-strategy-features.ts",
+      "filePath": "scripts/backfill-content-strategy-features.ts",
+      "summary": "Re-extracts the 7 content-strategy features for all existing training_features rows using transcript_text and caption from scraped_videos, with --dry-run and --limit support.",
+      "tags": ["script", "backfill", "training-features", "content-strategy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/backfill-creator-distribution-features.ts",
+      "type": "file",
+      "name": "backfill-creator-distribution-features.ts",
+      "filePath": "scripts/backfill-creator-distribution-features.ts",
+      "summary": "Backfills five creator + distribution features (followers, log-followers, post hour/day, is_original_sound) into training_features by joining to scraped_videos.",
+      "tags": ["script", "backfill", "training-features", "creator-signals", "distribution"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [40, 51],
+      "summary": "Loads NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_KEY from .env.local for the analysis run.",
+      "tags": ["utility", "env-loading", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [54, 104],
+      "summary": "Pulls scraped_videos joined with training_features for the side-hustles niche and returns a pandas DataFrame ready for baseline analysis.",
+      "tags": ["data-loading", "supabase", "pandas", "join"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:get_numeric_features",
+      "type": "function",
+      "name": "get_numeric_features",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [107, 125],
+      "summary": "Filters the DataFrame columns down to numeric training-feature columns suitable for Spearman correlation.",
+      "tags": ["utility", "feature-selection", "pandas"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:compute_correlations",
+      "type": "function",
+      "name": "compute_correlations",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [128, 145],
+      "summary": "Computes Spearman correlation of each feature against a target column and returns a labeled ranked list.",
+      "tags": ["analysis", "spearman", "correlation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:fmt_num",
+      "type": "function",
+      "name": "fmt_num",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [148, 157],
+      "summary": "Number-formatting helper for report rendering with NaN handling and decimal control.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:classify_change",
+      "type": "function",
+      "name": "classify_change",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [160, 177],
+      "summary": "Classifies a feature as content-only, authority-amplified, or authority-confound based on raw vs creator-relative correlation deltas.",
+      "tags": ["analysis", "classification", "signal-attribution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-creator-baselines.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-creator-baselines.py",
+      "lineRange": [180, 728],
+      "summary": "Orchestrates the entire creator-baseline analysis: load env, fetch data, compute per-creator baselines, run correlations on raw and relative DPS, and write the CREATOR_BASELINE_ANALYSIS.md report.",
+      "tags": ["entry-point", "orchestration", "report-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [41, 52],
+      "summary": "Loads Supabase credentials from .env.local for the correlation analysis run.",
+      "tags": ["utility", "env-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [55, 112],
+      "summary": "Loads scraped_videos joined to training_features into a DataFrame for the feature-to-DPS correlation pipeline.",
+      "tags": ["data-loading", "supabase", "pandas"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:get_numeric_features",
+      "type": "function",
+      "name": "get_numeric_features",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [115, 126],
+      "summary": "Returns the list of numeric feature columns to feed into Spearman correlation.",
+      "tags": ["utility", "feature-selection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:compute_spearman_table",
+      "type": "function",
+      "name": "compute_spearman_table",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [129, 160],
+      "summary": "Computes Spearman correlations for every feature against DPS and returns a ranked table with rho, p-value, and sample size.",
+      "tags": ["analysis", "spearman", "ranking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:compute_binary_analysis",
+      "type": "function",
+      "name": "compute_binary_analysis",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [163, 196],
+      "summary": "Runs Mann-Whitney U tests on binary features comparing DPS distributions for 0 vs 1 groups.",
+      "tags": ["analysis", "mann-whitney", "binary-features"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:mega_vs_under",
+      "type": "function",
+      "name": "mega_vs_under",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [199, 226],
+      "summary": "Compares feature means between mega-viral and underperforming buckets to surface clear top-vs-bottom signal deltas.",
+      "tags": ["analysis", "segmentation", "feature-importance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:duration_analysis",
+      "type": "function",
+      "name": "duration_analysis",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [229, 258],
+      "summary": "Buckets videos by duration and reports DPS distribution per bucket to surface duration sweet spots.",
+      "tags": ["analysis", "duration", "segmentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:describe_feature_diff",
+      "type": "function",
+      "name": "describe_feature_diff",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [261, 282],
+      "summary": "Renders a human-readable description of a feature's top-bucket vs bottom-bucket mean difference for the report.",
+      "tags": ["formatting", "report", "feature-description"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:generate_report",
+      "type": "function",
+      "name": "generate_report",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [285, 424],
+      "summary": "Assembles the full FEATURE_CORRELATION_REPORT.md markdown from Spearman, binary, mega-vs-under, and duration analyses.",
+      "tags": ["report-generation", "markdown", "synthesis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-feature-correlations.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-feature-correlations.py",
+      "lineRange": [427, 505],
+      "summary": "Top-level orchestrator that wires data fetch, all four analyses, and report generation together.",
+      "tags": ["entry-point", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-one-video.ts:analyzeVideo",
+      "type": "function",
+      "name": "analyzeVideo",
+      "filePath": "scripts/analyze-one-video.ts",
+      "lineRange": [28, 152],
+      "summary": "Runs analyzeVideoMetrics on the supplied video URL/path, formats the FFmpeg results, and computes a DPS visual sub-score for console output.",
+      "tags": ["cli", "ffmpeg", "diagnostic", "visual-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [41, 52],
+      "summary": "Loads Supabase credentials from .env.local for the post-publication observational study.",
+      "tags": ["utility", "env-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [55, 91],
+      "summary": "Pulls side-hustles scraped_videos with full post-pub engagement and metadata fields into a DataFrame.",
+      "tags": ["data-loading", "supabase", "post-publication"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:assign_tier",
+      "type": "function",
+      "name": "assign_tier",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [94, 105],
+      "summary": "Assigns a DPS score to a tier label using the supplied percentile boundaries.",
+      "tags": ["utility", "tier-assignment", "dps"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:fmt_num",
+      "type": "function",
+      "name": "fmt_num",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [115, 124],
+      "summary": "Number-formatting helper for the post-pub report with NaN handling and decimal precision.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:mann_whitney_effect",
+      "type": "function",
+      "name": "mann_whitney_effect",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [133, 145],
+      "summary": "Runs a Mann-Whitney U test between two groups and returns the U statistic, p-value, and rank-biserial effect size.",
+      "tags": ["analysis", "mann-whitney", "effect-size"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-post-pub-signals.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-post-pub-signals.py",
+      "lineRange": [148, 730],
+      "summary": "Orchestrates the entire post-publication observational study: load data, compute tier percentiles, run mega-vs-under engagement contrasts, posting-time and sound-origin breakdowns, then write POST_PUB_ANALYSIS_REPORT.md.",
+      "tags": ["entry-point", "orchestration", "report-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [40, 51],
+      "summary": "Loads Supabase credentials from .env.local for the response-stack analysis run.",
+      "tags": ["utility", "env-loading"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [54, 105],
+      "summary": "Pulls scraped_videos joined with training_features for side-hustles videos with engagement and caption metadata into a DataFrame.",
+      "tags": ["data-loading", "supabase", "pandas", "join"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:get_numeric_features",
+      "type": "function",
+      "name": "get_numeric_features",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [108, 127],
+      "summary": "Selects the numeric pre-publication feature columns for response-stack correlation analysis.",
+      "tags": ["utility", "feature-selection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:fmt_num",
+      "type": "function",
+      "name": "fmt_num",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [130, 139],
+      "summary": "Number-formatting helper for the response-stack report with NaN-safe decimal output.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:sig_str",
+      "type": "function",
+      "name": "sig_str",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [148, 157],
+      "summary": "Maps a p-value to a significance string for inline display in markdown tables.",
+      "tags": ["utility", "formatting", "statistics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:caption_signals",
+      "type": "function",
+      "name": "caption_signals",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [160, 176],
+      "summary": "Extracts lexical features from a caption (question marks, CTA verbs, mentions) used as predictors of audience response patterns.",
+      "tags": ["feature-extraction", "nlp", "captions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-response-stacks.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-response-stacks.py",
+      "lineRange": [179, 851],
+      "summary": "Drives the full response-stack analysis: load data, classify videos into share/save/comment/shallow stacks, correlate pre-pub features per stack, and emit RESPONSE_STACK_REPORT.md.",
+      "tags": ["entry-point", "orchestration", "response-stacks", "report-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-templates.js:showHelp",
+      "type": "function",
+      "name": "showHelp",
+      "filePath": "scripts/analyze-templates.js",
+      "lineRange": [13, 29],
+      "summary": "Prints CLI usage and option documentation for the template-analyzer tool.",
+      "tags": ["cli", "help", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-templates.js:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/analyze-templates.js",
+      "lineRange": [32, 51],
+      "summary": "Parses command-line arguments (command name, --samples, --help) and returns a structured options object.",
+      "tags": ["cli", "argument-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-templates.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-templates.js",
+      "lineRange": [54, 91],
+      "summary": "Dispatches to the requested template-analyzer test (structure, similarity, process, all) based on parsed CLI arguments.",
+      "tags": ["entry-point", "cli", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-tier-breakdown.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/analyze-tier-breakdown.py",
+      "lineRange": [84, 126],
+      "summary": "Loads the 863-video side-hustles training set with joined features for tier-breakdown analysis.",
+      "tags": ["data-loading", "supabase", "pandas"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/analyze-tier-breakdown.py:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "scripts/analyze-tier-breakdown.py",
+      "lineRange": [129, 144],
+      "summary": "Feature-aware value formatter (percent, raw, log) used in the tier-breakdown markdown report.",
+      "tags": ["utility", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/analyze-tier-breakdown.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/analyze-tier-breakdown.py",
+      "lineRange": [154, 490],
+      "summary": "Computes adjacent-tier feature deltas with Mann-Whitney U tests across TOP_FEATURES and writes the TIER_ANALYSIS_REPORT.md with per-feature directional advice.",
+      "tags": ["entry-point", "orchestration", "tier-breakdown", "report-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/analyze-tier-breakdown.py:_get_advice",
+      "type": "function",
+      "name": "_get_advice",
+      "filePath": "scripts/analyze-tier-breakdown.py",
+      "lineRange": [493, 517],
+      "summary": "Generates a short directional advice string (raise/lower a feature toward a target) used in the tier-breakdown report.",
+      "tags": ["report", "advice", "tier-breakdown"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/apply_atlas_migrations.ts:runSql",
+      "type": "function",
+      "name": "runSql",
+      "filePath": "scripts/apply_atlas_migrations.ts",
+      "lineRange": [11, 23],
+      "summary": "Executes a labeled SQL statement via Supabase exec_sql RPC, logging the trimmed query and surfacing errors.",
+      "tags": ["utility", "migration", "supabase", "rpc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/apply_atlas_migrations.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/apply_atlas_migrations.ts",
+      "lineRange": [31, 124],
+      "summary": "Sequentially applies Atlas migrations (cultural_scan_results unique fix and related schema changes) with verification checks after each step.",
+      "tags": ["entry-point", "migration", "atlas", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-dps-migrations.js:applyMigrations",
+      "type": "function",
+      "name": "applyMigrations",
+      "filePath": "scripts/apply-dps-migrations.js",
+      "lineRange": [20, 64],
+      "summary": "Reads the DPS migration SQL file and applies it to Supabase via the service-role client, logging progress per statement.",
+      "tags": ["migration", "dps", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-feat070-migration.js:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-feat070-migration.js",
+      "lineRange": [10, 82],
+      "summary": "Applies the FEAT-070 migration SQL through the Supabase service-role client, with statement splitting and progress logging.",
+      "tags": ["migration", "feat-070", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-features-migration.ts:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-features-migration.ts",
+      "lineRange": [14, 87],
+      "summary": "Reads the training_features migration SQL file, splits statements, and applies each via the Supabase RPC.",
+      "tags": ["migration", "training-features", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-migration-direct.js:applyMigrationDirect",
+      "type": "function",
+      "name": "applyMigrationDirect",
+      "filePath": "scripts/apply-migration-direct.js",
+      "lineRange": [8, 115],
+      "summary": "Opens a direct pg Client connection using SUPABASE_DB_PASSWORD and executes a target SQL file, bypassing Supabase RPC for unsupported DDL.",
+      "tags": ["migration", "postgres", "direct-db", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/apply-migration-safe.js:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-migration-safe.js",
+      "lineRange": [8, 103],
+      "summary": "Statement-by-statement migration runner with per-statement validation and abort-on-failure semantics for safer schema rollout.",
+      "tags": ["migration", "safe", "supabase", "validation", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-migration.js:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-migration.js",
+      "lineRange": [17, 54],
+      "summary": "Generic Supabase migration applier that takes a SQL filename argument and runs it through the service-role client.",
+      "tags": ["migration", "generic", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-predictions-migration-fix.js:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-predictions-migration-fix.js",
+      "lineRange": [9, 68],
+      "summary": "Applies a corrective predictions-table migration after a previous partial failure, with verification logging.",
+      "tags": ["migration", "predictions", "hotfix", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/apply-predictions-migration.js:applyMigration",
+      "type": "function",
+      "name": "applyMigration",
+      "filePath": "scripts/apply-predictions-migration.js",
+      "lineRange": [11, 46],
+      "summary": "Applies the predictions-table SQL migration via the Supabase service-role client.",
+      "tags": ["migration", "predictions", "supabase", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/backfill-content-strategy-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-content-strategy-features.ts",
+      "lineRange": [43, 187],
+      "summary": "Iterates existing training_features rows, re-extracts the seven content-strategy features from transcript and caption, and writes updates back to Supabase with --dry-run and --limit support.",
+      "tags": ["entry-point", "backfill", "training-features", "content-strategy"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-content-strategy-features.ts:flushUpdates",
+      "type": "function",
+      "name": "flushUpdates",
+      "filePath": "scripts/backfill-content-strategy-features.ts",
+      "lineRange": [189, 206],
+      "summary": "Flushes a batch of buffered training_features updates to Supabase, used by the backfill loop to keep round trips low.",
+      "tags": ["utility", "batch-update", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-creator-distribution-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-creator-distribution-features.ts",
+      "lineRange": [45, 223],
+      "summary": "Backfills the creator-followers, posting-time, and is_original_sound features into training_features by joining scraped_videos, with --dry-run and --limit options.",
+      "tags": ["entry-point", "backfill", "training-features", "creator-signals"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-creator-distribution-features.ts:flushUpdates",
+      "type": "function",
+      "name": "flushUpdates",
+      "filePath": "scripts/backfill-creator-distribution-features.ts",
+      "lineRange": [225, 236],
+      "summary": "Flushes a batch of buffered training_features updates to Supabase for the creator + distribution backfill loop.",
+      "tags": ["utility", "batch-update", "supabase"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:fetch_data", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:get_numeric_features", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:compute_correlations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:fmt_num", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:classify_change", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-creator-baselines.py", "target": "function:scripts/analyze-creator-baselines.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:fetch_data", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:get_numeric_features", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:compute_spearman_table", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:compute_binary_analysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:mega_vs_under", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:duration_analysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:describe_feature_diff", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:generate_report", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-feature-correlations.py", "target": "function:scripts/analyze-feature-correlations.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-one-video.ts", "target": "function:scripts/analyze-one-video.ts:analyzeVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:fetch_data", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:assign_tier", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:fmt_num", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:mann_whitney_effect", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-post-pub-signals.py", "target": "function:scripts/analyze-post-pub-signals.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:load_env", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:fetch_data", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:get_numeric_features", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:fmt_num", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:sig_str", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:caption_signals", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-response-stacks.py", "target": "function:scripts/analyze-response-stacks.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-templates.js", "target": "function:scripts/analyze-templates.js:showHelp", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-templates.js", "target": "function:scripts/analyze-templates.js:parseArgs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-templates.js", "target": "function:scripts/analyze-templates.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-tier-breakdown.py", "target": "function:scripts/analyze-tier-breakdown.py:fetch_data", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-tier-breakdown.py", "target": "function:scripts/analyze-tier-breakdown.py:fmt", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-tier-breakdown.py", "target": "function:scripts/analyze-tier-breakdown.py:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-tier-breakdown.py", "target": "function:scripts/analyze-tier-breakdown.py:_get_advice", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply_atlas_migrations.ts", "target": "function:scripts/apply_atlas_migrations.ts:runSql", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply_atlas_migrations.ts", "target": "function:scripts/apply_atlas_migrations.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-dps-migrations.js", "target": "function:scripts/apply-dps-migrations.js:applyMigrations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-feat070-migration.js", "target": "function:scripts/apply-feat070-migration.js:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-features-migration.ts", "target": "function:scripts/apply-features-migration.ts:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-migration-direct.js", "target": "function:scripts/apply-migration-direct.js:applyMigrationDirect", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-migration-safe.js", "target": "function:scripts/apply-migration-safe.js:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-migration.js", "target": "function:scripts/apply-migration.js:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-predictions-migration-fix.js", "target": "function:scripts/apply-predictions-migration-fix.js:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/apply-predictions-migration.js", "target": "function:scripts/apply-predictions-migration.js:applyMigration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/backfill-content-strategy-features.ts", "target": "function:scripts/backfill-content-strategy-features.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/backfill-content-strategy-features.ts", "target": "function:scripts/backfill-content-strategy-features.ts:flushUpdates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/backfill-creator-distribution-features.ts", "target": "function:scripts/backfill-creator-distribution-features.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/backfill-creator-distribution-features.ts", "target": "function:scripts/backfill-creator-distribution-features.ts:flushUpdates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/analyze-one-video.ts", "target": "file:src/lib/services/ffmpeg-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/analyze-templates.js", "target": "file:src/lib/etl/test-template-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/backfill-content-strategy-features.ts", "target": "file:src/lib/prediction/content-strategy-features.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

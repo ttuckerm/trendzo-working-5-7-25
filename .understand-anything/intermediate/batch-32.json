@@ -1,0 +1,901 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/diag-niche-sources.ts",
+      "type": "file",
+      "name": "diag-niche-sources.ts",
+      "filePath": "scripts/diag-niche-sources.ts",
+      "summary": "Diagnostic script that inspects Supabase niche source distribution and reports source breakdowns for the Trendzo training data inventory.",
+      "tags": ["diagnostic", "script", "supabase", "training-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag-prompt42-schema.ts",
+      "type": "file",
+      "name": "diag-prompt42-schema.ts",
+      "filePath": "scripts/diag-prompt42-schema.ts",
+      "summary": "Diagnostic script that prints the current Supabase schema state for the prompt 4.2 audit milestone in the prediction pipeline.",
+      "tags": ["diagnostic", "script", "schema-inspection", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag-prompt43-schema.ts",
+      "type": "file",
+      "name": "diag-prompt43-schema.ts",
+      "filePath": "scripts/diag-prompt43-schema.ts",
+      "summary": "Diagnostic script for inspecting the database schema relevant to the prompt 4.3 phase of the training pipeline overhaul.",
+      "tags": ["diagnostic", "script", "schema-inspection", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag-training-exp-cols.ts",
+      "type": "file",
+      "name": "diag-training-exp-cols.ts",
+      "filePath": "scripts/diag-training-exp-cols.ts",
+      "summary": "Tiny diagnostic that lists expected training columns vs. what is present in the training dataset table.",
+      "tags": ["diagnostic", "script", "training-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-users.ts",
+      "type": "file",
+      "name": "diag-users.ts",
+      "filePath": "scripts/diag-users.ts",
+      "summary": "Diagnostic script that lists Supabase users for debugging auth-related issues in the admin workflow.",
+      "tags": ["diagnostic", "script", "auth", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diagnose-patterns.js",
+      "type": "file",
+      "name": "diagnose-patterns.js",
+      "filePath": "scripts/diagnose-patterns.js",
+      "summary": "Node diagnostic that loads previously extracted viral patterns and prints a frequency report for QA inspection.",
+      "tags": ["diagnostic", "script", "patterns", "viral-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diagnostic-963-vs-new.py",
+      "type": "file",
+      "name": "diagnostic-963-vs-new.py",
+      "filePath": "scripts/diagnostic-963-vs-new.py",
+      "summary": "Python diagnostic comparing the legacy 963-video training cohort against newly collected videos, calculating DPS tier distribution and overlap.",
+      "tags": ["diagnostic", "script", "training-data", "evaluation"],
+      "complexity": "complex",
+      "languageNotes": "Python pandas-based comparison helper used for training set hygiene checks."
+    },
+    {
+      "id": "function:scripts/diagnostic-963-vs-new.py:get_dps",
+      "type": "function",
+      "name": "get_dps",
+      "filePath": "scripts/diagnostic-963-vs-new.py",
+      "lineRange": [55, 60],
+      "summary": "Extracts the DPS score from a row, returning a safe default when missing.",
+      "tags": ["utility", "dps", "data-access"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/diagnostic-963-vs-new.py:dps_tier",
+      "type": "function",
+      "name": "dps_tier",
+      "filePath": "scripts/diagnostic-963-vs-new.py",
+      "lineRange": [62, 68],
+      "summary": "Maps a numeric DPS score to its categorical tier label using project-wide thresholds.",
+      "tags": ["utility", "dps", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diagnostic-baseline-vps.ts",
+      "type": "file",
+      "name": "diagnostic-baseline-vps.ts",
+      "filePath": "scripts/diagnostic-baseline-vps.ts",
+      "summary": "Diagnostic that computes Spearman rank correlation between predicted and actual VPS scores over a baseline cohort to monitor pipeline drift.",
+      "tags": ["diagnostic", "script", "evaluation", "spearman", "vps"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/diagnostic-baseline-vps.ts:rankArray",
+      "type": "function",
+      "name": "rankArray",
+      "filePath": "scripts/diagnostic-baseline-vps.ts",
+      "lineRange": [36, 54],
+      "summary": "Ranks an array of numeric values with average-rank tie-breaking, used as input to Spearman correlation.",
+      "tags": ["utility", "statistics", "ranking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/diagnostic-baseline-vps.ts:spearmanRho",
+      "type": "function",
+      "name": "spearmanRho",
+      "filePath": "scripts/diagnostic-baseline-vps.ts",
+      "lineRange": [56, 70],
+      "summary": "Computes the Spearman rank correlation coefficient between two numeric arrays of equal length.",
+      "tags": ["utility", "statistics", "correlation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/diagnostic-baseline-vps.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/diagnostic-baseline-vps.ts",
+      "lineRange": [89, 234],
+      "summary": "Driver that pulls baseline prediction rows from Supabase, aligns predicted vs. actual VPS, and prints Spearman, calibration, and tier distribution diagnostics.",
+      "tags": ["entry-point", "evaluation", "vps", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/download-and-store-video.ts",
+      "type": "file",
+      "name": "download-and-store-video.ts",
+      "filePath": "scripts/download-and-store-video.ts",
+      "summary": "Batch utility that downloads source videos from upstream URLs and stores them via the video-storage-service, intended for cold-loading the training corpus.",
+      "tags": ["script", "ingest", "video-storage", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/download-and-store-video.ts:processVideo",
+      "type": "function",
+      "name": "processVideo",
+      "filePath": "scripts/download-and-store-video.ts",
+      "lineRange": [33, 103],
+      "summary": "Downloads a single video, persists it through the storage service, and updates DB linkage; respects a force flag to overwrite existing copies.",
+      "tags": ["ingest", "video-storage", "worker"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/download-and-store-video.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/download-and-store-video.ts",
+      "lineRange": [105, 211],
+      "summary": "CLI entry point that loads the candidate video list, fans out processVideo calls with concurrency control, and reports a summary.",
+      "tags": ["entry-point", "ingest", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/download-audio-samples.js",
+      "type": "file",
+      "name": "download-audio-samples.js",
+      "filePath": "scripts/download-audio-samples.js",
+      "summary": "One-shot Node script that downloads curated audio samples used as fixtures by the SFX/music subsystem.",
+      "tags": ["script", "ingest", "audio", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/download-audio-to-public.js",
+      "type": "file",
+      "name": "download-audio-to-public.js",
+      "filePath": "scripts/download-audio-to-public.js",
+      "summary": "Helper that fetches audio files and writes them into the public/ directory so the Next.js app can serve them statically.",
+      "tags": ["script", "ingest", "audio", "static-assets"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/download-test-audio.js",
+      "type": "file",
+      "name": "download-test-audio.js",
+      "filePath": "scripts/download-test-audio.js",
+      "summary": "Downloads small test audio clips for local development and smoke-testing the audio pipeline.",
+      "tags": ["script", "test", "audio", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/dryrun_atlas.ts",
+      "type": "file",
+      "name": "dryrun_atlas.ts",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "summary": "Dry-run harness for the Atlas crons (feedback collector, cultural scan, classify-events) that snapshots row counts and times the HTTP calls without mutating production.",
+      "tags": ["script", "dry-run", "atlas", "cron-verification"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/dryrun_atlas.ts:countRows",
+      "type": "function",
+      "name": "countRows",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "lineRange": [12, 19],
+      "summary": "Returns the row count for a given Supabase table, used to snapshot state before and after a cron call.",
+      "tags": ["utility", "supabase", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dryrun_atlas.ts:snapshot",
+      "type": "function",
+      "name": "snapshot",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "lineRange": [21, 27],
+      "summary": "Captures a labelled snapshot of Atlas-related table row counts for delta computation.",
+      "tags": ["utility", "snapshot", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dryrun_atlas.ts:delta",
+      "type": "function",
+      "name": "delta",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "lineRange": [29, 38],
+      "summary": "Computes the per-table difference between two snapshots so the dry-run report can highlight what each cron created.",
+      "tags": ["utility", "diff", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dryrun_atlas.ts:timedFetch",
+      "type": "function",
+      "name": "timedFetch",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "lineRange": [40, 48],
+      "summary": "Wraps fetch with timing instrumentation so the dry-run can report per-cron latency.",
+      "tags": ["utility", "fetch", "instrumentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/dryrun_atlas.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/dryrun_atlas.ts",
+      "lineRange": [50, 158],
+      "summary": "Orchestrates the dry-run by calling each Atlas cron in sequence, snapshotting before/after, and emitting a structured verification report.",
+      "tags": ["entry-point", "dry-run", "atlas", "cron-verification"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/dryrun-m10.js",
+      "type": "file",
+      "name": "dryrun-m10.js",
+      "filePath": "scripts/dryrun-m10.js",
+      "summary": "Lightweight Node script that simulates the M10 milestone calculation locally without touching the database.",
+      "tags": ["script", "dry-run", "simulation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/enable-supabase.js",
+      "type": "file",
+      "name": "enable-supabase.js",
+      "filePath": "scripts/enable-supabase.js",
+      "summary": "Developer helper that flips Supabase flags in .env files and prompts the user to confirm before persisting changes.",
+      "tags": ["script", "setup", "supabase", "environment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/enable-supabase.js:updateEnvFile",
+      "type": "function",
+      "name": "updateEnvFile",
+      "filePath": "scripts/enable-supabase.js",
+      "lineRange": [13, 60],
+      "summary": "Reads, mutates, and rewrites the project .env to enable the Supabase feature flag and related URLs.",
+      "tags": ["utility", "filesystem", "environment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/enable-supabase.js:confirmAndUpdate",
+      "type": "function",
+      "name": "confirmAndUpdate",
+      "filePath": "scripts/enable-supabase.js",
+      "lineRange": [62, 81],
+      "summary": "Interactive wrapper that asks the operator to confirm the change before calling updateEnvFile.",
+      "tags": ["utility", "cli", "interactive"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/error-analysis.ts",
+      "type": "file",
+      "name": "error-analysis.ts",
+      "filePath": "scripts/error-analysis.ts",
+      "summary": "Comprehensive error-analysis tool that runs the v6 XGBoost predictor against a labelled CSV cohort and prints per-segment accuracy, calibration, and worst-case tables.",
+      "tags": ["script", "evaluation", "xgboost", "error-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:parseCSV",
+      "type": "function",
+      "name": "parseCSV",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [36, 52],
+      "summary": "Parses a CSV blob into an array of records, delegating row tokenisation to parseCSVLine.",
+      "tags": ["utility", "csv", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:parseCSVLine",
+      "type": "function",
+      "name": "parseCSVLine",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [54, 83],
+      "summary": "Tokenises a single CSV line with quote-aware handling so embedded commas are preserved.",
+      "tags": ["utility", "csv", "parsing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:loadFeatureNames",
+      "type": "function",
+      "name": "loadFeatureNames",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [150, 171],
+      "summary": "Reads the XGBoost feature-name manifest and returns the canonical column order used by the predictor binary.",
+      "tags": ["utility", "xgboost", "features"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:batchPredictV6",
+      "type": "function",
+      "name": "batchPredictV6",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [174, 243],
+      "summary": "Runs the v6 XGBoost predictor over a batch of CSV rows and returns predicted DPS scores aligned to the input order.",
+      "tags": ["xgboost", "prediction", "batch", "v6"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:analyzeSegment",
+      "type": "function",
+      "name": "analyzeSegment",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [247, 276],
+      "summary": "Computes per-segment statistics (count, MAE, calibration, tier confusion) for a labelled cohort grouped by a chosen key.",
+      "tags": ["evaluation", "statistics", "segmentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:printSegmentTable",
+      "type": "function",
+      "name": "printSegmentTable",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [290, 314],
+      "summary": "Pretty-prints a segment statistics table to stdout for the analysis report.",
+      "tags": ["reporting", "cli", "formatting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/error-analysis.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/error-analysis.ts",
+      "lineRange": [329, 464],
+      "summary": "Driver that loads the labelled CSV cohort, computes batch predictions, runs segment analyses, and prints the consolidated diagnostic report.",
+      "tags": ["entry-point", "evaluation", "xgboost", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "type": "file",
+      "name": "eval-calibrator-silent-vs-speech.ts",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "summary": "Evaluates the prediction calibrator's behaviour on silent vs. speech-driven videos and emits a Markdown report comparing calibration error per group.",
+      "tags": ["script", "evaluation", "calibration", "audio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/eval-calibrator-silent-vs-speech.ts:classifyGroup",
+      "type": "function",
+      "name": "classifyGroup",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "lineRange": [137, 147],
+      "summary": "Buckets a labelled record into the silent or speech cohort based on speech-density signals.",
+      "tags": ["utility", "classification", "audio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/eval-calibrator-silent-vs-speech.ts:evaluateCase",
+      "type": "function",
+      "name": "evaluateCase",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "lineRange": [149, 212],
+      "summary": "Runs the prediction-calibrator on a single labelled case and returns before/after deltas for analysis.",
+      "tags": ["evaluation", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/eval-calibrator-silent-vs-speech.ts:computeSummary",
+      "type": "function",
+      "name": "computeSummary",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "lineRange": [214, 253],
+      "summary": "Aggregates per-case evaluation results into a structured summary for reporting.",
+      "tags": ["evaluation", "aggregation", "statistics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/eval-calibrator-silent-vs-speech.ts:generateMarkdownReport",
+      "type": "function",
+      "name": "generateMarkdownReport",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "lineRange": [255, 392],
+      "summary": "Formats the aggregated evaluation into a multi-section Markdown report for review and archival.",
+      "tags": ["reporting", "markdown", "evaluation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/eval-calibrator-silent-vs-speech.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/eval-calibrator-silent-vs-speech.ts",
+      "lineRange": [398, 514],
+      "summary": "Driver that loads labelled cases, classifies them, runs the calibrator, computes the summary, and writes the Markdown report.",
+      "tags": ["entry-point", "evaluation", "calibration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/eval-xgboost-v6.ts",
+      "type": "file",
+      "name": "eval-xgboost-v6.ts",
+      "filePath": "scripts/eval-xgboost-v6.ts",
+      "summary": "Evaluates the v6 XGBoost predictor over a held-out cohort and prints tier-distance and calibration metrics.",
+      "tags": ["script", "evaluation", "xgboost", "v6"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/eval-xgboost-v6.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/eval-xgboost-v6.ts",
+      "lineRange": [48, 150],
+      "summary": "Driver that loads the holdout set, invokes the v6 predictor, and prints tier accuracy and calibration statistics.",
+      "tags": ["entry-point", "evaluation", "xgboost"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/evaluate_predictions.ts",
+      "type": "file",
+      "name": "evaluate_predictions.ts",
+      "filePath": "scripts/evaluate_predictions.ts",
+      "summary": "Evaluation utility that computes Precision@K and Expected Calibration Error over a labelled prediction set, with anti-leakage validation hooks.",
+      "tags": ["script", "evaluation", "metrics", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/evaluate_predictions.ts:expectedCalibrationError",
+      "type": "function",
+      "name": "expectedCalibrationError",
+      "filePath": "scripts/evaluate_predictions.ts",
+      "lineRange": [13, 19],
+      "summary": "Computes Expected Calibration Error by bucketing predicted probabilities and comparing each bucket's mean prediction to its empirical positive rate.",
+      "tags": ["evaluation", "calibration", "statistics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/export-eval-set.ts",
+      "type": "file",
+      "name": "export-eval-set.ts",
+      "filePath": "scripts/export-eval-set.ts",
+      "summary": "CLI that delegates to exportTrainingDataset to produce an evaluation-only CSV slice for the held-out cohort.",
+      "tags": ["script", "export", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/export-script-elements.js",
+      "type": "file",
+      "name": "export-script-elements.js",
+      "filePath": "scripts/export-script-elements.js",
+      "summary": "Small helper that exports script-element annotations from the database to a flat file for downstream consumption.",
+      "tags": ["script", "export", "annotations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/export-training-dataset.ts",
+      "type": "file",
+      "name": "export-training-dataset.ts",
+      "filePath": "scripts/export-training-dataset.ts",
+      "summary": "Canonical exporter that flattens prediction_runs and run_component_results into the XGBoost training CSV, reconstructing all 42 features per row.",
+      "tags": ["script", "export", "training-data", "xgboost", "feature-engineering"],
+      "complexity": "complex",
+      "languageNotes": "Single source of truth for the v6 training-set schema; mirrored by the XGBoost feature manifest."
+    },
+    {
+      "id": "function:scripts/export-training-dataset.ts:reconstructFeatures",
+      "type": "function",
+      "name": "reconstructFeatures",
+      "filePath": "scripts/export-training-dataset.ts",
+      "lineRange": [123, 309],
+      "summary": "Rebuilds the full 42-feature row from the stored component results and raw orchestrator output, applying defaults for missing components.",
+      "tags": ["feature-engineering", "xgboost", "transformation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/export-training-dataset.ts:buildComponentPreds",
+      "type": "function",
+      "name": "buildComponentPreds",
+      "filePath": "scripts/export-training-dataset.ts",
+      "lineRange": [313, 321],
+      "summary": "Collects each component's prediction/confidence pair into a canonical map for the row.",
+      "tags": ["feature-engineering", "transformation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/export-training-dataset.ts:exportTrainingDataset",
+      "type": "function",
+      "name": "exportTrainingDataset",
+      "filePath": "scripts/export-training-dataset.ts",
+      "lineRange": [349, 529],
+      "summary": "Public export entry point: queries prediction_runs, joins component results, reconstructs features, applies filters, and writes the training CSV.",
+      "tags": ["entry-point", "export", "training-data", "xgboost"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/extract-all-features.ts",
+      "type": "file",
+      "name": "extract-all-features.ts",
+      "filePath": "scripts/extract-all-features.ts",
+      "summary": "Runs the full feature-extraction service over the entire video corpus, persisting all 106 raw features per video for downstream model training.",
+      "tags": ["script", "feature-extraction", "batch", "training-data"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/extract-all-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/extract-all-features.ts",
+      "lineRange": [87, 360],
+      "summary": "Driver that iterates the video corpus, invokes the feature-extraction service per video, and writes the extracted features back to the database with progress logging.",
+      "tags": ["entry-point", "feature-extraction", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/extract-all-genomes.ts",
+      "type": "file",
+      "name": "extract-all-genomes.ts",
+      "filePath": "scripts/extract-all-genomes.ts",
+      "summary": "Batch utility that extracts viral genomes (compact pattern fingerprints) for every video and persists them for pattern-mining workflows.",
+      "tags": ["script", "genome-extraction", "batch", "viral-patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/extract-all-genomes.ts:extractAllGenomes",
+      "type": "function",
+      "name": "extractAllGenomes",
+      "filePath": "scripts/extract-all-genomes.ts",
+      "lineRange": [54, 153],
+      "summary": "Iterates the video corpus, invokes the genome extractor per video, and writes each genome record back to Supabase.",
+      "tags": ["entry-point", "genome-extraction", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/extract-patterns-simple.js",
+      "type": "file",
+      "name": "extract-patterns-simple.js",
+      "filePath": "scripts/extract-patterns-simple.js",
+      "summary": "Lightweight Node helper that mines per-video viral patterns from transcripts and aggregates them into a corpus-level pattern catalog.",
+      "tags": ["script", "pattern-mining", "viral-analysis", "transcripts"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/extract-patterns-simple.js:extractPatternsFromTranscript",
+      "type": "function",
+      "name": "extractPatternsFromTranscript",
+      "filePath": "scripts/extract-patterns-simple.js",
+      "lineRange": [55, 136],
+      "summary": "Extracts viral patterns (hooks, callbacks, retention beats) from a single transcript combined with its metadata.",
+      "tags": ["pattern-mining", "transcripts", "viral-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/extract-patterns-simple.js:aggregatePatterns",
+      "type": "function",
+      "name": "aggregatePatterns",
+      "filePath": "scripts/extract-patterns-simple.js",
+      "lineRange": [141, 219],
+      "summary": "Aggregates per-video pattern lists into corpus-level frequency, co-occurrence, and tier-mapped summaries.",
+      "tags": ["pattern-mining", "aggregation", "viral-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/extract-patterns-simple.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/extract-patterns-simple.js",
+      "lineRange": [224, 286],
+      "summary": "Driver that loads transcripts, invokes the per-video extractor, aggregates results, and writes the corpus-level pattern report.",
+      "tags": ["entry-point", "pattern-mining", "batch"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/diagnostic-963-vs-new.py",
+      "target": "function:scripts/diagnostic-963-vs-new.py:get_dps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/diagnostic-963-vs-new.py",
+      "target": "function:scripts/diagnostic-963-vs-new.py:dps_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/diagnostic-baseline-vps.ts",
+      "target": "function:scripts/diagnostic-baseline-vps.ts:rankArray",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/diagnostic-baseline-vps.ts",
+      "target": "function:scripts/diagnostic-baseline-vps.ts:spearmanRho",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/diagnostic-baseline-vps.ts",
+      "target": "function:scripts/diagnostic-baseline-vps.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/download-and-store-video.ts",
+      "target": "function:scripts/download-and-store-video.ts:processVideo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/download-and-store-video.ts",
+      "target": "function:scripts/download-and-store-video.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dryrun_atlas.ts",
+      "target": "function:scripts/dryrun_atlas.ts:countRows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dryrun_atlas.ts",
+      "target": "function:scripts/dryrun_atlas.ts:snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dryrun_atlas.ts",
+      "target": "function:scripts/dryrun_atlas.ts:delta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dryrun_atlas.ts",
+      "target": "function:scripts/dryrun_atlas.ts:timedFetch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/dryrun_atlas.ts",
+      "target": "function:scripts/dryrun_atlas.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/enable-supabase.js",
+      "target": "function:scripts/enable-supabase.js:updateEnvFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/enable-supabase.js",
+      "target": "function:scripts/enable-supabase.js:confirmAndUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:parseCSV",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:parseCSVLine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:loadFeatureNames",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:batchPredictV6",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:analyzeSegment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:printSegmentTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/error-analysis.ts",
+      "target": "function:scripts/error-analysis.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "function:scripts/eval-calibrator-silent-vs-speech.ts:classifyGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "function:scripts/eval-calibrator-silent-vs-speech.ts:evaluateCase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "function:scripts/eval-calibrator-silent-vs-speech.ts:computeSummary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "function:scripts/eval-calibrator-silent-vs-speech.ts:generateMarkdownReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "function:scripts/eval-calibrator-silent-vs-speech.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/eval-xgboost-v6.ts",
+      "target": "function:scripts/eval-xgboost-v6.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/evaluate_predictions.ts",
+      "target": "function:scripts/evaluate_predictions.ts:expectedCalibrationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/export-training-dataset.ts",
+      "target": "function:scripts/export-training-dataset.ts:reconstructFeatures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/export-training-dataset.ts",
+      "target": "function:scripts/export-training-dataset.ts:buildComponentPreds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/export-training-dataset.ts",
+      "target": "function:scripts/export-training-dataset.ts:exportTrainingDataset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/extract-all-features.ts",
+      "target": "function:scripts/extract-all-features.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/extract-all-genomes.ts",
+      "target": "function:scripts/extract-all-genomes.ts:extractAllGenomes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/extract-patterns-simple.js",
+      "target": "function:scripts/extract-patterns-simple.js:extractPatternsFromTranscript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/extract-patterns-simple.js",
+      "target": "function:scripts/extract-patterns-simple.js:aggregatePatterns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/extract-patterns-simple.js",
+      "target": "function:scripts/extract-patterns-simple.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/diagnostic-963-vs-new.py",
+      "target": "function:scripts/diagnostic-963-vs-new.py:get_dps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/diagnostic-963-vs-new.py",
+      "target": "function:scripts/diagnostic-963-vs-new.py:dps_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/export-training-dataset.ts",
+      "target": "function:scripts/export-training-dataset.ts:exportTrainingDataset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/download-and-store-video.ts",
+      "target": "file:src/lib/services/video-storage-service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/eval-calibrator-silent-vs-speech.ts",
+      "target": "file:src/lib/prediction/prediction-calibrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/evaluate_predictions.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/evaluate_predictions.ts",
+      "target": "file:src/lib/validation/anti_leakage.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/export-eval-set.ts",
+      "target": "file:scripts/export-training-dataset.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

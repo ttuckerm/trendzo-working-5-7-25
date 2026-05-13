@@ -1,0 +1,981 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/backfill-dps-scores.js",
+      "type": "file",
+      "name": "backfill-dps-scores.js",
+      "filePath": "scripts/backfill-dps-scores.js",
+      "summary": "One-off backfill script that recomputes Dynamic Percentile System (DPS) scores for existing prediction_runs rows in Supabase.",
+      "tags": ["script", "backfill", "data-migration", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/backfill-dps-scores.js:backfillDPSScores",
+      "type": "function",
+      "name": "backfillDPSScores",
+      "filePath": "scripts/backfill-dps-scores.js",
+      "lineRange": [16, 100],
+      "summary": "Iterates prediction_runs and rewrites missing/stale DPS scores using the current scoring methodology.",
+      "tags": ["backfill", "dps", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/backfill-ffmpeg-segment-features.ts",
+      "type": "file",
+      "name": "backfill-ffmpeg-segment-features.ts",
+      "filePath": "scripts/backfill-ffmpeg-segment-features.ts",
+      "summary": "Backfill CLI that re-extracts FFmpeg per-segment visual features for previously processed videos and updates the prediction database.",
+      "tags": ["script", "backfill", "ffmpeg", "feature-extraction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-ffmpeg-segment-features.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/backfill-ffmpeg-segment-features.ts",
+      "lineRange": [32, 49],
+      "summary": "Parses CLI flags controlling the FFmpeg segment backfill (limit, run id, dry run, etc.).",
+      "tags": ["cli", "argument-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-ffmpeg-segment-features.ts:buildVideoFileMap",
+      "type": "function",
+      "name": "buildVideoFileMap",
+      "filePath": "scripts/backfill-ffmpeg-segment-features.ts",
+      "lineRange": [53, 73],
+      "summary": "Walks the local video cache directory to map prediction runs to their downloaded video file paths.",
+      "tags": ["filesystem", "video-cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-ffmpeg-segment-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-ffmpeg-segment-features.ts",
+      "lineRange": [77, 209],
+      "summary": "Entry point that loads target runs, extracts FFmpeg segment features per video, and writes them back to Supabase.",
+      "tags": ["entry-point", "backfill", "ffmpeg"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/backfill-follower-counts.js",
+      "type": "file",
+      "name": "backfill-follower-counts.js",
+      "filePath": "scripts/backfill-follower-counts.js",
+      "summary": "Backfill helper that fetches and stores creator follower counts for prediction runs that are missing the account_size signal.",
+      "tags": ["script", "backfill", "creator", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/backfill-follower-counts.js:backfillFollowerCounts",
+      "type": "function",
+      "name": "backfillFollowerCounts",
+      "filePath": "scripts/backfill-follower-counts.js",
+      "lineRange": [32, 77],
+      "summary": "Iterates prediction_runs lacking follower counts and updates them via the TikTok scraping helper.",
+      "tags": ["backfill", "follower-count", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/backfill-new-features.ts",
+      "type": "file",
+      "name": "backfill-new-features.ts",
+      "filePath": "scripts/backfill-new-features.ts",
+      "summary": "Large backfill pipeline that downloads videos and recomputes Wave 1 (transcript/audio) and Wave 2 (visual) prediction features.",
+      "tags": ["script", "backfill", "feature-extraction", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-new-features.ts:computeWave1",
+      "type": "function",
+      "name": "computeWave1",
+      "filePath": "scripts/backfill-new-features.ts",
+      "lineRange": [101, 200],
+      "summary": "Computes Wave 1 audio/transcript-derived features (hook density, pace, prosody) from a transcript and audio features blob.",
+      "tags": ["feature-extraction", "audio", "transcript"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-new-features.ts:computeWave2",
+      "type": "function",
+      "name": "computeWave2",
+      "filePath": "scripts/backfill-new-features.ts",
+      "lineRange": [217, 309],
+      "summary": "Computes Wave 2 vision features from a local video path, including scene-cut and motion signals via FFmpeg.",
+      "tags": ["feature-extraction", "vision", "ffmpeg"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-new-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-new-features.ts",
+      "lineRange": [315, 491],
+      "summary": "Entry point that queries candidate prediction runs, downloads each video, runs both Wave 1 and Wave 2, and persists the merged feature set.",
+      "tags": ["entry-point", "backfill", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/backfill-prediction-features.ts",
+      "type": "file",
+      "name": "backfill-prediction-features.ts",
+      "filePath": "scripts/backfill-prediction-features.ts",
+      "summary": "Backfill that re-runs extract-prediction-features and the training feature extractor over historical runs, writing normalized feature JSONB.",
+      "tags": ["script", "backfill", "feature-extraction", "training"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-prediction-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-prediction-features.ts",
+      "lineRange": [86, 403],
+      "summary": "Main loop that loads each prediction run, recomputes its prediction + training features, and updates the database with the new JSONB columns.",
+      "tags": ["entry-point", "backfill", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/backfill-training-ready.ts",
+      "type": "file",
+      "name": "backfill-training-ready.ts",
+      "filePath": "scripts/backfill-training-ready.ts",
+      "summary": "Diagnostic backfill that inspects prediction runs and flips training-ready / not-ready flags based on missing features or labels.",
+      "tags": ["script", "backfill", "training-readiness", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-training-ready.ts:diagnoseRun",
+      "type": "function",
+      "name": "diagnoseRun",
+      "filePath": "scripts/backfill-training-ready.ts",
+      "lineRange": [80, 121],
+      "summary": "Inspects a single prediction_runs row and returns a structured diagnosis of what is blocking it from being training-ready.",
+      "tags": ["diagnostic", "training-readiness"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/backfill-training-ready.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-training-ready.ts",
+      "lineRange": [125, 280],
+      "summary": "Entry point that scans all runs, runs diagnoseRun on each, and updates the training-ready flag plus produces a summary report.",
+      "tags": ["entry-point", "training-readiness", "reporting"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/backfill-vision-hook-features.ts",
+      "type": "file",
+      "name": "backfill-vision-hook-features.ts",
+      "filePath": "scripts/backfill-vision-hook-features.ts",
+      "summary": "Rate-limited backfill that re-extracts vision-hook (Gemini Vision) features for the opening seconds of each prediction-run video.",
+      "tags": ["script", "backfill", "vision", "gemini"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/backfill-vision-hook-features.ts:waitForRateLimit",
+      "type": "function",
+      "name": "waitForRateLimit",
+      "filePath": "scripts/backfill-vision-hook-features.ts",
+      "lineRange": [43, 55],
+      "summary": "Throttles Gemini API calls by sleeping when the per-minute call count exceeds the configured cap.",
+      "tags": ["rate-limit", "gemini"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-vision-hook-features.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/backfill-vision-hook-features.ts",
+      "lineRange": [59, 71],
+      "summary": "Parses CLI flags controlling the vision-hook backfill (limit, dry-run, since timestamp).",
+      "tags": ["cli", "argument-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-vision-hook-features.ts:buildVideoFileMap",
+      "type": "function",
+      "name": "buildVideoFileMap",
+      "filePath": "scripts/backfill-vision-hook-features.ts",
+      "lineRange": [75, 95],
+      "summary": "Maps prediction runs to local downloaded video files for input to the vision-hook extractor.",
+      "tags": ["filesystem", "video-cache"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/backfill-vision-hook-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/backfill-vision-hook-features.ts",
+      "lineRange": [99, 243],
+      "summary": "Entry point that loads target runs, calls the vision-hook feature extractor under rate limiting, and writes results back to Supabase.",
+      "tags": ["entry-point", "backfill", "vision"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/batch-calculate-dps.js",
+      "type": "file",
+      "name": "batch-calculate-dps.js",
+      "filePath": "scripts/batch-calculate-dps.js",
+      "summary": "Batch script that fetches videos missing DPS scores, computes Dynamic Percentile System scores, and verifies the writes.",
+      "tags": ["script", "batch", "dps", "verification"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-calculate-dps.js:fetchVideosForDPS",
+      "type": "function",
+      "name": "fetchVideosForDPS",
+      "filePath": "scripts/batch-calculate-dps.js",
+      "lineRange": [23, 49],
+      "summary": "Queries Supabase for videos that still need DPS score calculation.",
+      "tags": ["supabase", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-calculate-dps.js:batchCalculateDPS",
+      "type": "function",
+      "name": "batchCalculateDPS",
+      "filePath": "scripts/batch-calculate-dps.js",
+      "lineRange": [51, 134],
+      "summary": "Iterates a list of videos and computes DPS scores in batches, with retry-friendly logging.",
+      "tags": ["batch", "dps", "calculation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-calculate-dps.js:verifyDPSInDatabase",
+      "type": "function",
+      "name": "verifyDPSInDatabase",
+      "filePath": "scripts/batch-calculate-dps.js",
+      "lineRange": [136, 156],
+      "summary": "Reads back rows just updated to verify that DPS scores were persisted correctly.",
+      "tags": ["verification", "dps"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/batch-calculate-dps.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/batch-calculate-dps.js",
+      "lineRange": [158, 190],
+      "summary": "Entry point that orchestrates fetch, batch calculation, and verification of DPS scores.",
+      "tags": ["entry-point", "dps", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/batch-extract-knowledge.js",
+      "type": "file",
+      "name": "batch-extract-knowledge.js",
+      "filePath": "scripts/batch-extract-knowledge.js",
+      "summary": "Batch knowledge-extraction script that pulls candidate videos and runs the project's knowledge-extraction engine over them.",
+      "tags": ["script", "batch", "knowledge-extraction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/batch-extract-knowledge.js:fetchVideosToProcess",
+      "type": "function",
+      "name": "fetchVideosToProcess",
+      "filePath": "scripts/batch-extract-knowledge.js",
+      "lineRange": [67, 110],
+      "summary": "Selects videos awaiting knowledge extraction using configurable filters and limits.",
+      "tags": ["supabase", "selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-extract-knowledge.js:extractForVideo",
+      "type": "function",
+      "name": "extractForVideo",
+      "filePath": "scripts/batch-extract-knowledge.js",
+      "lineRange": [116, 152],
+      "summary": "Invokes the knowledge-extraction pipeline for a single video and writes its results.",
+      "tags": ["knowledge-extraction", "per-video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-extract-knowledge.js:processBatch",
+      "type": "function",
+      "name": "processBatch",
+      "filePath": "scripts/batch-extract-knowledge.js",
+      "lineRange": [158, 204],
+      "summary": "Processes a batch of videos sequentially, accumulating success/failure stats.",
+      "tags": ["batch", "knowledge-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/batch-extract-knowledge.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/batch-extract-knowledge.js",
+      "lineRange": [210, 267],
+      "summary": "Entry point that fetches a batch and routes it through processBatch with overall reporting.",
+      "tags": ["entry-point", "knowledge-extraction", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/build-baseline-from-existing.ts",
+      "type": "file",
+      "name": "build-baseline-from-existing.ts",
+      "filePath": "scripts/build-baseline-from-existing.ts",
+      "summary": "CLI that builds a per-creator viral baseline (median views, distribution) from the existing prediction_runs corpus via the creator-baseline helper.",
+      "tags": ["script", "baseline", "creator", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/build-baseline-from-existing.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/build-baseline-from-existing.ts",
+      "lineRange": [14, 159],
+      "summary": "Entry point that aggregates existing run data by creator and writes a baseline document for downstream personalization.",
+      "tags": ["entry-point", "baseline", "creator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/build-baseline-from-scraped.ts",
+      "type": "file",
+      "name": "build-baseline-from-scraped.ts",
+      "filePath": "scripts/build-baseline-from-scraped.ts",
+      "summary": "CLI that builds a creator viral baseline from freshly-scraped TikTok data using the shared creator-baseline helper.",
+      "tags": ["script", "baseline", "creator", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/build-baseline-from-scraped.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/build-baseline-from-scraped.ts",
+      "lineRange": [13, 141],
+      "summary": "Entry point that ingests scraped-video JSON and produces baseline statistics per creator.",
+      "tags": ["entry-point", "baseline", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-agency-mapping.ts",
+      "type": "file",
+      "name": "check-agency-mapping.ts",
+      "filePath": "scripts/check-agency-mapping.ts",
+      "summary": "Diagnostic script that prints the agency-to-creator mapping currently stored in Supabase for audit purposes.",
+      "tags": ["script", "diagnostic", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-constraint.mjs",
+      "type": "file",
+      "name": "check-constraint.mjs",
+      "filePath": "scripts/check-constraint.mjs",
+      "summary": "Operational check script that inspects a Supabase CHECK constraint (e.g. predicted_tier_7d) and reports its current SQL definition.",
+      "tags": ["script", "diagnostic", "supabase", "constraints"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-constraint.mjs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-constraint.mjs",
+      "lineRange": [12, 102],
+      "summary": "Entry point that queries pg_constraint via Supabase and prints the constraint definition for verification.",
+      "tags": ["entry-point", "constraints", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-creator-distribution-coverage.ts",
+      "type": "file",
+      "name": "check-creator-distribution-coverage.ts",
+      "filePath": "scripts/check-creator-distribution-coverage.ts",
+      "summary": "Diagnostic that reports how well distribution signals are populated per creator across recent prediction runs.",
+      "tags": ["script", "diagnostic", "distribution", "creator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-creator-distribution-coverage.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-creator-distribution-coverage.ts",
+      "lineRange": [27, 106],
+      "summary": "Entry point that groups runs by creator and outputs distribution-signal coverage statistics.",
+      "tags": ["entry-point", "distribution", "coverage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-creator-profile.ts",
+      "type": "file",
+      "name": "check-creator-profile.ts",
+      "filePath": "scripts/check-creator-profile.ts",
+      "summary": "Small diagnostic that prints a single creator profile row from Supabase for manual inspection.",
+      "tags": ["script", "diagnostic", "creator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-creator-profile.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-creator-profile.ts",
+      "lineRange": [13, 38],
+      "summary": "Entry point that loads and prints a single creator profile from Supabase based on a CLI handle argument.",
+      "tags": ["entry-point", "creator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-distribution-coverage.ts",
+      "type": "file",
+      "name": "check-distribution-coverage.ts",
+      "filePath": "scripts/check-distribution-coverage.ts",
+      "summary": "Diagnostic that summarizes overall distribution-signal coverage across prediction_runs using the shared distribution-signals helper.",
+      "tags": ["script", "diagnostic", "distribution", "coverage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-distribution-coverage.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-distribution-coverage.ts",
+      "lineRange": [16, 53],
+      "summary": "Entry point that calls the distribution-signals-check helper and prints a coverage report.",
+      "tags": ["entry-point", "distribution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-dps-scores.js",
+      "type": "file",
+      "name": "check-dps-scores.js",
+      "filePath": "scripts/check-dps-scores.js",
+      "summary": "Diagnostic that prints DPS scores for recent runs and counts how many are missing.",
+      "tags": ["script", "diagnostic", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-dps-scores.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-dps-scores.js",
+      "lineRange": [19, 77],
+      "summary": "Entry point that queries recent prediction_runs and summarizes DPS score coverage.",
+      "tags": ["entry-point", "dps", "coverage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-edge-case.js",
+      "type": "file",
+      "name": "check-edge-case.js",
+      "filePath": "scripts/check-edge-case.js",
+      "summary": "Tiny ad-hoc script that probes a specific edge case in scoring/feature logic for debugging.",
+      "tags": ["script", "diagnostic", "edge-case"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-edge-case.js:checkEdgeCase",
+      "type": "function",
+      "name": "checkEdgeCase",
+      "filePath": "scripts/check-edge-case.js",
+      "lineRange": [10, 32],
+      "summary": "Runs a single edge-case probe and prints the resulting computation for manual inspection.",
+      "tags": ["diagnostic", "edge-case"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-exact-score.js",
+      "type": "file",
+      "name": "check-exact-score.js",
+      "filePath": "scripts/check-exact-score.js",
+      "summary": "Ad-hoc script that recomputes the score for a specific input to verify formula correctness.",
+      "tags": ["script", "diagnostic", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-exact-score.js:checkExactScore",
+      "type": "function",
+      "name": "checkExactScore",
+      "filePath": "scripts/check-exact-score.js",
+      "lineRange": [10, 32],
+      "summary": "Runs the scoring computation on a hard-coded input and prints the result for verification.",
+      "tags": ["diagnostic", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-extraction-ready.js",
+      "type": "file",
+      "name": "check-extraction-ready.js",
+      "filePath": "scripts/check-extraction-ready.js",
+      "summary": "Diagnostic that reports which videos / runs are ready for feature extraction based on prerequisite columns.",
+      "tags": ["script", "diagnostic", "extraction", "readiness"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-extraction-ready.js:checkReadiness",
+      "type": "function",
+      "name": "checkReadiness",
+      "filePath": "scripts/check-extraction-ready.js",
+      "lineRange": [14, 133],
+      "summary": "Scans runs and reports how many meet each prerequisite for feature extraction.",
+      "tags": ["readiness", "extraction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/check-feat-002-003-status.js",
+      "type": "file",
+      "name": "check-feat-002-003-status.js",
+      "filePath": "scripts/check-feat-002-003-status.js",
+      "summary": "Status script for tracking the implementation/data state of features FEAT-002 and FEAT-003 across the prediction database.",
+      "tags": ["script", "diagnostic", "features", "status"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/check-feat-002-003-status.js:checkFEAT002",
+      "type": "function",
+      "name": "checkFEAT002",
+      "filePath": "scripts/check-feat-002-003-status.js",
+      "lineRange": [9, 95],
+      "summary": "Reports population stats and recent activity for the FEAT-002 feature in prediction_runs.",
+      "tags": ["feature-tracking", "feat-002"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-feat-002-003-status.js:checkFEAT003",
+      "type": "function",
+      "name": "checkFEAT003",
+      "filePath": "scripts/check-feat-002-003-status.js",
+      "lineRange": [97, 189],
+      "summary": "Reports population stats and recent activity for the FEAT-003 feature in prediction_runs.",
+      "tags": ["feature-tracking", "feat-003"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/check-feat-002-003-status.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/check-feat-002-003-status.js",
+      "lineRange": [191, 202],
+      "summary": "Entry point that runs both FEAT-002 and FEAT-003 status checks in sequence.",
+      "tags": ["entry-point", "feature-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-feat060-table.js",
+      "type": "file",
+      "name": "check-feat060-table.js",
+      "filePath": "scripts/check-feat060-table.js",
+      "summary": "Quick diagnostic that inspects the FEAT-060 Supabase table for row counts and recent rows.",
+      "tags": ["script", "diagnostic", "feat-060", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-feat060-table.js:checkTable",
+      "type": "function",
+      "name": "checkTable",
+      "filePath": "scripts/check-feat060-table.js",
+      "lineRange": [16, 47],
+      "summary": "Queries the FEAT-060 table and prints summary metrics about its contents.",
+      "tags": ["diagnostic", "feat-060"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-gemini-in-predictions.ts",
+      "type": "file",
+      "name": "check-gemini-in-predictions.ts",
+      "filePath": "scripts/check-gemini-in-predictions.ts",
+      "summary": "Tiny diagnostic that scans recent prediction runs to confirm Gemini-derived signals are present in stored features.",
+      "tags": ["script", "diagnostic", "gemini"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-gemini-in-predictions.ts:check",
+      "type": "function",
+      "name": "check",
+      "filePath": "scripts/check-gemini-in-predictions.ts",
+      "lineRange": [8, 20],
+      "summary": "Loads recent runs and prints which ones contain Gemini Vision component output.",
+      "tags": ["diagnostic", "gemini"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/check-knowledge.js",
+      "type": "file",
+      "name": "check-knowledge.js",
+      "filePath": "scripts/check-knowledge.js",
+      "summary": "Quick diagnostic that prints how many knowledge-extraction rows exist and surfaces a sample.",
+      "tags": ["script", "diagnostic", "knowledge-extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-knowledge.js:checkData",
+      "type": "function",
+      "name": "checkData",
+      "filePath": "scripts/check-knowledge.js",
+      "lineRange": [9, 30],
+      "summary": "Queries knowledge tables in Supabase and reports counts plus a sample row.",
+      "tags": ["diagnostic", "knowledge-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/check-last-prediction.ts",
+      "type": "file",
+      "name": "check-last-prediction.ts",
+      "filePath": "scripts/check-last-prediction.ts",
+      "summary": "Tiny diagnostic that fetches and prints the most recent prediction_runs row for ad-hoc inspection.",
+      "tags": ["script", "diagnostic", "prediction-runs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/check-last-prediction.ts:checkLastPrediction",
+      "type": "function",
+      "name": "checkLastPrediction",
+      "filePath": "scripts/check-last-prediction.ts",
+      "lineRange": [8, 28],
+      "summary": "Selects the latest prediction_runs row by created_at and prints its key fields.",
+      "tags": ["diagnostic", "prediction-runs"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/backfill-dps-scores.js",
+      "target": "function:scripts/backfill-dps-scores.js:backfillDPSScores",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-ffmpeg-segment-features.ts",
+      "target": "function:scripts/backfill-ffmpeg-segment-features.ts:parseArgs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-ffmpeg-segment-features.ts",
+      "target": "function:scripts/backfill-ffmpeg-segment-features.ts:buildVideoFileMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-ffmpeg-segment-features.ts",
+      "target": "function:scripts/backfill-ffmpeg-segment-features.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-ffmpeg-segment-features.ts",
+      "target": "file:src/lib/prediction/ffmpeg-segment-features.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-follower-counts.js",
+      "target": "function:scripts/backfill-follower-counts.js:backfillFollowerCounts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-new-features.ts",
+      "target": "function:scripts/backfill-new-features.ts:computeWave1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-new-features.ts",
+      "target": "function:scripts/backfill-new-features.ts:computeWave2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-new-features.ts",
+      "target": "function:scripts/backfill-new-features.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-new-features.ts",
+      "target": "file:src/lib/services/ffmpeg-service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-new-features.ts",
+      "target": "file:src/lib/services/tiktok-downloader.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-prediction-features.ts",
+      "target": "function:scripts/backfill-prediction-features.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-prediction-features.ts",
+      "target": "file:scripts/load-env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-prediction-features.ts",
+      "target": "file:src/lib/prediction/extract-prediction-features.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-prediction-features.ts",
+      "target": "file:src/lib/training/feature-extractor.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/backfill-training-ready.ts",
+      "target": "function:scripts/backfill-training-ready.ts:diagnoseRun",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-training-ready.ts",
+      "target": "function:scripts/backfill-training-ready.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-vision-hook-features.ts",
+      "target": "function:scripts/backfill-vision-hook-features.ts:waitForRateLimit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-vision-hook-features.ts",
+      "target": "function:scripts/backfill-vision-hook-features.ts:parseArgs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-vision-hook-features.ts",
+      "target": "function:scripts/backfill-vision-hook-features.ts:buildVideoFileMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-vision-hook-features.ts",
+      "target": "function:scripts/backfill-vision-hook-features.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/backfill-vision-hook-features.ts",
+      "target": "file:src/lib/prediction/vision-hook-features.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/batch-calculate-dps.js",
+      "target": "function:scripts/batch-calculate-dps.js:fetchVideosForDPS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-calculate-dps.js",
+      "target": "function:scripts/batch-calculate-dps.js:batchCalculateDPS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-calculate-dps.js",
+      "target": "function:scripts/batch-calculate-dps.js:verifyDPSInDatabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-calculate-dps.js",
+      "target": "function:scripts/batch-calculate-dps.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-extract-knowledge.js",
+      "target": "function:scripts/batch-extract-knowledge.js:fetchVideosToProcess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-extract-knowledge.js",
+      "target": "function:scripts/batch-extract-knowledge.js:extractForVideo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-extract-knowledge.js",
+      "target": "function:scripts/batch-extract-knowledge.js:processBatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/batch-extract-knowledge.js",
+      "target": "function:scripts/batch-extract-knowledge.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/build-baseline-from-existing.ts",
+      "target": "function:scripts/build-baseline-from-existing.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/build-baseline-from-existing.ts",
+      "target": "file:src/lib/components/creator-baseline.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/build-baseline-from-scraped.ts",
+      "target": "function:scripts/build-baseline-from-scraped.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/build-baseline-from-scraped.ts",
+      "target": "file:src/lib/components/creator-baseline.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/check-constraint.mjs",
+      "target": "function:scripts/check-constraint.mjs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-creator-distribution-coverage.ts",
+      "target": "function:scripts/check-creator-distribution-coverage.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-creator-profile.ts",
+      "target": "function:scripts/check-creator-profile.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-distribution-coverage.ts",
+      "target": "function:scripts/check-distribution-coverage.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-distribution-coverage.ts",
+      "target": "file:src/lib/features/distribution-signals-check.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/check-dps-scores.js",
+      "target": "function:scripts/check-dps-scores.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-edge-case.js",
+      "target": "function:scripts/check-edge-case.js:checkEdgeCase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-exact-score.js",
+      "target": "function:scripts/check-exact-score.js:checkExactScore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-extraction-ready.js",
+      "target": "function:scripts/check-extraction-ready.js:checkReadiness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-feat-002-003-status.js",
+      "target": "function:scripts/check-feat-002-003-status.js:checkFEAT002",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-feat-002-003-status.js",
+      "target": "function:scripts/check-feat-002-003-status.js:checkFEAT003",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-feat-002-003-status.js",
+      "target": "function:scripts/check-feat-002-003-status.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-feat060-table.js",
+      "target": "function:scripts/check-feat060-table.js:checkTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-gemini-in-predictions.ts",
+      "target": "function:scripts/check-gemini-in-predictions.ts:check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-knowledge.js",
+      "target": "function:scripts/check-knowledge.js:checkData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:scripts/check-last-prediction.ts",
+      "target": "function:scripts/check-last-prediction.ts:checkLastPrediction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

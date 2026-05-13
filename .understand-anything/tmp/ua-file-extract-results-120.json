@@ -1,0 +1,7088 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/components/templateMiniUI/signalBridge.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 113,
+      "nonEmptyLines": 99,
+      "functions": [
+        {
+          "name": "debounce",
+          "startLine": 35,
+          "endLine": 41,
+          "params": [
+            "func",
+            "delay"
+          ]
+        },
+        {
+          "name": "bindTemplateSignals",
+          "startLine": 43,
+          "endLine": 84,
+          "params": [
+            "templateId",
+            "onUpdate",
+            "onSuggestion",
+            "onValidationHint"
+          ]
+        },
+        {
+          "name": "publishSlotUpdate",
+          "startLine": 86,
+          "endLine": 93,
+          "params": [
+            "signal"
+          ]
+        },
+        {
+          "name": "publishSuggestionUpdate",
+          "startLine": 95,
+          "endLine": 102,
+          "params": [
+            "signal"
+          ]
+        },
+        {
+          "name": "publishValidationHint",
+          "startLine": 104,
+          "endLine": 111,
+          "params": [
+            "signal"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "bindTemplateSignals",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "publishSlotUpdate",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "publishSuggestionUpdate",
+          "line": 95,
+          "isDefault": false
+        },
+        {
+          "name": "publishValidationHint",
+          "line": 104,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "debounce",
+          "callee": "clearTimeout",
+          "lineNumber": 38
+        },
+        {
+          "caller": "debounce",
+          "callee": "setTimeout",
+          "lineNumber": 39
+        },
+        {
+          "caller": "debounce",
+          "callee": "func.apply",
+          "lineNumber": 39
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debounce",
+          "lineNumber": 50
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debounce",
+          "lineNumber": 51
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debounce",
+          "lineNumber": 52
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "supabaseClient\r\n    .channel(channelName)\r\n    .on(\"broadcast\", { event: \"slot_update\" }, ({ payload }) => {\r\n      const msg = payload as SlotUpdateSignal;\r\n      if (!msg || msg.templateId !== templateId) return;\r\n      debouncedUpdate(msg);\r\n    })\r\n    .on(\"broadcast\", { event: \"suggestion_update\" }, ({ payload }) => {\r\n      const msg = payload as SuggestionUpdateSignal;\r\n      if (!msg || msg.templateId !== templateId || !debouncedSuggestion) return;\r\n      debouncedSuggestion(msg);\r\n    })\r\n    .on(\"broadcast\", { event: \"validation_hint\" }, ({ payload }) => {\r\n      const msg = payload as ValidationHintSignal;\r\n      if (!msg || msg.templateId !== templateId || !debouncedValidationHint) return;\r\n      debouncedValidationHint(msg);\r\n    })\r\n    .subscribe",
+          "lineNumber": 56
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "supabaseClient\r\n    .channel(channelName)\r\n    .on(\"broadcast\", { event: \"slot_update\" }, ({ payload }) => {\r\n      const msg = payload as SlotUpdateSignal;\r\n      if (!msg || msg.templateId !== templateId) return;\r\n      debouncedUpdate(msg);\r\n    })\r\n    .on(\"broadcast\", { event: \"suggestion_update\" }, ({ payload }) => {\r\n      const msg = payload as SuggestionUpdateSignal;\r\n      if (!msg || msg.templateId !== templateId || !debouncedSuggestion) return;\r\n      debouncedSuggestion(msg);\r\n    })\r\n    .on",
+          "lineNumber": 56
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "supabaseClient\r\n    .channel(channelName)\r\n    .on(\"broadcast\", { event: \"slot_update\" }, ({ payload }) => {\r\n      const msg = payload as SlotUpdateSignal;\r\n      if (!msg || msg.templateId !== templateId) return;\r\n      debouncedUpdate(msg);\r\n    })\r\n    .on",
+          "lineNumber": 56
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "supabaseClient\r\n    .channel(channelName)\r\n    .on",
+          "lineNumber": 56
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "supabaseClient\r\n    .channel",
+          "lineNumber": 56
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debouncedUpdate",
+          "lineNumber": 61
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debouncedSuggestion",
+          "lineNumber": 66
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "debouncedValidationHint",
+          "lineNumber": 71
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "console.log",
+          "lineNumber": 75
+        },
+        {
+          "caller": "bindTemplateSignals",
+          "callee": "channel.unsubscribe",
+          "lineNumber": 81
+        },
+        {
+          "caller": "publishSlotUpdate",
+          "callee": "supabaseClient.channel(channelName).send",
+          "lineNumber": 88
+        },
+        {
+          "caller": "publishSlotUpdate",
+          "callee": "supabaseClient.channel",
+          "lineNumber": 88
+        },
+        {
+          "caller": "publishSuggestionUpdate",
+          "callee": "supabaseClient.channel(channelName).send",
+          "lineNumber": 97
+        },
+        {
+          "caller": "publishSuggestionUpdate",
+          "callee": "supabaseClient.channel",
+          "lineNumber": 97
+        },
+        {
+          "caller": "publishValidationHint",
+          "callee": "supabaseClient.channel(channelName).send",
+          "lineNumber": 106
+        },
+        {
+          "caller": "publishValidationHint",
+          "callee": "supabaseClient.channel",
+          "lineNumber": 106
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/store.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 142,
+      "nonEmptyLines": 129,
+      "functions": [
+        {
+          "name": "createTemplateStore",
+          "startLine": 49,
+          "endLine": 140,
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createTemplateStore",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createTemplateStore",
+          "callee": "createStore<State>()",
+          "lineNumber": 74
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "createStore",
+          "lineNumber": 74
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "get",
+          "lineNumber": 77
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "structuredClone",
+          "lineNumber": 80
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "Date.now",
+          "lineNumber": 81
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "set",
+          "lineNumber": 85
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "get",
+          "lineNumber": 93
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "structuredClone",
+          "lineNumber": 96
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "Date.now",
+          "lineNumber": 97
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "set",
+          "lineNumber": 99
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "get",
+          "lineNumber": 107
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "set",
+          "lineNumber": 110
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "prev.undoStack.slice",
+          "lineNumber": 112
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "structuredClone",
+          "lineNumber": 115
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "Date.now",
+          "lineNumber": 116
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "get",
+          "lineNumber": 122
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "set",
+          "lineNumber": 125
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "prev.redoStack.slice",
+          "lineNumber": 127
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "structuredClone",
+          "lineNumber": 130
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "Date.now",
+          "lineNumber": 131
+        },
+        {
+          "caller": "createTemplateStore",
+          "callee": "set",
+          "lineNumber": 136
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/telemetry.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "emitTelemetry",
+          "startLine": 15,
+          "endLine": 27,
+          "params": [
+            "evt"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "emitTelemetry",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "emitTelemetry",
+          "callee": "new Date().toISOString",
+          "lineNumber": 16
+        },
+        {
+          "caller": "emitTelemetry",
+          "callee": "fetch",
+          "lineNumber": 18
+        },
+        {
+          "caller": "emitTelemetry",
+          "callee": "JSON.stringify",
+          "lineNumber": 21
+        },
+        {
+          "caller": "emitTelemetry",
+          "callee": "console.warn",
+          "lineNumber": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/TemplateMiniUI.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 335,
+      "nonEmptyLines": 308,
+      "functions": [
+        {
+          "name": "TemplateMiniUI",
+          "startLine": 28,
+          "endLine": 332,
+          "params": [
+            "{ templateId, platform, userId }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateMiniUI",
+          "line": 28,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "isTemplateMiniUIEnabled",
+          "lineNumber": 30
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useMemo",
+          "lineNumber": 34
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "createTemplateStore",
+          "lineNumber": 34
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useState",
+          "lineNumber": 35
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useState",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useState",
+          "lineNumber": 37
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useState",
+          "lineNumber": 38
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "usePreviewKernel",
+          "lineNumber": 41
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "logTemplateEvent",
+          "lineNumber": 43
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "logTemplateEvent",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "logTemplateEvent",
+          "lineNumber": 66
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useEffect",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.subscribe",
+          "lineNumber": 78
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "setMode",
+          "lineNumber": 79
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "setPanel",
+          "lineNumber": 80
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "installMiniRouterShortcuts",
+          "lineNumber": 83
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "unsubRouter",
+          "lineNumber": 86
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "unsubShortcuts",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useEffect",
+          "lineNumber": 92
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "logTemplateEvent",
+          "lineNumber": 93
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useEffect",
+          "lineNumber": 98
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "bindTemplateSignals",
+          "lineNumber": 99
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "store.getState().setSlot",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "store.getState",
+          "lineNumber": 103
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "cancelInFlight",
+          "lineNumber": 104
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "render",
+          "lineNumber": 105
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "setSuggestions",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "prev.slice",
+          "lineNumber": 109
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "render",
+          "lineNumber": 111
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "setValidationHints",
+          "lineNumber": 115
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "prev.slice",
+          "lineNumber": 115
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "unsubscribe",
+          "lineNumber": 118
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "useMemo",
+          "lineNumber": 122
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "store.getState",
+          "lineNumber": 123
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "validateTemplate",
+          "lineNumber": 124
+        },
+        {
+          "caller": "handleSlotsUpdate",
+          "callee": "store.getState",
+          "lineNumber": 133
+        },
+        {
+          "caller": "handleSlotsUpdate",
+          "callee": "store.setState",
+          "lineNumber": 134
+        },
+        {
+          "caller": "handleSlotsUpdate",
+          "callee": "cancelInFlight",
+          "lineNumber": 140
+        },
+        {
+          "caller": "handleSlotsUpdate",
+          "callee": "render",
+          "lineNumber": 141
+        },
+        {
+          "caller": "handlePanelAction",
+          "callee": "logTemplateEvent",
+          "lineNumber": 146
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "store.getState",
+          "lineNumber": 156
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 167
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 175
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 183
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 191
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 199
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.set",
+          "lineNumber": 207
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.setMode",
+          "lineNumber": 215
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "s.slots.hashtags.join",
+          "lineNumber": 251
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "getPerformanceStats",
+          "lineNumber": 268
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "getPerformanceStats",
+          "lineNumber": 269
+        },
+        {
+          "caller": "TemplateMiniUI",
+          "callee": "miniRouter.goBack",
+          "lineNumber": 275
+        }
+      ],
+      "metrics": {
+        "importCount": 15,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/TemplateMiniUIProvider.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 172,
+      "nonEmptyLines": 154,
+      "functions": [
+        {
+          "name": "parseHash",
+          "startLine": 30,
+          "endLine": 38,
+          "params": [
+            "hash"
+          ]
+        },
+        {
+          "name": "TemplateMiniUIProvider",
+          "startLine": 40,
+          "endLine": 164,
+          "params": [
+            "{ children }"
+          ]
+        },
+        {
+          "name": "useTemplateMiniUI",
+          "startLine": 166,
+          "endLine": 170,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateMiniUIProvider",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "useTemplateMiniUI",
+          "line": 166,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseHash",
+          "callee": "(hash || \"\").replace(/^#/, \"\").trim().toLowerCase",
+          "lineNumber": 31
+        },
+        {
+          "caller": "parseHash",
+          "callee": "(hash || \"\").replace(/^#/, \"\").trim",
+          "lineNumber": 31
+        },
+        {
+          "caller": "parseHash",
+          "callee": "(hash || \"\").replace",
+          "lineNumber": 31
+        },
+        {
+          "caller": "parseHash",
+          "callee": "panels.has",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useState",
+          "lineNumber": 41
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useState",
+          "lineNumber": 42
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useRef",
+          "lineNumber": 43
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useRef",
+          "lineNumber": 44
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useState",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useRef",
+          "lineNumber": 46
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useState",
+          "lineNumber": 47
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useRef",
+          "lineNumber": 48
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useState",
+          "lineNumber": 49
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useEffect",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "fromHash",
+          "lineNumber": 53
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setMode",
+          "lineNumber": 54
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setPanel",
+          "lineNumber": 55
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setVariantId",
+          "lineNumber": 56
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useEffect",
+          "lineNumber": 60
+        },
+        {
+          "caller": "onHashChange",
+          "callee": "fromHash",
+          "lineNumber": 62
+        },
+        {
+          "caller": "onHashChange",
+          "callee": "setMode",
+          "lineNumber": 63
+        },
+        {
+          "caller": "onHashChange",
+          "callee": "setPanel",
+          "lineNumber": 64
+        },
+        {
+          "caller": "onHashChange",
+          "callee": "setVariantId",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "window.addEventListener",
+          "lineNumber": 67
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "window.removeEventListener",
+          "lineNumber": 68
+        },
+        {
+          "caller": "setHash",
+          "callee": "hash.startsWith",
+          "lineNumber": 72
+        },
+        {
+          "caller": "setUrlState",
+          "callee": "fromHash",
+          "lineNumber": 81
+        },
+        {
+          "caller": "setUrlState",
+          "callee": "toHash",
+          "lineNumber": 88
+        },
+        {
+          "caller": "getKernel",
+          "callee": "map.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "getKernel",
+          "callee": "map.set",
+          "lineNumber": 113
+        },
+        {
+          "caller": "getKernel",
+          "callee": "signalBridge.connect",
+          "lineNumber": 116
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "signalBridge.broadcast",
+          "lineNumber": 123
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "logTemplateEvent",
+          "lineNumber": 124
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "setPulse",
+          "lineNumber": 127
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "clearTimeout",
+          "lineNumber": 128
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "setTimeout",
+          "lineNumber": 129
+        },
+        {
+          "caller": "broadcastTemplateChanged",
+          "callee": "setPulse",
+          "lineNumber": 129
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "useMemo",
+          "lineNumber": 132
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setUrlState",
+          "lineNumber": 138
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setShortcutsOpen",
+          "lineNumber": 143
+        },
+        {
+          "caller": "TemplateMiniUIProvider",
+          "callee": "setShortcutsOpen",
+          "lineNumber": 144
+        },
+        {
+          "caller": "useTemplateMiniUI",
+          "callee": "useContext",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/tokenMeter.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "createTokenMeter",
+          "startLine": 23,
+          "endLine": 47,
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createTokenMeter",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createTokenMeter",
+          "callee": "createStore<State>()",
+          "lineNumber": 25
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "createStore",
+          "lineNumber": 25
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "get",
+          "lineNumber": 29
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "set",
+          "lineNumber": 33
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "set",
+          "lineNumber": 37
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "set",
+          "lineNumber": 40
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "set",
+          "lineNumber": 43
+        },
+        {
+          "caller": "createTokenMeter",
+          "callee": "set",
+          "lineNumber": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/validation.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 122,
+      "nonEmptyLines": 107,
+      "functions": [
+        {
+          "name": "validateTemplate",
+          "startLine": 23,
+          "endLine": 120,
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "validateTemplate",
+          "line": 23,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 35
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "slots.first3sCue.trim",
+          "lineNumber": 43
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 44
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 54
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 62
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 72
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "slots.thumbnailBrief.trim",
+          "lineNumber": 81
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 82
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "slots.hook.trim",
+          "lineNumber": 91
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 92
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 100
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "slots.hashtags.some",
+          "lineNumber": 108
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "/^#(viral|trending|like|follow|share)$/i.test",
+          "lineNumber": 109
+        },
+        {
+          "caller": "validateTemplate",
+          "callee": "issues.push",
+          "lineNumber": 112
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templateMiniUI/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 305,
+      "nonEmptyLines": 249,
+      "sections": [
+        {
+          "heading": "Template Mini-UI v1 — Live Signal-Binding + Preview",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "Features",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "Mount Point",
+          "level": 2,
+          "line": 17
+        },
+        {
+          "heading": "Feature Flag",
+          "level": 2,
+          "line": 27
+        },
+        {
+          "heading": "Architecture",
+          "level": 2,
+          "line": 31
+        },
+        {
+          "heading": "Signal Bridge (`signalBridge.ts`)",
+          "level": 3,
+          "line": 33
+        },
+        {
+          "heading": "Preview Kernel (`previewKernel.ts`)",
+          "level": 3,
+          "line": 39
+        },
+        {
+          "heading": "Store (`store.ts`)",
+          "level": 3,
+          "line": 45
+        },
+        {
+          "heading": "Keyboard Shortcuts",
+          "level": 2,
+          "line": 51
+        },
+        {
+          "heading": "Right-Rail Panels",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "Dashboard Panel",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "Scripts Panel",
+          "level": 3,
+          "line": 71
+        },
+        {
+          "heading": "Optimize Panel",
+          "level": 3,
+          "line": 76
+        },
+        {
+          "heading": "A/B Test Panel",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "Inception Panel",
+          "level": 3,
+          "line": 86
+        },
+        {
+          "heading": "Validate Panel",
+          "level": 3,
+          "line": 91
+        },
+        {
+          "heading": "Signal Types",
+          "level": 2,
+          "line": 96
+        },
+        {
+          "heading": "SlotUpdateSignal",
+          "level": 3,
+          "line": 98
+        },
+        {
+          "heading": "SuggestionUpdateSignal",
+          "level": 3,
+          "line": 109
+        },
+        {
+          "heading": "ValidationHintSignal",
+          "level": 3,
+          "line": 121
+        },
+        {
+          "heading": "Fixes Pipeline (`fixes.ts`)",
+          "level": 2,
+          "line": 133
+        },
+        {
+          "heading": "trimHashtagsToPlatformLimit()",
+          "level": 3,
+          "line": 135
+        },
+        {
+          "heading": "seedFirst3sCue()",
+          "level": 3,
+          "line": 141
+        },
+        {
+          "heading": "optimizeHashtags()",
+          "level": 3,
+          "line": 146
+        },
+        {
+          "heading": "Calibration Surfacing",
+          "level": 2,
+          "line": 151
+        },
+        {
+          "heading": "ECE Chip Display",
+          "level": 3,
+          "line": 153
+        },
+        {
+          "heading": "Prediction API Integration",
+          "level": 3,
+          "line": 158
+        },
+        {
+          "heading": "Performance Targets",
+          "level": 2,
+          "line": 180
+        },
+        {
+          "heading": "Preview Kernel",
+          "level": 3,
+          "line": 182
+        },
+        {
+          "heading": "Testing",
+          "level": 3,
+          "line": 188
+        },
+        {
+          "heading": "Deep Links",
+          "level": 2,
+          "line": 197
+        },
+        {
+          "heading": "Hash Navigation",
+          "level": 3,
+          "line": 199
+        },
+        {
+          "heading": "Full-Page Integration",
+          "level": 3,
+          "line": 209
+        },
+        {
+          "heading": "Telemetry Events",
+          "level": 2,
+          "line": 217
+        },
+        {
+          "heading": "Core Events",
+          "level": 3,
+          "line": 219
+        },
+        {
+          "heading": "Token Usage",
+          "level": 3,
+          "line": 227
+        },
+        {
+          "heading": "Accessibility Features",
+          "level": 2,
+          "line": 232
+        },
+        {
+          "heading": "Focus Management",
+          "level": 3,
+          "line": 234
+        },
+        {
+          "heading": "WCAG Compliance",
+          "level": 3,
+          "line": 239
+        },
+        {
+          "heading": "Error Handling",
+          "level": 2,
+          "line": 245
+        },
+        {
+          "heading": "Network Failures",
+          "level": 3,
+          "line": 247
+        },
+        {
+          "heading": "Performance Issues",
+          "level": 3,
+          "line": 252
+        },
+        {
+          "heading": "Development",
+          "level": 2,
+          "line": 257
+        },
+        {
+          "heading": "File Structure",
+          "level": 3,
+          "line": 259
+        },
+        {
+          "heading": "Integration Points",
+          "level": 3,
+          "line": 283
+        },
+        {
+          "heading": "Production Deployment",
+          "level": 2,
+          "line": 290
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 3,
+          "line": 292
+        },
+        {
+          "heading": "Performance Monitoring",
+          "level": 3,
+          "line": 297
+        },
+        {
+          "heading": "Scaling Considerations",
+          "level": 3,
+          "line": 302
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 50
+      }
+    },
+    {
+      "path": "src/components/templates/CustomCursor.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 87,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "CustomCursor",
+          "startLine": 6,
+          "endLine": 87,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CustomCursor",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "CustomCursor",
+          "callee": "useState",
+          "lineNumber": 7
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useState",
+          "lineNumber": 8
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useMotionValue",
+          "lineNumber": 10
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useMotionValue",
+          "lineNumber": 11
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useSpring",
+          "lineNumber": 14
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useSpring",
+          "lineNumber": 15
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "useEffect",
+          "lineNumber": 17
+        },
+        {
+          "caller": "moveCursor",
+          "callee": "cursorX.set",
+          "lineNumber": 19
+        },
+        {
+          "caller": "moveCursor",
+          "callee": "cursorY.set",
+          "lineNumber": 20
+        },
+        {
+          "caller": "moveCursor",
+          "callee": "setIsVisible",
+          "lineNumber": 21
+        },
+        {
+          "caller": "handleMouseEnter",
+          "callee": "setIsHovering",
+          "lineNumber": 24
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "setIsHovering",
+          "lineNumber": 25
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "window.addEventListener",
+          "lineNumber": 28
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "document.querySelectorAll",
+          "lineNumber": 31
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "interactiveElements.forEach",
+          "lineNumber": 32
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "el.addEventListener",
+          "lineNumber": 33
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "el.addEventListener",
+          "lineNumber": 34
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "window.removeEventListener",
+          "lineNumber": 38
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "interactiveElements.forEach",
+          "lineNumber": 39
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "el.removeEventListener",
+          "lineNumber": 40
+        },
+        {
+          "caller": "CustomCursor",
+          "callee": "el.removeEventListener",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/EditorHeader.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 634,
+      "nonEmptyLines": 601,
+      "functions": [
+        {
+          "name": "EditorHeader",
+          "startLine": 73,
+          "endLine": 634,
+          "params": [
+            "{\r\n  name,\r\n  saveStatus,\r\n  isPublished,\r\n  publishing,\r\n  campaignMode,\r\n  campaign,\r\n  isChanged,\r\n  showPublishModal,\r\n  setShowPublishModal,\r\n  showExportModal,\r\n  setShowExportModal,\r\n  setCampaignMode,\r\n  onNameChange,\r\n  onSave,\r\n  onPublish,\r\n  onExport,\r\n  // New props with defaults\r\n  previewMode = false,\r\n  togglePreviewMode = () => {},\r\n  isFullscreen = false,\r\n  toggleFullscreen = () => {},\r\n  canUndo = false,\r\n  canRedo = false,\r\n  onUndo = () => {},\r\n  onRedo = () => {},\r\n  generateAI = () => {},\r\n  isGeneratingAI = false,\r\n  previewDevice,\r\n  setPreviewDevice,\r\n  undoHistory,\r\n  showBackButton = true,\r\n  hasPendingChanges = false\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EditorHeader",
+          "line": 73,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 107
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 108
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 109
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 110
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useTemplateIntegration",
+          "lineNumber": 111
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useEffect",
+          "lineNumber": 114
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setTempName",
+          "lineNumber": 115
+        },
+        {
+          "caller": "handleSaveName",
+          "callee": "tempName.trim",
+          "lineNumber": 119
+        },
+        {
+          "caller": "handleSaveName",
+          "callee": "onNameChange",
+          "lineNumber": 120
+        },
+        {
+          "caller": "handleSaveName",
+          "callee": "setTempName",
+          "lineNumber": 122
+        },
+        {
+          "caller": "handleSaveName",
+          "callee": "setIsEditingName",
+          "lineNumber": 124
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useEffect",
+          "lineNumber": 128
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "['INPUT', 'TEXTAREA'].includes",
+          "lineNumber": 131
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 137
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "onSave",
+          "lineNumber": 139
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 145
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "onUndo",
+          "lineNumber": 147
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 154
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "onRedo",
+          "lineNumber": 156
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 162
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "togglePreviewMode",
+          "lineNumber": 163
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 168
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "toggleFullscreen",
+          "lineNumber": 169
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "document.addEventListener",
+          "lineNumber": 173
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "document.removeEventListener",
+          "lineNumber": 174
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "getSaveStatusDetails",
+          "lineNumber": 193
+        },
+        {
+          "caller": "handleBackNavigation",
+          "callee": "confirm",
+          "lineNumber": 208
+        },
+        {
+          "caller": "handleBackNavigation",
+          "callee": "navigateToTemplateLibrary",
+          "lineNumber": 209
+        },
+        {
+          "caller": "handleBackNavigation",
+          "callee": "navigateToTemplateLibrary",
+          "lineNumber": 212
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setTempName",
+          "lineNumber": 247
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "handleSaveName",
+          "lineNumber": 250
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setTempName",
+          "lineNumber": 252
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setIsEditingName",
+          "lineNumber": 253
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setTempName",
+          "lineNumber": 265
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setIsEditingName",
+          "lineNumber": 266
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 364
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 437
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "new Date().toLocaleTimeString",
+          "lineNumber": 484
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowExportModal",
+          "lineNumber": 495
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowPublishModal",
+          "lineNumber": 513
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 539
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 544
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setCampaignMode",
+          "lineNumber": 558
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowKeyboardShortcuts",
+          "lineNumber": 566
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowKeyboardShortcuts",
+          "lineNumber": 592
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "e.stopPropagation",
+          "lineNumber": 598
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowKeyboardShortcuts",
+          "lineNumber": 606
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "keyboardShortcuts.map",
+          "lineNumber": 613
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowKeyboardShortcuts",
+          "lineNumber": 625
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/EnhancedTemplateBrowser.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 748,
+      "nonEmptyLines": 683,
+      "functions": [
+        {
+          "name": "EnhancedTemplateBrowser",
+          "startLine": 51,
+          "endLine": 748,
+          "params": [
+            "{\r\n  initialTemplates = [],\r\n  onLoadMore,\r\n  onSearch,\r\n  onFilter,\r\n  onSelectTemplate,\r\n  className = '',\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EnhancedTemplateBrowser",
+          "line": 51,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 60
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 61
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 62
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 63
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 64
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 65
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 66
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 67
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 70
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 73
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 76
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 79
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useRef",
+          "lineNumber": 88
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useRouter",
+          "lineNumber": 97
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useComponentIntegration",
+          "lineNumber": 104
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useUsabilityTest",
+          "lineNumber": 107
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 110
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setActiveFiltersCount",
+          "lineNumber": 119
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFiltersChanged",
+          "lineNumber": 123
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTimeout",
+          "lineNumber": 125
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFiltersChanged",
+          "lineNumber": 125
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "clearTimeout",
+          "lineNumber": 126
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useInView",
+          "lineNumber": 131
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setLoadingTemplates",
+          "lineNumber": 138
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "Array.from",
+          "lineNumber": 138
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useRef",
+          "lineNumber": 142
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 144
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "query.trim",
+          "lineNumber": 145
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTemplates",
+          "lineNumber": 147
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setIsSearching",
+          "lineNumber": 148
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setIsSearching",
+          "lineNumber": 154
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "onSearch",
+          "lineNumber": 155
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTemplates",
+          "lineNumber": 156
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setHasMore",
+          "lineNumber": 157
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "console.error",
+          "lineNumber": 159
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setIsSearching",
+          "lineNumber": 161
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 166
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "clearTimeout",
+          "lineNumber": 168
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTimeout",
+          "lineNumber": 171
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "performSearch",
+          "lineNumber": 172
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "clearTimeout",
+          "lineNumber": 177
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 183
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "setIsLoading",
+          "lineNumber": 186
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "onLoadMore",
+          "lineNumber": 188
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "setHasMore",
+          "lineNumber": 190
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "setTemplates",
+          "lineNumber": 192
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "console.error",
+          "lineNumber": 195
+        },
+        {
+          "caller": "loadMoreItems",
+          "callee": "setIsLoading",
+          "lineNumber": 197
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "loadMoreItems",
+          "lineNumber": 202
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 206
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setIsFiltering",
+          "lineNumber": 208
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "onFilter",
+          "lineNumber": 210
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTemplates",
+          "lineNumber": 211
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setHasMore",
+          "lineNumber": 212
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "console.error",
+          "lineNumber": 214
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setIsFiltering",
+          "lineNumber": 216
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 222
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "handleFilterChange",
+          "lineNumber": 223
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setShowFilters",
+          "lineNumber": 226
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 231
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 232
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 236
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 237
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTimeout",
+          "lineNumber": 250
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 320
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "getComponentState",
+          "lineNumber": 322
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setSearchQuery",
+          "lineNumber": 324
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "getComponentState",
+          "lineNumber": 328
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 330
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "getComponentState",
+          "lineNumber": 334
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 341
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setComponentState",
+          "lineNumber": 343
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 347
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setComponentState",
+          "lineNumber": 348
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "useCallback",
+          "lineNumber": 352
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setComponentState",
+          "lineNumber": 354
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "trackInteraction",
+          "lineNumber": 357
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "onSelectTemplate",
+          "lineNumber": 366
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "navigateBetweenComponents",
+          "lineNumber": 369
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "setSearchQuery",
+          "lineNumber": 395
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "resetFilters",
+          "lineNumber": 396
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "router.push",
+          "lineNumber": 403
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "templates.map",
+          "lineNumber": 413
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "setHoveredCardId",
+          "lineNumber": 424
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "setHoveredCardId",
+          "lineNumber": 425
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "handleTemplateSelect",
+          "lineNumber": 427
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "handleTemplateSelect",
+          "lineNumber": 431
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "cn",
+          "lineNumber": 432
+        },
+        {
+          "caller": "renderTemplateCards",
+          "callee": "loadingTemplates.map",
+          "lineNumber": 440
+        },
+        {
+          "caller": "renderSearchInput",
+          "callee": "setSearchQuery",
+          "lineNumber": 474
+        },
+        {
+          "caller": "renderSearchInput",
+          "callee": "setSearchQuery",
+          "lineNumber": 482
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "renderSearchInput",
+          "lineNumber": 506
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setShowFilters",
+          "lineNumber": 520
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 539
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setTimeout",
+          "lineNumber": 540
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 595
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 625
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 635
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "Boolean",
+          "lineNumber": 635
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "setFilters",
+          "lineNumber": 647
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "Boolean",
+          "lineNumber": 647
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "removeFilter",
+          "lineNumber": 664
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "removeFilter",
+          "lineNumber": 674
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "removeFilter",
+          "lineNumber": 684
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "removeFilter",
+          "lineNumber": 694
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "removeFilter",
+          "lineNumber": 704
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "renderTemplateCards",
+          "lineNumber": 719
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "onLoadMore().then",
+          "lineNumber": 732
+        },
+        {
+          "caller": "EnhancedTemplateBrowser",
+          "callee": "onLoadMore",
+          "lineNumber": 732
+        }
+      ],
+      "metrics": {
+        "importCount": 13,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/EnhancedTemplateCard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 171,
+      "nonEmptyLines": 155,
+      "functions": [
+        {
+          "name": "EnhancedTemplateCard",
+          "startLine": 40,
+          "endLine": 169,
+          "params": [
+            "{\r\n  template,\r\n  sound,\r\n  expertInput = false,\r\n  onClick,\r\n  onPlaySound,\r\n  onUseTemplate,\r\n  className = '',\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EnhancedTemplateCard",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 50
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 51
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 52
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 53
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 54
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "useFeatureEnabled",
+          "lineNumber": 55
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000000).toFixed",
+          "lineNumber": 64
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000).toFixed",
+          "lineNumber": 66
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "num.toString",
+          "lineNumber": 68
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onClick",
+          "lineNumber": 75
+        },
+        {
+          "caller": "getPopularityClass",
+          "callee": "pop.toLowerCase",
+          "lineNumber": 81
+        },
+        {
+          "caller": "getCategoryStyle",
+          "callee": "cat.toLowerCase",
+          "lineNumber": 91
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "cn",
+          "lineNumber": 134
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "getCategoryStyle",
+          "lineNumber": 134
+        },
+        {
+          "caller": "EnhancedTemplateCard",
+          "callee": "formatNumber",
+          "lineNumber": 160
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/EnhancedTemplateEditor.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 635,
+      "nonEmptyLines": 570,
+      "functions": [
+        {
+          "name": "EnhancedTemplateEditor",
+          "startLine": 69,
+          "endLine": 635,
+          "params": [
+            "{\r\n  selectedTemplate,\r\n  selectedTemplateId,\r\n  selectedSection,\r\n  onUpdateTextOverlay,\r\n  onAddTextOverlay,\r\n  onDeleteTextOverlay,\r\n  onUpdateSection,\r\n  onAIEnhance,\r\n  onSave,\r\n  onExitEditor,\r\n  className = ''\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EnhancedTemplateEditor",
+          "line": 69,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 83
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 86
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 89
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 92
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 95
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useState",
+          "lineNumber": 98
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useRouter",
+          "lineNumber": 101
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useComponentIntegration",
+          "lineNumber": 108
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useUsabilityTest",
+          "lineNumber": 111
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useRef",
+          "lineNumber": 114
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "selectedTemplate?.sections.find",
+          "lineNumber": 118
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 122
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getComponentState",
+          "lineNumber": 124
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setActiveTab",
+          "lineNumber": 126
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getComponentState",
+          "lineNumber": 130
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setEditorMode",
+          "lineNumber": 132
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getComponentState",
+          "lineNumber": 136
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setSelectedOverlay",
+          "lineNumber": 138
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 143
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setComponentState",
+          "lineNumber": 144
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 147
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setComponentState",
+          "lineNumber": 148
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 151
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setComponentState",
+          "lineNumber": 153
+        },
+        {
+          "caller": "recordHistory",
+          "callee": "setHistory",
+          "lineNumber": 159
+        },
+        {
+          "caller": "recordHistory",
+          "callee": "newHistory.shift",
+          "lineNumber": 163
+        },
+        {
+          "caller": "recordHistory",
+          "callee": "setComponentState",
+          "lineNumber": 169
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "useCallback",
+          "lineNumber": 173
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "trackInteraction",
+          "lineNumber": 175
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "onExitEditor",
+          "lineNumber": 183
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "navigateBetweenComponents",
+          "lineNumber": 186
+        },
+        {
+          "caller": "toggleFullscreen",
+          "callee": "setIsFullscreen",
+          "lineNumber": 200
+        },
+        {
+          "caller": "handleOverlaySelect",
+          "callee": "setSelectedOverlay",
+          "lineNumber": 205
+        },
+        {
+          "caller": "handleOverlaySelect",
+          "callee": "setActiveTab",
+          "lineNumber": 206
+        },
+        {
+          "caller": "handleTextChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 214
+        },
+        {
+          "caller": "handleTextChange",
+          "callee": "recordHistory",
+          "lineNumber": 215
+        },
+        {
+          "caller": "handlePositionChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 222
+        },
+        {
+          "caller": "handlePositionChange",
+          "callee": "recordHistory",
+          "lineNumber": 223
+        },
+        {
+          "caller": "handleStyleChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 235
+        },
+        {
+          "caller": "handleAlignmentChange",
+          "callee": "selectedSectionObject.textOverlays.find",
+          "lineNumber": 243
+        },
+        {
+          "caller": "handleAlignmentChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 255
+        },
+        {
+          "caller": "handleAlignmentChange",
+          "callee": "selectedSectionObject.textOverlays.map",
+          "lineNumber": 257
+        },
+        {
+          "caller": "handleAlignmentChange",
+          "callee": "recordHistory",
+          "lineNumber": 262
+        },
+        {
+          "caller": "getSelectedOverlayData",
+          "callee": "selectedSectionObject.textOverlays.find",
+          "lineNumber": 269
+        },
+        {
+          "caller": "handleOverlayChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 280
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "onAddTextOverlay",
+          "lineNumber": 309
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "setEditorMode",
+          "lineNumber": 353
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "setEditorMode",
+          "lineNumber": 363
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "setPreviewMode",
+          "lineNumber": 364
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "setEditorMode",
+          "lineNumber": 374
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "setPreviewMode",
+          "lineNumber": 375
+        },
+        {
+          "caller": "renderEditorHeader",
+          "callee": "onSave",
+          "lineNumber": 400
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "renderEditorHeader",
+          "lineNumber": 413
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "selectedSectionObject.textOverlays.map",
+          "lineNumber": 435
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "onDeleteTextOverlay",
+          "lineNumber": 486
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setSelectedOverlay",
+          "lineNumber": 494
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "onAddTextOverlay",
+          "lineNumber": 511
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "setActiveTab",
+          "lineNumber": 530
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 540
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "handleTextChange",
+          "lineNumber": 541
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 552
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "handleAlignmentChange",
+          "lineNumber": 553
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 575
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "handleStyleChange",
+          "lineNumber": 579
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 588
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "handleStyleChange",
+          "lineNumber": 592
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 605
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "getSelectedOverlayData",
+          "lineNumber": 607
+        },
+        {
+          "caller": "EnhancedTemplateEditor",
+          "callee": "handleStyleChange",
+          "lineNumber": 611
+        }
+      ],
+      "metrics": {
+        "importCount": 10,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/FeatureGatedTemplateBrowser.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 488,
+      "nonEmptyLines": 441,
+      "functions": [
+        {
+          "name": "FeatureGatedTemplateBrowser",
+          "startLine": 40,
+          "endLine": 486,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "FeatureGatedTemplateBrowser",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useRouter",
+          "lineNumber": 41
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useFeatures",
+          "lineNumber": 42
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 45
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 46
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 47
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 48
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 49
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 50
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 53
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 54
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 57
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 58
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 59
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 60
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 61
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 62
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 65
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "setLoading",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 74
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "setTemplates",
+          "lineNumber": 75
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "allTemplates.forEach",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "Math.random",
+          "lineNumber": 81
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "setTemplatesWithExpertInput",
+          "lineNumber": 85
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "applyFiltersAndPagination",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "console.error",
+          "lineNumber": 90
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "setError",
+          "lineNumber": 91
+        },
+        {
+          "caller": "fetchTemplates",
+          "callee": "setLoading",
+          "lineNumber": 93
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "fetchTemplates",
+          "lineNumber": 97
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "searchQuery.toLowerCase",
+          "lineNumber": 106
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.filter",
+          "lineNumber": 107
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.title.toLowerCase().includes",
+          "lineNumber": 108
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.title.toLowerCase",
+          "lineNumber": 108
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.description?.toLowerCase().includes",
+          "lineNumber": 109
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.description?.toLowerCase",
+          "lineNumber": 109
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.category?.toLowerCase().includes",
+          "lineNumber": 110
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.category?.toLowerCase",
+          "lineNumber": 110
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.filter",
+          "lineNumber": 116
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "template.category?.toLowerCase",
+          "lineNumber": 117
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "categoryFilter.toLowerCase",
+          "lineNumber": 117
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.filter",
+          "lineNumber": 123
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.filter",
+          "lineNumber": 129
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.sort",
+          "lineNumber": 137
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.sort",
+          "lineNumber": 140
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "new Date(a.createdAt).getTime",
+          "lineNumber": 141
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "new Date(b.createdAt).getTime",
+          "lineNumber": 142
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.sort",
+          "lineNumber": 147
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "filtered.sort",
+          "lineNumber": 150
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "setFilteredTemplates",
+          "lineNumber": 155
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "setTotalPages",
+          "lineNumber": 158
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "Math.ceil",
+          "lineNumber": 158
+        },
+        {
+          "caller": "applyFiltersAndPagination",
+          "callee": "setCurrentPage",
+          "lineNumber": 161
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 165
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "applyFiltersAndPagination",
+          "lineNumber": 167
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 172
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "Math.min",
+          "lineNumber": 178
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "filteredTemplates.slice",
+          "lineNumber": 179
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "setLoadingSounds",
+          "lineNumber": 181
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "displayedTemplates\r\n          .map(template => template.soundId)\r\n          .filter",
+          "lineNumber": 185
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "displayedTemplates\r\n          .map",
+          "lineNumber": 185
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "setLoadingSounds",
+          "lineNumber": 190
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "Promise.all",
+          "lineNumber": 195
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "templateIds.map",
+          "lineNumber": 196
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "soundService.getSound",
+          "lineNumber": 196
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "sounds.forEach",
+          "lineNumber": 201
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "setTemplateSounds",
+          "lineNumber": 207
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "console.error",
+          "lineNumber": 209
+        },
+        {
+          "caller": "fetchSoundsForTemplates",
+          "callee": "setLoadingSounds",
+          "lineNumber": 211
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "fetchSoundsForTemplates",
+          "lineNumber": 215
+        },
+        {
+          "caller": "getCurrentPageTemplates",
+          "callee": "Math.min",
+          "lineNumber": 221
+        },
+        {
+          "caller": "getCurrentPageTemplates",
+          "callee": "filteredTemplates.slice",
+          "lineNumber": 222
+        },
+        {
+          "caller": "handleTemplateClick",
+          "callee": "router.push",
+          "lineNumber": 227
+        },
+        {
+          "caller": "handleUseTemplate",
+          "callee": "router.push",
+          "lineNumber": 232
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "console.log",
+          "lineNumber": 238
+        },
+        {
+          "caller": "getCategories",
+          "callee": "templates.forEach",
+          "lineNumber": 244
+        },
+        {
+          "caller": "getCategories",
+          "callee": "categories.add",
+          "lineNumber": 246
+        },
+        {
+          "caller": "getCategories",
+          "callee": "Array.from",
+          "lineNumber": 249
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setSearchQuery",
+          "lineNumber": 274
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setShowFilters",
+          "lineNumber": 281
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "getCategories().map",
+          "lineNumber": 309
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "getCategories",
+          "lineNumber": 309
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "category.toLowerCase",
+          "lineNumber": 310
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setDurationRange",
+          "lineNumber": 344
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Number",
+          "lineNumber": 344
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setDurationRange",
+          "lineNumber": 353
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Number",
+          "lineNumber": 353
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setShowExpertOnly",
+          "lineNumber": 365
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array(8).fill(0).map",
+          "lineNumber": 383
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array(8).fill",
+          "lineNumber": 383
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array",
+          "lineNumber": 383
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "window.location.reload",
+          "lineNumber": 395
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setSearchQuery",
+          "lineNumber": 406
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setCategoryFilter",
+          "lineNumber": 407
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setShowExpertOnly",
+          "lineNumber": 408
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setDurationRange",
+          "lineNumber": 409
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setSortOption",
+          "lineNumber": 410
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "getCurrentPageTemplates().map",
+          "lineNumber": 419
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "getCurrentPageTemplates",
+          "lineNumber": 419
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "handleTemplateClick",
+          "lineNumber": 425
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "handlePlaySound",
+          "lineNumber": 426
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "handleUseTemplate",
+          "lineNumber": 427
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setCurrentPage",
+          "lineNumber": 439
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Math.max",
+          "lineNumber": 439
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array.from({ length: totalPages }, (_, i) => i + 1)\r\n                      .filter(page => \r\n                        page === 1 || \r\n                        page === totalPages || \r\n                        (page >= currentPage - 1 && page <= currentPage + 1)\r\n                      )\r\n                      .map",
+          "lineNumber": 446
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array.from({ length: totalPages }, (_, i) => i + 1)\r\n                      .filter",
+          "lineNumber": 446
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Array.from",
+          "lineNumber": 446
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setCurrentPage",
+          "lineNumber": 460
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "setCurrentPage",
+          "lineNumber": 473
+        },
+        {
+          "caller": "FeatureGatedTemplateBrowser",
+          "callee": "Math.min",
+          "lineNumber": 473
+        }
+      ],
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/FloatingOrbs.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 105,
+      "functions": [
+        {
+          "name": "FloatingOrbs",
+          "startLine": 6,
+          "endLine": 111,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "FloatingOrbs",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FloatingOrbs",
+          "callee": "useState",
+          "lineNumber": 7
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "useEffect",
+          "lineNumber": 9
+        },
+        {
+          "caller": "handleScroll",
+          "callee": "setScrollY",
+          "lineNumber": 10
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "window.addEventListener",
+          "lineNumber": 11
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "window.removeEventListener",
+          "lineNumber": 12
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "orbs.map",
+          "lineNumber": 65
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Array.from({ length: 12 }).map",
+          "lineNumber": 89
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Array.from",
+          "lineNumber": 89
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Math.random",
+          "lineNumber": 94
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Math.random",
+          "lineNumber": 95
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Math.random",
+          "lineNumber": 102
+        },
+        {
+          "caller": "FloatingOrbs",
+          "callee": "Math.random",
+          "lineNumber": 104
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/GalleryPhase.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 954,
+      "nonEmptyLines": 880,
+      "functions": [
+        {
+          "name": "formatNumber",
+          "startLine": 28,
+          "endLine": 33,
+          "params": [
+            "num"
+          ]
+        },
+        {
+          "name": "calculateEngagementScore",
+          "startLine": 36,
+          "endLine": 50,
+          "params": [
+            "video"
+          ]
+        },
+        {
+          "name": "getNicheKey",
+          "startLine": 106,
+          "endLine": 130,
+          "params": [
+            "nicheName"
+          ]
+        },
+        {
+          "name": "PreviewComponent",
+          "startLine": 139,
+          "endLine": 241,
+          "params": [
+            "{ template, isHovered, resolvedThumbnail, onResolve }"
+          ]
+        },
+        {
+          "name": "GalleryPhase",
+          "startLine": 243,
+          "endLine": 954,
+          "params": [
+            "{ selectedNiche, onTemplateSelect, hoveredTemplate, onTemplateHover, isEmbedded = false }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GalleryPhase",
+          "line": 243,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000000).toFixed",
+          "lineNumber": 30
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000).toFixed",
+          "lineNumber": 31
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "num.toString",
+          "lineNumber": 32
+        },
+        {
+          "caller": "calculateEngagementScore",
+          "callee": "Math.min",
+          "lineNumber": 45
+        },
+        {
+          "caller": "calculateEngagementScore",
+          "callee": "Math.log10",
+          "lineNumber": 45
+        },
+        {
+          "caller": "calculateEngagementScore",
+          "callee": "Math.max",
+          "lineNumber": 45
+        },
+        {
+          "caller": "calculateEngagementScore",
+          "callee": "Math.min",
+          "lineNumber": 46
+        },
+        {
+          "caller": "calculateEngagementScore",
+          "callee": "Math.min",
+          "lineNumber": 49
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "useState",
+          "lineNumber": 140
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "useState",
+          "lineNumber": 141
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "useState",
+          "lineNumber": 142
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "useEffect",
+          "lineNumber": 144
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setIsLoading",
+          "lineNumber": 146
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setInterval",
+          "lineNumber": 147
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setCurrentFrame",
+          "lineNumber": 148
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setTimeout",
+          "lineNumber": 152
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setIsLoading",
+          "lineNumber": 152
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "clearInterval",
+          "lineNumber": 155
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "clearTimeout",
+          "lineNumber": 156
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setCurrentFrame",
+          "lineNumber": 159
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setIsLoading",
+          "lineNumber": 160
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "console.log",
+          "lineNumber": 184
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "setImageError",
+          "lineNumber": 185
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "console.log",
+          "lineNumber": 187
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "onResolve",
+          "lineNumber": 188
+        },
+        {
+          "caller": "PreviewComponent",
+          "callee": "console.log",
+          "lineNumber": 217
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useStarterSurfaceCheck",
+          "lineNumber": 245
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "usePathname",
+          "lineNumber": 246
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useRouter",
+          "lineNumber": 247
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useSearchParams",
+          "lineNumber": 248
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "isStarterPackEnabled",
+          "lineNumber": 249
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String(process.env.NEXT_PUBLIC_LIVE_STARTER_PACK_PATH || '').toLowerCase",
+          "lineNumber": 250
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String",
+          "lineNumber": 250
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 259
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useEffect",
+          "lineNumber": 260
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "isStudioViralWorkflow",
+          "lineNumber": 262
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setIsSurface",
+          "lineNumber": 263
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useWorkflowStoreNew",
+          "lineNumber": 268
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "getNicheKey",
+          "lineNumber": 272
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 273
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 274
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 275
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 276
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useRef",
+          "lineNumber": 277
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useState",
+          "lineNumber": 280
+        },
+        {
+          "caller": "resolveThumbnail",
+          "callee": "fetch",
+          "lineNumber": 288
+        },
+        {
+          "caller": "resolveThumbnail",
+          "callee": "response.json",
+          "lineNumber": 290
+        },
+        {
+          "caller": "resolveThumbnail",
+          "callee": "setResolvedThumbnails",
+          "lineNumber": 292
+        },
+        {
+          "caller": "resolveThumbnail",
+          "callee": "console.log",
+          "lineNumber": 300
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setIsLoadingTemplates",
+          "lineNumber": 306
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setLoadError",
+          "lineNumber": 307
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select('video_id, title, creator_username, views_count, likes_count, comments_count, shares_count, dps_score, thumbnail_url, tiktok_id, duration_seconds, caption, url')\n        .gte('views_count', 10000) // Only videos with 10k+ views\n        .order('views_count', { ascending: false })\n        .limit",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select('video_id, title, creator_username, views_count, likes_count, comments_count, shares_count, dps_score, thumbnail_url, tiktok_id, duration_seconds, caption, url')\n        .gte('views_count', 10000) // Only videos with 10k+ views\n        .order",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select('video_id, title, creator_username, views_count, likes_count, comments_count, shares_count, dps_score, thumbnail_url, tiktok_id, duration_seconds, caption, url')\n        .gte",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "supabase\n        .from",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "keywords.map(k => `title.ilike.%${k}%`).join",
+          "lineNumber": 334
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "keywords.map",
+          "lineNumber": 334
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "query.or",
+          "lineNumber": 335
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "console.error",
+          "lineNumber": 342
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setLoadError",
+          "lineNumber": 343
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setCurrentTemplates",
+          "lineNumber": 344
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "console.log",
+          "lineNumber": 349
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setCurrentTemplates",
+          "lineNumber": 350
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "data.map",
+          "lineNumber": 358
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "parseFloat",
+          "lineNumber": 359
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "calculateEngagementScore",
+          "lineNumber": 359
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "video.thumbnail_url.includes",
+          "lineNumber": 364
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "video.thumbnail_url.includes",
+          "lineNumber": 365
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "needThumbnailResolution.push",
+          "lineNumber": 368
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "formatNumber",
+          "lineNumber": 377
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "formatNumber",
+          "lineNumber": 378
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "formatNumber",
+          "lineNumber": 379
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "Math.round",
+          "lineNumber": 380
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "vps.toFixed",
+          "lineNumber": 382
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "getGradientForCategory",
+          "lineNumber": 383
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "getDefaultThumbnail",
+          "lineNumber": 384
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "console.log",
+          "lineNumber": 393
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "console.log",
+          "lineNumber": 394
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setCurrentTemplates",
+          "lineNumber": 396
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "needThumbnailResolution.slice",
+          "lineNumber": 401
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "resolveThumbnail",
+          "lineNumber": 402
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setTimeout",
+          "lineNumber": 406
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "needThumbnailResolution.slice",
+          "lineNumber": 407
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setTimeout",
+          "lineNumber": 408
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "resolveThumbnail",
+          "lineNumber": 408
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "console.error",
+          "lineNumber": 413
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setLoadError",
+          "lineNumber": 414
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setCurrentTemplates",
+          "lineNumber": 415
+        },
+        {
+          "caller": "fetchRealTemplates",
+          "callee": "setIsLoadingTemplates",
+          "lineNumber": 417
+        },
+        {
+          "caller": "getDefaultThumbnail",
+          "callee": "params.set",
+          "lineNumber": 439
+        },
+        {
+          "caller": "getDefaultThumbnail",
+          "callee": "params.set",
+          "lineNumber": 440
+        },
+        {
+          "caller": "getDefaultThumbnail",
+          "callee": "params.toString",
+          "lineNumber": 441
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useEffect",
+          "lineNumber": 445
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "fetchRealTemplates",
+          "lineNumber": 446
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useMemo",
+          "lineNumber": 450
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "selectStarterTemplates",
+          "lineNumber": 450
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "currentTemplates.map",
+          "lineNumber": 450
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "Number",
+          "lineNumber": 454
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String(t.views).replace",
+          "lineNumber": 454
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String",
+          "lineNumber": 454
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "Number",
+          "lineNumber": 455
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String(t.likes).replace",
+          "lineNumber": 455
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String",
+          "lineNumber": 455
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useEffect",
+          "lineNumber": 459
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "(params?.get('starter') || '').toLowerCase",
+          "lineNumber": 461
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "params?.get",
+          "lineNumber": 461
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "Array.isArray",
+          "lineNumber": 462
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterEnabled",
+          "lineNumber": 464
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterTemplates",
+          "lineNumber": 465
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "starterIds.map",
+          "lineNumber": 465
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().enableStarter",
+          "lineNumber": 466
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 466
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().setStarterTemplates",
+          "lineNumber": 467
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 467
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "useCallback",
+          "lineNumber": 473
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterEnabled",
+          "lineNumber": 475
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().enableStarter",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterTemplates",
+          "lineNumber": 478
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "starterIds.map",
+          "lineNumber": 478
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().setStarterTemplates",
+          "lineNumber": 479
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 479
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterTemplates",
+          "lineNumber": 481
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().setStarterTemplates",
+          "lineNumber": 482
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 482
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "applyStarterParam",
+          "lineNumber": 484
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "params.toString",
+          "lineNumber": 484
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "router.push",
+          "lineNumber": 485
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "console.debug",
+          "lineNumber": 488
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "console.debug",
+          "lineNumber": 494
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "console.debug",
+          "lineNumber": 496
+        },
+        {
+          "caller": "getTemplateCount",
+          "callee": "NICHE_CATEGORIES.find",
+          "lineNumber": 502
+        },
+        {
+          "caller": "scrollLeft",
+          "callee": "scrollRef.current.scrollBy",
+          "lineNumber": 508
+        },
+        {
+          "caller": "scrollRight",
+          "callee": "scrollRef.current.scrollBy",
+          "lineNumber": 514
+        },
+        {
+          "caller": "handleTemplateSelect",
+          "callee": "onTemplateSelect",
+          "lineNumber": 519
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "getTemplateCount",
+          "lineNumber": 548
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "onToggleStarter",
+          "lineNumber": 559
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "Boolean",
+          "lineNumber": 559
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "NICHE_CATEGORIES.map",
+          "lineNumber": 613
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setActiveCategory",
+          "lineNumber": 616
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "getTemplateCount",
+          "lineNumber": 645
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "NICHE_CATEGORIES.map",
+          "lineNumber": 725
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setActiveCategory",
+          "lineNumber": 731
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "router.push",
+          "lineNumber": 748
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "fetchRealTemplates",
+          "lineNumber": 766
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "currentTemplates.map",
+          "lineNumber": 780
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "Array.isArray",
+          "lineNumber": 782
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "(starterTemplates as any[]).map",
+          "lineNumber": 783
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "String",
+          "lineNumber": 783
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "storeStarterIds.includes",
+          "lineNumber": 785
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "onTemplateHover",
+          "lineNumber": 794
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "onTemplateHover",
+          "lineNumber": 795
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterEnabled",
+          "lineNumber": 804
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterTemplates",
+          "lineNumber": 805
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "starterIds.map",
+          "lineNumber": 805
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setTemplateId",
+          "lineNumber": 806
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().enableStarter",
+          "lineNumber": 808
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 808
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().setStarterTemplates",
+          "lineNumber": 809
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 809
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().selectTemplate",
+          "lineNumber": 810
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 810
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "console.debug",
+          "lineNumber": 813
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "router.push",
+          "lineNumber": 815
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "resolveThumbnail",
+          "lineNumber": 827
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "[0, 1, 2].map",
+          "lineNumber": 832
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterEnabled",
+          "lineNumber": 905
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setStarterTemplates",
+          "lineNumber": 906
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "starterIds.map",
+          "lineNumber": 906
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setTemplateId",
+          "lineNumber": 907
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().enableStarter",
+          "lineNumber": 908
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 908
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().setStarterTemplates",
+          "lineNumber": 909
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 909
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState().selectTemplate",
+          "lineNumber": 910
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "oldStore.getState",
+          "lineNumber": 910
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "router.push",
+          "lineNumber": 911
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "handleTemplateSelect",
+          "lineNumber": 913
+        },
+        {
+          "caller": "GalleryPhase",
+          "callee": "setActiveCategory",
+          "lineNumber": 943
+        }
+      ],
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/LoadingIndicator.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 34,
+      "functions": [
+        {
+          "name": "LoadingIndicator",
+          "startLine": 6,
+          "endLine": 36,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LoadingIndicator",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "LoadingIndicator",
+          "callee": "[0, 1, 2].map",
+          "lineNumber": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/SimilarTemplatesSection.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 63,
+      "nonEmptyLines": 56,
+      "functions": [
+        {
+          "name": "SimilarTemplatesSection",
+          "startLine": 26,
+          "endLine": 61,
+          "params": [
+            "{\r\n  templates,\r\n  title = \"Similar Templates\",\r\n  description = \"These templates share similar structure and content patterns\"\r\n}"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SimilarTemplatesSection",
+          "callee": "templates.map",
+          "lineNumber": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/SoundRemixModal.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 62,
+      "nonEmptyLines": 54,
+      "functions": [
+        {
+          "name": "SoundRemixModal",
+          "startLine": 22,
+          "endLine": 62,
+          "params": [
+            "{\r\n  isOpen,\r\n  onClose,\r\n  template,\r\n  onUpdateTemplate,\r\n  setShowSoundRemixModal\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SoundRemixModal",
+          "line": 22,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "handleSoundSelected",
+          "callee": "onUpdateTemplate",
+          "lineNumber": 44
+        },
+        {
+          "caller": "handleSoundSelected",
+          "callee": "onClose",
+          "lineNumber": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateBrowser.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 849,
+      "nonEmptyLines": 796,
+      "functions": [
+        {
+          "name": "EnhancedSearchInput",
+          "startLine": 35,
+          "endLine": 93,
+          "params": [
+            "{ \r\n  value, \r\n  onChange, \r\n  onClear, \r\n  onFocus, \r\n  onBlur, \r\n  ref, \r\n  isSearchFocused \r\n}"
+          ]
+        },
+        {
+          "name": "FilterButton",
+          "startLine": 96,
+          "endLine": 137,
+          "params": [
+            "{ \r\n  onClick, \r\n  isOpen, \r\n  count \r\n}"
+          ]
+        },
+        {
+          "name": "ViewModeButtons",
+          "startLine": 140,
+          "endLine": 175,
+          "params": [
+            "{ \r\n  viewMode, \r\n  setViewMode \r\n}"
+          ]
+        },
+        {
+          "name": "EmptyState",
+          "startLine": 178,
+          "endLine": 204,
+          "params": [
+            "{ query, clearFilters }"
+          ]
+        },
+        {
+          "name": "TemplateBrowser",
+          "startLine": 206,
+          "endLine": 849,
+          "params": [
+            "{\r\n  templates,\r\n  selectedTemplateId,\r\n  onSelectTemplate,\r\n  isLoading = false,\r\n  onLoadMore,\r\n  onSearch,\r\n  hasMore = false,\r\n  className = \"\"\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateBrowser",
+          "line": 206,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EnhancedSearchInput",
+          "callee": "cn",
+          "lineNumber": 54
+        },
+        {
+          "caller": "EnhancedSearchInput",
+          "callee": "cn",
+          "lineNumber": 66
+        },
+        {
+          "caller": "FilterButton",
+          "callee": "cn",
+          "lineNumber": 108
+        },
+        {
+          "caller": "FilterButton",
+          "callee": "cn",
+          "lineNumber": 131
+        },
+        {
+          "caller": "ViewModeButtons",
+          "callee": "cn",
+          "lineNumber": 150
+        },
+        {
+          "caller": "ViewModeButtons",
+          "callee": "setViewMode",
+          "lineNumber": 156
+        },
+        {
+          "caller": "ViewModeButtons",
+          "callee": "cn",
+          "lineNumber": 162
+        },
+        {
+          "caller": "ViewModeButtons",
+          "callee": "setViewMode",
+          "lineNumber": 168
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 217
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 218
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 227
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 228
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 229
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 230
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 231
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useState",
+          "lineNumber": 232
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useReducedMotion",
+          "lineNumber": 235
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useRef",
+          "lineNumber": 237
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useRef",
+          "lineNumber": 238
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useRef",
+          "lineNumber": 239
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Array.from(new Set(templates.map(t => t.industry))).filter",
+          "lineNumber": 242
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Array.from",
+          "lineNumber": 242
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "templates.map",
+          "lineNumber": 242
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Array.from(new Set(templates.map(t => t.category))).filter",
+          "lineNumber": 243
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Array.from",
+          "lineNumber": 243
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "templates.map",
+          "lineNumber": 243
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useMemo",
+          "lineNumber": 247
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "templates.filter",
+          "lineNumber": 247
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "template.name.toLowerCase().includes",
+          "lineNumber": 249
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "template.name.toLowerCase",
+          "lineNumber": 249
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "searchQuery.toLowerCase",
+          "lineNumber": 249
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "template.description?.toLowerCase().includes",
+          "lineNumber": 250
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "template.description?.toLowerCase",
+          "lineNumber": 250
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "searchQuery.toLowerCase",
+          "lineNumber": 250
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.industries.includes",
+          "lineNumber": 255
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.categories.includes",
+          "lineNumber": 260
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "template.sections.reduce",
+          "lineNumber": 266
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.durations.some",
+          "lineNumber": 269
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useMemo",
+          "lineNumber": 284
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "[...filteredTemplates].sort",
+          "lineNumber": 284
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "a.name.localeCompare",
+          "lineNumber": 286
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "new Date(b.createdAt || 0).getTime",
+          "lineNumber": 292
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "new Date(a.createdAt || 0).getTime",
+          "lineNumber": 292
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 296
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "clearTimeout",
+          "lineNumber": 298
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setTimeout",
+          "lineNumber": 302
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "onSearch",
+          "lineNumber": 304
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setHasSearched",
+          "lineNumber": 306
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "clearTimeout",
+          "lineNumber": 312
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 318
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "onLoadMore",
+          "lineNumber": 324
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "observer.observe",
+          "lineNumber": 330
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "observer.disconnect",
+          "lineNumber": 333
+        },
+        {
+          "caller": "handleIndustryChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 340
+        },
+        {
+          "caller": "handleIndustryChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 345
+        },
+        {
+          "caller": "handleIndustryChange",
+          "callee": "prev.industries.filter",
+          "lineNumber": 347
+        },
+        {
+          "caller": "handleCategoryChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 354
+        },
+        {
+          "caller": "handleCategoryChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 359
+        },
+        {
+          "caller": "handleCategoryChange",
+          "callee": "prev.categories.filter",
+          "lineNumber": 361
+        },
+        {
+          "caller": "handleDurationChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 368
+        },
+        {
+          "caller": "handleDurationChange",
+          "callee": "setActiveFilters",
+          "lineNumber": 373
+        },
+        {
+          "caller": "handleDurationChange",
+          "callee": "prev.durations.filter",
+          "lineNumber": 375
+        },
+        {
+          "caller": "clearFilters",
+          "callee": "setActiveFilters",
+          "lineNumber": 382
+        },
+        {
+          "caller": "clearFilters",
+          "callee": "setSearchQuery",
+          "lineNumber": 389
+        },
+        {
+          "caller": "clearFilters",
+          "callee": "onSearch",
+          "lineNumber": 391
+        },
+        {
+          "caller": "clearFilters",
+          "callee": "setHasSearched",
+          "lineNumber": 395
+        },
+        {
+          "caller": "focusSearch",
+          "callee": "searchInputRef.current?.focus",
+          "lineNumber": 400
+        },
+        {
+          "caller": "focusSearch",
+          "callee": "setSearchFocused",
+          "lineNumber": 401
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "useEffect",
+          "lineNumber": 405
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "['INPUT', 'TEXTAREA'].includes",
+          "lineNumber": 407
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "e.preventDefault",
+          "lineNumber": 408
+        },
+        {
+          "caller": "handleKeyDown",
+          "callee": "focusSearch",
+          "lineNumber": 409
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "document.addEventListener",
+          "lineNumber": 413
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "document.removeEventListener",
+          "lineNumber": 414
+        },
+        {
+          "caller": "renderSkeletonCards",
+          "callee": "Array(count).fill(0).map",
+          "lineNumber": 424
+        },
+        {
+          "caller": "renderSkeletonCards",
+          "callee": "Array(count).fill",
+          "lineNumber": 424
+        },
+        {
+          "caller": "renderSkeletonCards",
+          "callee": "Array",
+          "lineNumber": 424
+        },
+        {
+          "caller": "handleClearSearch",
+          "callee": "setSearchQuery",
+          "lineNumber": 453
+        },
+        {
+          "caller": "handleClearSearch",
+          "callee": "onSearch",
+          "lineNumber": 455
+        },
+        {
+          "caller": "handleClearSearch",
+          "callee": "setHasSearched",
+          "lineNumber": 457
+        },
+        {
+          "caller": "handleClearSearch",
+          "callee": "navigator.vibrate",
+          "lineNumber": 460
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 465
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSearchQuery",
+          "lineNumber": 475
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSearchFocused",
+          "lineNumber": 477
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSearchFocused",
+          "lineNumber": 478
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setFiltersVisible",
+          "lineNumber": 487
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 509
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSortBy",
+          "lineNumber": 513
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 519
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSortBy",
+          "lineNumber": 523
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 529
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setSortBy",
+          "lineNumber": 533
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "setActiveFilterTab",
+          "lineNumber": 572
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "industries.map",
+          "lineNumber": 604
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.industries.includes",
+          "lineNumber": 608
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleIndustryChange",
+          "lineNumber": 609
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "durations.map",
+          "lineNumber": 627
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.durations.includes",
+          "lineNumber": 631
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleDurationChange",
+          "lineNumber": 632
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "categories.map",
+          "lineNumber": 650
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.categories.includes",
+          "lineNumber": 654
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleCategoryChange",
+          "lineNumber": 655
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.industries.map",
+          "lineNumber": 682
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleIndustryChange",
+          "lineNumber": 697
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.durations.map",
+          "lineNumber": 705
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleDurationChange",
+          "lineNumber": 720
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "activeFilters.categories.map",
+          "lineNumber": 728
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "handleCategoryChange",
+          "lineNumber": 743
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 760
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "sortedTemplates.map",
+          "lineNumber": 767
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Math.min",
+          "lineNumber": 774
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "onSelectTemplate",
+          "lineNumber": 781
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "cn",
+          "lineNumber": 794
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "[...Array(8)].map",
+          "lineNumber": 801
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Array",
+          "lineNumber": 801
+        },
+        {
+          "caller": "TemplateBrowser",
+          "callee": "Math.min",
+          "lineNumber": 809
+        }
+      ],
+      "metrics": {
+        "importCount": 13,
+        "exportCount": 1,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateCard.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 673,
+      "nonEmptyLines": 618,
+      "functions": [
+        {
+          "name": "generateSlug",
+          "startLine": 45,
+          "endLine": 47,
+          "params": [
+            "title"
+          ]
+        },
+        {
+          "name": "TemplateCard",
+          "startLine": 56,
+          "endLine": 664,
+          "params": [
+            "{ template, isSelected, onClick, viewMode }"
+          ]
+        },
+        {
+          "name": "formatNumber",
+          "startLine": 666,
+          "endLine": 673,
+          "params": [
+            "num"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "generateSlug",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "TemplateCard",
+          "line": 56,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "generateSlug",
+          "callee": "title.toLowerCase().replace(/\\s+/g, '-').replace",
+          "lineNumber": 46
+        },
+        {
+          "caller": "generateSlug",
+          "callee": "title.toLowerCase().replace",
+          "lineNumber": 46
+        },
+        {
+          "caller": "generateSlug",
+          "callee": "title.toLowerCase",
+          "lineNumber": 46
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useState",
+          "lineNumber": 58
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useState",
+          "lineNumber": 59
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useState",
+          "lineNumber": 60
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useMotionValue",
+          "lineNumber": 63
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useMotionValue",
+          "lineNumber": 64
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useSpring",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useSpring",
+          "lineNumber": 69
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useSpring",
+          "lineNumber": 70
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useSpring",
+          "lineNumber": 73
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useHapticFeedback",
+          "lineNumber": 76
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useAudio",
+          "lineNumber": 79
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "e.currentTarget.getBoundingClientRect",
+          "lineNumber": 83
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "rotateYSpring.set",
+          "lineNumber": 93
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "rotateXSpring.set",
+          "lineNumber": 94
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "mouseX.set",
+          "lineNumber": 97
+        },
+        {
+          "caller": "handleMouseMove",
+          "callee": "mouseY.set",
+          "lineNumber": 98
+        },
+        {
+          "caller": "handleMouseEnter",
+          "callee": "setIsHovered",
+          "lineNumber": 102
+        },
+        {
+          "caller": "handleMouseEnter",
+          "callee": "scaleSpring.set",
+          "lineNumber": 103
+        },
+        {
+          "caller": "handleMouseEnter",
+          "callee": "gradientOpacity.set",
+          "lineNumber": 104
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "setIsHovered",
+          "lineNumber": 108
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "scaleSpring.set",
+          "lineNumber": 109
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "rotateXSpring.set",
+          "lineNumber": 110
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "rotateYSpring.set",
+          "lineNumber": 111
+        },
+        {
+          "caller": "handleMouseLeave",
+          "callee": "gradientOpacity.set",
+          "lineNumber": 112
+        },
+        {
+          "caller": "handleClick",
+          "callee": "triggerHaptic",
+          "lineNumber": 116
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setHasClicked",
+          "lineNumber": 117
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setIsLoading",
+          "lineNumber": 120
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setTimeout",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setIsLoading",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handleClick",
+          "callee": "onClick",
+          "lineNumber": 124
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setTimeout",
+          "lineNumber": 127
+        },
+        {
+          "caller": "handleClick",
+          "callee": "setHasClicked",
+          "lineNumber": 127
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "e.stopPropagation",
+          "lineNumber": 132
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "triggerHaptic",
+          "lineNumber": 133
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "loadSound",
+          "lineNumber": 146
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "play",
+          "lineNumber": 147
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "template.sections.reduce",
+          "lineNumber": 161
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "parseInt",
+          "lineNumber": 164
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "template.duration.replace",
+          "lineNumber": 164
+        },
+        {
+          "caller": "formatDuration",
+          "callee": "Math.floor",
+          "lineNumber": 182
+        },
+        {
+          "caller": "formatViews",
+          "callee": "(views / 1000000).toFixed",
+          "lineNumber": 194
+        },
+        {
+          "caller": "formatViews",
+          "callee": "(views / 1000).toFixed",
+          "lineNumber": 196
+        },
+        {
+          "caller": "formatViews",
+          "callee": "views.toString",
+          "lineNumber": 198
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "cn",
+          "lineNumber": 208
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "useMotionTemplate",
+          "lineNumber": 243
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "Date.now",
+          "lineNumber": 274
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "e.stopPropagation",
+          "lineNumber": 346
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "triggerHaptic",
+          "lineNumber": 347
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "onClick",
+          "lineNumber": 348
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "formatDuration",
+          "lineNumber": 401
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "formatViews",
+          "lineNumber": 409
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "cn",
+          "lineNumber": 468
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "setIsHovered",
+          "lineNumber": 474
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "setIsHovered",
+          "lineNumber": 475
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "Date.now",
+          "lineNumber": 508
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "formatDuration",
+          "lineNumber": 596
+        },
+        {
+          "caller": "TemplateCard",
+          "callee": "formatViews",
+          "lineNumber": 609
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000000).toFixed",
+          "lineNumber": 668
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "(num / 1000).toFixed",
+          "lineNumber": 670
+        },
+        {
+          "caller": "formatNumber",
+          "callee": "num.toString",
+          "lineNumber": 672
+        }
+      ],
+      "metrics": {
+        "importCount": 8,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateEditor.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 1670,
+      "nonEmptyLines": 1533,
+      "functions": [
+        {
+          "name": "EditorHeader",
+          "startLine": 114,
+          "endLine": 409,
+          "params": [
+            "{\r\n  previewMode,\r\n  setPreviewMode,\r\n  previewDevice,\r\n  setPreviewDevice,\r\n  undoHistory,\r\n  onUndo,\r\n  onSave,\r\n  isSaving,\r\n  isGeneratingAI,\r\n  fullScreen,\r\n  setFullScreen,\r\n  onGenerateAI\r\n}"
+          ]
+        },
+        {
+          "name": "PreviewCanvas",
+          "startLine": 426,
+          "endLine": 739,
+          "params": [
+            "{ \r\n  selectedSection, \r\n  selectedOverlayId, \r\n  previewDevice, \r\n  previewMode,\r\n  handleOverlaySelect, \r\n  onAddTextOverlay, \r\n  onDeleteTextOverlay,\r\n  setShowPropertyEditor,\r\n  setSelectedOverlayId,\r\n  recordHistory\r\n}"
+          ]
+        },
+        {
+          "name": "AudioControls",
+          "startLine": 755,
+          "endLine": 1250,
+          "params": [
+            "{ \r\n  template, \r\n  isPremium = false,\r\n  onUpdateTemplate\r\n}"
+          ]
+        },
+        {
+          "name": "TemplateEditor",
+          "startLine": 1252,
+          "endLine": 1668,
+          "params": [
+            "{ \r\n  template, \r\n  selectedSectionId, \r\n  onUpdateSection, \r\n  onUpdateTextOverlay, \r\n  onAddTextOverlay, \r\n  onDeleteTextOverlay,\r\n  onSave, \r\n  onGenerateAI,\r\n  isSaving,\r\n  isGeneratingAI,\r\n  className = ''\r\n}"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 129
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useState",
+          "lineNumber": 130
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "useReducedMotion",
+          "lineNumber": 131
+        },
+        {
+          "caller": "handleSave",
+          "callee": "onSave",
+          "lineNumber": 135
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setShowSaveConfirmation",
+          "lineNumber": 136
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setTimeout",
+          "lineNumber": 139
+        },
+        {
+          "caller": "handleSave",
+          "callee": "setShowSaveConfirmation",
+          "lineNumber": 140
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "navigator.vibrate",
+          "lineNumber": 147
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "onUndo",
+          "lineNumber": 149
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 167
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 191
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setPreviewMode",
+          "lineNumber": 197
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 218
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setPreviewDevice",
+          "lineNumber": 224
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 231
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setPreviewDevice",
+          "lineNumber": 237
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setFullScreen",
+          "lineNumber": 253
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "setShowAdvanced",
+          "lineNumber": 271
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 277
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 328
+        },
+        {
+          "caller": "EditorHeader",
+          "callee": "cn",
+          "lineNumber": 355
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useState",
+          "lineNumber": 438
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useState",
+          "lineNumber": 439
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useState",
+          "lineNumber": 440
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useState",
+          "lineNumber": 441
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useReducedMotion",
+          "lineNumber": 442
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "useRef",
+          "lineNumber": 445
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "e.stopPropagation",
+          "lineNumber": 451
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "setIsDragging",
+          "lineNumber": 452
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "handleOverlaySelect",
+          "lineNumber": 453
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "setSelectedOverlayId",
+          "lineNumber": 454
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 455
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "navigator.vibrate",
+          "lineNumber": 459
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 462
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "e.dataTransfer.setData",
+          "lineNumber": 464
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "JSON.stringify",
+          "lineNumber": 464
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "e.dataTransfer.setDragImage",
+          "lineNumber": 470
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "e.preventDefault",
+          "lineNumber": 475
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "setIsDragging",
+          "lineNumber": 476
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "JSON.parse",
+          "lineNumber": 479
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "e.dataTransfer.getData",
+          "lineNumber": 479
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "canvasRef.current.getBoundingClientRect",
+          "lineNumber": 484
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "Math.max",
+          "lineNumber": 488
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "Math.min",
+          "lineNumber": 488
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "Math.max",
+          "lineNumber": 488
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "Math.min",
+          "lineNumber": 488
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 491
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "recordHistory",
+          "lineNumber": 493
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "console.error",
+          "lineNumber": 506
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "e.stopPropagation",
+          "lineNumber": 512
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "setOverlayBeingDeleted",
+          "lineNumber": 513
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "navigator.vibrate",
+          "lineNumber": 517
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "setTimeout",
+          "lineNumber": 521
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "onDeleteTextOverlay",
+          "lineNumber": 522
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "setOverlayBeingDeleted",
+          "lineNumber": 523
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "setSelectedOverlayId",
+          "lineNumber": 527
+        },
+        {
+          "caller": "handleDeleteClick",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 528
+        },
+        {
+          "caller": "handleAddOverlay",
+          "callee": "navigator.vibrate",
+          "lineNumber": 537
+        },
+        {
+          "caller": "handleAddOverlay",
+          "callee": "onAddTextOverlay",
+          "lineNumber": 540
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "cn",
+          "lineNumber": 545
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "e.preventDefault",
+          "lineNumber": 551
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "selectedSection.textOverlays?.map",
+          "lineNumber": 578
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "cn",
+          "lineNumber": 604
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "e.stopPropagation",
+          "lineNumber": 628
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "handleOverlaySelect",
+          "lineNumber": 629
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 630
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "setIsHoveringOverlay",
+          "lineNumber": 633
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "setIsHoveringOverlay",
+          "lineNumber": 634
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "handleDragStart",
+          "lineNumber": 646
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "setIsDragging",
+          "lineNumber": 647
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "cn",
+          "lineNumber": 651
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "handleDeleteClick",
+          "lineNumber": 671
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "e.stopPropagation",
+          "lineNumber": 681
+        },
+        {
+          "caller": "PreviewCanvas",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 682
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useAudio",
+          "lineNumber": 760
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 761
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 762
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 763
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 764
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 765
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useState",
+          "lineNumber": 766
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useEffect",
+          "lineNumber": 776
+        },
+        {
+          "caller": "fetchTrendingSounds",
+          "callee": "setTrendingSoundSuggestions",
+          "lineNumber": 823
+        },
+        {
+          "caller": "fetchTrendingSounds",
+          "callee": "console.error",
+          "lineNumber": 825
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "fetchTrendingSounds",
+          "lineNumber": 829
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useCallback",
+          "lineNumber": 833
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setIsLoadingPrediction",
+          "lineNumber": 837
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setTimeout",
+          "lineNumber": 841
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "Math.floor",
+          "lineNumber": 842
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "Math.random",
+          "lineNumber": 842
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setPredictedEngagement",
+          "lineNumber": 844
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "console.error",
+          "lineNumber": 846
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setIsLoadingPrediction",
+          "lineNumber": 848
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "useEffect",
+          "lineNumber": 853
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "predictEngagement",
+          "lineNumber": 855
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setPredictedEngagement",
+          "lineNumber": 857
+        },
+        {
+          "caller": "handlePlaySound",
+          "callee": "toggle",
+          "lineNumber": 875
+        },
+        {
+          "caller": "handleSelectSound",
+          "callee": "onUpdateTemplate",
+          "lineNumber": 881
+        },
+        {
+          "caller": "handleSelectSound",
+          "callee": "setShowSoundBrowser",
+          "lineNumber": 888
+        },
+        {
+          "caller": "handleSelectSound",
+          "callee": "toast",
+          "lineNumber": 892
+        },
+        {
+          "caller": "handleRemoveSound",
+          "callee": "onUpdateTemplate",
+          "lineNumber": 903
+        },
+        {
+          "caller": "handleRemoveSound",
+          "callee": "setPredictedEngagement",
+          "lineNumber": 910
+        },
+        {
+          "caller": "renderSoundBrowser",
+          "callee": "setShowSoundBrowser",
+          "lineNumber": 923
+        },
+        {
+          "caller": "renderSoundBrowser",
+          "callee": "trendingSoundSuggestions.map",
+          "lineNumber": 961
+        },
+        {
+          "caller": "renderSoundBrowser",
+          "callee": "handleSelectSound",
+          "lineNumber": 965
+        },
+        {
+          "caller": "renderSoundBrowser",
+          "callee": "[1, 2, 3, 4, 5, 6].map",
+          "lineNumber": 991
+        },
+        {
+          "caller": "renderSoundBrowser",
+          "callee": "handleSelectSound",
+          "lineNumber": 995
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setShowSoundBrowser",
+          "lineNumber": 1058
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "renderSoundBrowser",
+          "lineNumber": 1064
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setIsExpanded",
+          "lineNumber": 1094
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "e.stopPropagation",
+          "lineNumber": 1119
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "handlePlaySound",
+          "lineNumber": 1120
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "e.stopPropagation",
+          "lineNumber": 1130
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setIsExpanded",
+          "lineNumber": 1131
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setShowTrendingSounds",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "trendingSoundSuggestions.slice(0, 2).map",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "trendingSoundSuggestions.slice",
+          "lineNumber": 1196
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "handleSelectSound",
+          "lineNumber": 1200
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "e.stopPropagation",
+          "lineNumber": 1221
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "setShowSoundBrowser",
+          "lineNumber": 1222
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "e.stopPropagation",
+          "lineNumber": 1234
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "handleRemoveSound",
+          "lineNumber": 1235
+        },
+        {
+          "caller": "AudioControls",
+          "callee": "renderSoundBrowser",
+          "lineNumber": 1247
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1265
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1266
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1267
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1268
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1269
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1270
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1271
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1272
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1275
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useState",
+          "lineNumber": 1276
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useSubscription",
+          "lineNumber": 1279
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "template.sections.find",
+          "lineNumber": 1283
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setSelectedOverlayId",
+          "lineNumber": 1291
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 1292
+        },
+        {
+          "caller": "recordHistory",
+          "callee": "setUndoHistory",
+          "lineNumber": 1297
+        },
+        {
+          "caller": "recordHistory",
+          "callee": "setRedoHistory",
+          "lineNumber": 1299
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "setUndoHistory",
+          "lineNumber": 1307
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "prev.slice",
+          "lineNumber": 1307
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "setRedoHistory",
+          "lineNumber": 1308
+        },
+        {
+          "caller": "handleUndo",
+          "callee": "console.log",
+          "lineNumber": 1312
+        },
+        {
+          "caller": "handleRedo",
+          "callee": "setRedoHistory",
+          "lineNumber": 1320
+        },
+        {
+          "caller": "handleRedo",
+          "callee": "prev.slice",
+          "lineNumber": 1320
+        },
+        {
+          "caller": "handleRedo",
+          "callee": "setUndoHistory",
+          "lineNumber": 1321
+        },
+        {
+          "caller": "handleRedo",
+          "callee": "console.log",
+          "lineNumber": 1325
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useHotkeys",
+          "lineNumber": 1329
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useHotkeys",
+          "lineNumber": 1330
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useHotkeys",
+          "lineNumber": 1331
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "onSave",
+          "lineNumber": 1331
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useEffect",
+          "lineNumber": 1334
+        },
+        {
+          "caller": "handleBeforeUnload",
+          "callee": "e.preventDefault",
+          "lineNumber": 1338
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "window.addEventListener",
+          "lineNumber": 1344
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "window.removeEventListener",
+          "lineNumber": 1345
+        },
+        {
+          "caller": "handleOverlaySelect",
+          "callee": "setSelectedOverlayId",
+          "lineNumber": 1350
+        },
+        {
+          "caller": "handleOverlaySelect",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 1351
+        },
+        {
+          "caller": "handleOverlaySelect",
+          "callee": "recordHistory",
+          "lineNumber": 1352
+        },
+        {
+          "caller": "handleAddTextOverlay",
+          "callee": "onAddTextOverlay",
+          "lineNumber": 1358
+        },
+        {
+          "caller": "handleAddTextOverlay",
+          "callee": "recordHistory",
+          "lineNumber": 1359
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "template.sections.find",
+          "lineNumber": 1367
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "section?.textOverlays.find",
+          "lineNumber": 1368
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "onDeleteTextOverlay",
+          "lineNumber": 1370
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "recordHistory",
+          "lineNumber": 1373
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "setSelectedOverlayId",
+          "lineNumber": 1378
+        },
+        {
+          "caller": "handleDeleteTextOverlay",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 1379
+        },
+        {
+          "caller": "handleModifiedTextChange",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 1387
+        },
+        {
+          "caller": "handleModifiedTextChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 1389
+        },
+        {
+          "caller": "handleModifiedTextChange",
+          "callee": "recordHistory",
+          "lineNumber": 1390
+        },
+        {
+          "caller": "handleModifiedAlignmentChange",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 1398
+        },
+        {
+          "caller": "handleModifiedAlignmentChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 1400
+        },
+        {
+          "caller": "handleModifiedAlignmentChange",
+          "callee": "recordHistory",
+          "lineNumber": 1401
+        },
+        {
+          "caller": "handleModifiedStyleChange",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 1409
+        },
+        {
+          "caller": "handleModifiedStyleChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 1411
+        },
+        {
+          "caller": "handleModifiedStyleChange",
+          "callee": "recordHistory",
+          "lineNumber": 1412
+        },
+        {
+          "caller": "handleGenerateAI",
+          "callee": "onGenerateAI",
+          "lineNumber": 1420
+        },
+        {
+          "caller": "handleModifiedPositionChange",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 1427
+        },
+        {
+          "caller": "handleModifiedPositionChange",
+          "callee": "['top', 'middle', 'bottom'].includes",
+          "lineNumber": 1428
+        },
+        {
+          "caller": "handleModifiedPositionChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 1429
+        },
+        {
+          "caller": "handleModifiedPositionChange",
+          "callee": "recordHistory",
+          "lineNumber": 1430
+        },
+        {
+          "caller": "handleModifiedOverlayChange",
+          "callee": "selectedSection.textOverlays.find",
+          "lineNumber": 1438
+        },
+        {
+          "caller": "handleModifiedOverlayChange",
+          "callee": "onUpdateTextOverlay",
+          "lineNumber": 1440
+        },
+        {
+          "caller": "handleModifiedOverlayChange",
+          "callee": "recordHistory",
+          "lineNumber": 1441
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "useCallback",
+          "lineNumber": 1447
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "onUpdateSection",
+          "lineNumber": 1449
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "toast",
+          "lineNumber": 1450
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "cn",
+          "lineNumber": 1470
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "onSave",
+          "lineNumber": 1478
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "cn",
+          "lineNumber": 1496
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setPreviewMode",
+          "lineNumber": 1500
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "cn",
+          "lineNumber": 1514
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setPreviewMode",
+          "lineNumber": 1518
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "cn",
+          "lineNumber": 1534
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setShowPropertyEditor",
+          "lineNumber": 1538
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "cn",
+          "lineNumber": 1553
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setShowSoundPanel",
+          "lineNumber": 1557
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setShowSoundPanel",
+          "lineNumber": 1629
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "recordHistory",
+          "lineNumber": 1652
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "onSave",
+          "lineNumber": 1653
+        },
+        {
+          "caller": "TemplateEditor",
+          "callee": "setShowSoundPanel",
+          "lineNumber": 1663
+        }
+      ],
+      "metrics": {
+        "importCount": 22,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateEditorSidebar.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 345,
+      "nonEmptyLines": 317,
+      "functions": [
+        {
+          "name": "TemplateEditorSidebar",
+          "startLine": 40,
+          "endLine": 345,
+          "params": [
+            "{\r\n  template,\r\n  onTemplateChange,\r\n  className = '',\r\n  templateSections = []\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateEditorSidebar",
+          "line": 40,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useState",
+          "lineNumber": 46
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useState",
+          "lineNumber": 47
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useState",
+          "lineNumber": 48
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useState",
+          "lineNumber": 49
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useRef",
+          "lineNumber": 52
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useTemplateSound",
+          "lineNumber": 60
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "onTemplateChange",
+          "lineNumber": 65
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "useEffect",
+          "lineNumber": 77
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "fetchRecommendedSounds",
+          "lineNumber": 79
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "setLoadingRecommendations",
+          "lineNumber": 85
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "fetch",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "response.json",
+          "lineNumber": 89
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "setRecommendedSounds",
+          "lineNumber": 92
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "setRecommendedSounds",
+          "lineNumber": 95
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "getSampleRecommendations",
+          "lineNumber": 95
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "console.error",
+          "lineNumber": 98
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "setRecommendedSounds",
+          "lineNumber": 99
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "getSampleRecommendations",
+          "lineNumber": 99
+        },
+        {
+          "caller": "fetchRecommendedSounds",
+          "callee": "setLoadingRecommendations",
+          "lineNumber": 101
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "e.dataTransfer.setData",
+          "lineNumber": 107
+        },
+        {
+          "caller": "handleDragStart",
+          "callee": "JSON.stringify",
+          "lineNumber": 107
+        },
+        {
+          "caller": "handleDragOver",
+          "callee": "e.preventDefault",
+          "lineNumber": 113
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "e.preventDefault",
+          "lineNumber": 119
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "e.dataTransfer.getData",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "JSON.parse",
+          "lineNumber": 123
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "selectSound",
+          "lineNumber": 125
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "alert",
+          "lineNumber": 132
+        },
+        {
+          "caller": "handleDrop",
+          "callee": "console.error",
+          "lineNumber": 135
+        },
+        {
+          "caller": "toggleSidebar",
+          "callee": "setIsOpen",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "templateSections.map",
+          "lineNumber": 233
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "handleDrop",
+          "lineNumber": 239
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "recommendedSounds.map",
+          "lineNumber": 278
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "handleDragStart",
+          "lineNumber": 283
+        },
+        {
+          "caller": "TemplateEditorSidebar",
+          "callee": "rec.genres.map",
+          "lineNumber": 301
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateGrid.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 125,
+      "nonEmptyLines": 117,
+      "functions": [
+        {
+          "name": "TemplateGrid",
+          "startLine": 32,
+          "endLine": 125,
+          "params": [
+            "{ \r\n  templates, \r\n  loading = false, \r\n  onTemplateClick \r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateGrid",
+          "line": 32,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TemplateGrid",
+          "callee": "Array.from({ length: 8 }).map",
+          "lineNumber": 70
+        },
+        {
+          "caller": "TemplateGrid",
+          "callee": "Array.from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "TemplateGrid",
+          "callee": "templates.map",
+          "lineNumber": 87
+        },
+        {
+          "caller": "TemplateGrid",
+          "callee": "Math.floor",
+          "lineNumber": 107
+        },
+        {
+          "caller": "TemplateGrid",
+          "callee": "onTemplateClick",
+          "lineNumber": 118
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/components/templates/TemplateLibraryEditorConnector.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 175,
+      "nonEmptyLines": 151,
+      "functions": [
+        {
+          "name": "TemplateLibraryEditorConnector",
+          "startLine": 18,
+          "endLine": 175,
+          "params": [
+            "{\r\n  children\r\n}"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateLibraryEditorConnector",
+          "line": 18,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "usePathname",
+          "lineNumber": 21
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useComponentIntegration",
+          "lineNumber": 28
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useUsabilityTest",
+          "lineNumber": 30
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useEffect",
+          "lineNumber": 33
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "connectComponents",
+          "lineNumber": 35
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "connectComponents",
+          "lineNumber": 36
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useCallback",
+          "lineNumber": 40
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "setComponentState",
+          "lineNumber": 42
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "trackInteraction",
+          "lineNumber": 45
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useCallback",
+          "lineNumber": 56
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "trackInteraction",
+          "lineNumber": 58
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "useEffect",
+          "lineNumber": 68
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "pathname?.includes",
+          "lineNumber": 69
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "getComponentState",
+          "lineNumber": 70
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "setTimeout",
+          "lineNumber": 74
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "window.scrollTo",
+          "lineNumber": 75
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "React.Children.map",
+          "lineNumber": 124
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "React.isValidElement",
+          "lineNumber": 125
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "getComponentName",
+          "lineNumber": 135
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "child.props.className?.includes",
+          "lineNumber": 136
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "child.props.className?.includes",
+          "lineNumber": 137
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "React.cloneElement",
+          "lineNumber": 141
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "getComponentState",
+          "lineNumber": 148
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "React.cloneElement",
+          "lineNumber": 150
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "getAnimationDirection",
+          "lineNumber": 161
+        },
+        {
+          "caller": "TemplateLibraryEditorConnector",
+          "callee": "getAnimationDirection",
+          "lineNumber": 164
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

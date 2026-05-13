@@ -1,0 +1,901 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/affiliates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/affiliates/route.ts",
+      "summary": "Next.js API route exposing GET/POST handlers for affiliate records, persisted via a Supabase client resolved at request time.",
+      "tags": ["api-handler", "affiliates", "route", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/affiliates/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/affiliates/route.ts",
+      "lineRange": [18, 38],
+      "summary": "Accepts an affiliate submission, validates required fields, and inserts the row into the affiliates Supabase table.",
+      "tags": ["api-handler", "post", "validation", "supabase-insert"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/agency-chat/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "summary": "Massive agency assistant chat endpoint that orchestrates context assembly, tool routing, triage spec generation, and streaming responses for the agency operator UI.",
+      "tags": ["api-handler", "chat", "streaming", "agent", "agency"],
+      "complexity": "complex",
+      "languageNotes": "Single 1854-line POST handler implements multiple inline state machines for triage, brief-status, performance, and action-result UI specs."
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:stripVoidAssistantTurns",
+      "type": "function",
+      "name": "stripVoidAssistantTurns",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [53, 69],
+      "summary": "Filters trailing assistant messages whose content is empty so they do not poison downstream LLM prompts.",
+      "tags": ["utility", "chat", "message-sanitization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:actionsForTriageItem",
+      "type": "function",
+      "name": "actionsForTriageItem",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [189, 228],
+      "summary": "Derives the per-item action buttons (review, dismiss, escalate) attached to triage spec entries based on item type and state.",
+      "tags": ["utility", "triage", "ui-spec"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:buildTriageSpec",
+      "type": "function",
+      "name": "buildTriageSpec",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [230, 339],
+      "summary": "Constructs the full triage UI specification payload (sections, items, actions, summary) consumed by the agency dashboard.",
+      "tags": ["ui-spec", "triage", "factory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:tryBuildTriageStream",
+      "type": "function",
+      "name": "tryBuildTriageStream",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [341, 375],
+      "summary": "Attempts to detect a triage intent in the conversation and, when matched, returns a streamed triage spec response.",
+      "tags": ["streaming", "triage", "intent-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:tryBuildActionResultStream",
+      "type": "function",
+      "name": "tryBuildActionResultStream",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [377, 419],
+      "summary": "Detects an action-result confirmation from the last user message and streams the corresponding success/failure UI spec.",
+      "tags": ["streaming", "action-result", "intent-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/agency-chat/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/agency-chat/route.ts",
+      "lineRange": [422, 1854],
+      "summary": "Main agency-chat POST handler — authenticates, assembles context, routes through tool registry and proactive engine, and streams the assistant response.",
+      "tags": ["api-handler", "post", "streaming", "agent", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/agency/batch-briefs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/agency/batch-briefs/route.ts",
+      "summary": "Generates content briefs in bulk for every client of an agency, running each through the variant generator and adversarial evaluator.",
+      "tags": ["api-handler", "briefs", "agency", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/batch-briefs/route.ts:generateBriefsForClient",
+      "type": "function",
+      "name": "generateBriefsForClient",
+      "filePath": "src/app/api/agency/batch-briefs/route.ts",
+      "lineRange": [51, 159],
+      "summary": "For a single client, generates brief variants, scores them with the adversarial evaluator, and persists the surviving briefs.",
+      "tags": ["briefs", "variant-generation", "adversarial-eval"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/batch-briefs/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/agency/batch-briefs/route.ts",
+      "lineRange": [163, 334],
+      "summary": "Validates the request, fans out brief generation across all clients of the calling agency, and returns aggregate results.",
+      "tags": ["api-handler", "post", "fan-out", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/agency/brief-review/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/agency/brief-review/route.ts",
+      "summary": "Endpoints for the agency operator to fetch pending briefs awaiting review and to approve, reject, or edit them.",
+      "tags": ["api-handler", "briefs", "review", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/brief-review/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/agency/brief-review/route.ts",
+      "lineRange": [26, 126],
+      "summary": "Returns the queue of briefs in pending-review state for the current agency, joined with client metadata.",
+      "tags": ["api-handler", "get", "review-queue"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/brief-review/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/agency/brief-review/route.ts",
+      "lineRange": [128, 258],
+      "summary": "Applies an operator decision (approve, reject, edit) to a brief, persists the change, and triggers email send on approval.",
+      "tags": ["api-handler", "patch", "brief-decision", "email-trigger"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/agency/memory/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/agency/memory/route.ts",
+      "summary": "CRUD endpoints for agency-scoped long-term memory entries used to ground the agency assistant across sessions.",
+      "tags": ["api-handler", "memory", "agency", "crud"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/memory/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/agency/memory/route.ts",
+      "lineRange": [26, 61],
+      "summary": "Lists the memory entries for the calling agency, optionally filtered by tag or scope.",
+      "tags": ["api-handler", "get", "memory-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/agency/memory/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/agency/memory/route.ts",
+      "lineRange": [65, 128],
+      "summary": "Creates a new memory entry for the agency after validating payload and scope ownership.",
+      "tags": ["api-handler", "post", "memory-create"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/memory/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/agency/memory/route.ts",
+      "lineRange": [132, 200],
+      "summary": "Updates an existing memory entry, verifying it belongs to the calling agency before persisting changes.",
+      "tags": ["api-handler", "patch", "memory-update"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/agency/memory/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/agency/memory/route.ts",
+      "lineRange": [204, 234],
+      "summary": "Deletes a memory entry by id after verifying agency ownership.",
+      "tags": ["api-handler", "delete", "memory-delete"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/ai/generate-script/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ai/generate-script/route.ts",
+      "summary": "Generates a short-form video script via an LLM, gated by subscription tier and using shared API helper utilities.",
+      "tags": ["api-handler", "ai", "script-generation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ai/generate-script/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ai/generate-script/route.ts",
+      "lineRange": [17, 77],
+      "summary": "Validates input, calls the script generation LLM with subscription-aware prompts, and returns the produced script.",
+      "tags": ["api-handler", "post", "llm-call"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/algorithm-iq/insights/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "summary": "Returns prioritized algorithm-IQ insights for the user with create, list, and update endpoints, plus helpers for icon/color metadata.",
+      "tags": ["api-handler", "algorithm-iq", "insights"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/insights/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "lineRange": [27, 155],
+      "summary": "Loads insights from storage, filters by category/severity, decorates each with display metadata, and returns the prioritized list.",
+      "tags": ["api-handler", "get", "insights"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/insights/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "lineRange": [158, 213],
+      "summary": "Creates a new insight entry for the user from caller-supplied type, message, and severity.",
+      "tags": ["api-handler", "post", "insights-create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/insights/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "lineRange": [216, 258],
+      "summary": "Updates an existing insight (dismiss, mark read, change severity) by id.",
+      "tags": ["api-handler", "patch", "insights-update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/insights/route.ts:getInsightIcon",
+      "type": "function",
+      "name": "getInsightIcon",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "lineRange": [260, 273],
+      "summary": "Maps an insight type string to its corresponding icon identifier for the UI.",
+      "tags": ["utility", "ui-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/insights/route.ts:getInsightColor",
+      "type": "function",
+      "name": "getInsightColor",
+      "filePath": "src/app/api/algorithm-iq/insights/route.ts",
+      "lineRange": [275, 288],
+      "summary": "Maps an insight type string to a UI color token for severity-aware styling.",
+      "tags": ["utility", "ui-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/algorithm-iq/performance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm-iq/performance/route.ts",
+      "summary": "Exposes performance metrics for the user's algorithm-IQ predictions with GET to read and POST to record new performance samples.",
+      "tags": ["api-handler", "algorithm-iq", "performance", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/performance/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/algorithm-iq/performance/route.ts",
+      "lineRange": [28, 174],
+      "summary": "Aggregates prediction-vs-actual stats, calibration deltas, and per-component accuracy into a single performance payload.",
+      "tags": ["api-handler", "get", "performance-aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/performance/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/algorithm-iq/performance/route.ts",
+      "lineRange": [177, 203],
+      "summary": "Records a new performance sample (actual outcome for a prediction) tied to the calling user.",
+      "tags": ["api-handler", "post", "performance-record"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/algorithm-iq/self-audit/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "summary": "Runs the algorithm-IQ self-audit pipeline that inspects recent predictions for failure patterns, component issues, and recommended adjustments.",
+      "tags": ["api-handler", "self-audit", "algorithm-iq", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [64, 159],
+      "summary": "Orchestrates a self-audit run: gathers worst predictions, calls pattern/issue detectors, and persists generated insights and adjustments.",
+      "tags": ["api-handler", "post", "audit-orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:analyzeFailurePatterns",
+      "type": "function",
+      "name": "analyzeFailurePatterns",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [161, 228],
+      "summary": "Scans recent predictions for recurring failure signatures (over-prediction, niche miscalibration, etc.) and tags each cluster.",
+      "tags": ["analysis", "failure-patterns", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:detectComponentIssues",
+      "type": "function",
+      "name": "detectComponentIssues",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [230, 273],
+      "summary": "Inspects per-component reliability across recent predictions to surface components that are systematically miscalibrated.",
+      "tags": ["analysis", "component-health", "diagnostics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:generateAutoAdjustments",
+      "type": "function",
+      "name": "generateAutoAdjustments",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [275, 306],
+      "summary": "Translates detected patterns and component issues into proposed calibration adjustments to be applied to future runs.",
+      "tags": ["calibration", "auto-tuning"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:generateAuditInsights",
+      "type": "function",
+      "name": "generateAuditInsights",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [308, 344],
+      "summary": "Produces user-facing insight strings summarizing the audit's findings and recommended actions.",
+      "tags": ["insights", "audit", "messaging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/self-audit/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/algorithm-iq/self-audit/route.ts",
+      "lineRange": [347, 376],
+      "summary": "Returns the most recent self-audit report for the calling user, with optional filtering by run id.",
+      "tags": ["api-handler", "get", "audit-report"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/algorithm-iq/track/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm-iq/track/route.ts",
+      "summary": "Records and updates algorithm-IQ tracking events linking predictions to subsequent actual outcomes and engagement.",
+      "tags": ["api-handler", "algorithm-iq", "tracking", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/track/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/algorithm-iq/track/route.ts",
+      "lineRange": [46, 182],
+      "summary": "Creates a new tracking record tying a prediction id to user/video metadata, then enqueues follow-up actions.",
+      "tags": ["api-handler", "post", "tracking-create"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/track/route.ts:generateInsight",
+      "type": "function",
+      "name": "generateInsight",
+      "filePath": "src/app/api/algorithm-iq/track/route.ts",
+      "lineRange": [185, 212],
+      "summary": "Builds a synthetic insight summarizing the tracked prediction's accuracy relative to the actual outcome.",
+      "tags": ["insights", "tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm-iq/track/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/algorithm-iq/track/route.ts",
+      "lineRange": [215, 315],
+      "summary": "Updates an existing tracking row with actual outcome data and recomputes derived accuracy metrics.",
+      "tags": ["api-handler", "patch", "tracking-update"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/algorithm/explain/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "summary": "Produces human-readable explanations for a prediction by analysing executed components, building a decision tree, and surfacing top performers and weak spots.",
+      "tags": ["api-handler", "explainability", "algorithm", "kai-orchestrator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [28, 154],
+      "summary": "Loads a stored prediction by id, walks its components against the reliability map, and returns a structured explanation payload.",
+      "tags": ["api-handler", "get", "explainability"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [159, 274],
+      "summary": "Runs a live prediction through the Kai orchestrator and returns the explanation alongside the prediction in a single call.",
+      "tags": ["api-handler", "post", "live-explain", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:analyzeComponents",
+      "type": "function",
+      "name": "analyzeComponents",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [284, 302],
+      "summary": "Joins each executed component with its reliability score and emits a per-component analysis record.",
+      "tags": ["analysis", "components", "reliability"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:buildDecisionTree",
+      "type": "function",
+      "name": "buildDecisionTree",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [364, 387],
+      "summary": "Constructs a structured decision tree representation of how the prediction's components reached the final score.",
+      "tags": ["explainability", "decision-tree"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:generateExplanation",
+      "type": "function",
+      "name": "generateExplanation",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [389, 401],
+      "summary": "Composes the final natural-language explanation string from the analysed components and decision tree.",
+      "tags": ["explainability", "messaging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/algorithm/explain/route.ts:generateRealtimeExplanation",
+      "type": "function",
+      "name": "generateRealtimeExplanation",
+      "filePath": "src/app/api/algorithm/explain/route.ts",
+      "lineRange": [403, 418],
+      "summary": "Produces a streamlined explanation for fresh, in-flight prediction results returned from the orchestrator.",
+      "tags": ["explainability", "realtime"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/algorithm_weather/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/algorithm_weather/route.ts",
+      "summary": "Lightweight rate-limited endpoint that returns the current 'algorithm weather' status banner consumed by the dashboard.",
+      "tags": ["api-handler", "rate-limited", "dashboard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analysis/instant/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analysis/instant/route.ts",
+      "summary": "Tiny stub endpoint accepting an instant-analysis request and echoing a minimal acknowledgement payload.",
+      "tags": ["api-handler", "stub", "analysis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analytics/expert-vs-automated/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/expert-vs-automated/route.ts",
+      "summary": "Compares expert-curated analytics against the automated pipeline, returning side-by-side scores and allowing manual overrides.",
+      "tags": ["api-handler", "analytics", "expert-pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/expert-vs-automated/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/expert-vs-automated/route.ts",
+      "lineRange": [16, 116],
+      "summary": "Loads expert and automated analytics for the current user and returns them aligned by template/sound id.",
+      "tags": ["api-handler", "get", "analytics-compare"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/expert-vs-automated/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/analytics/expert-vs-automated/route.ts",
+      "lineRange": [121, 188],
+      "summary": "Persists an expert override or correction and recomputes the comparison row via the expert analytics pipeline.",
+      "tags": ["api-handler", "post", "expert-override"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/analytics/newsletter-stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/newsletter-stats/route.ts",
+      "summary": "Returns aggregated newsletter engagement statistics (sends, opens, clicks, churn) for the current account from Supabase.",
+      "tags": ["api-handler", "analytics", "newsletter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/newsletter-stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/newsletter-stats/route.ts",
+      "lineRange": [68, 172],
+      "summary": "Queries Supabase for newsletter activity in the requested window and aggregates raw events into engagement metrics.",
+      "tags": ["api-handler", "get", "aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/analytics/sound-categories/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/sound-categories/route.ts",
+      "summary": "Returns synthetic sound-category analytics for a configurable time range to power the audio dashboard.",
+      "tags": ["api-handler", "analytics", "sounds"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-categories/route.ts:generateSoundCategoryData",
+      "type": "function",
+      "name": "generateSoundCategoryData",
+      "filePath": "src/app/api/analytics/sound-categories/route.ts",
+      "lineRange": [8, 111],
+      "summary": "Generates the per-category sound analytics rows (counts, growth, engagement) for the requested time range.",
+      "tags": ["analytics", "synthetic-data", "factory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-categories/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/sound-categories/route.ts",
+      "lineRange": [113, 133],
+      "summary": "Parses the time-range query parameter and returns the corresponding sound category dataset.",
+      "tags": ["api-handler", "get", "sounds"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/analytics/sound-engagement/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/sound-engagement/route.ts",
+      "summary": "Returns sound-by-sound engagement correlation data with optional category filter, min engagement threshold, and sort key.",
+      "tags": ["api-handler", "analytics", "sounds", "engagement"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-engagement/route.ts:generateCorrelationData",
+      "type": "function",
+      "name": "generateCorrelationData",
+      "filePath": "src/app/api/analytics/sound-engagement/route.ts",
+      "lineRange": [23, 218],
+      "summary": "Builds the sound engagement correlation dataset, filtering by category and min engagement and sorting by the requested key.",
+      "tags": ["analytics", "correlation", "factory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-engagement/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/sound-engagement/route.ts",
+      "lineRange": [220, 242],
+      "summary": "Parses filter/sort query params and delegates to the correlation data generator before returning the result.",
+      "tags": ["api-handler", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/analytics/sound-growth/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/sound-growth/route.ts",
+      "summary": "Returns growth trajectory data for a specific sound across the requested time range with optional compare-mode baseline.",
+      "tags": ["api-handler", "analytics", "sounds", "growth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-growth/route.ts:generateSoundGrowthData",
+      "type": "function",
+      "name": "generateSoundGrowthData",
+      "filePath": "src/app/api/analytics/sound-growth/route.ts",
+      "lineRange": [8, 81],
+      "summary": "Generates the time-series growth dataset for a sound, optionally including a comparison baseline series.",
+      "tags": ["analytics", "growth", "time-series"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/sound-growth/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/sound-growth/route.ts",
+      "lineRange": [83, 105],
+      "summary": "Parses sound id, time range, and compare mode from the query string and returns the growth dataset.",
+      "tags": ["api-handler", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/analytics/track-template-usage/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/track-template-usage/route.ts",
+      "summary": "Records a template-usage analytics event into Firebase from the client, used for downstream template popularity metrics.",
+      "tags": ["api-handler", "analytics", "templates", "firebase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/analytics/track-template-usage/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/analytics/track-template-usage/route.ts",
+      "lineRange": [10, 58],
+      "summary": "Validates the usage payload and writes a template-usage event document to Firebase.",
+      "tags": ["api-handler", "post", "event-write"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/analytics/unified-scores/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/unified-scores/route.ts",
+      "summary": "Merges sound and template analysis services into a single 'unified score' payload with score-based recommendation strings.",
+      "tags": ["api-handler", "analytics", "scoring", "unified"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/unified-scores/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/analytics/unified-scores/route.ts",
+      "lineRange": [8, 133],
+      "summary": "Loads sound and template analyses for the requested ids, merges them into unified scores, and decorates each with recommendations.",
+      "tags": ["api-handler", "get", "score-merge"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/analytics/unified-scores/route.ts:getRecommendation",
+      "type": "function",
+      "name": "getRecommendation",
+      "filePath": "src/app/api/analytics/unified-scores/route.ts",
+      "lineRange": [136, 154],
+      "summary": "Maps a numeric score and metric type to a human-readable recommendation string.",
+      "tags": ["utility", "recommendation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analytics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analytics/route.ts",
+      "summary": "Thin analytics endpoint that delegates report generation to the monitoring analytics-reporting library and returns the JSON.",
+      "tags": ["api-handler", "analytics", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analyze/apply-fixes/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analyze/apply-fixes/route.ts",
+      "summary": "Stub endpoint that forwards an apply-fixes request to the scoring service and returns the result.",
+      "tags": ["api-handler", "scoring", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analyze/examples/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analyze/examples/route.ts",
+      "summary": "Returns a static list of analyze-tool example payloads used by the docs and onboarding UI.",
+      "tags": ["api-handler", "examples", "docs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/analyze/route.ts",
+      "summary": "Top-level analyze endpoint that runs content through the scoring service under the configured SLA budget.",
+      "tags": ["api-handler", "scoring", "analyze"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/anthropic/analyze-template/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/anthropic/analyze-template/route.ts",
+      "summary": "Analyses a template via Claude with a deterministic mock fallback, returning remix suggestions consumed by the template editor.",
+      "tags": ["api-handler", "anthropic", "templates", "remix"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/anthropic/analyze-template/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/anthropic/analyze-template/route.ts",
+      "lineRange": [82, 163],
+      "summary": "Validates the template request, dispatches to Claude or the mock generator, and returns the structured remix response.",
+      "tags": ["api-handler", "post", "llm-call"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/anthropic/analyze-template/route.ts:generateClaudeResponse",
+      "type": "function",
+      "name": "generateClaudeResponse",
+      "filePath": "src/app/api/anthropic/analyze-template/route.ts",
+      "lineRange": [168, 287],
+      "summary": "Builds the Claude prompt for the template, invokes the API, and parses the response into the remix schema.",
+      "tags": ["llm-call", "anthropic", "prompt-build"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/anthropic/analyze-template/route.ts:generateMockResponse",
+      "type": "function",
+      "name": "generateMockResponse",
+      "filePath": "src/app/api/anthropic/analyze-template/route.ts",
+      "lineRange": [292, 378],
+      "summary": "Returns a deterministic mock remix response used when the Anthropic key is missing or the LLM call fails.",
+      "tags": ["mock", "fallback", "remix"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/affiliates/route.ts", "target": "function:src/app/api/affiliates/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/affiliates/route.ts", "target": "function:src/app/api/affiliates/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/affiliates/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:stripVoidAssistantTurns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:actionsForTriageItem", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:buildTriageSpec", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:tryBuildTriageStream", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:tryBuildActionResultStream", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "function:src/app/api/agency-chat/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/agent/correlation-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/agent/tool-registry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/clay/index.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/notifications/proactive-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency-chat/route.ts", "target": "file:src/lib/trendzo-catalog.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "function:src/app/api/agency/batch-briefs/route.ts:generateBriefsForClient", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "function:src/app/api/agency/batch-briefs/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "function:src/app/api/agency/batch-briefs/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "file:src/lib/content/adversarial-evaluator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "file:src/lib/content/variant-generator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency/batch-briefs/route.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "function:src/app/api/agency/brief-review/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "function:src/app/api/agency/brief-review/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "function:src/app/api/agency/brief-review/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "function:src/app/api/agency/brief-review/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "file:src/lib/content/variant-generator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/agency/brief-review/route.ts", "target": "file:src/lib/email/send-brief.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/agency/memory/route.ts", "target": "function:src/app/api/agency/memory/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ai/generate-script/route.ts", "target": "function:src/app/api/ai/generate-script/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ai/generate-script/route.ts", "target": "function:src/app/api/ai/generate-script/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ai/generate-script/route.ts", "target": "file:src/lib/contexts/SubscriptionContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ai/generate-script/route.ts", "target": "file:src/lib/utils/apiHelpers.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:getInsightIcon", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/insights/route.ts", "target": "function:src/app/api/algorithm-iq/insights/route.ts:getInsightColor", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/algorithm-iq/performance/route.ts", "target": "function:src/app/api/algorithm-iq/performance/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/performance/route.ts", "target": "function:src/app/api/algorithm-iq/performance/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/performance/route.ts", "target": "function:src/app/api/algorithm-iq/performance/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/performance/route.ts", "target": "function:src/app/api/algorithm-iq/performance/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:analyzeFailurePatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:detectComponentIssues", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:generateAutoAdjustments", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:generateAuditInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/self-audit/route.ts", "target": "function:src/app/api/algorithm-iq/self-audit/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/algorithm-iq/track/route.ts", "target": "function:src/app/api/algorithm-iq/track/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/track/route.ts", "target": "function:src/app/api/algorithm-iq/track/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm-iq/track/route.ts", "target": "function:src/app/api/algorithm-iq/track/route.ts:generateInsight", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/track/route.ts", "target": "function:src/app/api/algorithm-iq/track/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm-iq/track/route.ts", "target": "function:src/app/api/algorithm-iq/track/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:analyzeComponents", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:buildDecisionTree", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:generateExplanation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "function:src/app/api/algorithm/explain/route.ts:generateRealtimeExplanation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/algorithm/explain/route.ts", "target": "file:src/lib/orchestration/kai-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/algorithm_weather/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/algorithm_weather/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "function:src/app/api/analytics/expert-vs-automated/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "function:src/app/api/analytics/expert-vs-automated/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "function:src/app/api/analytics/expert-vs-automated/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "function:src/app/api/analytics/expert-vs-automated/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "file:src/lib/analytics/expertAnalyticsPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "file:src/lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/analytics/expert-vs-automated/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analytics/newsletter-stats/route.ts", "target": "function:src/app/api/analytics/newsletter-stats/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/newsletter-stats/route.ts", "target": "function:src/app/api/analytics/newsletter-stats/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/analytics/newsletter-stats/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analytics/sound-categories/route.ts", "target": "function:src/app/api/analytics/sound-categories/route.ts:generateSoundCategoryData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-categories/route.ts", "target": "function:src/app/api/analytics/sound-categories/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-categories/route.ts", "target": "function:src/app/api/analytics/sound-categories/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/analytics/sound-engagement/route.ts", "target": "function:src/app/api/analytics/sound-engagement/route.ts:generateCorrelationData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-engagement/route.ts", "target": "function:src/app/api/analytics/sound-engagement/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-engagement/route.ts", "target": "function:src/app/api/analytics/sound-engagement/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/analytics/sound-growth/route.ts", "target": "function:src/app/api/analytics/sound-growth/route.ts:generateSoundGrowthData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-growth/route.ts", "target": "function:src/app/api/analytics/sound-growth/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/sound-growth/route.ts", "target": "function:src/app/api/analytics/sound-growth/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/analytics/track-template-usage/route.ts", "target": "function:src/app/api/analytics/track-template-usage/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/track-template-usage/route.ts", "target": "function:src/app/api/analytics/track-template-usage/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/analytics/track-template-usage/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analytics/unified-scores/route.ts", "target": "function:src/app/api/analytics/unified-scores/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/unified-scores/route.ts", "target": "function:src/app/api/analytics/unified-scores/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/analytics/unified-scores/route.ts", "target": "function:src/app/api/analytics/unified-scores/route.ts:getRecommendation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/analytics/unified-scores/route.ts", "target": "file:src/lib/services/soundAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/analytics/unified-scores/route.ts", "target": "file:src/lib/services/templateAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analytics/route.ts", "target": "file:src/lib/monitoring/analytics-reporting.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analyze/apply-fixes/route.ts", "target": "file:src/lib/services/scoring-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/analyze/route.ts", "target": "file:src/lib/analysis/sla.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/analyze/route.ts", "target": "file:src/lib/services/scoring-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "function:src/app/api/anthropic/analyze-template/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "function:src/app/api/anthropic/analyze-template/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "function:src/app/api/anthropic/analyze-template/route.ts:generateClaudeResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "function:src/app/api/anthropic/analyze-template/route.ts:generateMockResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "file:src/lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/anthropic/analyze-template/route.ts", "target": "file:src/lib/types/remix.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

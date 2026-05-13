@@ -1,0 +1,751 @@
+{
+  "nodes": [
+    {
+      "id": "config:src/app/sandbox/workflow/_fixtures/templates.json",
+      "type": "config",
+      "name": "templates.json",
+      "filePath": "src/app/sandbox/workflow/_fixtures/templates.json",
+      "summary": "Static fixture file listing starter-pack workflow templates (niche, goal, success metrics) for the sandbox viral-studio workflow demo.",
+      "tags": ["fixture", "configuration", "sandbox", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/app/sandbox/workflow/_fixtures/validation.json",
+      "type": "config",
+      "name": "validation.json",
+      "filePath": "src/app/sandbox/workflow/_fixtures/validation.json",
+      "summary": "Static fixture providing validation metrics (KPI, calibration bins, confusion matrix) consumed by the sandbox Accuracy page.",
+      "tags": ["fixture", "configuration", "sandbox", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "type": "file",
+      "name": "exports.ts",
+      "filePath": "src/app/sandbox/workflow/_services/exports.ts",
+      "summary": "Client-side download helpers for the sandbox workflow that produce SRT, ICS, CSV, TXT, and a stub PDF blob via in-browser anchor downloads.",
+      "tags": ["utility", "serialization", "client-only", "sandbox", "export"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/_services/exports.ts:downloadText",
+      "type": "function",
+      "name": "downloadText",
+      "filePath": "src/app/sandbox/workflow/_services/exports.ts",
+      "lineRange": [3, 13],
+      "summary": "Triggers a browser download by creating a Blob, attaching it to a temporary anchor element, clicking it, and revoking the URL.",
+      "tags": ["utility", "download", "client-only"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/_services/exports.ts:exportSRT",
+      "type": "function",
+      "name": "exportSRT",
+      "filePath": "src/app/sandbox/workflow/_services/exports.ts",
+      "lineRange": [15, 36],
+      "summary": "Serializes timed caption lines into SRT subtitle format with HH:MM:SS,mmm timestamps and triggers a download.",
+      "tags": ["serialization", "export", "subtitles"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/_services/exports.ts:exportICS",
+      "type": "function",
+      "name": "exportICS",
+      "filePath": "src/app/sandbox/workflow/_services/exports.ts",
+      "lineRange": [38, 59],
+      "summary": "Builds an iCalendar (.ics) document from event objects and downloads it for the sandbox rollout schedule.",
+      "tags": ["serialization", "export", "calendar"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/_services/exports.ts:exportCSV",
+      "type": "function",
+      "name": "exportCSV",
+      "filePath": "src/app/sandbox/workflow/_services/exports.ts",
+      "lineRange": [61, 70],
+      "summary": "Serializes an array of row objects into a CSV string with header derived from the first row and downloads the file.",
+      "tags": ["serialization", "export", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/app/sandbox/workflow/_services/index.ts",
+      "summary": "Exports the SandboxServices object: a fixture-backed async facade returning templates, analysis, schedule, validation, learning and journey data with simulated latency, plus a localStorage prediction-receipt store.",
+      "tags": ["service", "facade", "sandbox", "fixture-backed", "client-only"],
+      "complexity": "moderate",
+      "languageNotes": "All methods await a small delay(ms) to mimic real async I/O; data ultimately comes from imported JSON fixtures."
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/_tests/fixtures-persistence.test.ts",
+      "type": "file",
+      "name": "fixtures-persistence.test.ts",
+      "filePath": "src/app/sandbox/workflow/_tests/fixtures-persistence.test.ts",
+      "summary": "Unit test asserting that the sandbox templates fixture stays stable and meets the contract expected by downstream workflow code.",
+      "tags": ["test", "sandbox", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/app/sandbox/workflow/_types/index.ts",
+      "summary": "TypeScript type definitions for the sandbox workflow domain: Template, Hook, ScriptDoc, AnalysisResult, Prediction, SchedulePlan, ValidationMetrics, LearningVersion, JourneyStep.",
+      "tags": ["type-definition", "sandbox", "domain-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/accuracy/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/accuracy/page.tsx",
+      "summary": "Sandbox workflow Accuracy page that loads ValidationMetrics from SandboxServices and renders KPI, calibration bars, and a confusion matrix.",
+      "tags": ["component", "page", "sandbox", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/accuracy/page.tsx:AccuracyInner",
+      "type": "function",
+      "name": "AccuracyInner",
+      "filePath": "src/app/sandbox/workflow/accuracy/page.tsx",
+      "lineRange": [9, 47],
+      "summary": "Client component that fetches validation metrics on mount and renders KPI, calibration plot, and confusion-matrix table.",
+      "tags": ["component", "client-only", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/analysis/page.tsx",
+      "summary": "Sandbox Instant Analysis page that scores the current script via SandboxServices, shows the viral score with confidence band, lets the user apply all fixes, and continues to scheduling.",
+      "tags": ["component", "page", "sandbox", "analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/analysis/page.tsx:AnalysisInner",
+      "type": "function",
+      "name": "AnalysisInner",
+      "filePath": "src/app/sandbox/workflow/analysis/page.tsx",
+      "lineRange": [12, 74],
+      "summary": "Client component that runs script analysis through SandboxServices, displays viral score and top fixes, and offers Apply-All-Fixes plus PDF export.",
+      "tags": ["component", "client-only", "analysis", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/campaigns/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/campaigns/page.tsx",
+      "summary": "Static placeholder Campaigns page for the sandbox workflow listing two example campaign cards (Spring Launch, Affiliate Push).",
+      "tags": ["component", "page", "sandbox", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/dashboard/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/dashboard/page.tsx",
+      "summary": "Sandbox Command Dashboard rendering a synthetic 12-tile system-health grid, an Algorithm Weather banner, and a link to the Clean-Room Canvas.",
+      "tags": ["component", "page", "sandbox", "dashboard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/gallery/page.tsx",
+      "summary": "Sandbox starter-pack Gallery page that loads templates filtered by niche and goal and lets the user pick one to advance into the script workbench.",
+      "tags": ["component", "page", "sandbox", "gallery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/gallery/page.tsx:GalleryInner",
+      "type": "function",
+      "name": "GalleryInner",
+      "filePath": "src/app/sandbox/workflow/gallery/page.tsx",
+      "lineRange": [12, 57],
+      "summary": "Client component that fetches templates from SandboxServices, displays the top three as cards, and routes to the script page when one is selected.",
+      "tags": ["component", "client-only", "gallery", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/lab/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/lab/page.tsx",
+      "summary": "Static placeholder Lab page for the sandbox workflow showing example experiments.",
+      "tags": ["component", "page", "sandbox", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/moat/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/moat/page.tsx",
+      "summary": "Static placeholder Moat page for the sandbox workflow describing the creator's competitive moat.",
+      "tags": ["component", "page", "sandbox", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/onboarding/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/onboarding/page.tsx",
+      "summary": "Sandbox Onboarding page that collects niche and goal, emits an onboarding.completed event, fires confetti, and routes to the gallery.",
+      "tags": ["component", "page", "sandbox", "onboarding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/onboarding/page.tsx:OnboardingInner",
+      "type": "function",
+      "name": "OnboardingInner",
+      "filePath": "src/app/sandbox/workflow/onboarding/page.tsx",
+      "lineRange": [9, 50],
+      "summary": "Client onboarding form capturing niche and goal, persisting them via context, and advancing the user into the gallery flow.",
+      "tags": ["component", "client-only", "form", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/process/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/process/page.tsx",
+      "summary": "Static placeholder Process page for the sandbox workflow describing the content-production process.",
+      "tags": ["component", "page", "sandbox", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/receipt/page.tsx",
+      "summary": "Sandbox Prediction Receipt page that builds a Prediction from current analysis and schedule state, stores it via SandboxServices, and offers a path to the Accuracy validator.",
+      "tags": ["component", "page", "sandbox", "receipt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/receipt/page.tsx:ReceiptInner",
+      "type": "function",
+      "name": "ReceiptInner",
+      "filePath": "src/app/sandbox/workflow/receipt/page.tsx",
+      "lineRange": [12, 49],
+      "summary": "Client component that creates a Prediction receipt on mount, persists it through context plus localStorage, toasts a follow-up message, and links to the Accuracy page.",
+      "tags": ["component", "client-only", "receipt", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/schedule/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/schedule/page.tsx",
+      "summary": "Sandbox Rollout Planner page that fetches a SchedulePlan, builds calendar events, and offers ICS, captions CSV, and cut-list TXT exports.",
+      "tags": ["component", "page", "sandbox", "schedule", "export"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/schedule/page.tsx:ScheduleInner",
+      "type": "function",
+      "name": "ScheduleInner",
+      "filePath": "src/app/sandbox/workflow/schedule/page.tsx",
+      "lineRange": [9, 68],
+      "summary": "Client component that loads a schedule plan, derives calendar events, and wires buttons for ICS, captions CSV, and cut-list TXT downloads.",
+      "tags": ["component", "client-only", "schedule", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/script/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/script/page.tsx",
+      "summary": "Sandbox Script Workbench: lets the user generate hooks, tweak tone and CTA, preview the draft in a teleprompter modal, export SRT, and continue to analysis.",
+      "tags": ["component", "page", "sandbox", "script-editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/script/page.tsx:Teleprompter",
+      "type": "function",
+      "name": "Teleprompter",
+      "filePath": "src/app/sandbox/workflow/script/page.tsx",
+      "lineRange": [12, 29],
+      "summary": "Modal teleprompter dialog that vertically scrolls the current script body with a CSS keyframe animation.",
+      "tags": ["component", "modal", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/sandbox/workflow/script/page.tsx:ScriptInner",
+      "type": "function",
+      "name": "ScriptInner",
+      "filePath": "src/app/sandbox/workflow/script/page.tsx",
+      "lineRange": [31, 127],
+      "summary": "Main script-editing client component: manages local ScriptDoc state, generates hooks, exports SRT, and saves the draft into context before routing to Analysis.",
+      "tags": ["component", "client-only", "script-editor", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/starter-playbook/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/starter-playbook/page.tsx",
+      "summary": "Static placeholder Starter Playbook page for the sandbox workflow.",
+      "tags": ["component", "page", "sandbox", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/sandbox/workflow/layout.tsx",
+      "summary": "Sandbox workflow layout that gates the entire subtree behind the NEXT_PUBLIC_SANDBOX_WORKFLOW=1 feature flag.",
+      "tags": ["component", "layout", "feature-flag", "sandbox"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/workflow/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/workflow/page.tsx",
+      "summary": "Sandbox workflow root page that redirects directly to /sandbox/workflow/onboarding.",
+      "tags": ["component", "page", "redirect", "sandbox"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/sandbox/layout.tsx",
+      "summary": "Top-level sandbox layout that sets the Viral Studio Sandbox metadata and renders a dark-themed full-height container.",
+      "tags": ["component", "layout", "sandbox", "metadata"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/sandbox/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/sandbox/page.tsx",
+      "summary": "Sandbox root index page that redirects to the onboarding entry point of the workflow.",
+      "tags": ["component", "page", "redirect", "sandbox"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/settings/animations/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/settings/animations/page.tsx",
+      "summary": "Settings page placeholder for Animation Settings, informing users the feature is under development.",
+      "tags": ["component", "page", "settings", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/settings/multi-sensory/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/settings/multi-sensory/page.tsx",
+      "summary": "Multi-Sensory Preferences settings page that wraps the MultiSensoryPreferenceManager component inside an AudioVisualProvider context.",
+      "tags": ["component", "page", "settings", "audiovisual"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:downloadText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportSRT",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportICS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportCSV",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:downloadText",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportSRT",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportICS",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "target": "function:src/app/sandbox/workflow/_services/exports.ts:exportCSV",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/accuracy/page.tsx",
+      "target": "function:src/app/sandbox/workflow/accuracy/page.tsx:AccuracyInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "function:src/app/sandbox/workflow/analysis/page.tsx:AnalysisInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "function:src/app/sandbox/workflow/gallery/page.tsx:GalleryInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/onboarding/page.tsx",
+      "target": "function:src/app/sandbox/workflow/onboarding/page.tsx:OnboardingInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "function:src/app/sandbox/workflow/receipt/page.tsx:ReceiptInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/schedule/page.tsx",
+      "target": "function:src/app/sandbox/workflow/schedule/page.tsx:ScheduleInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "function:src/app/sandbox/workflow/script/page.tsx:Teleprompter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "function:src/app/sandbox/workflow/script/page.tsx:ScriptInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/analysis.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/journey.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/learning.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/schedule.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/templates.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/validation.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_services/index.ts",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_tests/fixtures-persistence.test.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/templates.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/accuracy/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/accuracy/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/accuracy/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/analysis/page.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "file:src/components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/gallery/page.tsx",
+      "target": "file:src/components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/onboarding/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/onboarding/page.tsx",
+      "target": "file:src/lib/hooks/useConfetti.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "file:src/components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/receipt/page.tsx",
+      "target": "file:src/components/ui/use-toast.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/schedule/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/schedule/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/schedule/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_context/SandboxWorkflowContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "config:src/app/sandbox/workflow/_fixtures/script-presets.json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_services/exports.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "file:src/app/sandbox/workflow/_types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/script/page.tsx",
+      "target": "file:src/components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/settings/animations/page.tsx",
+      "target": "file:src/components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/settings/animations/page.tsx",
+      "target": "file:src/components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/settings/multi-sensory/page.tsx",
+      "target": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/settings/multi-sensory/page.tsx",
+      "target": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/sandbox/workflow/_tests/fixtures-persistence.test.ts",
+      "target": "config:src/app/sandbox/workflow/_fixtures/templates.json",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

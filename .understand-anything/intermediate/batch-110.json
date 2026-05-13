@@ -1,0 +1,788 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/components/assessment/AgentGate.tsx",
+      "type": "file",
+      "name": "AgentGate.tsx",
+      "filePath": "src/components/assessment/AgentGate.tsx",
+      "summary": "Gating overlay for the assessment agent rail that intercepts clicks before email capture and renders a modal email-collection prompt to unlock the experience.",
+      "tags": ["component", "modal", "assessment", "email-capture", "gate"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentGate.tsx:RailClickGate",
+      "type": "function",
+      "name": "RailClickGate",
+      "filePath": "src/components/assessment/AgentGate.tsx",
+      "lineRange": [44, 164],
+      "summary": "Invisible overlay component that captures pointer events on the agent rail when email has not been provided, prompting the email modal instead of allowing interaction.",
+      "tags": ["component", "gate", "interaction", "overlay"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentGate.tsx:AgentEmailModal",
+      "type": "function",
+      "name": "AgentEmailModal",
+      "filePath": "src/components/assessment/AgentGate.tsx",
+      "lineRange": [180, 438],
+      "summary": "Modal dialog that collects the visitor's email before granting access to the AI agent rail, including validation, submission, and analytics hooks.",
+      "tags": ["component", "modal", "email-capture", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/AgentIdentityGlyph.tsx",
+      "type": "file",
+      "name": "AgentIdentityGlyph.tsx",
+      "filePath": "src/components/assessment/AgentIdentityGlyph.tsx",
+      "summary": "Animated SVG glyph displayed next to the AI agent that visualizes the agent's identity and current activity state.",
+      "tags": ["component", "svg", "animation", "agent-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/assessment/AgentIdentityGlyph.tsx:AgentIdentityGlyph",
+      "type": "function",
+      "name": "AgentIdentityGlyph",
+      "filePath": "src/components/assessment/AgentIdentityGlyph.tsx",
+      "lineRange": [12, 115],
+      "summary": "Renders the animated SVG identity glyph for the assessment agent, with pulse and rotation states tied to agent activity.",
+      "tags": ["component", "svg", "animation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/AgentInput.tsx",
+      "type": "file",
+      "name": "AgentInput.tsx",
+      "filePath": "src/components/assessment/AgentInput.tsx",
+      "summary": "Text input area for chatting with the assessment AI agent, including send button and submit-on-enter behavior.",
+      "tags": ["component", "input", "agent-ui", "chat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/assessment/AgentInput.tsx:AgentInput",
+      "type": "function",
+      "name": "AgentInput",
+      "filePath": "src/components/assessment/AgentInput.tsx",
+      "lineRange": [13, 135],
+      "summary": "Controlled text-input component with keyboard handlers and disabled states for the AI agent chat interface.",
+      "tags": ["component", "input", "chat", "form-control"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/AgentMessages.tsx",
+      "type": "file",
+      "name": "AgentMessages.tsx",
+      "filePath": "src/components/assessment/AgentMessages.tsx",
+      "summary": "Scrolling chat transcript that renders user and agent message bubbles with a typing-indicator cursor.",
+      "tags": ["component", "chat", "messages", "agent-ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/assessment/AgentMessages.tsx:AgentMessages",
+      "type": "function",
+      "name": "AgentMessages",
+      "filePath": "src/components/assessment/AgentMessages.tsx",
+      "lineRange": [24, 67],
+      "summary": "Renders the agent chat transcript, mapping messages to styled bubbles and auto-scrolling on new content.",
+      "tags": ["component", "chat", "list", "transcript"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/assessment/AgentMessages.tsx:Bubble",
+      "type": "function",
+      "name": "Bubble",
+      "filePath": "src/components/assessment/AgentMessages.tsx",
+      "lineRange": [69, 129],
+      "summary": "Single chat-bubble subcomponent that styles user vs agent messages with timestamps and entrance animation.",
+      "tags": ["component", "chat", "presentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentMessages.tsx:BlinkingCursor",
+      "type": "function",
+      "name": "BlinkingCursor",
+      "filePath": "src/components/assessment/AgentMessages.tsx",
+      "lineRange": [131, 152],
+      "summary": "Renders the blinking typing-indicator cursor displayed while the agent streams a response.",
+      "tags": ["component", "animation", "indicator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/AgentRail.tsx",
+      "type": "file",
+      "name": "AgentRail.tsx",
+      "filePath": "src/components/assessment/AgentRail.tsx",
+      "summary": "Right-hand AI agent rail for the assessment HUD that orchestrates chat messages, input, identity glyph, and inline email capture into a cohesive collapsible panel.",
+      "tags": ["component", "agent-ui", "chat", "rail", "assessment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentRail.tsx:AgentRail",
+      "type": "function",
+      "name": "AgentRail",
+      "filePath": "src/components/assessment/AgentRail.tsx",
+      "lineRange": [34, 592],
+      "summary": "Top-level AI agent rail container that wires the chat transcript, input, identity glyph, expanded header, and email-ask flow into a single panel with collapse/expand state.",
+      "tags": ["component", "agent-ui", "container", "stateful"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentRail.tsx:ExpandedHeader",
+      "type": "function",
+      "name": "ExpandedHeader",
+      "filePath": "src/components/assessment/AgentRail.tsx",
+      "lineRange": [594, 671],
+      "summary": "Expanded-state header for the agent rail showing the agent name, status pulse, and collapse control.",
+      "tags": ["component", "header", "agent-ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AgentRail.tsx:EmailAskBlock",
+      "type": "function",
+      "name": "EmailAskBlock",
+      "filePath": "src/components/assessment/AgentRail.tsx",
+      "lineRange": [697, 862],
+      "summary": "Inline email-capture block rendered within the agent chat flow when the agent asks for the visitor's email before continuing.",
+      "tags": ["component", "email-capture", "agent-ui", "form"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/AssessmentHUD.tsx",
+      "type": "file",
+      "name": "AssessmentHUD.tsx",
+      "filePath": "src/components/assessment/AssessmentHUD.tsx",
+      "summary": "Top-level heads-up display layout for the Financial Escape Assessment, composing every panel (BusinessMatch, Day1, Deliverables, FreedomNumber, Operator, Sprint, etc.) around the agent rail.",
+      "tags": ["component", "layout", "assessment", "hud", "container"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AssessmentHUD.tsx:AssessmentHUD",
+      "type": "function",
+      "name": "AssessmentHUD",
+      "filePath": "src/components/assessment/AssessmentHUD.tsx",
+      "lineRange": [45, 232],
+      "summary": "Renders the full assessment HUD layout, fetching the assessment payload and arranging all child panels around the agent rail.",
+      "tags": ["component", "layout", "container", "data-fetch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/AssessmentHUD.tsx:usePrefersReducedMotion",
+      "type": "function",
+      "name": "usePrefersReducedMotion",
+      "filePath": "src/components/assessment/AssessmentHUD.tsx",
+      "lineRange": [234, 250],
+      "summary": "Custom hook that reads the user's prefers-reduced-motion media query to gate animations across the HUD.",
+      "tags": ["hook", "accessibility", "media-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/BusinessMatchPanel.tsx",
+      "type": "file",
+      "name": "BusinessMatchPanel.tsx",
+      "filePath": "src/components/assessment/BusinessMatchPanel.tsx",
+      "summary": "Assessment panel that displays the visitor's matched business model with recommended pricing cadence and expected monthly revenue.",
+      "tags": ["component", "assessment", "panel", "business-match"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/BusinessMatchPanel.tsx:BusinessMatchPanel",
+      "type": "function",
+      "name": "BusinessMatchPanel",
+      "filePath": "src/components/assessment/BusinessMatchPanel.tsx",
+      "lineRange": [26, 223],
+      "summary": "Renders the matched business model card with title, description, pricing cadence, and projected monthly revenue.",
+      "tags": ["component", "panel", "presentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/Chassis.tsx",
+      "type": "file",
+      "name": "Chassis.tsx",
+      "filePath": "src/components/assessment/Chassis.tsx",
+      "summary": "Reusable bordered chassis frame with corner brackets used to wrap every assessment HUD panel in a consistent instrument-panel aesthetic.",
+      "tags": ["component", "layout", "wrapper", "assessment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/Chassis.tsx:CornerBracket",
+      "type": "function",
+      "name": "CornerBracket",
+      "filePath": "src/components/assessment/Chassis.tsx",
+      "lineRange": [48, 96],
+      "summary": "Decorative SVG corner bracket primitive used to draw the four corners of the Chassis frame.",
+      "tags": ["component", "svg", "decoration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/Day1Spotlight.tsx",
+      "type": "file",
+      "name": "Day1Spotlight.tsx",
+      "filePath": "src/components/assessment/Day1Spotlight.tsx",
+      "summary": "Hero panel that spotlights the visitor's Day 1 sprint tasks with completion checkboxes, start-date parsing, and a celebratory completion sigil.",
+      "tags": ["component", "assessment", "panel", "day-1", "sprint"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/Day1Spotlight.tsx:Day1Spotlight",
+      "type": "function",
+      "name": "Day1Spotlight",
+      "filePath": "src/components/assessment/Day1Spotlight.tsx",
+      "lineRange": [29, 283],
+      "summary": "Renders the Day 1 spotlight panel with sprint tasks, completion state, start date, and the completion sigil reveal.",
+      "tags": ["component", "panel", "stateful"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/Day1Spotlight.tsx:CompletedCheckbox",
+      "type": "function",
+      "name": "CompletedCheckbox",
+      "filePath": "src/components/assessment/Day1Spotlight.tsx",
+      "lineRange": [285, 319],
+      "summary": "Animated checkbox subcomponent that visualizes Day 1 task completion with check-in transition.",
+      "tags": ["component", "form-control", "animation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/assessment/Day1Spotlight.tsx:CompletionSigil",
+      "type": "function",
+      "name": "CompletionSigil",
+      "filePath": "src/components/assessment/Day1Spotlight.tsx",
+      "lineRange": [321, 351],
+      "summary": "Celebratory SVG sigil revealed when all Day 1 tasks are marked complete.",
+      "tags": ["component", "svg", "reveal", "celebration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/DeliverablesHeader.tsx",
+      "type": "file",
+      "name": "DeliverablesHeader.tsx",
+      "filePath": "src/components/assessment/DeliverablesHeader.tsx",
+      "summary": "Header panel listing the assessment's promised deliverables with check icons and pulse animations to signal generation progress.",
+      "tags": ["component", "assessment", "header", "deliverables"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/DeliverablesHeader.tsx:DeliverablesHeader",
+      "type": "function",
+      "name": "DeliverablesHeader",
+      "filePath": "src/components/assessment/DeliverablesHeader.tsx",
+      "lineRange": [56, 212],
+      "summary": "Renders the deliverables checklist header with per-item pulse targeting tied to assessment generation progress.",
+      "tags": ["component", "header", "checklist", "progress"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/EmailCapturePanel.tsx",
+      "type": "file",
+      "name": "EmailCapturePanel.tsx",
+      "filePath": "src/components/assessment/EmailCapturePanel.tsx",
+      "summary": "Standalone email-capture panel for the assessment HUD with submit handling, validation, and a dispatched EMAIL_CAPTURED event for downstream listeners.",
+      "tags": ["component", "email-capture", "form", "assessment", "event-emitter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/EmailCapturePanel.tsx:EmailCapturePanel",
+      "type": "function",
+      "name": "EmailCapturePanel",
+      "filePath": "src/components/assessment/EmailCapturePanel.tsx",
+      "lineRange": [25, 358],
+      "summary": "Renders the email-capture panel with input, validation, submit handler, and dispatches the EMAIL_CAPTURED custom event on success.",
+      "tags": ["component", "form", "email-capture", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/FreedomNumberRing.tsx",
+      "type": "file",
+      "name": "FreedomNumberRing.tsx",
+      "filePath": "src/components/assessment/FreedomNumberRing.tsx",
+      "summary": "Holographic ring visualization that prominently displays the visitor's calculated Freedom Number alongside confidence-colored statistics.",
+      "tags": ["component", "visualization", "ring", "assessment", "headline-metric"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/FreedomNumberRing.tsx:FreedomNumberRing",
+      "type": "function",
+      "name": "FreedomNumberRing",
+      "filePath": "src/components/assessment/FreedomNumberRing.tsx",
+      "lineRange": [34, 194],
+      "summary": "Renders the Freedom Number as a large currency value inside the holographic ring with confidence-tinted supporting stats.",
+      "tags": ["component", "visualization", "metric"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/FreedomNumberRing.tsx:Stat",
+      "type": "function",
+      "name": "Stat",
+      "filePath": "src/components/assessment/FreedomNumberRing.tsx",
+      "lineRange": [196, 222],
+      "summary": "Supporting stat sub-component rendering a labeled value below the Freedom Number with optional confidence color.",
+      "tags": ["component", "presentation", "stat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/HolographicRing.tsx",
+      "type": "file",
+      "name": "HolographicRing.tsx",
+      "filePath": "src/components/assessment/HolographicRing.tsx",
+      "summary": "Reusable holographic SVG ring primitive with gradient strokes and rotation animation, used as the visual base for the FreedomNumberRing.",
+      "tags": ["component", "svg", "visualization", "ring", "primitive"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/HolographicRing.tsx:HolographicRing",
+      "type": "function",
+      "name": "HolographicRing",
+      "filePath": "src/components/assessment/HolographicRing.tsx",
+      "lineRange": [14, 128],
+      "summary": "Renders the animated holographic SVG ring with gradient strokes, rotating tick marks, and configurable size.",
+      "tags": ["component", "svg", "animation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/LeadsPanel.tsx",
+      "type": "file",
+      "name": "LeadsPanel.tsx",
+      "filePath": "src/components/assessment/LeadsPanel.tsx",
+      "summary": "Assessment panel that lists the visitor's first-week lead targets with a search affordance and per-lead detail rows.",
+      "tags": ["component", "assessment", "panel", "leads"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/LeadsPanel.tsx:LeadsPanel",
+      "type": "function",
+      "name": "LeadsPanel",
+      "filePath": "src/components/assessment/LeadsPanel.tsx",
+      "lineRange": [13, 173],
+      "summary": "Renders the leads panel with a header, search icon, and a list of recommended outreach targets pulled from the assessment payload.",
+      "tags": ["component", "panel", "list"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/OperatorPanel.tsx",
+      "type": "file",
+      "name": "OperatorPanel.tsx",
+      "filePath": "src/components/assessment/OperatorPanel.tsx",
+      "summary": "Assessment panel showing the operator persona summary with currency-formatted income targets and key operating numbers.",
+      "tags": ["component", "assessment", "panel", "operator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/OperatorPanel.tsx:OperatorPanel",
+      "type": "function",
+      "name": "OperatorPanel",
+      "filePath": "src/components/assessment/OperatorPanel.tsx",
+      "lineRange": [24, 112],
+      "summary": "Renders the operator persona panel including formatted income, hours, and supporting stat rows.",
+      "tags": ["component", "panel", "presentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/OperatorPanel.tsx:Row",
+      "type": "function",
+      "name": "Row",
+      "filePath": "src/components/assessment/OperatorPanel.tsx",
+      "lineRange": [114, 141],
+      "summary": "Labeled stat-row sub-component used inside the OperatorPanel to display individual metrics.",
+      "tags": ["component", "presentation", "row"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/RoadmapList.tsx",
+      "type": "file",
+      "name": "RoadmapList.tsx",
+      "filePath": "src/components/assessment/RoadmapList.tsx",
+      "summary": "Assessment panel showing the multi-week roadmap of milestones with currency-formatted revenue targets per phase.",
+      "tags": ["component", "assessment", "panel", "roadmap"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/RoadmapList.tsx:RoadmapList",
+      "type": "function",
+      "name": "RoadmapList",
+      "filePath": "src/components/assessment/RoadmapList.tsx",
+      "lineRange": [22, 133],
+      "summary": "Renders the roadmap milestones list with formatted revenue targets, durations, and supporting stat rows.",
+      "tags": ["component", "panel", "list"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/RoadmapList.tsx:Stat",
+      "type": "function",
+      "name": "Stat",
+      "filePath": "src/components/assessment/RoadmapList.tsx",
+      "lineRange": [135, 161],
+      "summary": "Labeled stat sub-component used inside roadmap entries to display individual metrics.",
+      "tags": ["component", "presentation", "stat"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/assessment/SaveYourLinkNotice.tsx",
+      "type": "file",
+      "name": "SaveYourLinkNotice.tsx",
+      "filePath": "src/components/assessment/SaveYourLinkNotice.tsx",
+      "summary": "Notice panel that prompts the visitor to bookmark or save their unique assessment link so they can return later.",
+      "tags": ["component", "assessment", "notice", "retention"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/SaveYourLinkNotice.tsx:SaveYourLinkNotice",
+      "type": "function",
+      "name": "SaveYourLinkNotice",
+      "filePath": "src/components/assessment/SaveYourLinkNotice.tsx",
+      "lineRange": [10, 164],
+      "summary": "Renders the save-your-link notice with the visitor's unique assessment URL and copy affordance.",
+      "tags": ["component", "notice", "clipboard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/assessment/SprintGrid.tsx",
+      "type": "file",
+      "name": "SprintGrid.tsx",
+      "filePath": "src/components/assessment/SprintGrid.tsx",
+      "summary": "Grid panel that lays out the multi-day sprint plan with toggleable day cards, dispatching a SPRINT_TOGGLE custom event when the visitor expands a day.",
+      "tags": ["component", "assessment", "panel", "sprint", "event-emitter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/assessment/SprintGrid.tsx:SprintGrid",
+      "type": "function",
+      "name": "SprintGrid",
+      "filePath": "src/components/assessment/SprintGrid.tsx",
+      "lineRange": [36, 314],
+      "summary": "Renders the sprint plan grid with per-day cards, expand/collapse state, and dispatches SPRINT_TOGGLE events on interaction.",
+      "tags": ["component", "panel", "grid", "stateful"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/audiovisual/icons/WaveformIcon.tsx",
+      "type": "file",
+      "name": "WaveformIcon.tsx",
+      "filePath": "src/components/audiovisual/icons/WaveformIcon.tsx",
+      "summary": "Small SVG icon component depicting an audio waveform, used in audiovisual UI surfaces.",
+      "tags": ["component", "svg", "icon", "audiovisual"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "type": "file",
+      "name": "AudioResponsiveVisuals.tsx",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "summary": "Canvas-based audio-reactive visualizer that analyses live audio frequency data and renders particle, shape, wave, and pulse visualizations synchronized to the sound.",
+      "tags": ["component", "canvas", "audio-visualizer", "audiovisual", "animation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:AudioResponsiveVisuals",
+      "type": "function",
+      "name": "AudioResponsiveVisuals",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [49, 249],
+      "summary": "Main audio-reactive canvas component that connects to AudioVisualContext, drives the frame loop, and dispatches to draw routines based on visualization mode.",
+      "tags": ["component", "canvas", "animation-loop", "audio-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawParticles",
+      "type": "function",
+      "name": "drawParticles",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [253, 277],
+      "summary": "Renders an audio-reactive particle field on the canvas, modulating particle positions and brightness by frequency bands.",
+      "tags": ["draw-routine", "canvas", "particles"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawShapes",
+      "type": "function",
+      "name": "drawShapes",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [279, 318],
+      "summary": "Renders the audio-reactive shapes mode, drawing polygons whose size and rotation scale with audio amplitude.",
+      "tags": ["draw-routine", "canvas", "shapes"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawWaves",
+      "type": "function",
+      "name": "drawWaves",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [320, 358],
+      "summary": "Renders the waveform visualization mode, drawing oscillating sine-style waves derived from the audio frequency buffer.",
+      "tags": ["draw-routine", "canvas", "waveform"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawPulse",
+      "type": "function",
+      "name": "drawPulse",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [360, 393],
+      "summary": "Renders the pulse visualization mode, drawing concentric rings that pulse with the average audio level.",
+      "tags": ["draw-routine", "canvas", "pulse"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawPolygon",
+      "type": "function",
+      "name": "drawPolygon",
+      "filePath": "src/components/audiovisual/AudioResponsiveVisuals.tsx",
+      "lineRange": [410, 430],
+      "summary": "Low-level helper that draws an n-sided polygon at a given center and radius for shape-mode visualizations.",
+      "tags": ["utility", "canvas", "geometry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/audiovisual/AudioVisualCard.tsx",
+      "type": "file",
+      "name": "AudioVisualCard.tsx",
+      "filePath": "src/components/audiovisual/AudioVisualCard.tsx",
+      "summary": "Card component that presents an audiovisual experience (title, description, controls) with badges and tabs for switching views, used in selector grids.",
+      "tags": ["component", "card", "audiovisual", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioVisualCard.tsx:AudioVisualCard",
+      "type": "function",
+      "name": "AudioVisualCard",
+      "filePath": "src/components/audiovisual/AudioVisualCard.tsx",
+      "lineRange": [18, 139],
+      "summary": "Renders a single audiovisual experience card with title, description, badges, and tabbed sub-views.",
+      "tags": ["component", "card", "presentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/audiovisual/AudioVisualDemo.tsx",
+      "type": "file",
+      "name": "AudioVisualDemo.tsx",
+      "filePath": "src/components/audiovisual/AudioVisualDemo.tsx",
+      "summary": "Lightweight wrapper that mounts the AudioVisualSynchronizer inside the AudioVisualContext for demo and preview surfaces.",
+      "tags": ["component", "demo", "audiovisual"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioVisualDemo.tsx:AudioVisualDemo",
+      "type": "function",
+      "name": "AudioVisualDemo",
+      "filePath": "src/components/audiovisual/AudioVisualDemo.tsx",
+      "lineRange": [22, 60],
+      "summary": "Demo container that wires up AudioVisualContext and renders the AudioVisualSynchronizer with sample inputs.",
+      "tags": ["component", "demo", "container"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/audiovisual/AudioVisualSelector.tsx",
+      "type": "file",
+      "name": "AudioVisualSelector.tsx",
+      "filePath": "src/components/audiovisual/AudioVisualSelector.tsx",
+      "summary": "Sound and visualization selector UI where users browse, preview, and lock in audiovisual choices, gated by SubscriptionContext for premium sounds.",
+      "tags": ["component", "selector", "audiovisual", "subscription-gated"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioVisualSelector.tsx:AudioVisualSelector",
+      "type": "function",
+      "name": "AudioVisualSelector",
+      "filePath": "src/components/audiovisual/AudioVisualSelector.tsx",
+      "lineRange": [99, 310],
+      "summary": "Top-level selector component that lists sound cards with previews and subscription-aware lock states, dispatching to AudioVisualContext on selection.",
+      "tags": ["component", "selector", "container", "subscription"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioVisualSelector.tsx:SoundCard",
+      "type": "function",
+      "name": "SoundCard",
+      "filePath": "src/components/audiovisual/AudioVisualSelector.tsx",
+      "lineRange": [320, 362],
+      "summary": "Single sound-card sub-component within the selector grid, rendering preview controls and premium-lock affordances.",
+      "tags": ["component", "card", "presentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/components/audiovisual/AudioVisualSynchronizer.tsx",
+      "type": "file",
+      "name": "AudioVisualSynchronizer.tsx",
+      "filePath": "src/components/audiovisual/AudioVisualSynchronizer.tsx",
+      "summary": "Lower-level synchronizer that loads an audio asset and drives a child visualization in lockstep with audio playback timing.",
+      "tags": ["component", "audiovisual", "sync", "audio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/components/audiovisual/AudioVisualSynchronizer.tsx:AudioVisualSynchronizer",
+      "type": "function",
+      "name": "AudioVisualSynchronizer",
+      "filePath": "src/components/audiovisual/AudioVisualSynchronizer.tsx",
+      "lineRange": [24, 148],
+      "summary": "Loads an audio element by id and synchronizes it with the rendered visualization, exposing play/pause and timing to children.",
+      "tags": ["component", "sync", "audio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx",
+      "type": "file",
+      "name": "MultiSensoryPreferenceManager.tsx",
+      "filePath": "src/components/audiovisual/MultiSensoryPreferenceManager.tsx",
+      "summary": "Comprehensive user-preference UI for the multi-sensory experience covering audio, visual, haptic, and accessibility settings, with tier-based gating via SubscriptionContext.",
+      "tags": ["component", "preferences", "audiovisual", "subscription-gated", "settings"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/components/audiovisual/MultiSensoryPreferenceManager.tsx:MultiSensoryPreferenceManager",
+      "type": "function",
+      "name": "MultiSensoryPreferenceManager",
+      "filePath": "src/components/audiovisual/MultiSensoryPreferenceManager.tsx",
+      "lineRange": [109, 625],
+      "summary": "Renders the tabbed multi-sensory preferences UI with sliders, switches, and per-tier gating for audio, visual, haptics, and accessibility options.",
+      "tags": ["component", "preferences", "tabs", "form"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/components/assessment/AgentGate.tsx", "target": "function:src/components/assessment/AgentGate.tsx:RailClickGate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentGate.tsx", "target": "function:src/components/assessment/AgentGate.tsx:AgentEmailModal", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentGate.tsx", "target": "function:src/components/assessment/AgentGate.tsx:RailClickGate", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/AgentGate.tsx", "target": "function:src/components/assessment/AgentGate.tsx:AgentEmailModal", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/assessment/AgentIdentityGlyph.tsx", "target": "function:src/components/assessment/AgentIdentityGlyph.tsx:AgentIdentityGlyph", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentIdentityGlyph.tsx", "target": "function:src/components/assessment/AgentIdentityGlyph.tsx:AgentIdentityGlyph", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/assessment/AgentInput.tsx", "target": "function:src/components/assessment/AgentInput.tsx:AgentInput", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentInput.tsx", "target": "function:src/components/assessment/AgentInput.tsx:AgentInput", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/assessment/AgentMessages.tsx", "target": "function:src/components/assessment/AgentMessages.tsx:AgentMessages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentMessages.tsx", "target": "function:src/components/assessment/AgentMessages.tsx:Bubble", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentMessages.tsx", "target": "function:src/components/assessment/AgentMessages.tsx:BlinkingCursor", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentMessages.tsx", "target": "function:src/components/assessment/AgentMessages.tsx:AgentMessages", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/AgentMessages.tsx", "target": "file:src/types/freedom-agent.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "function:src/components/assessment/AgentRail.tsx:AgentRail", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "function:src/components/assessment/AgentRail.tsx:ExpandedHeader", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "function:src/components/assessment/AgentRail.tsx:EmailAskBlock", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "function:src/components/assessment/AgentRail.tsx:AgentRail", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/components/assessment/AgentChip.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/components/assessment/AgentIdentityGlyph.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/components/assessment/AgentInput.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/components/assessment/AgentMessages.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AgentRail.tsx", "target": "file:src/types/freedom-agent.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "function:src/components/assessment/AssessmentHUD.tsx:AssessmentHUD", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "function:src/components/assessment/AssessmentHUD.tsx:usePrefersReducedMotion", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "function:src/components/assessment/AssessmentHUD.tsx:AssessmentHUD", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/AgentGate.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/AgentRail.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/BusinessMatchPanel.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/Chassis.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/Day1Spotlight.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/DeliverablesHeader.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/FreedomNumberRing.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/LeadsPanel.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/OperatorPanel.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/RoadmapList.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/SaveYourLinkNotice.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/components/assessment/SprintGrid.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/lib/assessment/fetch-assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/styles/instrument.css", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/AssessmentHUD.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/BusinessMatchPanel.tsx", "target": "function:src/components/assessment/BusinessMatchPanel.tsx:BusinessMatchPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/BusinessMatchPanel.tsx", "target": "function:src/components/assessment/BusinessMatchPanel.tsx:BusinessMatchPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/BusinessMatchPanel.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/Chassis.tsx", "target": "function:src/components/assessment/Chassis.tsx:CornerBracket", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "function:src/components/assessment/Day1Spotlight.tsx:Day1Spotlight", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "function:src/components/assessment/Day1Spotlight.tsx:CompletedCheckbox", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "function:src/components/assessment/Day1Spotlight.tsx:CompletionSigil", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "function:src/components/assessment/Day1Spotlight.tsx:Day1Spotlight", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "file:src/components/assessment/Chassis.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "file:src/components/assessment/SprintGrid.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/Day1Spotlight.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/DeliverablesHeader.tsx", "target": "function:src/components/assessment/DeliverablesHeader.tsx:DeliverablesHeader", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/DeliverablesHeader.tsx", "target": "function:src/components/assessment/DeliverablesHeader.tsx:DeliverablesHeader", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/DeliverablesHeader.tsx", "target": "file:src/components/assessment/Chassis.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/EmailCapturePanel.tsx", "target": "function:src/components/assessment/EmailCapturePanel.tsx:EmailCapturePanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/EmailCapturePanel.tsx", "target": "function:src/components/assessment/EmailCapturePanel.tsx:EmailCapturePanel", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/assessment/FreedomNumberRing.tsx", "target": "function:src/components/assessment/FreedomNumberRing.tsx:FreedomNumberRing", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/FreedomNumberRing.tsx", "target": "function:src/components/assessment/FreedomNumberRing.tsx:Stat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/FreedomNumberRing.tsx", "target": "function:src/components/assessment/FreedomNumberRing.tsx:FreedomNumberRing", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/FreedomNumberRing.tsx", "target": "file:src/components/assessment/HolographicRing.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/FreedomNumberRing.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/HolographicRing.tsx", "target": "function:src/components/assessment/HolographicRing.tsx:HolographicRing", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/HolographicRing.tsx", "target": "function:src/components/assessment/HolographicRing.tsx:HolographicRing", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/components/assessment/LeadsPanel.tsx", "target": "function:src/components/assessment/LeadsPanel.tsx:LeadsPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/LeadsPanel.tsx", "target": "function:src/components/assessment/LeadsPanel.tsx:LeadsPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/LeadsPanel.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/OperatorPanel.tsx", "target": "function:src/components/assessment/OperatorPanel.tsx:OperatorPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/OperatorPanel.tsx", "target": "function:src/components/assessment/OperatorPanel.tsx:Row", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/OperatorPanel.tsx", "target": "function:src/components/assessment/OperatorPanel.tsx:OperatorPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/OperatorPanel.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/RoadmapList.tsx", "target": "function:src/components/assessment/RoadmapList.tsx:RoadmapList", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/RoadmapList.tsx", "target": "function:src/components/assessment/RoadmapList.tsx:Stat", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/RoadmapList.tsx", "target": "function:src/components/assessment/RoadmapList.tsx:RoadmapList", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/RoadmapList.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/SaveYourLinkNotice.tsx", "target": "function:src/components/assessment/SaveYourLinkNotice.tsx:SaveYourLinkNotice", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/SaveYourLinkNotice.tsx", "target": "function:src/components/assessment/SaveYourLinkNotice.tsx:SaveYourLinkNotice", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/SaveYourLinkNotice.tsx", "target": "file:src/components/assessment/Chassis.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/assessment/SprintGrid.tsx", "target": "function:src/components/assessment/SprintGrid.tsx:SprintGrid", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/assessment/SprintGrid.tsx", "target": "function:src/components/assessment/SprintGrid.tsx:SprintGrid", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/assessment/SprintGrid.tsx", "target": "file:src/lib/assessment/fetch-assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/assessment/SprintGrid.tsx", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:AudioResponsiveVisuals", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawParticles", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawShapes", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawWaves", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawPulse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "function:src/components/audiovisual/AudioResponsiveVisuals.tsx:drawPolygon", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "file:src/lib/types/audio.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "file:src/lib/types/tiktok.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioResponsiveVisuals.tsx", "target": "file:src/lib/utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "function:src/components/audiovisual/AudioVisualCard.tsx:AudioVisualCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "function:src/components/audiovisual/AudioVisualCard.tsx:AudioVisualCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "file:src/components/ui/card.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualCard.tsx", "target": "file:src/components/ui/tabs.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/AudioVisualDemo.tsx", "target": "function:src/components/audiovisual/AudioVisualDemo.tsx:AudioVisualDemo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioVisualDemo.tsx", "target": "file:src/components/audiovisual/AudioVisualSynchronizer.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualDemo.tsx", "target": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "function:src/components/audiovisual/AudioVisualSelector.tsx:AudioVisualSelector", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "function:src/components/audiovisual/AudioVisualSelector.tsx:SoundCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "function:src/components/audiovisual/AudioVisualSelector.tsx:AudioVisualSelector", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/components/audiovisual/WaveformVisualizer.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/components/ui/card.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/components/ui/input.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/lib/contexts/SubscriptionContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/AudioVisualSelector.tsx", "target": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/AudioVisualSynchronizer.tsx", "target": "function:src/components/audiovisual/AudioVisualSynchronizer.tsx:AudioVisualSynchronizer", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/AudioVisualSynchronizer.tsx", "target": "file:src/lib/types/audio.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "function:src/components/audiovisual/MultiSensoryPreferenceManager.tsx:MultiSensoryPreferenceManager", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "function:src/components/audiovisual/MultiSensoryPreferenceManager.tsx:MultiSensoryPreferenceManager", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/badge.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/button.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/card.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/label.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/progress.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/slider.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/switch.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/components/ui/tabs.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/components/audiovisual/MultiSensoryPreferenceManager.tsx", "target": "file:src/lib/contexts/SubscriptionContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

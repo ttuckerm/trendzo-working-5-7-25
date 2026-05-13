@@ -1,0 +1,850 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/creator-workflows/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator-workflows/route.ts",
+      "summary": "Next.js API route exposing GET and POST handlers to list and create creator workflows in Supabase with a dev-mode auth bypass for local development.",
+      "tags": ["api-handler", "creator", "supabase", "workflows"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator-workflows/route.ts",
+      "lineRange": [29, 76],
+      "summary": "Lists creator workflows for the authenticated (or dev-bypass) user from Supabase.",
+      "tags": ["api-handler", "list", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator-workflows/route.ts",
+      "lineRange": [79, 153],
+      "summary": "Creates a new creator workflow record with validated input and writes it via the Supabase service client.",
+      "tags": ["api-handler", "create", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator-workflows/route.ts:getDevUserId",
+      "type": "function",
+      "name": "getDevUserId",
+      "filePath": "src/app/api/creator-workflows/route.ts",
+      "lineRange": [16, 26],
+      "summary": "Resolves the current Supabase auth user id, falling back to a fixed dev-bypass UUID when auth fails.",
+      "tags": ["auth", "helper", "dev-bypass"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/creator/concept-score/expand/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/concept-score/expand/route.ts",
+      "summary": "Expand-mode endpoint that takes a creator concept and runs the full prediction pipeline with creator context to produce a deep concept score response.",
+      "tags": ["api-handler", "creator", "concept-score", "prediction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator/concept-score/expand/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator/concept-score/expand/route.ts",
+      "lineRange": [37, 262],
+      "summary": "Validates input, resolves the creator context, invokes runPredictionPipeline in expand mode, and returns the full prediction payload.",
+      "tags": ["api-handler", "prediction", "creator-context"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/creator/concept-score/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/concept-score/route.ts",
+      "summary": "Lightweight concept-score endpoint using the rule-based concept-scorer with creator context, exposing POST for scoring and GET for history retrieval.",
+      "tags": ["api-handler", "creator", "concept-score", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator/concept-score/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator/concept-score/route.ts",
+      "lineRange": [30, 152],
+      "summary": "Scores a candidate concept against the creator profile using the concept-scorer module and persists the result.",
+      "tags": ["api-handler", "scoring", "creator-context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator/concept-score/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/concept-score/route.ts",
+      "lineRange": [154, 195],
+      "summary": "Returns recent concept-score records for the authenticated creator.",
+      "tags": ["api-handler", "list", "supabase"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/creator/list/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/list/route.ts",
+      "summary": "Endpoint that returns the list of creator profiles known to the system for selection UIs.",
+      "tags": ["api-handler", "creator", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator/list/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/list/route.ts",
+      "lineRange": [21, 45],
+      "summary": "Returns the list of creators from Supabase, ordered for selection menus.",
+      "tags": ["api-handler", "list"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/creator/onboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/onboard/route.ts",
+      "summary": "Creator onboarding endpoint that ingests profile + reference videos and triggers immediate video analysis to build a baseline creator context.",
+      "tags": ["api-handler", "creator", "onboarding", "video-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator/onboard/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator/onboard/route.ts",
+      "lineRange": [31, 292],
+      "summary": "Validates onboarding payload, persists creator + reference videos, and launches the immediate video analyzer to populate baseline metrics.",
+      "tags": ["api-handler", "onboarding", "video-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator/onboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/onboard/route.ts",
+      "lineRange": [297, 336],
+      "summary": "Returns current onboarding status for the requesting creator.",
+      "tags": ["api-handler", "status"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/creator/predictions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/predictions/route.ts",
+      "summary": "Returns and creates per-creator prediction run records used by the creator dashboard.",
+      "tags": ["api-handler", "creator", "predictions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator/predictions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/predictions/route.ts",
+      "lineRange": [23, 70],
+      "summary": "Returns recent prediction runs for the creator, ordered by timestamp.",
+      "tags": ["api-handler", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/creator/predictions/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator/predictions/route.ts",
+      "lineRange": [72, 133],
+      "summary": "Persists a new prediction run record for the creator from the supplied payload.",
+      "tags": ["api-handler", "create"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/creator/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/predict/route.ts",
+      "summary": "Creator-side prediction endpoint that loads creator context, downloads source video, runs the full prediction pipeline, and schedules post-publish metric collection.",
+      "tags": ["api-handler", "prediction", "creator-context", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/creator/predict/route.ts",
+      "lineRange": [45, 289],
+      "summary": "Authenticated endpoint that resolves creator context, downloads the TikTok source, assembles context, runs runPredictionPipeline with personalization, and schedules metric collection.",
+      "tags": ["api-handler", "prediction", "creator-context", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/creator/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/predict/route.ts",
+      "lineRange": [294, 310],
+      "summary": "Health-check / latest-prediction summary handler used to verify endpoint availability.",
+      "tags": ["api-handler", "health"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/creator/profile/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/profile/route.ts",
+      "summary": "Thin endpoint that returns the current creator's profile via the profile_builder library.",
+      "tags": ["api-handler", "creator", "profile"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/creator/profile/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/creator/profile/route.ts",
+      "lineRange": [7, 16],
+      "summary": "Returns the assembled creator profile from profile_builder.",
+      "tags": ["api-handler", "profile"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/creator/rebuild_profile/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/creator/rebuild_profile/route.ts",
+      "summary": "POST endpoint that triggers a rebuild of the creator profile via the profile_builder library.",
+      "tags": ["api-handler", "creator", "profile", "rebuild"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/auto-nudge-unacknowledged/route.ts",
+      "summary": "Cron handler that finds unacknowledged briefs and emits auto-nudge events through the account-manager auto-nudge module.",
+      "tags": ["api-handler", "cron", "nudge", "events"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/auto-nudge-unacknowledged/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/auto-nudge-unacknowledged/route.ts",
+      "lineRange": [59, 283],
+      "summary": "Iterates unacknowledged briefs, applies nudge policy, and emits events via the platform event bus.",
+      "tags": ["cron", "nudge", "events"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cron/autodream/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/autodream/route.ts",
+      "summary": "Autodream cron route that generates briefs per agency, classifies priorities, and runs adversarial evaluation over assembled context.",
+      "tags": ["api-handler", "cron", "autodream", "briefs"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/autodream/route.ts:generateBriefs",
+      "type": "function",
+      "name": "generateBriefs",
+      "filePath": "src/app/api/cron/autodream/route.ts",
+      "lineRange": [76, 167],
+      "summary": "Generates a set of candidate briefs for the agency from assembled context and LLM output.",
+      "tags": ["generation", "briefs", "autodream"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/autodream/route.ts:classifyPriority",
+      "type": "function",
+      "name": "classifyPriority",
+      "filePath": "src/app/api/cron/autodream/route.ts",
+      "lineRange": [171, 181],
+      "summary": "Classifies the priority bucket of a generated brief based on heuristics.",
+      "tags": ["classification", "priority", "autodream"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cron/autodream/route.ts:processAgency",
+      "type": "function",
+      "name": "processAgency",
+      "filePath": "src/app/api/cron/autodream/route.ts",
+      "lineRange": [185, 370],
+      "summary": "Runs the full autodream cycle for one agency: gather context, generate briefs, score adversarially, and persist results.",
+      "tags": ["autodream", "agency", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/autodream/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/autodream/route.ts",
+      "lineRange": [374, 435],
+      "summary": "Cron entry point that iterates active agencies and invokes processAgency for each.",
+      "tags": ["cron", "autodream", "orchestration"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cron/classify-events/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/classify-events/route.ts",
+      "summary": "Cron route that scans recent platform events and classifies them into trend buckets for downstream analytics.",
+      "tags": ["api-handler", "cron", "events", "classification"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/classify-events/route.ts:classifyTrends",
+      "type": "function",
+      "name": "classifyTrends",
+      "filePath": "src/app/api/cron/classify-events/route.ts",
+      "lineRange": [52, 106],
+      "summary": "Applies heuristic + model-based classification to a batch of recent events, returning trend tags.",
+      "tags": ["classification", "events", "trends"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/classify-events/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/classify-events/route.ts",
+      "lineRange": [110, 238],
+      "summary": "Cron handler that fetches recent events, runs classifyTrends, and persists classifications.",
+      "tags": ["cron", "events", "classification"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cron/consolidate-memory/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "summary": "Memory consolidation cron that summarizes facts per agency via an LLM, applies cold demotion rules, and logs consolidation runs.",
+      "tags": ["api-handler", "cron", "memory", "consolidation", "llm"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/consolidate-memory/route.ts:runConsolidationLLM",
+      "type": "function",
+      "name": "runConsolidationLLM",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "lineRange": [78, 168],
+      "summary": "Calls the consolidation LLM with the agency's facts payload and parses structured output.",
+      "tags": ["llm", "consolidation", "memory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/consolidate-memory/route.ts:consolidateAgency",
+      "type": "function",
+      "name": "consolidateAgency",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "lineRange": [172, 366],
+      "summary": "Runs the full consolidation cycle for a single agency including token budgeting, LLM call, and writing demoted/promoted facts.",
+      "tags": ["consolidation", "agency", "memory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/consolidate-memory/route.ts:applyColdDemotionRules",
+      "type": "function",
+      "name": "applyColdDemotionRules",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "lineRange": [370, 394],
+      "summary": "Applies heuristic cold-demotion rules to facts that no longer meet recency or relevance thresholds.",
+      "tags": ["memory", "demotion", "heuristics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/consolidate-memory/route.ts:logConsolidation",
+      "type": "function",
+      "name": "logConsolidation",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "lineRange": [398, 436],
+      "summary": "Writes consolidation run telemetry to the platform_events log for later audit.",
+      "tags": ["logging", "telemetry", "memory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/consolidate-memory/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/consolidate-memory/route.ts",
+      "lineRange": [440, 502],
+      "summary": "Cron entry point that iterates active agencies and runs consolidateAgency for each.",
+      "tags": ["cron", "consolidation", "orchestration"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cron/cultural-scan/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "summary": "Cultural-scan cron that pulls signals from Reddit and Twitter per niche, extracts themes, and synthesizes trend records for the trend store.",
+      "tags": ["api-handler", "cron", "cultural-scan", "reddit", "twitter"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:fetchSubredditTop",
+      "type": "function",
+      "name": "fetchSubredditTop",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [86, 125],
+      "summary": "Fetches the top posts from a given subreddit using Reddit's public API.",
+      "tags": ["reddit", "scraper", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:extractThemes",
+      "type": "function",
+      "name": "extractThemes",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [127, 172],
+      "summary": "Extracts candidate themes from a batch of social posts using keyword/topic heuristics.",
+      "tags": ["theme-extraction", "nlp", "heuristics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:scanReddit",
+      "type": "function",
+      "name": "scanReddit",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [174, 214],
+      "summary": "Drives the Reddit pass: pulls subreddit feeds for each niche, throttles requests, and collects raw posts.",
+      "tags": ["reddit", "scan", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:scanTwitterForNiche",
+      "type": "function",
+      "name": "scanTwitterForNiche",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [229, 284],
+      "summary": "Queries Twitter for a niche's keywords and returns normalized posts.",
+      "tags": ["twitter", "scraper", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:scanTwitter",
+      "type": "function",
+      "name": "scanTwitter",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [286, 327],
+      "summary": "Drives the Twitter pass across niches, aggregating results from scanTwitterForNiche.",
+      "tags": ["twitter", "scan", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:synthesizeTrends",
+      "type": "function",
+      "name": "synthesizeTrends",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [341, 483],
+      "summary": "Combines extracted themes from Reddit and Twitter into a unified trend record per niche with confidence scoring and dedupe.",
+      "tags": ["trend-synthesis", "aggregation", "scoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/cultural-scan/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/cultural-scan/route.ts",
+      "lineRange": [493, 556],
+      "summary": "Cron entry point that orchestrates Reddit + Twitter scans and writes the synthesized trend records.",
+      "tags": ["cron", "cultural-scan", "orchestration"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cron/generate-recipes/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/generate-recipes/route.ts",
+      "summary": "Cron route that triggers the analytics discovery module to generate content recipes from recent platform signals.",
+      "tags": ["api-handler", "cron", "recipes", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cron/generate-recipes/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/generate-recipes/route.ts",
+      "lineRange": [12, 38],
+      "summary": "Invokes analytics discovery to generate recipes and returns a small status payload.",
+      "tags": ["cron", "recipes", "discovery"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/cron/overnight-triage/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/overnight-triage/route.ts",
+      "summary": "Cron route that runs the overnight-triage workflow to prioritize follow-ups and surface stalled items.",
+      "tags": ["api-handler", "cron", "triage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/overnight-triage/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/overnight-triage/route.ts",
+      "lineRange": [25, 73],
+      "summary": "Delegates to the overnight-triage module and returns a structured summary of triaged items.",
+      "tags": ["cron", "triage"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/cron/process-scheduled-actions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/process-scheduled-actions/route.ts",
+      "summary": "Cron route that drains the scheduler queue by invoking the scheduler processor with a service-role Supabase client.",
+      "tags": ["api-handler", "cron", "scheduler", "queue"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cron/process-scheduled-actions/route.ts:handle",
+      "type": "function",
+      "name": "handle",
+      "filePath": "src/app/api/cron/process-scheduled-actions/route.ts",
+      "lineRange": [35, 52],
+      "summary": "Shared GET/POST handler that invokes the scheduler processor and serializes results.",
+      "tags": ["scheduler", "handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/cron/process-scheduled-actions/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/cron/process-scheduled-actions/route.ts",
+      "lineRange": [22, 33],
+      "summary": "Returns a Supabase client using the service-role key for cron-context operations.",
+      "tags": ["supabase", "helper", "service-role"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/cron/training-pipeline/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cron/training-pipeline/route.ts",
+      "summary": "Cron entry for the automated training pipeline: schedules backfills, scrapes creators, collects metrics, auto-labels, and runs Spearman evaluation steps.",
+      "tags": ["api-handler", "cron", "training", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/cron/training-pipeline/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cron/training-pipeline/route.ts",
+      "lineRange": [19, 137],
+      "summary": "Dispatches a training-pipeline step (or all steps) by invoking the relevant training modules based on the step query param.",
+      "tags": ["cron", "training", "dispatch"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/cross/cascades/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cross/cascades/route.ts",
+      "summary": "Endpoint that returns cross-channel cascade data from the cross service.",
+      "tags": ["api-handler", "cross", "cascades"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cross/cascades/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cross/cascades/route.ts",
+      "lineRange": [8, 23],
+      "summary": "Returns cross-channel cascade analytics via the cross service.",
+      "tags": ["api-handler", "cascades"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/cross/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cross/predict/route.ts",
+      "summary": "POST endpoint that returns cross-channel predictions for a given seed via the cross service.",
+      "tags": ["api-handler", "cross", "prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cross/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/cross/predict/route.ts",
+      "lineRange": [9, 27],
+      "summary": "Reads payload, delegates to cross service, and returns the cross-channel prediction.",
+      "tags": ["api-handler", "prediction", "cross"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/cross/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/cross/summary/route.ts",
+      "summary": "GET endpoint returning a cross-channel summary view from the cross service.",
+      "tags": ["api-handler", "cross", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/cross/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/cross/summary/route.ts",
+      "lineRange": [9, 26],
+      "summary": "Returns aggregated cross-channel summary via the cross service.",
+      "tags": ["api-handler", "summary", "cross"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/csat/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/csat/route.ts",
+      "summary": "Lightweight endpoint for capturing customer-satisfaction (CSAT) responses into Supabase.",
+      "tags": ["api-handler", "csat", "feedback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/csat/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/csat/route.ts",
+      "lineRange": [12, 26],
+      "summary": "Persists a CSAT response payload to Supabase using a server-role client.",
+      "tags": ["api-handler", "csat", "supabase"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/data-explorer/quality/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/data-explorer/quality/route.ts",
+      "summary": "Data-explorer endpoint that computes quality metrics over the prediction_runs corpus including a DPS histogram for the dashboard.",
+      "tags": ["api-handler", "data-explorer", "quality", "analytics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/data-explorer/quality/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/data-explorer/quality/route.ts",
+      "lineRange": [21, 225],
+      "summary": "Computes coverage, distribution, and quality metrics across prediction runs and returns them with a DPS histogram for the data-explorer UI.",
+      "tags": ["analytics", "quality", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/data-explorer/quality/route.ts:calculateDPSHistogram",
+      "type": "function",
+      "name": "calculateDPSHistogram",
+      "filePath": "src/app/api/data-explorer/quality/route.ts",
+      "lineRange": [230, 256],
+      "summary": "Buckets DPS scores into a fixed-width histogram for visualization.",
+      "tags": ["analytics", "histogram", "dps"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/data-explorer/videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/data-explorer/videos/route.ts",
+      "summary": "Data-explorer endpoint that returns paginated video records with filtering for the analytics UI.",
+      "tags": ["api-handler", "data-explorer", "videos", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/data-explorer/videos/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/data-explorer/videos/route.ts",
+      "lineRange": [18, 128],
+      "summary": "Returns paginated, filterable video records from Supabase for the data-explorer dashboard.",
+      "tags": ["api-handler", "pagination", "filtering"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/debug/analytics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/debug/analytics/route.ts",
+      "summary": "Debug endpoint that proxies through to the templates/analytics route for development inspection.",
+      "tags": ["api-handler", "debug", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/debug/analytics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/debug/analytics/route.ts",
+      "lineRange": [54, 71],
+      "summary": "Returns the templates analytics payload as a debug passthrough.",
+      "tags": ["debug", "analytics"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "function:src/app/api/creator-workflows/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "function:src/app/api/creator-workflows/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "function:src/app/api/creator-workflows/route.ts:getDevUserId", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "function:src/app/api/creator-workflows/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "function:src/app/api/creator-workflows/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator-workflows/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/concept-score/expand/route.ts", "target": "function:src/app/api/creator/concept-score/expand/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/concept-score/expand/route.ts", "target": "function:src/app/api/creator/concept-score/expand/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/concept-score/expand/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/concept-score/expand/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/concept-score/expand/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "function:src/app/api/creator/concept-score/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "function:src/app/api/creator/concept-score/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "function:src/app/api/creator/concept-score/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "function:src/app/api/creator/concept-score/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "file:src/lib/prediction/concept-scorer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/concept-score/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/list/route.ts", "target": "function:src/app/api/creator/list/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/list/route.ts", "target": "function:src/app/api/creator/list/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/creator/onboard/route.ts", "target": "function:src/app/api/creator/onboard/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/onboard/route.ts", "target": "function:src/app/api/creator/onboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/onboard/route.ts", "target": "function:src/app/api/creator/onboard/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/onboard/route.ts", "target": "function:src/app/api/creator/onboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/onboard/route.ts", "target": "file:src/lib/services/immediate-video-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/predictions/route.ts", "target": "function:src/app/api/creator/predictions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/predictions/route.ts", "target": "function:src/app/api/creator/predictions/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/predictions/route.ts", "target": "function:src/app/api/creator/predictions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/predictions/route.ts", "target": "function:src/app/api/creator/predictions/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "function:src/app/api/creator/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "function:src/app/api/creator/predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "function:src/app/api/creator/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "function:src/app/api/creator/predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/services/tiktok-downloader.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/creator/predict/route.ts", "target": "file:src/lib/training/metric-scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/profile/route.ts", "target": "function:src/app/api/creator/profile/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/creator/profile/route.ts", "target": "function:src/app/api/creator/profile/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/creator/profile/route.ts", "target": "file:src/lib/creator/profile_builder.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/creator/rebuild_profile/route.ts", "target": "file:src/lib/creator/profile_builder.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts", "target": "function:src/app/api/cron/auto-nudge-unacknowledged/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts", "target": "function:src/app/api/cron/auto-nudge-unacknowledged/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts", "target": "file:src/lib/account-manager/auto-nudge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/auto-nudge-unacknowledged/route.ts", "target": "file:src/lib/events/emit.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "function:src/app/api/cron/autodream/route.ts:generateBriefs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "function:src/app/api/cron/autodream/route.ts:classifyPriority", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "function:src/app/api/cron/autodream/route.ts:processAgency", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "function:src/app/api/cron/autodream/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "function:src/app/api/cron/autodream/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "file:src/lib/content/adversarial-evaluator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/autodream/route.ts", "target": "file:src/lib/context/assemble-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/classify-events/route.ts", "target": "function:src/app/api/cron/classify-events/route.ts:classifyTrends", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/classify-events/route.ts", "target": "function:src/app/api/cron/classify-events/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/classify-events/route.ts", "target": "function:src/app/api/cron/classify-events/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:runConsolidationLLM", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:consolidateAgency", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:applyColdDemotionRules", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:logConsolidation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "function:src/app/api/cron/consolidate-memory/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/consolidate-memory/route.ts", "target": "file:src/lib/scheduler/schedule-action.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:fetchSubredditTop", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:extractThemes", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:scanReddit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:scanTwitterForNiche", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:scanTwitter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:synthesizeTrends", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/cultural-scan/route.ts", "target": "function:src/app/api/cron/cultural-scan/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/cron/generate-recipes/route.ts", "target": "function:src/app/api/cron/generate-recipes/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/generate-recipes/route.ts", "target": "function:src/app/api/cron/generate-recipes/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/generate-recipes/route.ts", "target": "file:src/lib/analytics/discovery.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/overnight-triage/route.ts", "target": "function:src/app/api/cron/overnight-triage/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/overnight-triage/route.ts", "target": "function:src/app/api/cron/overnight-triage/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/overnight-triage/route.ts", "target": "file:src/lib/triage/overnight-triage.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/process-scheduled-actions/route.ts", "target": "function:src/app/api/cron/process-scheduled-actions/route.ts:handle", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/process-scheduled-actions/route.ts", "target": "function:src/app/api/cron/process-scheduled-actions/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/process-scheduled-actions/route.ts", "target": "file:src/lib/scheduler/processor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "function:src/app/api/cron/training-pipeline/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "function:src/app/api/cron/training-pipeline/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/cron/scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/auto-labeler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/fresh-video-scanner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/metric-collector.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/niche-creator-scraper.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/schedule-backfill.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/cron/training-pipeline/route.ts", "target": "file:src/lib/training/spearman-evaluator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cross/cascades/route.ts", "target": "function:src/app/api/cross/cascades/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cross/cascades/route.ts", "target": "function:src/app/api/cross/cascades/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cross/cascades/route.ts", "target": "file:src/lib/cross/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cross/predict/route.ts", "target": "function:src/app/api/cross/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cross/predict/route.ts", "target": "function:src/app/api/cross/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cross/predict/route.ts", "target": "file:src/lib/cross/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/cross/summary/route.ts", "target": "function:src/app/api/cross/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/cross/summary/route.ts", "target": "function:src/app/api/cross/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/cross/summary/route.ts", "target": "file:src/lib/cross/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/csat/route.ts", "target": "function:src/app/api/csat/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/csat/route.ts", "target": "function:src/app/api/csat/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/csat/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/data-explorer/quality/route.ts", "target": "function:src/app/api/data-explorer/quality/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/data-explorer/quality/route.ts", "target": "function:src/app/api/data-explorer/quality/route.ts:calculateDPSHistogram", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/data-explorer/quality/route.ts", "target": "function:src/app/api/data-explorer/quality/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/data-explorer/videos/route.ts", "target": "function:src/app/api/data-explorer/videos/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/data-explorer/videos/route.ts", "target": "function:src/app/api/data-explorer/videos/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/debug/analytics/route.ts", "target": "function:src/app/api/debug/analytics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/debug/analytics/route.ts", "target": "function:src/app/api/debug/analytics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/debug/analytics/route.ts", "target": "file:src/app/api/templates/analytics/route.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,598 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/labels/[...slug]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/labels/[...slug]/route.ts",
+      "summary": "Catch-all label endpoint that returns a stubbed OK response for GET/POST under /api/labels/*; used as a placeholder for label CRUD routing.",
+      "tags": ["api-handler", "stub", "catch-all", "route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/landing/code-validate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/landing/code-validate/route.ts",
+      "summary": "POST endpoint that validates the hidden 5-letter Code Edition landing-page code, rate-limits by IP, and issues an HMAC-signed access cookie via Supabase service client.",
+      "tags": ["api-handler", "validation", "rate-limit", "auth-cookie"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/landing/email-notify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/landing/email-notify/route.ts",
+      "summary": "POST endpoint that captures landing-page email signups, rate-limits by IP, stores them in Supabase, and forwards to Beehiiv for newsletter subscription.",
+      "tags": ["api-handler", "email-capture", "rate-limit", "integration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/learning/model/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/learning/model/route.ts",
+      "summary": "GET endpoint that returns the current learning-loop model version, weights, and metadata from the learning store.",
+      "tags": ["api-handler", "learning-loop", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/learning/promote/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/learning/promote/route.ts",
+      "summary": "POST endpoint that promotes a candidate learning-loop model to the active model in the learning store.",
+      "tags": ["api-handler", "learning-loop", "promotion"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/learning/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/learning/summary/route.ts",
+      "summary": "GET endpoint that returns a cached 30-day learning-loop summary (current/candidate model versions, drift index, trend), refreshing the cache when older than 10 minutes.",
+      "tags": ["api-handler", "learning-loop", "summary", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/learning/update/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/learning/update/route.ts",
+      "summary": "Core learning-loop ingestion endpoint that receives actual post-publish video metrics, recomputes DPS v2 cohort labels, updates component reliability scores, and emits insight events.",
+      "tags": ["api-handler", "learning-loop", "training", "dps-v2"],
+      "complexity": "complex",
+      "languageNotes": "Uses module-scoped Supabase service-key client; large POST handler embeds cohort labeling and insight generation alongside HTTP handling."
+    },
+    {
+      "id": "file:src/app/api/llm/judge/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/llm/judge/route.ts",
+      "summary": "Thin POST wrapper that delegates LLM judge scoring requests to the lib/llm/judge service.",
+      "tags": ["api-handler", "llm", "wrapper", "judge"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/llm/orchestrate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/llm/orchestrate/route.ts",
+      "summary": "Thin POST wrapper for LLM orchestration that delegates to the shared judge service module.",
+      "tags": ["api-handler", "llm", "wrapper", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/llm/scout/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/llm/scout/route.ts",
+      "summary": "Thin POST wrapper that delegates LLM scout (idea-mining) requests to the lib/llm/scout service.",
+      "tags": ["api-handler", "llm", "wrapper", "scout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/llm/teacher/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/llm/teacher/route.ts",
+      "summary": "Thin POST wrapper that delegates LLM teacher (rationale/coaching) requests to the lib/llm/teacher service.",
+      "tags": ["api-handler", "llm", "wrapper", "teacher"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/marketing/case_study/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/marketing/case_study/route.ts",
+      "summary": "POST endpoint that persists marketing case-study artifacts to the object store for downstream landing-page use.",
+      "tags": ["api-handler", "marketing", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/marketing/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/marketing/summary/route.ts",
+      "summary": "Minimal GET endpoint returning a stub marketing summary payload for the marketing dashboard.",
+      "tags": ["api-handler", "marketing", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/marketing/viral-analysis/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/marketing/viral-analysis/route.ts",
+      "summary": "Marketing endpoint that dispatches viral-analysis actions (fetch top-performing, analyze) to the viralVideoAnalysisService and returns results.",
+      "tags": ["api-handler", "marketing", "viral-analysis", "router"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/methodology/alignment/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/methodology/alignment/route.ts",
+      "summary": "Admin-gated GET endpoint that returns a methodology alignment report from cache or regenerates it when stale.",
+      "tags": ["api-handler", "methodology", "admin", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/metrics/accuracy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/metrics/accuracy/route.ts",
+      "summary": "GET endpoint that aggregates per-cohort calibration and drift bins by calling the calibration and drift sibling endpoints and returning a unified accuracy report.",
+      "tags": ["api-handler", "metrics", "accuracy", "aggregator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/metrics/calibration/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/metrics/calibration/route.ts",
+      "summary": "GET endpoint that returns calibration bins (predicted vs. actual viral score) for a given cohort.",
+      "tags": ["api-handler", "metrics", "calibration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/metrics/drift/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/metrics/drift/route.ts",
+      "summary": "GET endpoint that returns prediction drift bins for a given cohort over a time window.",
+      "tags": ["api-handler", "metrics", "drift"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/metrics/route.ts",
+      "summary": "Top-level metrics endpoint that merges the adaptation summary and learning-loop summary into a single dashboard payload.",
+      "tags": ["api-handler", "metrics", "aggregator", "dashboard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:src/app/api/metrics/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/app/api/metrics/README.md",
+      "summary": "Minimal placeholder README documenting the /api/metrics route group.",
+      "tags": ["documentation", "metrics", "placeholder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ml/suggestions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ml/suggestions/route.ts",
+      "summary": "Enterprise-tier GET endpoint that returns ML-driven trend prediction suggestions for a template, with development-mode mocks and Supabase-backed manual adjustment logging.",
+      "tags": ["api-handler", "ml", "suggestions", "enterprise"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/ml/update-model/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ml/update-model/route.ts",
+      "summary": "POST endpoint that records a manual ML model update event using the prediction type definitions.",
+      "tags": ["api-handler", "ml", "model-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/moat/benchmarks/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/moat/benchmarks/route.ts",
+      "summary": "Minimal GET endpoint returning a stub moat benchmarks payload for the competitive-moat dashboard.",
+      "tags": ["api-handler", "moat", "stub", "benchmarks"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/mockup/load/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/mockup/load/route.ts",
+      "summary": "GET endpoint that reads a static HTML mockup file from disk and injects a dark-mode CSS override before returning it for in-app preview.",
+      "tags": ["api-handler", "mockup", "html-injection", "preview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/models/active/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/models/active/route.ts",
+      "summary": "GET endpoint that returns the currently active model identifiers (e.g. Gemini, OpenAI) from the env helper for client consumption.",
+      "tags": ["api-handler", "models", "config-readout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/landing/code-validate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/landing/code-validate/route.ts",
+      "lineRange": [67, 140],
+      "summary": "Validates the submitted 5-letter access code against the active Code Edition value, rate-limits by IP, and on success issues the signed access cookie used by gated landing pages.",
+      "tags": ["api-handler", "validation", "auth-cookie", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/landing/code-validate/route.ts:rateLimit",
+      "type": "function",
+      "name": "rateLimit",
+      "filePath": "src/app/api/landing/code-validate/route.ts",
+      "lineRange": [19, 31],
+      "summary": "In-memory sliding-window rate limiter that allows at most RATE_LIMIT_MAX requests per IP within a 5-minute window.",
+      "tags": ["utility", "rate-limit", "in-memory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/landing/email-notify/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/landing/email-notify/route.ts",
+      "lineRange": [47, 134],
+      "summary": "Captures a landing-page email signup, applies IP rate limiting, persists the lead to Supabase, and forwards the address to Beehiiv for newsletter onboarding.",
+      "tags": ["api-handler", "email-capture", "integration", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/landing/email-notify/route.ts:rateLimit",
+      "type": "function",
+      "name": "rateLimit",
+      "filePath": "src/app/api/landing/email-notify/route.ts",
+      "lineRange": [13, 25],
+      "summary": "In-memory sliding-window rate limiter mirroring the code-validate limiter; caps per-IP email submissions within a 5-minute window.",
+      "tags": ["utility", "rate-limit", "in-memory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/learning/model/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/learning/model/route.ts",
+      "lineRange": [7, 20],
+      "summary": "Returns the active learning-loop model record (version, weights, metadata) by delegating to the learning store.",
+      "tags": ["api-handler", "learning-loop", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/learning/promote/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/learning/promote/route.ts",
+      "lineRange": [7, 32],
+      "summary": "Promotes the candidate model to the active model slot in the learning store and returns the resulting version metadata.",
+      "tags": ["api-handler", "learning-loop", "promotion", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/learning/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/learning/summary/route.ts",
+      "lineRange": [8, 34],
+      "summary": "Returns a cached 30-day learning-loop summary (current and candidate versions, drift index, trend) and refreshes it when older than 10 minutes.",
+      "tags": ["api-handler", "learning-loop", "summary", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/learning/update/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/learning/update/route.ts",
+      "lineRange": [50, 355],
+      "summary": "Receives actual post-publish video metrics, recomputes DPS v2 cohort labels, persists outcome rows, and updates component reliability scores driving the Kai learning loop.",
+      "tags": ["api-handler", "learning-loop", "training", "dps-v2", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/learning/update/route.ts:fetchCohortForV2",
+      "type": "function",
+      "name": "fetchCohortForV2",
+      "filePath": "src/app/api/learning/update/route.ts",
+      "lineRange": [357, 383],
+      "summary": "Fetches the relevant cohort of scraped-video rows (paginated) for DPS v2 labeling of the current prediction run.",
+      "tags": ["data-access", "supabase", "cohort", "dps-v2"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/learning/update/route.ts:generateInsights",
+      "type": "function",
+      "name": "generateInsights",
+      "filePath": "src/app/api/learning/update/route.ts",
+      "lineRange": [385, 424],
+      "summary": "Derives qualitative learning insights from the prediction-vs-actual delta to feed dashboards and coaching surfaces.",
+      "tags": ["learning-loop", "insights", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/learning/update/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/learning/update/route.ts",
+      "lineRange": [429, 447],
+      "summary": "Read-only companion to the learning-update POST that returns recent learning-loop status for the supplied prediction ID.",
+      "tags": ["api-handler", "learning-loop", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/llm/judge/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/llm/judge/route.ts",
+      "lineRange": [7, 22],
+      "summary": "Forwards a judge-scoring request body to the lib/llm/judge service and returns its verdict response.",
+      "tags": ["api-handler", "llm", "judge", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/llm/orchestrate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/llm/orchestrate/route.ts",
+      "lineRange": [7, 22],
+      "summary": "Forwards an orchestration request to the shared LLM judge service, used as the single entry point for multi-step LLM flows.",
+      "tags": ["api-handler", "llm", "orchestration", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/llm/scout/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/llm/scout/route.ts",
+      "lineRange": [7, 22],
+      "summary": "Forwards a scout (idea-mining / trend discovery) request to the lib/llm/scout service.",
+      "tags": ["api-handler", "llm", "scout", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/llm/teacher/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/llm/teacher/route.ts",
+      "lineRange": [7, 22],
+      "summary": "Forwards a teacher (rationale / coaching) request to the lib/llm/teacher service.",
+      "tags": ["api-handler", "llm", "teacher", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/marketing/case_study/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/marketing/case_study/route.ts",
+      "lineRange": [9, 25],
+      "summary": "Persists a marketing case-study artifact (JSON payload) to the configured object store under a deterministic key.",
+      "tags": ["api-handler", "marketing", "storage", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/marketing/viral-analysis/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/marketing/viral-analysis/route.ts",
+      "lineRange": [7, 56],
+      "summary": "Action-router POST that dispatches viral-analysis operations (fetch_top_performing, analyze, etc.) to the viralVideoAnalysisService and returns the result.",
+      "tags": ["api-handler", "marketing", "router", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/marketing/viral-analysis/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/marketing/viral-analysis/route.ts",
+      "lineRange": [58, 79],
+      "summary": "Returns recent viral-analysis results or a default sampler for the marketing dashboard surface.",
+      "tags": ["api-handler", "marketing", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/methodology/alignment/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/methodology/alignment/route.ts",
+      "lineRange": [8, 35],
+      "summary": "Admin-gated handler that returns a cached methodology-alignment report or regenerates it when the cache is stale or `force=true` is supplied.",
+      "tags": ["api-handler", "methodology", "admin", "caching", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/metrics/accuracy/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/metrics/accuracy/route.ts",
+      "lineRange": [12, 71],
+      "summary": "Aggregates calibration and drift bins for a cohort by calling sibling /api/metrics endpoints over absolute URLs and returning a unified accuracy report.",
+      "tags": ["api-handler", "metrics", "accuracy", "aggregator", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/metrics/calibration/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/metrics/calibration/route.ts",
+      "lineRange": [10, 19],
+      "summary": "Returns calibration bins (predicted vs. actual viral score) for the requested cohort.",
+      "tags": ["api-handler", "metrics", "calibration", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/metrics/drift/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/metrics/drift/route.ts",
+      "lineRange": [10, 19],
+      "summary": "Returns prediction drift bins for the requested cohort over a recent time window.",
+      "tags": ["api-handler", "metrics", "drift", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/metrics/route.ts",
+      "lineRange": [10, 28],
+      "summary": "Composes the adaptation summary and learning-loop summary into a single metrics-dashboard payload.",
+      "tags": ["api-handler", "metrics", "aggregator", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ml/suggestions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ml/suggestions/route.ts",
+      "lineRange": [20, 220],
+      "summary": "Returns ML-driven trend prediction suggestions for a template (enterprise-tier gated), with development-mode mock fallbacks and Supabase-backed manual adjustment logging.",
+      "tags": ["api-handler", "ml", "suggestions", "enterprise", "get"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/ml/suggestions/route.ts:getMockTrendPrediction",
+      "type": "function",
+      "name": "getMockTrendPrediction",
+      "filePath": "src/app/api/ml/suggestions/route.ts",
+      "lineRange": [225, 246],
+      "summary": "Builds a deterministic mock TrendPrediction object for a given template ID used during development to exercise the suggestions UI without ML calls.",
+      "tags": ["utility", "mock", "ml", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ml/update-model/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ml/update-model/route.ts",
+      "lineRange": [19, 49],
+      "summary": "Records a manual model-update event (active version, notes) typed against the shared prediction types module.",
+      "tags": ["api-handler", "ml", "model-management", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/mockup/load/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/mockup/load/route.ts",
+      "lineRange": [102, 115],
+      "summary": "Reads a static HTML mockup from disk, injects a dark-mode CSS override, and returns the augmented HTML for in-app preview.",
+      "tags": ["api-handler", "mockup", "html-injection", "get"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/landing/email-notify/route.ts", "target": "file:src/lib/beehiiv/notify.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/landing/email-notify/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/learning/model/route.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/learning/promote/route.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/learning/summary/route.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/learning/summary/route.ts", "target": "file:src/lib/learning/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/llm/judge/route.ts", "target": "file:src/lib/llm/judge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/llm/orchestrate/route.ts", "target": "file:src/lib/llm/judge.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/llm/scout/route.ts", "target": "file:src/lib/llm/scout.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/llm/teacher/route.ts", "target": "file:src/lib/llm/teacher.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/marketing/case_study/route.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/marketing/viral-analysis/route.ts", "target": "file:src/lib/services/viralVideoAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/methodology/alignment/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/methodology/alignment/route.ts", "target": "file:src/lib/methodology/alignment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/metrics/route.ts", "target": "file:src/app/api/adaptation/summary/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/metrics/route.ts", "target": "file:src/lib/learning/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "file:src/app/api/auth/[...nextauth]/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "file:src/lib/services/mlPredictionService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ml/update-model/route.ts", "target": "file:src/lib/types/prediction.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/models/active/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/landing/code-validate/route.ts", "target": "function:src/app/api/landing/code-validate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/landing/code-validate/route.ts", "target": "function:src/app/api/landing/code-validate/route.ts:rateLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/landing/code-validate/route.ts", "target": "function:src/app/api/landing/code-validate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/landing/email-notify/route.ts", "target": "function:src/app/api/landing/email-notify/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/landing/email-notify/route.ts", "target": "function:src/app/api/landing/email-notify/route.ts:rateLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/landing/email-notify/route.ts", "target": "function:src/app/api/landing/email-notify/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/learning/model/route.ts", "target": "function:src/app/api/learning/model/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/model/route.ts", "target": "function:src/app/api/learning/model/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/learning/promote/route.ts", "target": "function:src/app/api/learning/promote/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/promote/route.ts", "target": "function:src/app/api/learning/promote/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/learning/summary/route.ts", "target": "function:src/app/api/learning/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/summary/route.ts", "target": "function:src/app/api/learning/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:fetchCohortForV2", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:generateInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/learning/update/route.ts", "target": "function:src/app/api/learning/update/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/llm/judge/route.ts", "target": "function:src/app/api/llm/judge/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/llm/judge/route.ts", "target": "function:src/app/api/llm/judge/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/llm/orchestrate/route.ts", "target": "function:src/app/api/llm/orchestrate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/llm/orchestrate/route.ts", "target": "function:src/app/api/llm/orchestrate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/llm/scout/route.ts", "target": "function:src/app/api/llm/scout/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/llm/scout/route.ts", "target": "function:src/app/api/llm/scout/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/llm/teacher/route.ts", "target": "function:src/app/api/llm/teacher/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/llm/teacher/route.ts", "target": "function:src/app/api/llm/teacher/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/marketing/case_study/route.ts", "target": "function:src/app/api/marketing/case_study/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/marketing/case_study/route.ts", "target": "function:src/app/api/marketing/case_study/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/marketing/viral-analysis/route.ts", "target": "function:src/app/api/marketing/viral-analysis/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/marketing/viral-analysis/route.ts", "target": "function:src/app/api/marketing/viral-analysis/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/marketing/viral-analysis/route.ts", "target": "function:src/app/api/marketing/viral-analysis/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/marketing/viral-analysis/route.ts", "target": "function:src/app/api/marketing/viral-analysis/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/methodology/alignment/route.ts", "target": "function:src/app/api/methodology/alignment/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/methodology/alignment/route.ts", "target": "function:src/app/api/methodology/alignment/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/metrics/accuracy/route.ts", "target": "function:src/app/api/metrics/accuracy/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/metrics/accuracy/route.ts", "target": "function:src/app/api/metrics/accuracy/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/metrics/calibration/route.ts", "target": "function:src/app/api/metrics/calibration/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/metrics/calibration/route.ts", "target": "function:src/app/api/metrics/calibration/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/metrics/drift/route.ts", "target": "function:src/app/api/metrics/drift/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/metrics/drift/route.ts", "target": "function:src/app/api/metrics/drift/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/metrics/route.ts", "target": "function:src/app/api/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/metrics/route.ts", "target": "function:src/app/api/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "function:src/app/api/ml/suggestions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "function:src/app/api/ml/suggestions/route.ts:getMockTrendPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ml/suggestions/route.ts", "target": "function:src/app/api/ml/suggestions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ml/update-model/route.ts", "target": "function:src/app/api/ml/update-model/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ml/update-model/route.ts", "target": "function:src/app/api/ml/update-model/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/mockup/load/route.ts", "target": "function:src/app/api/mockup/load/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/mockup/load/route.ts", "target": "function:src/app/api/mockup/load/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/llm/judge/route.ts", "target": "function:src/lib/llm/judge.ts:judge", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/llm/orchestrate/route.ts", "target": "function:src/lib/llm/judge.ts:judge", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/llm/scout/route.ts", "target": "function:src/lib/llm/scout.ts:scout", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/llm/teacher/route.ts", "target": "function:src/lib/llm/teacher.ts:teacher", "type": "calls", "direction": "forward", "weight": 0.8}
+  ]
+}

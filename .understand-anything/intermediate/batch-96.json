@@ -1,0 +1,576 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/training/validate-features/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/training/validate-features/route.ts",
+      "summary": "Next.js API route that validates training feature availability and contamination boundaries by invoking the contamination validator and feature availability matrix.",
+      "tags": ["api-handler", "training", "validation", "next-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/training/validate-features/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/training/validate-features/route.ts",
+      "lineRange": [18, 115],
+      "summary": "POST handler that runs feature contamination checks and returns the feature availability matrix for the requested training set.",
+      "tags": ["api-handler", "post", "training", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/triage/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/triage/run/route.ts",
+      "summary": "Next.js API route that kicks off the overnight triage job for the caller's agency after enforcing auth and environment checks.",
+      "tags": ["api-handler", "triage", "agency", "next-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/triage/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/triage/run/route.ts",
+      "lineRange": [20, 75],
+      "summary": "POST handler that validates the agency context and invokes the overnight triage pipeline, returning job status.",
+      "tags": ["api-handler", "post", "triage", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/triage/today/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/triage/today/route.ts",
+      "summary": "Next.js API route that returns the current day's triage results for the authenticated agency.",
+      "tags": ["api-handler", "triage", "agency", "next-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/triage/today/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/triage/today/route.ts",
+      "lineRange": [20, 63],
+      "summary": "GET handler that fetches today's triage queue for the caller's agency from the overnight triage module.",
+      "tags": ["api-handler", "get", "triage", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/user/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/user/analyze/route.ts",
+      "summary": "Next.js API route that orchestrates DNA-detective prediction for a user-supplied video URL with limited-user quota enforcement and platform/niche extraction helpers.",
+      "tags": ["api-handler", "user", "analysis", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/user/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/user/analyze/route.ts",
+      "lineRange": [9, 122],
+      "summary": "POST handler that validates user quota in limited_users, extracts platform/niche from the URL, runs DNA prediction and orchestration, and returns the analysis result.",
+      "tags": ["api-handler", "post", "user", "analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/user/analyze/route.ts:generateOptimizationSuggestions",
+      "type": "function",
+      "name": "generateOptimizationSuggestions",
+      "filePath": "src/app/api/user/analyze/route.ts",
+      "lineRange": [137, 166],
+      "summary": "Produces a list of optimization suggestions derived from predicted DNA gene scores for the user's video.",
+      "tags": ["utility", "optimization", "suggestions", "user"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/user/analyze/route.ts:extractVideoId",
+      "type": "function",
+      "name": "extractVideoId",
+      "filePath": "src/app/api/user/analyze/route.ts",
+      "lineRange": [168, 183],
+      "summary": "Parses a video URL and returns the canonical video id for TikTok, Instagram, or YouTube shorts.",
+      "tags": ["utility", "parsing", "url", "video"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/user/stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/user/stats/route.ts",
+      "summary": "Next.js API route that returns aggregate analysis stats for the current limited user from Supabase.",
+      "tags": ["api-handler", "user", "stats", "next-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/user/stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/user/stats/route.ts",
+      "lineRange": [7, 83],
+      "summary": "GET handler that loads the limited_users row and analysis aggregates for the requesting user and returns daily/total counters.",
+      "tags": ["api-handler", "get", "user", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/user/templates/top/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/user/templates/top/route.ts",
+      "summary": "Next.js API route that returns the top-performing viral templates filtered by user-selected niche/platform.",
+      "tags": ["api-handler", "user", "templates", "next-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/user/templates/top/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/user/templates/top/route.ts",
+      "lineRange": [7, 88],
+      "summary": "GET handler that queries Supabase for top-ranked templates matching the requested niche and platform, then formats them for the user UI.",
+      "tags": ["api-handler", "get", "templates", "ranking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/validation/[...slug]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/[...slug]/route.ts",
+      "summary": "Catch-all Next.js API route for the legacy validation namespace that responds with a 410-style stub after a server-auth check.",
+      "tags": ["api-handler", "validation", "catch-all", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/[...slug]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/validation/[...slug]/route.ts",
+      "lineRange": [9, 25],
+      "summary": "GET handler that authenticates the caller and returns a deprecated-route payload for any nested validation slug.",
+      "tags": ["api-handler", "get", "validation", "deprecated"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/[...slug]/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/[...slug]/route.ts",
+      "lineRange": [27, 41],
+      "summary": "POST handler equivalent of the catch-all stub that gates with server-auth and signals the endpoint is deprecated.",
+      "tags": ["api-handler", "post", "validation", "deprecated"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/build-cohort/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/build-cohort/route.ts",
+      "summary": "Next.js API route that delegates to the validation-workflow server action to build a cohort for a validation run.",
+      "tags": ["api-handler", "validation", "cohort", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/build-cohort/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/build-cohort/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that parses cohort-build request payload and invokes the workflow action to materialize the cohort.",
+      "tags": ["api-handler", "post", "validation", "cohort"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/create-run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/create-run/route.ts",
+      "summary": "Next.js API route that creates a new validation workflow run via the validation-workflow server action.",
+      "tags": ["api-handler", "validation", "run", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/create-run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/create-run/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that validates the create-run payload and persists a new validation run record.",
+      "tags": ["api-handler", "post", "validation", "run"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/export.csv/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/export.csv/route.ts",
+      "summary": "Next.js API route that exports the validation run records as a CSV stream using the validation store.",
+      "tags": ["api-handler", "validation", "export", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/export.csv/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/validation/export.csv/route.ts",
+      "lineRange": [7, 21],
+      "summary": "GET handler that reads validation records from the store and returns them as a CSV download response.",
+      "tags": ["api-handler", "get", "export", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/extract-patterns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/extract-patterns/route.ts",
+      "summary": "Next.js API route that invokes the validation-workflow action to extract viral patterns for a given run.",
+      "tags": ["api-handler", "validation", "patterns", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/extract-patterns/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/extract-patterns/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that delegates to the workflow action to run pattern extraction over the run's cohort.",
+      "tags": ["api-handler", "post", "patterns", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/generate-fingerprints/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/generate-fingerprints/route.ts",
+      "summary": "Next.js API route that triggers fingerprint generation for the cohort via the validation workflow action.",
+      "tags": ["api-handler", "validation", "fingerprints", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/generate-fingerprints/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/generate-fingerprints/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that delegates to the validation workflow to compute video fingerprints for the cohort.",
+      "tags": ["api-handler", "post", "fingerprints", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/get-previous-runs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/get-previous-runs/route.ts",
+      "summary": "Next.js API route that lists previous validation runs via the validation-workflow server action.",
+      "tags": ["api-handler", "validation", "runs", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/get-previous-runs/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/validation/get-previous-runs/route.ts",
+      "lineRange": [10, 28],
+      "summary": "GET handler that retrieves the list of historical validation runs from the workflow action.",
+      "tags": ["api-handler", "get", "validation", "runs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/get-run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/get-run/route.ts",
+      "summary": "Next.js API route that fetches a single validation run by id via the validation-workflow server action.",
+      "tags": ["api-handler", "validation", "run", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/get-run/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/validation/get-run/route.ts",
+      "lineRange": [10, 35],
+      "summary": "GET handler that returns the requested validation run detail object from the workflow action.",
+      "tags": ["api-handler", "get", "validation", "run"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/lock-predictions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/lock-predictions/route.ts",
+      "summary": "Next.js API route that locks the prediction set for a validation run via the workflow action to prevent further edits.",
+      "tags": ["api-handler", "validation", "predictions", "lock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/lock-predictions/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/lock-predictions/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that marks predictions as locked through the validation-workflow server action.",
+      "tags": ["api-handler", "post", "predictions", "lock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/metrics/route.ts",
+      "summary": "Next.js API route that returns accuracy metrics for the viral prediction service via the accuracy tracker.",
+      "tags": ["api-handler", "validation", "metrics", "accuracy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/validation/metrics/route.ts",
+      "lineRange": [6, 21],
+      "summary": "GET handler that queries the accuracy tracker and returns aggregated validation metrics.",
+      "tags": ["api-handler", "get", "metrics", "accuracy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/predict-with-visual/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/predict-with-visual/route.ts",
+      "summary": "Next.js API route that performs a validation run prediction combining text-pattern scoring with FFmpeg-derived visual intelligence multipliers and persists results to Supabase.",
+      "tags": ["api-handler", "validation", "prediction", "visual"],
+      "complexity": "complex",
+      "languageNotes": "Uses inline supabase-js client construction with service key rather than the shared server helper."
+    },
+    {
+      "id": "function:src/app/api/validation/predict-with-visual/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/predict-with-visual/route.ts",
+      "lineRange": [19, 167],
+      "summary": "POST handler that loads run rows, computes blended text+visual scores per video, and writes prediction records back to Supabase.",
+      "tags": ["api-handler", "post", "prediction", "visual"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/validation/predict-with-visual/route.ts:calculateTextScore",
+      "type": "function",
+      "name": "calculateTextScore",
+      "filePath": "src/app/api/validation/predict-with-visual/route.ts",
+      "lineRange": [170, 184],
+      "summary": "Computes a text-only viral pattern score from extracted caption/hook features for the prediction pipeline.",
+      "tags": ["utility", "scoring", "text", "prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/predict-with-visual/route.ts:calculateVisualMultiplier",
+      "type": "function",
+      "name": "calculateVisualMultiplier",
+      "filePath": "src/app/api/validation/predict-with-visual/route.ts",
+      "lineRange": [187, 213],
+      "summary": "Derives a multiplicative visual quality factor from FFmpeg-derived visual analysis features.",
+      "tags": ["utility", "scoring", "visual", "prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/validation/recompute/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/recompute/route.ts",
+      "summary": "Next.js API route that recomputes the validation summary using the shared summary helper.",
+      "tags": ["api-handler", "validation", "recompute", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/records/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/records/route.ts",
+      "summary": "Next.js API route that returns raw validation records from the validation store.",
+      "tags": ["api-handler", "validation", "records", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/summary/route.ts",
+      "summary": "Next.js API route that returns the cached validation summary via the summary helper module.",
+      "tags": ["api-handler", "validation", "summary", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/templates/route.ts",
+      "summary": "Next.js API route stub that returns a placeholder template list for the validation namespace.",
+      "tags": ["api-handler", "validation", "templates", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/test-contract/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/test-contract/route.ts",
+      "summary": "Next.js API route that validates inbound payloads against the video ingestion and presentation card JSON schemas for contract testing.",
+      "tags": ["api-handler", "validation", "contract", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/test-contract/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/test-contract/route.ts",
+      "lineRange": [21, 36],
+      "summary": "POST handler that strips metadata and runs JSON schema validation against ingestion and presentation card contracts.",
+      "tags": ["api-handler", "post", "contract", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/trend/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/trend/route.ts",
+      "summary": "Next.js API route stub returning an empty trend payload for the validation namespace.",
+      "tags": ["api-handler", "validation", "trend", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/validate-accuracy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/validate-accuracy/route.ts",
+      "summary": "Next.js API route that triggers the validate-accuracy step of the validation workflow for a completed run.",
+      "tags": ["api-handler", "validation", "accuracy", "next-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/validation/validate-accuracy/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/validation/validate-accuracy/route.ts",
+      "lineRange": [11, 35],
+      "summary": "POST handler that invokes the validation-workflow action to evaluate prediction accuracy for a finished run.",
+      "tags": ["api-handler", "post", "validation", "accuracy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/validation/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/validation/route.ts",
+      "summary": "Next.js API route stub at the validation namespace root that returns an empty payload.",
+      "tags": ["api-handler", "validation", "stub", "next-route"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/training/validate-features/route.ts", "target": "function:src/app/api/training/validate-features/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/training/validate-features/route.ts", "target": "function:src/app/api/training/validate-features/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/training/validate-features/route.ts", "target": "file:src/lib/training/contamination-validator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/training/validate-features/route.ts", "target": "file:src/lib/training/feature-availability-matrix.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "function:src/app/api/triage/run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "function:src/app/api/triage/run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/run/route.ts", "target": "file:src/lib/triage/overnight-triage.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "function:src/app/api/triage/today/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "function:src/app/api/triage/today/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/triage/today/route.ts", "target": "file:src/lib/triage/overnight-triage.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "function:src/app/api/user/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "function:src/app/api/user/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "function:src/app/api/user/analyze/route.ts:generateOptimizationSuggestions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "function:src/app/api/user/analyze/route.ts:extractVideoId", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "file:src/lib/modules/dna-detective.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "file:src/lib/modules/orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/user/analyze/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/user/stats/route.ts", "target": "function:src/app/api/user/stats/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/user/stats/route.ts", "target": "function:src/app/api/user/stats/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/user/stats/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/user/templates/top/route.ts", "target": "function:src/app/api/user/templates/top/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/user/templates/top/route.ts", "target": "function:src/app/api/user/templates/top/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/user/templates/top/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "function:src/app/api/validation/[...slug]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "function:src/app/api/validation/[...slug]/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "function:src/app/api/validation/[...slug]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "function:src/app/api/validation/[...slug]/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/[...slug]/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/build-cohort/route.ts", "target": "function:src/app/api/validation/build-cohort/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/build-cohort/route.ts", "target": "function:src/app/api/validation/build-cohort/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/build-cohort/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/build-cohort/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/create-run/route.ts", "target": "function:src/app/api/validation/create-run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/create-run/route.ts", "target": "function:src/app/api/validation/create-run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/create-run/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/create-run/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/export.csv/route.ts", "target": "function:src/app/api/validation/export.csv/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/export.csv/route.ts", "target": "function:src/app/api/validation/export.csv/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/export.csv/route.ts", "target": "file:src/lib/validation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/extract-patterns/route.ts", "target": "function:src/app/api/validation/extract-patterns/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/extract-patterns/route.ts", "target": "function:src/app/api/validation/extract-patterns/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/extract-patterns/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/extract-patterns/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/generate-fingerprints/route.ts", "target": "function:src/app/api/validation/generate-fingerprints/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/generate-fingerprints/route.ts", "target": "function:src/app/api/validation/generate-fingerprints/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/generate-fingerprints/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/generate-fingerprints/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/get-previous-runs/route.ts", "target": "function:src/app/api/validation/get-previous-runs/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/get-previous-runs/route.ts", "target": "function:src/app/api/validation/get-previous-runs/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/get-previous-runs/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/get-run/route.ts", "target": "function:src/app/api/validation/get-run/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/get-run/route.ts", "target": "function:src/app/api/validation/get-run/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/get-run/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/lock-predictions/route.ts", "target": "function:src/app/api/validation/lock-predictions/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/lock-predictions/route.ts", "target": "function:src/app/api/validation/lock-predictions/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/lock-predictions/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/lock-predictions/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/metrics/route.ts", "target": "function:src/app/api/validation/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/metrics/route.ts", "target": "function:src/app/api/validation/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/metrics/route.ts", "target": "file:src/lib/services/viral-prediction/accuracy-tracker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/predict-with-visual/route.ts", "target": "function:src/app/api/validation/predict-with-visual/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/predict-with-visual/route.ts", "target": "function:src/app/api/validation/predict-with-visual/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/predict-with-visual/route.ts", "target": "function:src/app/api/validation/predict-with-visual/route.ts:calculateTextScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/predict-with-visual/route.ts", "target": "function:src/app/api/validation/predict-with-visual/route.ts:calculateVisualMultiplier", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/validation/recompute/route.ts", "target": "file:src/lib/validation/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/records/route.ts", "target": "file:src/lib/validation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/summary/route.ts", "target": "file:src/lib/validation/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/test-contract/route.ts", "target": "function:src/app/api/validation/test-contract/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/test-contract/route.ts", "target": "function:src/app/api/validation/test-contract/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/test-contract/route.ts", "target": "file:src/lib/schemas/video-ingestion-record.schema.json", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/test-contract/route.ts", "target": "file:src/lib/schemas/video-presentation-card.schema.json", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/test-contract/route.ts", "target": "file:src/lib/validation/jsonSchema.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/validation/validate-accuracy/route.ts", "target": "function:src/app/api/validation/validate-accuracy/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/validation/validate-accuracy/route.ts", "target": "function:src/app/api/validation/validate-accuracy/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/validation/validate-accuracy/route.ts", "target": "file:src/app/actions/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/validation/validate-accuracy/route.ts", "target": "file:src/types/validation-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

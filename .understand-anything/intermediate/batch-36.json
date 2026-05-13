@@ -1,0 +1,853 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/scrape-batch-2.ts",
+      "type": "file",
+      "name": "scrape-batch-2.ts",
+      "filePath": "scripts/scrape-batch-2.ts",
+      "summary": "Batch-2 TikTok creator scraping script that iterates an explicit creator list and runs a scrape routine for each.",
+      "tags": ["script", "scraper", "tiktok", "batch", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/scrape-batch-2.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/scrape-batch-2.ts",
+      "lineRange": [26, 73],
+      "summary": "Entry point that loops over the second batch of TikTok creators and orchestrates per-creator scraping.",
+      "tags": ["entry-point", "batch", "scraper", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/scrape-sidehustlereview-direct.ts",
+      "type": "file",
+      "name": "scrape-sidehustlereview-direct.ts",
+      "filePath": "scripts/scrape-sidehustlereview-direct.ts",
+      "summary": "Direct scraping script for the sidehustlereview TikTok account that pulls video metadata without going through the standard pipeline.",
+      "tags": ["script", "scraper", "tiktok", "data-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/scrape-sidehustlereview-direct.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/scrape-sidehustlereview-direct.ts",
+      "lineRange": [13, 211],
+      "summary": "Large entry point that scrapes sidehustlereview videos, extracts metrics, and persists the results.",
+      "tags": ["entry-point", "scraper", "tiktok", "data-extraction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/scrape-thereallauwerz.ts",
+      "type": "file",
+      "name": "scrape-thereallauwerz.ts",
+      "filePath": "scripts/scrape-thereallauwerz.ts",
+      "summary": "Single-purpose scraping script that pulls TikTok content for the thereallauwerz channel.",
+      "tags": ["script", "scraper", "tiktok", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/scrape-thereallauwerz.ts:scrapeChannel",
+      "type": "function",
+      "name": "scrapeChannel",
+      "filePath": "scripts/scrape-thereallauwerz.ts",
+      "lineRange": [5, 29],
+      "summary": "Scrapes the specified TikTok channel and writes the resulting videos to storage.",
+      "tags": ["scraper", "tiktok", "data-extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/scrape-training-data.ts",
+      "type": "file",
+      "name": "scrape-training-data.ts",
+      "filePath": "scripts/scrape-training-data.ts",
+      "summary": "Bulk TikTok scraping utility used to assemble training datasets for the viral prediction model, including profile fetch, metric extraction, parsing, and summary reporting.",
+      "tags": ["script", "scraper", "training-data", "data-pipeline", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [56, 73],
+      "summary": "Parses CLI arguments controlling profile list, target counts, and output paths for the scraper.",
+      "tags": ["cli", "argument-parsing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:scrapeProfiles",
+      "type": "function",
+      "name": "scrapeProfiles",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [79, 111],
+      "summary": "Iterates the configured profile list and fetches recent TikTok videos for each, aggregating raw results.",
+      "tags": ["scraper", "tiktok", "data-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:extractMetrics",
+      "type": "function",
+      "name": "extractMetrics",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [123, 133],
+      "summary": "Normalises engagement metrics (views, likes, comments, shares) into a uniform shape for downstream training.",
+      "tags": ["metrics", "normalization", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:parseItem",
+      "type": "function",
+      "name": "parseItem",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [166, 231],
+      "summary": "Parses a raw scraped TikTok item into the canonical training-data row with caption, metrics, and metadata.",
+      "tags": ["parsing", "data-transformation", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [240, 349],
+      "summary": "End-to-end entry point that wires CLI parsing, profile scraping, item parsing, persistence, and summary reporting.",
+      "tags": ["entry-point", "orchestration", "scraper", "training-data"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/scrape-training-data.ts:printSummary",
+      "type": "function",
+      "name": "printSummary",
+      "filePath": "scripts/scrape-training-data.ts",
+      "lineRange": [351, 384],
+      "summary": "Prints a human-readable summary of scraped totals, error counts, and per-profile breakdowns.",
+      "tags": ["reporting", "cli", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/seed-dev-user.ts",
+      "type": "file",
+      "name": "seed-dev-user.ts",
+      "filePath": "scripts/seed-dev-user.ts",
+      "summary": "Dev-only seeding script that ensures a baseline development user (and any required profile rows) exist in Supabase.",
+      "tags": ["script", "seed", "supabase", "dev"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/seed-dev-user.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/seed-dev-user.ts",
+      "lineRange": [35, 95],
+      "summary": "Creates or upserts the dev user record and any related rows needed for local development.",
+      "tags": ["entry-point", "seed", "supabase", "dev"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/seed-distribution-and-print-status.js",
+      "type": "file",
+      "name": "seed-distribution-and-print-status.js",
+      "filePath": "scripts/seed-distribution-and-print-status.js",
+      "summary": "Utility script that seeds distribution fixtures and then prints the current pipeline status.",
+      "tags": ["script", "seed", "distribution", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/seed-distribution-and-print-status.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/seed-distribution-and-print-status.js",
+      "lineRange": [5, 35],
+      "summary": "Runs the seed-distribution flow and logs a status summary on completion.",
+      "tags": ["entry-point", "seed", "reporting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/seed-mvp-data.js",
+      "type": "file",
+      "name": "seed-mvp-data.js",
+      "filePath": "scripts/seed-mvp-data.js",
+      "summary": "Large MVP seeding script that creates demo users, landing pages, templates, analytics, and email captures plus an optional SQL seed pass.",
+      "tags": ["script", "seed", "fixtures", "mvp", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:createUsers",
+      "type": "function",
+      "name": "createUsers",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [54, 120],
+      "summary": "Creates a set of demo user accounts with profiles for the MVP environment.",
+      "tags": ["seed", "users", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:createLandingPages",
+      "type": "function",
+      "name": "createLandingPages",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [122, 162],
+      "summary": "Inserts demo landing pages tied to the seeded users.",
+      "tags": ["seed", "landing-pages", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:createTemplates",
+      "type": "function",
+      "name": "createTemplates",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [164, 241],
+      "summary": "Inserts a catalog of demo content templates used by the MVP UI.",
+      "tags": ["seed", "templates", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:generateRealisticAnalytics",
+      "type": "function",
+      "name": "generateRealisticAnalytics",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [243, 303],
+      "summary": "Generates plausible analytics events and aggregates so the dashboard has non-trivial charts in demos.",
+      "tags": ["seed", "analytics", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:createEmailCaptures",
+      "type": "function",
+      "name": "createEmailCaptures",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [305, 348],
+      "summary": "Seeds the email-capture lead table with sample submissions.",
+      "tags": ["seed", "email", "fixtures"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:runSQLSeed",
+      "type": "function",
+      "name": "runSQLSeed",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [350, 367],
+      "summary": "Executes a bundled SQL seed file via the Supabase client for any rows not handled by the JS seeders.",
+      "tags": ["seed", "sql", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/seed-mvp-data.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/seed-mvp-data.js",
+      "lineRange": [369, 411],
+      "summary": "Top-level entry point orchestrating all MVP seed routines in dependency order.",
+      "tags": ["entry-point", "seed", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/seed-quickwin-fixtures.js",
+      "type": "file",
+      "name": "seed-quickwin-fixtures.js",
+      "filePath": "scripts/seed-quickwin-fixtures.js",
+      "summary": "Tiny helper that seeds quick-win fixture records used by smoke-testing flows.",
+      "tags": ["script", "seed", "fixtures", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/seed.ts",
+      "type": "file",
+      "name": "seed.ts",
+      "filePath": "scripts/seed.ts",
+      "summary": "Top-level seed runner that uses the shared package and the project's pg client to populate baseline tables.",
+      "tags": ["script", "seed", "postgres", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/seed.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/seed.ts",
+      "lineRange": [6, 31],
+      "summary": "Seed entry point that performs the initial set of inserts against the configured Postgres database.",
+      "tags": ["entry-point", "seed", "postgres"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/setup-mvp-database.js",
+      "type": "file",
+      "name": "setup-mvp-database.js",
+      "filePath": "scripts/setup-mvp-database.js",
+      "summary": "One-shot database bootstrap script that runs the MVP schema against Supabase for fresh environments.",
+      "tags": ["script", "database", "setup", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-mvp-database.js:runSchema",
+      "type": "function",
+      "name": "runSchema",
+      "filePath": "scripts/setup-mvp-database.js",
+      "lineRange": [20, 108],
+      "summary": "Loads the MVP SQL schema file and executes it statement-by-statement against Supabase.",
+      "tags": ["setup", "schema", "supabase", "sql"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-mvp-database.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/setup-mvp-database.js",
+      "lineRange": [120, 129],
+      "summary": "Entry point that invokes runSchema and reports completion status.",
+      "tags": ["entry-point", "setup", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/setup-supabase-schema.js",
+      "type": "file",
+      "name": "setup-supabase-schema.js",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "summary": "Comprehensive Supabase schema bootstrap that installs core tables, RPC helpers, and metadata/exec-sql utility functions.",
+      "tags": ["script", "database", "setup", "supabase", "schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/setup-supabase-schema.js:setupSchema",
+      "type": "function",
+      "name": "setupSchema",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "lineRange": [27, 112],
+      "summary": "Creates the core Supabase tables required by the application.",
+      "tags": ["setup", "schema", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-supabase-schema.js:createDatabaseFunctions",
+      "type": "function",
+      "name": "createDatabaseFunctions",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "lineRange": [115, 273],
+      "summary": "Installs the large suite of Postgres helper functions and RPCs the app depends on.",
+      "tags": ["setup", "rpc", "postgres", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/setup-supabase-schema.js:createMetaFunction",
+      "type": "function",
+      "name": "createMetaFunction",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "lineRange": [276, 315],
+      "summary": "Creates the metadata helper function used to introspect tables and columns from the app.",
+      "tags": ["setup", "rpc", "metadata", "postgres"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-supabase-schema.js:createExecSqlFunction",
+      "type": "function",
+      "name": "createExecSqlFunction",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "lineRange": [318, 358],
+      "summary": "Installs the privileged exec_sql RPC used to apply ad-hoc SQL from server-side code.",
+      "tags": ["setup", "rpc", "postgres", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-supabase-schema.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/setup-supabase-schema.js",
+      "lineRange": [361, 397],
+      "summary": "Entry point that sequences schema, RPCs, and helper-function creation.",
+      "tags": ["entry-point", "setup", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/setup-test-env.js",
+      "type": "file",
+      "name": "setup-test-env.js",
+      "filePath": "scripts/setup-test-env.js",
+      "summary": "Prepares the local test environment by copying or generating .env values and verifying required keys are present.",
+      "tags": ["script", "setup", "test", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/setup-viral-dna-db.js",
+      "type": "file",
+      "name": "setup-viral-dna-db.js",
+      "filePath": "scripts/setup-viral-dna-db.js",
+      "summary": "Bootstraps the viral DNA database schema by executing the bundled SQL file against Supabase.",
+      "tags": ["script", "database", "setup", "viral-dna"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/setup-viral-filter.js",
+      "type": "file",
+      "name": "setup-viral-filter.js",
+      "filePath": "scripts/setup-viral-filter.js",
+      "summary": "Large bootstrap script that wires the viral-filter feature: schema setup, configuration, and integration with the application's viral filter service.",
+      "tags": ["script", "setup", "viral-filter", "database", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/setup-viral-filter.js:setupViralFilter",
+      "type": "function",
+      "name": "setupViralFilter",
+      "filePath": "scripts/setup-viral-filter.js",
+      "lineRange": [11, 416],
+      "summary": "Installs all tables, functions, and seed data required by the viral filter feature in one orchestrated routine.",
+      "tags": ["setup", "viral-filter", "schema", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/setup-viral-intelligence-db.js",
+      "type": "file",
+      "name": "setup-viral-intelligence-db.js",
+      "filePath": "scripts/setup-viral-intelligence-db.js",
+      "summary": "Bootstraps the viral-intelligence database schema by executing the full DDL via Supabase RPC.",
+      "tags": ["script", "database", "setup", "viral-intelligence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-viral-intelligence-db.js:setupViralIntelligenceDatabase",
+      "type": "function",
+      "name": "setupViralIntelligenceDatabase",
+      "filePath": "scripts/setup-viral-intelligence-db.js",
+      "lineRange": [13, 139],
+      "summary": "Creates the tables, indexes, and helper functions needed by the viral intelligence subsystem.",
+      "tags": ["setup", "viral-intelligence", "schema", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/setup-viral-intelligence-simple.js",
+      "type": "file",
+      "name": "setup-viral-intelligence-simple.js",
+      "filePath": "scripts/setup-viral-intelligence-simple.js",
+      "summary": "Simplified variant of the viral-intelligence bootstrap that uses the project's Supabase client wrapper for a lighter-weight setup.",
+      "tags": ["script", "database", "setup", "viral-intelligence", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/setup-viral-intelligence-simple.js:setupViralIntelligenceDatabase",
+      "type": "function",
+      "name": "setupViralIntelligenceDatabase",
+      "filePath": "scripts/setup-viral-intelligence-simple.js",
+      "lineRange": [11, 149],
+      "summary": "Lighter setup routine that creates the minimal viral-intelligence tables required for development environments.",
+      "tags": ["setup", "viral-intelligence", "schema", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/show-table-schemas.js",
+      "type": "file",
+      "name": "show-table-schemas.js",
+      "filePath": "scripts/show-table-schemas.js",
+      "summary": "Diagnostic CLI that prints the column layout of all configured Supabase tables to the console.",
+      "tags": ["script", "diagnostic", "supabase", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/show-table-schemas.js:showSchemas",
+      "type": "function",
+      "name": "showSchemas",
+      "filePath": "scripts/show-table-schemas.js",
+      "lineRange": [5, 74],
+      "summary": "Queries Supabase metadata and prints each table's columns and types in a readable format.",
+      "tags": ["diagnostic", "schema", "supabase", "reporting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/show-triage.ts",
+      "type": "file",
+      "name": "show-triage.ts",
+      "filePath": "scripts/show-triage.ts",
+      "summary": "CLI helper that prints the current triage queue and stats for content moderation review.",
+      "tags": ["script", "diagnostic", "triage", "reporting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/smoke_plugins.ts",
+      "type": "file",
+      "name": "smoke_plugins.ts",
+      "filePath": "scripts/smoke_plugins.ts",
+      "summary": "Quick smoke-test script that validates the plugins runtime by invoking each plugin and reporting basic health.",
+      "tags": ["script", "smoke-test", "plugins", "diagnostic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke_plugins.ts:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "scripts/smoke_plugins.ts",
+      "lineRange": [6, 27],
+      "summary": "Smoke-test runner that iterates the plugin list and exercises each one once.",
+      "tags": ["smoke-test", "entry-point", "plugins"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/smoke-funnel.ts",
+      "type": "file",
+      "name": "smoke-funnel.ts",
+      "filePath": "scripts/smoke-funnel.ts",
+      "summary": "Massive end-to-end smoke test that walks every layer of the viral-prediction funnel (L1-L9), runs HTTP probes, captures evidence, and produces a printable report.",
+      "tags": ["script", "smoke-test", "e2e", "funnel", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:bhFetch",
+      "type": "function",
+      "name": "bhFetch",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [165, 174],
+      "summary": "Thin fetch wrapper that adds the bypass-header used to call protected endpoints in the smoke environment.",
+      "tags": ["utility", "http", "smoke-test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer1",
+      "type": "function",
+      "name": "layer1",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [197, 248],
+      "summary": "Exercises funnel layer 1 (acquisition/landing) and records pass/fail results.",
+      "tags": ["smoke-test", "funnel", "layer1"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer2",
+      "type": "function",
+      "name": "layer2",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [251, 330],
+      "summary": "Exercises funnel layer 2 (signup/onboarding) and records pass/fail results.",
+      "tags": ["smoke-test", "funnel", "layer2"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer3",
+      "type": "function",
+      "name": "layer3",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [333, 395],
+      "summary": "Exercises funnel layer 3 (upload/intake) flow against the smoke environment.",
+      "tags": ["smoke-test", "funnel", "layer3"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer4",
+      "type": "function",
+      "name": "layer4",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [398, 450],
+      "summary": "Exercises funnel layer 4 (prediction pipeline) including kai/predict probes.",
+      "tags": ["smoke-test", "funnel", "layer4", "prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer5",
+      "type": "function",
+      "name": "layer5",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [453, 506],
+      "summary": "Exercises funnel layer 5 (results/insight surfacing) flow.",
+      "tags": ["smoke-test", "funnel", "layer5"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer6",
+      "type": "function",
+      "name": "layer6",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [509, 548],
+      "summary": "Exercises funnel layer 6 (followups/publish-side) flow.",
+      "tags": ["smoke-test", "funnel", "layer6"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer7",
+      "type": "function",
+      "name": "layer7",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [551, 610],
+      "summary": "Exercises funnel layer 7 (post-publish metric ingest and labeling) flow.",
+      "tags": ["smoke-test", "funnel", "layer7"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer8",
+      "type": "function",
+      "name": "layer8",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [613, 645],
+      "summary": "Exercises funnel layer 8 (training/eval cron surfaces).",
+      "tags": ["smoke-test", "funnel", "layer8", "training"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:layer9",
+      "type": "function",
+      "name": "layer9",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [648, 727],
+      "summary": "Exercises funnel layer 9 (admin/ops dashboards and pack health surfaces).",
+      "tags": ["smoke-test", "funnel", "layer9", "admin"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:cleanup",
+      "type": "function",
+      "name": "cleanup",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [730, 774],
+      "summary": "Tears down ephemeral resources created during the smoke run (test users, runs, artifacts).",
+      "tags": ["smoke-test", "cleanup", "teardown"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:printReport",
+      "type": "function",
+      "name": "printReport",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [789, 837],
+      "summary": "Aggregates layer results into a printable pass/fail report with timing and notable failures.",
+      "tags": ["smoke-test", "reporting", "diagnostic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/smoke-funnel.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/smoke-funnel.ts",
+      "lineRange": [840, 897],
+      "summary": "End-to-end entry point that runs every funnel layer in order, cleans up, and prints the final report.",
+      "tags": ["entry-point", "smoke-test", "orchestration", "e2e"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/snap-os-canvas.ts",
+      "type": "file",
+      "name": "snap-os-canvas.ts",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "summary": "Visual-regression helper that boots the dev server if needed, captures canvas screenshots, and compares them against baselines.",
+      "tags": ["script", "visual-regression", "screenshot", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/snap-os-canvas.ts:ping",
+      "type": "function",
+      "name": "ping",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "lineRange": [53, 79],
+      "summary": "Polls a URL until it responds, used to wait for the dev server to be ready before snapping.",
+      "tags": ["utility", "http", "polling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snap-os-canvas.ts:startDevServerIfNeeded",
+      "type": "function",
+      "name": "startDevServerIfNeeded",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "lineRange": [91, 102],
+      "summary": "Spawns the Next.js dev server in a subprocess when one is not already running.",
+      "tags": ["utility", "dev-server", "child-process"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snap-os-canvas.ts:readPng",
+      "type": "function",
+      "name": "readPng",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "lineRange": [119, 129],
+      "summary": "Reads a PNG file from disk into a comparable image buffer.",
+      "tags": ["utility", "image", "io"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snap-os-canvas.ts:compareImages",
+      "type": "function",
+      "name": "compareImages",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "lineRange": [138, 159],
+      "summary": "Diffs the captured screenshot against a stored baseline using pixel comparison.",
+      "tags": ["visual-regression", "image-diff", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snap-os-canvas.ts:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "scripts/snap-os-canvas.ts",
+      "lineRange": [161, 257],
+      "summary": "Top-level orchestrator that ensures the dev server is up, snaps the canvas page, and runs the baseline comparison.",
+      "tags": ["entry-point", "visual-regression", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/snapshot-site.js",
+      "type": "file",
+      "name": "snapshot-site.js",
+      "filePath": "scripts/snapshot-site.js",
+      "summary": "Site snapshotting helper that downloads the current site and rewrites base hrefs for static archival use.",
+      "tags": ["script", "snapshot", "static", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snapshot-site.js:injectBaseHref",
+      "type": "function",
+      "name": "injectBaseHref",
+      "filePath": "scripts/snapshot-site.js",
+      "lineRange": [21, 30],
+      "summary": "Inserts a base href tag into snapshotted HTML so relative links resolve when served statically.",
+      "tags": ["utility", "html", "snapshot"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/snapshot-site.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/snapshot-site.js",
+      "lineRange": [32, 55],
+      "summary": "Entry point that drives a one-shot site snapshot, writing the result to disk.",
+      "tags": ["entry-point", "snapshot", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/store-features-in-db.ts",
+      "type": "file",
+      "name": "store-features-in-db.ts",
+      "filePath": "scripts/store-features-in-db.ts",
+      "summary": "Persists computed feature vectors to Supabase, creating the target table if it doesn't yet exist.",
+      "tags": ["script", "features", "database", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/store-features-in-db.ts:createTableIfNotExists",
+      "type": "function",
+      "name": "createTableIfNotExists",
+      "filePath": "scripts/store-features-in-db.ts",
+      "lineRange": [34, 84],
+      "summary": "Creates the features table with the expected column layout when it is not already present.",
+      "tags": ["setup", "schema", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/store-features-in-db.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/store-features-in-db.ts",
+      "lineRange": [86, 215],
+      "summary": "Entry point that reads computed feature files and upserts them into the features table.",
+      "tags": ["entry-point", "features", "etl", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/store-features-simple.ts",
+      "type": "file",
+      "name": "store-features-simple.ts",
+      "filePath": "scripts/store-features-simple.ts",
+      "summary": "Simpler feature persistence script that writes the latest feature vectors directly using env-driven Supabase configuration.",
+      "tags": ["script", "features", "database", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/store-features-simple.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/store-features-simple.ts",
+      "lineRange": [16, 59],
+      "summary": "Entry point that loads feature vectors from a local file and inserts them into Supabase.",
+      "tags": ["entry-point", "features", "etl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/tag-moat8.js",
+      "type": "file",
+      "name": "tag-moat8.js",
+      "filePath": "scripts/tag-moat8.js",
+      "summary": "Repository tagging helper that ensures a moat8 milestone tag is created and pushed for release tracking.",
+      "tags": ["script", "git", "tagging", "release"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/tag-moat8.js:ensureRepo",
+      "type": "function",
+      "name": "ensureRepo",
+      "filePath": "scripts/tag-moat8.js",
+      "lineRange": [10, 26],
+      "summary": "Verifies the current working directory is a git repo before running tagging operations.",
+      "tags": ["utility", "git", "guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/tag-moat8.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/tag-moat8.js",
+      "lineRange": [28, 95],
+      "summary": "Entry point that creates the moat8 tag, optionally pushes it, and reports outcome.",
+      "tags": ["entry-point", "git", "tagging", "release"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/scrape-batch-2.ts", "target": "function:scripts/scrape-batch-2.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-sidehustlereview-direct.ts", "target": "function:scripts/scrape-sidehustlereview-direct.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-thereallauwerz.ts", "target": "function:scripts/scrape-thereallauwerz.ts:scrapeChannel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:parseArgs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:scrapeProfiles", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:extractMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:parseItem", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/scrape-training-data.ts", "target": "function:scripts/scrape-training-data.ts:printSummary", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-dev-user.ts", "target": "function:scripts/seed-dev-user.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-distribution-and-print-status.js", "target": "function:scripts/seed-distribution-and-print-status.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:createUsers", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:createLandingPages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:createTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:generateRealisticAnalytics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:createEmailCaptures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:runSQLSeed", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed-mvp-data.js", "target": "function:scripts/seed-mvp-data.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed.ts", "target": "function:scripts/seed.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/seed.ts", "target": "file:packages/shared/src/index.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/seed.ts", "target": "file:src/lib/db/pg.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/setup-mvp-database.js", "target": "function:scripts/setup-mvp-database.js:runSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-mvp-database.js", "target": "function:scripts/setup-mvp-database.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-supabase-schema.js", "target": "function:scripts/setup-supabase-schema.js:setupSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-supabase-schema.js", "target": "function:scripts/setup-supabase-schema.js:createDatabaseFunctions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-supabase-schema.js", "target": "function:scripts/setup-supabase-schema.js:createMetaFunction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-supabase-schema.js", "target": "function:scripts/setup-supabase-schema.js:createExecSqlFunction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-supabase-schema.js", "target": "function:scripts/setup-supabase-schema.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-viral-filter.js", "target": "function:scripts/setup-viral-filter.js:setupViralFilter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-viral-filter.js", "target": "file:src/lib/services/viralFilter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/setup-viral-intelligence-db.js", "target": "function:scripts/setup-viral-intelligence-db.js:setupViralIntelligenceDatabase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-viral-intelligence-simple.js", "target": "function:scripts/setup-viral-intelligence-simple.js:setupViralIntelligenceDatabase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/setup-viral-intelligence-simple.js", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/show-table-schemas.js", "target": "function:scripts/show-table-schemas.js:showSchemas", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke_plugins.ts", "target": "function:scripts/smoke_plugins.ts:run", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke_plugins.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:bhFetch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer1", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer2", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer3", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer4", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer5", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer6", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer7", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer8", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:layer9", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:cleanup", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:printReport", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/smoke-funnel.ts", "target": "function:scripts/smoke-funnel.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snap-os-canvas.ts", "target": "function:scripts/snap-os-canvas.ts:ping", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snap-os-canvas.ts", "target": "function:scripts/snap-os-canvas.ts:startDevServerIfNeeded", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snap-os-canvas.ts", "target": "function:scripts/snap-os-canvas.ts:readPng", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snap-os-canvas.ts", "target": "function:scripts/snap-os-canvas.ts:compareImages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snap-os-canvas.ts", "target": "function:scripts/snap-os-canvas.ts:run", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snapshot-site.js", "target": "function:scripts/snapshot-site.js:injectBaseHref", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/snapshot-site.js", "target": "function:scripts/snapshot-site.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/store-features-in-db.ts", "target": "function:scripts/store-features-in-db.ts:createTableIfNotExists", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/store-features-in-db.ts", "target": "function:scripts/store-features-in-db.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/store-features-simple.ts", "target": "function:scripts/store-features-simple.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/store-features-simple.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/tag-moat8.js", "target": "function:scripts/tag-moat8.js:ensureRepo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/tag-moat8.js", "target": "function:scripts/tag-moat8.js:main", "type": "contains", "direction": "forward", "weight": 1.0}
+  ]
+}

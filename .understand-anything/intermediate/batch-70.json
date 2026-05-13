@@ -1,0 +1,773 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/pipeline/control/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/control/route.ts",
+      "summary": "Admin POST endpoint that issues control actions (start/stop/pause) for the prediction pipeline.",
+      "tags": ["api-handler", "admin", "pipeline", "control"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/dag/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/dag/route.ts",
+      "summary": "Returns the pipeline DAG (modules and dependencies) for admin visualization tools.",
+      "tags": ["api-handler", "admin", "pipeline", "dag"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/export.csv/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/export.csv/route.ts",
+      "summary": "Stub admin endpoint that exports pipeline data as CSV.",
+      "tags": ["api-handler", "admin", "export", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/export.json/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/export.json/route.ts",
+      "summary": "Stub admin endpoint that exports pipeline data as JSON.",
+      "tags": ["api-handler", "admin", "export", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/export/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/export/route.ts",
+      "summary": "Admin endpoint that serializes recent pipeline runs into a downloadable export payload.",
+      "tags": ["api-handler", "admin", "pipeline", "export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/health/route.ts",
+      "summary": "Reports overall pipeline health (recent errors, queue depth, freshness) for the admin dashboard.",
+      "tags": ["api-handler", "admin", "pipeline", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/config/route.ts",
+      "summary": "GET/POST handler for reading and updating per-module pipeline configuration via the admin UI.",
+      "tags": ["api-handler", "admin", "pipeline", "module-config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/runbook/route.ts",
+      "summary": "Serves the runbook (default or custom markdown) for a given pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "runbook"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/[id]/runs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/runs/route.ts",
+      "summary": "Lists recent execution runs for a specific pipeline module with paging.",
+      "tags": ["api-handler", "admin", "pipeline", "module-runs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/[id]/slo/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/slo/route.ts",
+      "summary": "Returns Service Level Objective (SLO) metrics for a specific pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "slo"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/route.ts",
+      "summary": "Returns details for a single pipeline module identified by its id.",
+      "tags": ["api-handler", "admin", "pipeline", "module-detail"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/modules/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/modules/route.ts",
+      "summary": "Lists all pipeline modules with current SLO and synthetic activity metadata for the admin dashboard.",
+      "tags": ["api-handler", "admin", "pipeline", "modules-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/quality/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/quality/route.ts",
+      "summary": "Surfaces pipeline data-quality metrics (missing fields, validation rates) for the admin dashboard.",
+      "tags": ["api-handler", "admin", "pipeline", "data-quality"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/status/route.ts",
+      "summary": "Reports the current overall pipeline status using real DB data with synthetic fallback when unavailable.",
+      "tags": ["api-handler", "admin", "pipeline", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/throughput/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/throughput/route.ts",
+      "summary": "Bucketed throughput metrics (runs per time bucket) for the admin pipeline charts.",
+      "tags": ["api-handler", "admin", "pipeline", "throughput"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/_lib.ts",
+      "type": "file",
+      "name": "_lib.ts",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "summary": "Shared helpers for admin pipeline routes: range parsing, admin guard, caching, bucketing, paging and rate limiting.",
+      "tags": ["utility", "admin", "pipeline", "shared-lib"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/_slo.ts",
+      "type": "file",
+      "name": "_slo.ts",
+      "filePath": "src/app/api/admin/pipeline/_slo.ts",
+      "summary": "Computes Service Level Objective values for individual modules and the whole pipeline using default thresholds.",
+      "tags": ["utility", "admin", "pipeline", "slo"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/_synthetic.ts",
+      "type": "file",
+      "name": "_synthetic.ts",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "summary": "Synthetic data generators (status, throughput, modules, backlog, alerts) used as fallback for the admin pipeline endpoints.",
+      "tags": ["utility", "admin", "pipeline", "synthetic-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/planning/action-items/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/planning/action-items/route.ts",
+      "summary": "Admin endpoint to list and patch planning-session action items (status, ownership, due dates).",
+      "tags": ["api-handler", "admin", "planning", "action-items"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/planning/decision/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/planning/decision/route.ts",
+      "summary": "Records or updates a decision for a planning session, persisting rationale, alternatives and extracted recommendations.",
+      "tags": ["api-handler", "admin", "planning", "decision"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/planning/sessions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/planning/sessions/route.ts",
+      "summary": "Lists existing planning sessions for the admin planning UI.",
+      "tags": ["api-handler", "admin", "planning", "sessions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/planning/start/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/planning/start/route.ts",
+      "summary": "Starts a new planning session with tier gating and dispatches the planning worker.",
+      "tags": ["api-handler", "admin", "planning", "session-start"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/platform-monitor/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/platform-monitor/route.ts",
+      "summary": "Triggers platform monitoring signal collection (TikTok/IG/etc.) and returns a status payload; exposes both GET and POST.",
+      "tags": ["api-handler", "admin", "platform-monitor", "signals"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts",
+      "summary": "Attaches a platform video id to a prediction run, validates uniqueness, and schedules metric collection.",
+      "tags": ["api-handler", "admin", "prediction-runs", "training-ingest"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/prediction-runs/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/prediction-runs/route.ts",
+      "summary": "Lists prediction runs with admin filters (niche, status, attachment state) for the training/ingest dashboard.",
+      "tags": ["api-handler", "admin", "prediction-runs", "training-ingest"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "function:src/app/api/admin/pipeline/control/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline/control/route.ts",
+      "lineRange": [10, 20],
+      "summary": "Handles admin pipeline control actions (e.g., pause/resume) and applies rate limiting.",
+      "tags": ["api-handler", "admin", "pipeline", "control"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/dag/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/dag/route.ts",
+      "lineRange": [7, 19],
+      "summary": "Returns the pipeline DAG structure for visualization.",
+      "tags": ["api-handler", "admin", "pipeline", "dag"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/export/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/export/route.ts",
+      "lineRange": [7, 38],
+      "summary": "Serializes pipeline runs in a selectable format for admin export.",
+      "tags": ["api-handler", "admin", "pipeline", "export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/health/route.ts",
+      "lineRange": [7, 33],
+      "summary": "Computes pipeline health indicators across recent runs (errors, freshness, queue).",
+      "tags": ["api-handler", "admin", "pipeline", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/config/route.ts",
+      "lineRange": [9, 20],
+      "summary": "Reads the persisted configuration for a pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "module-config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/config/route.ts",
+      "lineRange": [22, 40],
+      "summary": "Validates and writes a new configuration payload for a pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "module-config"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/runbook/route.ts",
+      "lineRange": [8, 23],
+      "summary": "Returns the runbook (custom or default) for a pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "runbook"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/runs/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/runs/route.ts",
+      "lineRange": [8, 27],
+      "summary": "Lists recent execution runs for a single pipeline module with paging.",
+      "tags": ["api-handler", "admin", "pipeline", "module-runs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/slo/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/slo/route.ts",
+      "lineRange": [9, 20],
+      "summary": "Computes and returns SLO values for a single pipeline module.",
+      "tags": ["api-handler", "admin", "pipeline", "slo"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/[id]/route.ts",
+      "lineRange": [8, 18],
+      "summary": "Returns details for a single pipeline module by id.",
+      "tags": ["api-handler", "admin", "pipeline", "module-detail"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/modules/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/modules/route.ts",
+      "lineRange": [9, 58],
+      "summary": "Aggregates module metadata, SLO values and synthetic activity to produce the admin modules list.",
+      "tags": ["api-handler", "admin", "pipeline", "modules-list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/quality/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/quality/route.ts",
+      "lineRange": [7, 47],
+      "summary": "Computes data-quality indicators (validation rates, gaps) for the pipeline.",
+      "tags": ["api-handler", "admin", "pipeline", "data-quality"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/status/route.ts",
+      "lineRange": [11, 50],
+      "summary": "Returns pipeline status from the database, falling back to synthetic data when DB results are missing.",
+      "tags": ["api-handler", "admin", "pipeline", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/throughput/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/throughput/route.ts",
+      "lineRange": [8, 79],
+      "summary": "Produces bucketed throughput metrics for the pipeline over a configurable time window.",
+      "tags": ["api-handler", "admin", "pipeline", "throughput"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:parseRange",
+      "type": "function",
+      "name": "parseRange",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [11, 15],
+      "summary": "Parses an admin time-range query parameter against the shared zod schema.",
+      "tags": ["utility", "validation", "range"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:getWindow",
+      "type": "function",
+      "name": "getWindow",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [17, 26],
+      "summary": "Converts an admin time range (1h/24h/7d/etc.) into concrete from/to timestamps.",
+      "tags": ["utility", "time-window", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:getAdminDb",
+      "type": "function",
+      "name": "getAdminDb",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [32, 40],
+      "summary": "Builds a Supabase admin client using the service-role key for privileged queries.",
+      "tags": ["utility", "supabase", "admin-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:guardAdmin",
+      "type": "function",
+      "name": "guardAdmin",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [42, 44],
+      "summary": "Helper that wraps server-auth admin guard for admin pipeline routes.",
+      "tags": ["utility", "auth", "admin-guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:withCache",
+      "type": "function",
+      "name": "withCache",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [46, 50],
+      "summary": "Attaches cache-control headers to a response for short-lived admin caching.",
+      "tags": ["utility", "cache", "headers"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:toBuckets",
+      "type": "function",
+      "name": "toBuckets",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [52, 58],
+      "summary": "Converts an array of timestamped values into time-bucketed counts for charts.",
+      "tags": ["utility", "bucketing", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:parsePaging",
+      "type": "function",
+      "name": "parsePaging",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [62, 67],
+      "summary": "Reads page/limit query parameters and clamps them into safe pagination bounds.",
+      "tags": ["utility", "paging", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_lib.ts:rateLimitAction",
+      "type": "function",
+      "name": "rateLimitAction",
+      "filePath": "src/app/api/admin/pipeline/_lib.ts",
+      "lineRange": [69, 82],
+      "summary": "In-memory rate-limit helper used by admin write actions to prevent rapid repeated requests.",
+      "tags": ["utility", "rate-limit", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForModule",
+      "type": "function",
+      "name": "computeSloForModule",
+      "filePath": "src/app/api/admin/pipeline/_slo.ts",
+      "lineRange": [25, 80],
+      "summary": "Computes success rate, latency and freshness SLOs for a single pipeline module relative to default thresholds.",
+      "tags": ["slo", "metrics", "pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForAll",
+      "type": "function",
+      "name": "computeSloForAll",
+      "filePath": "src/app/api/admin/pipeline/_slo.ts",
+      "lineRange": [82, 88],
+      "summary": "Iterates all known modules and computes their SLO snapshot.",
+      "tags": ["slo", "aggregator", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_synthetic.ts:synthStatus",
+      "type": "function",
+      "name": "synthStatus",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "lineRange": [7, 19],
+      "summary": "Generates a synthetic pipeline status payload for fallback when no DB data is available.",
+      "tags": ["synthetic", "fallback", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_synthetic.ts:synthThroughput",
+      "type": "function",
+      "name": "synthThroughput",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "lineRange": [21, 34],
+      "summary": "Generates a synthetic bucketed throughput series for fallback rendering of pipeline charts.",
+      "tags": ["synthetic", "fallback", "throughput"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_synthetic.ts:synthModules",
+      "type": "function",
+      "name": "synthModules",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "lineRange": [36, 55],
+      "summary": "Generates a synthetic list of modules with status/latency/throughput placeholders.",
+      "tags": ["synthetic", "fallback", "modules"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_synthetic.ts:synthBacklog",
+      "type": "function",
+      "name": "synthBacklog",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "lineRange": [57, 64],
+      "summary": "Generates a synthetic backlog/queue depth payload for fallback rendering.",
+      "tags": ["synthetic", "fallback", "backlog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/_synthetic.ts:synthAlerts",
+      "type": "function",
+      "name": "synthAlerts",
+      "filePath": "src/app/api/admin/pipeline/_synthetic.ts",
+      "lineRange": [66, 72],
+      "summary": "Generates a synthetic list of pipeline alerts as a development/demo fallback.",
+      "tags": ["synthetic", "fallback", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/action-items/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/admin/planning/action-items/route.ts",
+      "lineRange": [24, 35],
+      "summary": "Lazy-constructs a Supabase service-role client for planning action-item queries.",
+      "tags": ["utility", "supabase", "service-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/action-items/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/planning/action-items/route.ts",
+      "lineRange": [37, 70],
+      "summary": "Lists planning action items, optionally filtered by session and status.",
+      "tags": ["api-handler", "admin", "planning", "action-items"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/action-items/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/planning/action-items/route.ts",
+      "lineRange": [72, 111],
+      "summary": "Updates an existing planning action item (status, ownership, due date).",
+      "tags": ["api-handler", "admin", "planning", "action-items"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/decision/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/admin/planning/decision/route.ts",
+      "lineRange": [35, 46],
+      "summary": "Lazy-constructs a Supabase service-role client for planning-decision persistence.",
+      "tags": ["utility", "supabase", "service-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/decision/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/planning/decision/route.ts",
+      "lineRange": [56, 198],
+      "summary": "Persists a planning decision plus extracted recommendations and updates the parent session state.",
+      "tags": ["api-handler", "admin", "planning", "decision"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/sessions/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/admin/planning/sessions/route.ts",
+      "lineRange": [16, 27],
+      "summary": "Lazy-constructs a Supabase service-role client for listing planning sessions.",
+      "tags": ["utility", "supabase", "service-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/sessions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/planning/sessions/route.ts",
+      "lineRange": [29, 67],
+      "summary": "Lists existing planning sessions ordered for the admin UI.",
+      "tags": ["api-handler", "admin", "planning", "sessions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/start/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/admin/planning/start/route.ts",
+      "lineRange": [26, 37],
+      "summary": "Lazy-constructs a Supabase service-role client for creating new planning sessions.",
+      "tags": ["utility", "supabase", "service-client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/planning/start/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/planning/start/route.ts",
+      "lineRange": [39, 97],
+      "summary": "Creates a new planning session after tier gating and dispatches the planning worker to begin processing.",
+      "tags": ["api-handler", "admin", "planning", "session-start"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/platform-monitor/route.ts:handle",
+      "type": "function",
+      "name": "handle",
+      "filePath": "src/app/api/admin/platform-monitor/route.ts",
+      "lineRange": [19, 40],
+      "summary": "Shared handler that runs platform monitor signal collection for both GET and POST entry points.",
+      "tags": ["api-handler", "admin", "platform-monitor", "signals"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts",
+      "lineRange": [27, 174],
+      "summary": "Attaches a platform video id to a prediction run, enforces uniqueness, and triggers post-publication metric scheduling.",
+      "tags": ["api-handler", "admin", "prediction-runs", "training-ingest"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/prediction-runs/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/prediction-runs/route.ts",
+      "lineRange": [25, 144],
+      "summary": "Returns paginated prediction runs filtered by niche/status/platform-id state for the admin training dashboard.",
+      "tags": ["api-handler", "admin", "prediction-runs", "training-ingest"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/pipeline/dag/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/export/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/health/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runs/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/slo/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/slo/route.ts", "target": "file:src/app/api/admin/pipeline/_slo.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/route.ts", "target": "file:src/app/api/admin/pipeline/_slo.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/modules/route.ts", "target": "file:src/app/api/admin/pipeline/_synthetic.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/quality/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/status/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/status/route.ts", "target": "file:src/app/api/admin/pipeline/_synthetic.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/throughput/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/throughput/route.ts", "target": "file:src/app/api/admin/pipeline/_synthetic.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/_slo.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/planning/decision/route.ts", "target": "file:src/lib/planning/extract-recommendations.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "file:src/lib/planning/tier-gating.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "file:src/lib/planning/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "file:src/lib/planning/worker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/platform-monitor/route.ts", "target": "file:src/lib/monitoring/platform-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/platform-monitor/route.ts", "target": "file:src/lib/monitoring/platform-signals.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts", "target": "file:src/lib/training/metric-scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts", "target": "file:src/lib/training/training-ingest-types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/prediction-runs/route.ts", "target": "file:src/lib/training/training-ingest-types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/prediction-runs/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/control/route.ts", "target": "function:src/app/api/admin/pipeline/control/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/control/route.ts", "target": "function:src/app/api/admin/pipeline/control/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/dag/route.ts", "target": "function:src/app/api/admin/pipeline/dag/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/dag/route.ts", "target": "function:src/app/api/admin/pipeline/dag/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/export/route.ts", "target": "function:src/app/api/admin/pipeline/export/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/export/route.ts", "target": "function:src/app/api/admin/pipeline/export/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/health/route.ts", "target": "function:src/app/api/admin/pipeline/health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/health/route.ts", "target": "function:src/app/api/admin/pipeline/health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/config/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/config/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/runbook/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runs/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/runs/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/runs/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/runs/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/slo/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/slo/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/slo/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/slo/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/[id]/route.ts", "target": "function:src/app/api/admin/pipeline/modules/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/modules/route.ts", "target": "function:src/app/api/admin/pipeline/modules/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/modules/route.ts", "target": "function:src/app/api/admin/pipeline/modules/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/quality/route.ts", "target": "function:src/app/api/admin/pipeline/quality/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/quality/route.ts", "target": "function:src/app/api/admin/pipeline/quality/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/status/route.ts", "target": "function:src/app/api/admin/pipeline/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/status/route.ts", "target": "function:src/app/api/admin/pipeline/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/throughput/route.ts", "target": "function:src/app/api/admin/pipeline/throughput/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/throughput/route.ts", "target": "function:src/app/api/admin/pipeline/throughput/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:parseRange", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:parseRange", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:getWindow", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:getWindow", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:getAdminDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:getAdminDb", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:guardAdmin", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:guardAdmin", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:withCache", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:withCache", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:toBuckets", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:toBuckets", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:parsePaging", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:parsePaging", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:rateLimitAction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_lib.ts", "target": "function:src/app/api/admin/pipeline/_lib.ts:rateLimitAction", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/_slo.ts", "target": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForModule", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_slo.ts", "target": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForModule", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_slo.ts", "target": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForAll", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_slo.ts", "target": "function:src/app/api/admin/pipeline/_slo.ts:computeSloForAll", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthStatus", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthThroughput", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthThroughput", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthModules", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthModules", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthBacklog", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthBacklog", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthAlerts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/_synthetic.ts", "target": "function:src/app/api/admin/pipeline/_synthetic.ts:synthAlerts", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/planning/action-items/route.ts", "target": "function:src/app/api/admin/planning/action-items/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/action-items/route.ts", "target": "function:src/app/api/admin/planning/action-items/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/action-items/route.ts", "target": "function:src/app/api/admin/planning/action-items/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/planning/action-items/route.ts", "target": "function:src/app/api/admin/planning/action-items/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/action-items/route.ts", "target": "function:src/app/api/admin/planning/action-items/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/planning/decision/route.ts", "target": "function:src/app/api/admin/planning/decision/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/decision/route.ts", "target": "function:src/app/api/admin/planning/decision/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/decision/route.ts", "target": "function:src/app/api/admin/planning/decision/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/planning/sessions/route.ts", "target": "function:src/app/api/admin/planning/sessions/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/sessions/route.ts", "target": "function:src/app/api/admin/planning/sessions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/sessions/route.ts", "target": "function:src/app/api/admin/planning/sessions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "function:src/app/api/admin/planning/start/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "function:src/app/api/admin/planning/start/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/planning/start/route.ts", "target": "function:src/app/api/admin/planning/start/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/platform-monitor/route.ts", "target": "function:src/app/api/admin/platform-monitor/route.ts:handle", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts", "target": "function:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts", "target": "function:src/app/api/admin/prediction-runs/[id]/attach-platform-id/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/prediction-runs/route.ts", "target": "function:src/app/api/admin/prediction-runs/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/prediction-runs/route.ts", "target": "function:src/app/api/admin/prediction-runs/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

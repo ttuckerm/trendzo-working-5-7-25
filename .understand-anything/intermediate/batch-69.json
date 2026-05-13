@@ -1,0 +1,1134 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/mission-control/modules/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/mission-control/modules/route.ts",
+      "summary": "Mission Control admin API exposing GET (list pipeline modules with health status) and PATCH (toggle module enabled/disabled) over the supabase pipeline_modules table.",
+      "tags": ["api-handler", "admin", "mission-control", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/modules/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/mission-control/modules/route.ts",
+      "lineRange": [7, 35],
+      "summary": "Returns the list of mission-control pipeline modules from Supabase as JSON for the admin dashboard.",
+      "tags": ["api-handler", "http-get", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/modules/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/mission-control/modules/route.ts",
+      "lineRange": [38, 82],
+      "summary": "Updates an individual pipeline module record (e.g. toggling enabled/status fields) by id in Supabase.",
+      "tags": ["api-handler", "http-patch", "mutation", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/mission-control/pipeline/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/mission-control/pipeline/route.ts",
+      "summary": "Mission Control pipeline admin API: GET returns aggregate pipeline status, POST triggers pipeline-wide actions (start/stop/restart) by writing to Supabase.",
+      "tags": ["api-handler", "admin", "mission-control", "pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/pipeline/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/mission-control/pipeline/route.ts",
+      "lineRange": [7, 36],
+      "summary": "Reads pipeline state aggregates from Supabase and returns them as the mission-control pipeline overview payload.",
+      "tags": ["api-handler", "http-get", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/pipeline/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/mission-control/pipeline/route.ts",
+      "lineRange": [39, 76],
+      "summary": "Accepts pipeline control commands and dispatches them by mutating pipeline state in Supabase.",
+      "tags": ["api-handler", "http-post", "mutation", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/mission-control/restart/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/mission-control/restart/route.ts",
+      "summary": "Mission Control admin endpoint that restarts a pipeline module: validates input, resets its Supabase status record, and returns the new module state.",
+      "tags": ["api-handler", "admin", "mission-control", "restart"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/restart/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/mission-control/restart/route.ts",
+      "lineRange": [8, 68],
+      "summary": "Handles a restart request for a specified pipeline module by clearing its status and writing fresh fields back to Supabase.",
+      "tags": ["api-handler", "http-post", "restart", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/mission-control/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/mission-control/templates/route.ts",
+      "summary": "Mission Control admin endpoint that lists recent template-related records from Supabase for the dashboard's templates panel.",
+      "tags": ["api-handler", "admin", "mission-control", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/mission-control/templates/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/mission-control/templates/route.ts",
+      "lineRange": [7, 35],
+      "summary": "Queries Supabase for the latest template entries and returns them as JSON to the mission-control UI.",
+      "tags": ["api-handler", "http-get", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/model-evaluation/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/model-evaluation/route.ts",
+      "summary": "Admin API for evaluating prediction models: GET runs the benchmark via benchmark-runner, POST logs experiment results to Supabase, with handleLogExperiment computing summary metrics like Spearman correlation.",
+      "tags": ["api-handler", "admin", "model-evaluation", "benchmark"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/model-evaluation/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/model-evaluation/route.ts",
+      "lineRange": [10, 55],
+      "summary": "Invokes the benchmark runner against the active model and returns evaluation metrics as JSON.",
+      "tags": ["api-handler", "http-get", "benchmark"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/model-evaluation/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/model-evaluation/route.ts",
+      "lineRange": [59, 78],
+      "summary": "Routes incoming model-evaluation POSTs to handleLogExperiment for persistence.",
+      "tags": ["api-handler", "http-post", "dispatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/model-evaluation/route.ts:handleLogExperiment",
+      "type": "function",
+      "name": "handleLogExperiment",
+      "filePath": "src/app/api/admin/model-evaluation/route.ts",
+      "lineRange": [80, 170],
+      "summary": "Validates an experiment payload, computes summary metrics (e.g. rounded correlations), and writes the experiment record to Supabase.",
+      "tags": ["evaluation", "logging", "supabase", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/model/promote_if_better/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/model/promote_if_better/route.ts",
+      "summary": "Thin admin endpoint that delegates to the canary promote service to swap the active model only if the shadow model beats current production metrics.",
+      "tags": ["api-handler", "admin", "canary", "model-promotion"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/model/set_shadow/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/model/set_shadow/route.ts",
+      "summary": "Admin endpoint that sets the shadow model identifier (read from env helpers) for canary evaluation runs.",
+      "tags": ["api-handler", "admin", "canary", "shadow-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/model/set_shadow/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/model/set_shadow/route.ts",
+      "lineRange": [8, 17],
+      "summary": "Accepts a model id and persists it as the shadow model for subsequent canary evaluations.",
+      "tags": ["api-handler", "http-post", "shadow-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/monitoring/comprehensive/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "summary": "Comprehensive monitoring admin API aggregating real-time metrics, analytics, business KPIs, alerts, and system health across the platform; POST routes manual alert/report/notification actions through the monitoring subsystems.",
+      "tags": ["api-handler", "monitoring", "admin", "aggregator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [29, 114],
+      "summary": "Dispatches monitoring read requests to overview, performance, business, alerting, analytics, or system-health helpers based on the requested view.",
+      "tags": ["api-handler", "http-get", "dispatch", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [120, 190],
+      "summary": "Handles monitoring control actions (trigger alert, generate report, ack/resolve alert, test notification, force collection) by delegating to alert and analytics services.",
+      "tags": ["api-handler", "http-post", "monitoring", "actions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getMonitoringOverview",
+      "type": "function",
+      "name": "getMonitoringOverview",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [194, 243],
+      "summary": "Builds a high-level monitoring overview by combining real-time metrics, system health summary, and quick insights.",
+      "tags": ["monitoring", "aggregator", "overview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getPerformanceMetrics",
+      "type": "function",
+      "name": "getPerformanceMetrics",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [245, 270],
+      "summary": "Collects performance metrics (response times, percentiles, trends) via the metrics-collector and shapes them for the monitoring API.",
+      "tags": ["monitoring", "performance", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getBusinessMetrics",
+      "type": "function",
+      "name": "getBusinessMetrics",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [272, 298],
+      "summary": "Loads business KPIs and revenue forecasts from the business-metrics-dashboard service.",
+      "tags": ["monitoring", "business-metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getAlertingStatus",
+      "type": "function",
+      "name": "getAlertingStatus",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [300, 323],
+      "summary": "Summarises active alerts, recent alert history, rule counts, and configured channels for the monitoring dashboard.",
+      "tags": ["monitoring", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getAnalyticsData",
+      "type": "function",
+      "name": "getAnalyticsData",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [325, 351],
+      "summary": "Returns analytics reports and forecasts produced by the analytics-reporting service.",
+      "tags": ["monitoring", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getSystemHealth",
+      "type": "function",
+      "name": "getSystemHealth",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [353, 378],
+      "summary": "Computes overall system health by composing service status, database health, external service status, and health recommendations.",
+      "tags": ["monitoring", "system-health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:triggerManualAlert",
+      "type": "function",
+      "name": "triggerManualAlert",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [382, 391],
+      "summary": "Fires a manual alert through the alert-system service using the request payload.",
+      "tags": ["monitoring", "alerts", "action"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:testNotification",
+      "type": "function",
+      "name": "testNotification",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [415, 425],
+      "summary": "Sends a test notification through configured channels to verify alert delivery wiring.",
+      "tags": ["monitoring", "notification", "test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getRealTimeMetrics",
+      "type": "function",
+      "name": "getRealTimeMetrics",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [439, 456],
+      "summary": "Snapshots current real-time metrics from the real-time-monitor for inclusion in the monitoring overview.",
+      "tags": ["monitoring", "real-time", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getSystemHealthSummary",
+      "type": "function",
+      "name": "getSystemHealthSummary",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [458, 468],
+      "summary": "Produces a compact health summary (overall score and status counts) from current monitoring inputs.",
+      "tags": ["monitoring", "system-health", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getQuickInsights",
+      "type": "function",
+      "name": "getQuickInsights",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [470, 480],
+      "summary": "Derives short-form actionable insights (top issues, key wins) for the monitoring overview card.",
+      "tags": ["monitoring", "insights"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/comprehensive/route.ts:generateHealthRecommendations",
+      "type": "function",
+      "name": "generateHealthRecommendations",
+      "filePath": "src/app/api/admin/monitoring/comprehensive/route.ts",
+      "lineRange": [602, 614],
+      "summary": "Produces remediation recommendations based on current service and database health checks.",
+      "tags": ["monitoring", "recommendations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/monitoring/dashboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "summary": "Monitoring dashboard admin API that compiles performance metrics, system health, real-time stats, alerts, and trend data into the dashboard payload using the metrics-collector and alert-manager services.",
+      "tags": ["api-handler", "monitoring", "dashboard", "aggregator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [27, 178],
+      "summary": "Top-level dashboard handler that applies auth + rate limiting, then assembles performance, health, real-time, alert, and trend sections into a single response.",
+      "tags": ["api-handler", "http-get", "dashboard", "aggregator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getPerformanceMetrics",
+      "type": "function",
+      "name": "getPerformanceMetrics",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [184, 313],
+      "summary": "Aggregates response-time samples and percentile breakdowns from the metrics-collector for the dashboard performance panel.",
+      "tags": ["monitoring", "performance", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getSystemHealth",
+      "type": "function",
+      "name": "getSystemHealth",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [315, 374],
+      "summary": "Computes service-by-service health, CPU usage, and active user counts for the dashboard health card.",
+      "tags": ["monitoring", "system-health"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getRealTimeMetrics",
+      "type": "function",
+      "name": "getRealTimeMetrics",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [376, 424],
+      "summary": "Snapshots the current real-time metrics (throughput, latency, errors) for the dashboard live panel.",
+      "tags": ["monitoring", "real-time"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getAlertSummary",
+      "type": "function",
+      "name": "getAlertSummary",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [426, 459],
+      "summary": "Builds an alert summary from the alert-manager (counts by severity, recent alerts) for the dashboard.",
+      "tags": ["monitoring", "alerts"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getTrendData",
+      "type": "function",
+      "name": "getTrendData",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [461, 484],
+      "summary": "Assembles trend datasets (performance, business, alerts) for the dashboard's time-series charts.",
+      "tags": ["monitoring", "trends"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getPerformanceTrends",
+      "type": "function",
+      "name": "getPerformanceTrends",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [486, 500],
+      "summary": "Returns historical performance samples used to render the dashboard performance trend chart.",
+      "tags": ["monitoring", "trends", "performance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getBusinessTrends",
+      "type": "function",
+      "name": "getBusinessTrends",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [502, 516],
+      "summary": "Returns business KPI trend series used by the dashboard business chart.",
+      "tags": ["monitoring", "trends", "business"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:calculateOverallHealth",
+      "type": "function",
+      "name": "calculateOverallHealth",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [523, 550],
+      "summary": "Combines performance, system, and alert signals into a single weighted overall-health score.",
+      "tags": ["monitoring", "system-health", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getStartTime",
+      "type": "function",
+      "name": "getStartTime",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [556, 577],
+      "summary": "Resolves a start timestamp from a relative range string (e.g. '1h', '7d') for time-window queries.",
+      "tags": ["utility", "time-range"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/monitoring/dashboard/route.ts:getActiveUsersCount",
+      "type": "function",
+      "name": "getActiveUsersCount",
+      "filePath": "src/app/api/admin/monitoring/dashboard/route.ts",
+      "lineRange": [594, 609],
+      "summary": "Estimates currently active users for the dashboard's health card.",
+      "tags": ["monitoring", "users", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/monitoring/fast-prediction/route.ts.disabled",
+      "type": "file",
+      "name": "route.ts.disabled",
+      "filePath": "src/app/api/admin/monitoring/fast-prediction/route.ts.disabled",
+      "summary": "Disabled (renamed) Next.js route that previously exposed fast-prediction monitoring; retained in the tree for reference but not registered with the router.",
+      "tags": ["disabled", "monitoring", "fast-prediction", "legacy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/monitoring/synthetic/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/monitoring/synthetic/route.ts",
+      "summary": "Tiny synthetic monitoring endpoint that returns a constant health payload guarded by an env flag, used as a heartbeat probe.",
+      "tags": ["api-handler", "monitoring", "synthetic", "heartbeat"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/omniscient-flow/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "summary": "Admin API simulating the 'omniscient flow' integration tests: POST dispatches sub-tests (video analysis, template generation, viral prediction, feedback, performance), GET reports stats and health.",
+      "tags": ["api-handler", "admin", "testing", "integration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [20, 63],
+      "summary": "Routes omniscient-flow POST actions to the appropriate handler (full test, batch processing, individual report types).",
+      "tags": ["api-handler", "http-post", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [65, 94],
+      "summary": "Dispatches GET queries to the stats and health-check handlers for omniscient flow monitoring.",
+      "tags": ["api-handler", "http-get", "dispatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleTestOmniscientFlow",
+      "type": "function",
+      "name": "handleTestOmniscientFlow",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [96, 193],
+      "summary": "Runs the full omniscient flow integration test, exercising the major reporting paths and aggregating per-stage outcomes.",
+      "tags": ["testing", "integration", "omniscient-flow"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportVideoAnalysis",
+      "type": "function",
+      "name": "handleReportVideoAnalysis",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [195, 212],
+      "summary": "Records a synthetic video-analysis report into the omniscient flow's event stream.",
+      "tags": ["reporting", "video-analysis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportTemplateGeneration",
+      "type": "function",
+      "name": "handleReportTemplateGeneration",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [214, 231],
+      "summary": "Records a synthetic template-generation event into the omniscient flow's event stream.",
+      "tags": ["reporting", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportViralPrediction",
+      "type": "function",
+      "name": "handleReportViralPrediction",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [233, 250],
+      "summary": "Records a synthetic viral-prediction event for the omniscient flow integration test.",
+      "tags": ["reporting", "viral-prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportUserFeedback",
+      "type": "function",
+      "name": "handleReportUserFeedback",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [252, 269],
+      "summary": "Records a synthetic user-feedback event for the omniscient flow integration test.",
+      "tags": ["reporting", "feedback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportPerformanceMetrics",
+      "type": "function",
+      "name": "handleReportPerformanceMetrics",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [271, 288],
+      "summary": "Records a synthetic performance-metrics event for the omniscient flow integration test.",
+      "tags": ["reporting", "performance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleProcessBatch",
+      "type": "function",
+      "name": "handleProcessBatch",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [290, 299],
+      "summary": "Invokes the omniscient-flow batch processor with the requested payload.",
+      "tags": ["batch", "processing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleGetStats",
+      "type": "function",
+      "name": "handleGetStats",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [301, 311],
+      "summary": "Returns aggregate stats for omniscient flow runs.",
+      "tags": ["stats", "reporting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/omniscient-flow/route.ts:handleHealthCheck",
+      "type": "function",
+      "name": "handleHealthCheck",
+      "filePath": "src/app/api/admin/omniscient-flow/route.ts",
+      "lineRange": [313, 322],
+      "summary": "Returns a simple health-check response for the omniscient flow subsystem.",
+      "tags": ["health-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/operations/accuracy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/operations/accuracy/route.ts",
+      "summary": "Operations admin API that projects prediction-accuracy milestones (week/date) using training-eligibility data and the supabase server client.",
+      "tags": ["api-handler", "operations", "accuracy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/operations/accuracy/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/operations/accuracy/route.ts",
+      "lineRange": [116, 274],
+      "summary": "Computes and returns accuracy operations metrics including milestone projections and training-data readiness, sourced from Supabase.",
+      "tags": ["api-handler", "http-get", "operations", "accuracy"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/operations/initiative/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/operations/initiative/route.ts",
+      "summary": "Operations admin API returning the full initiative dashboard payload by querying multiple Supabase tables (initiatives, phases, status) and shaping them for the UI.",
+      "tags": ["api-handler", "operations", "initiative", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/operations/initiative/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/operations/initiative/route.ts",
+      "lineRange": [108, 248],
+      "summary": "Reads initiative records and related operations data from Supabase, then assembles the initiative dashboard JSON response.",
+      "tags": ["api-handler", "http-get", "operations", "initiative"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/operations/system-health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/operations/system-health/route.ts",
+      "summary": "Pack Health Dashboard backend that derives component/pack status from prediction_runs + run_component_results in Supabase, including API-key indicators and XGBoost model version.",
+      "tags": ["api-handler", "operations", "system-health", "pack-health"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/operations/system-health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/operations/system-health/route.ts",
+      "lineRange": [92, 305],
+      "summary": "Queries recent prediction runs and component results, evaluates which packs/components are active or degraded, and returns the system-health dashboard payload.",
+      "tags": ["api-handler", "http-get", "operations", "system-health"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/ops/notify/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ops/notify/route.ts",
+      "summary": "Ops admin endpoint that posts a notification through the alarm + notifier services for incident-response wiring.",
+      "tags": ["api-handler", "ops", "notification", "alarms"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/ops/notify/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/ops/notify/route.ts",
+      "lineRange": [8, 21],
+      "summary": "Receives a notify payload and dispatches it through the alarms and notifier modules.",
+      "tags": ["api-handler", "http-post", "notification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/phase2-test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/phase2-test/route.ts",
+      "summary": "Admin test endpoint exercising the Phase 2 DPS v2 path: builds a sample viral-prediction input and runs it through dps-v2 to verify wiring.",
+      "tags": ["api-handler", "admin", "test", "dps-v2"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/phase2-test/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/phase2-test/route.ts",
+      "lineRange": [6, 119],
+      "summary": "Constructs a synthetic prediction input, runs it through dps-v2, and returns the computed scores for verification.",
+      "tags": ["api-handler", "http-get", "test", "dps-v2"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline-actions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline-actions/route.ts",
+      "summary": "Admin API that executes pipeline control actions: POST dispatches per-module or batch actions through handleModuleAction/handleBatchAction; GET returns the actions catalog.",
+      "tags": ["api-handler", "admin", "pipeline", "actions"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-actions/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline-actions/route.ts",
+      "lineRange": [192, 232],
+      "summary": "Routes pipeline-action POSTs to either single-module or batch handlers based on the payload shape.",
+      "tags": ["api-handler", "http-post", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-actions/route.ts:handleModuleAction",
+      "type": "function",
+      "name": "handleModuleAction",
+      "filePath": "src/app/api/admin/pipeline-actions/route.ts",
+      "lineRange": [234, 270],
+      "summary": "Executes a single named action against one pipeline module (start, stop, restart, reset) and returns the resulting status.",
+      "tags": ["pipeline", "actions", "module"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-actions/route.ts:handleBatchAction",
+      "type": "function",
+      "name": "handleBatchAction",
+      "filePath": "src/app/api/admin/pipeline-actions/route.ts",
+      "lineRange": [272, 360],
+      "summary": "Performs the same action across many pipeline modules in batch, aggregating per-module results into one response.",
+      "tags": ["pipeline", "actions", "batch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-actions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline-actions/route.ts",
+      "lineRange": [362, 374],
+      "summary": "Returns the metadata catalog describing all supported pipeline actions.",
+      "tags": ["api-handler", "http-get", "catalog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline-status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "summary": "Admin API that probes each pipeline service (scraper, decomposer, gene-tagger, template generator, evolution engine, recipe-book, DNA detective, orchestrator, advisor, feedback ingest) and returns an aggregated status payload.",
+      "tags": ["api-handler", "admin", "pipeline", "status"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getApifyScraperStatus",
+      "type": "function",
+      "name": "getApifyScraperStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [54, 103],
+      "summary": "Probes the Apify scraper service and returns its current health, last-run, and queue depth metrics.",
+      "tags": ["pipeline", "status", "scraper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getFeatureDecomposerStatus",
+      "type": "function",
+      "name": "getFeatureDecomposerStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [108, 153],
+      "summary": "Probes the feature decomposer and returns last-run state, throughput, and error counts.",
+      "tags": ["pipeline", "status", "feature-decomposer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getGeneTaggerStatus",
+      "type": "function",
+      "name": "getGeneTaggerStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [158, 197],
+      "summary": "Probes the gene-tagger service and reports its activity and recent classifications.",
+      "tags": ["pipeline", "status", "gene-tagger"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getTemplateGeneratorStatus",
+      "type": "function",
+      "name": "getTemplateGeneratorStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [202, 246],
+      "summary": "Probes the template generator service and reports generation rates and recent outputs.",
+      "tags": ["pipeline", "status", "template-generator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getEvolutionEngineStatus",
+      "type": "function",
+      "name": "getEvolutionEngineStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [251, 294],
+      "summary": "Probes the evolution engine and reports its current state, generation counts, and recent improvements.",
+      "tags": ["pipeline", "status", "evolution-engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getRecipeBookAPIStatus",
+      "type": "function",
+      "name": "getRecipeBookAPIStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [299, 316],
+      "summary": "Probes the recipe-book API and returns counts of registered recipes and last-update times.",
+      "tags": ["pipeline", "status", "recipe-book"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getDNADetectiveStatus",
+      "type": "function",
+      "name": "getDNADetectiveStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [321, 339],
+      "summary": "Probes the DNA-detective service and returns detection rates and confidence statistics.",
+      "tags": ["pipeline", "status", "dna-detective"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getOrchestratorStatus",
+      "type": "function",
+      "name": "getOrchestratorStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [344, 362],
+      "summary": "Probes the pipeline orchestrator and reports queue depth, active jobs, and last completed run.",
+      "tags": ["pipeline", "status", "orchestrator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getAdvisorServiceStatus",
+      "type": "function",
+      "name": "getAdvisorServiceStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [367, 403],
+      "summary": "Probes the advisor service and returns recommendation volume, accuracy hints, and recent activity.",
+      "tags": ["pipeline", "status", "advisor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getFeedbackIngestStatus",
+      "type": "function",
+      "name": "getFeedbackIngestStatus",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [408, 447],
+      "summary": "Probes the feedback ingestion service and returns recent ingestion rates and error counts.",
+      "tags": ["pipeline", "status", "feedback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:getRelativeTime",
+      "type": "function",
+      "name": "getRelativeTime",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [452, 465],
+      "summary": "Formats an absolute timestamp as a relative human-readable string (e.g. '5m ago').",
+      "tags": ["utility", "formatting", "time"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:calculatePipelineHealth",
+      "type": "function",
+      "name": "calculatePipelineHealth",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [470, 486],
+      "summary": "Combines per-service status into a single pipeline-wide health score and label.",
+      "tags": ["pipeline", "health", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline-status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline-status/route.ts",
+      "lineRange": [488, 648],
+      "summary": "Invokes every per-service status probe in parallel, aggregates results, and returns the unified pipeline status payload.",
+      "tags": ["api-handler", "http-get", "aggregator", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/actions/[action]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/actions/[action]/route.ts",
+      "summary": "Dynamic admin route that executes a named pipeline action (e.g. recompute recipes) using helpers from the pipeline _lib and the recipes compute service.",
+      "tags": ["api-handler", "admin", "pipeline", "dynamic-route"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/actions/[action]/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline/actions/[action]/route.ts",
+      "lineRange": [11, 94],
+      "summary": "Switches on the route param's action name to invoke the appropriate pipeline helper (compute, reset, etc.) and returns the result.",
+      "tags": ["api-handler", "http-post", "dispatch", "pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/alerts/ack/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/alerts/ack/route.ts",
+      "summary": "Admin endpoint that acknowledges a pipeline alert by id using the shared pipeline _lib helpers.",
+      "tags": ["api-handler", "admin", "pipeline", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/alerts/ack/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline/alerts/ack/route.ts",
+      "lineRange": [7, 21],
+      "summary": "Reads an alert id from the request body and marks it acknowledged through the pipeline alerts helper.",
+      "tags": ["api-handler", "http-post", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/alerts/resolve/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/alerts/resolve/route.ts",
+      "summary": "Admin endpoint that resolves a pipeline alert by id via the pipeline _lib helpers.",
+      "tags": ["api-handler", "admin", "pipeline", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/alerts/resolve/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/pipeline/alerts/resolve/route.ts",
+      "lineRange": [7, 21],
+      "summary": "Receives an alert id and marks the alert resolved through the pipeline alerts helper.",
+      "tags": ["api-handler", "http-post", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/alerts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/alerts/route.ts",
+      "summary": "Admin endpoint that lists current pipeline alerts, falling back to synthetic data from _synthetic when no real alerts are available.",
+      "tags": ["api-handler", "admin", "pipeline", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/alerts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/alerts/route.ts",
+      "lineRange": [8, 28],
+      "summary": "Returns the current list of pipeline alerts, blending real data via _lib with synthetic seed data from _synthetic when needed.",
+      "tags": ["api-handler", "http-get", "alerts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/backlog/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/backlog/route.ts",
+      "summary": "Admin endpoint that returns the pipeline backlog (pending jobs) merging real data and synthetic placeholders via the pipeline _lib helpers.",
+      "tags": ["api-handler", "admin", "pipeline", "backlog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/backlog/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/backlog/route.ts",
+      "lineRange": [8, 47],
+      "summary": "Reads the pipeline backlog (queued/pending jobs) and returns it for the admin UI.",
+      "tags": ["api-handler", "http-get", "backlog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/pipeline/changelog/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/pipeline/changelog/route.ts",
+      "summary": "Admin endpoint that returns recent pipeline changelog entries via the pipeline _lib helpers.",
+      "tags": ["api-handler", "admin", "pipeline", "changelog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/pipeline/changelog/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/pipeline/changelog/route.ts",
+      "lineRange": [7, 21],
+      "summary": "Returns recent pipeline changelog entries for the admin UI.",
+      "tags": ["api-handler", "http-get", "changelog"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/mission-control/modules/route.ts", "target": "function:src/app/api/admin/mission-control/modules/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/modules/route.ts", "target": "function:src/app/api/admin/mission-control/modules/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/modules/route.ts", "target": "function:src/app/api/admin/mission-control/modules/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/modules/route.ts", "target": "function:src/app/api/admin/mission-control/modules/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/modules/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/mission-control/pipeline/route.ts", "target": "function:src/app/api/admin/mission-control/pipeline/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/pipeline/route.ts", "target": "function:src/app/api/admin/mission-control/pipeline/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/pipeline/route.ts", "target": "function:src/app/api/admin/mission-control/pipeline/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/pipeline/route.ts", "target": "function:src/app/api/admin/mission-control/pipeline/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/pipeline/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/mission-control/restart/route.ts", "target": "function:src/app/api/admin/mission-control/restart/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/restart/route.ts", "target": "function:src/app/api/admin/mission-control/restart/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/restart/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/mission-control/templates/route.ts", "target": "function:src/app/api/admin/mission-control/templates/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/mission-control/templates/route.ts", "target": "function:src/app/api/admin/mission-control/templates/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/mission-control/templates/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "function:src/app/api/admin/model-evaluation/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "function:src/app/api/admin/model-evaluation/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "function:src/app/api/admin/model-evaluation/route.ts:handleLogExperiment", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "function:src/app/api/admin/model-evaluation/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "function:src/app/api/admin/model-evaluation/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "file:src/lib/evaluation/benchmark-runner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/model-evaluation/route.ts", "target": "file:src/lib/supabase-server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/model/promote_if_better/route.ts", "target": "file:src/lib/services/canary/promote.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/model/set_shadow/route.ts", "target": "function:src/app/api/admin/model/set_shadow/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/model/set_shadow/route.ts", "target": "function:src/app/api/admin/model/set_shadow/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/model/set_shadow/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getMonitoringOverview", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getPerformanceMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getBusinessMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getAlertingStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getAnalyticsData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:triggerManualAlert", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:testNotification", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getRealTimeMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getSystemHealthSummary", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:getQuickInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:generateHealthRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "function:src/app/api/admin/monitoring/comprehensive/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/monitoring/alert-system.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/monitoring/analytics-reporting.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/monitoring/business-metrics-dashboard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/monitoring/real-time-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/comprehensive/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getPerformanceMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getRealTimeMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getAlertSummary", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getTrendData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getPerformanceTrends", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getBusinessTrends", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:calculateOverallHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getStartTime", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:getActiveUsersCount", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "function:src/app/api/admin/monitoring/dashboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "file:src/lib/monitoring/alert-manager.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "file:src/lib/monitoring/business-metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "file:src/lib/monitoring/metrics-collector.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/monitoring/dashboard/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/monitoring/synthetic/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleTestOmniscientFlow", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportVideoAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportTemplateGeneration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportViralPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportUserFeedback", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleReportPerformanceMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleProcessBatch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleGetStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:handleHealthCheck", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/omniscient-flow/route.ts", "target": "function:src/app/api/admin/omniscient-flow/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/operations/accuracy/route.ts", "target": "function:src/app/api/admin/operations/accuracy/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/operations/accuracy/route.ts", "target": "function:src/app/api/admin/operations/accuracy/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/operations/accuracy/route.ts", "target": "file:src/lib/supabase-server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/operations/accuracy/route.ts", "target": "file:src/lib/training/training-eligibility.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/operations/initiative/route.ts", "target": "function:src/app/api/admin/operations/initiative/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/operations/initiative/route.ts", "target": "function:src/app/api/admin/operations/initiative/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/operations/initiative/route.ts", "target": "file:src/lib/supabase-server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/operations/system-health/route.ts", "target": "function:src/app/api/admin/operations/system-health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/operations/system-health/route.ts", "target": "function:src/app/api/admin/operations/system-health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/operations/system-health/route.ts", "target": "file:src/lib/supabase-server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/ops/notify/route.ts", "target": "function:src/app/api/admin/ops/notify/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ops/notify/route.ts", "target": "function:src/app/api/admin/ops/notify/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ops/notify/route.ts", "target": "file:src/lib/ops/alarms.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/ops/notify/route.ts", "target": "file:src/lib/ops/notifier.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/phase2-test/route.ts", "target": "function:src/app/api/admin/phase2-test/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/phase2-test/route.ts", "target": "function:src/app/api/admin/phase2-test/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/phase2-test/route.ts", "target": "file:src/lib/training/dps-v2.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/phase2-test/route.ts", "target": "file:src/lib/types/viral-prediction.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:handleModuleAction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:handleBatchAction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline-actions/route.ts", "target": "function:src/app/api/admin/pipeline-actions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getApifyScraperStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getFeatureDecomposerStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getGeneTaggerStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getTemplateGeneratorStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getEvolutionEngineStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getRecipeBookAPIStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getDNADetectiveStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getOrchestratorStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getAdvisorServiceStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getFeedbackIngestStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:getRelativeTime", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:calculatePipelineHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline-status/route.ts", "target": "function:src/app/api/admin/pipeline-status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/pipeline/actions/[action]/route.ts", "target": "function:src/app/api/admin/pipeline/actions/[action]/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/actions/[action]/route.ts", "target": "function:src/app/api/admin/pipeline/actions/[action]/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/actions/[action]/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/actions/[action]/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/actions/[action]/route.ts", "target": "file:src/lib/services/recipes/compute.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/alerts/ack/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/ack/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/alerts/ack/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/ack/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/alerts/ack/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/alerts/resolve/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/resolve/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/alerts/resolve/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/resolve/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/alerts/resolve/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/alerts/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/alerts/route.ts", "target": "function:src/app/api/admin/pipeline/alerts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/alerts/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/alerts/route.ts", "target": "file:src/app/api/admin/pipeline/_synthetic.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/backlog/route.ts", "target": "function:src/app/api/admin/pipeline/backlog/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/backlog/route.ts", "target": "function:src/app/api/admin/pipeline/backlog/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/backlog/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/pipeline/backlog/route.ts", "target": "file:src/app/api/admin/pipeline/_synthetic.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/pipeline/changelog/route.ts", "target": "function:src/app/api/admin/pipeline/changelog/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/pipeline/changelog/route.ts", "target": "function:src/app/api/admin/pipeline/changelog/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/pipeline/changelog/route.ts", "target": "file:src/app/api/admin/pipeline/_lib.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,1087 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/scheduled-actions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/scheduled-actions/route.ts",
+      "summary": "Admin API route for managing scheduled actions: GET lists pending/all scheduled actions, POST creates new ones, PATCH updates status (cancel, mark executed, etc.).",
+      "tags": ["api-handler", "admin", "scheduler", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/scheduled-actions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/scheduled-actions/route.ts",
+      "lineRange": [38, 67],
+      "summary": "GET handler returning a paginated list of scheduled actions with optional status/agency filters.",
+      "tags": ["api-handler", "list", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/scheduled-actions/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/scheduled-actions/route.ts",
+      "lineRange": [69, 102],
+      "summary": "POST handler that schedules a new action by delegating to the scheduler service.",
+      "tags": ["api-handler", "create", "scheduler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/scheduled-actions/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/scheduled-actions/route.ts",
+      "lineRange": [104, 165],
+      "summary": "PATCH handler for updating a scheduled action's status (cancel, mark executed, retry) with audit logging.",
+      "tags": ["api-handler", "update", "scheduler"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/scrape-search/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/scrape-search/route.ts",
+      "summary": "Admin API endpoint that runs an Apify TikTok keyword search and returns scraped video metadata.",
+      "tags": ["api-handler", "admin", "scraping", "apify"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/scrape-search/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/scrape-search/route.ts",
+      "lineRange": [26, 119],
+      "summary": "POST handler that authenticates the admin caller and runs an Apify-driven TikTok search scrape, returning the resulting videos.",
+      "tags": ["api-handler", "scraping", "apify", "tiktok"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/scrape/tiktok/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/scrape/tiktok/route.ts",
+      "summary": "Admin API endpoint that enqueues a TikTok scrape job using Apify, optionally building keywords from configured frameworks.",
+      "tags": ["api-handler", "admin", "scraping", "tiktok", "jobs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/scrape/tiktok/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/scrape/tiktok/route.ts",
+      "lineRange": [18, 78],
+      "summary": "POST handler creating a TikTok scrape job, hooking into the jobs runner and Apify scraper service.",
+      "tags": ["api-handler", "scraping", "jobs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/scrape/tiktok/route.ts:buildKeywordsFromFrameworks",
+      "type": "function",
+      "name": "buildKeywordsFromFrameworks",
+      "filePath": "src/app/api/admin/scrape/tiktok/route.ts",
+      "lineRange": [89, 134],
+      "summary": "Builds a deduplicated keyword/hashtag set from configured viral frameworks, capped at maxKeywords.",
+      "tags": ["utility", "keywords", "frameworks"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/script-intelligence/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/script-intelligence/analyze/route.ts",
+      "summary": "Admin API endpoint that runs script-intelligence analysis on a script via the viral-prediction engine; supports POST analyze and GET status/history.",
+      "tags": ["api-handler", "admin", "script-intelligence", "analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/script-intelligence/analyze/route.ts",
+      "lineRange": [19, 175],
+      "summary": "POST handler invoking the script-intelligence engine to score a script and persist the analysis result.",
+      "tags": ["api-handler", "analysis", "viral-prediction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/analyze/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/script-intelligence/analyze/route.ts",
+      "lineRange": [177, 238],
+      "summary": "GET handler returning recent script-intelligence analyses with filters and pagination.",
+      "tags": ["api-handler", "query", "analysis"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/script-intelligence/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/script-intelligence/status/route.ts",
+      "summary": "Admin API endpoint exposing readiness and health of the script-intelligence subsystem; POST allows toggling diagnostic flags.",
+      "tags": ["api-handler", "admin", "script-intelligence", "health-check"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/script-intelligence/status/route.ts",
+      "lineRange": [11, 139],
+      "summary": "GET handler aggregating script-intelligence module status (API keys, recent runs, error counts) for the admin dashboard.",
+      "tags": ["api-handler", "health-check", "diagnostics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/status/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/script-intelligence/status/route.ts",
+      "lineRange": [141, 204],
+      "summary": "POST handler for toggling script-intelligence flags and recording admin diagnostic actions.",
+      "tags": ["api-handler", "diagnostics", "configuration"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/script-intelligence/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "summary": "Large admin facade for the script-intelligence engine — dispatches actions like analyze, generate, optimize, store/query memory, evolution metrics, zeitgeist, singularity metrics, winning patterns, and template naming.",
+      "tags": ["api-handler", "admin", "script-intelligence", "facade"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [14, 54],
+      "summary": "POST entry that dispatches to the appropriate script-intelligence action handler based on the action field.",
+      "tags": ["api-handler", "dispatcher", "facade"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [56, 96],
+      "summary": "GET entry for read-only script-intelligence actions (stats, evolution, zeitgeist, patterns).",
+      "tags": ["api-handler", "dispatcher", "read"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleAnalyzeScript",
+      "type": "function",
+      "name": "handleAnalyzeScript",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [98, 143],
+      "summary": "Handles a script analysis action by calling the script-intelligence engine and shaping the response.",
+      "tags": ["analysis", "script-intelligence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGenerateScript",
+      "type": "function",
+      "name": "handleGenerateScript",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [145, 213],
+      "summary": "Generates a new viral script via the engine using prompt context (platform, niche, goals).",
+      "tags": ["generation", "script-intelligence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:generateTrendzoMarketingScript",
+      "type": "function",
+      "name": "generateTrendzoMarketingScript",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [215, 326],
+      "summary": "Produces a Trendzo-branded marketing script using templated context blocks tailored to platform and tone.",
+      "tags": ["generation", "marketing", "template"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleOptimizeScript",
+      "type": "function",
+      "name": "handleOptimizeScript",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [328, 354],
+      "summary": "Runs the engine's optimization routine over an existing script and returns suggested edits.",
+      "tags": ["optimization", "script-intelligence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleStoreMemory",
+      "type": "function",
+      "name": "handleStoreMemory",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [356, 401],
+      "summary": "Persists a memory entry (insight, pattern, observation) into the script-intelligence memory store.",
+      "tags": ["memory", "persistence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleQueryMemory",
+      "type": "function",
+      "name": "handleQueryMemory",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [403, 442],
+      "summary": "Queries the script-intelligence memory store with filters and returns matched entries.",
+      "tags": ["memory", "query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGetMemoryStats",
+      "type": "function",
+      "name": "handleGetMemoryStats",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [444, 473],
+      "summary": "Returns memory store statistics: counts by type, recency distribution, and storage health.",
+      "tags": ["memory", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGetPatternEvolution",
+      "type": "function",
+      "name": "handleGetPatternEvolution",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [475, 516],
+      "summary": "Computes how viral patterns have evolved over time using historical memory entries.",
+      "tags": ["evolution", "patterns", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGetCulturalZeitgeist",
+      "type": "function",
+      "name": "handleGetCulturalZeitgeist",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [518, 559],
+      "summary": "Returns current cultural-zeitgeist indicators derived from recent script observations.",
+      "tags": ["zeitgeist", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGetSingularityMetrics",
+      "type": "function",
+      "name": "handleGetSingularityMetrics",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [561, 603],
+      "summary": "Computes 'singularity' metrics — convergence indicators across viral patterns and trends.",
+      "tags": ["metrics", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGetWinningPatterns",
+      "type": "function",
+      "name": "handleGetWinningPatterns",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [605, 665],
+      "summary": "Returns the top-performing script patterns filtered by platform and niche.",
+      "tags": ["patterns", "ranking", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/script-intelligence/route.ts:handleGenerateTemplateName",
+      "type": "function",
+      "name": "handleGenerateTemplateName",
+      "filePath": "src/app/api/admin/script-intelligence/route.ts",
+      "lineRange": [667, 769],
+      "summary": "Generates a catchy, branded template name from input viral indicators and pattern scores.",
+      "tags": ["generation", "naming", "template"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/admin/security/dashboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "summary": "Admin security dashboard API aggregating threats, blocked IPs, system health, trends, vulnerabilities, and recommendations into a single security overview payload.",
+      "tags": ["api-handler", "admin", "security", "dashboard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [32, 143],
+      "summary": "Aggregates the full security-dashboard payload (threats, blocked IPs, system health, score, recommendations).",
+      "tags": ["api-handler", "aggregation", "security"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getActiveThreats",
+      "type": "function",
+      "name": "getActiveThreats",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [149, 165],
+      "summary": "Returns currently active threats from the security monitor.",
+      "tags": ["security", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getBlockedIPs",
+      "type": "function",
+      "name": "getBlockedIPs",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [167, 184],
+      "summary": "Returns blocked IPs along with reasons and timestamps.",
+      "tags": ["security", "rate-limiting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getSystemHealth",
+      "type": "function",
+      "name": "getSystemHealth",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [186, 230],
+      "summary": "Probes core subsystems and returns an aggregated system-health snapshot for the security dashboard.",
+      "tags": ["security", "health-check", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getSecurityTrends",
+      "type": "function",
+      "name": "getSecurityTrends",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [232, 265],
+      "summary": "Calculates time-bucketed trends of security events within the requested range.",
+      "tags": ["security", "analytics", "trends"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getTopVulnerabilities",
+      "type": "function",
+      "name": "getTopVulnerabilities",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [267, 287],
+      "summary": "Returns the most frequent/severe vulnerabilities observed by the security monitor.",
+      "tags": ["security", "vulnerabilities"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getAPISecurityStatus",
+      "type": "function",
+      "name": "getAPISecurityStatus",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [289, 327],
+      "summary": "Reports per-API security posture (auth coverage, rate-limit hits, suspicious activity counts).",
+      "tags": ["security", "api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:calculateSecurityScore",
+      "type": "function",
+      "name": "calculateSecurityScore",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [329, 348],
+      "summary": "Computes an overall 0-100 security score from collected metrics and system health.",
+      "tags": ["security", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:generateSecurityRecommendations",
+      "type": "function",
+      "name": "generateSecurityRecommendations",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [350, 381],
+      "summary": "Generates actionable security recommendations based on metrics and current system health.",
+      "tags": ["security", "recommendations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getVulnerabilitySeverity",
+      "type": "function",
+      "name": "getVulnerabilitySeverity",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [383, 394],
+      "summary": "Maps a vulnerability type string to a severity label.",
+      "tags": ["security", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/security/dashboard/route.ts:getVulnerabilityDescription",
+      "type": "function",
+      "name": "getVulnerabilityDescription",
+      "filePath": "src/app/api/admin/security/dashboard/route.ts",
+      "lineRange": [396, 407],
+      "summary": "Returns a human-readable description for a given vulnerability type.",
+      "tags": ["security", "utility"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/security/events/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/security/events/route.ts",
+      "summary": "Admin API for browsing and emitting security events; GET lists filtered events, POST records a new manual event.",
+      "tags": ["api-handler", "admin", "security", "events"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/events/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/security/events/route.ts",
+      "lineRange": [24, 115],
+      "summary": "Returns a filtered, paginated list of security events drawn from the security monitor.",
+      "tags": ["api-handler", "security", "events"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/security/events/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/security/events/route.ts",
+      "lineRange": [121, 177],
+      "summary": "Records a new manual security event via the security monitor (e.g., admin-triggered investigations).",
+      "tags": ["api-handler", "security", "events"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/seed/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/seed/templates/route.ts",
+      "summary": "Admin endpoint that seeds the database with demo template records for development and demo environments.",
+      "tags": ["api-handler", "admin", "seeder", "templates"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/seed/templates/route.ts:buildDemoTemplates",
+      "type": "function",
+      "name": "buildDemoTemplates",
+      "filePath": "src/app/api/admin/seed/templates/route.ts",
+      "lineRange": [12, 75],
+      "summary": "Builds an array of synthetic template records used to populate demo data.",
+      "tags": ["seeder", "factory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/seed/templates/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/seed/templates/route.ts",
+      "lineRange": [77, 97],
+      "summary": "GET handler that inserts demo templates into Supabase and returns the count inserted.",
+      "tags": ["api-handler", "seeder"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/seed/videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/seed/videos/route.ts",
+      "summary": "Admin endpoint that seeds the database with demo video records (with derived TikTok ids) for development data.",
+      "tags": ["api-handler", "admin", "seeder", "videos"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/seed/videos/route.ts:buildDemoVideos",
+      "type": "function",
+      "name": "buildDemoVideos",
+      "filePath": "src/app/api/admin/seed/videos/route.ts",
+      "lineRange": [32, 145],
+      "summary": "Constructs an array of demo video records covering varied creators, niches and metric profiles.",
+      "tags": ["seeder", "factory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/seed/videos/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/seed/videos/route.ts",
+      "lineRange": [147, 193],
+      "summary": "GET handler that upserts demo video records into Supabase and returns the seeded count.",
+      "tags": ["api-handler", "seeder"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/self-test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/self-test/route.ts",
+      "summary": "Admin self-test endpoint that probes environment, Supabase connectivity, and key dependencies, returning a readiness summary.",
+      "tags": ["api-handler", "admin", "health-check", "diagnostics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/self-test/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/self-test/route.ts",
+      "lineRange": [10, 54],
+      "summary": "Runs a synchronous self-test: probes env vars, Supabase, and external services and returns a pass/fail report.",
+      "tags": ["api-handler", "health-check"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/shadow/divergence_count/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/shadow/divergence_count/route.ts",
+      "summary": "Admin endpoint returning the count of divergences between shadow and production predictions.",
+      "tags": ["api-handler", "admin", "shadow", "metrics"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/success-tracking/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/success-tracking/metrics/route.ts",
+      "summary": "Admin endpoint returning aggregated success-tracking metrics (story counts, conversion rates, performance KPIs).",
+      "tags": ["api-handler", "admin", "metrics", "success-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/success-tracking/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/success-tracking/metrics/route.ts",
+      "lineRange": [7, 64],
+      "summary": "Aggregates success-tracking metrics from Supabase and returns a KPI bundle for the admin dashboard.",
+      "tags": ["api-handler", "metrics"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/success-tracking/stories/update/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/success-tracking/stories/update/route.ts",
+      "summary": "Admin endpoint to PATCH-update a success-tracking story record (status, metrics, notes).",
+      "tags": ["api-handler", "admin", "success-tracking", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/success-tracking/stories/update/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/success-tracking/stories/update/route.ts",
+      "lineRange": [7, 70],
+      "summary": "Updates fields on a success-tracking story by id in Supabase.",
+      "tags": ["api-handler", "update"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/success-tracking/stories/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/success-tracking/stories/route.ts",
+      "summary": "Admin success-tracking stories CRUD-lite endpoint: GET lists stories with filters, POST creates a new story record.",
+      "tags": ["api-handler", "admin", "success-tracking", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/success-tracking/stories/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/success-tracking/stories/route.ts",
+      "lineRange": [7, 47],
+      "summary": "Returns a list of success-tracking stories filtered by status, customer or date range.",
+      "tags": ["api-handler", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/success-tracking/stories/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/success-tracking/stories/route.ts",
+      "lineRange": [49, 117],
+      "summary": "Creates a new success-tracking story record with validation.",
+      "tags": ["api-handler", "create"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/dashboard-data/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/dashboard-data/route.ts",
+      "summary": "Super-admin dashboard data endpoint aggregating system-wide metrics, user counts and module summaries.",
+      "tags": ["api-handler", "super-admin", "dashboard", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/dashboard-data/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/dashboard-data/route.ts",
+      "lineRange": [9, 111],
+      "summary": "Aggregates super-admin dashboard data from multiple Supabase tables into a single response payload.",
+      "tags": ["api-handler", "aggregation"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/module-status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/module-status/route.ts",
+      "summary": "Super-admin endpoint reporting per-module health, uptime and error counts across the platform.",
+      "tags": ["api-handler", "super-admin", "monitoring", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/module-status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/module-status/route.ts",
+      "lineRange": [13, 147],
+      "summary": "Queries module status records and derives an aggregated module health view for super-admin.",
+      "tags": ["api-handler", "health-check"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/prediction-validations/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/prediction-validations/route.ts",
+      "summary": "Super-admin endpoint returning recent prediction validation results (predicted vs actual VPS comparisons).",
+      "tags": ["api-handler", "super-admin", "predictions", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/prediction-validations/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/prediction-validations/route.ts",
+      "lineRange": [13, 97],
+      "summary": "Returns recent prediction-validation rows with computed accuracy summaries.",
+      "tags": ["api-handler", "validation", "metrics"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/quick-predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "summary": "Super-admin quick-predict endpoint: extracts metadata from a TikTok URL, runs the orchestrator/master viral algorithm pipeline, and returns a fast viral prediction with breakdown.",
+      "tags": ["api-handler", "super-admin", "prediction", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractRealFollowerCount",
+      "type": "function",
+      "name": "extractRealFollowerCount",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [21, 34],
+      "summary": "Attempts to derive a creator's real follower count from URL/creator metadata.",
+      "tags": ["extraction", "tiktok"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractVideoDuration",
+      "type": "function",
+      "name": "extractVideoDuration",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [39, 49],
+      "summary": "Estimates the video duration for the given TikTok URL via downloader / probing.",
+      "tags": ["extraction", "video"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractHashtagsFromContent",
+      "type": "function",
+      "name": "extractHashtagsFromContent",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [54, 72],
+      "summary": "Parses hashtags out of a TikTok caption/URL for use in feature extraction.",
+      "tags": ["extraction", "hashtags"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractVideoData",
+      "type": "function",
+      "name": "extractVideoData",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [77, 140],
+      "summary": "Assembles a combined VideoData object (creator, duration, hashtags, captions) from various sources for downstream prediction.",
+      "tags": ["extraction", "video", "data"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [142, 411],
+      "summary": "POST handler that runs the full quick-predict pipeline: extract metadata, run orchestrator + master viral algorithm, persist prediction, return breakdown.",
+      "tags": ["api-handler", "prediction", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [413, 445],
+      "summary": "GET handler returning recent quick-predict results for super-admin browsing.",
+      "tags": ["api-handler", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:generateAnalysisBreakdown",
+      "type": "function",
+      "name": "generateAnalysisBreakdown",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [448, 480],
+      "summary": "Produces a per-component prediction breakdown formatted for UI consumption.",
+      "tags": ["formatting", "prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/quick-predict/route.ts:generateFallbackPrediction",
+      "type": "function",
+      "name": "generateFallbackPrediction",
+      "filePath": "src/app/api/admin/super-admin/quick-predict/route.ts",
+      "lineRange": [491, 509],
+      "summary": "Returns a deterministic fallback prediction object when the full pipeline fails.",
+      "tags": ["fallback", "prediction"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/system-metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/system-metrics/route.ts",
+      "summary": "Super-admin endpoint aggregating platform-wide system metrics — counts, throughput, error rates, latency percentiles.",
+      "tags": ["api-handler", "super-admin", "metrics", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/system-metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/system-metrics/route.ts",
+      "lineRange": [12, 250],
+      "summary": "Aggregates platform-wide metrics from Supabase tables and returns a structured metrics payload.",
+      "tags": ["api-handler", "aggregation", "metrics"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/admin/super-admin/template-discovery/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "summary": "Super-admin endpoint that discovers new template candidates by analyzing viral patterns and saves derived templates.",
+      "tags": ["api-handler", "super-admin", "templates", "discovery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [13, 75],
+      "summary": "Runs the template-discovery pipeline: analyze patterns, build candidate templates, persist, update generators.",
+      "tags": ["api-handler", "discovery", "pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [77, 104],
+      "summary": "Returns recently discovered templates and discovery-run statistics.",
+      "tags": ["api-handler", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:analyzeViralPatterns",
+      "type": "function",
+      "name": "analyzeViralPatterns",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [107, 135],
+      "summary": "Analyzes recent viral patterns to identify common signals that can become templates.",
+      "tags": ["analysis", "patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:saveTemplatestoDatabase",
+      "type": "function",
+      "name": "saveTemplatestoDatabase",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [137, 163],
+      "summary": "Persists newly discovered templates into the templates table.",
+      "tags": ["persistence", "templates"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:updateTemplateGenerators",
+      "type": "function",
+      "name": "updateTemplateGenerators",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [165, 176],
+      "summary": "Updates downstream template-generator records to reference newly created templates.",
+      "tags": ["templates", "update"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/super-admin/template-discovery/route.ts:generateFallbackTemplates",
+      "type": "function",
+      "name": "generateFallbackTemplates",
+      "filePath": "src/app/api/admin/super-admin/template-discovery/route.ts",
+      "lineRange": [221, 242],
+      "summary": "Returns a deterministic set of fallback template candidates when discovery analysis fails.",
+      "tags": ["fallback", "templates"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/admin/telemetry/keys/[id]/revoke/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/telemetry/keys/[id]/revoke/route.ts",
+      "summary": "Admin endpoint to revoke a telemetry key by id.",
+      "tags": ["api-handler", "admin", "telemetry", "auth"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/telemetry/keys/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/telemetry/keys/route.ts",
+      "summary": "Admin telemetry-keys endpoint: POST issues a new telemetry key, GET lists existing keys.",
+      "tags": ["api-handler", "admin", "telemetry", "auth"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/telemetry/plugin/recent/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/telemetry/plugin/recent/route.ts",
+      "summary": "Admin endpoint listing recent plugin telemetry events.",
+      "tags": ["api-handler", "admin", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/telemetry/plugin/recent/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/telemetry/plugin/recent/route.ts",
+      "lineRange": [9, 45],
+      "summary": "Returns the most recent plugin telemetry events with admin-auth gating.",
+      "tags": ["api-handler", "telemetry", "list"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/admin/template-analysis/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/template-analysis/route.ts",
+      "summary": "Admin template-analysis endpoint: POST runs backend template analysis on inputs, GET returns recent analyses.",
+      "tags": ["api-handler", "admin", "templates", "analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/template-analysis/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/template-analysis/route.ts",
+      "lineRange": [14, 161],
+      "summary": "Delegates template analysis to the backend service and persists the analysis result.",
+      "tags": ["api-handler", "analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/template-analysis/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/template-analysis/route.ts",
+      "lineRange": [163, 220],
+      "summary": "Returns recent template-analysis results with optional filters.",
+      "tags": ["api-handler", "list"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "function:src/app/api/admin/scheduled-actions/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/scrape-search/route.ts", "target": "function:src/app/api/admin/scrape-search/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scrape-search/route.ts", "target": "function:src/app/api/admin/scrape-search/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "function:src/app/api/admin/scrape/tiktok/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "function:src/app/api/admin/scrape/tiktok/route.ts:buildKeywordsFromFrameworks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "function:src/app/api/admin/scrape/tiktok/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "function:src/app/api/admin/script-intelligence/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "function:src/app/api/admin/script-intelligence/analyze/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "function:src/app/api/admin/script-intelligence/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "function:src/app/api/admin/script-intelligence/analyze/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/script-intelligence/status/route.ts", "target": "function:src/app/api/admin/script-intelligence/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/status/route.ts", "target": "function:src/app/api/admin/script-intelligence/status/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/status/route.ts", "target": "function:src/app/api/admin/script-intelligence/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/script-intelligence/status/route.ts", "target": "function:src/app/api/admin/script-intelligence/status/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleAnalyzeScript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGenerateScript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:generateTrendzoMarketingScript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleOptimizeScript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleStoreMemory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleQueryMemory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGetMemoryStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGetPatternEvolution", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGetCulturalZeitgeist", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGetSingularityMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGetWinningPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:handleGenerateTemplateName", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "function:src/app/api/admin/script-intelligence/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getActiveThreats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getBlockedIPs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getSecurityTrends", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getTopVulnerabilities", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getAPISecurityStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:calculateSecurityScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:generateSecurityRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getVulnerabilitySeverity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:getVulnerabilityDescription", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "function:src/app/api/admin/security/dashboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "function:src/app/api/admin/security/events/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "function:src/app/api/admin/security/events/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "function:src/app/api/admin/security/events/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "function:src/app/api/admin/security/events/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/seed/templates/route.ts", "target": "function:src/app/api/admin/seed/templates/route.ts:buildDemoTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/seed/templates/route.ts", "target": "function:src/app/api/admin/seed/templates/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/seed/templates/route.ts", "target": "function:src/app/api/admin/seed/templates/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/seed/videos/route.ts", "target": "function:src/app/api/admin/seed/videos/route.ts:buildDemoVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/seed/videos/route.ts", "target": "function:src/app/api/admin/seed/videos/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/seed/videos/route.ts", "target": "function:src/app/api/admin/seed/videos/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/self-test/route.ts", "target": "function:src/app/api/admin/self-test/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/self-test/route.ts", "target": "function:src/app/api/admin/self-test/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/success-tracking/metrics/route.ts", "target": "function:src/app/api/admin/success-tracking/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/success-tracking/metrics/route.ts", "target": "function:src/app/api/admin/success-tracking/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/success-tracking/stories/update/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/update/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/success-tracking/stories/update/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/update/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/success-tracking/stories/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/success-tracking/stories/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/success-tracking/stories/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/success-tracking/stories/route.ts", "target": "function:src/app/api/admin/success-tracking/stories/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/dashboard-data/route.ts", "target": "function:src/app/api/admin/super-admin/dashboard-data/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/dashboard-data/route.ts", "target": "function:src/app/api/admin/super-admin/dashboard-data/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/module-status/route.ts", "target": "function:src/app/api/admin/super-admin/module-status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/module-status/route.ts", "target": "function:src/app/api/admin/super-admin/module-status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/prediction-validations/route.ts", "target": "function:src/app/api/admin/super-admin/prediction-validations/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/prediction-validations/route.ts", "target": "function:src/app/api/admin/super-admin/prediction-validations/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractRealFollowerCount", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractVideoDuration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractHashtagsFromContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:extractVideoData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:generateAnalysisBreakdown", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:generateFallbackPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "function:src/app/api/admin/super-admin/quick-predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/system-metrics/route.ts", "target": "function:src/app/api/admin/super-admin/system-metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/system-metrics/route.ts", "target": "function:src/app/api/admin/super-admin/system-metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:analyzeViralPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:saveTemplatestoDatabase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:updateTemplateGenerators", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:generateFallbackTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "function:src/app/api/admin/super-admin/template-discovery/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/telemetry/plugin/recent/route.ts", "target": "function:src/app/api/admin/telemetry/plugin/recent/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/telemetry/plugin/recent/route.ts", "target": "function:src/app/api/admin/telemetry/plugin/recent/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/template-analysis/route.ts", "target": "function:src/app/api/admin/template-analysis/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-analysis/route.ts", "target": "function:src/app/api/admin/template-analysis/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/template-analysis/route.ts", "target": "function:src/app/api/admin/template-analysis/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/template-analysis/route.ts", "target": "function:src/app/api/admin/template-analysis/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/scheduled-actions/route.ts", "target": "file:src/lib/scheduler/schedule-action.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/scrape-search/route.ts", "target": "file:src/lib/services/apify-tiktok-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/scrape-search/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "file:src/app/api/admin/jobs/runner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "file:src/lib/jobs/job_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/scrape/tiktok/route.ts", "target": "file:src/lib/services/apifyScraper.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/script-intelligence/analyze/route.ts", "target": "file:src/lib/services/viral-prediction/script-intelligence-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/script-intelligence/route.ts", "target": "file:src/lib/services/script-intelligence-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/dashboard/route.ts", "target": "file:src/lib/security/security-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/security/events/route.ts", "target": "file:src/lib/security/security-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/seed/templates/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/self-test/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/shadow/divergence_count/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/success-tracking/metrics/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/success-tracking/stories/update/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/success-tracking/stories/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/dashboard-data/route.ts", "target": "file:src/lib/supabase-server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/module-status/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/prediction-validations/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/orchestration/kai-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/services/ffmpeg-full-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/services/master-viral-algorithm.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/services/tiktok-downloader.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/services/tiktok-specific-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/quick-predict/route.ts", "target": "file:src/lib/services/whisper-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/system-metrics/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/super-admin/template-discovery/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/keys/[id]/revoke/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/keys/[id]/revoke/route.ts", "target": "file:src/lib/security/telemetry-keys.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/keys/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/keys/route.ts", "target": "file:src/lib/security/telemetry-keys.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/plugin/recent/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/telemetry/plugin/recent/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/template-analysis/route.ts", "target": "file:src/lib/services/templateAnalysisBackend.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

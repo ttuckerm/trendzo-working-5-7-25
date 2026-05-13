@@ -1,0 +1,737 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/predict/pre-content/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/pre-content/route.ts",
+      "summary": "Pre-content prediction API route that runs the canonical VPS prediction pipeline against creator inputs (concept/script) before any video exists, returning tier, score, and component breakdown.",
+      "tags": ["api-handler", "prediction", "route-handler", "pre-content"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/predict/pre-content/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/pre-content/route.ts",
+      "lineRange": [46, 224],
+      "summary": "Handles pre-content prediction POST requests: validates input, runs runPredictionPipeline with synthetic inputs, formats the VPS result, and returns JSON.",
+      "tags": ["api-handler", "prediction", "post-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/predict/pre-content/route.ts:OPTIONS",
+      "type": "function",
+      "name": "OPTIONS",
+      "filePath": "src/app/api/predict/pre-content/route.ts",
+      "lineRange": [230, 242],
+      "summary": "CORS preflight handler returning permitted methods and headers for the pre-content endpoint.",
+      "tags": ["api-handler", "cors", "options-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/predict/pre-content/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/predict/pre-content/route.ts",
+      "lineRange": [248, 282],
+      "summary": "GET handler that returns a health/info payload describing pre-content prediction usage.",
+      "tags": ["api-handler", "health-check", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/predict/v2/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/v2/route.ts",
+      "summary": "Version 2 prediction API route that invokes the VPS pipeline v2 implementation and returns tier-labeled prediction results.",
+      "tags": ["api-handler", "prediction", "vps-v2", "route-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/v2/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/v2/route.ts",
+      "lineRange": [31, 209],
+      "summary": "Parses the request body, runs the VPS v2 prediction pipeline, and returns score, tier label, and component breakdown.",
+      "tags": ["api-handler", "prediction", "vps", "post-handler"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/predict/viral/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/viral/route.ts",
+      "summary": "Viral prediction endpoint combining knowledge-extraction pattern matching with confidence scoring and recommendation generation.",
+      "tags": ["api-handler", "prediction", "viral-scoring", "route-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/predict/viral/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/viral/route.ts",
+      "lineRange": [22, 325],
+      "summary": "Main POST handler that extracts patterns via the GPPT knowledge engine, computes pattern match score, confidence, and personalized recommendations.",
+      "tags": ["api-handler", "prediction", "viral-scoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/predict/viral/route.ts:calculatePatternMatch",
+      "type": "function",
+      "name": "calculatePatternMatch",
+      "filePath": "src/app/api/predict/viral/route.ts",
+      "lineRange": [328, 374],
+      "summary": "Computes how closely the input content aligns with extracted viral patterns, returning a normalized match score.",
+      "tags": ["scoring", "pattern-matching", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/viral/route.ts:calculatePredictionConfidence",
+      "type": "function",
+      "name": "calculatePredictionConfidence",
+      "filePath": "src/app/api/predict/viral/route.ts",
+      "lineRange": [377, 397],
+      "summary": "Derives a confidence figure for the viral prediction from the pattern match score and signal coverage.",
+      "tags": ["scoring", "confidence", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/predict/viral/route.ts:generateRecommendations",
+      "type": "function",
+      "name": "generateRecommendations",
+      "filePath": "src/app/api/predict/viral/route.ts",
+      "lineRange": [400, 439],
+      "summary": "Generates content recommendations based on the matched patterns and the predicted score profile.",
+      "tags": ["recommendation", "post-processing", "utility"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/prediction/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/prediction/route.ts",
+      "summary": "Thin prediction route that proxies the request to the prediction-service helper and returns its result.",
+      "tags": ["api-handler", "prediction", "thin-wrapper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/prediction/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/prediction/route.ts",
+      "lineRange": [7, 18],
+      "summary": "Forwards request body to prediction-service and returns the JSON response.",
+      "tags": ["api-handler", "prediction", "post-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/route.ts",
+      "summary": "Primary prediction route that runs the canonical Trendzo VPS pipeline (runPredictionPipeline) for uploaded or referenced videos.",
+      "tags": ["api-handler", "prediction", "vps", "route-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/route.ts",
+      "lineRange": [20, 103],
+      "summary": "Validates the request body and runs the canonical VPS pipeline, returning the full prediction payload.",
+      "tags": ["api-handler", "prediction", "vps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/predict/route.ts",
+      "lineRange": [108, 120],
+      "summary": "Returns a usage/health payload for the prediction endpoint.",
+      "tags": ["api-handler", "health-check", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/preview/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/preview/route.ts",
+      "summary": "Preview endpoint that sanitizes input and returns a lightweight preview payload used by the public widget surface.",
+      "tags": ["api-handler", "preview", "route-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/preview/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/preview/route.ts",
+      "lineRange": [12, 44],
+      "summary": "Receives preview input, sanitizes it, and returns a structured preview response.",
+      "tags": ["api-handler", "preview", "post-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/privacy/delete/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/privacy/delete/route.ts",
+      "summary": "Privacy compliance endpoint that handles user-data deletion requests, gated by env-configured credentials.",
+      "tags": ["api-handler", "privacy", "gdpr", "route-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/privacy/delete/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/privacy/delete/route.ts",
+      "lineRange": [10, 25],
+      "summary": "Processes a privacy-driven data deletion request after env-based authorization.",
+      "tags": ["api-handler", "privacy", "gdpr"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/privacy/export/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/privacy/export/route.ts",
+      "summary": "Privacy compliance endpoint that exports user data, recording the export attempt via audit utils.",
+      "tags": ["api-handler", "privacy", "gdpr", "audit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/privacy/export/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/privacy/export/route.ts",
+      "lineRange": [11, 32],
+      "summary": "Authorizes the caller, emits an audit record, and returns the requested user-data export.",
+      "tags": ["api-handler", "privacy", "audit"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/process/event/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/process/event/route.ts",
+      "summary": "Event ingestion endpoint that ensures backing tables exist and writes incoming events to the analytics store with rate limiting.",
+      "tags": ["api-handler", "ingestion", "analytics", "rate-limiting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/process/event/route.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/app/api/process/event/route.ts",
+      "lineRange": [9, 22],
+      "summary": "Lazy-creates the analytics event tables required for ingestion if they do not already exist.",
+      "tags": ["bootstrap", "migration", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/process/event/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/process/event/route.ts",
+      "lineRange": [24, 46],
+      "summary": "Rate-limits the request, ensures tables, and persists the event payload.",
+      "tags": ["api-handler", "ingestion", "post-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/process/funnel/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/process/funnel/route.ts",
+      "summary": "Funnel analytics endpoint that aggregates event data into funnel-stage counts.",
+      "tags": ["api-handler", "analytics", "funnel"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/process/funnel/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/process/funnel/route.ts",
+      "lineRange": [10, 34],
+      "summary": "Returns aggregated funnel-stage metrics derived from the events store.",
+      "tags": ["api-handler", "analytics", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/process/journeys/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/process/journeys/route.ts",
+      "summary": "Stub endpoint for user journey analytics returning a placeholder response.",
+      "tags": ["api-handler", "analytics", "stub"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/prompt-generation/generate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/prompt-generation/generate/route.ts",
+      "summary": "Prompt generation endpoint that delegates to the prompt-generator-engine to produce GPPT prompts from user inputs.",
+      "tags": ["api-handler", "prompt-generation", "llm", "route-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/prompt-generation/generate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/prompt-generation/generate/route.ts",
+      "lineRange": [12, 53],
+      "summary": "Validates the request body and invokes prompt-generator-engine, returning the generated prompt payload.",
+      "tags": ["api-handler", "prompt-generation", "post-handler"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/proof-tiles/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/proof-tiles/route.ts",
+      "summary": "Aggregator endpoint that gathers cross-cutting summaries (analysis, experiments, learning, validation, moat) into a single proof-tiles payload for the public surface.",
+      "tags": ["api-handler", "aggregator", "proof-tiles", "public"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/proof-tiles/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/proof-tiles/route.ts",
+      "lineRange": [31, 296],
+      "summary": "Composes data from many internal services (analysis, experiments, learning, validation, moat, templates, scripts) into the unified proof-tiles response.",
+      "tags": ["api-handler", "aggregator", "get-handler"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/proxy-thumbnail/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/proxy-thumbnail/route.ts",
+      "summary": "Image proxy endpoint that fetches a remote thumbnail and re-serves it with appropriate caching and CORS headers.",
+      "tags": ["api-handler", "proxy", "thumbnail", "media"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/proxy-thumbnail/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/proxy-thumbnail/route.ts",
+      "lineRange": [14, 79],
+      "summary": "Validates the requested URL, fetches the upstream thumbnail, and streams the response with cache headers.",
+      "tags": ["api-handler", "proxy", "get-handler"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/public/accuracy/csv/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/accuracy/csv/route.ts",
+      "summary": "Public endpoint that streams the validation accuracy dataset as CSV.",
+      "tags": ["api-handler", "public", "csv-export", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/accuracy/csv/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/public/accuracy/csv/route.ts",
+      "lineRange": [7, 26],
+      "summary": "Reads validation store entries and serializes them as a CSV download.",
+      "tags": ["api-handler", "csv", "export"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/public/accuracy/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/accuracy/summary/route.ts",
+      "summary": "Public endpoint returning aggregate validation accuracy summary metrics.",
+      "tags": ["api-handler", "public", "validation", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/accuracy/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/public/accuracy/summary/route.ts",
+      "lineRange": [7, 16],
+      "summary": "Returns the validation summary JSON computed by lib/validation/summary.",
+      "tags": ["api-handler", "summary", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/public/commerce/estimate_lift/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/commerce/estimate_lift/route.ts",
+      "summary": "Public commerce-lift estimation endpoint with CORS support, computing projected uplift from inputs via commerce lift utils.",
+      "tags": ["api-handler", "public", "commerce", "cors"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/commerce/estimate_lift/route.ts:OPTIONS",
+      "type": "function",
+      "name": "OPTIONS",
+      "filePath": "src/app/api/public/commerce/estimate_lift/route.ts",
+      "lineRange": [9, 9],
+      "summary": "CORS preflight handler for the commerce lift endpoint.",
+      "tags": ["api-handler", "cors", "options-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/commerce/estimate_lift/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/public/commerce/estimate_lift/route.ts",
+      "lineRange": [11, 17],
+      "summary": "Computes a commerce uplift estimate from the request payload using lib/commerce helpers.",
+      "tags": ["api-handler", "commerce", "post-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/public/score/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/score/route.ts",
+      "summary": "Public score endpoint gated by feature flags returning a basic scoring payload.",
+      "tags": ["api-handler", "public", "score", "feature-flag"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/score/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/public/score/route.ts",
+      "lineRange": [7, 13],
+      "summary": "Returns the public score payload when the corresponding feature flag is enabled.",
+      "tags": ["api-handler", "feature-flag", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/public/v1/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/v1/analyze/route.ts",
+      "summary": "Public v1 analyze endpoint that runs the script analysis stack (features, match, recommend, score) gated by moat keys, flags, and rate limits.",
+      "tags": ["api-handler", "public-api", "v1", "analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/public/v1/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/public/v1/analyze/route.ts",
+      "lineRange": [17, 51],
+      "summary": "Authenticates via moat key, rate-limits, and runs the analyzer pipeline returning recommendations and score.",
+      "tags": ["api-handler", "analysis", "post-handler"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/public/v1/insights/unique/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/v1/insights/unique/route.ts",
+      "summary": "Public v1 endpoint returning unique insights for the caller, gated by moat keys/flags and rate-limited.",
+      "tags": ["api-handler", "public-api", "v1", "insights"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/public/v1/insights/unique/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/public/v1/insights/unique/route.ts",
+      "lineRange": [10, 28],
+      "summary": "Validates the moat key, rate-limits, and returns the caller's unique insights payload.",
+      "tags": ["api-handler", "insights", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/public/v1/recipe-book/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/public/v1/recipe-book/route.ts",
+      "summary": "Public v1 recipe-book endpoint exposing template recipes through the templates service, gated by moat keys/flags.",
+      "tags": ["api-handler", "public-api", "v1", "templates"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/public/v1/recipe-book/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/public/v1/recipe-book/route.ts",
+      "lineRange": [11, 44],
+      "summary": "Validates the moat key, rate-limits, and returns the templates service recipe-book payload.",
+      "tags": ["api-handler", "templates", "get-handler"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/qa/overlay/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/qa/overlay/route.ts",
+      "summary": "QA overlay endpoint guarded by a feature flag that returns overlay data for the QA tooling surface.",
+      "tags": ["api-handler", "qa", "feature-flag"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/qa/overlay/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/qa/overlay/route.ts",
+      "lineRange": [7, 23],
+      "summary": "Returns the QA overlay payload when the corresponding feature flag is enabled.",
+      "tags": ["api-handler", "qa", "get-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/qa/results/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/qa/results/route.ts",
+      "summary": "QA results endpoint that reads and writes QA run records via a lazily-acquired database client.",
+      "tags": ["api-handler", "qa", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/qa/results/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/qa/results/route.ts",
+      "lineRange": [12, 25],
+      "summary": "Returns stored QA result rows for inspection.",
+      "tags": ["api-handler", "qa", "get-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/qa/results/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/qa/results/route.ts",
+      "lineRange": [27, 46],
+      "summary": "Persists a new QA result record into the QA results table.",
+      "tags": ["api-handler", "qa", "post-handler"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/qa/seed/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/qa/seed/route.ts",
+      "summary": "QA seeding endpoint that creates schema and bulk-inserts deterministic synthetic data for local QA workflows.",
+      "tags": ["api-handler", "qa", "seed", "fixtures"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/qa/seed/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/qa/seed/route.ts",
+      "lineRange": [12, 357],
+      "summary": "Creates all required QA tables and inserts a fixed seed corpus used by automated QA suites.",
+      "tags": ["api-handler", "qa", "seed", "post-handler"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/quick-win/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/quick-win/analyze/route.ts",
+      "summary": "Quick-win analysis endpoint that runs the canonical VPS pipeline with personalized creator context to surface fast, actionable wins.",
+      "tags": ["api-handler", "prediction", "quick-win", "creator-context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/quick-win/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/quick-win/analyze/route.ts",
+      "lineRange": [31, 106],
+      "summary": "Authenticates the user via Supabase, resolves creator context, runs runPredictionPipeline with personalization, and returns quick-win findings.",
+      "tags": ["api-handler", "prediction", "quick-win", "post-handler"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:OPTIONS", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:OPTIONS", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "function:src/app/api/predict/pre-content/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/predict/v2/route.ts", "target": "function:src/app/api/predict/v2/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/v2/route.ts", "target": "function:src/app/api/predict/v2/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "function:src/app/api/predict/viral/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "function:src/app/api/predict/viral/route.ts:calculatePatternMatch", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "function:src/app/api/predict/viral/route.ts:calculatePredictionConfidence", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "function:src/app/api/predict/viral/route.ts:generateRecommendations", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "function:src/app/api/predict/viral/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/prediction/route.ts", "target": "function:src/app/api/prediction/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/prediction/route.ts", "target": "function:src/app/api/prediction/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/predict/route.ts", "target": "function:src/app/api/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/route.ts", "target": "function:src/app/api/predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/predict/route.ts", "target": "function:src/app/api/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/app/api/predict/route.ts", "target": "function:src/app/api/predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/preview/route.ts", "target": "function:src/app/api/preview/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/preview/route.ts", "target": "function:src/app/api/preview/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/privacy/delete/route.ts", "target": "function:src/app/api/privacy/delete/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/privacy/delete/route.ts", "target": "function:src/app/api/privacy/delete/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/privacy/export/route.ts", "target": "function:src/app/api/privacy/export/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/privacy/export/route.ts", "target": "function:src/app/api/privacy/export/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/process/event/route.ts", "target": "function:src/app/api/process/event/route.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/process/event/route.ts", "target": "function:src/app/api/process/event/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/process/event/route.ts", "target": "function:src/app/api/process/event/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/process/funnel/route.ts", "target": "function:src/app/api/process/funnel/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/process/funnel/route.ts", "target": "function:src/app/api/process/funnel/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/prompt-generation/generate/route.ts", "target": "function:src/app/api/prompt-generation/generate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/prompt-generation/generate/route.ts", "target": "function:src/app/api/prompt-generation/generate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "function:src/app/api/proof-tiles/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "function:src/app/api/proof-tiles/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/proxy-thumbnail/route.ts", "target": "function:src/app/api/proxy-thumbnail/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/proxy-thumbnail/route.ts", "target": "function:src/app/api/proxy-thumbnail/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/accuracy/csv/route.ts", "target": "function:src/app/api/public/accuracy/csv/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/accuracy/csv/route.ts", "target": "function:src/app/api/public/accuracy/csv/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/accuracy/summary/route.ts", "target": "function:src/app/api/public/accuracy/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/accuracy/summary/route.ts", "target": "function:src/app/api/public/accuracy/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "function:src/app/api/public/commerce/estimate_lift/route.ts:OPTIONS", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "function:src/app/api/public/commerce/estimate_lift/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "function:src/app/api/public/commerce/estimate_lift/route.ts:OPTIONS", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "function:src/app/api/public/commerce/estimate_lift/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/score/route.ts", "target": "function:src/app/api/public/score/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/score/route.ts", "target": "function:src/app/api/public/score/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "function:src/app/api/public/v1/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "function:src/app/api/public/v1/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "function:src/app/api/public/v1/insights/unique/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "function:src/app/api/public/v1/insights/unique/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "function:src/app/api/public/v1/recipe-book/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "function:src/app/api/public/v1/recipe-book/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/qa/overlay/route.ts", "target": "function:src/app/api/qa/overlay/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/qa/overlay/route.ts", "target": "function:src/app/api/qa/overlay/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/qa/results/route.ts", "target": "function:src/app/api/qa/results/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/qa/results/route.ts", "target": "function:src/app/api/qa/results/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/qa/results/route.ts", "target": "function:src/app/api/qa/results/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8 },
+    { "source": "file:src/app/api/qa/results/route.ts", "target": "function:src/app/api/qa/results/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/qa/seed/route.ts", "target": "function:src/app/api/qa/seed/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/qa/seed/route.ts", "target": "function:src/app/api/qa/seed/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/quick-win/analyze/route.ts", "target": "function:src/app/api/quick-win/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0 },
+    { "source": "file:src/app/api/quick-win/analyze/route.ts", "target": "function:src/app/api/quick-win/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8 },
+
+    { "source": "file:src/app/api/predict/pre-content/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/predict/v2/route.ts", "target": "file:src/lib/prediction/run-vps-pipeline-v2.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/predict/viral/route.ts", "target": "file:src/lib/services/gppt/knowledge-extraction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/prediction/route.ts", "target": "file:src/lib/services/prediction-service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/predict/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/privacy/delete/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/privacy/export/route.ts", "target": "file:src/lib/audit/audit_utils.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/privacy/export/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/process/event/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/process/event/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/process/funnel/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/prompt-generation/generate/route.ts", "target": "file:src/lib/services/prompt-generation/prompt-generator-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/adaptation/apply/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/adaptation/scan/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/coach/apply/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/coach/suggest/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/cross/cascades/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/cross/predict/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/cross/summary/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/experiments/[id]/summary/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/experiments/assign/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/experiments/create/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/api/scale/summary/route.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/app/widget/badge/route.tsx", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/analysis/recommender.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/analysis/scorer.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/analysis/sla.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/benchmark/report.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/insights/service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/learning/store.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/learning/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/moat/keys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/moat/rate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/script/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/proof-tiles/route.ts", "target": "file:src/lib/validation/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/accuracy/csv/route.ts", "target": "file:src/lib/validation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/accuracy/summary/route.ts", "target": "file:src/lib/validation/summary.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "file:src/lib/commerce/lift.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "file:src/lib/commerce/utils.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/commerce/estimate_lift/route.ts", "target": "file:src/lib/security/telemetry-keys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/score/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/analysis/recommender.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/analysis/scorer.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/analysis/sla.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/moat/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/moat/keys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/moat/rate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/script/features.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/script/match.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/script/recommend.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/analyze/route.ts", "target": "file:src/lib/script/score.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "file:src/lib/insights/service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "file:src/lib/moat/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "file:src/lib/moat/keys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/insights/unique/route.ts", "target": "file:src/lib/moat/rate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "file:src/lib/moat/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "file:src/lib/moat/keys.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "file:src/lib/moat/rate.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/public/v1/recipe-book/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/qa/overlay/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/qa/results/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/qa/seed/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/quick-win/analyze/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/quick-win/analyze/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7 },
+    { "source": "file:src/app/api/quick-win/analyze/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7 }
+  ]
+}

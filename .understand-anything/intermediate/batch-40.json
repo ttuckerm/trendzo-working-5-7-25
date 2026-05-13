@@ -1,0 +1,3618 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/test-supabase-connection.js",
+      "type": "file",
+      "name": "test-supabase-connection.js",
+      "filePath": "scripts/test-supabase-connection.js",
+      "summary": "Diagnostic script that tests Supabase REST connectivity via axios, the supabase-js client, and DNS lookups to debug intermittent network failures.",
+      "tags": [
+        "test",
+        "diagnostic",
+        "supabase",
+        "script",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-supabase-connection.js:testWithAxios",
+      "type": "function",
+      "name": "testWithAxios",
+      "filePath": "scripts/test-supabase-connection.js",
+      "lineRange": [
+        22,
+        46
+      ],
+      "summary": "Direct REST GET against Supabase REST API to verify connectivity.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-supabase-connection.js:testWithSupabaseClient",
+      "type": "function",
+      "name": "testWithSupabaseClient",
+      "filePath": "scripts/test-supabase-connection.js",
+      "lineRange": [
+        49,
+        79
+      ],
+      "summary": "Performs a select() via the supabase-js client to validate SDK auth and reachability.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-supabase-connection.js:testDnsLookup",
+      "type": "function",
+      "name": "testDnsLookup",
+      "filePath": "scripts/test-supabase-connection.js",
+      "lineRange": [
+        82,
+        105
+      ],
+      "summary": "Resolves the Supabase host with dns.lookup to isolate DNS-layer failures.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-supabase-connection.js:runTests",
+      "type": "function",
+      "name": "runTests",
+      "filePath": "scripts/test-supabase-connection.js",
+      "lineRange": [
+        108,
+        124
+      ],
+      "summary": "Top-level driver that sequentially runs all three Supabase connectivity probes.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/test-template-analysis.js",
+      "type": "file",
+      "name": "test-template-analysis.js",
+      "filePath": "scripts/test-template-analysis.js",
+      "summary": "End-to-end smoke test for the template-analysis backend orchestrating downloads, transcription, vision, and pattern detection on sample TikTok URLs.",
+      "tags": [
+        "test",
+        "integration",
+        "template-analysis",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/test-template-analysis.js:testTemplateAnalysisBackend",
+      "type": "function",
+      "name": "testTemplateAnalysisBackend",
+      "filePath": "scripts/test-template-analysis.js",
+      "lineRange": [
+        10,
+        371
+      ],
+      "summary": "Drives the full template-analysis pipeline on sample inputs and asserts on each stage of output.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "type": "file",
+      "name": "test-tiktok-ingestion-pipeline.js",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "summary": "Integration test harness that drives the TikTok ingestion pipeline through every endpoint (start, monitor, schedule, metrics) and emits a final report.",
+      "tags": [
+        "test",
+        "integration",
+        "tiktok",
+        "ingestion",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:testTikTokIngestionPipeline",
+      "type": "function",
+      "name": "testTikTokIngestionPipeline",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        12,
+        100
+      ],
+      "summary": "Top-level test orchestrator that walks every endpoint of the TikTok ingestion pipeline.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:startIngestionJob",
+      "type": "function",
+      "name": "startIngestionJob",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        102,
+        115
+      ],
+      "summary": "Posts to the start-ingestion endpoint with a typed source/parameters payload and returns the job id.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:monitorJob",
+      "type": "function",
+      "name": "monitorJob",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        117,
+        154
+      ],
+      "summary": "Polls the job-status endpoint until completion or timeout, logging progress along the way.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:scheduleRegularIngestion",
+      "type": "function",
+      "name": "scheduleRegularIngestion",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        176,
+        187
+      ],
+      "summary": "Posts a scheduled-ingestion config to the scheduler endpoint.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:testDirectAPIEndpoints",
+      "type": "function",
+      "name": "testDirectAPIEndpoints",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        189,
+        207
+      ],
+      "summary": "Exercises a hard-coded list of API endpoints to verify each returns sane status codes.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:makeAPIRequest",
+      "type": "function",
+      "name": "makeAPIRequest",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        209,
+        303
+      ],
+      "summary": "Generic axios wrapper around the local API base URL with verbose request/response logging.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-tiktok-ingestion-pipeline.js:generateTestReport",
+      "type": "function",
+      "name": "generateTestReport",
+      "filePath": "scripts/test-tiktok-ingestion-pipeline.js",
+      "lineRange": [
+        305,
+        412
+      ],
+      "summary": "Renders accumulated test results into a console plus markdown summary report.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-unified-framework.js",
+      "type": "file",
+      "name": "test-unified-framework.js",
+      "filePath": "scripts/test-unified-framework.js",
+      "summary": "Smoke test that exercises the unified viral-prediction framework end-to-end across multiple components and producers.",
+      "tags": [
+        "test",
+        "integration",
+        "viral-prediction",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-unified-framework.js:testUnifiedFramework",
+      "type": "function",
+      "name": "testUnifiedFramework",
+      "filePath": "scripts/test-unified-framework.js",
+      "lineRange": [
+        10,
+        199
+      ],
+      "summary": "Runs the unified viral-prediction framework end-to-end and reports pass/fail per pack.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-url-access.ts",
+      "type": "file",
+      "name": "test-url-access.ts",
+      "filePath": "scripts/test-url-access.ts",
+      "summary": "Probes arbitrary URLs with and without browser-style headers to verify outbound HTTP reachability from the Node runtime.",
+      "tags": [
+        "test",
+        "diagnostic",
+        "network",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-url-access.ts:testUrlAccess",
+      "type": "function",
+      "name": "testUrlAccess",
+      "filePath": "scripts/test-url-access.ts",
+      "lineRange": [
+        11,
+        36
+      ],
+      "summary": "Fetches a URL with optional browser-style headers and returns status and body snippet.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-url-access.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/test-url-access.ts",
+      "lineRange": [
+        38,
+        52
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/test-validation-system.js",
+      "type": "file",
+      "name": "test-validation-system.js",
+      "filePath": "scripts/test-validation-system.js",
+      "summary": "Generates synthetic prediction-vs-actual rows and runs the validation/health pipeline to verify accuracy calculations and display formatting.",
+      "tags": [
+        "test",
+        "validation",
+        "accuracy",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-validation-system.js:testValidationSystem",
+      "type": "function",
+      "name": "testValidationSystem",
+      "filePath": "scripts/test-validation-system.js",
+      "lineRange": [
+        18,
+        102
+      ],
+      "summary": "Drives the validation pipeline against sample data and checks accuracy outputs.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-validation-system.js:calculateMockAccuracy",
+      "type": "function",
+      "name": "calculateMockAccuracy",
+      "filePath": "scripts/test-validation-system.js",
+      "lineRange": [
+        105,
+        132
+      ],
+      "summary": "Computes a mock accuracy figure from the provided validation rows for display tests.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-validation-system.js:generateAccuracyDisplayText",
+      "type": "function",
+      "name": "generateAccuracyDisplayText",
+      "filePath": "scripts/test-validation-system.js",
+      "lineRange": [
+        135,
+        151
+      ],
+      "summary": "Formats accuracy numbers into the user-facing display string.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-validation-system.js:updateSystemHealthWithValidation",
+      "type": "function",
+      "name": "updateSystemHealthWithValidation",
+      "filePath": "scripts/test-validation-system.js",
+      "lineRange": [
+        154,
+        177
+      ],
+      "summary": "Pushes validation results into the system-health state and verifies the update.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-validation-system.js:createSampleValidationData",
+      "type": "function",
+      "name": "createSampleValidationData",
+      "filePath": "scripts/test-validation-system.js",
+      "lineRange": [
+        180,
+        231
+      ],
+      "summary": "Builds synthetic predicted-vs-actual rows used by the rest of the test.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-variants.ts",
+      "type": "file",
+      "name": "test-variants.ts",
+      "filePath": "scripts/test-variants.ts",
+      "summary": "Generates and evaluates content variants from primary hooks/formats, used to validate the variant-generation engine.",
+      "tags": [
+        "test",
+        "variants",
+        "content-generation",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/test-variants.ts:inferHookType",
+      "type": "function",
+      "name": "inferHookType",
+      "filePath": "scripts/test-variants.ts",
+      "lineRange": [
+        40,
+        50
+      ],
+      "summary": "Heuristically classifies a hook string into a hook-type category.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-variants.ts:inferFormat",
+      "type": "function",
+      "name": "inferFormat",
+      "filePath": "scripts/test-variants.ts",
+      "lineRange": [
+        52,
+        62
+      ],
+      "summary": "Heuristically classifies a format description into a known format key.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-variants.ts:generateVariant",
+      "type": "function",
+      "name": "generateVariant",
+      "filePath": "scripts/test-variants.ts",
+      "lineRange": [
+        78,
+        122
+      ],
+      "summary": "Generates one content variant given a primary plus type/target/niche.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-variants.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/test-variants.ts",
+      "lineRange": [
+        126,
+        302
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-viral-prediction-system.js",
+      "type": "file",
+      "name": "test-viral-prediction-system.js",
+      "filePath": "scripts/test-viral-prediction-system.js",
+      "summary": "Top-level smoke test for the viral-prediction system covering Pack 1, Pack 2, and Pack V flows and consensus scoring.",
+      "tags": [
+        "test",
+        "viral-prediction",
+        "integration",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-viral-prediction-system.js:testViralPredictionSystem",
+      "type": "function",
+      "name": "testViralPredictionSystem",
+      "filePath": "scripts/test-viral-prediction-system.js",
+      "lineRange": [
+        10,
+        153
+      ],
+      "summary": "Smoke-tests the full viral-prediction stack and prints per-pack outcomes.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-viral-prediction.js",
+      "type": "file",
+      "name": "test-viral-prediction.js",
+      "filePath": "scripts/test-viral-prediction.js",
+      "summary": "Runs prediction fixtures through the orchestrator and compares predicted DPS/VPS to expected ranges, classifying tier match accuracy.",
+      "tags": [
+        "test",
+        "viral-prediction",
+        "dps",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-viral-prediction.js:runPrediction",
+      "type": "function",
+      "name": "runPrediction",
+      "filePath": "scripts/test-viral-prediction.js",
+      "lineRange": [
+        59,
+        147
+      ],
+      "summary": "Sends a single fixture to the predict endpoint and returns the predicted DPS, VPS, and classification.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-viral-prediction.js:evalDPSMatch",
+      "type": "function",
+      "name": "evalDPSMatch",
+      "filePath": "scripts/test-viral-prediction.js",
+      "lineRange": [
+        149,
+        158
+      ],
+      "summary": "Compares an actual DPS to an expected range and reports match status.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/test-viral-prediction.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/test-viral-prediction.js",
+      "lineRange": [
+        170,
+        224
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "javascript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-visual-intelligence.ts",
+      "type": "file",
+      "name": "test-visual-intelligence.ts",
+      "filePath": "scripts/test-visual-intelligence.ts",
+      "summary": "Exercises the visual-intelligence pack against ffmpeg-extracted frames to validate visual scoring and feature extraction.",
+      "tags": [
+        "test",
+        "visual-intelligence",
+        "ffmpeg",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/test-visual-intelligence.ts:testVisualIntelligence",
+      "type": "function",
+      "name": "testVisualIntelligence",
+      "filePath": "scripts/test-visual-intelligence.ts",
+      "lineRange": [
+        20,
+        188
+      ],
+      "summary": "Runs the visual-intelligence pack against extracted frames and prints scoring output.",
+      "tags": [
+        "function",
+        "typescript",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/test-xgb-debug.py",
+      "type": "file",
+      "name": "test-xgb-debug.py",
+      "filePath": "scripts/test-xgb-debug.py",
+      "summary": "One-off Python diagnostic that loads the saved XGBoost model and prints its feature names and booster metadata for debugging.",
+      "tags": [
+        "test",
+        "xgboost",
+        "debug",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/test-xgb-only.py",
+      "type": "file",
+      "name": "test-xgb-only.py",
+      "filePath": "scripts/test-xgb-only.py",
+      "summary": "Minimal sanity check that invokes the XGBoost predictor in isolation to confirm Python environment and model file integrity.",
+      "tags": [
+        "test",
+        "xgboost",
+        "script",
+        "smoke-test"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/time-travel-24h.ts",
+      "type": "file",
+      "name": "time-travel-24h.ts",
+      "filePath": "scripts/time-travel-24h.ts",
+      "summary": "Tiny maintenance script that rewinds prediction-run timestamps by 24 hours via the pg client, used during local testing of time-windowed jobs.",
+      "tags": [
+        "utility",
+        "database",
+        "script",
+        "dev-tooling"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/train_model.py",
+      "type": "file",
+      "name": "train_model.py",
+      "filePath": "scripts/train_model.py",
+      "summary": "Legacy entry point that loads training data and invokes the shared model trainer; superseded by versioned train-vN scripts.",
+      "tags": [
+        "training",
+        "xgboost",
+        "legacy",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train_model.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train_model.py",
+      "lineRange": [
+        39,
+        75
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/train-eval-prompt10.py",
+      "type": "file",
+      "name": "train-eval-prompt10.py",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "summary": "Comprehensive training-and-evaluation harness with ablation studies, cross-validation, breakout cohorts, and a 300-line markdown report generator.",
+      "tags": [
+        "training",
+        "evaluation",
+        "xgboost",
+        "ablation",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        111,
+        116
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        119,
+        127
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        130,
+        185
+      ],
+      "summary": "Pulls labeled training rows from Supabase with feature columns and target.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:prepare_features",
+      "type": "function",
+      "name": "prepare_features",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        188,
+        196
+      ],
+      "summary": "Slices the dataframe to the requested feature list and fills missing values.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        199,
+        222
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        225,
+        238
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:train_and_evaluate",
+      "type": "function",
+      "name": "train_and_evaluate",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        241,
+        280
+      ],
+      "summary": "Fits an XGBoost regressor on train, evaluates on holdout, and returns both metric sets.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:ablation_study",
+      "type": "function",
+      "name": "ablation_study",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        283,
+        324
+      ],
+      "summary": "Iteratively removes one feature at a time and records performance delta vs the full model.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:generate_report",
+      "type": "function",
+      "name": "generate_report",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        327,
+        657
+      ],
+      "summary": "Formats raw, breakout, and ablation results into a multi-section markdown evaluation report.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-eval-prompt10.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-eval-prompt10.py",
+      "lineRange": [
+        660,
+        829
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/train-model.py",
+      "type": "file",
+      "name": "train-model.py",
+      "filePath": "scripts/train-model.py",
+      "summary": "Primary XGBoost trainer that pulls labeled rows from Supabase (or CSV fallback), classifies tiers, and writes the production model artifact.",
+      "tags": [
+        "training",
+        "xgboost",
+        "supabase",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-model.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-model.py",
+      "lineRange": [
+        95,
+        103
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-model.py:load_from_supabase",
+      "type": "function",
+      "name": "load_from_supabase",
+      "filePath": "scripts/train-model.py",
+      "lineRange": [
+        108,
+        166
+      ],
+      "summary": "Loads labeled training rows from Supabase and assembles a pandas dataframe.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-model.py:load_from_csv",
+      "type": "function",
+      "name": "load_from_csv",
+      "filePath": "scripts/train-model.py",
+      "lineRange": [
+        169,
+        174
+      ],
+      "summary": "Reads a local CSV as the training dataframe fallback when Supabase is unavailable.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-model.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-model.py",
+      "lineRange": [
+        179,
+        604
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-v10-retrain.py",
+      "type": "file",
+      "name": "train-v10-retrain.py",
+      "filePath": "scripts/train-v10-retrain.py",
+      "summary": "Version 10 retraining pipeline with K-fold CV, feature preparation, and Spearman evaluation against the v9 baseline.",
+      "tags": [
+        "training",
+        "xgboost",
+        "retrain",
+        "v10",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        110,
+        115
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        118,
+        126
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        129,
+        218
+      ],
+      "summary": "Pulls labeled training rows from Supabase with feature columns and target.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:prepare_features",
+      "type": "function",
+      "name": "prepare_features",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        221,
+        229
+      ],
+      "summary": "Slices the dataframe to the requested feature list and fills missing values.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        232,
+        255
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        258,
+        270
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v10-retrain.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v10-retrain.py",
+      "lineRange": [
+        273,
+        709
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-v12-sandbox.py",
+      "type": "file",
+      "name": "train-v12-sandbox.py",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "summary": "Sandbox training run for v12 with manual metric implementations (MAE/RMSE/R2/Spearman) and a ManualScaler class to bypass scikit-learn dependencies.",
+      "tags": [
+        "training",
+        "xgboost",
+        "sandbox",
+        "v12",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:pf",
+      "type": "function",
+      "name": "pf",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        30,
+        32
+      ],
+      "summary": "Local print-with-flush helper used in place of the built-in print.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        88,
+        93
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        96,
+        104
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        107,
+        184
+      ],
+      "summary": "Pulls labeled training rows from Supabase with feature columns and target.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:build_matrices",
+      "type": "function",
+      "name": "build_matrices",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        187,
+        207
+      ],
+      "summary": "Converts a row list into feature/target numpy matrices using the requested feature list.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:manual_mae",
+      "type": "function",
+      "name": "manual_mae",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        210,
+        211
+      ],
+      "summary": "Manual MAE calculation without scikit-learn.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:manual_rmse",
+      "type": "function",
+      "name": "manual_rmse",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        213,
+        214
+      ],
+      "summary": "Manual RMSE calculation without scikit-learn.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:manual_r2",
+      "type": "function",
+      "name": "manual_r2",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        216,
+        219
+      ],
+      "summary": "Manual R-squared calculation without scikit-learn.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:_rank_array",
+      "type": "function",
+      "name": "_rank_array",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        221,
+        236
+      ],
+      "summary": "Manual rank-array helper used by manual_spearman to avoid scipy.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:manual_spearman",
+      "type": "function",
+      "name": "manual_spearman",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        238,
+        260
+      ],
+      "summary": "Spearman rank correlation implemented without scipy.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        278,
+        295
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        298,
+        321
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v12-sandbox.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        324,
+        614
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:scripts/train-v12-sandbox.py:ManualScaler",
+      "type": "class",
+      "name": "ManualScaler",
+      "filePath": "scripts/train-v12-sandbox.py",
+      "lineRange": [
+        262,
+        275
+      ],
+      "summary": "Manual StandardScaler-style transformer (fit_transform/transform) implemented without scikit-learn for sandbox use.",
+      "tags": [
+        "class",
+        "python",
+        "training",
+        "scaler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/train-v13-sandbox.py",
+      "type": "file",
+      "name": "train-v13-sandbox.py",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "summary": "Sandbox v13 training pipeline introducing Optuna hyperparameter tuning and native-NaN feature preparation on top of XGBoost.",
+      "tags": [
+        "training",
+        "xgboost",
+        "optuna",
+        "sandbox",
+        "v13"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        42,
+        44
+      ],
+      "summary": "Local print() override that flushes stdout immediately for live log streaming.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        99,
+        104
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        107,
+        115
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        118,
+        195
+      ],
+      "summary": "Pulls labeled training rows from Supabase with feature columns and target.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:prepare_features_native_nan",
+      "type": "function",
+      "name": "prepare_features_native_nan",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        201,
+        213
+      ],
+      "summary": "Builds the feature matrix while preserving NaN values for XGBoost native missing handling.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        216,
+        232
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:optuna_tune",
+      "type": "function",
+      "name": "optuna_tune",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        237,
+        298
+      ],
+      "summary": "Runs Optuna search over XGBoost hyperparameters with K-fold CV inside each trial.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        301,
+        316
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:train_and_evaluate",
+      "type": "function",
+      "name": "train_and_evaluate",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        319,
+        370
+      ],
+      "summary": "Fits an XGBoost regressor on train, evaluates on holdout, and returns both metric sets.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v13-sandbox.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v13-sandbox.py",
+      "lineRange": [
+        373,
+        711
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-v14-clean-sandbox.py",
+      "type": "file",
+      "name": "train-v14-clean-sandbox.py",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "summary": "Cleaned v14 sandbox using paginated Supabase fetching, stratified holdout splitting, and Optuna tuning for a leaner training run.",
+      "tags": [
+        "training",
+        "xgboost",
+        "sandbox",
+        "v14",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        34,
+        41
+      ],
+      "summary": "Local print() override that flushes stdout immediately for live log streaming.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        81,
+        89
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        92,
+        97
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:paginated_fetch",
+      "type": "function",
+      "name": "paginated_fetch",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        100,
+        114
+      ],
+      "summary": "Iterates Supabase results in chunks to bypass the default 1000-row cap.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:fetch_eligible_data",
+      "type": "function",
+      "name": "fetch_eligible_data",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        117,
+        140
+      ],
+      "summary": "Returns training rows that meet eligibility criteria (labeled, post-publish, etc).",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:prepare_features",
+      "type": "function",
+      "name": "prepare_features",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        143,
+        153
+      ],
+      "summary": "Slices the dataframe to the requested feature list and fills missing values.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        156,
+        166
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:stratified_holdout",
+      "type": "function",
+      "name": "stratified_holdout",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        169,
+        185
+      ],
+      "summary": "Performs a tier-stratified train/holdout split on the dataframe.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:optuna_tune",
+      "type": "function",
+      "name": "optuna_tune",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        188,
+        237
+      ],
+      "summary": "Runs Optuna search over XGBoost hyperparameters with K-fold CV inside each trial.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        240,
+        255
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-clean-sandbox.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v14-clean-sandbox.py",
+      "lineRange": [
+        258,
+        466
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-v14-experiments.py",
+      "type": "file",
+      "name": "train-v14-experiments.py",
+      "filePath": "scripts/train-v14-experiments.py",
+      "summary": "v14 experiments runner that sweeps feature sets and hyperparameters, persists each experiment record, and reports comparative metrics.",
+      "tags": [
+        "training",
+        "experiments",
+        "xgboost",
+        "v14",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        32,
+        39
+      ],
+      "summary": "Local print() override that flushes stdout immediately for live log streaming.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        81,
+        86
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        88,
+        96
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:fetch_all_data",
+      "type": "function",
+      "name": "fetch_all_data",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        98,
+        163
+      ],
+      "summary": "Loads the full labeled training set from Supabase for the experiments runner.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:prepare_features",
+      "type": "function",
+      "name": "prepare_features",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        166,
+        176
+      ],
+      "summary": "Slices the dataframe to the requested feature list and fills missing values.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        179,
+        189
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:optuna_tune",
+      "type": "function",
+      "name": "optuna_tune",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        192,
+        241
+      ],
+      "summary": "Runs Optuna search over XGBoost hyperparameters with K-fold CV inside each trial.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        244,
+        259
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:stratified_holdout",
+      "type": "function",
+      "name": "stratified_holdout",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        262,
+        280
+      ],
+      "summary": "Performs a tier-stratified train/holdout split on the dataframe.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:run_experiment",
+      "type": "function",
+      "name": "run_experiment",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        283,
+        352
+      ],
+      "summary": "Trains a single experiment with the given feature set and reports its metrics.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:save_experiment",
+      "type": "function",
+      "name": "save_experiment",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        355,
+        390
+      ],
+      "summary": "Persists an experiment result to disk for later comparison.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v14-experiments.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v14-experiments.py",
+      "lineRange": [
+        393,
+        613
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-v9-retrain.py",
+      "type": "file",
+      "name": "train-v9-retrain.py",
+      "filePath": "scripts/train-v9-retrain.py",
+      "summary": "Version 9 retraining script with feature scaling, K-fold CV, and tier-classification evaluation, used as a baseline reference.",
+      "tags": [
+        "training",
+        "xgboost",
+        "retrain",
+        "v9",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        84,
+        89
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        92,
+        100
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:fetch_data",
+      "type": "function",
+      "name": "fetch_data",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        103,
+        156
+      ],
+      "summary": "Pulls labeled training rows from Supabase with feature columns and target.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:prepare_features",
+      "type": "function",
+      "name": "prepare_features",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        159,
+        167
+      ],
+      "summary": "Slices the dataframe to the requested feature list and fills missing values.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:evaluate_model",
+      "type": "function",
+      "name": "evaluate_model",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        170,
+        193
+      ],
+      "summary": "Computes MAE, RMSE, R2, and Spearman against ground truth and prints the metrics block.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:cross_validate",
+      "type": "function",
+      "name": "cross_validate",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        196,
+        208
+      ],
+      "summary": "Runs K-fold cross-validation on scaled features and returns mean fold scores.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-v9-retrain.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-v9-retrain.py",
+      "lineRange": [
+        211,
+        637
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-xgboost-model.py",
+      "type": "file",
+      "name": "train-xgboost-model.py",
+      "filePath": "scripts/train-xgboost-model.py",
+      "summary": "Top-level XGBoost training script that orchestrates data load, training, and model serialization without intermediate helper functions.",
+      "tags": [
+        "training",
+        "xgboost",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-xgboost-v6.py",
+      "type": "file",
+      "name": "train-xgboost-v6.py",
+      "filePath": "scripts/train-xgboost-v6.py",
+      "summary": "Version 6 XGBoost trainer with explicit tier classification and a monolithic main() that handles fetch, train, and save in one pass.",
+      "tags": [
+        "training",
+        "xgboost",
+        "v6",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v6.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-xgboost-v6.py",
+      "lineRange": [
+        77,
+        82
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v6.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v6.py",
+      "lineRange": [
+        86,
+        319
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/train-xgboost-v7-content-only.py",
+      "type": "file",
+      "name": "train-xgboost-v7-content-only.py",
+      "filePath": "scripts/train-xgboost-v7-content-only.py",
+      "summary": "v7 training run restricted to content-only features (no creator/account signals) to measure content-signal-alone performance.",
+      "tags": [
+        "training",
+        "xgboost",
+        "v7",
+        "content-only",
+        "script"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-content-only.py:classify_tier",
+      "type": "function",
+      "name": "classify_tier",
+      "filePath": "scripts/train-xgboost-v7-content-only.py",
+      "lineRange": [
+        114,
+        119
+      ],
+      "summary": "Maps a numeric DPS into a tier label.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-content-only.py:load_env",
+      "type": "function",
+      "name": "load_env",
+      "filePath": "scripts/train-xgboost-v7-content-only.py",
+      "lineRange": [
+        122,
+        130
+      ],
+      "summary": "Loads .env.local values into process env before training.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-content-only.py:fetch_from_supabase",
+      "type": "function",
+      "name": "fetch_from_supabase",
+      "filePath": "scripts/train-xgboost-v7-content-only.py",
+      "lineRange": [
+        133,
+        186
+      ],
+      "summary": "Pulls labeled training rows with the content-only feature column subset.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/train-xgboost-v7-content-only.py:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/train-xgboost-v7-content-only.py",
+      "lineRange": [
+        189,
+        459
+      ],
+      "summary": "Top-level entry that orchestrates this scripts end-to-end run.",
+      "tags": [
+        "function",
+        "python",
+        "training"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:scripts/test-supabase-connection.js",
+      "target": "function:scripts/test-supabase-connection.js:testWithAxios",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-supabase-connection.js",
+      "target": "function:scripts/test-supabase-connection.js:testWithSupabaseClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-supabase-connection.js",
+      "target": "function:scripts/test-supabase-connection.js:testDnsLookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-supabase-connection.js",
+      "target": "function:scripts/test-supabase-connection.js:runTests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-template-analysis.js",
+      "target": "function:scripts/test-template-analysis.js:testTemplateAnalysisBackend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:testTikTokIngestionPipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:startIngestionJob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:monitorJob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:scheduleRegularIngestion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:testDirectAPIEndpoints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:makeAPIRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-tiktok-ingestion-pipeline.js",
+      "target": "function:scripts/test-tiktok-ingestion-pipeline.js:generateTestReport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-unified-framework.js",
+      "target": "function:scripts/test-unified-framework.js:testUnifiedFramework",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-url-access.ts",
+      "target": "function:scripts/test-url-access.ts:testUrlAccess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-url-access.ts",
+      "target": "function:scripts/test-url-access.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-validation-system.js",
+      "target": "function:scripts/test-validation-system.js:testValidationSystem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-validation-system.js",
+      "target": "function:scripts/test-validation-system.js:calculateMockAccuracy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-validation-system.js",
+      "target": "function:scripts/test-validation-system.js:generateAccuracyDisplayText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-validation-system.js",
+      "target": "function:scripts/test-validation-system.js:updateSystemHealthWithValidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-validation-system.js",
+      "target": "function:scripts/test-validation-system.js:createSampleValidationData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-variants.ts",
+      "target": "function:scripts/test-variants.ts:inferHookType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-variants.ts",
+      "target": "function:scripts/test-variants.ts:inferFormat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-variants.ts",
+      "target": "function:scripts/test-variants.ts:generateVariant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-variants.ts",
+      "target": "function:scripts/test-variants.ts:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-viral-prediction-system.js",
+      "target": "function:scripts/test-viral-prediction-system.js:testViralPredictionSystem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-viral-prediction.js",
+      "target": "function:scripts/test-viral-prediction.js:runPrediction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-viral-prediction.js",
+      "target": "function:scripts/test-viral-prediction.js:evalDPSMatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-viral-prediction.js",
+      "target": "function:scripts/test-viral-prediction.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-visual-intelligence.ts",
+      "target": "function:scripts/test-visual-intelligence.ts:testVisualIntelligence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/test-visual-intelligence.ts",
+      "target": "file:src/lib/services/ffmpeg-service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/time-travel-24h.ts",
+      "target": "file:src/lib/db/pg.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:scripts/train_model.py",
+      "target": "function:scripts/train_model.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train_model.py",
+      "target": "function:scripts/train_model.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:fetch_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:fetch_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:prepare_features",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:prepare_features",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:train_and_evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:train_and_evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:ablation_study",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:ablation_study",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:generate_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:generate_report",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-eval-prompt10.py",
+      "target": "function:scripts/train-eval-prompt10.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:load_from_supabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:load_from_supabase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:load_from_csv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:load_from_csv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-model.py",
+      "target": "function:scripts/train-model.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:fetch_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:fetch_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:prepare_features",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:prepare_features",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v10-retrain.py",
+      "target": "function:scripts/train-v10-retrain.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:pf",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:pf",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:fetch_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:fetch_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:build_matrices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:build_matrices",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_mae",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_mae",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_rmse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_rmse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_r2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_r2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:_rank_array",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:_rank_array",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_spearman",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:manual_spearman",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "function:scripts/train-v12-sandbox.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "class:scripts/train-v12-sandbox.py:ManualScaler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v12-sandbox.py",
+      "target": "class:scripts/train-v12-sandbox.py:ManualScaler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:print",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:fetch_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:fetch_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:prepare_features_native_nan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:prepare_features_native_nan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:optuna_tune",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:optuna_tune",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:train_and_evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:train_and_evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v13-sandbox.py",
+      "target": "function:scripts/train-v13-sandbox.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:print",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:paginated_fetch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:paginated_fetch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:fetch_eligible_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:fetch_eligible_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:prepare_features",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:prepare_features",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:stratified_holdout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:stratified_holdout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:optuna_tune",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:optuna_tune",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-clean-sandbox.py",
+      "target": "function:scripts/train-v14-clean-sandbox.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:print",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:fetch_all_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:fetch_all_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:prepare_features",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:prepare_features",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:optuna_tune",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:optuna_tune",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:stratified_holdout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:stratified_holdout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:run_experiment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:run_experiment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:save_experiment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:save_experiment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v14-experiments.py",
+      "target": "function:scripts/train-v14-experiments.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:fetch_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:fetch_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:prepare_features",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:prepare_features",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:evaluate_model",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:evaluate_model",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:cross_validate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:cross_validate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-v9-retrain.py",
+      "target": "function:scripts/train-v9-retrain.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v6.py",
+      "target": "function:scripts/train-xgboost-v6.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v6.py",
+      "target": "function:scripts/train-xgboost-v6.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v6.py",
+      "target": "function:scripts/train-xgboost-v6.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v6.py",
+      "target": "function:scripts/train-xgboost-v6.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:classify_tier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:classify_tier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:load_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:load_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:fetch_from_supabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:fetch_from_supabase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:scripts/train-xgboost-v7-content-only.py",
+      "target": "function:scripts/train-xgboost-v7-content-only.py:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

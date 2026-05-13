@@ -1,0 +1,734 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/templates/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/[id]/route.ts",
+      "summary": "Next.js API route returning a single template by id via the templates service layer.",
+      "tags": ["api-handler", "templates", "next-route", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/[id]/route.ts",
+      "lineRange": [5, 31],
+      "summary": "Handles GET requests to fetch a single template by id, with not-found and error handling.",
+      "tags": ["api-handler", "http-get", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/analysis/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/analysis/route.ts",
+      "summary": "Returns AI/structural analysis data for a template, falling back to deterministic mock data when Supabase is unavailable.",
+      "tags": ["api-handler", "templates", "analysis", "mock-fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/analysis/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/analysis/route.ts",
+      "lineRange": [14, 54],
+      "summary": "GET endpoint resolving a template's analysis from Supabase or returning a generated mock payload on failure.",
+      "tags": ["api-handler", "http-get", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/analysis/route.ts:getMockTemplateAnalysis",
+      "type": "function",
+      "name": "getMockTemplateAnalysis",
+      "filePath": "src/app/api/templates/analysis/route.ts",
+      "lineRange": [59, 161],
+      "summary": "Generates a deterministic mock analysis payload for a template id, used when Supabase is unreachable or unconfigured.",
+      "tags": ["mock-data", "fallback", "analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/analytics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/analytics/route.ts",
+      "summary": "Returns aggregated template performance analytics (views, engagement, time series) gated by subscription middleware, with rich mock generators for offline/demo mode.",
+      "tags": ["api-handler", "analytics", "templates", "subscription-gated", "mock-fallback"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/analytics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/analytics/route.ts",
+      "lineRange": [28, 150],
+      "summary": "GET endpoint that checks subscription tier, reads Firestore analytics for a template, and returns mock data when Firebase is missing.",
+      "tags": ["api-handler", "http-get", "subscription", "firestore"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/analytics/route.ts:getMockAnalyticsData",
+      "type": "function",
+      "name": "getMockAnalyticsData",
+      "filePath": "src/app/api/templates/analytics/route.ts",
+      "lineRange": [155, 214],
+      "summary": "Builds a stable mock analytics object for a template, including aggregate metrics and time-series stubs.",
+      "tags": ["mock-data", "analytics", "fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/analytics/route.ts:generateHistoricalData",
+      "type": "function",
+      "name": "generateHistoricalData",
+      "filePath": "src/app/api/templates/analytics/route.ts",
+      "lineRange": [219, 237],
+      "summary": "Generates a synthetic historical metric series for a given length, used to populate analytics charts in mock mode.",
+      "tags": ["mock-data", "time-series", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/analytics/route.ts:generateDateLabels",
+      "type": "function",
+      "name": "generateDateLabels",
+      "filePath": "src/app/api/templates/analytics/route.ts",
+      "lineRange": [242, 270],
+      "summary": "Produces an array of ISO date labels for a given window, paired with generated metric series for analytics charts.",
+      "tags": ["mock-data", "date-formatting", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/comparison/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/comparison/route.ts",
+      "summary": "Side-by-side template comparison endpoint: pulls metrics for multiple template ids from Supabase, computes delta/winner stats, and falls back to mock data when needed.",
+      "tags": ["api-handler", "comparison", "templates", "mock-fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/comparison/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/comparison/route.ts",
+      "lineRange": [15, 85],
+      "summary": "GET endpoint that loads several templates from Supabase, computes comparison metrics, and returns a winner summary.",
+      "tags": ["api-handler", "http-get", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/comparison/route.ts:calculateComparisonMetrics",
+      "type": "function",
+      "name": "calculateComparisonMetrics",
+      "filePath": "src/app/api/templates/comparison/route.ts",
+      "lineRange": [90, 146],
+      "summary": "Computes engagement/growth deltas across a set of template records and selects a top performer for the comparison response.",
+      "tags": ["analytics", "metrics", "comparison"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/comparison/route.ts:getMockComparisonData",
+      "type": "function",
+      "name": "getMockComparisonData",
+      "filePath": "src/app/api/templates/comparison/route.ts",
+      "lineRange": [151, 192],
+      "summary": "Produces deterministic comparison stubs used when Supabase data is unavailable.",
+      "tags": ["mock-data", "fallback", "comparison"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/cooling/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/cooling/route.ts",
+      "summary": "Returns templates whose momentum is cooling, via the templates service layer.",
+      "tags": ["api-handler", "templates", "trend-momentum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/cooling/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/cooling/route.ts",
+      "lineRange": [7, 15],
+      "summary": "GET handler delegating to the templates service for the cooling-templates list.",
+      "tags": ["api-handler", "http-get", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/copy-winner/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/copy-winner/route.ts",
+      "summary": "Auth + rate-limited endpoint that clones the winning template variant into the user's library.",
+      "tags": ["api-handler", "templates", "auth", "rate-limited"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/copy-winner/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/copy-winner/route.ts",
+      "lineRange": [8, 22],
+      "summary": "POST handler that authenticates the caller, enforces rate limits, and triggers the copy-winner workflow.",
+      "tags": ["api-handler", "http-post", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/decay/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/decay/route.ts",
+      "summary": "Stub endpoint returning template decay/momentum data; currently a minimal placeholder with no external imports.",
+      "tags": ["api-handler", "templates", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/definition/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/definition/[id]/route.ts",
+      "summary": "Returns the canonical definition JSON for a template id, using env config for the data source.",
+      "tags": ["api-handler", "templates", "definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/discovery/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/discovery/route.ts",
+      "summary": "Returns a curated discovery list of templates via the templates service layer.",
+      "tags": ["api-handler", "templates", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/evolution/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/evolution/route.ts",
+      "summary": "Exposes the viral-prediction framework-evolution system via POST (trigger) and GET (status) handlers.",
+      "tags": ["api-handler", "templates", "viral-prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/expert-insights/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/expert-insights/route.ts",
+      "summary": "Endpoint for storing and listing expert-curated insights tied to templates, backed by Firestore and the expert-insight service.",
+      "tags": ["api-handler", "templates", "expert-insights", "firestore"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/expert-insights/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/expert-insights/route.ts",
+      "lineRange": [12, 149],
+      "summary": "POST handler that validates an expert insight payload and persists it via the expert-insight service.",
+      "tags": ["api-handler", "http-post", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/expert-insights/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/expert-insights/route.ts",
+      "lineRange": [154, 183],
+      "summary": "GET handler that lists expert insights for a template id, delegating to the expert-insight service.",
+      "tags": ["api-handler", "http-get", "expert-insights"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/hot/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/hot/route.ts",
+      "summary": "Returns currently hot/rising templates via the templates service layer.",
+      "tags": ["api-handler", "templates", "trending"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/leaderboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/leaderboard/route.ts",
+      "summary": "Builds a leaderboard view of templates with filtering and sorting options, served from the templates service.",
+      "tags": ["api-handler", "templates", "leaderboard"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/leaderboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/leaderboard/route.ts",
+      "lineRange": [9, 75],
+      "summary": "GET handler that parses query parameters and fetches a ranked template leaderboard from the service layer.",
+      "tags": ["api-handler", "http-get", "ranking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/link-sound/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/link-sound/route.ts",
+      "summary": "POST endpoint that links a sound to a template via the sound service, validating ids and surfacing service errors.",
+      "tags": ["api-handler", "templates", "sound", "linking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/link-sound/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/link-sound/route.ts",
+      "lineRange": [7, 69],
+      "summary": "POST handler that validates a template/sound pair and delegates linking to the sound service.",
+      "tags": ["api-handler", "http-post", "linking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/open_in_simulator/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/open_in_simulator/route.ts",
+      "summary": "POST endpoint that constructs a deep link to open a template inside the simulator, using env config for the simulator host.",
+      "tags": ["api-handler", "templates", "simulator", "deep-link"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/open_in_simulator/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/open_in_simulator/route.ts",
+      "lineRange": [8, 25],
+      "summary": "POST handler that builds a simulator URL for a given template id using the configured simulator base.",
+      "tags": ["api-handler", "http-post", "simulator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/predictions/notifications/[id]/read/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/predictions/notifications/[id]/read/route.ts",
+      "summary": "Marks a single template-prediction notification as read for the authenticated user, with auth and ownership checks.",
+      "tags": ["api-handler", "notifications", "templates", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/notifications/[id]/read/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/predictions/notifications/[id]/read/route.ts",
+      "lineRange": [10, 113],
+      "summary": "POST handler that authenticates the user, verifies ownership of a notification, and marks it as read in Supabase.",
+      "tags": ["api-handler", "http-post", "supabase", "ownership"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/predictions/notifications/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/predictions/notifications/[id]/route.ts",
+      "summary": "Deletes a single template-prediction notification for the authenticated user via Supabase with auth and ownership checks.",
+      "tags": ["api-handler", "notifications", "templates", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/notifications/[id]/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/templates/predictions/notifications/[id]/route.ts",
+      "lineRange": [10, 110],
+      "summary": "DELETE handler that authenticates, validates ownership, and removes a prediction notification from Supabase.",
+      "tags": ["api-handler", "http-delete", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/predictions/notifications/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/predictions/notifications/route.ts",
+      "summary": "Lists template-prediction notifications for the authenticated user with subscription gating and demo-data fallback.",
+      "tags": ["api-handler", "notifications", "templates", "subscription-gated", "mock-fallback"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/notifications/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/predictions/notifications/route.ts",
+      "lineRange": [18, 164],
+      "summary": "GET handler that authenticates, checks subscription, and lists prediction notifications from Supabase with demo fallback.",
+      "tags": ["api-handler", "http-get", "supabase", "subscription"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/templates/predictions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/predictions/route.ts",
+      "summary": "Primary template-prediction endpoint: lists predictions and accepts expert adjustments, with subscription gating, demo fallback, and notification side-effects.",
+      "tags": ["api-handler", "predictions", "templates", "subscription-gated", "notifications"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/predictions/route.ts",
+      "lineRange": [25, 205],
+      "summary": "GET handler that authenticates, gates by subscription, and returns trend predictions from Supabase with demo-data fallback.",
+      "tags": ["api-handler", "http-get", "predictions", "subscription"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/predictions/route.ts",
+      "lineRange": [210, 323],
+      "summary": "POST handler that records an expert adjustment to a prediction, persists it to Supabase, and creates a follow-up notification.",
+      "tags": ["api-handler", "http-post", "expert-adjustment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/predictions/route.ts:createExpertAdjustmentNotification",
+      "type": "function",
+      "name": "createExpertAdjustmentNotification",
+      "filePath": "src/app/api/templates/predictions/route.ts",
+      "lineRange": [328, 353],
+      "summary": "Inserts a notification row in Supabase informing the template owner that an expert adjusted their prediction.",
+      "tags": ["notifications", "supabase", "side-effect"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/similar/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/similar/route.ts",
+      "summary": "Returns templates similar to a given seed template via the advanced template analysis service, with deterministic mock fallback.",
+      "tags": ["api-handler", "templates", "similarity", "mock-fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/similar/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/similar/route.ts",
+      "lineRange": [15, 74],
+      "summary": "GET handler that resolves a seed template id, asks the analysis service for similar templates, and falls back to mocks on failure.",
+      "tags": ["api-handler", "http-get", "similarity"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/similar/route.ts:getMockSimilarTemplates",
+      "type": "function",
+      "name": "getMockSimilarTemplates",
+      "filePath": "src/app/api/templates/similar/route.ts",
+      "lineRange": [77, 122],
+      "summary": "Generates deterministic similar-template stubs used when the analysis service is unavailable.",
+      "tags": ["mock-data", "fallback", "similarity"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/templates/trending/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/trending/route.ts",
+      "summary": "Returns trending templates from Firestore, with rich deterministic mock data when Firebase is unavailable.",
+      "tags": ["api-handler", "templates", "trending", "firestore", "mock-fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/trending/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/trending/route.ts",
+      "lineRange": [18, 44],
+      "summary": "GET handler that pulls trending templates from Firestore, falling back to mock data on failure or missing config.",
+      "tags": ["api-handler", "http-get", "firestore"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/trending/route.ts:getMockTrendingTemplates",
+      "type": "function",
+      "name": "getMockTrendingTemplates",
+      "filePath": "src/app/api/templates/trending/route.ts",
+      "lineRange": [47, 191],
+      "summary": "Produces a curated list of mock trending templates with realistic metadata for offline/demo mode.",
+      "tags": ["mock-data", "fallback", "trending"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/unlink-sound/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/unlink-sound/route.ts",
+      "summary": "POST endpoint that detaches a sound from a template via the sound service.",
+      "tags": ["api-handler", "templates", "sound", "linking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/unlink-sound/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/unlink-sound/route.ts",
+      "lineRange": [7, 74],
+      "summary": "POST handler that validates a template/sound pair and removes the link via the sound service.",
+      "tags": ["api-handler", "http-post", "unlinking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/update-sound/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/update-sound/route.ts",
+      "summary": "Authenticated POST endpoint that updates a template's associated sound via the newsletter-sound service and Supabase.",
+      "tags": ["api-handler", "templates", "sound", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/update-sound/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/update-sound/route.ts",
+      "lineRange": [23, 127],
+      "summary": "POST handler that authenticates, validates payload, and updates the template/sound association in Supabase.",
+      "tags": ["api-handler", "http-post", "auth", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/variations/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "summary": "Full CRUD endpoint for template variations using Firestore Admin, with custom user resolution and GET/POST/PUT/DELETE/PATCH handlers.",
+      "tags": ["api-handler", "templates", "variations", "crud", "firestore"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:getCurrentUser",
+      "type": "function",
+      "name": "getCurrentUser",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [20, 57],
+      "summary": "Resolves the current authenticated user from request headers/cookies for use across the CRUD handlers.",
+      "tags": ["auth", "user-resolution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [60, 142],
+      "summary": "GET handler that lists template variations for the authenticated user from Firestore.",
+      "tags": ["api-handler", "http-get", "firestore"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [145, 189],
+      "summary": "POST handler that creates a new template variation in Firestore for the authenticated user.",
+      "tags": ["api-handler", "http-post", "firestore", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:PUT",
+      "type": "function",
+      "name": "PUT",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [192, 246],
+      "summary": "PUT handler that replaces an existing template variation in Firestore.",
+      "tags": ["api-handler", "http-put", "firestore", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [249, 302],
+      "summary": "DELETE handler that removes a template variation document from Firestore after auth/ownership checks.",
+      "tags": ["api-handler", "http-delete", "firestore"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/variations/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/templates/variations/route.ts",
+      "lineRange": [305, 360],
+      "summary": "PATCH handler that applies partial updates to a template variation in Firestore.",
+      "tags": ["api-handler", "http-patch", "firestore", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/route.ts",
+      "summary": "Top-level templates collection endpoint exposing GET (list) and POST (create) handlers backed by the templates service.",
+      "tags": ["api-handler", "templates", "collection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/route.ts",
+      "lineRange": [11, 51],
+      "summary": "GET handler that lists templates with pagination/filter params, delegating to the templates service and helpers.",
+      "tags": ["api-handler", "http-get", "templates"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/templates/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/templates/route.ts",
+      "lineRange": [54, 68],
+      "summary": "POST handler that creates a new template record via the templates service.",
+      "tags": ["api-handler", "http-post", "templates"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/templates/[id]/route.ts", "target": "function:src/app/api/templates/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/[id]/route.ts", "target": "function:src/app/api/templates/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/[id]/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/analysis/route.ts", "target": "function:src/app/api/templates/analysis/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analysis/route.ts", "target": "function:src/app/api/templates/analysis/route.ts:getMockTemplateAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analysis/route.ts", "target": "function:src/app/api/templates/analysis/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/analysis/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "function:src/app/api/templates/analytics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "function:src/app/api/templates/analytics/route.ts:getMockAnalyticsData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "function:src/app/api/templates/analytics/route.ts:generateHistoricalData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "function:src/app/api/templates/analytics/route.ts:generateDateLabels", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "function:src/app/api/templates/analytics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "file:src/lib/utils/demoData.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/analytics/route.ts", "target": "file:src/middleware/checkSubscription.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/comparison/route.ts", "target": "function:src/app/api/templates/comparison/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/comparison/route.ts", "target": "function:src/app/api/templates/comparison/route.ts:calculateComparisonMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/comparison/route.ts", "target": "function:src/app/api/templates/comparison/route.ts:getMockComparisonData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/comparison/route.ts", "target": "function:src/app/api/templates/comparison/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/comparison/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/cooling/route.ts", "target": "function:src/app/api/templates/cooling/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/cooling/route.ts", "target": "function:src/app/api/templates/cooling/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/cooling/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/copy-winner/route.ts", "target": "function:src/app/api/templates/copy-winner/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/copy-winner/route.ts", "target": "function:src/app/api/templates/copy-winner/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/copy-winner/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/copy-winner/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/definition/[id]/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/discovery/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/evolution/route.ts", "target": "file:src/lib/services/viral-prediction/framework-evolution-system.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "function:src/app/api/templates/expert-insights/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "function:src/app/api/templates/expert-insights/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "function:src/app/api/templates/expert-insights/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "function:src/app/api/templates/expert-insights/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/expert-insights/route.ts", "target": "file:src/lib/services/expertInsightService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/hot/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/leaderboard/route.ts", "target": "function:src/app/api/templates/leaderboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/leaderboard/route.ts", "target": "function:src/app/api/templates/leaderboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/leaderboard/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/link-sound/route.ts", "target": "function:src/app/api/templates/link-sound/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/link-sound/route.ts", "target": "function:src/app/api/templates/link-sound/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/link-sound/route.ts", "target": "file:src/lib/services/soundService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/open_in_simulator/route.ts", "target": "function:src/app/api/templates/open_in_simulator/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/open_in_simulator/route.ts", "target": "function:src/app/api/templates/open_in_simulator/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/open_in_simulator/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/read/route.ts", "target": "function:src/app/api/templates/predictions/notifications/[id]/read/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/read/route.ts", "target": "function:src/app/api/templates/predictions/notifications/[id]/read/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/read/route.ts", "target": "file:src/app/api/auth/[...nextauth]/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/read/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/route.ts", "target": "function:src/app/api/templates/predictions/notifications/[id]/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/route.ts", "target": "function:src/app/api/templates/predictions/notifications/[id]/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/route.ts", "target": "file:src/app/api/auth/[...nextauth]/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/[id]/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "function:src/app/api/templates/predictions/notifications/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "function:src/app/api/templates/predictions/notifications/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "file:src/app/api/auth/[...nextauth]/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "file:src/lib/utils/demoData.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/notifications/route.ts", "target": "file:src/middleware/checkSubscription.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "function:src/app/api/templates/predictions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "function:src/app/api/templates/predictions/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "function:src/app/api/templates/predictions/route.ts:createExpertAdjustmentNotification", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "function:src/app/api/templates/predictions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "function:src/app/api/templates/predictions/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/app/api/auth/[...nextauth]/route.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/lib/services/trendPredictionService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/lib/utils/demoData.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/predictions/route.ts", "target": "file:src/middleware/checkSubscription.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/similar/route.ts", "target": "function:src/app/api/templates/similar/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/similar/route.ts", "target": "function:src/app/api/templates/similar/route.ts:getMockSimilarTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/similar/route.ts", "target": "function:src/app/api/templates/similar/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/similar/route.ts", "target": "file:src/lib/services/advancedTemplateAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/trending/route.ts", "target": "function:src/app/api/templates/trending/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/trending/route.ts", "target": "function:src/app/api/templates/trending/route.ts:getMockTrendingTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/trending/route.ts", "target": "function:src/app/api/templates/trending/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/trending/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/trending/route.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/unlink-sound/route.ts", "target": "function:src/app/api/templates/unlink-sound/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/unlink-sound/route.ts", "target": "function:src/app/api/templates/unlink-sound/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/unlink-sound/route.ts", "target": "file:src/lib/services/soundService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/update-sound/route.ts", "target": "function:src/app/api/templates/update-sound/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/update-sound/route.ts", "target": "function:src/app/api/templates/update-sound/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/update-sound/route.ts", "target": "file:src/lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/update-sound/route.ts", "target": "file:src/lib/services/newsletterSoundService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/update-sound/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:getCurrentUser", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:PUT", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:PUT", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "function:src/app/api/templates/variations/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/variations/route.ts", "target": "file:src/lib/firebase/firebaseAdmin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/route.ts", "target": "function:src/app/api/templates/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/route.ts", "target": "function:src/app/api/templates/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/route.ts", "target": "function:src/app/api/templates/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/route.ts", "target": "function:src/app/api/templates/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/route.ts", "target": "file:src/lib/services/templateService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/route.ts", "target": "file:src/lib/types/template.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/templates/route.ts", "target": "file:src/lib/utils/apiHelpers.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

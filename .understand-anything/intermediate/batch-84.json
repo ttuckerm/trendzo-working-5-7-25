@@ -1,0 +1,723 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/ga/freeze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ga/freeze/route.ts",
+      "summary": "POST endpoint that performs GA (general availability) freeze: snapshots feature flags to disk, promotes canary release channel to stable, and verifies the GA gate before proceeding.",
+      "tags": ["api-handler", "release-management", "feature-flags", "ga-gate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ga/freeze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ga/freeze/route.ts",
+      "lineRange": [19, 72],
+      "summary": "Executes the GA freeze procedure — checks GA gate status, writes flags snapshot to the artifacts directory, and promotes the canary release channel to stable in Supabase.",
+      "tags": ["api-handler", "release-management", "promotion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/ga/handoff/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ga/handoff/route.ts",
+      "summary": "POST endpoint that packages GA handoff artifacts (OpenAPI specs, GA-gate output, flags snapshot) into a stored ZIP archive saved under public/artifacts/handoff.",
+      "tags": ["api-handler", "ga-handoff", "zip-archive", "openapi"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ga/handoff/route.ts:buildStoredZip",
+      "type": "function",
+      "name": "buildStoredZip",
+      "filePath": "src/app/api/ga/handoff/route.ts",
+      "lineRange": [9, 38],
+      "summary": "Hand-rolled ZIP encoder that emits a stored (uncompressed) archive with CRC32 computation, local file headers, and central directory records.",
+      "tags": ["utility", "zip-encoding", "binary-format"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ga/handoff/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ga/handoff/route.ts",
+      "lineRange": [40, 87],
+      "summary": "Gathers GA artifacts and OpenAPI specs from the filesystem, ZIPs them, and writes the handoff bundle to public/artifacts/handoff.",
+      "tags": ["api-handler", "ga-handoff", "artifacts"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/ga/hypercare/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ga/hypercare/route.ts",
+      "summary": "API endpoint to start and check a 72-hour post-GA hypercare monitoring window, writing alert-rule summary to artifacts and reporting active status.",
+      "tags": ["api-handler", "monitoring", "ga-hypercare", "alerting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ga/last-run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ga/last-run/route.ts",
+      "summary": "Lightweight GET endpoint returning the status of the most recent GA preflight run (stubbed PASS for in-process gating checks).",
+      "tags": ["api-handler", "ga-gate", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ga/tag/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ga/tag/route.ts",
+      "summary": "POST endpoint that returns a synthetic git tag string for the current GA release based on the latest commit SHA or local-dev fallback.",
+      "tags": ["api-handler", "release-management", "git-tag"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/gallery/lab/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gallery/lab/route.ts",
+      "summary": "GET endpoint for the Gallery Lab view — returns videos currently in active experiments (A/B groups, experiment stage), with a synthetic-demo fallback when the experiments table is empty.",
+      "tags": ["api-handler", "gallery", "experiments", "ab-testing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/lab/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/gallery/lab/route.ts",
+      "lineRange": [13, 102],
+      "summary": "Reads active experiments from Supabase, joins to videos, and returns lab-view items with experiment badges; falls back to demo data when no records exist.",
+      "tags": ["api-handler", "gallery", "experiments"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/lab/route.ts:makeDemo",
+      "type": "function",
+      "name": "makeDemo",
+      "filePath": "src/app/api/gallery/lab/route.ts",
+      "lineRange": [104, 120],
+      "summary": "Builds a synthetic gallery-lab item record with placeholder experiment metadata for demo / empty-state rendering.",
+      "tags": ["utility", "demo-data", "fallback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/gallery/proving-grounds/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gallery/proving-grounds/route.ts",
+      "summary": "GET endpoint for the Proving Grounds gallery — returns candidate videos awaiting validation with prediction scores and badges, with demo fallback when no real data exists.",
+      "tags": ["api-handler", "gallery", "proving-grounds", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/proving-grounds/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/gallery/proving-grounds/route.ts",
+      "lineRange": [13, 65],
+      "summary": "Queries proving-grounds candidates from Supabase and shapes them for the gallery UI, falling back to synthetic demo items when the table is empty.",
+      "tags": ["api-handler", "gallery", "proving-grounds"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/proving-grounds/route.ts:buildDemoItems",
+      "type": "function",
+      "name": "buildDemoItems",
+      "filePath": "src/app/api/gallery/proving-grounds/route.ts",
+      "lineRange": [67, 92],
+      "summary": "Generates a list of demo proving-grounds gallery items with randomized scores and metadata for empty-state rendering.",
+      "tags": ["utility", "demo-data", "fallback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/gallery/recipe-book/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gallery/recipe-book/route.ts",
+      "summary": "GET endpoint for the Recipe Book gallery — lists viral video patterns/templates from Supabase that creators can clone, with demo fallback.",
+      "tags": ["api-handler", "gallery", "recipe-book", "patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/recipe-book/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/gallery/recipe-book/route.ts",
+      "lineRange": [13, 45],
+      "summary": "Reads viral pattern recipes from Supabase ordered by recency, returning a list of usable patterns to the gallery UI.",
+      "tags": ["api-handler", "gallery", "patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/gallery/segments/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gallery/segments/route.ts",
+      "summary": "GET endpoint that returns Gallery segment groupings (e.g. by niche, hook style, or pattern) for the discovery UI, with synthetic fallback data.",
+      "tags": ["api-handler", "gallery", "segments", "discovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gallery/segments/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/gallery/segments/route.ts",
+      "lineRange": [13, 100],
+      "summary": "Builds gallery segment views by querying Supabase for grouped video records and shaping them for the segments-explorer UI.",
+      "tags": ["api-handler", "gallery", "segments"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/gemini/analyze-video/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gemini/analyze-video/route.ts",
+      "summary": "POST endpoint invoking the Gemini multimodal video analyzer service on a given videoPath and persisting analysis results to Supabase.",
+      "tags": ["api-handler", "gemini", "video-analysis", "multimodal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gemini/analyze-video/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/gemini/analyze-video/route.ts",
+      "lineRange": [18, 92],
+      "summary": "Validates API key presence, runs the Gemini video analyzer service against the supplied videoPath, and writes structured analysis results back to Supabase.",
+      "tags": ["api-handler", "gemini", "video-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/gemini/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/gemini/test/route.ts",
+      "summary": "Diagnostic endpoint that pings the Gemini service to verify connectivity, API key presence, and basic generation/round-trip health.",
+      "tags": ["api-handler", "gemini", "diagnostic", "health-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gemini/test/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/gemini/test/route.ts",
+      "lineRange": [13, 81],
+      "summary": "Runs a Gemini health check: verifies API key, calls the service with a smoke-test prompt, and reports model/availability status.",
+      "tags": ["api-handler", "diagnostic", "gemini"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/gemini/test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/gemini/test/route.ts",
+      "lineRange": [87, 115],
+      "summary": "Runs a parameterized Gemini test generation given a prompt from the request body, returning the model's response for verification.",
+      "tags": ["api-handler", "diagnostic", "gemini"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/generate-cinematic-prompt/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/generate-cinematic-prompt/route.ts",
+      "summary": "POST endpoint that converts a script/concept into a cinematic, image-/video-generation prompt suitable for downstream visual models.",
+      "tags": ["api-handler", "prompt-generation", "cinematic", "ai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate-cinematic-prompt/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/generate-cinematic-prompt/route.ts",
+      "lineRange": [23, 126],
+      "summary": "Builds an LLM prompt from input script and style hints, calls the generation model, and returns a structured cinematic prompt for video generation.",
+      "tags": ["api-handler", "prompt-generation", "ai"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/generate/optimize/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/generate/optimize/route.ts",
+      "summary": "POST endpoint that takes a draft script and returns an optimized version with parsed sections (hook, context, value, CTA) and improvement notes.",
+      "tags": ["api-handler", "script-generation", "optimization", "ai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/optimize/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/generate/optimize/route.ts",
+      "lineRange": [33, 119],
+      "summary": "Sends a draft script to an LLM with optimization instructions, parses the response into a structured script, and returns improvements with rationale.",
+      "tags": ["api-handler", "script-optimization", "ai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/optimize/route.ts:parseOptimizedScript",
+      "type": "function",
+      "name": "parseOptimizedScript",
+      "filePath": "src/app/api/generate/optimize/route.ts",
+      "lineRange": [121, 166],
+      "summary": "Parses the LLM's optimized-script text into structured ScriptPart sections (hook, context, value, CTA) using section markers.",
+      "tags": ["utility", "parsing", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/generate/script/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "summary": "Major script-generation API endpoint that produces viral video scripts via OpenAI using pattern data, creator preferences, and platform-specific guidance, plus inline DPS/VPS prediction and recommendation analysis.",
+      "tags": ["api-handler", "script-generation", "openai", "viral-prediction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [52, 136],
+      "summary": "Orchestrates script generation: validates request, fetches pattern data, calls OpenAI generation, computes predicted DPS, and returns the structured script plus optimization recommendations.",
+      "tags": ["api-handler", "script-generation", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:fetchRealPatternData",
+      "type": "function",
+      "name": "fetchRealPatternData",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [142, 256],
+      "summary": "Loads a viral pattern record (by id) from Supabase and the source-video metadata used as a reference for the script generator.",
+      "tags": ["data-access", "patterns", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:getPlatformGuidance",
+      "type": "function",
+      "name": "getPlatformGuidance",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [258, 281],
+      "summary": "Returns a platform-specific (tiktok / instagram / youtube) script-writing rules block used inside the LLM prompt.",
+      "tags": ["utility", "platform-guidance", "prompt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:generateScriptWithOpenAI",
+      "type": "function",
+      "name": "generateScriptWithOpenAI",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [283, 464],
+      "summary": "Builds the full system + user prompt with platform guidance and creator preferences, calls OpenAI, and returns the raw completion plus token usage.",
+      "tags": ["ai", "openai", "script-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:buildCreatorPrefsSection",
+      "type": "function",
+      "name": "buildCreatorPrefsSection",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [470, 507],
+      "summary": "Renders the creator calibration preferences (hook styles, tone, saturation hints) into a prompt-ready section.",
+      "tags": ["utility", "prompt", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:parseScriptFromCompletion",
+      "type": "function",
+      "name": "parseScriptFromCompletion",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [509, 624],
+      "summary": "Parses the LLM completion text into a structured script with hook/context/value/CTA sections and a reconstituted fullScript.",
+      "tags": ["utility", "parsing", "script"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:calculatePredictedDPS",
+      "type": "function",
+      "name": "calculatePredictedDPS",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [626, 718],
+      "summary": "Computes a predicted DPS/VPS score for the generated script using component analyzers (pattern interrupt, emotional resonance, social currency, etc.) with weighted blending.",
+      "tags": ["prediction", "scoring", "viral-metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:generateOptimizationRecommendations",
+      "type": "function",
+      "name": "generateOptimizationRecommendations",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [727, 815],
+      "summary": "Produces actionable optimization recommendations for the script based on each component's score, flagging the weakest dimensions first.",
+      "tags": ["recommendations", "optimization", "scoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzePatternInterrupt",
+      "type": "function",
+      "name": "analyzePatternInterrupt",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [818, 833],
+      "summary": "Scores how strongly the script's hook breaks scrolling expectations using lightweight heuristics on the hook content.",
+      "tags": ["analyzer", "pattern-interrupt", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeEmotionalResonance",
+      "type": "function",
+      "name": "analyzeEmotionalResonance",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [835, 847],
+      "summary": "Estimates the emotional resonance of the script by detecting emotion keywords across hook, context, and value sections.",
+      "tags": ["analyzer", "emotion", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeSocialCurrency",
+      "type": "function",
+      "name": "analyzeSocialCurrency",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [849, 869],
+      "summary": "Scores share-worthiness of the script — does it teach, surprise, or provide social proof — using keyword/phrase heuristics.",
+      "tags": ["analyzer", "social-currency", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeValueDensity",
+      "type": "function",
+      "name": "analyzeValueDensity",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [871, 886],
+      "summary": "Measures how much actionable value the script packs per second based on word count and section length.",
+      "tags": ["analyzer", "value-density", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeHookStrength",
+      "type": "function",
+      "name": "analyzeHookStrength",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [888, 904],
+      "summary": "Scores the strength of the script's hook (first 3 seconds) using length and curiosity-trigger keyword heuristics.",
+      "tags": ["analyzer", "hook", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeRetention",
+      "type": "function",
+      "name": "analyzeRetention",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [906, 921],
+      "summary": "Heuristically scores how well the script's middle sustains viewer retention through pattern variety and tension cues.",
+      "tags": ["analyzer", "retention", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:analyzeCTA",
+      "type": "function",
+      "name": "analyzeCTA",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [923, 936],
+      "summary": "Evaluates the CTA section for clarity and conversion potential using imperative-verb and call-out keyword heuristics.",
+      "tags": ["analyzer", "cta", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/generate/script/route.ts:logAPIUsage",
+      "type": "function",
+      "name": "logAPIUsage",
+      "filePath": "src/app/api/generate/script/route.ts",
+      "lineRange": [938, 964],
+      "summary": "Logs OpenAI token usage and cost to Supabase for the script-generation request, including model and request metadata.",
+      "tags": ["logging", "telemetry", "openai"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/generate/video/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/generate/video/route.ts",
+      "summary": "Asynchronous video-generation API: starts Kling video jobs, exposes a polling GET endpoint for progress, and runs the generation pipeline in the background.",
+      "tags": ["api-handler", "video-generation", "async-job", "kling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/video/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/generate/video/route.ts",
+      "lineRange": [26, 95],
+      "summary": "Validates the video-generation request, creates a job record in Supabase, and kicks off the async processing pipeline returning a job id immediately.",
+      "tags": ["api-handler", "video-generation", "async-job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/video/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/generate/video/route.ts",
+      "lineRange": [101, 157],
+      "summary": "Polling endpoint returning current status, progress percent, and output URL for a video-generation job, given the job id.",
+      "tags": ["api-handler", "polling", "job-status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/generate/video/route.ts:processVideoGeneration",
+      "type": "function",
+      "name": "processVideoGeneration",
+      "filePath": "src/app/api/generate/video/route.ts",
+      "lineRange": [162, 228],
+      "summary": "Background worker that calls the Kling service to render the video, polls its progress, and writes the final output URL and metadata back to the job record.",
+      "tags": ["worker", "video-generation", "kling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/generate/video/route.ts:calculateProgress",
+      "type": "function",
+      "name": "calculateProgress",
+      "filePath": "src/app/api/generate/video/route.ts",
+      "lineRange": [233, 258],
+      "summary": "Computes a smoothed progress percentage for a video-generation job from job state, elapsed time, and Kling pipeline stage.",
+      "tags": ["utility", "progress", "job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/growth/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/growth/summary/route.ts",
+      "summary": "GET endpoint returning a growth-metrics summary (signups, activation, retention) by aggregating recent rows from Supabase.",
+      "tags": ["api-handler", "growth-metrics", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/growth/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/growth/summary/route.ts",
+      "lineRange": [12, 39],
+      "summary": "Queries Supabase for growth-funnel records and returns aggregated counters (totals, conversion rates) to the growth dashboard.",
+      "tags": ["api-handler", "growth-metrics", "aggregation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/guardrails/config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/guardrails/config/route.ts",
+      "summary": "GET/POST endpoints to read or update recommendation guardrails configuration (rate limits, content filters) backed by the guardrails service module.",
+      "tags": ["api-handler", "guardrails", "configuration", "recs"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/guardrails/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/guardrails/metrics/route.ts",
+      "summary": "GET endpoint returning guardrail-tripping metrics (blocked recs, near-misses, rule hit counts) from the guardrails service.",
+      "tags": ["api-handler", "guardrails", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/health/route.ts",
+      "summary": "Health-check endpoint reporting Supabase connectivity and presence of required environment variables (Supabase keys, Anthropic key); returns 503 when degraded.",
+      "tags": ["api-handler", "health-check", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/hub/config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/hub/config/route.ts",
+      "summary": "Lightweight GET endpoint returning Creator Hub configuration constants (feature toggles, layout flags) to the frontend.",
+      "tags": ["api-handler", "configuration", "hub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/impact/score/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/impact/score/route.ts",
+      "summary": "GET endpoint scoring the impact of a synthetic video sample via the ViralPredictionModel, mapping the score to a qualitative impact level.",
+      "tags": ["api-handler", "impact-score", "viral-prediction", "synthetic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/impact/score/route.ts:generateSyntheticFeatures",
+      "type": "function",
+      "name": "generateSyntheticFeatures",
+      "filePath": "src/app/api/impact/score/route.ts",
+      "lineRange": [10, 75],
+      "summary": "Builds a synthetic ExtractedFeatures object with platform-aware visual, audio, and engagement defaults for testing the prediction model.",
+      "tags": ["utility", "synthetic-features", "testing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/impact/score/route.ts:deriveLevel",
+      "type": "function",
+      "name": "deriveLevel",
+      "filePath": "src/app/api/impact/score/route.ts",
+      "lineRange": [77, 90],
+      "summary": "Maps a numeric prediction score into a qualitative impact level (low/medium/high/viral) using fixed thresholds.",
+      "tags": ["utility", "scoring", "mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/impact/score/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/impact/score/route.ts",
+      "lineRange": [92, 125],
+      "summary": "Generates synthetic features, runs the ViralPredictionModel, derives an impact level, and returns score + level + an identifier.",
+      "tags": ["api-handler", "impact-score", "prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/incidents/[id]/ack/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/incidents/[id]/ack/route.ts",
+      "summary": "POST endpoint that acknowledges an open incident by id, stamping acknowledged_at on the Supabase incident row.",
+      "tags": ["api-handler", "incidents", "operations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/incidents/[id]/resolve/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/incidents/[id]/resolve/route.ts",
+      "summary": "POST endpoint that resolves an incident by id, setting resolved_at and updating status='resolved' in Supabase.",
+      "tags": ["api-handler", "incidents", "operations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/incidents/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/incidents/[id]/route.ts",
+      "summary": "GET endpoint returning a single incident record from Supabase by id for incident detail views.",
+      "tags": ["api-handler", "incidents", "operations"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/incidents/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/incidents/route.ts",
+      "summary": "GET/POST endpoints for the incidents collection: lists incidents filtered by status, and creates new incidents with severity (SEV1/2/3), summary, and owner — auto-ensuring the table via exec_sql.",
+      "tags": ["api-handler", "incidents", "operations", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/incidents/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/incidents/route.ts",
+      "lineRange": [25, 59],
+      "summary": "Ensures the `incident` table exists, inserts a new incident with severity/summary/impact/owner, and returns the created row.",
+      "tags": ["api-handler", "incidents", "insert"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/ga/freeze/route.ts", "target": "function:src/app/api/ga/freeze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ga/freeze/route.ts", "target": "function:src/app/api/ga/freeze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ga/freeze/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/ga/freeze/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ga/handoff/route.ts", "target": "function:src/app/api/ga/handoff/route.ts:buildStoredZip", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ga/handoff/route.ts", "target": "function:src/app/api/ga/handoff/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ga/handoff/route.ts", "target": "function:src/app/api/ga/handoff/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ga/handoff/route.ts", "target": "file:src/lib/api/openapi.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gallery/lab/route.ts", "target": "function:src/app/api/gallery/lab/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/lab/route.ts", "target": "function:src/app/api/gallery/lab/route.ts:makeDemo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/lab/route.ts", "target": "function:src/app/api/gallery/lab/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gallery/lab/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gallery/proving-grounds/route.ts", "target": "function:src/app/api/gallery/proving-grounds/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/proving-grounds/route.ts", "target": "function:src/app/api/gallery/proving-grounds/route.ts:buildDemoItems", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/proving-grounds/route.ts", "target": "function:src/app/api/gallery/proving-grounds/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gallery/proving-grounds/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gallery/recipe-book/route.ts", "target": "function:src/app/api/gallery/recipe-book/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/recipe-book/route.ts", "target": "function:src/app/api/gallery/recipe-book/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gallery/recipe-book/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gallery/segments/route.ts", "target": "function:src/app/api/gallery/segments/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gallery/segments/route.ts", "target": "function:src/app/api/gallery/segments/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gallery/segments/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gemini/analyze-video/route.ts", "target": "function:src/app/api/gemini/analyze-video/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gemini/analyze-video/route.ts", "target": "function:src/app/api/gemini/analyze-video/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gemini/analyze-video/route.ts", "target": "file:src/lib/services/gemini-video-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/gemini/test/route.ts", "target": "function:src/app/api/gemini/test/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gemini/test/route.ts", "target": "function:src/app/api/gemini/test/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/gemini/test/route.ts", "target": "function:src/app/api/gemini/test/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gemini/test/route.ts", "target": "function:src/app/api/gemini/test/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/gemini/test/route.ts", "target": "file:src/lib/services/gemini-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/generate-cinematic-prompt/route.ts", "target": "function:src/app/api/generate-cinematic-prompt/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate-cinematic-prompt/route.ts", "target": "function:src/app/api/generate-cinematic-prompt/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/generate/optimize/route.ts", "target": "function:src/app/api/generate/optimize/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/optimize/route.ts", "target": "function:src/app/api/generate/optimize/route.ts:parseOptimizedScript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/optimize/route.ts", "target": "function:src/app/api/generate/optimize/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:fetchRealPatternData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:getPlatformGuidance", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:generateScriptWithOpenAI", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:buildCreatorPrefsSection", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:parseScriptFromCompletion", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:calculatePredictedDPS", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:generateOptimizationRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzePatternInterrupt", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeEmotionalResonance", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeSocialCurrency", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeValueDensity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeHookStrength", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeRetention", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:analyzeCTA", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:logAPIUsage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/script/route.ts", "target": "function:src/app/api/generate/script/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:processVideoGeneration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:calculateProgress", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "function:src/app/api/generate/video/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/generate/video/route.ts", "target": "file:src/lib/services/kling-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/growth/summary/route.ts", "target": "function:src/app/api/growth/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/growth/summary/route.ts", "target": "function:src/app/api/growth/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/growth/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/guardrails/config/route.ts", "target": "file:src/lib/recs/guardrails.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/guardrails/metrics/route.ts", "target": "file:src/lib/recs/guardrails.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "function:src/app/api/impact/score/route.ts:generateSyntheticFeatures", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "function:src/app/api/impact/score/route.ts:deriveLevel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "function:src/app/api/impact/score/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "function:src/app/api/impact/score/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "file:src/lib/services/feature-extractor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/impact/score/route.ts", "target": "file:src/lib/services/viral-prediction-model.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/incidents/[id]/ack/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/incidents/[id]/resolve/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/incidents/[id]/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/incidents/route.ts", "target": "function:src/app/api/incidents/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/incidents/route.ts", "target": "function:src/app/api/incidents/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/incidents/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

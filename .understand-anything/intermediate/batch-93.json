@@ -1,0 +1,620 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/studio/predictions/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/studio/predictions/route.ts",
+      "summary": "Studio predictions API GET handler that queries Postgres for recent prediction rows and returns them with normalized JSON shape.",
+      "tags": ["api-handler", "studio", "predictions", "postgres"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/studio/predictions/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/studio/predictions/route.ts",
+      "lineRange": [12, 68],
+      "summary": "Next.js GET handler that fetches recent prediction runs from Postgres and returns them as JSON for the studio dashboard.",
+      "tags": ["api-handler", "get", "studio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/studio/quick-predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/studio/quick-predict/route.ts",
+      "summary": "Studio quick-predict API that scrapes a video URL, runs video intelligence analysis, and emits alerts in a single request.",
+      "tags": ["api-handler", "studio", "prediction", "video-intelligence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/studio/quick-predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/studio/quick-predict/route.ts",
+      "lineRange": [21, 172],
+      "summary": "POST handler that accepts a video URL, scrapes metadata, runs intelligence analysis, raises alerts for low scores, and returns a structured prediction.",
+      "tags": ["api-handler", "post", "video-intelligence", "scraping"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/studio/system-metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/studio/system-metrics/route.ts",
+      "summary": "Studio API exposing aggregated system health and performance metrics for the operations dashboard.",
+      "tags": ["api-handler", "studio", "metrics", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/studio/system-metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/studio/system-metrics/route.ts",
+      "lineRange": [12, 65],
+      "summary": "GET handler returning aggregated system metrics (uptime, latency, throughput) for the studio operations dashboard.",
+      "tags": ["api-handler", "get", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/studio/templates/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/studio/templates/route.ts",
+      "summary": "Studio templates API that lists available content templates via the shared SupabaseService.",
+      "tags": ["api-handler", "studio", "templates", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/studio/templates/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/studio/templates/route.ts",
+      "lineRange": [7, 71],
+      "summary": "GET handler that fetches and returns available content templates from Supabase for the studio UI.",
+      "tags": ["api-handler", "get", "templates"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/studio/video-intelligence/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/studio/video-intelligence/route.ts",
+      "summary": "Studio API surface returning video intelligence analytics aggregated across recent prediction runs.",
+      "tags": ["api-handler", "studio", "video-intelligence", "analytics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/studio/video-intelligence/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/studio/video-intelligence/route.ts",
+      "lineRange": [12, 82],
+      "summary": "GET handler returning aggregated video intelligence analytics for the studio dashboard.",
+      "tags": ["api-handler", "get", "video-intelligence"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/subscribe/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/subscribe/route.ts",
+      "summary": "Email subscribe API that validates input and persists subscribers via the Supabase service role client.",
+      "tags": ["api-handler", "subscription", "email", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/subscribe/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/subscribe/route.ts",
+      "lineRange": [17, 166],
+      "summary": "POST handler that validates an email subscription request, handles duplicates, and writes new subscribers to Supabase.",
+      "tags": ["api-handler", "post", "subscription", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/system-alerts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system-alerts/route.ts",
+      "summary": "CRUD API for system alerts (list, create, update status, delete) backed by the alertService.",
+      "tags": ["api-handler", "alerts", "crud", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/system-alerts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system-alerts/route.ts",
+      "lineRange": [15, 52],
+      "summary": "Returns the list of active system alerts with optional filtering by severity or status.",
+      "tags": ["api-handler", "get", "alerts"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/system-alerts/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/system-alerts/route.ts",
+      "lineRange": [54, 104],
+      "summary": "Creates a new system alert from a validated payload and persists it via alertService.",
+      "tags": ["api-handler", "post", "alerts", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/system-alerts/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/system-alerts/route.ts",
+      "lineRange": [106, 150],
+      "summary": "Updates an existing system alert (e.g., acknowledge or resolve) via alertService.",
+      "tags": ["api-handler", "patch", "alerts", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/system-health/accuracy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system-health/accuracy/route.ts",
+      "summary": "Returns prediction accuracy time-series metrics by querying prediction_runs and labels, used by the control-center health dashboard.",
+      "tags": ["api-handler", "system-health", "accuracy", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/system-health/accuracy/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system-health/accuracy/route.ts",
+      "lineRange": [27, 222],
+      "summary": "GET handler computing prediction accuracy metrics, error distributions, and trend data over a requested time window.",
+      "tags": ["api-handler", "get", "accuracy", "analytics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/system-health/errors/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system-health/errors/route.ts",
+      "summary": "Returns recent system error events and aggregated counts for the control-center error monitoring panel.",
+      "tags": ["api-handler", "system-health", "errors", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/system-health/errors/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system-health/errors/route.ts",
+      "lineRange": [6, 61],
+      "summary": "GET handler that lists recent system error events with severity/source filters for the health dashboard.",
+      "tags": ["api-handler", "get", "errors"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/system-health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system-health/route.ts",
+      "summary": "Aggregate system-health endpoint combining component status checks and page health probes into a single dashboard snapshot.",
+      "tags": ["api-handler", "system-health", "monitoring", "control-center"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/system-health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system-health/route.ts",
+      "lineRange": [8, 56],
+      "summary": "GET handler aggregating component and page health checks into one response for the control-center health view.",
+      "tags": ["api-handler", "get", "system-health"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/system/controls/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/controls/route.ts",
+      "summary": "Small admin API that writes operator-issued system control flags into Redis.",
+      "tags": ["api-handler", "system", "redis", "controls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/health/[moduleKey]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/health/[moduleKey]/route.ts",
+      "summary": "Per-module health endpoint returning the Redis-stored health record for a specific module key.",
+      "tags": ["api-handler", "system", "health", "redis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/system/health/[moduleKey]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system/health/[moduleKey]/route.ts",
+      "lineRange": [16, 29],
+      "summary": "GET handler reading a module-specific health record from Redis by moduleKey path parameter.",
+      "tags": ["api-handler", "get", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/health/route.ts",
+      "summary": "Aggregate system health endpoint reading per-module health entries from Redis and returning them as a single map.",
+      "tags": ["api-handler", "system", "health", "redis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/system/health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system/health/route.ts",
+      "lineRange": [20, 40],
+      "summary": "GET handler returning aggregated per-module health entries pulled from Redis.",
+      "tags": ["api-handler", "get", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/ingest/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/ingest/summary/route.ts",
+      "summary": "Tiny endpoint returning a summary of recently ingested rows for monitoring data pipelines.",
+      "tags": ["api-handler", "ingest", "summary", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/metrics/route.ts",
+      "summary": "System metrics endpoint returning Redis-stored counters and gauges for the operations dashboard.",
+      "tags": ["api-handler", "system", "metrics", "redis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/system/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/system/metrics/route.ts",
+      "lineRange": [13, 25],
+      "summary": "GET handler returning a snapshot of system metrics persisted in Redis.",
+      "tags": ["api-handler", "get", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/mode/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/mode/route.ts",
+      "summary": "Operator API to read and write the global system mode flag stored in Redis (e.g., normal, degraded, maintenance).",
+      "tags": ["api-handler", "system", "mode", "redis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/system/restarts/mock/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/system/restarts/mock/route.ts",
+      "summary": "Mock endpoint that simulates a service restart by writing a marker into Redis for testing operator flows.",
+      "tags": ["api-handler", "system", "mock", "redis"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/system/restarts/mock/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/system/restarts/mock/route.ts",
+      "lineRange": [13, 24],
+      "summary": "POST handler that simulates a service restart by recording a marker in Redis.",
+      "tags": ["api-handler", "post", "mock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/telemetry/first_hour_plugin/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/telemetry/first_hour_plugin/route.ts",
+      "summary": "Telemetry ingest endpoint for first-hour plugin events; lazily creates its Postgres table, gates by feature flag, and validates an HMAC telemetry key.",
+      "tags": ["api-handler", "telemetry", "ingest", "feature-flag", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/telemetry/first_hour_plugin/route.ts:ensureFirstHourTelemetryTable",
+      "type": "function",
+      "name": "ensureFirstHourTelemetryTable",
+      "filePath": "src/app/api/telemetry/first_hour_plugin/route.ts",
+      "lineRange": [24, 48],
+      "summary": "Idempotently creates the first-hour plugin telemetry table and required indexes on first request.",
+      "tags": ["bootstrap", "postgres", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/telemetry/first_hour_plugin/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/telemetry/first_hour_plugin/route.ts",
+      "lineRange": [62, 109],
+      "summary": "POST handler validating the telemetry key and inserting first-hour plugin events behind a feature flag gate.",
+      "tags": ["api-handler", "post", "telemetry", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/telemetry/first_hour/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/telemetry/first_hour/route.ts",
+      "summary": "Telemetry ingest endpoint for first-hour onboarding events; lazily creates its table and authenticates requests via telemetry key.",
+      "tags": ["api-handler", "telemetry", "ingest", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/telemetry/first_hour/route.ts:ensureFirstHourTelemetryTable",
+      "type": "function",
+      "name": "ensureFirstHourTelemetryTable",
+      "filePath": "src/app/api/telemetry/first_hour/route.ts",
+      "lineRange": [23, 43],
+      "summary": "Idempotently creates the first-hour telemetry table and indexes on first request.",
+      "tags": ["bootstrap", "postgres", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/telemetry/first_hour/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/telemetry/first_hour/route.ts",
+      "lineRange": [45, 76],
+      "summary": "POST handler that validates the telemetry key and inserts first-hour onboarding telemetry rows into Postgres.",
+      "tags": ["api-handler", "post", "telemetry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/telemetry/ingest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/telemetry/ingest/route.ts",
+      "summary": "Generic telemetry ingest endpoint that inserts arbitrary event payloads into the Postgres telemetry store.",
+      "tags": ["api-handler", "telemetry", "ingest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/telemetry/ingest/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/telemetry/ingest/route.ts",
+      "lineRange": [12, 36],
+      "summary": "POST handler inserting an arbitrary telemetry event payload into the telemetry Postgres table.",
+      "tags": ["api-handler", "post", "telemetry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/telemetry/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/telemetry/summary/route.ts",
+      "summary": "Telemetry summary endpoint that aggregates recent events into counts by type for dashboards.",
+      "tags": ["api-handler", "telemetry", "summary", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/telemetry/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/telemetry/summary/route.ts",
+      "lineRange": [12, 40],
+      "summary": "GET handler returning aggregated counts of recent telemetry events grouped by type.",
+      "tags": ["api-handler", "get", "telemetry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/telemetry/template-event/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/telemetry/template-event/route.ts",
+      "summary": "Telemetry endpoint capturing template-specific events (view, apply, share) for usage analytics.",
+      "tags": ["api-handler", "telemetry", "templates", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/telemetry/template-event/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/telemetry/template-event/route.ts",
+      "lineRange": [32, 45],
+      "summary": "POST handler that ingests a template usage event (view/apply/share) into the telemetry store.",
+      "tags": ["api-handler", "post", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/template-expert/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/template-expert/route.ts",
+      "summary": "Template-expert API that returns advanced template analysis and expert insights, falling back to mock data when services are unavailable.",
+      "tags": ["api-handler", "templates", "expert-insight", "analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/template-expert/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/template-expert/route.ts",
+      "lineRange": [16, 105],
+      "summary": "GET handler returning advanced template analysis plus expert insights for a requested template, with Firebase-backed lookup and mock fallback.",
+      "tags": ["api-handler", "get", "templates"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/template-expert/route.ts:getMockTemplateData",
+      "type": "function",
+      "name": "getMockTemplateData",
+      "filePath": "src/app/api/template-expert/route.ts",
+      "lineRange": [107, 222],
+      "summary": "Returns a hand-crafted mock template analysis payload used when the real analysis service is unavailable.",
+      "tags": ["mock", "fixture", "fallback"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/template-expert/route.ts:getMockExpertInsights",
+      "type": "function",
+      "name": "getMockExpertInsights",
+      "filePath": "src/app/api/template-expert/route.ts",
+      "lineRange": [224, 265],
+      "summary": "Returns a mock expert-insight payload used when the live expert insight service is unavailable.",
+      "tags": ["mock", "fixture", "fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/template-redirect/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/template-redirect/route.ts",
+      "summary": "Template short-link redirect endpoint that resolves a template id to a destination URL and records a click event in Supabase.",
+      "tags": ["api-handler", "templates", "redirect", "analytics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/template-redirect/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/template-redirect/route.ts",
+      "lineRange": [12, 103],
+      "summary": "GET handler that resolves a template short-link id, records the click, and issues a redirect to the destination URL.",
+      "tags": ["api-handler", "get", "redirect"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/template-redirect/route.ts:trackClick",
+      "type": "function",
+      "name": "trackClick",
+      "filePath": "src/app/api/template-redirect/route.ts",
+      "lineRange": [108, 186],
+      "summary": "Persists a template-redirect click event with referrer/UA metadata into Supabase for downstream analytics.",
+      "tags": ["analytics", "tracking", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/templates/[id]/examples/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/templates/[id]/examples/route.ts",
+      "summary": "Tiny route returning example videos/contents for a given template id via the templates service.",
+      "tags": ["api-handler", "templates", "examples"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/templates/[id]/examples/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/templates/[id]/examples/route.ts",
+      "lineRange": [5, 15],
+      "summary": "GET handler returning example items for a given template id by delegating to the templates service.",
+      "tags": ["api-handler", "get", "templates"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/studio/predictions/route.ts", "target": "function:src/app/api/studio/predictions/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/studio/predictions/route.ts", "target": "function:src/app/api/studio/predictions/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/studio/predictions/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/studio/quick-predict/route.ts", "target": "function:src/app/api/studio/quick-predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/studio/quick-predict/route.ts", "target": "function:src/app/api/studio/quick-predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/studio/quick-predict/route.ts", "target": "file:src/lib/services/alertService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/studio/quick-predict/route.ts", "target": "file:src/lib/services/videoIntelligenceService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/studio/quick-predict/route.ts", "target": "file:src/lib/services/videoScraperService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/studio/system-metrics/route.ts", "target": "function:src/app/api/studio/system-metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/studio/system-metrics/route.ts", "target": "function:src/app/api/studio/system-metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/studio/templates/route.ts", "target": "function:src/app/api/studio/templates/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/studio/templates/route.ts", "target": "function:src/app/api/studio/templates/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/studio/templates/route.ts", "target": "file:src/lib/database/SupabaseService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/studio/video-intelligence/route.ts", "target": "function:src/app/api/studio/video-intelligence/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/studio/video-intelligence/route.ts", "target": "function:src/app/api/studio/video-intelligence/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/subscribe/route.ts", "target": "function:src/app/api/subscribe/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/subscribe/route.ts", "target": "function:src/app/api/subscribe/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "function:src/app/api/system-alerts/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-alerts/route.ts", "target": "file:src/lib/services/alertService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/system-health/accuracy/route.ts", "target": "function:src/app/api/system-health/accuracy/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-health/accuracy/route.ts", "target": "function:src/app/api/system-health/accuracy/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-health/accuracy/route.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/system-health/errors/route.ts", "target": "function:src/app/api/system-health/errors/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-health/errors/route.ts", "target": "function:src/app/api/system-health/errors/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-health/errors/route.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/system-health/route.ts", "target": "function:src/app/api/system-health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system-health/route.ts", "target": "function:src/app/api/system-health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/system-health/route.ts", "target": "file:src/lib/control-center/component-status-checker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/system-health/route.ts", "target": "file:src/lib/control-center/page-health-checker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/system-health/route.ts", "target": "file:src/lib/control-center/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/system/health/[moduleKey]/route.ts", "target": "function:src/app/api/system/health/[moduleKey]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system/health/[moduleKey]/route.ts", "target": "function:src/app/api/system/health/[moduleKey]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/system/health/route.ts", "target": "function:src/app/api/system/health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system/health/route.ts", "target": "function:src/app/api/system/health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/system/ingest/summary/route.ts", "target": "file:src/lib/db/pg.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/system/metrics/route.ts", "target": "function:src/app/api/system/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system/metrics/route.ts", "target": "function:src/app/api/system/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/system/restarts/mock/route.ts", "target": "function:src/app/api/system/restarts/mock/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/system/restarts/mock/route.ts", "target": "function:src/app/api/system/restarts/mock/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "function:src/app/api/telemetry/first_hour_plugin/route.ts:ensureFirstHourTelemetryTable", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "function:src/app/api/telemetry/first_hour_plugin/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "function:src/app/api/telemetry/first_hour_plugin/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "file:src/lib/flags/requireFeature.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/telemetry/first_hour_plugin/route.ts", "target": "file:src/lib/security/telemetry-keys.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/telemetry/first_hour/route.ts", "target": "function:src/app/api/telemetry/first_hour/route.ts:ensureFirstHourTelemetryTable", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/first_hour/route.ts", "target": "function:src/app/api/telemetry/first_hour/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/first_hour/route.ts", "target": "function:src/app/api/telemetry/first_hour/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/telemetry/first_hour/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/telemetry/first_hour/route.ts", "target": "file:src/lib/security/telemetry-keys.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/telemetry/ingest/route.ts", "target": "function:src/app/api/telemetry/ingest/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/ingest/route.ts", "target": "function:src/app/api/telemetry/ingest/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/telemetry/ingest/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/telemetry/summary/route.ts", "target": "function:src/app/api/telemetry/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/summary/route.ts", "target": "function:src/app/api/telemetry/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/telemetry/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/telemetry/template-event/route.ts", "target": "function:src/app/api/telemetry/template-event/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/telemetry/template-event/route.ts", "target": "function:src/app/api/telemetry/template-event/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "function:src/app/api/template-expert/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "function:src/app/api/template-expert/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "function:src/app/api/template-expert/route.ts:getMockTemplateData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "function:src/app/api/template-expert/route.ts:getMockExpertInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "file:src/lib/services/advancedTemplateAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/template-expert/route.ts", "target": "file:src/lib/services/expertInsightService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/template-redirect/route.ts", "target": "function:src/app/api/template-redirect/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/template-redirect/route.ts", "target": "function:src/app/api/template-redirect/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/template-redirect/route.ts", "target": "function:src/app/api/template-redirect/route.ts:trackClick", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/template-redirect/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/templates/[id]/examples/route.ts", "target": "function:src/app/api/templates/[id]/examples/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/templates/[id]/examples/route.ts", "target": "function:src/app/api/templates/[id]/examples/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/templates/[id]/examples/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

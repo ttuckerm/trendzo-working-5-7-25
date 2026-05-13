@@ -1,0 +1,1348 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "dashboard-fix/page.tsx",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 254,
+      "nonEmptyLines": 235,
+      "functions": [
+        {
+          "name": "DashboardViewPage",
+          "startLine": 17,
+          "endLine": 254,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DashboardViewPage",
+          "line": 17,
+          "isDefault": true
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "DashboardViewPage",
+          "callee": "useState",
+          "lineNumber": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "database/add_metadata_column_migration.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 63,
+      "nonEmptyLines": 52,
+      "definitions": [
+        {
+          "name": "idx_prediction_validation_metadata",
+          "kind": "index",
+          "fields": [],
+          "startLine": 18,
+          "endLine": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 1
+      }
+    },
+    {
+      "path": "database/algorithm_optimizations_table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 30,
+      "nonEmptyLines": 25,
+      "definitions": [
+        {
+          "name": "algorithm_optimizations",
+          "kind": "table",
+          "fields": [
+            "id",
+            "optimization_id",
+            "training_data_points",
+            "current_weights",
+            "optimized_weights",
+            "current_accuracy",
+            "optimized_accuracy",
+            "improvement_percentage",
+            "optimization_timestamp",
+            "algorithm_version",
+            "deployment_status"
+          ],
+          "startLine": 4,
+          "endLine": 19
+        },
+        {
+          "name": "idx_algorithm_optimizations_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 22,
+          "endLine": 22
+        },
+        {
+          "name": "idx_algorithm_optimizations_deployed",
+          "kind": "index",
+          "fields": [],
+          "startLine": 26,
+          "endLine": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 3
+      }
+    },
+    {
+      "path": "database/pipeline_ops.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 238,
+      "nonEmptyLines": 214,
+      "definitions": [
+        {
+          "name": "pipeline_modules",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "version",
+            "description",
+            "enabled",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 13
+        },
+        {
+          "name": "pipeline_module_config",
+          "kind": "table",
+          "fields": [
+            "module_id",
+            "env_flags",
+            "scale",
+            "enabled",
+            "updated_at"
+          ],
+          "startLine": 15,
+          "endLine": 21
+        },
+        {
+          "name": "pipeline_dag_nodes",
+          "kind": "table",
+          "fields": [
+            "id",
+            "label",
+            "module_id",
+            "created_at"
+          ],
+          "startLine": 24,
+          "endLine": 29
+        },
+        {
+          "name": "pipeline_dag_edges",
+          "kind": "table",
+          "fields": [
+            "id",
+            "upstream_node_id",
+            "downstream_node_id",
+            "last_health",
+            "last_run_at",
+            "created_at"
+          ],
+          "startLine": 31,
+          "endLine": 38
+        },
+        {
+          "name": "module_runs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "module_id",
+            "status",
+            "started_at",
+            "completed_at",
+            "duration_ms",
+            "error",
+            "meta",
+            "created_at"
+          ],
+          "startLine": 43,
+          "endLine": 53
+        },
+        {
+          "name": "module_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "module_id",
+            "run_id",
+            "ts",
+            "level",
+            "message",
+            "file_url",
+            "meta"
+          ],
+          "startLine": 56,
+          "endLine": 65
+        },
+        {
+          "name": "scheduler_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "job_name",
+            "status",
+            "scheduled_at",
+            "started_at",
+            "completed_at",
+            "miss",
+            "error",
+            "meta",
+            "created_at"
+          ],
+          "startLine": 71,
+          "endLine": 82
+        },
+        {
+          "name": "scraping_jobs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "source",
+            "status",
+            "queued_at",
+            "started_at",
+            "completed_at",
+            "params",
+            "error"
+          ],
+          "startLine": 85,
+          "endLine": 94
+        },
+        {
+          "name": "video_engagement_windows",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "captured_at",
+            "views",
+            "likes",
+            "comments",
+            "shares",
+            "updated_at"
+          ],
+          "startLine": 98,
+          "endLine": 107
+        },
+        {
+          "name": "authors",
+          "kind": "table",
+          "fields": [
+            "id",
+            "username",
+            "platform",
+            "median_views_30d",
+            "updated_at"
+          ],
+          "startLine": 111,
+          "endLine": 117
+        },
+        {
+          "name": "pipeline_alerts",
+          "kind": "table",
+          "fields": [
+            "id",
+            "type",
+            "severity",
+            "title",
+            "description",
+            "created_at",
+            "resolved_at",
+            "meta"
+          ],
+          "startLine": 121,
+          "endLine": 130
+        },
+        {
+          "name": "pipeline_control_actions",
+          "kind": "table",
+          "fields": [
+            "id",
+            "action",
+            "module_id",
+            "user_id",
+            "params",
+            "status",
+            "result",
+            "created_at"
+          ],
+          "startLine": 134,
+          "endLine": 143
+        },
+        {
+          "name": "ops_changelog",
+          "kind": "table",
+          "fields": [
+            "id",
+            "who",
+            "what",
+            "category",
+            "created_at",
+            "meta"
+          ],
+          "startLine": 147,
+          "endLine": 154
+        },
+        {
+          "name": "videos_write_log",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "op",
+            "at"
+          ],
+          "startLine": 157,
+          "endLine": 162
+        },
+        {
+          "name": "validation_labels_24h",
+          "kind": "view",
+          "fields": [],
+          "startLine": 208,
+          "endLine": 208
+        },
+        {
+          "name": "idx_module_runs_module_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 54,
+          "endLine": 54
+        },
+        {
+          "name": "idx_module_logs_module_ts",
+          "kind": "index",
+          "fields": [],
+          "startLine": 66,
+          "endLine": 66
+        },
+        {
+          "name": "idx_scheduler_logs_job_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 83,
+          "endLine": 83
+        },
+        {
+          "name": "idx_scraping_jobs_status_queued",
+          "kind": "index",
+          "fields": [],
+          "startLine": 95,
+          "endLine": 95
+        },
+        {
+          "name": "idx_vew_video_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 108,
+          "endLine": 108
+        },
+        {
+          "name": "idx_pipeline_alerts_open",
+          "kind": "index",
+          "fields": [],
+          "startLine": 131,
+          "endLine": 131
+        },
+        {
+          "name": "idx_control_actions_time",
+          "kind": "index",
+          "fields": [],
+          "startLine": 144,
+          "endLine": 144
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 22
+      }
+    },
+    {
+      "path": "database/prediction_validation_table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 62,
+      "nonEmptyLines": 50,
+      "definitions": [
+        {
+          "name": "prediction_validation",
+          "kind": "table",
+          "fields": [
+            "id",
+            "prediction_id",
+            "video_id",
+            "predicted_viral_score",
+            "predicted_views",
+            "predicted_viral_probability",
+            "actual_viral_score",
+            "actual_views",
+            "actual_viral_probability",
+            "accuracy_percentage",
+            "validation_status",
+            "validation_timestamp",
+            "created_at",
+            "platform",
+            "confidence_level"
+          ],
+          "startLine": 4,
+          "endLine": 29
+        },
+        {
+          "name": "idx_prediction_validation_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 32,
+          "endLine": 32
+        },
+        {
+          "name": "idx_prediction_validation_accuracy",
+          "kind": "index",
+          "fields": [],
+          "startLine": 36,
+          "endLine": 36
+        },
+        {
+          "name": "idx_prediction_validation_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 40,
+          "endLine": 40
+        },
+        {
+          "name": "idx_prediction_validation_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 44,
+          "endLine": 44
+        },
+        {
+          "name": "idx_prediction_validation_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 48,
+          "endLine": 48
+        },
+        {
+          "name": "idx_prediction_validation_metadata",
+          "kind": "index",
+          "fields": [],
+          "startLine": 52,
+          "endLine": 52
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 7
+      }
+    },
+    {
+      "path": "docker/alertmanager/alertmanager.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 474,
+      "nonEmptyLines": 421,
+      "sections": [
+        {
+          "heading": "global",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "templates",
+          "level": 1,
+          "line": 23
+        },
+        {
+          "heading": "route",
+          "level": 1,
+          "line": 27
+        },
+        {
+          "heading": "inhibit_rules",
+          "level": 1,
+          "line": 139
+        },
+        {
+          "heading": "receivers",
+          "level": 1,
+          "line": 168
+        },
+        {
+          "heading": "time_intervals",
+          "level": 1,
+          "line": 455
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "docker/environment/env.template",
+      "language": "template",
+      "fileCategory": "code",
+      "totalLines": 159,
+      "nonEmptyLines": 119,
+      "metrics": {}
+    },
+    {
+      "path": "docker/environment/validate-env.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 239,
+      "nonEmptyLines": 207,
+      "functions": [
+        {
+          "name": "validateEnvVar",
+          "startLine": 68,
+          "endLine": 112,
+          "params": [
+            "name",
+            "config",
+            "value"
+          ]
+        },
+        {
+          "name": "validateAIServices",
+          "startLine": 117,
+          "endLine": 135,
+          "params": []
+        },
+        {
+          "name": "loadEnvFile",
+          "startLine": 140,
+          "endLine": 160,
+          "params": [
+            "filename"
+          ]
+        },
+        {
+          "name": "validateEnvironment",
+          "startLine": 165,
+          "endLine": 235,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validateEnvVar",
+          "callee": "value.trim",
+          "lineNumber": 69
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "errors.push",
+          "lineNumber": 71
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "warnings.push",
+          "lineNumber": 74
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "errors.push",
+          "lineNumber": 83
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "value.includes",
+          "lineNumber": 89
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "value.includes",
+          "lineNumber": 89
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "errors.push",
+          "lineNumber": 90
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "['development', 'production', 'staging', 'test'].includes",
+          "lineNumber": 96
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "errors.push",
+          "lineNumber": 97
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "value.startsWith",
+          "lineNumber": 103
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "errors.push",
+          "lineNumber": 104
+        },
+        {
+          "caller": "validateEnvVar",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "process.env.OPENAI_API_KEY.trim",
+          "lineNumber": 118
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "process.env.ANTHROPIC_API_KEY.trim",
+          "lineNumber": 119
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "errors.push",
+          "lineNumber": 122
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "console.log",
+          "lineNumber": 127
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "validateAIServices",
+          "callee": "console.log",
+          "lineNumber": 131
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "path.join",
+          "lineNumber": 141
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "process.cwd",
+          "lineNumber": 141
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "fs.existsSync",
+          "lineNumber": 142
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "fs.readFileSync",
+          "lineNumber": 144
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "envContent.split",
+          "lineNumber": 145
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "lines.forEach",
+          "lineNumber": 147
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "line.trim",
+          "lineNumber": 148
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 149
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "trimmed.split",
+          "lineNumber": 150
+        },
+        {
+          "caller": "loadEnvFile",
+          "callee": "valueParts.join",
+          "lineNumber": 152
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "loadEnvFile",
+          "lineNumber": 171
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 178
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "Object.entries",
+          "lineNumber": 182
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 183
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "Object.entries",
+          "lineNumber": 185
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "validateEnvVar",
+          "lineNumber": 186
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 191
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 195
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "validateAIServices",
+          "lineNumber": 196
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 200
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 203
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "Object.entries",
+          "lineNumber": 204
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "process.env[name].trim",
+          "lineNumber": 205
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "warnings.push",
+          "lineNumber": 206
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 208
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 211
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 214
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 217
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 219
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "errors.forEach",
+          "lineNumber": 220
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 220
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 224
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "warnings.forEach",
+          "lineNumber": 225
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 225
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 228
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 229
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 230
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 231
+        },
+        {
+          "caller": "validateEnvironment",
+          "callee": "console.log",
+          "lineNumber": 232
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "docker/grafana/dashboards/trendzo-application.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 549,
+      "nonEmptyLines": 549,
+      "sections": [
+        {
+          "heading": "annotations",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "editable",
+          "level": 1,
+          "line": 15
+        },
+        {
+          "heading": "gnetId",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "graphTooltip",
+          "level": 1,
+          "line": 17
+        },
+        {
+          "heading": "id",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "links",
+          "level": 1,
+          "line": 19
+        },
+        {
+          "heading": "panels",
+          "level": 1,
+          "line": 20
+        },
+        {
+          "heading": "refresh",
+          "level": 1,
+          "line": 501
+        },
+        {
+          "heading": "schemaVersion",
+          "level": 1,
+          "line": 502
+        },
+        {
+          "heading": "style",
+          "level": 1,
+          "line": 503
+        },
+        {
+          "heading": "tags",
+          "level": 1,
+          "line": 504
+        },
+        {
+          "heading": "templating",
+          "level": 1,
+          "line": 509
+        },
+        {
+          "heading": "time",
+          "level": 1,
+          "line": 540
+        },
+        {
+          "heading": "timepicker",
+          "level": 1,
+          "line": 544
+        },
+        {
+          "heading": "timezone",
+          "level": 1,
+          "line": 545
+        },
+        {
+          "heading": "title",
+          "level": 1,
+          "line": 80
+        },
+        {
+          "heading": "uid",
+          "level": 1,
+          "line": 547
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 548
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 18
+      }
+    },
+    {
+      "path": "docker/grafana/provisioning/dashboards/dashboards.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 40,
+      "nonEmptyLines": 36,
+      "sections": [
+        {
+          "heading": "apiVersion",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "providers",
+          "level": 1,
+          "line": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "docker/grafana/provisioning/datasources/datasources.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 151,
+      "nonEmptyLines": 132,
+      "sections": [
+        {
+          "heading": "apiVersion",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "datasources",
+          "level": 1,
+          "line": 8
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "docker/loki/loki.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 92,
+      "nonEmptyLines": 79,
+      "sections": [
+        {
+          "heading": "auth_enabled",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "server",
+          "level": 1,
+          "line": 8
+        },
+        {
+          "heading": "common",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "query_range",
+          "level": 1,
+          "line": 25
+        },
+        {
+          "heading": "schema_config",
+          "level": 1,
+          "line": 32
+        },
+        {
+          "heading": "ruler",
+          "level": 1,
+          "line": 42
+        },
+        {
+          "heading": "limits_config",
+          "level": 1,
+          "line": 48
+        },
+        {
+          "heading": "table_manager",
+          "level": 1,
+          "line": 73
+        },
+        {
+          "heading": "compactor",
+          "level": 1,
+          "line": 80
+        },
+        {
+          "heading": "analytics",
+          "level": 1,
+          "line": 91
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 10
+      }
+    },
+    {
+      "path": "docker/nginx/conf.d/trendzo.conf",
+      "language": "conf",
+      "fileCategory": "code",
+      "totalLines": 218,
+      "nonEmptyLines": 178,
+      "metrics": {}
+    },
+    {
+      "path": "docker/nginx/nginx.conf",
+      "language": "conf",
+      "fileCategory": "code",
+      "totalLines": 162,
+      "nonEmptyLines": 133,
+      "metrics": {}
+    },
+    {
+      "path": "docker/prometheus/prometheus.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 181,
+      "nonEmptyLines": 161,
+      "sections": [
+        {
+          "heading": "global",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "rule_files",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "scrape_configs",
+          "level": 1,
+          "line": 25
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "docker/promtail/promtail.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 225,
+      "nonEmptyLines": 193,
+      "sections": [
+        {
+          "heading": "server",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "positions",
+          "level": 1,
+          "line": 10
+        },
+        {
+          "heading": "clients",
+          "level": 1,
+          "line": 13
+        },
+        {
+          "heading": "scrape_configs",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "target_config",
+          "level": 1,
+          "line": 224
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "docker/security/docker-security.conf",
+      "language": "conf",
+      "fileCategory": "code",
+      "totalLines": 92,
+      "nonEmptyLines": 84,
+      "metrics": {}
+    },
+    {
+      "path": "docker/ssl/generate-certs.ps1",
+      "language": "powershell",
+      "fileCategory": "script",
+      "totalLines": 117,
+      "nonEmptyLines": 96,
+      "metrics": {}
+    },
+    {
+      "path": "docker/ssl/generate-certs.sh",
+      "language": "shell",
+      "fileCategory": "script",
+      "totalLines": 82,
+      "nonEmptyLines": 66,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "docker/monitoring-stack.yml",
+      "language": "yaml",
+      "fileCategory": "config",
+      "totalLines": 407,
+      "nonEmptyLines": 390,
+      "sections": [
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "services",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "networks",
+          "level": 1,
+          "line": 385
+        },
+        {
+          "heading": "volumes",
+          "level": 1,
+          "line": 395
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "docs/assurance/viral-recipe-book_preflight/workflows/SF_AB_Test.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "SF — A/B Test",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Analyzer.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "SF — Analyzer",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Dashboard.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 9,
+      "nonEmptyLines": 8,
+      "sections": [
+        {
+          "heading": "SF — Dashboard",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Inception.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "sections": [
+        {
+          "heading": "SF — Inception",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "docs/assurance/viral-recipe-book_preflight/workflows/SF_Optimize.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "sections": [
+        {
+          "heading": "SF — Optimize",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    }
+  ]
+}

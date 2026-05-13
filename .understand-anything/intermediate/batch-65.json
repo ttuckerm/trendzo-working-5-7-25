@@ -1,0 +1,671 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/extract-genomes/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/extract-genomes/route.ts",
+      "summary": "Admin API route triggering viral-genome extraction for top videos via POST and reporting extraction progress via GET, persisting through Supabase service-role client.",
+      "tags": ["api-handler", "admin", "genome-extraction", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/extract-genomes/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/extract-genomes/route.ts",
+      "lineRange": [23, 86],
+      "summary": "POST handler that fetches videos lacking genomes (filtered by limit, minDps, niche), extracts and saves viral genomes per video, and returns aggregated results.",
+      "tags": ["api-handler", "post", "genome-extraction", "batch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/extract-genomes/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/extract-genomes/route.ts",
+      "lineRange": [88, 133],
+      "summary": "GET handler returning genome-extraction progress statistics across the videos table for admin monitoring.",
+      "tags": ["api-handler", "get", "progress", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/featurestore/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/featurestore/health/route.ts",
+      "summary": "Admin endpoint computing feature_store health stats (missing values, outliers) over the last 24h against FEATURE_SCHEMA_V1, with optional CSV export to object storage.",
+      "tags": ["api-handler", "feature-store", "monitoring", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/featurestore/health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/featurestore/health/route.ts",
+      "lineRange": [9, 38],
+      "summary": "Admin-only GET handler that scans recent feature_store rows, tallies missing/outlier counts per schema field, and optionally writes a CSV proof file.",
+      "tags": ["api-handler", "get", "feature-quality", "csv-export"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/fetch-metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/fetch-metrics/route.ts",
+      "summary": "Admin Lab endpoint for manually entering engagement metrics against a prediction (Phase 0 manual flow), storing engagement-rate snapshots for later actuals display.",
+      "tags": ["api-handler", "metrics", "admin", "prediction-actuals"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/fetch-metrics/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/fetch-metrics/route.ts",
+      "lineRange": [37, 165],
+      "summary": "POST handler validating engagement-metric payloads (views/likes/comments/shares/bookmarks) and inserting an engagement-rate snapshot tied to a prediction id.",
+      "tags": ["api-handler", "post", "metrics-ingest", "validation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/fetch-metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/fetch-metrics/route.ts",
+      "lineRange": [170, 192],
+      "summary": "GET handler retrieving engagement-metric snapshots for a given prediction id, joined with prediction-actuals context.",
+      "tags": ["api-handler", "get", "metrics-read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/fetch-metrics/route.ts:calculateEngagementRate",
+      "type": "function",
+      "name": "calculateEngagementRate",
+      "filePath": "src/app/api/admin/fetch-metrics/route.ts",
+      "lineRange": [26, 35],
+      "summary": "Helper that computes engagement rate as (likes + comments + shares + bookmarks) / views, replacing the retired legacy DPS formula.",
+      "tags": ["utility", "engagement-rate", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/bootstrap_beta1/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flags/bootstrap_beta1/route.ts",
+      "summary": "One-shot bootstrap endpoint that seeds the beta1 cohort: ensures flag/assignment/billing/api-key tables exist, upserts default flags for a demo user, and issues API + telemetry keys.",
+      "tags": ["api-handler", "bootstrap", "feature-flags", "admin"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/flags/bootstrap_beta1/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/flags/bootstrap_beta1/route.ts",
+      "lineRange": [6, 50],
+      "summary": "Provisions feature_flags, feature_assignments, billing rows, and freshly minted api/telemetry keys for the beta1 demo cohort.",
+      "tags": ["api-handler", "post", "bootstrap", "seeding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/get/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flags/get/route.ts",
+      "summary": "Thin wrapper exposing the moat flag-resolution helper as a GET endpoint for evaluating a single flag for a request context.",
+      "tags": ["api-handler", "feature-flags", "moat", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/list/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flags/list/route.ts",
+      "summary": "GET endpoint listing all known feature flags via the shared flags library.",
+      "tags": ["api-handler", "feature-flags", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/set/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flags/set/route.ts",
+      "summary": "POST endpoint persisting a flag override via the moat flags helper, used by admin tooling to enable/disable features.",
+      "tags": ["api-handler", "feature-flags", "moat", "write"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flags/route.ts",
+      "summary": "Chairman-gated flags CRUD endpoint: GET lists rows from the features table; POST upserts a flag with audit logging into flag_audit.",
+      "tags": ["api-handler", "feature-flags", "admin", "audit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flags/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/flags/route.ts",
+      "lineRange": [8, 15],
+      "summary": "Chairman-gated lister returning key/description/default_state for every row of the features table.",
+      "tags": ["api-handler", "get", "feature-flags", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flags/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/flags/route.ts",
+      "lineRange": [17, 29],
+      "summary": "Chairman-gated upsert of a feature row with before/after audit insert into flag_audit.",
+      "tags": ["api-handler", "post", "feature-flags", "audit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flags/types.ts",
+      "type": "file",
+      "name": "types.ts",
+      "filePath": "src/app/api/admin/flags/types.ts",
+      "summary": "Type-only module exporting the AdminFlagRow shape (key, description, default_state) shared by admin-flags UI and API.",
+      "tags": ["type-definition", "feature-flags", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flipboard/apply/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flipboard/apply/route.ts",
+      "summary": "HMAC-confirmed endpoint that flips a system switch (ingestion/validation/telemetry/billing/alarms) between live and mock, re-checking prereqs and writing system_switches + system_audit rows.",
+      "tags": ["api-handler", "flipboard", "system-switch", "admin"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/flipboard/apply/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/flipboard/apply/route.ts",
+      "lineRange": [16, 48],
+      "summary": "Verifies the signed confirm token, re-runs prereq checks, applies live/mock side-effects, persists switch state, and audits the change.",
+      "tags": ["api-handler", "post", "flipboard", "audit"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/flipboard/flags/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flipboard/flags/route.ts",
+      "summary": "Read/write endpoint for global demo-mode flags driving the Flipboard control panel.",
+      "tags": ["api-handler", "flipboard", "demo-mode", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flipboard/flags/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/flipboard/flags/route.ts",
+      "lineRange": [10, 34],
+      "summary": "Persists updates to the demo-mode flag set used by the Flipboard control panel.",
+      "tags": ["api-handler", "post", "flipboard", "demo-mode"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flipboard/migrate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flipboard/migrate/route.ts",
+      "summary": "Idempotent migration endpoint that creates/upgrades flipboard backing tables (system_switches, system_audit, etc.) via exec_sql RPC.",
+      "tags": ["api-handler", "flipboard", "migration", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flipboard/migrate/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/flipboard/migrate/route.ts",
+      "lineRange": [6, 39],
+      "summary": "Runs CREATE TABLE IF NOT EXISTS statements through exec_sql to provision Flipboard schema on demand.",
+      "tags": ["api-handler", "get", "migration", "schema"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flipboard/preview/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flipboard/preview/route.ts",
+      "summary": "Generates a preview plan for a switch+target combo, runs prereq checks, and returns an HMAC-signed confirm token consumed by the apply endpoint.",
+      "tags": ["api-handler", "flipboard", "preview", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flipboard/preview/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/flipboard/preview/route.ts",
+      "lineRange": [12, 23],
+      "summary": "Builds the per-switch action plan, surfaces prereq blockers, and returns an HMAC confirm token timestamped for short-lived use.",
+      "tags": ["api-handler", "post", "flipboard", "hmac"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/flipboard/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/flipboard/status/route.ts",
+      "summary": "Returns current state of every system switch alongside per-switch prereq status for the Flipboard UI dashboard.",
+      "tags": ["api-handler", "flipboard", "status", "admin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/flipboard/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/flipboard/status/route.ts",
+      "lineRange": [7, 23],
+      "summary": "Fetches all system_switches rows and joins them with prereq results into a single Flipboard status payload.",
+      "tags": ["api-handler", "get", "flipboard", "status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/framework-evolution/patterns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "summary": "Admin API managing emerging viral patterns: lists/filters patterns (GET) and supports validate/retire/force-discovery actions (POST) to evolve the framework library.",
+      "tags": ["api-handler", "framework-evolution", "viral-patterns", "admin"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/patterns/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "lineRange": [20, 170],
+      "summary": "Lists emerging_patterns rows with status/category filters, configurable sorting, and per-category breakdown plus cross-platform/recent-activity flags.",
+      "tags": ["api-handler", "get", "viral-patterns", "stats"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/patterns/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "lineRange": [172, 206],
+      "summary": "Dispatches pattern-management actions (validatePattern, retirePattern, forceDiscovery) and returns the action result.",
+      "tags": ["api-handler", "post", "viral-patterns", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/patterns/route.ts:validatePattern",
+      "type": "function",
+      "name": "validatePattern",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "lineRange": [233, 259],
+      "summary": "Marks an emerging pattern as validated, updating confidence and timestamps on the emerging_patterns row.",
+      "tags": ["utility", "viral-patterns", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/patterns/route.ts:retirePattern",
+      "type": "function",
+      "name": "retirePattern",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "lineRange": [261, 289],
+      "summary": "Marks an emerging pattern as retired with a reason field, removing it from active framework rotation.",
+      "tags": ["utility", "viral-patterns", "retirement"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/patterns/route.ts:forceDiscovery",
+      "type": "function",
+      "name": "forceDiscovery",
+      "filePath": "src/app/api/admin/framework-evolution/patterns/route.ts",
+      "lineRange": [291, 316],
+      "summary": "Forces an immediate framework-evolution discovery pass, bypassing the scheduled cadence.",
+      "tags": ["utility", "viral-patterns", "discovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/framework-evolution/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/framework-evolution/run/route.ts",
+      "summary": "Admin endpoint executing a full FrameworkEvolutionSystem cycle (POST) and reporting historic evolution-cycle stats with ETA to framework-count target (GET).",
+      "tags": ["api-handler", "framework-evolution", "admin", "cycle"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/framework-evolution/run/route.ts",
+      "lineRange": [21, 122],
+      "summary": "Instantiates FrameworkEvolutionSystem with optional config, runs a complete evolution cycle, and persists cycle metrics into framework_evolution_cycles.",
+      "tags": ["api-handler", "post", "evolution-cycle", "persistence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/run/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/framework-evolution/run/route.ts",
+      "lineRange": [124, 227],
+      "summary": "Aggregates historic framework_evolution_cycles into trend statistics, projecting an ETA toward the configured framework-count goal.",
+      "tags": ["api-handler", "get", "evolution-stats", "projection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/framework-evolution/run/route.ts:estimateTimeToTarget",
+      "type": "function",
+      "name": "estimateTimeToTarget",
+      "filePath": "src/app/api/admin/framework-evolution/run/route.ts",
+      "lineRange": [230, 246],
+      "summary": "Estimates time (cycles + wall-clock) needed to reach a target framework count given current discovery velocity.",
+      "tags": ["utility", "projection", "evolution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/holdout/designate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/holdout/designate/route.ts",
+      "summary": "One-time chairman-only endpoint that designates the 200-video stratified holdout set on prediction_runs, refusing to run if any holdout already exists.",
+      "tags": ["api-handler", "holdout", "training", "admin"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/holdout/designate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/holdout/designate/route.ts",
+      "lineRange": [22, 58],
+      "summary": "Authenticates a chairman/admin, refuses if any prediction_runs row already has is_holdout=true, then runs designateHoldout and returns the stratification report.",
+      "tags": ["api-handler", "post", "holdout", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/inception-studio/campaigns/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/inception-studio/campaigns/route.ts",
+      "summary": "Inception Studio campaigns CRUD endpoint: GET lists marketing_campaigns, POST creates a campaign, PATCH updates campaign status/fields.",
+      "tags": ["api-handler", "inception-studio", "campaigns", "crud"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/campaigns/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/inception-studio/campaigns/route.ts",
+      "lineRange": [7, 35],
+      "summary": "Lists the 50 most recent marketing_campaigns rows ordered by creation time.",
+      "tags": ["api-handler", "get", "campaigns", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/campaigns/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/inception-studio/campaigns/route.ts",
+      "lineRange": [37, 86],
+      "summary": "Inserts a new marketing_campaign row from request payload and returns the created record.",
+      "tags": ["api-handler", "post", "campaigns", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/campaigns/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/inception-studio/campaigns/route.ts",
+      "lineRange": [89, 141],
+      "summary": "Updates one or more fields of an existing marketing_campaign, returning the patched row.",
+      "tags": ["api-handler", "patch", "campaigns", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/inception-studio/generate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/inception-studio/generate/route.ts",
+      "summary": "Generates viral marketing content via OpenAI (action/niche/platform-driven prompts) with a templated fallback when the API is unavailable.",
+      "tags": ["api-handler", "inception-studio", "openai", "content-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/generate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/inception-studio/generate/route.ts",
+      "lineRange": [16, 41],
+      "summary": "Validates the generate request and routes it through generateViralContent, returning the generated copy.",
+      "tags": ["api-handler", "post", "content-generation", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/generate/route.ts:generateViralContent",
+      "type": "function",
+      "name": "generateViralContent",
+      "filePath": "src/app/api/admin/inception-studio/generate/route.ts",
+      "lineRange": [43, 161],
+      "summary": "Builds action/niche/platform-aware OpenAI prompts (copy_viral, transformation, etc.) and returns the model's viral script output.",
+      "tags": ["service", "openai", "prompt-engineering", "viral-content"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/inception-studio/generate/route.ts:generateFallbackContent",
+      "type": "function",
+      "name": "generateFallbackContent",
+      "filePath": "src/app/api/admin/inception-studio/generate/route.ts",
+      "lineRange": [163, 218],
+      "summary": "Returns a deterministic templated script keyed by action/niche/platform when OpenAI is unavailable, keeping the endpoint usable offline.",
+      "tags": ["utility", "fallback", "viral-content", "template"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_accuracy_public/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_accuracy_public/route.ts",
+      "summary": "Integration dry-run endpoint emitting a public-facing accuracy snapshot artifact into object storage for downstream verification.",
+      "tags": ["api-handler", "dryrun", "integration", "accuracy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/dryrun_accuracy_public/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/dryrun_accuracy_public/route.ts",
+      "lineRange": [9, 24],
+      "summary": "Writes a public accuracy-summary artifact via putText and returns its URL plus computed counters.",
+      "tags": ["api-handler", "get", "dryrun", "artifact"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_alarms/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_alarms/route.ts",
+      "summary": "Stub dry-run endpoint asserting the alarms subsystem is reachable, returning ok:true for integration smoke checks.",
+      "tags": ["api-handler", "dryrun", "alarms", "smoke-test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_artifacts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_artifacts/route.ts",
+      "summary": "Integration dry-run endpoint that writes a placeholder artifact into object storage and returns its URL.",
+      "tags": ["api-handler", "dryrun", "artifacts", "object-store"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/dryrun_artifacts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/dryrun_artifacts/route.ts",
+      "lineRange": [9, 17],
+      "summary": "Persists a synthetic artifact through putText and returns the resulting object-store URL.",
+      "tags": ["api-handler", "get", "dryrun", "artifact"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_audit/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_audit/route.ts",
+      "summary": "Integration dry-run endpoint that emits an audit event through audit_utils and confirms persistence into system_audit.",
+      "tags": ["api-handler", "dryrun", "audit", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/dryrun_audit/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/dryrun_audit/route.ts",
+      "lineRange": [7, 32],
+      "summary": "Writes a synthetic audit event via audit_utils and reads it back from system_audit to prove round-trip persistence.",
+      "tags": ["api-handler", "get", "dryrun", "audit"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_bandit/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_bandit/route.ts",
+      "summary": "Stub dry-run endpoint validating the bandit subsystem returns a placeholder pull result for integration verification.",
+      "tags": ["api-handler", "dryrun", "bandit", "smoke-test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/integration/dryrun_baselines/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/integration/dryrun_baselines/route.ts",
+      "summary": "Integration dry-run endpoint that ensures the baselines_state table exists and upserts the current ISO-week baseline version.",
+      "tags": ["api-handler", "dryrun", "baselines", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/integration/dryrun_baselines/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/integration/dryrun_baselines/route.ts",
+      "lineRange": [12, 22],
+      "summary": "Creates baselines_state if missing and upserts a row carrying the current ISO-week version and run timestamp.",
+      "tags": ["api-handler", "get", "baselines", "schema-bootstrap"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/extract-genomes/route.ts", "target": "function:src/app/api/admin/extract-genomes/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/extract-genomes/route.ts", "target": "function:src/app/api/admin/extract-genomes/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/extract-genomes/route.ts", "target": "function:src/app/api/admin/extract-genomes/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/extract-genomes/route.ts", "target": "function:src/app/api/admin/extract-genomes/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "function:src/app/api/admin/featurestore/health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "function:src/app/api/admin/featurestore/health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "file:src/lib/features/schema.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/featurestore/health/route.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/fetch-metrics/route.ts", "target": "function:src/app/api/admin/fetch-metrics/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/fetch-metrics/route.ts", "target": "function:src/app/api/admin/fetch-metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/fetch-metrics/route.ts", "target": "function:src/app/api/admin/fetch-metrics/route.ts:calculateEngagementRate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/fetch-metrics/route.ts", "target": "function:src/app/api/admin/fetch-metrics/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/fetch-metrics/route.ts", "target": "function:src/app/api/admin/fetch-metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/flags/bootstrap_beta1/route.ts", "target": "function:src/app/api/admin/flags/bootstrap_beta1/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flags/bootstrap_beta1/route.ts", "target": "function:src/app/api/admin/flags/bootstrap_beta1/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flags/bootstrap_beta1/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flags/get/route.ts", "target": "file:src/lib/moat/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flags/list/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flags/set/route.ts", "target": "file:src/lib/moat/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "function:src/app/api/admin/flags/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "function:src/app/api/admin/flags/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "function:src/app/api/admin/flags/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "function:src/app/api/admin/flags/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/flags/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flipboard/apply/route.ts", "target": "function:src/app/api/admin/flipboard/apply/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flipboard/apply/route.ts", "target": "function:src/app/api/admin/flipboard/apply/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flipboard/apply/route.ts", "target": "file:src/lib/admin/flipboard_apply.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/flipboard/apply/route.ts", "target": "file:src/lib/admin/flipboard_prereq.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/flipboard/apply/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flipboard/flags/route.ts", "target": "function:src/app/api/admin/flipboard/flags/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flipboard/flags/route.ts", "target": "function:src/app/api/admin/flipboard/flags/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flipboard/flags/route.ts", "target": "file:src/lib/runtime/demo_mode.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flipboard/migrate/route.ts", "target": "function:src/app/api/admin/flipboard/migrate/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flipboard/migrate/route.ts", "target": "function:src/app/api/admin/flipboard/migrate/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flipboard/migrate/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flipboard/preview/route.ts", "target": "function:src/app/api/admin/flipboard/preview/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flipboard/preview/route.ts", "target": "function:src/app/api/admin/flipboard/preview/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flipboard/preview/route.ts", "target": "file:src/lib/admin/flipboard_prereq.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/flipboard/status/route.ts", "target": "function:src/app/api/admin/flipboard/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/flipboard/status/route.ts", "target": "function:src/app/api/admin/flipboard/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/flipboard/status/route.ts", "target": "file:src/lib/admin/flipboard_prereq.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/flipboard/status/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:validatePattern", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:retirePattern", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:forceDiscovery", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "function:src/app/api/admin/framework-evolution/patterns/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/framework-evolution/patterns/route.ts", "target": "file:src/lib/services/viral-prediction/framework-evolution-system.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "function:src/app/api/admin/framework-evolution/run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "function:src/app/api/admin/framework-evolution/run/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "function:src/app/api/admin/framework-evolution/run/route.ts:estimateTimeToTarget", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "function:src/app/api/admin/framework-evolution/run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "function:src/app/api/admin/framework-evolution/run/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/framework-evolution/run/route.ts", "target": "file:src/lib/services/viral-prediction/framework-evolution-system.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/holdout/designate/route.ts", "target": "function:src/app/api/admin/holdout/designate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/holdout/designate/route.ts", "target": "function:src/app/api/admin/holdout/designate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/holdout/designate/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/holdout/designate/route.ts", "target": "file:src/lib/training/designate-holdout.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "function:src/app/api/admin/inception-studio/campaigns/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/inception-studio/campaigns/route.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/inception-studio/generate/route.ts", "target": "function:src/app/api/admin/inception-studio/generate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/generate/route.ts", "target": "function:src/app/api/admin/inception-studio/generate/route.ts:generateViralContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/generate/route.ts", "target": "function:src/app/api/admin/inception-studio/generate/route.ts:generateFallbackContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/inception-studio/generate/route.ts", "target": "function:src/app/api/admin/inception-studio/generate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/integration/dryrun_accuracy_public/route.ts", "target": "function:src/app/api/admin/integration/dryrun_accuracy_public/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/integration/dryrun_accuracy_public/route.ts", "target": "function:src/app/api/admin/integration/dryrun_accuracy_public/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/integration/dryrun_accuracy_public/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/integration/dryrun_accuracy_public/route.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/integration/dryrun_artifacts/route.ts", "target": "function:src/app/api/admin/integration/dryrun_artifacts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/integration/dryrun_artifacts/route.ts", "target": "function:src/app/api/admin/integration/dryrun_artifacts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/integration/dryrun_artifacts/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/integration/dryrun_artifacts/route.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/integration/dryrun_audit/route.ts", "target": "function:src/app/api/admin/integration/dryrun_audit/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/integration/dryrun_audit/route.ts", "target": "function:src/app/api/admin/integration/dryrun_audit/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/integration/dryrun_audit/route.ts", "target": "file:src/lib/audit/audit_utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/integration/dryrun_audit/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/integration/dryrun_baselines/route.ts", "target": "function:src/app/api/admin/integration/dryrun_baselines/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/integration/dryrun_baselines/route.ts", "target": "function:src/app/api/admin/integration/dryrun_baselines/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/integration/dryrun_baselines/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

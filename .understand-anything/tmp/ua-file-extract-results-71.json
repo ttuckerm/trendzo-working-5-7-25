@@ -1,0 +1,4046 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/app/api/admin/prediction-validation/accuracy/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 38,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 46,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('accuracy_metrics')\r\n      .select('*')\r\n      .eq('time_period', period)\r\n      .order('start_date', { ascending: false })\r\n      .limit",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('accuracy_metrics')\r\n      .select('*')\r\n      .eq('time_period', period)\r\n      .order",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('accuracy_metrics')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('accuracy_metrics')\r\n      .select",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "query.eq",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 34
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 40
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction-validation/metrics/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 106,
+      "nonEmptyLines": 93,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 12,
+          "endLine": 106,
+          "params": [
+            "_req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select(\r\n        [\r\n          'id',\r\n          'prediction_id',\r\n          'video_id',\r\n          'predicted_viral_score',\r\n          'actual_viral_score',\r\n          'accuracy_percentage',\r\n          'validation_status',\r\n          'validation_timestamp',\r\n          'created_at',\r\n          'platform'\r\n        ].join(',')\r\n      )\r\n      .order('validation_timestamp', { ascending: false })\r\n      .limit",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select(\r\n        [\r\n          'id',\r\n          'prediction_id',\r\n          'video_id',\r\n          'predicted_viral_score',\r\n          'actual_viral_score',\r\n          'accuracy_percentage',\r\n          'validation_status',\r\n          'validation_timestamp',\r\n          'created_at',\r\n          'platform'\r\n        ].join(',')\r\n      )\r\n      .order",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "[\r\n          'id',\r\n          'prediction_id',\r\n          'video_id',\r\n          'predicted_viral_score',\r\n          'actual_viral_score',\r\n          'accuracy_percentage',\r\n          'validation_status',\r\n          'validation_timestamp',\r\n          'created_at',\r\n          'platform'\r\n        ].join",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GET",
+          "callee": "Array.isArray",
+          "lineNumber": 39
+        },
+        {
+          "caller": "GET",
+          "callee": "all.filter",
+          "lineNumber": 40
+        },
+        {
+          "caller": "GET",
+          "callee": "all.filter",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "validated\r\n      .map(r => Number((r as any).accuracy_percentage))\r\n      .filter",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GET",
+          "callee": "validated\r\n      .map",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "Number.isFinite",
+          "lineNumber": 46
+        },
+        {
+          "caller": "GET",
+          "callee": "accuracyValues.reduce",
+          "lineNumber": 49
+        },
+        {
+          "caller": "GET",
+          "callee": "validated.slice",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GET",
+          "callee": "validated.slice",
+          "lineNumber": 54
+        },
+        {
+          "caller": "avg",
+          "callee": "arr\r\n            .map(r => Number((r as any).accuracy_percentage))\r\n            .filter(v => Number.isFinite(v))\r\n            .reduce",
+          "lineNumber": 57
+        },
+        {
+          "caller": "avg",
+          "callee": "arr\r\n            .map(r => Number((r as any).accuracy_percentage))\r\n            .filter",
+          "lineNumber": 57
+        },
+        {
+          "caller": "avg",
+          "callee": "arr\r\n            .map",
+          "lineNumber": 57
+        },
+        {
+          "caller": "avg",
+          "callee": "Number",
+          "lineNumber": 58
+        },
+        {
+          "caller": "avg",
+          "callee": "Number.isFinite",
+          "lineNumber": 59
+        },
+        {
+          "caller": "GET",
+          "callee": "Math.round",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "avg",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "avg",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "validated.slice(0, 25).map",
+          "lineNumber": 69
+        },
+        {
+          "caller": "GET",
+          "callee": "validated.slice",
+          "lineNumber": 69
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 72
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 73
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 74
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 75
+        },
+        {
+          "caller": "GET",
+          "callee": "Math.round",
+          "lineNumber": 81
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date(lastValidationTs).toISOString",
+          "lineNumber": 86
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 90
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 93
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction-validation/start-test/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 204,
+      "nonEmptyLines": 178,
+      "functions": [
+        {
+          "name": "runPredictionEngine",
+          "startLine": 72,
+          "endLine": 105,
+          "params": [
+            "video",
+            "engineName"
+          ]
+        },
+        {
+          "name": "getDb",
+          "startLine": 107,
+          "endLine": 109,
+          "params": []
+        },
+        {
+          "name": "POST",
+          "startLine": 111,
+          "endLine": 202,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 111,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.random",
+          "lineNumber": 86
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.max",
+          "lineNumber": 87
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.min",
+          "lineNumber": 87
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.max",
+          "lineNumber": 91
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.min",
+          "lineNumber": 91
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.random",
+          "lineNumber": 92
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.max",
+          "lineNumber": 96
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.min",
+          "lineNumber": 96
+        },
+        {
+          "caller": "runPredictionEngine",
+          "callee": "Math.random",
+          "lineNumber": 97
+        },
+        {
+          "caller": "getDb",
+          "callee": "createClient",
+          "lineNumber": 108
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 113
+        },
+        {
+          "caller": "POST",
+          "callee": "getDb",
+          "lineNumber": 114
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.min",
+          "lineNumber": 120
+        },
+        {
+          "caller": "POST",
+          "callee": "runPredictionEngine",
+          "lineNumber": 124
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 128
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 132
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 134
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.abs",
+          "lineNumber": 135
+        },
+        {
+          "caller": "POST",
+          "callee": "results.push",
+          "lineNumber": 141
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from('prediction_validations')\r\n        .insert",
+          "lineNumber": 144
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 144
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 149
+        },
+        {
+          "caller": "POST",
+          "callee": "results.filter",
+          "lineNumber": 155
+        },
+        {
+          "caller": "POST",
+          "callee": "engineResults.filter",
+          "lineNumber": 159
+        },
+        {
+          "caller": "POST",
+          "callee": "engineResults.reduce",
+          "lineNumber": 161
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 166
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 166
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 167
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 167
+        },
+        {
+          "caller": "POST",
+          "callee": "engineResults.reduce",
+          "lineNumber": 172
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from('accuracy_metrics')\r\n        .insert",
+          "lineNumber": 178
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 178
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 183
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 187
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 196
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 197
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction-validation/trigger/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 103,
+      "nonEmptyLines": 86,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 14,
+          "endLine": 93,
+          "params": [
+            "_req"
+          ]
+        },
+        {
+          "name": "computeAccuracy",
+          "startLine": 95,
+          "endLine": 102,
+          "params": [
+            "predicted",
+            "actual"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select('*')\r\n      .eq('validation_status', 'pending')\r\n      .order('created_at', { ascending: true })\r\n      .limit",
+          "lineNumber": 17
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select('*')\r\n      .eq('validation_status', 'pending')\r\n      .order",
+          "lineNumber": 17
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 17
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_validation')\r\n      .select",
+          "lineNumber": 17
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 17
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n            .from('videos')\r\n            .select('viral_score, view_count')\r\n            .eq('id', (row as any).video_id)\r\n            .single",
+          "lineNumber": 38
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n            .from('videos')\r\n            .select('viral_score, view_count')\r\n            .eq",
+          "lineNumber": 38
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n            .from('videos')\r\n            .select",
+          "lineNumber": 38
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n            .from",
+          "lineNumber": 38
+        },
+        {
+          "caller": "POST",
+          "callee": "Number",
+          "lineNumber": 44
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from('video_engagement_windows' as any)\r\n              .select('captured_at,views')\r\n              .eq('video_id', (row as any).video_id)\r\n              .order",
+          "lineNumber": 51
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from('video_engagement_windows' as any)\r\n              .select('captured_at,views')\r\n              .eq",
+          "lineNumber": 51
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from('video_engagement_windows' as any)\r\n              .select",
+          "lineNumber": 51
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from",
+          "lineNumber": 51
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 56
+        },
+        {
+          "caller": "POST",
+          "callee": "chooseSnapshotAtHorizon",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "Number",
+          "lineNumber": 58
+        },
+        {
+          "caller": "POST",
+          "callee": "Number",
+          "lineNumber": 65
+        },
+        {
+          "caller": "POST",
+          "callee": "computeAccuracy",
+          "lineNumber": 66
+        },
+        {
+          "caller": "POST",
+          "callee": "Number",
+          "lineNumber": 66
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_validation')\r\n          .update({\r\n            actual_viral_score: actualScore,\r\n            accuracy_percentage: accuracy,\r\n            validation_status: 'validated',\r\n            validation_timestamp: new Date().toISOString()\r\n          })\r\n          .eq",
+          "lineNumber": 68
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_validation')\r\n          .update",
+          "lineNumber": 68
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 74
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.round",
+          "lineNumber": 87
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 89
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 91
+        },
+        {
+          "caller": "computeAccuracy",
+          "callee": "Math.abs",
+          "lineNumber": 98
+        },
+        {
+          "caller": "computeAccuracy",
+          "callee": "Math.max",
+          "lineNumber": 100
+        },
+        {
+          "caller": "computeAccuracy",
+          "callee": "Math.round",
+          "lineNumber": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction-validation/validations/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 89,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 50,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 53,
+          "endLine": 89,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 53,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "parseInt",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .select('*')\r\n      .order('prediction_timestamp', { ascending: false })\r\n      .limit",
+          "lineNumber": 14
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .select('*')\r\n      .order",
+          "lineNumber": 14
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .select",
+          "lineNumber": 14
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 14
+        },
+        {
+          "caller": "GET",
+          "callee": "query.eq",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "query.eq",
+          "lineNumber": 25
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 31
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 32
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 38
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 45
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 55
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .insert({\r\n        video_id: validationData.video_id,\r\n        predicted_probability: validationData.predicted_probability,\r\n        prediction_engine: validationData.prediction_engine,\r\n        prediction_timestamp: validationData.prediction_timestamp || new Date().toISOString(),\r\n        niche: validationData.niche || 'general',\r\n        platform: validationData.platform || 'tiktok'\r\n      })\r\n      .select",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .insert",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 63
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 70
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 71
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 77
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 83
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 84
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction/[id]/evidence/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 31,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 32,
+          "params": [
+            "_req",
+            "{ params }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "createClient",
+          "lineNumber": 9
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('viral_predictions').select('*').eq('id', id).limit",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('viral_predictions').select('*').eq",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('viral_predictions').select",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('predictions_audit').select('*').eq('prediction_id', id).limit",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('predictions_audit').select('*').eq",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('predictions_audit').select",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "hmacSignHex",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GET",
+          "callee": "sha256Hex",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GET",
+          "callee": "writeEvidenceZip",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 23
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 24
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 25
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 26
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction/analyze-video/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 82,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 7,
+          "endLine": 55,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 57,
+          "endLine": 82,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 57,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 9
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 11
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "POST",
+          "callee": "predictionEngine.analyzeVideoFromUrl",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "predictionEngine.analyzeVideo",
+          "lineNumber": 32
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 37
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 41
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 46
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 48
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 52
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 66
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction/baselines/recompute/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 8,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 10,
+          "params": [
+            "_req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "recomputeCohortStats",
+          "lineNumber": 8
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction/test-engine/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 6,
+          "endLine": 35,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "console.log",
+          "lineNumber": 8
+        },
+        {
+          "caller": "GET",
+          "callee": "import",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 25
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/prediction/unified-predict/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 230,
+      "nonEmptyLines": 214,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 10,
+          "endLine": 194,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 196,
+          "endLine": 230,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 196,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 12
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 18
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "POST",
+          "callee": "request.headers.get",
+          "lineNumber": 52
+        },
+        {
+          "caller": "POST",
+          "callee": "url.searchParams.get",
+          "lineNumber": 54
+        },
+        {
+          "caller": "POST",
+          "callee": "scoreDual",
+          "lineNumber": 56
+        },
+        {
+          "caller": "POST",
+          "callee": "String",
+          "lineNumber": 56
+        },
+        {
+          "caller": "POST",
+          "callee": "engine.predict",
+          "lineNumber": 56
+        },
+        {
+          "caller": "POST",
+          "callee": "logSupabaseRuntimeEnv",
+          "lineNumber": 60
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 61
+        },
+        {
+          "caller": "POST",
+          "callee": "(db as any).rpc",
+          "lineNumber": 82
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('viral_predictions').select('*').limit",
+          "lineNumber": 85
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('viral_predictions').select",
+          "lineNumber": 85
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 85
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 86
+        },
+        {
+          "caller": "POST",
+          "callee": "Object.keys",
+          "lineNumber": 86
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 95
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 96
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 97
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 98
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 100
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 106
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 107
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 110
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 111
+        },
+        {
+          "caller": "POST",
+          "callee": "columns.includes",
+          "lineNumber": 112
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('viral_predictions').insert",
+          "lineNumber": 115
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 115
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('viral_predictions').insert",
+          "lineNumber": 117
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 117
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('prediction_validation').insert",
+          "lineNumber": 122
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 122
+        },
+        {
+          "caller": "POST",
+          "callee": "(globalThis as any).crypto?.randomUUID",
+          "lineNumber": 123
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 123
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 130
+        },
+        {
+          "caller": "POST",
+          "callee": "console.warn",
+          "lineNumber": 134
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 137
+        },
+        {
+          "caller": "POST",
+          "callee": "(db as any).rpc",
+          "lineNumber": 149
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('prediction_validation').select('*').limit",
+          "lineNumber": 151
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('prediction_validation').select",
+          "lineNumber": 151
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 151
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 152
+        },
+        {
+          "caller": "POST",
+          "callee": "Object.keys",
+          "lineNumber": 152
+        },
+        {
+          "caller": "POST",
+          "callee": "cols.includes",
+          "lineNumber": 156
+        },
+        {
+          "caller": "POST",
+          "callee": "cols.includes",
+          "lineNumber": 157
+        },
+        {
+          "caller": "POST",
+          "callee": "cols.includes",
+          "lineNumber": 158
+        },
+        {
+          "caller": "POST",
+          "callee": "cols.includes",
+          "lineNumber": 159
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 159
+        },
+        {
+          "caller": "POST",
+          "callee": "cols.includes",
+          "lineNumber": 160
+        },
+        {
+          "caller": "POST",
+          "callee": "Object.keys",
+          "lineNumber": 162
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('prediction_validation').insert",
+          "lineNumber": 163
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 163
+        },
+        {
+          "caller": "POST",
+          "callee": "Object.keys",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('prediction_validation').insert",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "console.warn",
+          "lineNumber": 168
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 172
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 174
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 180
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 185
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 187
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 191
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 201
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 205
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 225
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/predict/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 229,
+      "nonEmptyLines": 200,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 33,
+          "endLine": 199,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 204,
+          "endLine": 229,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 204,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 34
+        },
+        {
+          "caller": "POST",
+          "callee": "request.formData",
+          "lineNumber": 38
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 41
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 42
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 43
+        },
+        {
+          "caller": "POST",
+          "callee": "formData.get",
+          "lineNumber": 44
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 48
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 55
+        },
+        {
+          "caller": "POST",
+          "callee": "join",
+          "lineNumber": 65
+        },
+        {
+          "caller": "POST",
+          "callee": "process.cwd",
+          "lineNumber": 65
+        },
+        {
+          "caller": "POST",
+          "callee": "existsSync",
+          "lineNumber": 67
+        },
+        {
+          "caller": "POST",
+          "callee": "mkdir",
+          "lineNumber": 68
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 71
+        },
+        {
+          "caller": "POST",
+          "callee": "join",
+          "lineNumber": 73
+        },
+        {
+          "caller": "POST",
+          "callee": "join",
+          "lineNumber": 74
+        },
+        {
+          "caller": "POST",
+          "callee": "process.cwd",
+          "lineNumber": 74
+        },
+        {
+          "caller": "POST",
+          "callee": "videoFile.arrayBuffer",
+          "lineNumber": 76
+        },
+        {
+          "caller": "POST",
+          "callee": "writeFile",
+          "lineNumber": 77
+        },
+        {
+          "caller": "POST",
+          "callee": "Buffer.from",
+          "lineNumber": 77
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 79
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "POST",
+          "callee": "import",
+          "lineNumber": 86
+        },
+        {
+          "caller": "POST",
+          "callee": "TikTokDownloader.downloadVideo",
+          "lineNumber": 88
+        },
+        {
+          "caller": "POST",
+          "callee": "downloadResult.localPath.replace(process.cwd() + '\\\\', '').replace",
+          "lineNumber": 91
+        },
+        {
+          "caller": "POST",
+          "callee": "downloadResult.localPath.replace",
+          "lineNumber": 91
+        },
+        {
+          "caller": "POST",
+          "callee": "process.cwd",
+          "lineNumber": 91
+        },
+        {
+          "caller": "POST",
+          "callee": "process.cwd",
+          "lineNumber": 91
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 92
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 94
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 97
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('video_files')\r\n      .insert({\r\n        tiktok_url: tiktokUrl,\r\n        storage_path: storagePath,\r\n        niche,\r\n        goal,\r\n        account_size_band: accountSize,\r\n        platform: 'tiktok',\r\n        created_at: new Date().toISOString()\r\n      })\r\n      .select()\r\n      .single",
+          "lineNumber": 102
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('video_files')\r\n      .insert({\r\n        tiktok_url: tiktokUrl,\r\n        storage_path: storagePath,\r\n        niche,\r\n        goal,\r\n        account_size_band: accountSize,\r\n        platform: 'tiktok',\r\n        created_at: new Date().toISOString()\r\n      })\r\n      .select",
+          "lineNumber": 102
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('video_files')\r\n      .insert",
+          "lineNumber": 102
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 102
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 111
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 117
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 123
+        },
+        {
+          "caller": "POST",
+          "callee": "runPredictionPipeline",
+          "lineNumber": 130
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 133
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 145
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 148
+        },
+        {
+          "caller": "POST",
+          "callee": "PredictionHash.generate",
+          "lineNumber": 150
+        },
+        {
+          "caller": "POST",
+          "callee": "console.warn",
+          "lineNumber": 152
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 153
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 156
+        },
+        {
+          "caller": "POST",
+          "callee": "hashResult.hash.substring",
+          "lineNumber": 156
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 158
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 161
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.max",
+          "lineNumber": 168
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.min",
+          "lineNumber": 169
+        },
+        {
+          "caller": "POST",
+          "callee": "pipelineResult.predicted_dps_7d.toFixed",
+          "lineNumber": 172
+        },
+        {
+          "caller": "POST",
+          "callee": "pipelineResult.components_used.slice(0, 10).map",
+          "lineNumber": 174
+        },
+        {
+          "caller": "POST",
+          "callee": "pipelineResult.components_used.slice",
+          "lineNumber": 174
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 185
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 193
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 194
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 205
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/preview/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 16,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 10,
+          "endLine": 18,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "requireRole",
+          "lineNumber": 11
+        },
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "getUserRoles",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "String",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "Promise.all",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "(Array.isArray(keys) ? keys : []).map",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "evaluateFlag",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "Object.fromEntries",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "(keys as string[]).map",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "NRes.json",
+          "lineNumber": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/proof-tiles/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 21,
+      "nonEmptyLines": 16,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 10,
+          "endLine": 19,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "createClient",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('objective_status').select('*').order",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from('objective_status').select",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "db.from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 15
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/quality/recent/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 30,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 9,
+          "endLine": 34,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "requireRole(UserRole.ADMIN)",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "requireRole",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "commonRateLimiters.admin",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "new URL(req.url).searchParams.get",
+          "lineNumber": 15
+        },
+        {
+          "caller": "GET",
+          "callee": "windowParam.endsWith",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "windowParam.replace",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "Array.from",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GET",
+          "callee": "Math.min",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "computeQualityReasons",
+          "lineNumber": 26
+        },
+        {
+          "caller": "GET",
+          "callee": "Object.entries",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GET",
+          "callee": "Object.keys",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GET",
+          "callee": "flagged.push",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 33
+        },
+        {
+          "caller": "GET",
+          "callee": "flagged.slice",
+          "lineNumber": 33
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/real-creators/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 48,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 54,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('creator_username, views, title')\r\n      .not('creator_username', 'is', null)\r\n      .not('creator_username', 'eq', '')\r\n      .order('views', { ascending: false })\r\n      .limit",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('creator_username, views, title')\r\n      .not('creator_username', 'is', null)\r\n      .not('creator_username', 'eq', '')\r\n      .order",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('creator_username, views, title')\r\n      .not('creator_username', 'is', null)\r\n      .not",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('creator_username, views, title')\r\n      .not",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GET",
+          "callee": "videos?.reduce",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GET",
+          "callee": "acc.find",
+          "lineNumber": 31
+        },
+        {
+          "caller": "GET",
+          "callee": "acc.push",
+          "lineNumber": 32
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 47
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 48
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/real-urls/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 42,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 48,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('tiktok_url, title, views')\r\n      .not('tiktok_url', 'is', null)\r\n      .not('tiktok_url', 'eq', '')\r\n      .order('created_at', { ascending: false })\r\n      .limit",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('tiktok_url, title, views')\r\n      .not('tiktok_url', 'is', null)\r\n      .not('tiktok_url', 'eq', '')\r\n      .order",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('tiktok_url, title, views')\r\n      .not('tiktok_url', 'is', null)\r\n      .not",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select('tiktok_url, title, views')\r\n      .not",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('scraped_data')\r\n      .select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GET",
+          "callee": "videos?.map",
+          "lineNumber": 29
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 36
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 43
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/reprocess-queue/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 323,
+      "nonEmptyLines": 280,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 48,
+          "endLine": 106,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 110,
+          "endLine": 323,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 110,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "request.nextUrl.searchParams.get",
+          "lineNumber": 50
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('training_readiness_summary')\r\n      .select",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 58
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select('id, status, has_components, has_raw_result, component_rows_count, niche, actual_dps')\r\n      .eq('training_ready', false)\r\n      .not",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select('id, status, has_components, has_raw_result, component_rows_count, niche, actual_dps')\r\n      .eq",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 62
+        },
+        {
+          "caller": "GET",
+          "callee": "query.eq",
+          "lineNumber": 68
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 73
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 91
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 104
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 111
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json().catch",
+          "lineNumber": 114
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 114
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.min",
+          "lineNumber": 116
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.max",
+          "lineNumber": 116
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 118
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select(\r\n        'id, video_id, status, actual_dps, actual_tier, predicted_dps_7d, ' +\r\n        'predicted_tier_7d, confidence, has_components, has_raw_result, ' +\r\n        'component_rows_count, niche, components_used, ' +\r\n        'dps_formula_version, dps_label_trust, dps_training_weight',\r\n      )\r\n      .eq('training_ready', false)\r\n      .not",
+          "lineNumber": 121
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select(\r\n        'id, video_id, status, actual_dps, actual_tier, predicted_dps_7d, ' +\r\n        'predicted_tier_7d, confidence, has_components, has_raw_result, ' +\r\n        'component_rows_count, niche, components_used, ' +\r\n        'dps_formula_version, dps_label_trust, dps_training_weight',\r\n      )\r\n      .eq",
+          "lineNumber": 121
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('prediction_runs_enriched')\r\n      .select",
+          "lineNumber": 121
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 121
+        },
+        {
+          "caller": "POST",
+          "callee": "query.eq",
+          "lineNumber": 132
+        },
+        {
+          "caller": "POST",
+          "callee": "query\r\n      .order('created_at', { ascending: false })\r\n      .limit",
+          "lineNumber": 134
+        },
+        {
+          "caller": "POST",
+          "callee": "query\r\n      .order",
+          "lineNumber": 134
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 139
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 143
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 148
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 152
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_runs')\r\n          .update({ status: 'completed', completed_at: new Date().toISOString() })\r\n          .eq",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_runs')\r\n          .update",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from",
+          "lineNumber": 165
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 167
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 172
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 179
+        },
+        {
+          "caller": "POST",
+          "callee": "run.id.slice",
+          "lineNumber": 179
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 188
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_runs')\r\n          .update({\r\n            status: 'completed',\r\n            raw_result: synthesizedRawResult,\r\n            completed_at: new Date().toISOString(),\r\n          })\r\n          .eq",
+          "lineNumber": 197
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('prediction_runs')\r\n          .update",
+          "lineNumber": 197
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from",
+          "lineNumber": 197
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 202
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 208
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 215
+        },
+        {
+          "caller": "POST",
+          "callee": "run.id.slice",
+          "lineNumber": 215
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('video_files')\r\n          .select('id, niche, goal, account_size_band, storage_path')\r\n          .eq('id', run.video_id)\r\n          .single",
+          "lineNumber": 223
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('video_files')\r\n          .select('id, niche, goal, account_size_band, storage_path')\r\n          .eq",
+          "lineNumber": 223
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from('video_files')\r\n          .select",
+          "lineNumber": 223
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n          .from",
+          "lineNumber": 223
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 231
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 241
+        },
+        {
+          "caller": "POST",
+          "callee": "vf.id.slice",
+          "lineNumber": 241
+        },
+        {
+          "caller": "POST",
+          "callee": "runPredictionPipeline",
+          "lineNumber": 243
+        },
+        {
+          "caller": "POST",
+          "callee": "(run as any).dps_formula_version.startsWith",
+          "lineNumber": 255
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from('prediction_runs')\r\n              .update({\r\n                actual_dps: run.actual_dps,\r\n                actual_tier: run.actual_tier,\r\n                dps_formula_version: (run as any).dps_formula_version,\r\n                dps_label_trust: (run as any).dps_label_trust,\r\n                dps_training_weight: (run as any).dps_training_weight,\r\n              })\r\n              .eq",
+          "lineNumber": 257
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from('prediction_runs')\r\n              .update",
+          "lineNumber": 257
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n              .from",
+          "lineNumber": 257
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 270
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 276
+        },
+        {
+          "caller": "POST",
+          "callee": "vf.id.slice",
+          "lineNumber": 276
+        },
+        {
+          "caller": "POST",
+          "callee": "pipelineResult.run_id.slice",
+          "lineNumber": 276
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 279
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 286
+        },
+        {
+          "caller": "POST",
+          "callee": "vf.id.slice",
+          "lineNumber": 286
+        },
+        {
+          "caller": "POST",
+          "callee": "details.push",
+          "lineNumber": 290
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 297
+        },
+        {
+          "caller": "POST",
+          "callee": "run.id.slice",
+          "lineNumber": 297
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 302
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 304
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 306
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 320
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 321
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/research-reports/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 25,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 8,
+          "endLine": 31,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "path.join",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "process.cwd",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "fs.existsSync",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "GET",
+          "callee": "fs.readdirSync(reportsDir).filter",
+          "lineNumber": 18
+        },
+        {
+          "caller": "GET",
+          "callee": "fs.readdirSync",
+          "lineNumber": 18
+        },
+        {
+          "caller": "GET",
+          "callee": "f.endsWith",
+          "lineNumber": 18
+        },
+        {
+          "caller": "GET",
+          "callee": "files.map",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GET",
+          "callee": "path.join",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "fs.readFileSync",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.parse",
+          "lineNumber": 23
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 26
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-apify-scraper/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 46,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 7,
+          "endLine": 46,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 9
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 11
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 12
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 19
+        },
+        {
+          "caller": "POST",
+          "callee": "scrapeTikTokBatch",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "((endTime - startTime) / 1000).toFixed",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 27
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 32
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-feature-decomposer/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 62,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 9,
+          "endLine": 76,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "runtime",
+          "line": 2,
+          "isDefault": false
+        },
+        {
+          "name": "dynamic",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "revalidate",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 11
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 20
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('raw_videos')\r\n      .select('*')\r\n      .eq('id', videoId)\r\n      .single",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('raw_videos')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('raw_videos')\r\n      .select",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 37
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 43
+        },
+        {
+          "caller": "POST",
+          "callee": "import",
+          "lineNumber": 46
+        },
+        {
+          "caller": "POST",
+          "callee": "decomposeVideo",
+          "lineNumber": 48
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 54
+        },
+        {
+          "caller": "POST",
+          "callee": "((endTime - startTime) / 1000).toFixed",
+          "lineNumber": 55
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 62
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 66
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 68
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-gene-tagger/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 45,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 7,
+          "endLine": 55,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 9
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 12
+        },
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 19
+        },
+        {
+          "caller": "POST",
+          "callee": "tagGenes",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "((endTime - startTime) / 1000).toFixed",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "genes\r\n      .map((gene, index) => gene ? index : -1)\r\n      .filter",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "genes\r\n      .map",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 32
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 41
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 45
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-migration/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 184,
+      "nonEmptyLines": 161,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 112,
+          "endLine": 143,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 145,
+          "endLine": 184,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 145,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 114
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 117
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 131
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 137
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 138
+        },
+        {
+          "caller": "GET",
+          "callee": "Promise.all",
+          "lineNumber": 147
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('bulk_download_jobs').select('id').limit",
+          "lineNumber": 148
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('bulk_download_jobs').select",
+          "lineNumber": 148
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 148
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('bulk_download_items').select('id').limit",
+          "lineNumber": 149
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('bulk_download_items').select",
+          "lineNumber": 149
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 149
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('batch_test_runs').select('id').limit",
+          "lineNumber": 150
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('batch_test_runs').select",
+          "lineNumber": 150
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 150
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('algorithm_performance').select('id').limit",
+          "lineNumber": 151
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('algorithm_performance').select",
+          "lineNumber": 151
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 151
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('prediction_tracking').select('id').limit",
+          "lineNumber": 152
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('prediction_tracking').select",
+          "lineNumber": 152
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 152
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('component_reliability').select('id').limit",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from('component_reliability').select",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.from",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GET",
+          "callee": "tables.map",
+          "lineNumber": 165
+        },
+        {
+          "caller": "GET",
+          "callee": "status.every",
+          "lineNumber": 172
+        },
+        {
+          "caller": "GET",
+          "callee": "status.filter",
+          "lineNumber": 173
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 175
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-test/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 103,
+      "nonEmptyLines": 87,
+      "functions": [
+        {
+          "name": "isAuthorized",
+          "startLine": 8,
+          "endLine": 17,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 19,
+          "endLine": 103,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "isAuthorized",
+          "callee": "request.headers.get('Authorization')?.replace",
+          "lineNumber": 15
+        },
+        {
+          "caller": "isAuthorized",
+          "callee": "request.headers.get",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "isAuthorized",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 34
+        },
+        {
+          "caller": "POST",
+          "callee": "templateAnalyzerTests.testVideoProcessing",
+          "lineNumber": 49
+        },
+        {
+          "caller": "POST",
+          "callee": "templateAnalyzerTests.testTemplateCategorization",
+          "lineNumber": 54
+        },
+        {
+          "caller": "POST",
+          "callee": "templateAnalyzerTests.testTemplateStructureExtraction",
+          "lineNumber": 59
+        },
+        {
+          "caller": "POST",
+          "callee": "templateAnalyzerTests.testTemplateSimilarity",
+          "lineNumber": 64
+        },
+        {
+          "caller": "POST",
+          "callee": "templateAnalyzerTests.runAllAnalyzerTests",
+          "lineNumber": 70
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 77
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 83
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 92
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 94
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/run-viral-filter/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 124,
+      "nonEmptyLines": 105,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 12,
+          "endLine": 61,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "fetchVideoMetrics",
+          "startLine": 67,
+          "endLine": 124,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "console.log",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "fetchVideoMetrics",
+          "lineNumber": 18
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 21
+        },
+        {
+          "caller": "POST",
+          "callee": "runViralFilter",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "Promise.all",
+          "lineNumber": 34
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('viral_pool').select('video_id').order('created_at', { ascending: false }).limit",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('viral_pool').select('video_id').order",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('viral_pool').select",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('negative_pool').select('video_id').order('created_at', { ascending: false }).limit",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('negative_pool').select('video_id').order",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from('negative_pool').select",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 46
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 51
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 53
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select('video_id, views_1h, likes_1h, creator_followers')\r\n      .not('views_1h', 'is', null)\r\n      .not('likes_1h', 'is', null)\r\n      .not('creator_followers', 'is', null)\r\n      .order('processed_at', { ascending: false })\r\n      .limit",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select('video_id, views_1h, likes_1h, creator_followers')\r\n      .not('views_1h', 'is', null)\r\n      .not('likes_1h', 'is', null)\r\n      .not('creator_followers', 'is', null)\r\n      .order",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select('video_id, views_1h, likes_1h, creator_followers')\r\n      .not('views_1h', 'is', null)\r\n      .not('likes_1h', 'is', null)\r\n      .not",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select('video_id, views_1h, likes_1h, creator_followers')\r\n      .not('views_1h', 'is', null)\r\n      .not",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select('video_id, views_1h, likes_1h, creator_followers')\r\n      .not",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from('video_features')\r\n      .select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "console.warn",
+          "lineNumber": 80
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "console.log",
+          "lineNumber": 86
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "sampleData.push",
+          "lineNumber": 91
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Date.now",
+          "lineNumber": 92
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.floor",
+          "lineNumber": 93
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.random",
+          "lineNumber": 93
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.floor",
+          "lineNumber": 94
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.random",
+          "lineNumber": 94
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.floor",
+          "lineNumber": 95
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Math.random",
+          "lineNumber": 95
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "sampleData.push",
+          "lineNumber": 101
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "Date.now",
+          "lineNumber": 102
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "videoFeatures.map",
+          "lineNumber": 113
+        },
+        {
+          "caller": "fetchVideoMetrics",
+          "callee": "console.error",
+          "lineNumber": 121
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/admin/safe-scrape/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 44,
+      "functions": [
+        {
+          "name": "envNumber",
+          "startLine": 7,
+          "endLine": 11,
+          "params": [
+            "name",
+            "fallback"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 13,
+          "endLine": 53,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "envNumber",
+          "callee": "Number",
+          "lineNumber": 9
+        },
+        {
+          "caller": "envNumber",
+          "callee": "Number.isFinite",
+          "lineNumber": 10
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "fetch",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "res.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 27
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "req.json().catch",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 34
+        },
+        {
+          "caller": "POST",
+          "callee": "envNumber",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "envNumber",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "envNumber",
+          "lineNumber": 41
+        },
+        {
+          "caller": "POST",
+          "callee": "keywords.slice",
+          "lineNumber": 44
+        },
+        {
+          "caller": "POST",
+          "callee": "scrapeTikTokBatch",
+          "lineNumber": 47
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.min",
+          "lineNumber": 47
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.min",
+          "lineNumber": 47
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 49
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    }
+  ]
+}

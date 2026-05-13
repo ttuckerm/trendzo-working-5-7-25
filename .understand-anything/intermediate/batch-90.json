@@ -1,0 +1,654 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/quick-win/brief/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/quick-win/brief/route.ts",
+      "summary": "Quick-win brief API route exposing POST (create brief from suggestion) and PATCH (record outcome metrics) handlers backed by Supabase and the pattern performance tracker.",
+      "tags": ["api-handler", "quick-win", "supabase", "pattern-tracking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/quick-win/brief/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/quick-win/brief/route.ts",
+      "lineRange": [26, 82],
+      "summary": "Creates a quick-win brief row from a suggestion payload and returns the inserted brief id.",
+      "tags": ["api-handler", "post", "brief-creation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/quick-win/brief/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/quick-win/brief/route.ts",
+      "lineRange": [86, 203],
+      "summary": "Updates an existing brief with observed performance metrics and forwards results to the pattern performance tracker.",
+      "tags": ["api-handler", "patch", "metrics", "pattern-tracking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/quick-win/context/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/quick-win/context/route.ts",
+      "summary": "GET handler that assembles quick-win contextual data (creator context plus pattern metrics) used by the Quick Win UI.",
+      "tags": ["api-handler", "quick-win", "creator-context", "patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/quick-win/context/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/quick-win/context/route.ts",
+      "lineRange": [28, 151],
+      "summary": "Resolves creator context, pulls pattern metrics, and returns the merged context payload for Quick Win flows.",
+      "tags": ["api-handler", "get", "context-aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/quick-win/generate-script/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/quick-win/generate-script/route.ts",
+      "summary": "POST handler that runs the prediction pipeline with creator context to generate a Quick Win script and registry-aware recommendations.",
+      "tags": ["api-handler", "quick-win", "prediction-pipeline", "script-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/quick-win/generate-script/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/quick-win/generate-script/route.ts",
+      "lineRange": [37, 292],
+      "summary": "Generates a Quick Win script by invoking the prediction pipeline with resolved creator context and shaping a UI-friendly response.",
+      "tags": ["api-handler", "post", "prediction", "creator-context"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/quickwin/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/quickwin/route.ts",
+      "summary": "Tiny GET handler returning a static Quick Win marker payload; used as a smoke or feature-flag probe.",
+      "tags": ["api-handler", "quick-win", "probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/rd/discoveries/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/rd/discoveries/route.ts",
+      "summary": "Trivial GET stub for the R&D discoveries endpoint returning a placeholder JSON payload.",
+      "tags": ["api-handler", "stub", "r-and-d"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recipe-book/generate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recipe-book/generate/route.ts",
+      "summary": "POST handler that delegates to the templates service to generate a new recipe-book entry.",
+      "tags": ["api-handler", "recipe-book", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/recipe-book/generate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/recipe-book/generate/route.ts",
+      "lineRange": [9, 38],
+      "summary": "Validates the request body and calls the templates service to generate a recipe-book entry.",
+      "tags": ["api-handler", "post", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recipe-book/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recipe-book/route.ts",
+      "summary": "GET handler that lists recipe-book entries via the templates service.",
+      "tags": ["api-handler", "recipe-book", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/recipe-book/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/recipe-book/route.ts",
+      "lineRange": [9, 35],
+      "summary": "Lists recipe-book entries by calling the templates service and returning a JSON response.",
+      "tags": ["api-handler", "get", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recipes/history/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recipes/history/route.ts",
+      "summary": "GET handler returning recipe execution history; gated by auth middleware and rate limiting.",
+      "tags": ["api-handler", "recipes", "auth", "rate-limit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/recipes/history/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/recipes/history/route.ts",
+      "lineRange": [10, 20],
+      "summary": "Returns recipe execution history after applying auth and rate-limit checks.",
+      "tags": ["api-handler", "get", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recipes/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recipes/summary/route.ts",
+      "summary": "GET handler that returns an aggregate recipes summary computed against an env-configured database.",
+      "tags": ["api-handler", "recipes", "summary", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/recipes/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/recipes/summary/route.ts",
+      "lineRange": [12, 33],
+      "summary": "Queries the database for recipe summary stats and returns them as JSON.",
+      "tags": ["api-handler", "get", "aggregation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recipes/today/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recipes/today/route.ts",
+      "summary": "GET handler returning today's recipes; protected by auth middleware and rate limiting.",
+      "tags": ["api-handler", "recipes", "auth", "rate-limit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/recipes/today/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/recipes/today/route.ts",
+      "lineRange": [12, 21],
+      "summary": "Returns recipes scoped to the current UTC day after auth and rate-limit checks.",
+      "tags": ["api-handler", "get", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recs/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recs/metrics/route.ts",
+      "summary": "GET handler that surfaces recommendation system metrics from the recs metrics module.",
+      "tags": ["api-handler", "recommendations", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/recs/serve/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/recs/serve/route.ts",
+      "summary": "Recommendations serving endpoint with GET probe and POST handler that runs ranking, exploration, guardrails, and event/metrics logging behind feature flags.",
+      "tags": ["api-handler", "recommendations", "ranking", "feature-flags"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/recs/serve/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/recs/serve/route.ts",
+      "lineRange": [21, 94],
+      "summary": "Serves recommendations by running the cap320 ranker plus cap330 exploration, applying guardrails, and logging metrics and events.",
+      "tags": ["api-handler", "post", "ranking", "exploration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/referrals/track/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/referrals/track/route.ts",
+      "summary": "POST handler that records a referral tracking event into the env-configured database.",
+      "tags": ["api-handler", "referrals", "tracking", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/referrals/track/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/referrals/track/route.ts",
+      "lineRange": [12, 37],
+      "summary": "Persists a referral tracking event and returns a confirmation payload.",
+      "tags": ["api-handler", "post", "tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/release/notes/latest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/release/notes/latest/route.ts",
+      "summary": "GET handler that returns the most recent release notes entry from the database.",
+      "tags": ["api-handler", "release-notes", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/release/notes/latest/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/release/notes/latest/route.ts",
+      "lineRange": [12, 35],
+      "summary": "Queries the latest release notes row and returns it as a JSON response.",
+      "tags": ["api-handler", "get", "release-notes"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/remix/generate-variations/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/remix/generate-variations/route.ts",
+      "summary": "Remix variations endpoint that authenticates the user, fetches the template from Supabase, and either calls the AI variation generator or falls back to a deterministic mock.",
+      "tags": ["api-handler", "remix", "ai", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/remix/generate-variations/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/remix/generate-variations/route.ts",
+      "lineRange": [22, 103],
+      "summary": "Authenticates the request, loads the source template, and dispatches AI or mock variation generation based on environment configuration.",
+      "tags": ["api-handler", "post", "remix", "auth"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/remix/generate-variations/route.ts:generateAIResponse",
+      "type": "function",
+      "name": "generateAIResponse",
+      "filePath": "src/app/api/remix/generate-variations/route.ts",
+      "lineRange": [108, 219],
+      "summary": "Calls the external AI provider to produce remix variations and shapes the result into the API response format.",
+      "tags": ["ai", "remix", "generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/remix/generate-variations/route.ts:generateMockResponse",
+      "type": "function",
+      "name": "generateMockResponse",
+      "filePath": "src/app/api/remix/generate-variations/route.ts",
+      "lineRange": [224, 310],
+      "summary": "Produces a deterministic mock set of remix variations used when AI is disabled or unavailable.",
+      "tags": ["mock", "remix", "fallback"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/remix/track-performance/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/remix/track-performance/route.ts",
+      "summary": "POST handler that records remix performance outcomes into Firebase and computes prediction accuracy.",
+      "tags": ["api-handler", "remix", "firebase", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/remix/track-performance/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/remix/track-performance/route.ts",
+      "lineRange": [17, 130],
+      "summary": "Stores remix performance data in Firebase and returns accuracy metrics computed from predicted vs actual values.",
+      "tags": ["api-handler", "post", "firebase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/remix/track-performance/route.ts:calculateAccuracy",
+      "type": "function",
+      "name": "calculateAccuracy",
+      "filePath": "src/app/api/remix/track-performance/route.ts",
+      "lineRange": [136, 146],
+      "summary": "Computes accuracy as a percentage similarity between predicted and actual performance values.",
+      "tags": ["utility", "accuracy", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/replicate/generate-image/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/replicate/generate-image/route.ts",
+      "summary": "POST handler that proxies an image generation request to the Replicate API and returns the generated image URL.",
+      "tags": ["api-handler", "replicate", "image-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/replicate/generate-image/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/replicate/generate-image/route.ts",
+      "lineRange": [11, 40],
+      "summary": "Calls Replicate to generate an image from the supplied prompt and returns the result URL.",
+      "tags": ["api-handler", "post", "replicate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/rollout/canary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/rollout/canary/route.ts",
+      "summary": "Canary rollout endpoint exposing GET (read current canary state) and POST (update flag) handlers backed by the feature flags module.",
+      "tags": ["api-handler", "rollout", "feature-flags"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/sandbox/clone-relume/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/sandbox/clone-relume/route.ts",
+      "summary": "Sandbox endpoint that fetches a Relume page, injects a base href, and applies minimal customizations before returning the cloned HTML.",
+      "tags": ["api-handler", "sandbox", "html-clone", "scraping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/clone-relume/route.ts:injectBaseHref",
+      "type": "function",
+      "name": "injectBaseHref",
+      "filePath": "src/app/api/sandbox/clone-relume/route.ts",
+      "lineRange": [9, 23],
+      "summary": "Injects a base href tag into the supplied HTML so relative asset URLs resolve back to the source domain.",
+      "tags": ["html", "utility", "url-rewriting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/sandbox/clone-relume/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/sandbox/clone-relume/route.ts",
+      "lineRange": [25, 111],
+      "summary": "Fetches a Relume page, rewrites its HTML, applies customizations, and returns the resulting cloned markup.",
+      "tags": ["api-handler", "post", "sandbox", "clone"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/sandbox/clone-relume/route.ts:applyMinimalCustomizations",
+      "type": "function",
+      "name": "applyMinimalCustomizations",
+      "filePath": "src/app/api/sandbox/clone-relume/route.ts",
+      "lineRange": [114, 142],
+      "summary": "Applies a small set of safe HTML edits to the cloned Relume markup before returning it.",
+      "tags": ["html", "transform", "sandbox"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/sandbox/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/sandbox/predict/route.ts",
+      "summary": "Sandbox prediction endpoint that scores content and returns recommendations, formatted view counts, and best-variation suggestions for offline experimentation.",
+      "tags": ["api-handler", "sandbox", "prediction", "recommendations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/sandbox/predict/route.ts",
+      "lineRange": [6, 96],
+      "summary": "Runs the sandbox prediction flow, producing a viral score plus recommendation and variation payloads.",
+      "tags": ["api-handler", "post", "sandbox", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/predict/route.ts:generateRecommendations",
+      "type": "function",
+      "name": "generateRecommendations",
+      "filePath": "src/app/api/sandbox/predict/route.ts",
+      "lineRange": [98, 127],
+      "summary": "Builds a list of recommendation strings from content and score inputs for sandbox responses.",
+      "tags": ["sandbox", "recommendations", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/predict/route.ts:getBestVariation",
+      "type": "function",
+      "name": "getBestVariation",
+      "filePath": "src/app/api/sandbox/predict/route.ts",
+      "lineRange": [138, 151],
+      "summary": "Selects the best recommended variation given the current sandbox score.",
+      "tags": ["sandbox", "variation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/sandbox/predict/route.ts:getVariationImprovements",
+      "type": "function",
+      "name": "getVariationImprovements",
+      "filePath": "src/app/api/sandbox/predict/route.ts",
+      "lineRange": [153, 163],
+      "summary": "Returns the list of expected improvements for a selected sandbox variation.",
+      "tags": ["sandbox", "variation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/sandbox/workspace-config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/sandbox/workspace-config/route.ts",
+      "summary": "GET handler that resolves and returns the sandbox workspace configuration for a given video id.",
+      "tags": ["api-handler", "sandbox", "workspace", "config"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/workspace-config/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/sandbox/workspace-config/route.ts",
+      "lineRange": [6, 48],
+      "summary": "Builds a sandbox workspace configuration response keyed by video id and target framework.",
+      "tags": ["api-handler", "get", "sandbox"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/sandbox/workspace-config/route.ts:getFrameworkForVideo",
+      "type": "function",
+      "name": "getFrameworkForVideo",
+      "filePath": "src/app/api/sandbox/workspace-config/route.ts",
+      "lineRange": [50, 62],
+      "summary": "Maps a video id to the framework string used by the sandbox workspace configuration.",
+      "tags": ["sandbox", "utility", "framework"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/case-study/[creatorId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/case-study/[creatorId]/route.ts",
+      "summary": "Scale case-study endpoint that returns a CSV export for a given creator id using the scale store.",
+      "tags": ["api-handler", "scale", "case-study", "csv-export"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scale/case-study/[creatorId]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/scale/case-study/[creatorId]/route.ts",
+      "lineRange": [14, 33],
+      "summary": "Builds and returns a CSV case-study export for the requested creator id.",
+      "tags": ["api-handler", "get", "csv"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/create-creator/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/create-creator/route.ts",
+      "summary": "POST handler that registers a new creator in the scale store and returns the generated id.",
+      "tags": ["api-handler", "scale", "creator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scale/create-creator/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/scale/create-creator/route.ts",
+      "lineRange": [9, 27],
+      "summary": "Generates a creator id and persists the new creator record via the scale store.",
+      "tags": ["api-handler", "post", "scale"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/list/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/list/route.ts",
+      "summary": "GET handler returning the list of creators tracked in the scale store.",
+      "tags": ["api-handler", "scale", "list"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scale/list/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/scale/list/route.ts",
+      "lineRange": [7, 26],
+      "summary": "Lists tracked creators with their high-level scale data for the dashboard.",
+      "tags": ["api-handler", "get", "scale"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/scale/plan/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/scale/plan/route.ts",
+      "summary": "POST handler that produces a scale plan using the scale plan generator and persists it via the scale store.",
+      "tags": ["api-handler", "scale", "planning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/scale/plan/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/scale/plan/route.ts",
+      "lineRange": [8, 24],
+      "summary": "Builds a creator scale plan from request input and persists the result.",
+      "tags": ["api-handler", "post", "scale"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "function:src/app/api/quick-win/brief/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "function:src/app/api/quick-win/brief/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "function:src/app/api/quick-win/brief/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "function:src/app/api/quick-win/brief/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "file:src/lib/content/pattern-performance-tracker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/brief/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/quick-win/context/route.ts", "target": "function:src/app/api/quick-win/context/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/quick-win/context/route.ts", "target": "function:src/app/api/quick-win/context/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/quick-win/context/route.ts", "target": "file:src/lib/patterns/pattern-metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/context/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/context/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "function:src/app/api/quick-win/generate-script/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "function:src/app/api/quick-win/generate-script/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "file:src/lib/prediction/creator-context.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "file:src/lib/prediction/system-registry.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/quick-win/generate-script/route.ts", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recipe-book/generate/route.ts", "target": "function:src/app/api/recipe-book/generate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recipe-book/generate/route.ts", "target": "function:src/app/api/recipe-book/generate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recipe-book/generate/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recipe-book/route.ts", "target": "function:src/app/api/recipe-book/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recipe-book/route.ts", "target": "function:src/app/api/recipe-book/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recipe-book/route.ts", "target": "file:src/lib/templates/service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recipes/history/route.ts", "target": "function:src/app/api/recipes/history/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recipes/history/route.ts", "target": "function:src/app/api/recipes/history/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recipes/history/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recipes/history/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recipes/history/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recipes/summary/route.ts", "target": "function:src/app/api/recipes/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recipes/summary/route.ts", "target": "function:src/app/api/recipes/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recipes/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recipes/today/route.ts", "target": "function:src/app/api/recipes/today/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recipes/today/route.ts", "target": "function:src/app/api/recipes/today/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recipes/today/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recipes/today/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recipes/today/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recs/metrics/route.ts", "target": "file:src/lib/recs/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "function:src/app/api/recs/serve/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "function:src/app/api/recs/serve/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/recs/cap320/ranker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/recs/cap330/exploration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/recs/events.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/recs/guardrails.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/recs/serve/route.ts", "target": "file:src/lib/recs/metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/referrals/track/route.ts", "target": "function:src/app/api/referrals/track/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/referrals/track/route.ts", "target": "function:src/app/api/referrals/track/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/referrals/track/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/release/notes/latest/route.ts", "target": "function:src/app/api/release/notes/latest/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/release/notes/latest/route.ts", "target": "function:src/app/api/release/notes/latest/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/release/notes/latest/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "function:src/app/api/remix/generate-variations/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "function:src/app/api/remix/generate-variations/route.ts:generateAIResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "function:src/app/api/remix/generate-variations/route.ts:generateMockResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "function:src/app/api/remix/generate-variations/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "file:src/lib/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "file:src/lib/supabase-client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/remix/generate-variations/route.ts", "target": "file:src/lib/types/remix.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/remix/track-performance/route.ts", "target": "function:src/app/api/remix/track-performance/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/remix/track-performance/route.ts", "target": "function:src/app/api/remix/track-performance/route.ts:calculateAccuracy", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/remix/track-performance/route.ts", "target": "function:src/app/api/remix/track-performance/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/remix/track-performance/route.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/remix/track-performance/route.ts", "target": "file:src/lib/types/remix.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/replicate/generate-image/route.ts", "target": "function:src/app/api/replicate/generate-image/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/replicate/generate-image/route.ts", "target": "function:src/app/api/replicate/generate-image/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/rollout/canary/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/sandbox/clone-relume/route.ts", "target": "function:src/app/api/sandbox/clone-relume/route.ts:injectBaseHref", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/clone-relume/route.ts", "target": "function:src/app/api/sandbox/clone-relume/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/clone-relume/route.ts", "target": "function:src/app/api/sandbox/clone-relume/route.ts:applyMinimalCustomizations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/clone-relume/route.ts", "target": "function:src/app/api/sandbox/clone-relume/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/sandbox/predict/route.ts", "target": "function:src/app/api/sandbox/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/predict/route.ts", "target": "function:src/app/api/sandbox/predict/route.ts:generateRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/predict/route.ts", "target": "function:src/app/api/sandbox/predict/route.ts:getBestVariation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/predict/route.ts", "target": "function:src/app/api/sandbox/predict/route.ts:getVariationImprovements", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/predict/route.ts", "target": "function:src/app/api/sandbox/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/sandbox/workspace-config/route.ts", "target": "function:src/app/api/sandbox/workspace-config/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/workspace-config/route.ts", "target": "function:src/app/api/sandbox/workspace-config/route.ts:getFrameworkForVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/sandbox/workspace-config/route.ts", "target": "function:src/app/api/sandbox/workspace-config/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/scale/case-study/[creatorId]/route.ts", "target": "function:src/app/api/scale/case-study/[creatorId]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scale/case-study/[creatorId]/route.ts", "target": "function:src/app/api/scale/case-study/[creatorId]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/scale/case-study/[creatorId]/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/scale/create-creator/route.ts", "target": "function:src/app/api/scale/create-creator/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scale/create-creator/route.ts", "target": "function:src/app/api/scale/create-creator/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/scale/create-creator/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/scale/list/route.ts", "target": "function:src/app/api/scale/list/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scale/list/route.ts", "target": "function:src/app/api/scale/list/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/scale/list/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/scale/plan/route.ts", "target": "function:src/app/api/scale/plan/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/scale/plan/route.ts", "target": "function:src/app/api/scale/plan/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/scale/plan/route.ts", "target": "file:src/lib/scale/plan.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/scale/plan/route.ts", "target": "file:src/lib/scale/store.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

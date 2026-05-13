@@ -17,6 +17,7 @@ import { BetrayalSection } from '@/components/landing/BetrayalSection';
 import { MethodSection } from '@/components/landing/MethodSection';
 import { ReceiveSection } from '@/components/landing/ReceiveSection';
 import { StackSection } from '@/components/landing/StackSection';
+import { TestimonialsSection } from '@/components/landing/TestimonialsSection';
 import { PromiseSection } from '@/components/landing/PromiseSection';
 import { NotForSection } from '@/components/landing/NotForSection';
 import { StatsSection } from '@/components/landing/StatsSection';
@@ -52,6 +53,7 @@ export default function LandingPage() {
       <MethodSection />
       <ReceiveSection />
       <StackSection />
+      <TestimonialsSection />
       <PromiseSection />
       <NotForSection />
       <StatsSection />

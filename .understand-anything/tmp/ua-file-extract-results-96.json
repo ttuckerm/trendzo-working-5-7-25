@@ -1,0 +1,2452 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/app/api/training/validate-features/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 115,
+      "nonEmptyLines": 101,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 18,
+          "endLine": 115,
+          "params": [
+            "request"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "TRAINING_V2_ENABLED",
+          "lineNumber": 19
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 20
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json().catch",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 34
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('training_data')\r\n      .select('features')\r\n      .eq",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('training_data')\r\n      .select",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "query.limit",
+          "lineNumber": 53
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 56
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 63
+        },
+        {
+          "caller": "POST",
+          "callee": "rows\r\n      .map((r: any) => r.features)\r\n      .filter",
+          "lineNumber": 74
+        },
+        {
+          "caller": "POST",
+          "callee": "rows\r\n      .map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "POST",
+          "callee": "validateTrainingFeatures",
+          "lineNumber": 78
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('contamination_audit_log')\r\n      .insert({\r\n        job_id: job_id || null,\r\n        features_checked: result.features_checked,\r\n        contaminated_features: result.contaminated,\r\n        passed: result.passed,\r\n        niche: niche || null,\r\n        auditor: 'system',\r\n        details: result.details,\r\n      })\r\n      .select('id')\r\n      .single",
+          "lineNumber": 81
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('contamination_audit_log')\r\n      .insert({\r\n        job_id: job_id || null,\r\n        features_checked: result.features_checked,\r\n        contaminated_features: result.contaminated,\r\n        passed: result.passed,\r\n        niche: niche || null,\r\n        auditor: 'system',\r\n        details: result.details,\r\n      })\r\n      .select",
+          "lineNumber": 81
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('contamination_audit_log')\r\n      .insert",
+          "lineNumber": 81
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 81
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 96
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 99
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 109
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 110
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/triage/run/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 65,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 20,
+          "endLine": 75,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "runtime",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "url.searchParams.get",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "createServerSupabaseClient",
+          "lineNumber": 29
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase.auth.getUser",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "runTriageForAllAgencies",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 37
+        },
+        {
+          "caller": "POST",
+          "callee": "getUserAgencyId",
+          "lineNumber": 41
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 49
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq('is_active', true)\r\n        .limit(1)\r\n        .maybeSingle",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq('is_active', true)\r\n        .limit",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "sc\r\n        .from",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 60
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 62
+        },
+        {
+          "caller": "POST",
+          "callee": "runTriageForAgency",
+          "lineNumber": 63
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 65
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 69
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 72
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 73
+        },
+        {
+          "caller": "POST",
+          "callee": "String",
+          "lineNumber": 73
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 3,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/triage/today/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 63,
+      "nonEmptyLines": 55,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 20,
+          "endLine": 63,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "runtime",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "url.searchParams.get",
+          "lineNumber": 23
+        },
+        {
+          "caller": "GET",
+          "callee": "createServerSupabaseClient",
+          "lineNumber": 30
+        },
+        {
+          "caller": "GET",
+          "callee": "supabase.auth.getUser",
+          "lineNumber": 31
+        },
+        {
+          "caller": "GET",
+          "callee": "getUserAgencyId",
+          "lineNumber": 32
+        },
+        {
+          "caller": "GET",
+          "callee": "import",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GET",
+          "callee": "import",
+          "lineNumber": 43
+        },
+        {
+          "caller": "GET",
+          "callee": "createClient",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq('is_active', true)\r\n        .limit(1)\r\n        .maybeSingle",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq('is_active', true)\r\n        .limit",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq('role', 'owner')\r\n        .eq",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select('agency_id')\r\n        .eq",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from('agency_members')\r\n        .select",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "sc\r\n        .from",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 55
+        },
+        {
+          "caller": "GET",
+          "callee": "readTriageForAgency",
+          "lineNumber": 57
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 58
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 60
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 61
+        },
+        {
+          "caller": "GET",
+          "callee": "String",
+          "lineNumber": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 3,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/user/analyze/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 197,
+      "nonEmptyLines": 168,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 9,
+          "endLine": 122,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "generateMockGenes",
+          "startLine": 125,
+          "endLine": 135,
+          "params": [
+            "videoUrl"
+          ]
+        },
+        {
+          "name": "generateOptimizationSuggestions",
+          "startLine": 137,
+          "endLine": 166,
+          "params": [
+            "analysis",
+            "tier"
+          ]
+        },
+        {
+          "name": "extractVideoId",
+          "startLine": 168,
+          "endLine": 183,
+          "params": [
+            "url"
+          ]
+        },
+        {
+          "name": "extractPlatform",
+          "startLine": 185,
+          "endLine": 190,
+          "params": [
+            "url"
+          ]
+        },
+        {
+          "name": "extractNiche",
+          "startLine": 192,
+          "endLine": 197,
+          "params": [
+            "url"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "request.json",
+          "lineNumber": 11
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 14
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('*')\r\n      .eq('id', userId)\r\n      .single",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 47
+        },
+        {
+          "caller": "POST",
+          "callee": "generateMockGenes",
+          "lineNumber": 54
+        },
+        {
+          "caller": "POST",
+          "callee": "predictDNA",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "generateOptimizationSuggestions",
+          "lineNumber": 60
+        },
+        {
+          "caller": "POST",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 71
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .update({\r\n        analyses_used_today: user.analyses_used_today + 1,\r\n        updated_at: new Date().toISOString()\r\n      })\r\n      .eq",
+          "lineNumber": 75
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .update",
+          "lineNumber": 75
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 75
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 79
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('user_analytics')\r\n      .insert",
+          "lineNumber": 84
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 84
+        },
+        {
+          "caller": "POST",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 94
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 95
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from('prediction_validation')\r\n      .insert",
+          "lineNumber": 99
+        },
+        {
+          "caller": "POST",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 99
+        },
+        {
+          "caller": "POST",
+          "callee": "extractVideoId",
+          "lineNumber": 102
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 105
+        },
+        {
+          "caller": "POST",
+          "callee": "extractNiche",
+          "lineNumber": 106
+        },
+        {
+          "caller": "POST",
+          "callee": "extractPlatform",
+          "lineNumber": 107
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 110
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 116
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 117
+        },
+        {
+          "caller": "generateMockGenes",
+          "callee": "videoUrl.split('').reduce",
+          "lineNumber": 126
+        },
+        {
+          "caller": "generateMockGenes",
+          "callee": "videoUrl.split",
+          "lineNumber": 126
+        },
+        {
+          "caller": "generateMockGenes",
+          "callee": "char.charCodeAt",
+          "lineNumber": 126
+        },
+        {
+          "caller": "generateMockGenes",
+          "callee": "Array(48).fill",
+          "lineNumber": 127
+        },
+        {
+          "caller": "generateMockGenes",
+          "callee": "Array",
+          "lineNumber": 127
+        },
+        {
+          "caller": "generateOptimizationSuggestions",
+          "callee": "advancedSuggestions.slice",
+          "lineNumber": 162
+        },
+        {
+          "caller": "generateOptimizationSuggestions",
+          "callee": "fullSuggestions.slice",
+          "lineNumber": 163
+        },
+        {
+          "caller": "extractVideoId",
+          "callee": "url.match",
+          "lineNumber": 178
+        },
+        {
+          "caller": "extractVideoId",
+          "callee": "crypto.randomUUID",
+          "lineNumber": 182
+        },
+        {
+          "caller": "extractPlatform",
+          "callee": "url.includes",
+          "lineNumber": 186
+        },
+        {
+          "caller": "extractPlatform",
+          "callee": "url.includes",
+          "lineNumber": 187
+        },
+        {
+          "caller": "extractPlatform",
+          "callee": "url.includes",
+          "lineNumber": 188
+        },
+        {
+          "caller": "extractPlatform",
+          "callee": "url.includes",
+          "lineNumber": 188
+        },
+        {
+          "caller": "extractNiche",
+          "callee": "Math.floor",
+          "lineNumber": 196
+        },
+        {
+          "caller": "extractNiche",
+          "callee": "Math.random",
+          "lineNumber": 196
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/user/stats/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 83,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 83,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('*')\r\n      .eq('id', userId)\r\n      .single",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 20
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('user_analytics')\r\n      .select('*')\r\n      .eq('user_id', userId)\r\n      .eq('action_type', 'video_analyzed')\r\n      .order",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('user_analytics')\r\n      .select('*')\r\n      .eq('user_id', userId)\r\n      .eq",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('user_analytics')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('user_analytics')\r\n      .select",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 35
+        },
+        {
+          "caller": "GET",
+          "callee": "userAnalytics\r\n      .map(a => a.details?.viral_probability || 0)\r\n      .filter",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GET",
+          "callee": "userAnalytics\r\n      .map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GET",
+          "callee": "viralScores.reduce",
+          "lineNumber": 47
+        },
+        {
+          "caller": "GET",
+          "callee": "Math.max",
+          "lineNumber": 51
+        },
+        {
+          "caller": "GET",
+          "callee": "userAnalytics.slice(0, 10).map",
+          "lineNumber": 55
+        },
+        {
+          "caller": "GET",
+          "callee": "userAnalytics.slice",
+          "lineNumber": 55
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 70
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 77
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 78
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/user/templates/top/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 88,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 88,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('features_enabled')\r\n      .eq('id', userId)\r\n      .single",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select('features_enabled')\r\n      .eq",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('limited_users')\r\n      .select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('template_intelligence')\r\n      .select(`\r\n        template_id,\r\n        status,\r\n        temperature_score,\r\n        viral_count_24h,\r\n        success_rate_limited_users,\r\n        template_library!inner(name, success_rate, niche)\r\n      `)\r\n      .in('status', ['HOT', 'NEW', 'STABLE'])\r\n      .order('temperature_score', { ascending: false })\r\n      .limit",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('template_intelligence')\r\n      .select(`\r\n        template_id,\r\n        status,\r\n        temperature_score,\r\n        viral_count_24h,\r\n        success_rate_limited_users,\r\n        template_library!inner(name, success_rate, niche)\r\n      `)\r\n      .in('status', ['HOT', 'NEW', 'STABLE'])\r\n      .order",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('template_intelligence')\r\n      .select(`\r\n        template_id,\r\n        status,\r\n        temperature_score,\r\n        viral_count_24h,\r\n        success_rate_limited_users,\r\n        template_library!inner(name, success_rate, niche)\r\n      `)\r\n      .in",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from('template_intelligence')\r\n      .select",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "supabaseClient\r\n      .from",
+          "lineNumber": 41
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 56
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 57
+        },
+        {
+          "caller": "GET",
+          "callee": "(templates || []).map",
+          "lineNumber": 64
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 74
+        },
+        {
+          "caller": "GET",
+          "callee": "console.error",
+          "lineNumber": 82
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/[...slug]/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 38,
+      "functions": [
+        {
+          "name": "ok",
+          "startLine": 7,
+          "endLine": 7,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 9,
+          "endLine": 25,
+          "params": [
+            "_req",
+            "{ params }"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 27,
+          "endLine": 41,
+          "params": [
+            "req",
+            "{ params }"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 27,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ok",
+          "callee": "NextResponse.json",
+          "lineNumber": 7
+        },
+        {
+          "caller": "GET",
+          "callee": "ok",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "ok",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "Array.from",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "Math.random",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "ok",
+          "lineNumber": 19
+        },
+        {
+          "caller": "GET",
+          "callee": "ok",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "requireRole",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 35
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('pipeline_control_actions').insert({ action: 'validation_start', user_id: req.headers.get('x-user-id') || null, params: {} } as any).select('id').limit",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('pipeline_control_actions').insert({ action: 'validation_start', user_id: req.headers.get('x-user-id') || null, params: {} } as any).select",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from('pipeline_control_actions').insert",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "db.from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "req.headers.get",
+          "lineNumber": 36
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.random().toString(36).slice",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.random().toString",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.random",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "Date.now",
+          "lineNumber": 39
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/build-cohort/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actBuildCohort",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/create-run/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actCreateValidationRun",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/export.csv/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 19,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 21,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "readAllValidations",
+          "lineNumber": 8
+        },
+        {
+          "caller": "GET",
+          "callee": "rows.map(r=>[\r\n    r.predictionId,\r\n    r.videoId||'',\r\n    r.platform,\r\n    r.madeAtISO,\r\n    r.maturedAtISO,\r\n    r.probability.toFixed(4),\r\n    r.actualViral?1:0,\r\n    r.predictedViral?1:0\r\n  ].join(',')).join",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "rows.map",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "[\r\n    r.predictionId,\r\n    r.videoId||'',\r\n    r.platform,\r\n    r.madeAtISO,\r\n    r.maturedAtISO,\r\n    r.probability.toFixed(4),\r\n    r.actualViral?1:0,\r\n    r.predictedViral?1:0\r\n  ].join",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "r.probability.toFixed",
+          "lineNumber": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/extract-patterns/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actExtractPatterns",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/generate-fingerprints/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actGenerateFingerprints",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/get-previous-runs/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 10,
+          "endLine": 28,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "parseInt",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "actGetPreviousRuns",
+          "lineNumber": 15
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 18
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 23
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/get-run/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 10,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 13
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "actGetRun",
+          "lineNumber": 22
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/lock-predictions/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actLockPredictions",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/metrics/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 20,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 6,
+          "endLine": 21,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "tracker.getSystemPerformance",
+          "lineNumber": 9
+        },
+        {
+          "caller": "GET",
+          "callee": "tracker.updateSystemAccuracy",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "JSON.stringify",
+          "lineNumber": 16
+        },
+        {
+          "caller": "GET",
+          "callee": "String",
+          "lineNumber": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/predict-with-visual/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 213,
+      "nonEmptyLines": 175,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 19,
+          "endLine": 167,
+          "params": [
+            "req"
+          ]
+        },
+        {
+          "name": "calculateTextScore",
+          "startLine": 170,
+          "endLine": 184,
+          "params": [
+            "video"
+          ]
+        },
+        {
+          "name": "calculateVisualMultiplier",
+          "startLine": 187,
+          "endLine": 213,
+          "params": [
+            "visual"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 21
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 24
+        },
+        {
+          "caller": "POST",
+          "callee": "createClient",
+          "lineNumber": 30
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('validation_runs')\r\n      .select('*')\r\n      .eq('id', body.run_id)\r\n      .single",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('validation_runs')\r\n      .select('*')\r\n      .eq",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('validation_runs')\r\n      .select",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 33
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 40
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 50
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('*')\r\n      .in",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 57
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from('video_visual_analysis')\r\n        .select('*')\r\n        .in",
+          "lineNumber": 70
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from('video_visual_analysis')\r\n        .select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "POST",
+          "callee": "calculateTextScore",
+          "lineNumber": 88
+        },
+        {
+          "caller": "POST",
+          "callee": "visualAnalysis.find",
+          "lineNumber": 95
+        },
+        {
+          "caller": "POST",
+          "callee": "calculateVisualMultiplier",
+          "lineNumber": 98
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.random",
+          "lineNumber": 104
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.random",
+          "lineNumber": 104
+        },
+        {
+          "caller": "POST",
+          "callee": "predictions.push",
+          "lineNumber": 106
+        },
+        {
+          "caller": "POST",
+          "callee": "predictions.map",
+          "lineNumber": 129
+        },
+        {
+          "caller": "POST",
+          "callee": "new Date().toISOString",
+          "lineNumber": 135
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from('validation_predictions')\r\n      .insert",
+          "lineNumber": 138
+        },
+        {
+          "caller": "POST",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 138
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 143
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 146
+        },
+        {
+          "caller": "POST",
+          "callee": "avgPrediction.toFixed",
+          "lineNumber": 148
+        },
+        {
+          "caller": "POST",
+          "callee": "Math.round",
+          "lineNumber": 149
+        },
+        {
+          "caller": "POST",
+          "callee": "predictions.slice",
+          "lineNumber": 153
+        },
+        {
+          "caller": "POST",
+          "callee": "console.error",
+          "lineNumber": 161
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 162
+        },
+        {
+          "caller": "calculateTextScore",
+          "callee": "Math.max",
+          "lineNumber": 177
+        },
+        {
+          "caller": "calculateTextScore",
+          "callee": "Math.min",
+          "lineNumber": 180
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/recompute/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 7,
+          "endLine": 14,
+          "params": [
+            "req"
+          ]
+        },
+        {
+          "name": "GET",
+          "startLine": 16,
+          "endLine": 16,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "forceRecompute",
+          "lineNumber": 9
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 10
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "POST",
+          "lineNumber": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/records/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 11,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 13,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 9
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 9
+        },
+        {
+          "caller": "GET",
+          "callee": "Number",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "searchParams.get",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "listValidationsPaginated",
+          "lineNumber": 11
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/summary/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 17,
+      "nonEmptyLines": 12,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 7,
+          "endLine": 14,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "getSummary",
+          "lineNumber": 9
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 10
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 12
+        },
+        {
+          "caller": "GET",
+          "callee": "new Date().toISOString",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/templates/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 14,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 6,
+          "endLine": 16,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "Array.from({ length: 8 }).map",
+          "lineNumber": 8
+        },
+        {
+          "caller": "GET",
+          "callee": "Array.from",
+          "lineNumber": 8
+        },
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 15
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/test-contract/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 45,
+      "nonEmptyLines": 29,
+      "functions": [
+        {
+          "name": "stripMeta",
+          "startLine": 10,
+          "endLine": 13,
+          "params": [
+            "schema"
+          ]
+        },
+        {
+          "name": "POST",
+          "startLine": 21,
+          "endLine": 36,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 21,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 23
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "validateIngestion",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "validatePresentation",
+          "lineNumber": 31
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 32
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/trend/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 6,
+          "endLine": 8,
+          "params": [
+            "_req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/validate-accuracy/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 35,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "POST",
+          "startLine": 11,
+          "endLine": 35,
+          "params": [
+            "req"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "POST",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "POST",
+          "callee": "req.json",
+          "lineNumber": 13
+        },
+        {
+          "caller": "POST",
+          "callee": "Array.isArray",
+          "lineNumber": 15
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 16
+        },
+        {
+          "caller": "POST",
+          "callee": "actValidateAccuracy",
+          "lineNumber": 22
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 25
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 28
+        },
+        {
+          "caller": "POST",
+          "callee": "NextResponse.json",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/app/api/validation/route.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 6,
+      "functions": [
+        {
+          "name": "GET",
+          "startLine": 6,
+          "endLine": 8,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "dynamic",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "GET",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "GET",
+          "callee": "NextResponse.json",
+          "lineNumber": 7
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

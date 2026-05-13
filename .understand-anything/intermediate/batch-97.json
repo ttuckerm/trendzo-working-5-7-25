@@ -1,0 +1,1511 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/value-template-editor/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "summary": "Next.js POST handler that runs ML-style content analysis and viral prediction for value-template editor inputs, returning hook/timing/platform-fit scores plus intelligent suggestions and persisting predictions for validation.",
+      "tags": ["api-handler", "viral-prediction", "ml-analysis", "value-template-editor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [45, 122],
+      "summary": "Route entry point that parses incoming editor state, orchestrates the ML pipeline (content analysis, prediction, suggestions), and returns a structured viral-prediction payload.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:getEnhancedContextForPrediction",
+      "type": "function",
+      "name": "getEnhancedContextForPrediction",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [129, 204],
+      "summary": "Builds an enriched context object from Supabase (trends, niche stats, historical patterns) used as input to the ML prediction stage.",
+      "tags": ["data-loader", "context", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:runMLContentAnalysis",
+      "type": "function",
+      "name": "runMLContentAnalysis",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [211, 240],
+      "summary": "Runs feature-level ML content analysis on the template fields, producing a structured score breakdown.",
+      "tags": ["ml-analysis", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:generateMLViralPrediction",
+      "type": "function",
+      "name": "generateMLViralPrediction",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [247, 302],
+      "summary": "Aggregates sub-scores into a final ML viral-prediction object (viral score, predicted views, engagement rate, confidence).",
+      "tags": ["ml-analysis", "viral-prediction", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:generateIntelligentSuggestions",
+      "type": "function",
+      "name": "generateIntelligentSuggestions",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [309, 358],
+      "summary": "Generates actionable improvement suggestions (hook rewrites, pacing, CTA) from the score breakdown.",
+      "tags": ["suggestions", "recommendation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateViralDNAScore",
+      "type": "function",
+      "name": "calculateViralDNAScore",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [362, 375],
+      "summary": "Computes a composite Viral DNA score from weighted sub-feature inputs.",
+      "tags": ["scoring", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:analyzeContentQuality",
+      "type": "function",
+      "name": "analyzeContentQuality",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [377, 399],
+      "summary": "Scores content quality based on clarity, specificity, and emotional pull heuristics.",
+      "tags": ["scoring", "content-quality"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLHookScore",
+      "type": "function",
+      "name": "calculateMLHookScore",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [401, 433],
+      "summary": "Scores hook strength using keyword detection, length checks, and pattern matchers.",
+      "tags": ["scoring", "hook-detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateTimingOptimization",
+      "type": "function",
+      "name": "calculateTimingOptimization",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [435, 458],
+      "summary": "Estimates timing/pacing optimality from beat structure and runtime targets.",
+      "tags": ["scoring", "timing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculatePlatformFitScore",
+      "type": "function",
+      "name": "calculatePlatformFitScore",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [460, 479],
+      "summary": "Scores platform-fit (TikTok/Reels/Shorts) based on format, aspect, and length conventions.",
+      "tags": ["scoring", "platform-fit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLViralScore",
+      "type": "function",
+      "name": "calculateMLViralScore",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [481, 504],
+      "summary": "Combines sub-scores into a single ML viral score number using fixed weights.",
+      "tags": ["scoring", "viral-prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLConfidence",
+      "type": "function",
+      "name": "calculateMLConfidence",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [506, 523],
+      "summary": "Derives a confidence value for the ML prediction from feature completeness and agreement.",
+      "tags": ["scoring", "confidence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLPredictedViews",
+      "type": "function",
+      "name": "calculateMLPredictedViews",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [525, 542],
+      "summary": "Projects an estimated view count from the viral score and platform baselines.",
+      "tags": ["scoring", "projection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLEngagementRate",
+      "type": "function",
+      "name": "calculateMLEngagementRate",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [544, 560],
+      "summary": "Estimates an engagement rate from hook and content-quality sub-scores.",
+      "tags": ["scoring", "engagement"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/predict/route.ts:storePredictionForValidation",
+      "type": "function",
+      "name": "storePredictionForValidation",
+      "filePath": "src/app/api/value-template-editor/predict/route.ts",
+      "lineRange": [565, 599],
+      "summary": "Persists the predicted scores and inputs to Supabase so they can be evaluated against future ground-truth metrics.",
+      "tags": ["persistence", "supabase", "validation"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/value-template-editor/related-videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/value-template-editor/related-videos/route.ts",
+      "summary": "GET endpoint that returns related-video recommendations for a template, falling back to a mock generator when no Supabase data is available.",
+      "tags": ["api-handler", "related-videos", "value-template-editor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/related-videos/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/value-template-editor/related-videos/route.ts",
+      "lineRange": [20, 85],
+      "summary": "Resolves related videos for the requested template by querying Supabase and falling back to mock data when empty.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/related-videos/route.ts:generateMockRelatedVideos",
+      "type": "function",
+      "name": "generateMockRelatedVideos",
+      "filePath": "src/app/api/value-template-editor/related-videos/route.ts",
+      "lineRange": [90, 157],
+      "summary": "Produces synthetic related-video records used as a fallback when no Supabase rows match.",
+      "tags": ["mock-data", "fallback"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/value-template-editor/viral-videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/value-template-editor/viral-videos/route.ts",
+      "summary": "REST endpoint pair (GET/POST) that lists viral reference videos and records new viral selections for the value-template editor.",
+      "tags": ["api-handler", "viral-videos", "value-template-editor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/viral-videos/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/value-template-editor/viral-videos/route.ts",
+      "lineRange": [32, 102],
+      "summary": "Fetches viral reference videos filtered by niche/platform from Supabase.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/viral-videos/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/value-template-editor/viral-videos/route.ts",
+      "lineRange": [109, 169],
+      "summary": "Persists a newly tagged viral reference video to Supabase.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/value-template-editor/workspace-config/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "summary": "GET handler that builds an enhanced workspace configuration for the value-template editor, deriving color schemes, hooks, optimization insights, and projected metrics.",
+      "tags": ["api-handler", "workspace-config", "value-template-editor", "viral-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/workspace-config/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "lineRange": [24, 170],
+      "summary": "Composes a workspace-config payload from template inputs, viral patterns, and projected performance numbers.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateEnhancedWorkspaceConfig",
+      "type": "function",
+      "name": "generateEnhancedWorkspaceConfig",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "lineRange": [177, 290],
+      "summary": "Builds the workspace-config object by combining viral pattern analyzer output with style/tone/pacing heuristics.",
+      "tags": ["config-builder", "viral-analysis"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateViralColorScheme",
+      "type": "function",
+      "name": "generateViralColorScheme",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "lineRange": [295, 313],
+      "summary": "Picks a color palette tuned to the chosen niche and emotional arc.",
+      "tags": ["styling", "color-scheme"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateIntelligentHooks",
+      "type": "function",
+      "name": "generateIntelligentHooks",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "lineRange": [318, 356],
+      "summary": "Produces hook suggestions tailored to the template style and target platform.",
+      "tags": ["hook-detection", "suggestions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateOptimizationInsights",
+      "type": "function",
+      "name": "generateOptimizationInsights",
+      "filePath": "src/app/api/value-template-editor/workspace-config/route.ts",
+      "lineRange": [361, 409],
+      "summary": "Generates actionable optimization insights covering pacing, structure, and platform fit.",
+      "tags": ["suggestions", "optimization"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/video-status/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/video-status/[id]/route.ts",
+      "summary": "GET handler that reports a video's processing status, exposing stage, progress, and any error details for a given video id.",
+      "tags": ["api-handler", "video-status", "polling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video-status/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/video-status/[id]/route.ts",
+      "lineRange": [15, 71],
+      "summary": "Reads the video row and returns its processing stage plus a derived progress percentage.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video-status/[id]/route.ts:calculateProgress",
+      "type": "function",
+      "name": "calculateProgress",
+      "filePath": "src/app/api/video-status/[id]/route.ts",
+      "lineRange": [76, 101],
+      "summary": "Maps the current pipeline stage label to a 0-100 progress percentage.",
+      "tags": ["utility", "progress"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/video/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/video/predict/route.ts",
+      "summary": "POST/GET endpoints that run feature extraction plus the viral prediction model against an uploaded video and report the result.",
+      "tags": ["api-handler", "viral-prediction", "video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/video/predict/route.ts",
+      "lineRange": [15, 101],
+      "summary": "Loads the video record, runs feature extraction and the viral-prediction model, and stores the resulting prediction.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/video/predict/route.ts",
+      "lineRange": [103, 151],
+      "summary": "Returns the stored viral prediction for the requested video id.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/video/upload/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "summary": "Handles video uploads end-to-end: accepts the file, kicks off async processing and feature extraction, generates an initial viral prediction, and emits optimization suggestions.",
+      "tags": ["api-handler", "video-upload", "viral-prediction", "background-job"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [28, 144],
+      "summary": "Receives a multipart upload, persists the video record, and dispatches the async processing pipeline.",
+      "tags": ["api-handler", "entry-point", "post", "upload"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:processVideoAsync",
+      "type": "function",
+      "name": "processVideoAsync",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [150, 200],
+      "summary": "Drives asynchronous post-upload processing: feature extraction, prediction, and DB updates.",
+      "tags": ["background-job", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:generateViralPrediction",
+      "type": "function",
+      "name": "generateViralPrediction",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [205, 256],
+      "summary": "Runs the viral-prediction model on the extracted features and returns scored output.",
+      "tags": ["viral-prediction", "scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:generateOptimizationSuggestions",
+      "type": "function",
+      "name": "generateOptimizationSuggestions",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [261, 324],
+      "summary": "Produces concrete optimization suggestions (hook, pacing, platform, timing, engagement) for the uploaded video.",
+      "tags": ["suggestions", "optimization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:calculateHookStrength",
+      "type": "function",
+      "name": "calculateHookStrength",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [327, 338],
+      "summary": "Computes a hook-strength sub-score from extracted hook features.",
+      "tags": ["scoring", "hook-detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:calculateContentQuality",
+      "type": "function",
+      "name": "calculateContentQuality",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [340, 354],
+      "summary": "Computes a content-quality sub-score from extracted features.",
+      "tags": ["scoring", "content-quality"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:calculatePlatformFit",
+      "type": "function",
+      "name": "calculatePlatformFit",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [356, 369],
+      "summary": "Computes a platform-fit sub-score from aspect, length, and format features.",
+      "tags": ["scoring", "platform-fit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:calculateTimingScore",
+      "type": "function",
+      "name": "calculateTimingScore",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [371, 381],
+      "summary": "Computes a timing-quality sub-score for the video.",
+      "tags": ["scoring", "timing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/video/upload/route.ts:calculateEngagementPotential",
+      "type": "function",
+      "name": "calculateEngagementPotential",
+      "filePath": "src/app/api/video/upload/route.ts",
+      "lineRange": [383, 394],
+      "summary": "Computes an engagement-potential sub-score for the video.",
+      "tags": ["scoring", "engagement"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/videos/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/videos/[id]/route.ts",
+      "summary": "Thin GET handler that returns the computed VIT (viral intelligence) payload for a single video id.",
+      "tags": ["api-handler", "video", "vit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/videos/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/videos/[id]/route.ts",
+      "lineRange": [6, 15],
+      "summary": "Computes and returns the VIT payload for the requested video id.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/videos/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/videos/route.ts",
+      "summary": "GET endpoint that lists videos with their VIT scores, used by the videos index page and admin dashboards.",
+      "tags": ["api-handler", "video", "vit", "listing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/videos/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/videos/route.ts",
+      "lineRange": [12, 67],
+      "summary": "Lists videos with computed VIT data, with logging for diagnostic visibility.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/videos/schema.d.ts",
+      "type": "file",
+      "name": "schema.d.ts",
+      "filePath": "src/app/api/videos/schema.d.ts",
+      "summary": "Ambient TypeScript declarations describing the videos API response/request shapes.",
+      "tags": ["type-definition", "schema", "videos"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "document:src/app/api/videos/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "src/app/api/videos/README.md",
+      "summary": "Brief README for the videos API folder, describing the endpoint surface and conventions.",
+      "tags": ["documentation", "videos-api"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-dna-report/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-dna-report/route.ts",
+      "summary": "POST/GET endpoints that generate and serve mock Viral DNA reports, used as a stub while the full pipeline is wired up.",
+      "tags": ["api-handler", "viral-dna", "mock-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-dna-report/route.ts:generateMockReport",
+      "type": "function",
+      "name": "generateMockReport",
+      "filePath": "src/app/api/viral-dna-report/route.ts",
+      "lineRange": [13, 107],
+      "summary": "Builds a fully shaped mock Viral DNA report including scores, breakdowns, and recommendations.",
+      "tags": ["mock-data", "viral-dna"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-dna-report/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-dna-report/route.ts",
+      "lineRange": [110, 155],
+      "summary": "Accepts a request payload and responds with a generated Viral DNA report (currently mock).",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-dna-report/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-dna-report/route.ts",
+      "lineRange": [158, 189],
+      "summary": "Returns a mock Viral DNA report for the requested id or current context.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "summary": "Accuracy-enhanced viral-prediction endpoint that runs the accuracy orchestrator, applies rate limiting and request validation, and reports metrics via the real-time monitor.",
+      "tags": ["api-handler", "viral-prediction", "accuracy", "rate-limiting"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "lineRange": [55, 219],
+      "summary": "Validates a viral-prediction request, enforces rate limits, runs the accuracy orchestrator, and instruments the run for the real-time monitor.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "lineRange": [221, 295],
+      "summary": "Returns aggregated accuracy-enhanced prediction stats and health information.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:checkRateLimit",
+      "type": "function",
+      "name": "checkRateLimit",
+      "filePath": "src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "lineRange": [299, 321],
+      "summary": "In-memory rate-limit check keyed by client identifier.",
+      "tags": ["rate-limiting", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:validateRequest",
+      "type": "function",
+      "name": "validateRequest",
+      "filePath": "src/app/api/viral-prediction/accuracy-enhanced/route.ts",
+      "lineRange": [323, 373],
+      "summary": "Validates the incoming POST body for required fields, types, and ISO8601 timestamps.",
+      "tags": ["validation", "middleware"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/analytics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "summary": "GET endpoint exposing viral-prediction analytics: total videos analyzed, prediction counts, accuracy metrics, hook detections, and recent activity.",
+      "tags": ["api-handler", "analytics", "viral-prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [9, 69],
+      "summary": "Aggregates analytics across videos, predictions, accuracy, and activity and returns the combined payload.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:getTotalVideosAnalyzed",
+      "type": "function",
+      "name": "getTotalVideosAnalyzed",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [71, 88],
+      "summary": "Returns the count of analyzed videos for the analytics endpoint.",
+      "tags": ["analytics", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:getViralPredictions",
+      "type": "function",
+      "name": "getViralPredictions",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [90, 101],
+      "summary": "Loads viral-prediction summary rows for analytics aggregation.",
+      "tags": ["analytics", "query"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:getAccuracyMetrics",
+      "type": "function",
+      "name": "getAccuracyMetrics",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [103, 138],
+      "summary": "Computes accuracy metrics (Spearman/MAE-style) used by the analytics dashboard.",
+      "tags": ["analytics", "accuracy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:getHookDetections",
+      "type": "function",
+      "name": "getHookDetections",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [140, 165],
+      "summary": "Returns hook-detection counts and patterns for analytics.",
+      "tags": ["analytics", "hook-detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analytics/route.ts:getRecentAnalysisActivity",
+      "type": "function",
+      "name": "getRecentAnalysisActivity",
+      "filePath": "src/app/api/viral-prediction/analytics/route.ts",
+      "lineRange": [167, 181],
+      "summary": "Returns a feed of recent analysis activity for the analytics dashboard.",
+      "tags": ["analytics", "activity-feed"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/analyze-complete/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/analyze-complete/route.ts",
+      "summary": "Orchestrates a complete viral analysis run combining the AI brain, framework parser, and main prediction engine, with fallback when external services fail.",
+      "tags": ["api-handler", "viral-prediction", "ai-brain", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analyze-complete/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/analyze-complete/route.ts",
+      "lineRange": [11, 170],
+      "summary": "Validates input (TikTok URL), runs the full AI brain + framework + prediction pipeline, and returns a complete analysis.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analyze-complete/route.ts:generateFallbackAnalysis",
+      "type": "function",
+      "name": "generateFallbackAnalysis",
+      "filePath": "src/app/api/viral-prediction/analyze-complete/route.ts",
+      "lineRange": [189, 259],
+      "summary": "Returns a degraded but well-shaped analysis object when the full pipeline cannot complete.",
+      "tags": ["fallback", "resilience"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/analyze/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/analyze/route.ts",
+      "summary": "Primary viral-prediction analyze endpoint that extracts a TikTok id, runs the canonical prediction pipeline, and returns the structured result.",
+      "tags": ["api-handler", "viral-prediction", "tiktok", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analyze/route.ts:extractTikTokId",
+      "type": "function",
+      "name": "extractTikTokId",
+      "filePath": "src/app/api/viral-prediction/analyze/route.ts",
+      "lineRange": [22, 38],
+      "summary": "Parses a TikTok URL and returns the canonical video id, handling several URL shapes.",
+      "tags": ["utility", "url-parsing", "tiktok"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analyze/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/analyze/route.ts",
+      "lineRange": [40, 202],
+      "summary": "Drives the canonical viral-prediction pipeline for a given TikTok URL and returns the scored analysis.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/analyze/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/analyze/route.ts",
+      "lineRange": [204, 215],
+      "summary": "Health/metadata endpoint for the analyze route.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/batch-process/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "summary": "Batch-processing endpoint that orchestrates daily Apify ingestion, trending-content scans, and bulk URL analysis jobs with status tracking in Supabase.",
+      "tags": ["api-handler", "viral-prediction", "batch", "background-job", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [19, 55],
+      "summary": "Dispatches a batch-processing job (ingestion, trending, or batch URLs) based on the request action.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [57, 85],
+      "summary": "Returns job status by id or lists recent/active jobs.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:startDailyIngestion",
+      "type": "function",
+      "name": "startDailyIngestion",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [87, 128],
+      "summary": "Creates a daily ingestion job row and launches background processing via Apify.",
+      "tags": ["batch", "apify", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:processTrendingContent",
+      "type": "function",
+      "name": "processTrendingContent",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [130, 169],
+      "summary": "Kicks off a trending-content scan job and schedules background work.",
+      "tags": ["batch", "trending"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:batchAnalyzeUrls",
+      "type": "function",
+      "name": "batchAnalyzeUrls",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [171, 213],
+      "summary": "Creates a batch-URL job for analyzing a user-supplied list of URLs.",
+      "tags": ["batch", "url-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:getJobStatus",
+      "type": "function",
+      "name": "getJobStatus",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [215, 254],
+      "summary": "Reads a job row by id and returns its current status and metadata.",
+      "tags": ["batch", "job-status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:getJobsByStatus",
+      "type": "function",
+      "name": "getJobsByStatus",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [256, 274],
+      "summary": "Returns active/pending jobs by status for monitoring.",
+      "tags": ["batch", "job-status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:getRecentJobs",
+      "type": "function",
+      "name": "getRecentJobs",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [276, 293],
+      "summary": "Returns recent job history for the batch-process dashboard.",
+      "tags": ["batch", "job-status"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:processInBackground",
+      "type": "function",
+      "name": "processInBackground",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [297, 371],
+      "summary": "Background worker that runs Apify ingestion for a daily job and updates progress.",
+      "tags": ["background-job", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:processTrendingInBackground",
+      "type": "function",
+      "name": "processTrendingInBackground",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [373, 403],
+      "summary": "Background worker that processes a trending-content scan job.",
+      "tags": ["background-job", "trending"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:processBatchUrlsInBackground",
+      "type": "function",
+      "name": "processBatchUrlsInBackground",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [405, 435],
+      "summary": "Background worker that analyzes each URL in a batch job and accumulates results.",
+      "tags": ["background-job", "url-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/batch-process/route.ts:updateJobProgress",
+      "type": "function",
+      "name": "updateJobProgress",
+      "filePath": "src/app/api/viral-prediction/batch-process/route.ts",
+      "lineRange": [437, 446],
+      "summary": "Helper that writes job progress and status fields back to Supabase.",
+      "tags": ["persistence", "job-status"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/dashboard/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "summary": "Backend for the viral-prediction admin dashboard: aggregates accuracy, processing stats, recent predictions, system health, and exposes trigger actions for batch analysis and target updates.",
+      "tags": ["api-handler", "dashboard", "viral-prediction", "admin"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [18, 99],
+      "summary": "Assembles the dashboard payload by querying accuracy, processing, recent predictions, system health, and top templates.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [101, 134],
+      "summary": "Handles dashboard actions like triggering batch analysis or updating the accuracy target.",
+      "tags": ["api-handler", "entry-point", "post", "admin"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:getCurrentAccuracy",
+      "type": "function",
+      "name": "getCurrentAccuracy",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [136, 199],
+      "summary": "Computes current accuracy metrics for the dashboard from prediction history.",
+      "tags": ["analytics", "accuracy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:getProcessingStats",
+      "type": "function",
+      "name": "getProcessingStats",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [201, 240],
+      "summary": "Computes throughput and queue stats for the dashboard.",
+      "tags": ["analytics", "processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:getRecentPredictions",
+      "type": "function",
+      "name": "getRecentPredictions",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [242, 285],
+      "summary": "Returns recent predictions formatted for the dashboard table.",
+      "tags": ["analytics", "listing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:getSystemHealth",
+      "type": "function",
+      "name": "getSystemHealth",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [287, 314],
+      "summary": "Reports system-health indicators (DB, Apify, queues) for the dashboard.",
+      "tags": ["monitoring", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:getTopPerformingTemplates",
+      "type": "function",
+      "name": "getTopPerformingTemplates",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [316, 337],
+      "summary": "Returns the top-performing templates for the dashboard summary.",
+      "tags": ["analytics", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:triggerBatchAnalysis",
+      "type": "function",
+      "name": "triggerBatchAnalysis",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [356, 374],
+      "summary": "Triggers a new batch-analysis job from the dashboard.",
+      "tags": ["admin", "batch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:updateAccuracyTarget",
+      "type": "function",
+      "name": "updateAccuracyTarget",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [376, 397],
+      "summary": "Updates the target accuracy metric used by the dashboard and monitors.",
+      "tags": ["admin", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/dashboard/route.ts:generateValidationReport",
+      "type": "function",
+      "name": "generateValidationReport",
+      "filePath": "src/app/api/viral-prediction/dashboard/route.ts",
+      "lineRange": [399, 425],
+      "summary": "Generates a validation report comparing predictions against observed metrics.",
+      "tags": ["analytics", "validation"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/fast/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "summary": "Fast-path viral-prediction endpoint that uses the fast-prediction engine, applies calibration, and streams metrics to the real-time monitor with rate limiting and validation.",
+      "tags": ["api-handler", "viral-prediction", "fast-path", "calibration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/fast/route.ts:applyCalibration",
+      "type": "function",
+      "name": "applyCalibration",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "lineRange": [47, 61],
+      "summary": "Applies a calibration multiplier/offset to a raw prediction score.",
+      "tags": ["calibration", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/fast/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "lineRange": [63, 196],
+      "summary": "Validates input, enforces rate limits, runs the fast prediction engine, calibrates output, and emits monitor events.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/fast/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "lineRange": [201, 231],
+      "summary": "Returns fast-path engine status and recent accuracy metrics.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/fast/route.ts:checkRateLimit",
+      "type": "function",
+      "name": "checkRateLimit",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "lineRange": [235, 254],
+      "summary": "In-memory rate-limit guard for the fast-path endpoint.",
+      "tags": ["rate-limiting", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/fast/route.ts:validateInput",
+      "type": "function",
+      "name": "validateInput",
+      "filePath": "src/app/api/viral-prediction/fast/route.ts",
+      "lineRange": [256, 305],
+      "summary": "Validates the fast-path POST body for required fields and types.",
+      "tags": ["validation", "middleware"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/inception/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/inception/route.ts",
+      "summary": "Inception-mode endpoint that powers copy-viral-winner, optimize-for-viral, and platform-adapt actions on top of the inception service.",
+      "tags": ["api-handler", "viral-prediction", "inception"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/inception/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/inception/route.ts",
+      "lineRange": [9, 43],
+      "summary": "Routes inception-mode actions to the appropriate handler based on the request action.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/inception/route.ts:handleCopyViralWinner",
+      "type": "function",
+      "name": "handleCopyViralWinner",
+      "filePath": "src/app/api/viral-prediction/inception/route.ts",
+      "lineRange": [45, 100],
+      "summary": "Runs the copy-viral-winner inception flow and returns adapted template output.",
+      "tags": ["inception", "copy-winner"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/inception/route.ts:handleOptimizeForViral",
+      "type": "function",
+      "name": "handleOptimizeForViral",
+      "filePath": "src/app/api/viral-prediction/inception/route.ts",
+      "lineRange": [102, 164],
+      "summary": "Runs the optimize-for-viral inception flow, producing structured edit suggestions.",
+      "tags": ["inception", "optimization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/inception/route.ts:handlePlatformAdapt",
+      "type": "function",
+      "name": "handlePlatformAdapt",
+      "filePath": "src/app/api/viral-prediction/inception/route.ts",
+      "lineRange": [166, 231],
+      "summary": "Adapts a viral template for a specific target platform via the inception service.",
+      "tags": ["inception", "platform-adapt"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/optimized/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "summary": "Optimization-oriented viral-prediction endpoint that dispatches predictions to the optimization orchestrator and tracks API performance.",
+      "tags": ["api-handler", "viral-prediction", "optimization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [99, 211],
+      "summary": "Runs an optimized prediction request through the orchestrator with strategy selection and monitoring.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:PUT",
+      "type": "function",
+      "name": "PUT",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [215, 307],
+      "summary": "Handles a batch optimization request and computes effectiveness across the batch.",
+      "tags": ["api-handler", "entry-point", "put", "batch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [311, 368],
+      "summary": "Returns optimized-endpoint stats, including selected strategies and recent latencies.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:validateRequest",
+      "type": "function",
+      "name": "validateRequest",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [372, 405],
+      "summary": "Validates required fields and types for the optimization endpoint.",
+      "tags": ["validation", "middleware"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:getStrategyFromOptimizations",
+      "type": "function",
+      "name": "getStrategyFromOptimizations",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [407, 419],
+      "summary": "Selects an optimization strategy label from the orchestrator's output.",
+      "tags": ["optimization", "strategy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:calculateBatchOptimizationEffectiveness",
+      "type": "function",
+      "name": "calculateBatchOptimizationEffectiveness",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [421, 431],
+      "summary": "Computes a single effectiveness score across a batch of optimization results.",
+      "tags": ["optimization", "scoring", "batch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/optimized/route.ts:trackAPIPerformance",
+      "type": "function",
+      "name": "trackAPIPerformance",
+      "filePath": "src/app/api/viral-prediction/optimized/route.ts",
+      "lineRange": [433, 444],
+      "summary": "Records request latency and outcome metrics for the optimized endpoint.",
+      "tags": ["monitoring", "performance"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/viral-prediction/validate-system/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "summary": "System-validation endpoint that runs database, AI prediction, accuracy tracker, and Apify integration tests and produces an end-to-end validation report.",
+      "tags": ["api-handler", "viral-prediction", "validation", "self-test"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [21, 65],
+      "summary": "Dispatches the requested validation test (db, ai, tracker, apify, end-to-end, full).",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [67, 81],
+      "summary": "Returns the most recent validation summary.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:testDatabaseConnectivity",
+      "type": "function",
+      "name": "testDatabaseConnectivity",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [83, 130],
+      "summary": "Tests Supabase connectivity and basic read/write permissions.",
+      "tags": ["validation", "database", "self-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:testAIPredictionEngine",
+      "type": "function",
+      "name": "testAIPredictionEngine",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [132, 184],
+      "summary": "Exercises the AI prediction engine end-to-end with a synthetic input.",
+      "tags": ["validation", "ai-engine", "self-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:testAccuracyTracker",
+      "type": "function",
+      "name": "testAccuracyTracker",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [186, 224],
+      "summary": "Runs accuracy-tracker checks to verify metrics flow correctly.",
+      "tags": ["validation", "accuracy", "self-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:testApifyIntegration",
+      "type": "function",
+      "name": "testApifyIntegration",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [226, 295],
+      "summary": "Verifies Apify integration credentials and a smoke-run scrape.",
+      "tags": ["validation", "apify", "self-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:runFullSystemTest",
+      "type": "function",
+      "name": "runFullSystemTest",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [297, 372],
+      "summary": "Runs the full suite of validation tests and aggregates results.",
+      "tags": ["validation", "self-test", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:runEndToEndTest",
+      "type": "function",
+      "name": "runEndToEndTest",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [374, 430],
+      "summary": "Runs an end-to-end synthetic prediction flow to validate the integrated pipeline.",
+      "tags": ["validation", "e2e", "self-test"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-prediction/validate-system/route.ts:createTestData",
+      "type": "function",
+      "name": "createTestData",
+      "filePath": "src/app/api/viral-prediction/validate-system/route.ts",
+      "lineRange": [432, 520],
+      "summary": "Seeds Supabase with controlled fixtures used by the validation runs.",
+      "tags": ["validation", "fixtures"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/viral-scraping/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/viral-scraping/route.ts",
+      "summary": "Viral-scraping endpoint exposing GET/POST/DELETE actions on top of the scraper service for fetching, queuing, and clearing viral video jobs.",
+      "tags": ["api-handler", "viral-scraping", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/viral-scraping/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/viral-scraping/route.ts",
+      "lineRange": [38, 93],
+      "summary": "Returns scraped viral videos with filtering and pagination.",
+      "tags": ["api-handler", "entry-point", "get"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/viral-scraping/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/viral-scraping/route.ts",
+      "lineRange": [114, 210],
+      "summary": "Enqueues a scraping job (single URL, batch, or trending) via the scraper service.",
+      "tags": ["api-handler", "entry-point", "post"],
+      "complexity": "complex"
+    },
+
+    {
+      "id": "file:src/app/api/warehouse/download/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/warehouse/download/route.ts",
+      "summary": "Thin GET handler that streams a downloadable export from the warehouse module.",
+      "tags": ["api-handler", "warehouse", "download"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "file:src/app/api/warehouse/manifest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/warehouse/manifest/route.ts",
+      "summary": "GET handler that returns the warehouse manifest listing available exports and their metadata.",
+      "tags": ["api-handler", "warehouse", "manifest"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:getEnhancedContextForPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:runMLContentAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:generateMLViralPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:generateIntelligentSuggestions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateViralDNAScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:analyzeContentQuality", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLHookScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateTimingOptimization", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculatePlatformFitScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLViralScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLConfidence", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLPredictedViews", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:calculateMLEngagementRate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:storePredictionForValidation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "function:src/app/api/value-template-editor/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/value-template-editor/predict/route.ts", "target": "file:src/lib/services/viral-pattern-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/value-template-editor/related-videos/route.ts", "target": "function:src/app/api/value-template-editor/related-videos/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/related-videos/route.ts", "target": "function:src/app/api/value-template-editor/related-videos/route.ts:generateMockRelatedVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/related-videos/route.ts", "target": "function:src/app/api/value-template-editor/related-videos/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/value-template-editor/related-videos/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/value-template-editor/viral-videos/route.ts", "target": "function:src/app/api/value-template-editor/viral-videos/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/viral-videos/route.ts", "target": "function:src/app/api/value-template-editor/viral-videos/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/viral-videos/route.ts", "target": "function:src/app/api/value-template-editor/viral-videos/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/value-template-editor/viral-videos/route.ts", "target": "function:src/app/api/value-template-editor/viral-videos/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/value-template-editor/viral-videos/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateEnhancedWorkspaceConfig", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateViralColorScheme", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateIntelligentHooks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:generateOptimizationInsights", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "function:src/app/api/value-template-editor/workspace-config/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/value-template-editor/workspace-config/route.ts", "target": "file:src/lib/services/viral-pattern-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/video-status/[id]/route.ts", "target": "function:src/app/api/video-status/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video-status/[id]/route.ts", "target": "function:src/app/api/video-status/[id]/route.ts:calculateProgress", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video-status/[id]/route.ts", "target": "function:src/app/api/video-status/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "function:src/app/api/video/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "function:src/app/api/video/predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "function:src/app/api/video/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "function:src/app/api/video/predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "file:src/lib/database/supabase-viral-prediction.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "file:src/lib/services/feature-extractor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/video/predict/route.ts", "target": "file:src/lib/services/viral-prediction-model.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:processVideoAsync", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:generateViralPrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:generateOptimizationSuggestions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:calculateHookStrength", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:calculateContentQuality", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:calculatePlatformFit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:calculateTimingScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:calculateEngagementPotential", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "function:src/app/api/video/upload/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "file:src/lib/database/supabase-viral-prediction.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "file:src/lib/services/feature-extractor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/video/upload/route.ts", "target": "file:src/lib/services/video-processor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/videos/[id]/route.ts", "target": "function:src/app/api/videos/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/videos/[id]/route.ts", "target": "function:src/app/api/videos/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/videos/[id]/route.ts", "target": "file:src/lib/vit/compute.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/videos/route.ts", "target": "function:src/app/api/videos/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/videos/route.ts", "target": "function:src/app/api/videos/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/videos/route.ts", "target": "file:src/lib/utils/logger.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/videos/route.ts", "target": "file:src/lib/vit/compute.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "document:src/app/api/videos/README.md", "target": "file:src/app/api/videos/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "document:src/app/api/videos/README.md", "target": "file:src/app/api/videos/[id]/route.ts", "type": "documents", "direction": "forward", "weight": 0.5},
+
+    {"source": "file:src/app/api/viral-dna-report/route.ts", "target": "function:src/app/api/viral-dna-report/route.ts:generateMockReport", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-dna-report/route.ts", "target": "function:src/app/api/viral-dna-report/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-dna-report/route.ts", "target": "function:src/app/api/viral-dna-report/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-dna-report/route.ts", "target": "function:src/app/api/viral-dna-report/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-dna-report/route.ts", "target": "function:src/app/api/viral-dna-report/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:checkRateLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:validateRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "function:src/app/api/viral-prediction/accuracy-enhanced/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "file:src/lib/monitoring/real-time-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/accuracy-enhanced/route.ts", "target": "file:src/lib/services/accuracy-enhancement/accuracy-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:getTotalVideosAnalyzed", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:getViralPredictions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:getAccuracyMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:getHookDetections", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:getRecentAnalysisActivity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analytics/route.ts", "target": "function:src/app/api/viral-prediction/analytics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "function:src/app/api/viral-prediction/analyze-complete/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "function:src/app/api/viral-prediction/analyze-complete/route.ts:generateFallbackAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "function:src/app/api/viral-prediction/analyze-complete/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "file:src/lib/services/viral-prediction/ai-brain-intelligence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "file:src/lib/services/viral-prediction/framework-parser.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/analyze-complete/route.ts", "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "function:src/app/api/viral-prediction/analyze/route.ts:extractTikTokId", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "function:src/app/api/viral-prediction/analyze/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "function:src/app/api/viral-prediction/analyze/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "function:src/app/api/viral-prediction/analyze/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "function:src/app/api/viral-prediction/analyze/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/analyze/route.ts", "target": "file:src/lib/prediction/runPredictionPipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:startDailyIngestion", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:processTrendingContent", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:batchAnalyzeUrls", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:getJobStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:getJobsByStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:getRecentJobs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:processInBackground", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:processTrendingInBackground", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:processBatchUrlsInBackground", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:updateJobProgress", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "function:src/app/api/viral-prediction/batch-process/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/batch-process/route.ts", "target": "file:src/lib/services/viral-prediction/apify-integration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:getCurrentAccuracy", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:getProcessingStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:getRecentPredictions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:getSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:getTopPerformingTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:triggerBatchAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:updateAccuracyTarget", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:generateValidationReport", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "function:src/app/api/viral-prediction/dashboard/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/dashboard/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:applyCalibration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:checkRateLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:validateInput", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "function:src/app/api/viral-prediction/fast/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "file:src/lib/monitoring/real-time-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/fast/route.ts", "target": "file:src/lib/services/fast-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "function:src/app/api/viral-prediction/inception/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "function:src/app/api/viral-prediction/inception/route.ts:handleCopyViralWinner", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "function:src/app/api/viral-prediction/inception/route.ts:handleOptimizeForViral", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "function:src/app/api/viral-prediction/inception/route.ts:handlePlatformAdapt", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "function:src/app/api/viral-prediction/inception/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/inception/route.ts", "target": "file:src/lib/services/viral-prediction/inception-mode.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:PUT", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:validateRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:getStrategyFromOptimizations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:calculateBatchOptimizationEffectiveness", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:trackAPIPerformance", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:PUT", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "function:src/app/api/viral-prediction/optimized/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "file:src/lib/monitoring/real-time-monitor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/optimized/route.ts", "target": "file:src/lib/services/optimization/optimization-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:testDatabaseConnectivity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:testAIPredictionEngine", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:testAccuracyTracker", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:testApifyIntegration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:runFullSystemTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:runEndToEndTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:createTestData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "function:src/app/api/viral-prediction/validate-system/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "file:src/lib/services/viral-prediction/accuracy-tracker.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "file:src/lib/services/viral-prediction/ai-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/viral-prediction/validate-system/route.ts", "target": "file:src/lib/services/viral-prediction/apify-integration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/viral-scraping/route.ts", "target": "function:src/app/api/viral-scraping/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-scraping/route.ts", "target": "function:src/app/api/viral-scraping/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/viral-scraping/route.ts", "target": "function:src/app/api/viral-scraping/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/viral-scraping/route.ts", "target": "function:src/app/api/viral-scraping/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

@@ -1,0 +1,638 @@
+{
+  "nodes": [
+    {
+      "id": "file:process-scraped-videos.js",
+      "type": "file",
+      "name": "process-scraped-videos.js",
+      "filePath": "process-scraped-videos.js",
+      "summary": "One-off Node script that walks scraped TikTok video records, computes a viral score and percentile via local heuristics, and persists results to the project database.",
+      "tags": ["script", "data-pipeline", "viral-scoring", "batch-job"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:process-scraped-videos.js:processScrapedVideos",
+      "type": "function",
+      "name": "processScrapedVideos",
+      "filePath": "process-scraped-videos.js",
+      "lineRange": [10, 125],
+      "summary": "Main driver that fetches scraped videos, runs viral scoring per record, and writes derived metrics back to the store.",
+      "tags": ["driver", "batch-processing", "viral-scoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:process-scraped-videos.js:calculateViralScore",
+      "type": "function",
+      "name": "calculateViralScore",
+      "filePath": "process-scraped-videos.js",
+      "lineRange": [127, 161],
+      "summary": "Heuristic viral score derived from engagement signals on the scraped content payload.",
+      "tags": ["heuristic", "scoring", "engagement"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:process-scraped-videos.js:calculatePercentile",
+      "type": "function",
+      "name": "calculatePercentile",
+      "filePath": "process-scraped-videos.js",
+      "lineRange": [163, 173],
+      "summary": "Maps a raw viral score to a coarse percentile band used by downstream UI.",
+      "tags": ["normalization", "percentile", "scoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:quick-test.mjs",
+      "type": "file",
+      "name": "quick-test.mjs",
+      "filePath": "quick-test.mjs",
+      "summary": "Tiny smoke harness that imports the pattern-extraction service and prints a single result for local sanity checks.",
+      "tags": ["test", "smoke-test", "script"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:quick-test.mjs:test",
+      "type": "function",
+      "name": "test",
+      "filePath": "quick-test.mjs",
+      "lineRange": [4, 25],
+      "summary": "Invokes the pattern-extraction service against a hardcoded sample and logs the output.",
+      "tags": ["smoke-test", "harness"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:replace_step1.py",
+      "type": "file",
+      "name": "replace_step1.py",
+      "filePath": "replace_step1.py",
+      "summary": "Small Python utility script used as a one-shot find/replace helper during a migration step.",
+      "tags": ["script", "utility", "migration-helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:run-full-transcription.js",
+      "type": "file",
+      "name": "run-full-transcription.js",
+      "filePath": "run-full-transcription.js",
+      "summary": "Long-running batch runner that resumes a transcription job, processes videos in chunks, persists progress, and prints ETA estimates.",
+      "tags": ["script", "batch-job", "transcription", "resumable"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:run-full-transcription.js:loadProgress",
+      "type": "function",
+      "name": "loadProgress",
+      "filePath": "run-full-transcription.js",
+      "lineRange": [14, 26],
+      "summary": "Reads transcription progress state from disk to support resumable runs.",
+      "tags": ["state", "persistence", "resumable"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:run-full-transcription.js:runBatch",
+      "type": "function",
+      "name": "runBatch",
+      "filePath": "run-full-transcription.js",
+      "lineRange": [34, 73],
+      "summary": "Processes one bounded batch of videos, transcribing each and updating progress.",
+      "tags": ["batch-processing", "transcription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:run-full-transcription.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "run-full-transcription.js",
+      "lineRange": [76, 140],
+      "summary": "Top-level entry that loops through batches until completion and prints summary stats.",
+      "tags": ["entry-point", "driver"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:run-full-transcription.js:calculateTotalTime",
+      "type": "function",
+      "name": "calculateTotalTime",
+      "filePath": "run-full-transcription.js",
+      "lineRange": [150, 160],
+      "summary": "Aggregates elapsed time across processed batches for the run-end summary.",
+      "tags": ["metrics", "timing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:show-me-the-truth.js",
+      "type": "file",
+      "name": "show-me-the-truth.js",
+      "filePath": "show-me-the-truth.js",
+      "summary": "Diagnostic script that prints the raw state of prediction-related tables to surface what the pipeline really produced.",
+      "tags": ["script", "diagnostic", "debugging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:show-me-the-truth.js:showTheTruth",
+      "type": "function",
+      "name": "showTheTruth",
+      "filePath": "show-me-the-truth.js",
+      "lineRange": [8, 112],
+      "summary": "Queries DB tables and prints a side-by-side dump of predicted vs actual fields for the most recent runs.",
+      "tags": ["diagnostic", "audit", "debugging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:t -n 1 v0.7.0-moat2",
+      "type": "file",
+      "name": "t -n 1 v0.7.0-moat2",
+      "filePath": "t -n 1 v0.7.0-moat2",
+      "summary": "Stray text artifact at the repo root (a captured `less` help dump from a mis-typed shell command, named after the command fragment); has no role in the build.",
+      "tags": ["artifact", "stray-file", "cleanup-candidate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:table-pre-restructuring",
+      "type": "file",
+      "name": "table-pre-restructuring",
+      "filePath": "table-pre-restructuring",
+      "summary": "Stray text artifact at the repo root (truncated `less` help dump from a mis-typed shell command); not used by any code path.",
+      "tags": ["artifact", "stray-file", "cleanup-candidate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tailwind.config.ts",
+      "type": "file",
+      "name": "tailwind.config.ts",
+      "filePath": "tailwind.config.ts",
+      "summary": "Tailwind CSS configuration for the Next.js app, declaring content globs, theme extensions, custom colors, and plugins for the Trendzo UI.",
+      "tags": ["configuration", "tailwind", "styling", "build-system"],
+      "complexity": "complex",
+      "languageNotes": "Declarative TS config; large theme block extends colors, fonts, and animation keyframes."
+    },
+    {
+      "id": "file:tatus",
+      "type": "file",
+      "name": "tatus",
+      "filePath": "tatus",
+      "summary": "Stray one-line file at the repo root capturing a `git status` stdout fragment from a mistyped command; no functional role.",
+      "tags": ["artifact", "stray-file", "cleanup-candidate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:tatus -v",
+      "type": "file",
+      "name": "tatus -v",
+      "filePath": "tatus -v",
+      "summary": "Stray file at the repo root capturing leftover shell output from a mistyped command; not referenced by any code path.",
+      "tags": ["artifact", "stray-file", "cleanup-candidate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test-audio-utils.mjs",
+      "type": "file",
+      "name": "test-audio-utils.mjs",
+      "filePath": "test-audio-utils.mjs",
+      "summary": "Tiny ad-hoc test that imports an audio utility module and exercises it from the CLI for local verification.",
+      "tags": ["test", "smoke-test", "audio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test-db-connection.js",
+      "type": "file",
+      "name": "test-db-connection.js",
+      "filePath": "test-db-connection.js",
+      "summary": "Connectivity check script that opens a Supabase client, runs a probe query, and reports success or failure.",
+      "tags": ["test", "smoke-test", "database", "diagnostic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-db-connection.js:testConnection",
+      "type": "function",
+      "name": "testConnection",
+      "filePath": "test-db-connection.js",
+      "lineRange": [5, 59],
+      "summary": "Opens a Supabase connection, executes a probe query, and prints whether the DB is reachable.",
+      "tags": ["smoke-test", "database", "diagnostic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test-feat007.js",
+      "type": "file",
+      "name": "test-feat007.js",
+      "filePath": "test-feat007.js",
+      "summary": "Feature-flag-specific smoke test that exercises the FEAT-007 code path end-to-end against a fixture payload.",
+      "tags": ["test", "feature-flag", "smoke-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-feat007.js:test",
+      "type": "function",
+      "name": "test",
+      "filePath": "test-feat007.js",
+      "lineRange": [21, 91],
+      "summary": "Runs the FEAT-007 feature-flag code path against a fixture and prints the response.",
+      "tags": ["smoke-test", "feature-flag"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test-pattern-extraction-direct.js",
+      "type": "file",
+      "name": "test-pattern-extraction-direct.js",
+      "filePath": "test-pattern-extraction-direct.js",
+      "summary": "Standalone harness that imports the pattern-extraction service directly and exercises it without going through the API layer.",
+      "tags": ["test", "smoke-test", "pattern-extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test-pattern-extraction-direct.js:testDirectly",
+      "type": "function",
+      "name": "testDirectly",
+      "filePath": "test-pattern-extraction-direct.js",
+      "lineRange": [4, 41],
+      "summary": "Drives the pattern-extraction service in-process for fast iteration during development.",
+      "tags": ["smoke-test", "pattern-extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test-pattern-extraction.js",
+      "type": "file",
+      "name": "test-pattern-extraction.js",
+      "filePath": "test-pattern-extraction.js",
+      "summary": "End-to-end test script for the pattern-extraction route, calling the live API endpoint and validating the response shape.",
+      "tags": ["test", "integration-test", "pattern-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test-prediction.js",
+      "type": "file",
+      "name": "test-prediction.js",
+      "filePath": "test-prediction.js",
+      "summary": "Large diagnostic test that exercises the tier-prediction pipeline against a sample input and pretty-prints the breakdown.",
+      "tags": ["test", "integration-test", "prediction-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-prediction.js:testTierPrediction",
+      "type": "function",
+      "name": "testTierPrediction",
+      "filePath": "test-prediction.js",
+      "lineRange": [15, 176],
+      "summary": "Calls the prediction pipeline with a representative payload and logs per-component scores plus the final tier.",
+      "tags": ["integration-test", "prediction-pipeline", "diagnostic"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:test-rls.js",
+      "type": "file",
+      "name": "test-rls.js",
+      "filePath": "test-rls.js",
+      "summary": "Probe script that verifies Supabase row-level security policies behave correctly for the anon and service roles.",
+      "tags": ["test", "security", "database", "rls"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-rls.js:testRLS",
+      "type": "function",
+      "name": "testRLS",
+      "filePath": "test-rls.js",
+      "lineRange": [15, 56],
+      "summary": "Issues parallel queries under different Supabase keys and asserts that RLS denies/allows access as expected.",
+      "tags": ["security", "rls", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test-tiktok-analysis.js",
+      "type": "file",
+      "name": "test-tiktok-analysis.js",
+      "filePath": "test-tiktok-analysis.js",
+      "summary": "Local harness that generates TikTok-specific analysis (FYP potential, algorithm signals, recommendations) from a video payload for QA.",
+      "tags": ["test", "tiktok", "analysis", "harness"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:test-tiktok-analysis.js:generateTikTokSpecificAnalysis",
+      "type": "function",
+      "name": "generateTikTokSpecificAnalysis",
+      "filePath": "test-tiktok-analysis.js",
+      "lineRange": [7, 54],
+      "summary": "Composes the full TikTok-specific analysis bundle from video URL, title, and creator metadata.",
+      "tags": ["tiktok", "analysis", "composer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-tiktok-analysis.js:generateAlgorithmSignals",
+      "type": "function",
+      "name": "generateAlgorithmSignals",
+      "filePath": "test-tiktok-analysis.js",
+      "lineRange": [63, 85],
+      "summary": "Heuristically derives TikTok algorithm-signal hints from title and creator metadata.",
+      "tags": ["tiktok", "heuristic", "signals"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-tiktok-analysis.js:generateIndividualizedRecommendations",
+      "type": "function",
+      "name": "generateIndividualizedRecommendations",
+      "filePath": "test-tiktok-analysis.js",
+      "lineRange": [87, 118],
+      "summary": "Produces per-video TikTok-tailored recommendations such as optimal posting and editing tweaks.",
+      "tags": ["tiktok", "recommendations", "heuristic"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-tiktok-analysis.js:generateSoundRecommendation",
+      "type": "function",
+      "name": "generateSoundRecommendation",
+      "filePath": "test-tiktok-analysis.js",
+      "lineRange": [135, 144],
+      "summary": "Suggests a TikTok sound type based on title and video id heuristics.",
+      "tags": ["tiktok", "recommendations", "audio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:test-tiktok-fix.js",
+      "type": "file",
+      "name": "test-tiktok-fix.js",
+      "filePath": "test-tiktok-fix.js",
+      "summary": "Regression test verifying that a previously broken TikTok-analysis code path produces the expected output again.",
+      "tags": ["test", "regression-test", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:test-tiktok-fix.js:testTikTokAnalysisFix",
+      "type": "function",
+      "name": "testTikTokAnalysisFix",
+      "filePath": "test-tiktok-fix.js",
+      "lineRange": [11, 121],
+      "summary": "Reproduces the original failure scenario for the TikTok analyzer and verifies the patched behavior.",
+      "tags": ["regression-test", "tiktok"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:test-transcribe-api.js",
+      "type": "file",
+      "name": "test-transcribe-api.js",
+      "filePath": "test-transcribe-api.js",
+      "summary": "Smoke test that POSTs to the transcription API endpoint and prints the response payload.",
+      "tags": ["test", "smoke-test", "transcription", "api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:test-transcribe-api.js:testTranscribeAPI",
+      "type": "function",
+      "name": "testTranscribeAPI",
+      "filePath": "test-transcribe-api.js",
+      "lineRange": [6, 34],
+      "summary": "Sends a sample transcription request to the API and logs the structured response.",
+      "tags": ["smoke-test", "transcription"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:transcribe-slow-safe.js",
+      "type": "file",
+      "name": "transcribe-slow-safe.js",
+      "filePath": "transcribe-slow-safe.js",
+      "summary": "Conservative transcription runner that throttles requests, persists progress, and survives long batch jobs without overwhelming downstream services.",
+      "tags": ["script", "batch-job", "transcription", "resumable"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:transcribe-slow-safe.js:loadProgress",
+      "type": "function",
+      "name": "loadProgress",
+      "filePath": "transcribe-slow-safe.js",
+      "lineRange": [19, 31],
+      "summary": "Reads the persisted progress file so the slow-safe runner can resume mid-batch.",
+      "tags": ["state", "resumable"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:transcribe-slow-safe.js:transcribeOne",
+      "type": "function",
+      "name": "transcribeOne",
+      "filePath": "transcribe-slow-safe.js",
+      "lineRange": [40, 70],
+      "summary": "Transcribes a single video with retry/backoff so the long-running job stays under rate limits.",
+      "tags": ["transcription", "retry", "throttling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:transcribe-slow-safe.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "transcribe-slow-safe.js",
+      "lineRange": [80, 180],
+      "summary": "Top-level loop that walks all queued videos, calls transcribeOne, and persists progress between items.",
+      "tags": ["entry-point", "driver", "transcription"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:discovered-actors.json",
+      "type": "config",
+      "name": "discovered-actors.json",
+      "filePath": "discovered-actors.json",
+      "summary": "Configuration listing Apify actor identifiers discovered for use across the scraping pipeline.",
+      "tags": ["configuration", "scraping", "apify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:extracted_features.json",
+      "type": "config",
+      "name": "extracted_features.json",
+      "filePath": "extracted_features.json",
+      "summary": "Large pre-computed feature dump (~123k lines) from prior extraction runs, kept at repo root as a reference dataset.",
+      "tags": ["configuration", "dataset", "features", "cache"],
+      "complexity": "complex",
+      "languageNotes": "Very large JSON; treat as data blob rather than human-edited config."
+    },
+    {
+      "id": "config:firestore.indexes.json",
+      "type": "config",
+      "name": "firestore.indexes.json",
+      "filePath": "firestore.indexes.json",
+      "summary": "Firebase Firestore index definitions and field overrides used when deploying composite indexes.",
+      "tags": ["configuration", "firestore", "database", "indexing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:framework_genes.json",
+      "type": "config",
+      "name": "framework_genes.json",
+      "filePath": "framework_genes.json",
+      "summary": "Catalog of viral 'framework genes' (pattern templates) consumed by the prediction and pattern-extraction subsystems.",
+      "tags": ["configuration", "dataset", "patterns", "prediction"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:process-scraped-videos.js",
+      "target": "function:process-scraped-videos.js:processScrapedVideos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:process-scraped-videos.js",
+      "target": "function:process-scraped-videos.js:calculateViralScore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:process-scraped-videos.js",
+      "target": "function:process-scraped-videos.js:calculatePercentile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:quick-test.mjs",
+      "target": "function:quick-test.mjs:test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:quick-test.mjs",
+      "target": "file:src/lib/services/pattern-extraction/pattern-extraction-service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:run-full-transcription.js",
+      "target": "function:run-full-transcription.js:loadProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:run-full-transcription.js",
+      "target": "function:run-full-transcription.js:runBatch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:run-full-transcription.js",
+      "target": "function:run-full-transcription.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:run-full-transcription.js",
+      "target": "function:run-full-transcription.js:calculateTotalTime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:show-me-the-truth.js",
+      "target": "function:show-me-the-truth.js:showTheTruth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-db-connection.js",
+      "target": "function:test-db-connection.js:testConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-feat007.js",
+      "target": "function:test-feat007.js:test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-pattern-extraction-direct.js",
+      "target": "function:test-pattern-extraction-direct.js:testDirectly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-pattern-extraction-direct.js",
+      "target": "file:src/lib/services/pattern-extraction/pattern-extraction-service.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:test-prediction.js",
+      "target": "function:test-prediction.js:testTierPrediction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-rls.js",
+      "target": "function:test-rls.js:testRLS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-tiktok-analysis.js",
+      "target": "function:test-tiktok-analysis.js:generateTikTokSpecificAnalysis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-tiktok-analysis.js",
+      "target": "function:test-tiktok-analysis.js:generateAlgorithmSignals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-tiktok-analysis.js",
+      "target": "function:test-tiktok-analysis.js:generateIndividualizedRecommendations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-tiktok-analysis.js",
+      "target": "function:test-tiktok-analysis.js:generateSoundRecommendation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-tiktok-fix.js",
+      "target": "function:test-tiktok-fix.js:testTikTokAnalysisFix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:test-transcribe-api.js",
+      "target": "function:test-transcribe-api.js:testTranscribeAPI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:transcribe-slow-safe.js",
+      "target": "function:transcribe-slow-safe.js:loadProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:transcribe-slow-safe.js",
+      "target": "function:transcribe-slow-safe.js:transcribeOne",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:transcribe-slow-safe.js",
+      "target": "function:transcribe-slow-safe.js:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

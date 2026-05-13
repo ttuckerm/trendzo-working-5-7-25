@@ -1,0 +1,742 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/freedom-agent/append-message.ts",
+      "type": "file",
+      "name": "append-message.ts",
+      "filePath": "src/lib/freedom-agent/append-message.ts",
+      "summary": "Persists Freedom Agent chat messages to Supabase by normalizing input and appending them to a conversation row's message array.",
+      "tags": ["service", "persistence", "supabase", "freedom-agent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/append-message.ts:appendMessages",
+      "type": "function",
+      "name": "appendMessages",
+      "filePath": "src/lib/freedom-agent/append-message.ts",
+      "lineRange": [34, 62],
+      "summary": "Reads the existing conversation row, normalizes incoming messages, and writes the concatenated message list back to Supabase.",
+      "tags": ["persistence", "supabase", "mutation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/build-system-prompt.ts",
+      "type": "file",
+      "name": "build-system-prompt.ts",
+      "filePath": "src/lib/freedom-agent/build-system-prompt.ts",
+      "summary": "Builds the Freedom Agent system prompt by interpolating the user's assessment data and current sprint-day context into the base prompt template.",
+      "tags": ["prompt", "freedom-agent", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/build-system-prompt.ts:buildFreedomAgentSystemPrompt",
+      "type": "function",
+      "name": "buildFreedomAgentSystemPrompt",
+      "filePath": "src/lib/freedom-agent/build-system-prompt.ts",
+      "lineRange": [29, 58],
+      "summary": "Loads assessment data for a user and returns the rendered Freedom Agent system prompt with sprint context.",
+      "tags": ["prompt", "freedom-agent", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/build-system-prompt.ts:computeCurrentSprintDay",
+      "type": "function",
+      "name": "computeCurrentSprintDay",
+      "filePath": "src/lib/freedom-agent/build-system-prompt.ts",
+      "lineRange": [8, 27],
+      "summary": "Computes the current day index within the user's 90-day Freedom sprint from their assessment start date.",
+      "tags": ["utility", "date", "sprint"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/fetch-conversation.ts",
+      "type": "file",
+      "name": "fetch-conversation.ts",
+      "filePath": "src/lib/freedom-agent/fetch-conversation.ts",
+      "summary": "Fetches or creates a Freedom Agent conversation in Supabase, normalizing stored message rows back into the canonical conversation shape.",
+      "tags": ["service", "supabase", "persistence", "freedom-agent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchOrCreateConversation",
+      "type": "function",
+      "name": "fetchOrCreateConversation",
+      "filePath": "src/lib/freedom-agent/fetch-conversation.ts",
+      "lineRange": [62, 97],
+      "summary": "Returns the existing Freedom Agent conversation for a user/session or inserts a fresh row when none exists.",
+      "tags": ["persistence", "supabase", "upsert"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchConversation",
+      "type": "function",
+      "name": "fetchConversation",
+      "filePath": "src/lib/freedom-agent/fetch-conversation.ts",
+      "lineRange": [99, 111],
+      "summary": "Read-only lookup that returns an existing Freedom Agent conversation or null when not found.",
+      "tags": ["query", "supabase", "read"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/fetch-conversation.ts:normalizeMessages",
+      "type": "function",
+      "name": "normalizeMessages",
+      "filePath": "src/lib/freedom-agent/fetch-conversation.ts",
+      "lineRange": [31, 49],
+      "summary": "Coerces stored message rows of mixed shape into validated AgentMessage objects with role and content fields.",
+      "tags": ["normalization", "validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/load-plan-for-session.ts",
+      "type": "file",
+      "name": "load-plan-for-session.ts",
+      "filePath": "src/lib/freedom-agent/load-plan-for-session.ts",
+      "summary": "Loads a Freedom OS plan record by id and maps it into the agent-facing plan shape with segment classification and structured inputs.",
+      "tags": ["service", "freedom-agent", "data-mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/load-plan-for-session.ts:loadFreedomPlanById",
+      "type": "function",
+      "name": "loadFreedomPlanById",
+      "filePath": "src/lib/freedom-agent/load-plan-for-session.ts",
+      "lineRange": [37, 92],
+      "summary": "Fetches a freedom_plans row by id, validates ownership, and projects it into the agent's loaded-plan shape including segment label.",
+      "tags": ["persistence", "supabase", "data-mapping"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/load-plan-for-session.ts:apiRowInputsToSegmentRaw",
+      "type": "function",
+      "name": "apiRowInputsToSegmentRaw",
+      "filePath": "src/lib/freedom-agent/load-plan-for-session.ts",
+      "lineRange": [9, 23],
+      "summary": "Converts a stored plan-input row into the raw inputs shape expected by funnel segmentation.",
+      "tags": ["utility", "data-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/niche-templates.ts",
+      "type": "file",
+      "name": "niche-templates.ts",
+      "filePath": "src/lib/freedom-agent/niche-templates.ts",
+      "summary": "Catalog of niche-specific Freedom Agent system-prompt templates with keyword-driven matchers that pick a template from a user's interest text.",
+      "tags": ["data-model", "freedom-agent", "templates", "configuration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/niche-templates.ts:matchNiche",
+      "type": "function",
+      "name": "matchNiche",
+      "filePath": "src/lib/freedom-agent/niche-templates.ts",
+      "lineRange": [342, 365],
+      "summary": "Matches a free-text niche-interest string against the keyword table and returns the canonical niche slug.",
+      "tags": ["matching", "keyword", "classification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/niche-templates.ts:getNicheTemplate",
+      "type": "function",
+      "name": "getNicheTemplate",
+      "filePath": "src/lib/freedom-agent/niche-templates.ts",
+      "lineRange": [377, 385],
+      "summary": "Returns the appropriate niche template for the given interest and business-type strings, falling back to the default template.",
+      "tags": ["selector", "template", "freedom-agent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/plan-prompt-section.ts",
+      "type": "file",
+      "name": "plan-prompt-section.ts",
+      "filePath": "src/lib/freedom-agent/plan-prompt-section.ts",
+      "summary": "Renders the user's loaded Freedom plan into a Markdown-style prompt section the agent injects into its system message.",
+      "tags": ["prompt", "freedom-agent", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/plan-prompt-section.ts:buildFreedomPlanPromptSection",
+      "type": "function",
+      "name": "buildFreedomPlanPromptSection",
+      "filePath": "src/lib/freedom-agent/plan-prompt-section.ts",
+      "lineRange": [6, 69],
+      "summary": "Formats a loaded Freedom plan (segment, niche, sprint week, milestones) into a textual prompt section.",
+      "tags": ["prompt", "formatting", "freedom-agent"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/progress-tracker.ts",
+      "type": "file",
+      "name": "progress-tracker.ts",
+      "filePath": "src/lib/freedom-agent/progress-tracker.ts",
+      "summary": "Tracks Freedom Agent sprint progress by matching chat messages against milestone keyword cues and producing a prompt context block summarizing status.",
+      "tags": ["freedom-agent", "progress", "service", "milestone"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/progress-tracker.ts:updateProgress",
+      "type": "function",
+      "name": "updateProgress",
+      "filePath": "src/lib/freedom-agent/progress-tracker.ts",
+      "lineRange": [24, 65],
+      "summary": "Scans new agent/user messages for milestone-trigger keywords and advances the user's sprint progress record accordingly.",
+      "tags": ["progress", "milestone", "mutation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/progress-tracker.ts:buildProgressContext",
+      "type": "function",
+      "name": "buildProgressContext",
+      "filePath": "src/lib/freedom-agent/progress-tracker.ts",
+      "lineRange": [71, 105],
+      "summary": "Builds a textual progress-context block (current week, completed milestones, next actions) for inclusion in the system prompt.",
+      "tags": ["prompt", "progress", "formatting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/freedom-agent/soft-sell-arc.ts",
+      "type": "file",
+      "name": "soft-sell-arc.ts",
+      "filePath": "src/lib/freedom-agent/soft-sell-arc.ts",
+      "summary": "Encodes the 12-week soft-sell narrative arc by returning per-week directives and conversational openers used to steer Freedom Agent tone.",
+      "tags": ["freedom-agent", "content", "prompt", "marketing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekDirective",
+      "type": "function",
+      "name": "getWeekDirective",
+      "filePath": "src/lib/freedom-agent/soft-sell-arc.ts",
+      "lineRange": [14, 127],
+      "summary": "Returns the soft-sell directive text the agent should follow for the given sprint week.",
+      "tags": ["selector", "content", "marketing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekOpener",
+      "type": "function",
+      "name": "getWeekOpener",
+      "filePath": "src/lib/freedom-agent/soft-sell-arc.ts",
+      "lineRange": [129, 150],
+      "summary": "Returns an opening conversational line keyed to the current sprint week to seed the agent's response.",
+      "tags": ["selector", "content", "copywriting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/freedom-os/parse-claude-plan-json.ts",
+      "type": "file",
+      "name": "parse-claude-plan-json.ts",
+      "filePath": "src/lib/freedom-os/parse-claude-plan-json.ts",
+      "summary": "Tiny helper that extracts the first JSON object from a Claude response string used by the Freedom OS plan-generator.",
+      "tags": ["utility", "parsing", "freedom-os"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/freedom-os/parse-claude-plan-json.ts:extractJsonObject",
+      "type": "function",
+      "name": "extractJsonObject",
+      "filePath": "src/lib/freedom-os/parse-claude-plan-json.ts",
+      "lineRange": [4, 13],
+      "summary": "Returns the first balanced JSON object substring from a free-form text response, or null.",
+      "tags": ["parsing", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/freedom-os/rate-limit.ts",
+      "type": "file",
+      "name": "rate-limit.ts",
+      "filePath": "src/lib/freedom-os/rate-limit.ts",
+      "summary": "In-memory IP rate limiter used by Freedom OS API routes plus a helper to extract the client IP from incoming requests.",
+      "tags": ["utility", "rate-limiting", "freedom-os", "middleware"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/freedom-os/rate-limit.ts:checkIpRateLimit",
+      "type": "function",
+      "name": "checkIpRateLimit",
+      "filePath": "src/lib/freedom-os/rate-limit.ts",
+      "lineRange": [12, 27],
+      "summary": "Tracks per-IP request counts within a rolling window and returns whether the caller is within the configured limit.",
+      "tags": ["rate-limiting", "security", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/freedom-os/rate-limit.ts:getClientIp",
+      "type": "function",
+      "name": "getClientIp",
+      "filePath": "src/lib/freedom-os/rate-limit.ts",
+      "lineRange": [29, 38],
+      "summary": "Extracts the client IP from the standard forwarding headers on a NextRequest, falling back to a placeholder.",
+      "tags": ["utility", "request", "networking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/funnel/nurture-sequences.ts",
+      "type": "file",
+      "name": "nurture-sequences.ts",
+      "filePath": "src/lib/funnel/nurture-sequences.ts",
+      "summary": "Single source of truth for the Trendzo nurture email sequences, exporting per-segment HTML email bodies plus shared layout helpers used by the Beehiiv automation.",
+      "tags": ["data-model", "content", "email", "marketing", "funnel"],
+      "complexity": "complex",
+      "languageNotes": "Embeds large HTML email templates as tagged strings; layout helpers (p, heading, cta, footer, email) keep styling consistent across segments."
+    },
+    {
+      "id": "file:src/lib/funnel/segment.ts",
+      "type": "file",
+      "name": "segment.ts",
+      "filePath": "src/lib/funnel/segment.ts",
+      "summary": "Classifies Freedom OS leads into one of four funnel segments (curious-browser, side-hustle-seeker, business-builder, agency-operator) from assessment inputs.",
+      "tags": ["service", "classification", "funnel", "freedom-os"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/funnel/segment.ts:classifyLead",
+      "type": "function",
+      "name": "classifyLead",
+      "filePath": "src/lib/funnel/segment.ts",
+      "lineRange": [28, 55],
+      "summary": "First-match-wins classifier mapping Freedom OS inputs (hours, business type, experience) to a funnel segment letter.",
+      "tags": ["classification", "funnel", "rules"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/funnel/segment.ts:classifyEscapeAssessment",
+      "type": "function",
+      "name": "classifyEscapeAssessment",
+      "filePath": "src/lib/funnel/segment.ts",
+      "lineRange": [211, 264],
+      "summary": "Classifies a Financial Escape Assessment payload into a funnel segment using audience size, established platform, and placeholder-text heuristics.",
+      "tags": ["classification", "funnel", "assessment"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/funnel/segment.ts:mapInputsForSegmentation",
+      "type": "function",
+      "name": "mapInputsForSegmentation",
+      "filePath": "src/lib/funnel/segment.ts",
+      "lineRange": [61, 75],
+      "summary": "Maps stored plan input rows into the FreedomOsInputs shape that classifyLead consumes.",
+      "tags": ["data-mapping", "utility", "funnel"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/funnel/segment.ts:extractAudienceCount",
+      "type": "function",
+      "name": "extractAudienceCount",
+      "filePath": "src/lib/funnel/segment.ts",
+      "lineRange": [158, 181],
+      "summary": "Parses follower-count strings (with K/M suffixes and ranges) into a numeric audience size used by escape-assessment classification.",
+      "tags": ["parsing", "utility", "funnel"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/funnel/segment.ts:isPlaceholderText",
+      "type": "function",
+      "name": "isPlaceholderText",
+      "filePath": "src/lib/funnel/segment.ts",
+      "lineRange": [114, 127],
+      "summary": "Detects placeholder/empty values like 'n/a' or 'none' in assessment free-text fields.",
+      "tags": ["validation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/hooks/audiovisual/useBeatDetection.ts",
+      "type": "file",
+      "name": "useBeatDetection.ts",
+      "filePath": "src/lib/hooks/audiovisual/useBeatDetection.ts",
+      "summary": "React hook that analyzes an audio source via the Web Audio API and emits detected beat events with energy and timing data.",
+      "tags": ["hook", "audio", "audiovisual", "client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/hooks/audiovisual/useBeatDetection.ts:useBeatDetection",
+      "type": "function",
+      "name": "useBeatDetection",
+      "filePath": "src/lib/hooks/audiovisual/useBeatDetection.ts",
+      "lineRange": [33, 126],
+      "summary": "Sets up an AnalyserNode and rAF loop that detects beats from an audio element and returns beat event state.",
+      "tags": ["hook", "audio", "analyser"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts",
+      "type": "file",
+      "name": "useEmotionalToneMapping.ts",
+      "filePath": "src/lib/hooks/audiovisual/useEmotionalToneMapping.ts",
+      "summary": "React hook that maps audio characteristics (tempo, energy, mood) into emotional tone parameters used to drive visual effects on TikTok-style content.",
+      "tags": ["hook", "audio", "audiovisual", "mapping"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts:useEmotionalToneMapping",
+      "type": "function",
+      "name": "useEmotionalToneMapping",
+      "filePath": "src/lib/hooks/audiovisual/useEmotionalToneMapping.ts",
+      "lineRange": [83, 208],
+      "summary": "Computes an emotional tone mapping from audio characteristics and pushes results into the AudioVisual context.",
+      "tags": ["hook", "audio", "mapping", "context"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/lib/hooks/index.ts",
+      "summary": "Barrel module re-exporting every hook in src/lib/hooks so callers can import from a single entry point.",
+      "tags": ["barrel", "entry-point", "hooks"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/hooks/useAISuggestions.ts",
+      "type": "file",
+      "name": "useAISuggestions.ts",
+      "filePath": "src/lib/hooks/useAISuggestions.ts",
+      "summary": "React hook that requests AI-generated template suggestions, manages loading/error state, and exposes them via the template editor context.",
+      "tags": ["hook", "ai", "template-editor", "client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/hooks/useAISuggestions.ts:useAISuggestions",
+      "type": "function",
+      "name": "useAISuggestions",
+      "filePath": "src/lib/hooks/useAISuggestions.ts",
+      "lineRange": [12, 122],
+      "summary": "Fetches AI suggestions for the current template, caches them, and exposes accept/dismiss handlers.",
+      "tags": ["hook", "ai", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/useAnimation.ts",
+      "type": "file",
+      "name": "useAnimation.ts",
+      "filePath": "src/lib/hooks/useAnimation.ts",
+      "summary": "React hook providing element-level animation control (play, pause, scrub, easing) backed by the AnimationContext store.",
+      "tags": ["hook", "animation", "context", "client"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useAnimation.ts:useAnimation",
+      "type": "function",
+      "name": "useAnimation",
+      "filePath": "src/lib/hooks/useAnimation.ts",
+      "lineRange": [52, 248],
+      "summary": "Builds and returns an animation controller bound to a specific element id with state, transport, and keyframe helpers.",
+      "tags": ["hook", "animation", "controller"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/useAudio.ts",
+      "type": "file",
+      "name": "useAudio.ts",
+      "filePath": "src/lib/hooks/useAudio.ts",
+      "summary": "React hook wrapping the HTMLAudioElement API to expose play/pause, seeking, volume, and time/duration state.",
+      "tags": ["hook", "audio", "media", "client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/hooks/useAudio.ts:useAudio",
+      "type": "function",
+      "name": "useAudio",
+      "filePath": "src/lib/hooks/useAudio.ts",
+      "lineRange": [22, 127],
+      "summary": "Creates and controls an HTMLAudioElement, returning transport state and methods to React consumers.",
+      "tags": ["hook", "audio", "media"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/useAuditLog.ts",
+      "type": "file",
+      "name": "useAuditLog.ts",
+      "filePath": "src/lib/hooks/useAuditLog.ts",
+      "summary": "React hook that records audit-log entries to Firebase keyed to the currently authenticated user.",
+      "tags": ["hook", "audit", "firebase", "logging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/hooks/useAuditLog.ts:useAuditLog",
+      "type": "function",
+      "name": "useAuditLog",
+      "filePath": "src/lib/hooks/useAuditLog.ts",
+      "lineRange": [14, 51],
+      "summary": "Returns a logEvent callback that writes audit entries to Firestore tagged with the current user id and timestamp.",
+      "tags": ["hook", "audit", "firebase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/hooks/useAuth.ts",
+      "type": "file",
+      "name": "useAuth.ts",
+      "filePath": "src/lib/hooks/useAuth.ts",
+      "summary": "Thin re-export of the AuthContext hook plus the AuthUser type, providing the standard import path for auth state.",
+      "tags": ["hook", "auth", "barrel"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/hooks/useBeatSyncAnimation.ts",
+      "type": "file",
+      "name": "useBeatSyncAnimation.ts",
+      "filePath": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "summary": "React hook that synchronizes template element animations to audio beats by reading the AudioContext and applying per-beat transforms.",
+      "tags": ["hook", "audio", "animation", "beat-sync"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useBeatSyncAnimation.ts:useBeatSyncAnimation",
+      "type": "function",
+      "name": "useBeatSyncAnimation",
+      "filePath": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "lineRange": [34, 182],
+      "summary": "Subscribes to beat events and dispatches animation updates onto matched template elements via the editor context.",
+      "tags": ["hook", "animation", "beat-sync"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useBeatSyncAnimation.ts:applyBeatAnimation",
+      "type": "function",
+      "name": "applyBeatAnimation",
+      "filePath": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "lineRange": [227, 309],
+      "summary": "Mutates a template element's transform/style fields in response to a beat event according to the configured beat-animation profile.",
+      "tags": ["animation", "beat-sync", "mutation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useBeatSyncAnimation.ts:getValidSoundUrl",
+      "type": "function",
+      "name": "getValidSoundUrl",
+      "filePath": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "lineRange": [210, 224],
+      "summary": "Normalizes a stored sound reference into a playable URL or returns null when no valid source is available.",
+      "tags": ["utility", "audio", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/hooks/useBeatSyncAnimation.ts:getAllElementsFromTemplate",
+      "type": "function",
+      "name": "getAllElementsFromTemplate",
+      "filePath": "src/lib/hooks/useBeatSyncAnimation.ts",
+      "lineRange": [185, 196],
+      "summary": "Flattens a template's nested section/element tree into a single array of animatable elements.",
+      "tags": ["utility", "template", "traversal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/hooks/useConfetti.ts",
+      "type": "file",
+      "name": "useConfetti.ts",
+      "filePath": "src/lib/hooks/useConfetti.ts",
+      "summary": "React hook that triggers a confetti burst effect on demand, used for celebratory UI moments.",
+      "tags": ["hook", "ui-effect", "confetti", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/hooks/useConfetti.ts:useConfetti",
+      "type": "function",
+      "name": "useConfetti",
+      "filePath": "src/lib/hooks/useConfetti.ts",
+      "lineRange": [5, 48],
+      "summary": "Returns a fire() callback that launches a confetti animation with configurable options.",
+      "tags": ["hook", "ui-effect", "confetti"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/hooks/useDataFetching.ts",
+      "type": "file",
+      "name": "useDataFetching.ts",
+      "filePath": "src/lib/hooks/useDataFetching.ts",
+      "summary": "React hooks for one-shot data fetching and paginated infinite scroll, layered on top of the project's cacheUtils.",
+      "tags": ["hook", "data-fetching", "cache", "client"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useDataFetching.ts:useDataFetch",
+      "type": "function",
+      "name": "useDataFetch",
+      "filePath": "src/lib/hooks/useDataFetching.ts",
+      "lineRange": [52, 131],
+      "summary": "Fetches data with caching, manages loading/error/data state, and exposes a refetch handler.",
+      "tags": ["hook", "data-fetching", "cache"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useDataFetching.ts:useInfiniteScroll",
+      "type": "function",
+      "name": "useInfiniteScroll",
+      "filePath": "src/lib/hooks/useDataFetching.ts",
+      "lineRange": [137, 242],
+      "summary": "Implements cursor-based infinite scrolling with IntersectionObserver-driven page loads and merged result state.",
+      "tags": ["hook", "data-fetching", "infinite-scroll"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/hooks/useDebounce.ts",
+      "type": "file",
+      "name": "useDebounce.ts",
+      "filePath": "src/lib/hooks/useDebounce.ts",
+      "summary": "Small React hook that returns a debounced copy of a value, updating only after the input has been stable for the configured delay.",
+      "tags": ["hook", "utility", "debounce", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/hooks/useDebounce.ts:useDebounce",
+      "type": "function",
+      "name": "useDebounce",
+      "filePath": "src/lib/hooks/useDebounce.ts",
+      "lineRange": [11, 27],
+      "summary": "Returns a debounced copy of value that lags behind the input by the given delay in ms.",
+      "tags": ["hook", "debounce", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/hooks/useDragDrop.ts",
+      "type": "file",
+      "name": "useDragDrop.ts",
+      "filePath": "src/lib/hooks/useDragDrop.ts",
+      "summary": "React hook providing drag-and-drop state, handlers, and DOM bindings for sortable lists and drop targets.",
+      "tags": ["hook", "drag-drop", "ui", "client"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/hooks/useDragDrop.ts:useDragDrop",
+      "type": "function",
+      "name": "useDragDrop",
+      "filePath": "src/lib/hooks/useDragDrop.ts",
+      "lineRange": [21, 147],
+      "summary": "Wires up pointer/drag event listeners, tracks drag source and drop target state, and invokes onDrop callbacks.",
+      "tags": ["hook", "drag-drop", "ui"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/lib/freedom-agent/append-message.ts", "target": "function:src/lib/freedom-agent/append-message.ts:appendMessages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/append-message.ts", "target": "function:src/lib/freedom-agent/append-message.ts:appendMessages", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/append-message.ts", "target": "file:src/types/freedom-agent.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "function:src/lib/freedom-agent/build-system-prompt.ts:buildFreedomAgentSystemPrompt", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "function:src/lib/freedom-agent/build-system-prompt.ts:computeCurrentSprintDay", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "function:src/lib/freedom-agent/build-system-prompt.ts:buildFreedomAgentSystemPrompt", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "file:src/lib/assessment/fetch-assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "file:src/lib/prompts/freedom-agent-prompt.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/freedom-agent/build-system-prompt.ts", "target": "file:src/types/assessment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/freedom-agent/fetch-conversation.ts", "target": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchOrCreateConversation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/fetch-conversation.ts", "target": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchConversation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/fetch-conversation.ts", "target": "function:src/lib/freedom-agent/fetch-conversation.ts:normalizeMessages", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/fetch-conversation.ts", "target": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchOrCreateConversation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/fetch-conversation.ts", "target": "function:src/lib/freedom-agent/fetch-conversation.ts:fetchConversation", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/freedom-agent/load-plan-for-session.ts", "target": "function:src/lib/freedom-agent/load-plan-for-session.ts:loadFreedomPlanById", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/load-plan-for-session.ts", "target": "function:src/lib/freedom-agent/load-plan-for-session.ts:apiRowInputsToSegmentRaw", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/load-plan-for-session.ts", "target": "function:src/lib/freedom-agent/load-plan-for-session.ts:loadFreedomPlanById", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/load-plan-for-session.ts", "target": "file:src/lib/funnel/segment.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/freedom-agent/niche-templates.ts", "target": "function:src/lib/freedom-agent/niche-templates.ts:getNicheTemplate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/niche-templates.ts", "target": "function:src/lib/freedom-agent/niche-templates.ts:matchNiche", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/niche-templates.ts", "target": "function:src/lib/freedom-agent/niche-templates.ts:getNicheTemplate", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/freedom-agent/plan-prompt-section.ts", "target": "function:src/lib/freedom-agent/plan-prompt-section.ts:buildFreedomPlanPromptSection", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/plan-prompt-section.ts", "target": "function:src/lib/freedom-agent/plan-prompt-section.ts:buildFreedomPlanPromptSection", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/plan-prompt-section.ts", "target": "file:src/lib/freedom-agent/load-plan-for-session.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/freedom-agent/progress-tracker.ts", "target": "function:src/lib/freedom-agent/progress-tracker.ts:updateProgress", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/progress-tracker.ts", "target": "function:src/lib/freedom-agent/progress-tracker.ts:buildProgressContext", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/progress-tracker.ts", "target": "function:src/lib/freedom-agent/progress-tracker.ts:updateProgress", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/progress-tracker.ts", "target": "function:src/lib/freedom-agent/progress-tracker.ts:buildProgressContext", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/freedom-agent/soft-sell-arc.ts", "target": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekDirective", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/soft-sell-arc.ts", "target": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekOpener", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-agent/soft-sell-arc.ts", "target": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekDirective", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-agent/soft-sell-arc.ts", "target": "function:src/lib/freedom-agent/soft-sell-arc.ts:getWeekOpener", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/freedom-os/parse-claude-plan-json.ts", "target": "function:src/lib/freedom-os/parse-claude-plan-json.ts:extractJsonObject", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-os/parse-claude-plan-json.ts", "target": "function:src/lib/freedom-os/parse-claude-plan-json.ts:extractJsonObject", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/freedom-os/rate-limit.ts", "target": "function:src/lib/freedom-os/rate-limit.ts:checkIpRateLimit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-os/rate-limit.ts", "target": "function:src/lib/freedom-os/rate-limit.ts:getClientIp", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/freedom-os/rate-limit.ts", "target": "function:src/lib/freedom-os/rate-limit.ts:checkIpRateLimit", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/freedom-os/rate-limit.ts", "target": "function:src/lib/freedom-os/rate-limit.ts:getClientIp", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:classifyLead", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:classifyEscapeAssessment", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:mapInputsForSegmentation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:extractAudienceCount", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:isPlaceholderText", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:classifyLead", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:classifyEscapeAssessment", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/funnel/segment.ts", "target": "function:src/lib/funnel/segment.ts:mapInputsForSegmentation", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/hooks/audiovisual/useBeatDetection.ts", "target": "function:src/lib/hooks/audiovisual/useBeatDetection.ts:useBeatDetection", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts", "target": "function:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts:useEmotionalToneMapping", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts", "target": "file:src/lib/contexts/audiovisual/AudioVisualContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/audiovisual/useEmotionalToneMapping.ts", "target": "file:src/lib/types/tiktok.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useAISuggestions.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useAnimation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useAudio.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useAuditLog.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useBeatSyncAnimation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useConfetti.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useDataFetching.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useDebounce.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useDragDrop.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useFocusManagement.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useHapticFeedback.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useMLSuggestions.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useMediaQuery.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useOptimizedAnimation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useOptimizedDataFetching.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/usePlatformDPS.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useSound.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useSoundCollection.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useTemplateIntegration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useTemplateSound.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useTemplatesDiscovery.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/index.ts", "target": "file:src/lib/hooks/useWorkflowPersistence.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useAISuggestions.ts", "target": "function:src/lib/hooks/useAISuggestions.ts:useAISuggestions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useAISuggestions.ts", "target": "function:src/lib/hooks/useAISuggestions.ts:useAISuggestions", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useAISuggestions.ts", "target": "file:src/lib/contexts/TemplateEditorContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/useAISuggestions.ts", "target": "file:src/lib/services/aiSuggestionService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/useAISuggestions.ts", "target": "file:src/lib/types/templateEditor.types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useAnimation.ts", "target": "function:src/lib/hooks/useAnimation.ts:useAnimation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useAnimation.ts", "target": "function:src/lib/hooks/useAnimation.ts:useAnimation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useAnimation.ts", "target": "file:src/lib/contexts/AnimationContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useAudio.ts", "target": "function:src/lib/hooks/useAudio.ts:useAudio", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useAudio.ts", "target": "function:src/lib/hooks/useAudio.ts:useAudio", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/hooks/useAuditLog.ts", "target": "function:src/lib/hooks/useAuditLog.ts:useAuditLog", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useAuditLog.ts", "target": "function:src/lib/hooks/useAuditLog.ts:useAuditLog", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useAuditLog.ts", "target": "file:src/lib/firebase/firebase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/useAuditLog.ts", "target": "file:src/lib/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useAuth.ts", "target": "file:src/lib/contexts/AuthContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "function:src/lib/hooks/useBeatSyncAnimation.ts:useBeatSyncAnimation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "function:src/lib/hooks/useBeatSyncAnimation.ts:applyBeatAnimation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "function:src/lib/hooks/useBeatSyncAnimation.ts:getValidSoundUrl", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "function:src/lib/hooks/useBeatSyncAnimation.ts:getAllElementsFromTemplate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "function:src/lib/hooks/useBeatSyncAnimation.ts:useBeatSyncAnimation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "file:src/lib/contexts/AudioContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "file:src/lib/contexts/EditorContext.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/hooks/useBeatSyncAnimation.ts", "target": "file:src/lib/types/audio.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useConfetti.ts", "target": "function:src/lib/hooks/useConfetti.ts:useConfetti", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useConfetti.ts", "target": "function:src/lib/hooks/useConfetti.ts:useConfetti", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/hooks/useDataFetching.ts", "target": "function:src/lib/hooks/useDataFetching.ts:useDataFetch", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useDataFetching.ts", "target": "function:src/lib/hooks/useDataFetching.ts:useInfiniteScroll", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useDataFetching.ts", "target": "function:src/lib/hooks/useDataFetching.ts:useDataFetch", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useDataFetching.ts", "target": "function:src/lib/hooks/useDataFetching.ts:useInfiniteScroll", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/hooks/useDataFetching.ts", "target": "file:src/lib/utils/cacheUtils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/hooks/useDebounce.ts", "target": "function:src/lib/hooks/useDebounce.ts:useDebounce", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useDebounce.ts", "target": "function:src/lib/hooks/useDebounce.ts:useDebounce", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/hooks/useDragDrop.ts", "target": "function:src/lib/hooks/useDragDrop.ts:useDragDrop", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/hooks/useDragDrop.ts", "target": "function:src/lib/hooks/useDragDrop.ts:useDragDrop", "type": "exports", "direction": "forward", "weight": 0.8}
+  ]
+}

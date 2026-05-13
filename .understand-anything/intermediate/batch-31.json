@@ -1,0 +1,696 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/create-mock-env.js",
+      "type": "file",
+      "name": "create-mock-env.js",
+      "filePath": "scripts/create-mock-env.js",
+      "summary": "One-shot CLI that writes a mock .env.local containing Apify/Supabase placeholder values for local development.",
+      "tags": ["script", "configuration", "dev-tooling", "fixture"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/create-sample-audio.js",
+      "type": "file",
+      "name": "create-sample-audio.js",
+      "filePath": "scripts/create-sample-audio.js",
+      "summary": "Creates placeholder MP3 files in public/audio to prevent 404 errors during local development.",
+      "tags": ["script", "dev-tooling", "fixture", "asset-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/create-valid-mp3s.js",
+      "type": "file",
+      "name": "create-valid-mp3s.js",
+      "filePath": "scripts/create-valid-mp3s.js",
+      "summary": "Generates minimal-but-valid silent MP3 files (ID3v2 + single frame) in public/audio for dev playback testing.",
+      "tags": ["script", "dev-tooling", "fixture", "asset-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/debug-kai-api.ts",
+      "type": "file",
+      "name": "debug-kai-api.ts",
+      "filePath": "scripts/debug-kai-api.ts",
+      "summary": "Step-by-step diagnostic that isolates failure points in the Kai prediction API by probing Supabase, video_files insert, KaiOrchestrator load, and PredictionHash generation.",
+      "tags": ["script", "diagnostic", "debug", "prediction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/debug-pattern-extraction.js",
+      "type": "file",
+      "name": "debug-pattern-extraction.js",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "summary": "Five-step verbose debug harness for the /api/patterns/extract endpoint covering high-DPS video selection, env, live API call, DB patterns, and extraction job state.",
+      "tags": ["script", "diagnostic", "debug", "pattern-extraction", "api-test"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/debug-scraped-videos.js",
+      "type": "file",
+      "name": "debug-scraped-videos.js",
+      "filePath": "scripts/debug-scraped-videos.js",
+      "summary": "Diagnostic that inspects the scraped_videos table for niche values, viral_score distribution, and other content-pipeline health signals.",
+      "tags": ["script", "diagnostic", "debug", "database-probe"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/debug-transcript-count.ts",
+      "type": "file",
+      "name": "debug-transcript-count.ts",
+      "filePath": "scripts/debug-transcript-count.ts",
+      "summary": "Counts and samples rows in scraped_videos where transcript_text is populated, to confirm Whisper backfill state.",
+      "tags": ["script", "diagnostic", "transcript", "database-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/demo-accuracy.ts",
+      "type": "file",
+      "name": "demo-accuracy.ts",
+      "filePath": "scripts/demo-accuracy.ts",
+      "summary": "End-to-end CLI demo: resets dev store, seeds the P1 demo cohort, runs calibration in dev mode, then fetches accuracy metrics.",
+      "tags": ["script", "demo", "calibration", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/demo-creator-personalization-final.ts",
+      "type": "file",
+      "name": "demo-creator-personalization-final.ts",
+      "filePath": "scripts/demo-creator-personalization-final.ts",
+      "summary": "Demonstrates personalized predictions by building a CreatorBaseline from 200 real scraped TikTok videos and running context-aware scoring against new content.",
+      "tags": ["script", "demo", "creator-baseline", "personalization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-database-schema.js",
+      "type": "file",
+      "name": "deploy-database-schema.js",
+      "filePath": "scripts/deploy-database-schema.js",
+      "summary": "Deploys the full omniscient viral-prediction schema to Supabase by reading deploy-viral-prediction-database.sql and applying it with the service-role key.",
+      "tags": ["script", "deployment", "database", "migration", "schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/deploy-database-tables.js",
+      "type": "file",
+      "name": "deploy-database-tables.js",
+      "filePath": "scripts/deploy-database-tables.js",
+      "summary": "Creates the predictions, hook_detections, and related core tables in Supabase via CREATE TABLE IF NOT EXISTS statements when raw SQL execution is unavailable.",
+      "tags": ["script", "deployment", "database", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-database.js",
+      "type": "file",
+      "name": "deploy-database.js",
+      "filePath": "scripts/deploy-database.js",
+      "summary": "Full production-data deployment: connects to Supabase, then populates the recipe book, viral video gallery, framework mappings, prediction validation, and system health seed data.",
+      "tags": ["script", "deployment", "database", "seed-data", "fixture"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/deploy-missing-tables.js",
+      "type": "file",
+      "name": "deploy-missing-tables.js",
+      "filePath": "scripts/deploy-missing-tables.js",
+      "summary": "Deploys the additional tables required by the 12-module viral prediction system that were missing from earlier schema runs, with a verification pass at the end.",
+      "tags": ["script", "deployment", "database", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-script-intelligence-schema.js",
+      "type": "file",
+      "name": "deploy-script-intelligence-schema.js",
+      "filePath": "scripts/deploy-script-intelligence-schema.js",
+      "summary": "Applies script-intelligence-schema.sql to Supabase to set up the omniscient script intelligence tables, functions, and indexes.",
+      "tags": ["script", "deployment", "database", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-simple.js",
+      "type": "file",
+      "name": "deploy-simple.js",
+      "filePath": "scripts/deploy-simple.js",
+      "summary": "Lightweight deployment alternative to deploy-database.js: clears existing data and repopulates the recipe book, viral videos, framework mappings, predictions, and health metrics via direct Supabase client calls.",
+      "tags": ["script", "deployment", "database", "seed-data"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/deploy-viral-prediction-schema.js",
+      "type": "file",
+      "name": "deploy-viral-prediction-schema.js",
+      "filePath": "scripts/deploy-viral-prediction-schema.js",
+      "summary": "Loads setup-viral-prediction-database.sql, splits it into statements, and applies each one against Supabase with a fallback path that creates core tables directly via the client.",
+      "tags": ["script", "deployment", "database", "schema", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/dev-with-port.js",
+      "type": "file",
+      "name": "dev-with-port.js",
+      "filePath": "scripts/dev-with-port.js",
+      "summary": "Cross-platform Next.js dev-server launcher that parses a port argument and self-heals EADDRINUSE by killing the offending process on Windows, macOS, or Linux.",
+      "tags": ["script", "dev-tooling", "process-management", "next-dev"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag_atlas_crons.ts",
+      "type": "file",
+      "name": "diag_atlas_crons.ts",
+      "filePath": "scripts/diag_atlas_crons.ts",
+      "summary": "Read-only diagnostic dump for Atlas cron health: surveys integration_job_runs to surface most-recent runs and errors per scheduled job.",
+      "tags": ["script", "diagnostic", "atlas-crons", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag_atlas_crons2.ts",
+      "type": "file",
+      "name": "diag_atlas_crons2.ts",
+      "filePath": "scripts/diag_atlas_crons2.ts",
+      "summary": "Companion diagnostic that dumps every integration_job_runs row and probes the prediction_log table shape for schema validation.",
+      "tags": ["script", "diagnostic", "atlas-crons", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-agency-data.ts",
+      "type": "file",
+      "name": "diag-agency-data.ts",
+      "filePath": "scripts/diag-agency-data.ts",
+      "summary": "Direct pg client diagnostic that counts agencies, active members, and onboarding profiles, then inspects how niches link via onboarding_profiles.agency_id.",
+      "tags": ["script", "diagnostic", "agency", "database-probe"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/diag-agency-link.ts",
+      "type": "file",
+      "name": "diag-agency-link.ts",
+      "filePath": "scripts/diag-agency-link.ts",
+      "summary": "Lists video/creator/client/ingest tables and the agency/creator/client/owner FK columns to map how content is linked to agencies in the Supabase schema.",
+      "tags": ["script", "diagnostic", "agency", "schema-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-agency-schema.ts",
+      "type": "file",
+      "name": "diag-agency-schema.ts",
+      "filePath": "scripts/diag-agency-schema.ts",
+      "summary": "Prints column-level schema (type, nullability, default) for agencies, agency_members, onboarding_profiles, and memory_extractions tables.",
+      "tags": ["script", "diagnostic", "schema-probe", "agency"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-brief-constraint.ts",
+      "type": "file",
+      "name": "diag-brief-constraint.ts",
+      "filePath": "scripts/diag-brief-constraint.ts",
+      "summary": "Reads pg_constraint to display the priority_type CHECK and any other constraints on pre_generated_briefs for debugging insert failures.",
+      "tags": ["script", "diagnostic", "brief-pipeline", "constraint-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-creators.ts",
+      "type": "file",
+      "name": "diag-creators.ts",
+      "filePath": "scripts/diag-creators.ts",
+      "summary": "Inspects creators, videos, and creator_predictions schema and counts how many creators are scoped to a specific real agency for diagnostic purposes.",
+      "tags": ["script", "diagnostic", "creator", "schema-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/diag-feedback-rows.ts",
+      "type": "file",
+      "name": "diag-feedback-rows.ts",
+      "filePath": "scripts/diag-feedback-rows.ts",
+      "summary": "Counts prediction_runs that carry both predicted_dps_7d and actual_dps to confirm the feedback-collector cron has been writing labels.",
+      "tags": ["script", "diagnostic", "feedback-collector", "prediction-runs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-kai-api.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/debug-kai-api.ts",
+      "lineRange": [16, 103],
+      "summary": "Sequentially probes Supabase connection, video_files insert/delete, KaiOrchestrator import, PredictionHash import, and prediction_events table read, logging each step's result.",
+      "tags": ["diagnostic", "entry-point", "prediction", "debug"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:step1_checkHighDPSVideos",
+      "type": "function",
+      "name": "step1_checkHighDPSVideos",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [21, 76],
+      "summary": "Queries dps_calculations for videos with viral_score >= 70 and returns the top hits for downstream pattern-extraction tests.",
+      "tags": ["diagnostic", "dps", "database-query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:step2_checkEnvironment",
+      "type": "function",
+      "name": "step2_checkEnvironment",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [78, 96],
+      "summary": "Verifies that required environment variables (Supabase URL/key, OpenAI key) are set before attempting the pattern-extraction API call.",
+      "tags": ["diagnostic", "env-check", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:step3_testAPICall",
+      "type": "function",
+      "name": "step3_testAPICall",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [98, 166],
+      "summary": "Issues a live POST to /api/patterns/extract with the candidate video IDs and prints request/response payloads plus error details.",
+      "tags": ["diagnostic", "api-test", "pattern-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:step4_checkDatabasePatterns",
+      "type": "function",
+      "name": "step4_checkDatabasePatterns",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [168, 195],
+      "summary": "Reads the patterns table after the API call to confirm whether new pattern rows were persisted.",
+      "tags": ["diagnostic", "database-probe", "patterns"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:step5_checkExtractionJobs",
+      "type": "function",
+      "name": "step5_checkExtractionJobs",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [197, 229],
+      "summary": "Inspects pattern_extraction_jobs to surface job status, errors, and timing for the recent extraction request.",
+      "tags": ["diagnostic", "job-status", "patterns"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-pattern-extraction.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/debug-pattern-extraction.js",
+      "lineRange": [231, 257],
+      "summary": "Orchestrates the five debug steps end-to-end and prints a summary banner.",
+      "tags": ["entry-point", "diagnostic", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/debug-scraped-videos.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/debug-scraped-videos.js",
+      "lineRange": [32, 153],
+      "summary": "Dumps row counts, distinct niche values, viral_score buckets, and sample rows from scraped_videos to validate scraping pipeline health.",
+      "tags": ["entry-point", "diagnostic", "scraped-videos", "database-probe"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/debug-transcript-count.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/debug-transcript-count.ts",
+      "lineRange": [16, 46],
+      "summary": "Counts scraped_videos rows with non-null transcript_text and prints the first five sample transcripts.",
+      "tags": ["entry-point", "diagnostic", "transcript", "database-probe"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/demo-accuracy.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/demo-accuracy.ts",
+      "lineRange": [9, 50],
+      "summary": "Resets the dev store, seeds the P1 demo cohort, kicks off /api/jobs/calibrate?dev=1, and prints the resulting AUC/ECE/bins metrics.",
+      "tags": ["entry-point", "demo", "calibration", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/demo-creator-personalization-final.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/demo-creator-personalization-final.ts",
+      "lineRange": [19, 182],
+      "summary": "Pulls 200 scraped TikTok videos, derives DPS, builds a CreatorBaseline + CreatorProfile, then runs personalized predictions against new content to demonstrate context-aware insights.",
+      "tags": ["entry-point", "demo", "creator-baseline", "personalization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-database-schema.js:deployViralPredictionSchema",
+      "type": "function",
+      "name": "deployViralPredictionSchema",
+      "filePath": "scripts/deploy-database-schema.js",
+      "lineRange": [34, 170],
+      "summary": "Reads the viral-prediction SQL schema file and applies it to Supabase, falling back to manual table creation when raw SQL execution is unavailable.",
+      "tags": ["deployment", "database", "migration", "schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-database-schema.js:createCoreTablesManually",
+      "type": "function",
+      "name": "createCoreTablesManually",
+      "filePath": "scripts/deploy-database-schema.js",
+      "lineRange": [172, 223],
+      "summary": "Fallback path that creates the core viral-prediction tables via the Supabase client when SQL exec is blocked.",
+      "tags": ["deployment", "database", "fallback", "schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-database-schema.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/deploy-database-schema.js",
+      "lineRange": [226, 248],
+      "summary": "Entry-point wrapper that runs the schema deployment and prints success/failure status.",
+      "tags": ["entry-point", "deployment", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-database-tables.js:deployTables",
+      "type": "function",
+      "name": "deployTables",
+      "filePath": "scripts/deploy-database-tables.js",
+      "lineRange": [10, 125],
+      "summary": "Defines and creates the predictions, hook_detections, and related core tables via Supabase client CREATE TABLE statements.",
+      "tags": ["deployment", "database", "migration", "schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:deployDatabase",
+      "type": "function",
+      "name": "deployDatabase",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [23, 69],
+      "summary": "Top-level deployment orchestrator: checks connection, then runs each population step (recipes, gallery, mappings, predictions, health).",
+      "tags": ["deployment", "database", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:checkDatabaseConnection",
+      "type": "function",
+      "name": "checkDatabaseConnection",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [74, 86],
+      "summary": "Performs a basic SELECT against Supabase to verify connectivity before deployment proceeds.",
+      "tags": ["deployment", "connectivity-check", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:populateRecipeBook",
+      "type": "function",
+      "name": "populateRecipeBook",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [91, 195],
+      "summary": "Seeds the recipe_book table with canonical viral content recipes used by the prediction engine.",
+      "tags": ["deployment", "seed-data", "recipe-book"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:populateViralVideoGallery",
+      "type": "function",
+      "name": "populateViralVideoGallery",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [200, 322],
+      "summary": "Seeds the viral video gallery with curated reference videos and their canonical pattern annotations.",
+      "tags": ["deployment", "seed-data", "viral-videos"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:createFrameworkMappings",
+      "type": "function",
+      "name": "createFrameworkMappings",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [327, 395],
+      "summary": "Inserts the recipe-to-framework hook mappings linking each canonical recipe to its set of supported hook templates.",
+      "tags": ["deployment", "seed-data", "framework-mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:getFrameworkHooks",
+      "type": "function",
+      "name": "getFrameworkHooks",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [400, 430],
+      "summary": "Returns the canonical hook list for a given recipe name, used during framework-mapping seed insertion.",
+      "tags": ["deployment", "lookup", "framework-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:addPredictionValidationData",
+      "type": "function",
+      "name": "addPredictionValidationData",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [435, 459],
+      "summary": "Inserts prediction validation seed records used to bootstrap the calibration evaluation flow.",
+      "tags": ["deployment", "seed-data", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:addSystemHealthData",
+      "type": "function",
+      "name": "addSystemHealthData",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [464, 520],
+      "summary": "Inserts initial system_health rows so the operations dashboards have baseline metrics to display.",
+      "tags": ["deployment", "seed-data", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-database.js:verifyDeployment",
+      "type": "function",
+      "name": "verifyDeployment",
+      "filePath": "scripts/deploy-database.js",
+      "lineRange": [525, 550],
+      "summary": "Reads back each seeded table to confirm the deployment populated the expected rows.",
+      "tags": ["deployment", "verification", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-missing-tables.js:deployMissingTables",
+      "type": "function",
+      "name": "deployMissingTables",
+      "filePath": "scripts/deploy-missing-tables.js",
+      "lineRange": [27, 95],
+      "summary": "Creates the additional 12-module-system tables (creator baselines, predictions, etc.) that were absent in earlier deployments.",
+      "tags": ["deployment", "database", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-missing-tables.js:verifyTables",
+      "type": "function",
+      "name": "verifyTables",
+      "filePath": "scripts/deploy-missing-tables.js",
+      "lineRange": [97, 125],
+      "summary": "Checks that each newly created table responds to a SELECT to confirm successful deployment.",
+      "tags": ["deployment", "verification", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-script-intelligence-schema.js:deployScriptIntelligenceSchema",
+      "type": "function",
+      "name": "deployScriptIntelligenceSchema",
+      "filePath": "scripts/deploy-script-intelligence-schema.js",
+      "lineRange": [10, 122],
+      "summary": "Loads script-intelligence-schema.sql and applies it via the Supabase service-role client, creating the omniscient script intelligence tables and indexes.",
+      "tags": ["deployment", "database", "schema", "script-intelligence"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:deploySimple",
+      "type": "function",
+      "name": "deploySimple",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [20, 66],
+      "summary": "Lightweight orchestrator that clears existing data and then repopulates recipes, videos, mappings, predictions, and health rows.",
+      "tags": ["deployment", "database", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:testConnection",
+      "type": "function",
+      "name": "testConnection",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [71, 82],
+      "summary": "Confirms the Supabase client can reach the database before the simple deployment proceeds.",
+      "tags": ["deployment", "connectivity-check", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:clearExistingData",
+      "type": "function",
+      "name": "clearExistingData",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [87, 98],
+      "summary": "Deletes existing rows from the deployment-managed tables so a fresh seed pass can be applied.",
+      "tags": ["deployment", "data-reset", "cleanup"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:populateRecipeBook",
+      "type": "function",
+      "name": "populateRecipeBook",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [103, 202],
+      "summary": "Repopulates the recipe_book seed data using direct Supabase client inserts.",
+      "tags": ["deployment", "seed-data", "recipe-book"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:populateViralVideos",
+      "type": "function",
+      "name": "populateViralVideos",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [207, 324],
+      "summary": "Repopulates the viral_videos gallery with curated reference content and pattern metadata.",
+      "tags": ["deployment", "seed-data", "viral-videos"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:createMappings",
+      "type": "function",
+      "name": "createMappings",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [329, 387],
+      "summary": "Inserts framework hook mappings linking recipes to hook templates for downstream prediction logic.",
+      "tags": ["deployment", "seed-data", "framework-mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:getHooksForFramework",
+      "type": "function",
+      "name": "getHooksForFramework",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [392, 402],
+      "summary": "Returns the canonical hook strings for a given framework / recipe name.",
+      "tags": ["deployment", "lookup", "framework-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:addPredictionData",
+      "type": "function",
+      "name": "addPredictionData",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [407, 436],
+      "summary": "Seeds prediction validation rows so calibration and dashboards have baseline data after a simple deploy.",
+      "tags": ["deployment", "seed-data", "prediction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-simple.js:addHealthData",
+      "type": "function",
+      "name": "addHealthData",
+      "filePath": "scripts/deploy-simple.js",
+      "lineRange": [441, 470],
+      "summary": "Seeds the system_health table with baseline operational metrics.",
+      "tags": ["deployment", "seed-data", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-viral-prediction-schema.js:deploySchema",
+      "type": "function",
+      "name": "deploySchema",
+      "filePath": "scripts/deploy-viral-prediction-schema.js",
+      "lineRange": [7, 124],
+      "summary": "Reads setup-viral-prediction-database.sql, splits it into individual statements, and applies each one against Supabase with detailed logging.",
+      "tags": ["deployment", "database", "schema", "migration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-viral-prediction-schema.js:createTablesDirectly",
+      "type": "function",
+      "name": "createTablesDirectly",
+      "filePath": "scripts/deploy-viral-prediction-schema.js",
+      "lineRange": [127, 164],
+      "summary": "Fallback path that creates the core viral-prediction tables via the supplied Supabase client when SQL execution fails.",
+      "tags": ["deployment", "database", "fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev-with-port.js:killPort",
+      "type": "function",
+      "name": "killPort",
+      "filePath": "scripts/dev-with-port.js",
+      "lineRange": [25, 48],
+      "summary": "Frees the requested TCP port using platform-specific tooling (PowerShell + taskkill on Windows, lsof+kill on macOS, fuser/lsof on Linux).",
+      "tags": ["dev-tooling", "process-management", "cross-platform"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/dev-with-port.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/dev-with-port.js",
+      "lineRange": [50, 68],
+      "summary": "Launches `next dev` on the chosen port and automatically retries after killing the port on EADDRINUSE or non-zero exits.",
+      "tags": ["entry-point", "dev-tooling", "next-dev"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/diag_atlas_crons.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/diag_atlas_crons.ts",
+      "lineRange": [9, 167],
+      "summary": "Surveys integration_job_runs and related tables to surface the most recent cron run, status, and error for each Atlas job.",
+      "tags": ["entry-point", "diagnostic", "atlas-crons", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/diag_atlas_crons2.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/diag_atlas_crons2.ts",
+      "lineRange": [9, 34],
+      "summary": "Lists every integration_job_runs row and probes prediction_log shape (count + first-row keys) to validate schema assumptions.",
+      "tags": ["entry-point", "diagnostic", "atlas-crons", "schema-probe"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/debug-kai-api.ts", "target": "function:scripts/debug-kai-api.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:step1_checkHighDPSVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:step2_checkEnvironment", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:step3_testAPICall", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:step4_checkDatabasePatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:step5_checkExtractionJobs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-pattern-extraction.js", "target": "function:scripts/debug-pattern-extraction.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-scraped-videos.js", "target": "function:scripts/debug-scraped-videos.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-transcript-count.ts", "target": "function:scripts/debug-transcript-count.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/demo-accuracy.ts", "target": "function:scripts/demo-accuracy.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/demo-creator-personalization-final.ts", "target": "function:scripts/demo-creator-personalization-final.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database-schema.js", "target": "function:scripts/deploy-database-schema.js:deployViralPredictionSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database-schema.js", "target": "function:scripts/deploy-database-schema.js:createCoreTablesManually", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database-schema.js", "target": "function:scripts/deploy-database-schema.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database-tables.js", "target": "function:scripts/deploy-database-tables.js:deployTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:deployDatabase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:checkDatabaseConnection", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:populateRecipeBook", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:populateViralVideoGallery", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:createFrameworkMappings", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:getFrameworkHooks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:addPredictionValidationData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:addSystemHealthData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-database.js", "target": "function:scripts/deploy-database.js:verifyDeployment", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-missing-tables.js", "target": "function:scripts/deploy-missing-tables.js:deployMissingTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-missing-tables.js", "target": "function:scripts/deploy-missing-tables.js:verifyTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-script-intelligence-schema.js", "target": "function:scripts/deploy-script-intelligence-schema.js:deployScriptIntelligenceSchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:deploySimple", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:testConnection", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:clearExistingData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:populateRecipeBook", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:populateViralVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:createMappings", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:getHooksForFramework", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:addPredictionData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-simple.js", "target": "function:scripts/deploy-simple.js:addHealthData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-viral-prediction-schema.js", "target": "function:scripts/deploy-viral-prediction-schema.js:deploySchema", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-viral-prediction-schema.js", "target": "function:scripts/deploy-viral-prediction-schema.js:createTablesDirectly", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/dev-with-port.js", "target": "function:scripts/dev-with-port.js:killPort", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/dev-with-port.js", "target": "function:scripts/dev-with-port.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/diag_atlas_crons.ts", "target": "function:scripts/diag_atlas_crons.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/diag_atlas_crons2.ts", "target": "function:scripts/diag_atlas_crons2.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/debug-kai-api.ts", "target": "file:src/lib/orchestration/kai-orchestrator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/debug-kai-api.ts", "target": "file:src/lib/services/prediction-hash.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/demo-creator-personalization-final.ts", "target": "file:src/lib/components/creator-baseline.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

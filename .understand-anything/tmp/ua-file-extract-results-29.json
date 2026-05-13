@@ -1,0 +1,6956 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "scripts/backfill-dps-scores.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 102,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "backfillDPSScores",
+          "startLine": 16,
+          "endLine": 100,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 18
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from('dps_calculations')\r\n      .select('video_id, viral_score, percentile_rank, classification, calculated_at')\r\n      .order",
+          "lineNumber": 21
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from('dps_calculations')\r\n      .select",
+          "lineNumber": 21
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 21
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.error",
+          "lineNumber": 27
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "process.exit",
+          "lineNumber": 28
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "process.exit",
+          "lineNumber": 33
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "calculations.forEach",
+          "lineNumber": 40
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "latestByVideo.get",
+          "lineNumber": 41
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "latestByVideo.set",
+          "lineNumber": 43
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 47
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "latestByVideo.entries",
+          "lineNumber": 53
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update({\r\n          dps_score: calc.viral_score,\r\n          dps_percentile: calc.percentile_rank,\r\n          dps_classification: calc.classification,\r\n          dps_calculated_at: calc.calculated_at\r\n        })\r\n        .eq",
+          "lineNumber": 54
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update",
+          "lineNumber": 54
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 54
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.error",
+          "lineNumber": 65
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "process.stdout.write",
+          "lineNumber": 70
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 75
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 76
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 78
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, dps_score, dps_classification')\r\n      .not('dps_score', 'is', null)\r\n      .limit",
+          "lineNumber": 82
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, dps_score, dps_classification')\r\n      .not",
+          "lineNumber": 82
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select",
+          "lineNumber": 82
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 82
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 89
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "sample.forEach",
+          "lineNumber": 90
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.log",
+          "lineNumber": 91
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "process.exit",
+          "lineNumber": 95
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "console.error",
+          "lineNumber": 97
+        },
+        {
+          "caller": "backfillDPSScores",
+          "callee": "process.exit",
+          "lineNumber": 98
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-ffmpeg-segment-features.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 214,
+      "nonEmptyLines": 175,
+      "functions": [
+        {
+          "name": "parseArgs",
+          "startLine": 32,
+          "endLine": 49,
+          "params": []
+        },
+        {
+          "name": "buildVideoFileMap",
+          "startLine": 53,
+          "endLine": 73,
+          "params": []
+        },
+        {
+          "name": "main",
+          "startLine": 77,
+          "endLine": 209,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parseArgs",
+          "callee": "process.argv.slice",
+          "lineNumber": 33
+        },
+        {
+          "caller": "parseArgs",
+          "callee": "parseInt",
+          "lineNumber": 39
+        },
+        {
+          "caller": "parseArgs",
+          "callee": "parseInt",
+          "lineNumber": 43
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "join",
+          "lineNumber": 54
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "existsSync",
+          "lineNumber": 57
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "console.error",
+          "lineNumber": 58
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "readdirSync(downloadDir).filter",
+          "lineNumber": 62
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "readdirSync",
+          "lineNumber": 62
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "f.endsWith",
+          "lineNumber": 62
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "file.match",
+          "lineNumber": 66
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "map.set",
+          "lineNumber": 68
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "join",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "parseArgs",
+          "lineNumber": 78
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 80
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 80
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 81
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "buildVideoFileMap",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 91
+        },
+        {
+          "caller": "main",
+          "callee": "createClient",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('video_id, hook_motion_ratio')\r\n      .is('hook_motion_ratio', null)\r\n      .range",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('video_id, hook_motion_ratio')\r\n      .is",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 111
+        },
+        {
+          "caller": "main",
+          "callee": "allRows.push",
+          "lineNumber": 114
+        },
+        {
+          "caller": "main",
+          "callee": "allRows.filter",
+          "lineNumber": 120
+        },
+        {
+          "caller": "main",
+          "callee": "fileMap.has",
+          "lineNumber": 120
+        },
+        {
+          "caller": "main",
+          "callee": "rowsWithFiles.slice",
+          "lineNumber": 122
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 124
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 125
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 126
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "main",
+          "callee": "fileMap.get",
+          "lineNumber": 146
+        },
+        {
+          "caller": "main",
+          "callee": "process.stdout.write",
+          "lineNumber": 148
+        },
+        {
+          "caller": "main",
+          "callee": "extractSegmentFeatures",
+          "lineNumber": 151
+        },
+        {
+          "caller": "main",
+          "callee": "Object.keys",
+          "lineNumber": 155
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('training_features')\r\n        .update({\r\n          hook_motion_ratio: f.hook_motion_ratio,\r\n          audio_energy_buildup: f.audio_energy_buildup,\r\n          scene_rate_first_half_vs_second: f.scene_rate_first_half_vs_second,\r\n          visual_variety_score: f.visual_variety_score,\r\n          hook_audio_intensity: f.hook_audio_intensity,\r\n        })\r\n        .eq",
+          "lineNumber": 162
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('training_features')\r\n        .update",
+          "lineNumber": 162
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 162
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 174
+        },
+        {
+          "caller": "main",
+          "callee": "Object.values(f).filter",
+          "lineNumber": 179
+        },
+        {
+          "caller": "main",
+          "callee": "Object.values",
+          "lineNumber": 179
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 181
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 185
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 191
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 197
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 197
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 198
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 199
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 199
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 200
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 201
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 202
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 203
+        },
+        {
+          "caller": "main",
+          "callee": "((succeeded / pending.length) * 100).toFixed",
+          "lineNumber": 203
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 204
+        },
+        {
+          "caller": "main",
+          "callee": "Object.entries",
+          "lineNumber": 205
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 206
+        },
+        {
+          "caller": "main",
+          "callee": "key.padEnd",
+          "lineNumber": 206
+        },
+        {
+          "caller": "main",
+          "callee": "((count / succeeded) * 100).toFixed",
+          "lineNumber": 206
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 208
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-follower-counts.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 79,
+      "nonEmptyLines": 66,
+      "functions": [
+        {
+          "name": "backfillFollowerCounts",
+          "startLine": 32,
+          "endLine": 77,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('creator_username, creator_id')\r\n    .not",
+          "lineNumber": 36
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 36
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 36
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "videos.map",
+          "lineNumber": 43
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 44
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "username.toLowerCase",
+          "lineNumber": 50
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update({ creator_followers_count: followerCount })\r\n        .eq",
+          "lineNumber": 53
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update",
+          "lineNumber": 53
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 53
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "followerCount.toLocaleString",
+          "lineNumber": 59
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "notFound.push",
+          "lineNumber": 63
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 67
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 68
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 69
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 72
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "notFound.forEach",
+          "lineNumber": 73
+        },
+        {
+          "caller": "backfillFollowerCounts",
+          "callee": "console.log",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-new-features.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 496,
+      "nonEmptyLines": 426,
+      "functions": [
+        {
+          "name": "normalizeToUnit",
+          "startLine": 89,
+          "endLine": 91,
+          "params": [
+            "value",
+            "p5",
+            "p95"
+          ]
+        },
+        {
+          "name": "computeWave1",
+          "startLine": 101,
+          "endLine": 200,
+          "params": [
+            "transcript",
+            "durationSeconds",
+            "audioFeatures"
+          ]
+        },
+        {
+          "name": "computeWave2",
+          "startLine": 217,
+          "endLine": 309,
+          "params": [
+            "videoPath",
+            "durationSeconds"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 315,
+          "endLine": 491,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "normalizeToUnit",
+          "callee": "Math.max",
+          "lineNumber": 90
+        },
+        {
+          "caller": "normalizeToUnit",
+          "callee": "Math.min",
+          "lineNumber": 90
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.toLowerCase",
+          "lineNumber": 120
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "Math.max",
+          "lineNumber": 121
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.split(/\\s+/).filter",
+          "lineNumber": 122
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.split",
+          "lineNumber": 122
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "Math.max",
+          "lineNumber": 123
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "tool.replace",
+          "lineNumber": 128
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "lower.match",
+          "lineNumber": 129
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.match",
+          "lineNumber": 132
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "NON_ROUND_REGEX.test",
+          "lineNumber": 135
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "lower.match",
+          "lineNumber": 139
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.split(/[.!?\\n]+/).filter",
+          "lineNumber": 146
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "transcript.split",
+          "lineNumber": 146
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "s.trim",
+          "lineNumber": 146
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "sentence.trim().toLowerCase",
+          "lineNumber": 148
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "sentence.trim",
+          "lineNumber": 148
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 150
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 150
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 150
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "trimmed.startsWith",
+          "lineNumber": 150
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "lower.match",
+          "lineNumber": 158
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "phrase.replace",
+          "lineNumber": 167
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "lower.match",
+          "lineNumber": 168
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "normalizeToUnit",
+          "lineNumber": 177
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.push",
+          "lineNumber": 178
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "normalizeToUnit",
+          "lineNumber": 181
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.push",
+          "lineNumber": 182
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "normalizeToUnit",
+          "lineNumber": 185
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.push",
+          "lineNumber": 186
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "normalizeToUnit",
+          "lineNumber": 189
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.push",
+          "lineNumber": 190
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.reduce",
+          "lineNumber": 193
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "Math.max",
+          "lineNumber": 194
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "Math.min",
+          "lineNumber": 194
+        },
+        {
+          "caller": "computeWave1",
+          "callee": "components.reduce",
+          "lineNumber": 195
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "import",
+          "lineNumber": 218
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "import",
+          "lineNumber": 219
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "import",
+          "lineNumber": 220
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "timestamps.push",
+          "lineNumber": 232
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "Math.round",
+          "lineNumber": 232
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "extractThumbnails",
+          "lineNumber": 237
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "frames.map",
+          "lineNumber": 240
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "fs.readFileSync",
+          "lineNumber": 245
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "imageParts.push",
+          "lineNumber": 246
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "imageBuffer.toString",
+          "lineNumber": 247
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "ai.models.generateContent",
+          "lineNumber": 252
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "responseText.trim",
+          "lineNumber": 270
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "cleaned.startsWith",
+          "lineNumber": 271
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "cleaned.replace(/```json\\n?/g, '').replace",
+          "lineNumber": 271
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "cleaned.replace",
+          "lineNumber": 271
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "cleaned.startsWith",
+          "lineNumber": 272
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "cleaned.replace",
+          "lineNumber": 272
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "JSON.parse",
+          "lineNumber": 274
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "Array.isArray",
+          "lineNumber": 275
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "parsed.map",
+          "lineNumber": 281
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "(item || '').toLowerCase().trim().replace",
+          "lineNumber": 282
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "(item || '').toLowerCase().trim",
+          "lineNumber": 282
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "(item || '').toLowerCase",
+          "lineNumber": 282
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "validTypes.includes",
+          "lineNumber": 283
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "Math.max",
+          "lineNumber": 287
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "classifications.filter",
+          "lineNumber": 290
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "proofTypes.includes",
+          "lineNumber": 290
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "classifications.filter",
+          "lineNumber": 291
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "classifications.filter",
+          "lineNumber": 292
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "String",
+          "lineNumber": 301
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "console.error",
+          "lineNumber": 302
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "fs.existsSync",
+          "lineNumber": 306
+        },
+        {
+          "caller": "computeWave2",
+          "callee": "fs.unlinkSync",
+          "lineNumber": 306
+        },
+        {
+          "caller": "main",
+          "callee": "process.argv.slice",
+          "lineNumber": 316
+        },
+        {
+          "caller": "main",
+          "callee": "args.includes",
+          "lineNumber": 317
+        },
+        {
+          "caller": "main",
+          "callee": "args.includes",
+          "lineNumber": 318
+        },
+        {
+          "caller": "main",
+          "callee": "args.includes",
+          "lineNumber": 319
+        },
+        {
+          "caller": "main",
+          "callee": "args.indexOf",
+          "lineNumber": 320
+        },
+        {
+          "caller": "main",
+          "callee": "parseInt",
+          "lineNumber": 321
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 323
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 324
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 325
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 326
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 327
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n    .from('training_features')\n    .select('video_id, meta_duration_seconds, audio_pitch_variance, audio_loudness_variance, audio_silence_ratio, speaking_rate_wpm_variance, ffmpeg_duration_seconds')\n    .is",
+          "lineNumber": 330
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n    .from('training_features')\n    .select",
+          "lineNumber": 330
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n    .from",
+          "lineNumber": 330
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 337
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 338
+        },
+        {
+          "caller": "main",
+          "callee": "targets.slice",
+          "lineNumber": 342
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 343
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 349
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select('transcript_text, caption, duration_seconds')\n        .eq('video_id', row.video_id)\n        .single",
+          "lineNumber": 354
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select('transcript_text, caption, duration_seconds')\n        .eq",
+          "lineNumber": 354
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from('scraped_videos')\n        .select",
+          "lineNumber": 354
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from",
+          "lineNumber": 354
+        },
+        {
+          "caller": "main",
+          "callee": "computeWave1",
+          "lineNumber": 366
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n          .from('training_features')\n          .update({\n            specificity_score: wave1.specificity_score,\n            instructional_density: wave1.instructional_density,\n            has_step_structure: wave1.has_step_structure,\n            hedge_word_density: wave1.hedge_word_density,\n            vocal_confidence_composite: wave1.vocal_confidence_composite,\n          })\n          .eq",
+          "lineNumber": 374
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n          .from('training_features')\n          .update",
+          "lineNumber": 374
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n          .from",
+          "lineNumber": 374
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 386
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 394
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 397
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 402
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 406
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from('training_features')\n        .select('video_id, ffmpeg_duration_seconds, meta_duration_seconds')\n        .is",
+          "lineNumber": 409
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from('training_features')\n        .select",
+          "lineNumber": 409
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n        .from",
+          "lineNumber": 409
+        },
+        {
+          "caller": "main",
+          "callee": "visionTargets.slice",
+          "lineNumber": 415
+        },
+        {
+          "caller": "main",
+          "callee": "visionTargets.slice",
+          "lineNumber": 421
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n            .from('scraped_videos')\n            .select('url, duration_seconds')\n            .eq('video_id', row.video_id)\n            .single",
+          "lineNumber": 425
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n            .from('scraped_videos')\n            .select('url, duration_seconds')\n            .eq",
+          "lineNumber": 425
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n            .from('scraped_videos')\n            .select",
+          "lineNumber": 425
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n            .from",
+          "lineNumber": 425
+        },
+        {
+          "caller": "main",
+          "callee": "import",
+          "lineNumber": 438
+        },
+        {
+          "caller": "main",
+          "callee": "TikTokDownloader.downloadVideo",
+          "lineNumber": 439
+        },
+        {
+          "caller": "main",
+          "callee": "computeWave2",
+          "lineNumber": 447
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n                .from('training_features')\n                .update({\n                  visual_proof_ratio: wave2.visual_proof_ratio,\n                  talking_head_ratio: wave2.talking_head_ratio,\n                  text_overlay_density: wave2.text_overlay_density,\n                  visual_to_verbal_ratio: wave2.visual_to_verbal_ratio,\n                })\n                .eq",
+          "lineNumber": 450
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n                .from('training_features')\n                .update",
+          "lineNumber": 450
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n                .from",
+          "lineNumber": 450
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 461
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 470
+        },
+        {
+          "caller": "main",
+          "callee": "Math.min",
+          "lineNumber": 475
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 477
+        },
+        {
+          "caller": "main",
+          "callee": "setTimeout",
+          "lineNumber": 482
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 485
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 489
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 490
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-prediction-features.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 408,
+      "nonEmptyLines": 344,
+      "functions": [
+        {
+          "name": "toFeatureJsonb",
+          "startLine": 74,
+          "endLine": 80,
+          "params": [
+            "row"
+          ]
+        },
+        {
+          "name": "countPopulated",
+          "startLine": 82,
+          "endLine": 84,
+          "params": [
+            "jsonb"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 86,
+          "endLine": 403,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "countPopulated",
+          "callee": "Object.values(jsonb).filter",
+          "lineNumber": 83
+        },
+        {
+          "caller": "countPopulated",
+          "callee": "Object.values",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 88
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "supabase.rpc",
+          "lineNumber": 92
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('prediction_runs')\r\n      .select('id, video_id, actual_dps, dps_v2_display_score, dps_v2_incomplete')\r\n      .or",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('prediction_runs')\r\n      .select",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 106
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 107
+        },
+        {
+          "caller": "main",
+          "callee": "prRows.filter",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 115
+        },
+        {
+          "caller": "main",
+          "callee": "cleanRows.map",
+          "lineNumber": 118
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, url, caption, transcript_text, hashtags, duration_seconds, creator_followers_count, upload_timestamp, is_original_sound')\r\n      .in",
+          "lineNumber": 120
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select",
+          "lineNumber": 120
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 120
+        },
+        {
+          "caller": "main",
+          "callee": "(svRows || []).map",
+          "lineNumber": 125
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('video_files')\r\n      .select('id, storage_path, tiktok_url')\r\n      .in",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('video_files')\r\n      .select",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "(vfRows || []).map",
+          "lineNumber": 133
+        },
+        {
+          "caller": "main",
+          "callee": "svMap.get",
+          "lineNumber": 136
+        },
+        {
+          "caller": "main",
+          "callee": "vfMap.get",
+          "lineNumber": 137
+        },
+        {
+          "caller": "main",
+          "callee": "labeledRows.push",
+          "lineNumber": 139
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 158
+        },
+        {
+          "caller": "main",
+          "callee": "downloadable.push",
+          "lineNumber": 168
+        },
+        {
+          "caller": "main",
+          "callee": "join",
+          "lineNumber": 170
+        },
+        {
+          "caller": "main",
+          "callee": "process.cwd",
+          "lineNumber": 170
+        },
+        {
+          "caller": "main",
+          "callee": "existsSync",
+          "lineNumber": 171
+        },
+        {
+          "caller": "main",
+          "callee": "localFile.push",
+          "lineNumber": 172
+        },
+        {
+          "caller": "main",
+          "callee": "noVideo.push",
+          "lineNumber": 174
+        },
+        {
+          "caller": "main",
+          "callee": "noVideo.push",
+          "lineNumber": 177
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 181
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 182
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 183
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('video_id')\r\n      .range",
+          "lineNumber": 198
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select",
+          "lineNumber": 198
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 198
+        },
+        {
+          "caller": "main",
+          "callee": "existingIds.add",
+          "lineNumber": 203
+        },
+        {
+          "caller": "main",
+          "callee": "allRowsUnfiltered.filter",
+          "lineNumber": 208
+        },
+        {
+          "caller": "main",
+          "callee": "existingIds.has",
+          "lineNumber": 208
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 210
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 211
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 218
+        },
+        {
+          "caller": "main",
+          "callee": "row.run_id.slice",
+          "lineNumber": 218
+        },
+        {
+          "caller": "main",
+          "callee": "import",
+          "lineNumber": 244
+        },
+        {
+          "caller": "main",
+          "callee": "join",
+          "lineNumber": 245
+        },
+        {
+          "caller": "main",
+          "callee": "process.cwd",
+          "lineNumber": 245
+        },
+        {
+          "caller": "main",
+          "callee": "extractPredictionFeatures",
+          "lineNumber": 247
+        },
+        {
+          "caller": "main",
+          "callee": "new Date().toISOString",
+          "lineNumber": 258
+        },
+        {
+          "caller": "main",
+          "callee": "Object.fromEntries",
+          "lineNumber": 262
+        },
+        {
+          "caller": "main",
+          "callee": "Object.keys(result.features).map",
+          "lineNumber": 263
+        },
+        {
+          "caller": "main",
+          "callee": "Object.keys",
+          "lineNumber": 263
+        },
+        {
+          "caller": "main",
+          "callee": "extractFeaturesForVideo",
+          "lineNumber": 268
+        },
+        {
+          "caller": "main",
+          "callee": "toFeatureJsonb",
+          "lineNumber": 272
+        },
+        {
+          "caller": "main",
+          "callee": "countPopulated",
+          "lineNumber": 273
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('training_features')\r\n        .upsert",
+          "lineNumber": 276
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 276
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 281
+        },
+        {
+          "caller": "main",
+          "callee": "results.failed.push",
+          "lineNumber": 282
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('prediction_runs')\r\n        .update({ extracted_features: featureJsonb })\r\n        .eq",
+          "lineNumber": 287
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('prediction_runs')\r\n        .update",
+          "lineNumber": 287
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 287
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 293
+        },
+        {
+          "caller": "main",
+          "callee": "results.failed.push",
+          "lineNumber": 294
+        },
+        {
+          "caller": "main",
+          "callee": "results.success.push",
+          "lineNumber": 298
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 299
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 302
+        },
+        {
+          "caller": "main",
+          "callee": "results.failed.push",
+          "lineNumber": 303
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 308
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 308
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 309
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 310
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 310
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 311
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 312
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 313
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 314
+        },
+        {
+          "caller": "main",
+          "callee": "results.success.reduce",
+          "lineNumber": 318
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 319
+        },
+        {
+          "caller": "main",
+          "callee": "avgFill.toFixed",
+          "lineNumber": 319
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 320
+        },
+        {
+          "caller": "main",
+          "callee": "((avgFill / V10_FEATURE_NAMES.length) * 100).toFixed",
+          "lineNumber": 320
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 324
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 326
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 331
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 333
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 338
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 338
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 339
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 340
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 340
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select",
+          "lineNumber": 342
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 342
+        },
+        {
+          "caller": "main",
+          "callee": "results.success.map",
+          "lineNumber": 347
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select('video_id')\r\n    .in",
+          "lineNumber": 348
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select",
+          "lineNumber": 348
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 348
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 353
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select",
+          "lineNumber": 356
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 356
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 360
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 361
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('*')\r\n      .in('video_id', newVideoIds)\r\n      .limit",
+          "lineNumber": 365
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('*')\r\n      .in",
+          "lineNumber": 365
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select",
+          "lineNumber": 365
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 365
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 372
+        },
+        {
+          "caller": "main",
+          "callee": "V10_FEATURE_NAMES.filter",
+          "lineNumber": 374
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 375
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select('*')\r\n    .not('video_id', 'in', `(${newVideoIds.join(',')})`)\r\n    .limit",
+          "lineNumber": 381
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select('*')\r\n    .not",
+          "lineNumber": 381
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_features')\r\n    .select",
+          "lineNumber": 381
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 381
+        },
+        {
+          "caller": "main",
+          "callee": "newVideoIds.join",
+          "lineNumber": 384
+        },
+        {
+          "caller": "main",
+          "callee": "origSample.reduce",
+          "lineNumber": 388
+        },
+        {
+          "caller": "main",
+          "callee": "V10_FEATURE_NAMES.filter",
+          "lineNumber": 389
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 392
+        },
+        {
+          "caller": "main",
+          "callee": "origAvg.toFixed",
+          "lineNumber": 392
+        },
+        {
+          "caller": "main",
+          "callee": "((origAvg / V10_FEATURE_NAMES.length) * 100).toFixed",
+          "lineNumber": 392
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select('*', { count: 'exact', head: true })\r\n    .not",
+          "lineNumber": 396
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select",
+          "lineNumber": 396
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 396
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 401
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 402
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-training-ready.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 285,
+      "nonEmptyLines": 240,
+      "functions": [
+        {
+          "name": "getCliArg",
+          "startLine": 36,
+          "endLine": 43,
+          "params": [
+            "flag"
+          ]
+        },
+        {
+          "name": "diagnoseRun",
+          "startLine": 80,
+          "endLine": 121,
+          "params": [
+            "run"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 125,
+          "endLine": 280,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getCliArg",
+          "callee": "process.argv.slice",
+          "lineNumber": 37
+        },
+        {
+          "caller": "getCliArg",
+          "callee": "args.find",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getCliArg",
+          "callee": "a.startsWith",
+          "lineNumber": 38
+        },
+        {
+          "caller": "getCliArg",
+          "callee": "eq.split",
+          "lineNumber": 39
+        },
+        {
+          "caller": "getCliArg",
+          "callee": "args.indexOf",
+          "lineNumber": 40
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.push",
+          "lineNumber": 85
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.push",
+          "lineNumber": 86
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.push",
+          "lineNumber": 90
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.push",
+          "lineNumber": 91
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.push",
+          "lineNumber": 95
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.push",
+          "lineNumber": 96
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.push",
+          "lineNumber": 99
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.push",
+          "lineNumber": 100
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.push",
+          "lineNumber": 103
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.push",
+          "lineNumber": 104
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "issues.includes",
+          "lineNumber": 113
+        },
+        {
+          "caller": "diagnoseRun",
+          "callee": "parts.join",
+          "lineNumber": 118
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 126
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 127
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('training_readiness_summary')\r\n    .select",
+          "lineNumber": 134
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 134
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 139
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 140
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 144
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 145
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 148
+        },
+        {
+          "caller": "main",
+          "callee": "(row.niche || '???').padEnd",
+          "lineNumber": 149
+        },
+        {
+          "caller": "main",
+          "callee": "String(row.total_runs).padStart",
+          "lineNumber": 149
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 149
+        },
+        {
+          "caller": "main",
+          "callee": "String(row.completed_runs).padStart",
+          "lineNumber": 150
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 150
+        },
+        {
+          "caller": "main",
+          "callee": "String(row.labeled_runs).padStart",
+          "lineNumber": 151
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 151
+        },
+        {
+          "caller": "main",
+          "callee": "String(row.training_ready_runs).padStart",
+          "lineNumber": 152
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 152
+        },
+        {
+          "caller": "main",
+          "callee": "String(gap).padStart",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 156
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs_enriched')\r\n    .select('id, video_id, status, niche, actual_dps, predicted_dps_7d, has_components, has_raw_result, component_rows_count, training_ready, created_at')\r\n    .eq",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs_enriched')\r\n    .select",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "query.eq",
+          "lineNumber": 166
+        },
+        {
+          "caller": "main",
+          "callee": "query.order",
+          "lineNumber": 169
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 171
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 172
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 176
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 180
+        },
+        {
+          "caller": "main",
+          "callee": "runs.map",
+          "lineNumber": 184
+        },
+        {
+          "caller": "main",
+          "callee": "diagnoseRun",
+          "lineNumber": 184
+        },
+        {
+          "caller": "main",
+          "callee": "byIssue.has",
+          "lineNumber": 190
+        },
+        {
+          "caller": "main",
+          "callee": "byIssue.set",
+          "lineNumber": 190
+        },
+        {
+          "caller": "main",
+          "callee": "byIssue.get(issue)!.push",
+          "lineNumber": 191
+        },
+        {
+          "caller": "main",
+          "callee": "byIssue.get",
+          "lineNumber": 191
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 195
+        },
+        {
+          "caller": "main",
+          "callee": "Object.entries",
+          "lineNumber": 203
+        },
+        {
+          "caller": "main",
+          "callee": "byIssue.get",
+          "lineNumber": 204
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 206
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 209
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 213
+        },
+        {
+          "caller": "main",
+          "callee": "diagnoses.slice",
+          "lineNumber": 214
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 217
+        },
+        {
+          "caller": "main",
+          "callee": "r.id.slice",
+          "lineNumber": 218
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 222
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 225
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 227
+        },
+        {
+          "caller": "main",
+          "callee": "diagnoses.filter",
+          "lineNumber": 232
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 233
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 234
+        },
+        {
+          "caller": "main",
+          "callee": "diagnoses.filter",
+          "lineNumber": 240
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 242
+        },
+        {
+          "caller": "main",
+          "callee": "fixable.map",
+          "lineNumber": 246
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 247
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id')\r\n      .eq('video_id', videoId)\r\n      .limit",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id')\r\n      .eq",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update({ needs_processing: true })\r\n        .eq",
+          "lineNumber": 261
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('scraped_videos')\r\n        .update",
+          "lineNumber": 261
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 261
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 267
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 270
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 274
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 278
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 279
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/backfill-vision-hook-features.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 248,
+      "nonEmptyLines": 203,
+      "functions": [
+        {
+          "name": "waitForRateLimit",
+          "startLine": 43,
+          "endLine": 55,
+          "params": []
+        },
+        {
+          "name": "parseArgs",
+          "startLine": 59,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "buildVideoFileMap",
+          "startLine": 75,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "main",
+          "startLine": 99,
+          "endLine": 243,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "waitForRateLimit",
+          "callee": "Date.now",
+          "lineNumber": 44
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "callTimestamps.shift",
+          "lineNumber": 47
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "console.log",
+          "lineNumber": 51
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "(waitMs / 1000).toFixed",
+          "lineNumber": 51
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "setTimeout",
+          "lineNumber": 52
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "callTimestamps.push",
+          "lineNumber": 54
+        },
+        {
+          "caller": "waitForRateLimit",
+          "callee": "Date.now",
+          "lineNumber": 54
+        },
+        {
+          "caller": "parseArgs",
+          "callee": "process.argv.slice",
+          "lineNumber": 60
+        },
+        {
+          "caller": "parseArgs",
+          "callee": "parseInt",
+          "lineNumber": 65
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "join",
+          "lineNumber": 76
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "existsSync",
+          "lineNumber": 79
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "console.error",
+          "lineNumber": 80
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "readdirSync(downloadDir).filter",
+          "lineNumber": 84
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "readdirSync",
+          "lineNumber": 84
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "f.endsWith",
+          "lineNumber": 84
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "file.match",
+          "lineNumber": 88
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "map.set",
+          "lineNumber": 90
+        },
+        {
+          "caller": "buildVideoFileMap",
+          "callee": "join",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "parseArgs",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 102
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 102
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "buildVideoFileMap",
+          "lineNumber": 108
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 109
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 112
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 113
+        },
+        {
+          "caller": "main",
+          "callee": "createClient",
+          "lineNumber": 117
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('video_id, hook_face_present')\r\n      .is('hook_face_present', null)\r\n      .range",
+          "lineNumber": 123
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select('video_id, hook_face_present')\r\n      .is",
+          "lineNumber": 123
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('training_features')\r\n      .select",
+          "lineNumber": 123
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 123
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 130
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 131
+        },
+        {
+          "caller": "main",
+          "callee": "allRows.push",
+          "lineNumber": 134
+        },
+        {
+          "caller": "main",
+          "callee": "allRows.filter",
+          "lineNumber": 140
+        },
+        {
+          "caller": "main",
+          "callee": "fileMap.has",
+          "lineNumber": 140
+        },
+        {
+          "caller": "main",
+          "callee": "rowsWithFiles.slice",
+          "lineNumber": 141
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 144
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 145
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 148
+        },
+        {
+          "caller": "main",
+          "callee": "Date.now",
+          "lineNumber": 165
+        },
+        {
+          "caller": "main",
+          "callee": "fileMap.get",
+          "lineNumber": 169
+        },
+        {
+          "caller": "main",
+          "callee": "process.stdout.write",
+          "lineNumber": 171
+        },
+        {
+          "caller": "main",
+          "callee": "waitForRateLimit",
+          "lineNumber": 174
+        },
+        {
+          "caller": "main",
+          "callee": "extractVisionHookFeatures",
+          "lineNumber": 176
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 179
+        },
+        {
+          "caller": "main",
+          "callee": "Object.keys",
+          "lineNumber": 185
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('training_features')\r\n        .update({\r\n          hook_face_present: result.hook_face_present,\r\n          hook_text_overlay: result.hook_text_overlay,\r\n          hook_composition_score: result.hook_composition_score,\r\n          hook_emotion_intensity: result.hook_emotion_intensity,\r\n        })\r\n        .eq",
+          "lineNumber": 194
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from('training_features')\r\n        .update",
+          "lineNumber": 194
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n        .from",
+          "lineNumber": 194
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 205
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 210
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 213
+        },
+        {
+          "caller": "main",
+          "callee": "Date.now",
+          "lineNumber": 218
+        },
+        {
+          "caller": "main",
+          "callee": "(elapsedMs / 60_000).toFixed",
+          "lineNumber": 219
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 226
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 226
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 227
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 228
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 228
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 229
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 230
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 231
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 232
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 233
+        },
+        {
+          "caller": "main",
+          "callee": "((succeeded / pending.length) * 100).toFixed",
+          "lineNumber": 233
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 234
+        },
+        {
+          "caller": "main",
+          "callee": "Object.entries",
+          "lineNumber": 235
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 236
+        },
+        {
+          "caller": "main",
+          "callee": "key.padEnd",
+          "lineNumber": 236
+        },
+        {
+          "caller": "main",
+          "callee": "((count / succeeded) * 100).toFixed",
+          "lineNumber": 236
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 238
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 239
+        },
+        {
+          "caller": "main",
+          "callee": "((facePresentCount / succeeded) * 100).toFixed",
+          "lineNumber": 239
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 240
+        },
+        {
+          "caller": "main",
+          "callee": "((textOverlayCount / succeeded) * 100).toFixed",
+          "lineNumber": 240
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 241
+        },
+        {
+          "caller": "main",
+          "callee": "estimatedCost.toFixed",
+          "lineNumber": 241
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 242
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/batch-calculate-dps.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 192,
+      "nonEmptyLines": 151,
+      "functions": [
+        {
+          "name": "fetchVideosForDPS",
+          "startLine": 23,
+          "endLine": 49,
+          "params": []
+        },
+        {
+          "name": "batchCalculateDPS",
+          "startLine": 51,
+          "endLine": 134,
+          "params": [
+            "videos"
+          ]
+        },
+        {
+          "name": "verifyDPSInDatabase",
+          "startLine": 136,
+          "endLine": 156,
+          "params": []
+        },
+        {
+          "name": "main",
+          "startLine": 158,
+          "endLine": 190,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, title, platform, views_count, likes_count, shares_count, comments_count, creator_followers_count, upload_timestamp')\r\n    .not('transcript', 'is', null)\r\n    .order",
+          "lineNumber": 26
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, title, platform, views_count, likes_count, shares_count, comments_count, creator_followers_count, upload_timestamp')\r\n    .not",
+          "lineNumber": 26
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 26
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 26
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 40
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "data.slice(0, 3).forEach",
+          "lineNumber": 41
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "data.slice",
+          "lineNumber": 41
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 42
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "v.title?.substring",
+          "lineNumber": 42
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "v.views_count?.toLocaleString",
+          "lineNumber": 43
+        },
+        {
+          "caller": "fetchVideosForDPS",
+          "callee": "console.log",
+          "lineNumber": 45
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 52
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "videos.map",
+          "lineNumber": 54
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "Date.now",
+          "lineNumber": 55
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "Date.now",
+          "lineNumber": 56
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "uploadDate.getTime",
+          "lineNumber": 56
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "parseInt",
+          "lineNumber": 61
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "parseInt",
+          "lineNumber": 62
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "parseInt",
+          "lineNumber": 63
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "parseInt",
+          "lineNumber": 64
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "parseInt",
+          "lineNumber": 65
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "Math.max",
+          "lineNumber": 66
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "uploadDate.toISOString",
+          "lineNumber": 67
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "Date.now",
+          "lineNumber": 72
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "fetch",
+          "lineNumber": 75
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "JSON.stringify",
+          "lineNumber": 80
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "Date.now",
+          "lineNumber": 83
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "response.json",
+          "lineNumber": 86
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "JSON.stringify",
+          "lineNumber": 87
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "response.json",
+          "lineNumber": 90
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 92
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "(duration / 1000).toFixed",
+          "lineNumber": 92
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 93
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 94
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 95
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 96
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 97
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "JSON.stringify(result, null, 2).substring",
+          "lineNumber": 100
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "JSON.stringify",
+          "lineNumber": 100
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "result.results\r\n        .sort((a, b) => (b.viralScore || 0) - (a.viralScore || 0))\r\n        .slice",
+          "lineNumber": 104
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "result.results\r\n        .sort",
+          "lineNumber": 104
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "topScores.forEach",
+          "lineNumber": 108
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "videos.find",
+          "lineNumber": 109
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 112
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "r.viralScore?.toFixed",
+          "lineNumber": 112
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 113
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "title.substring",
+          "lineNumber": 113
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 114
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "video?.views_count?.toLocaleString",
+          "lineNumber": 114
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 115
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 120
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "result.failures.forEach",
+          "lineNumber": 121
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 122
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.log",
+          "lineNumber": 126
+        },
+        {
+          "caller": "batchCalculateDPS",
+          "callee": "console.error",
+          "lineNumber": 131
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, virality_classification, percentile_rank, created_at')\r\n    .order('viral_score', { ascending: false })\r\n    .limit",
+          "lineNumber": 140
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, virality_classification, percentile_rank, created_at')\r\n    .order",
+          "lineNumber": 140
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 140
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 140
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "console.warn",
+          "lineNumber": 147
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "console.log",
+          "lineNumber": 152
+        },
+        {
+          "caller": "verifyDPSInDatabase",
+          "callee": "console.log",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 159
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "'=' .repeat",
+          "lineNumber": 160
+        },
+        {
+          "caller": "main",
+          "callee": "fetchVideosForDPS",
+          "lineNumber": 164
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 167
+        },
+        {
+          "caller": "main",
+          "callee": "batchCalculateDPS",
+          "lineNumber": 172
+        },
+        {
+          "caller": "main",
+          "callee": "verifyDPSInDatabase",
+          "lineNumber": 175
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 177
+        },
+        {
+          "caller": "main",
+          "callee": "'=' .repeat",
+          "lineNumber": 177
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 178
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 180
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 183
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 184
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 185
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 186
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 187
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 188
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/batch-extract-knowledge.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 272,
+      "nonEmptyLines": 219,
+      "functions": [
+        {
+          "name": "fetchVideosToProcess",
+          "startLine": 67,
+          "endLine": 110,
+          "params": []
+        },
+        {
+          "name": "extractForVideo",
+          "startLine": 116,
+          "endLine": 152,
+          "params": [
+            "video"
+          ]
+        },
+        {
+          "name": "processBatch",
+          "startLine": 158,
+          "endLine": 204,
+          "params": [
+            "videos"
+          ]
+        },
+        {
+          "name": "main",
+          "startLine": 210,
+          "endLine": 267,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 68
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, dps_score, classification, transcript, caption')\r\n    .not('dps_score', 'is', null)\r\n    .order",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, dps_score, classification, transcript, caption')\r\n    .not",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "query.eq",
+          "lineNumber": 78
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "query.gte",
+          "lineNumber": 82
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "query.limit",
+          "lineNumber": 86
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.error",
+          "lineNumber": 92
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "process.exit",
+          "lineNumber": 93
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "data.filter",
+          "lineNumber": 97
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 101
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 104
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 106
+        },
+        {
+          "caller": "fetchVideosToProcess",
+          "callee": "console.log",
+          "lineNumber": 107
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "Date.now",
+          "lineNumber": 117
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "fetch",
+          "lineNumber": 120
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "JSON.stringify",
+          "lineNumber": 123
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "response.json",
+          "lineNumber": 129
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "console.error",
+          "lineNumber": 132
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "Date.now",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "console.log",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "(result.llm_agreement * 100).toFixed",
+          "lineNumber": 141
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "(result.confidence * 100).toFixed",
+          "lineNumber": 142
+        },
+        {
+          "caller": "extractForVideo",
+          "callee": "console.error",
+          "lineNumber": 149
+        },
+        {
+          "caller": "processBatch",
+          "callee": "Date.now",
+          "lineNumber": 169
+        },
+        {
+          "caller": "processBatch",
+          "callee": "videos.slice",
+          "lineNumber": 173
+        },
+        {
+          "caller": "processBatch",
+          "callee": "Math.floor",
+          "lineNumber": 174
+        },
+        {
+          "caller": "processBatch",
+          "callee": "Math.ceil",
+          "lineNumber": 175
+        },
+        {
+          "caller": "processBatch",
+          "callee": "console.log",
+          "lineNumber": 177
+        },
+        {
+          "caller": "processBatch",
+          "callee": "chunk.map",
+          "lineNumber": 179
+        },
+        {
+          "caller": "processBatch",
+          "callee": "extractForVideo",
+          "lineNumber": 179
+        },
+        {
+          "caller": "processBatch",
+          "callee": "Promise.all",
+          "lineNumber": 180
+        },
+        {
+          "caller": "processBatch",
+          "callee": "chunkResults.forEach",
+          "lineNumber": 183
+        },
+        {
+          "caller": "processBatch",
+          "callee": "results.errors.push",
+          "lineNumber": 191
+        },
+        {
+          "caller": "processBatch",
+          "callee": "setTimeout",
+          "lineNumber": 197
+        },
+        {
+          "caller": "processBatch",
+          "callee": "Date.now",
+          "lineNumber": 201
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 211
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 212
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 213
+        },
+        {
+          "caller": "main",
+          "callee": "fetchVideosToProcess",
+          "lineNumber": 215
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 218
+        },
+        {
+          "caller": "main",
+          "callee": "processBatch",
+          "lineNumber": 222
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 228
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 229
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 230
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 232
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 233
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 234
+        },
+        {
+          "caller": "main",
+          "callee": "((results.success / results.total) * 100).toFixed",
+          "lineNumber": 234
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 235
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 236
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 237
+        },
+        {
+          "caller": "main",
+          "callee": "(results.totalTime / 1000).toFixed",
+          "lineNumber": 237
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 238
+        },
+        {
+          "caller": "main",
+          "callee": "(results.totalTime / results.total / 1000).toFixed",
+          "lineNumber": 238
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 241
+        },
+        {
+          "caller": "main",
+          "callee": "results.errors.forEach",
+          "lineNumber": 242
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 243
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 245
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('extracted_knowledge')\r\n    .select",
+          "lineNumber": 249
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 249
+        },
+        {
+          "caller": "main",
+          "callee": "stats.reduce",
+          "lineNumber": 254
+        },
+        {
+          "caller": "main",
+          "callee": "stats.reduce",
+          "lineNumber": 255
+        },
+        {
+          "caller": "main",
+          "callee": "stats.filter",
+          "lineNumber": 256
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 258
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 259
+        },
+        {
+          "caller": "main",
+          "callee": "(avgAgreement * 100).toFixed",
+          "lineNumber": 259
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 260
+        },
+        {
+          "caller": "main",
+          "callee": "(avgConfidence * 100).toFixed",
+          "lineNumber": 260
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 261
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 264
+        },
+        {
+          "caller": "main",
+          "callee": "process.exit",
+          "lineNumber": 266
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/build-baseline-from-existing.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 132,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 14,
+          "endLine": 159,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 15
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('*')\r\n    .order('scraped_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('*')\r\n    .order",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 18
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "videos.map(v => {\r\n    const raw = v.raw_scraping_data;\r\n    if (!raw) return null;\r\n\r\n    const views = raw.playCount || v.views_count || 0;\r\n    const likes = raw.diggCount || v.likes_count || 0;\r\n    const comments = raw.commentCount || v.comments_count || 0;\r\n    const shares = raw.shareCount || v.shares_count || 0;\r\n    const saves = raw.collectCount || 0;\r\n\r\n    if (views === 0) return null;\r\n\r\n    const engagementRate = (likes + comments + shares + saves) / views;\r\n\r\n    let dps = 0;\r\n    if (engagementRate >= 0.20) {\r\n      dps = 80 + (engagementRate - 0.20) * 100;\r\n    } else if (engagementRate >= 0.10) {\r\n      dps = 60 + (engagementRate - 0.10) * 200;\r\n    } else if (engagementRate >= 0.05) {\r\n      dps = 40 + (engagementRate - 0.05) * 400;\r\n    } else if (engagementRate >= 0.03) {\r\n      dps = 30 + (engagementRate - 0.03) * 500;\r\n    } else {\r\n      dps = engagementRate * 1000;\r\n    }\r\n\r\n    dps = Math.max(0, Math.min(100, dps));\r\n\r\n    return {\r\n      video_id: v.video_id,\r\n      creator: v.creator_username,\r\n      views,\r\n      likes,\r\n      comments,\r\n      shares,\r\n      saves,\r\n      dps,\r\n      engagement: engagementRate,\r\n      posted_at: v.upload_timestamp\r\n    };\r\n  }).filter",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "videos.map",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "Math.max",
+          "lineNumber": 60
+        },
+        {
+          "caller": "main",
+          "callee": "Math.min",
+          "lineNumber": 60
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 77
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 84
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.map(v => v.dps).sort",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.map",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 88
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 92
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 93
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round(avgViews).toLocaleString",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round(avgLikes).toLocaleString",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 96
+        },
+        {
+          "caller": "main",
+          "callee": "avgDPS.toFixed",
+          "lineNumber": 96
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "p25.toFixed",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "p50.toFixed",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "p75.toFixed",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 101
+        },
+        {
+          "caller": "main",
+          "callee": "p90.toFixed",
+          "lineNumber": 101
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => b.dps - a.dps).slice(0, 10).forEach",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => b.dps - a.dps).slice",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "v.dps.toFixed",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "v.views.toLocaleString",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "v.likes.toLocaleString",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 108
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => a.dps - b.dps).slice(0, 5).forEach",
+          "lineNumber": 109
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => a.dps - b.dps).slice",
+          "lineNumber": 109
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort",
+          "lineNumber": 109
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "v.dps.toFixed",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "v.views.toLocaleString",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "v.likes.toLocaleString",
+          "lineNumber": 110
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 114
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 114
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 115
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 121
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 138
+        },
+        {
+          "caller": "main",
+          "callee": "CreatorBaseline.analyze",
+          "lineNumber": 140
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 142
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 144
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 145
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 146
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 148
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 150
+        },
+        {
+          "caller": "main",
+          "callee": "CreatorBaseline.adjustPrediction",
+          "lineNumber": 153
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "(adjustedDPS - scenario.prediction).toFixed",
+          "lineNumber": 154
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 155
+        },
+        {
+          "caller": "main",
+          "callee": "'-'.repeat",
+          "lineNumber": 155
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 158
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/build-baseline-from-scraped.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 143,
+      "nonEmptyLines": 116,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 13,
+          "endLine": 141,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('*')\r\n    .order('scraped_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('*')\r\n    .order",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "videos.map(v => {\r\n    const views = v.play_count || 0;\r\n    const likes = v.digg_count || 0;\r\n    const comments = v.comment_count || 0;\r\n    const shares = v.share_count || 0;\r\n    const saves = v.collect_count || 0;\r\n\r\n    if (views === 0) return null;\r\n\r\n    const engagementRate = (likes + comments + shares + saves) / views;\r\n\r\n    let dps = 0;\r\n    if (engagementRate >= 0.20) {\r\n      dps = 80 + (engagementRate - 0.20) * 100;\r\n    } else if (engagementRate >= 0.10) {\r\n      dps = 60 + (engagementRate - 0.10) * 200;\r\n    } else if (engagementRate >= 0.05) {\r\n      dps = 40 + (engagementRate - 0.05) * 400;\r\n    } else if (engagementRate >= 0.03) {\r\n      dps = 30 + (engagementRate - 0.03) * 500;\r\n    } else {\r\n      dps = engagementRate * 1000;\r\n    }\r\n\r\n    dps = Math.max(0, Math.min(100, dps));\r\n\r\n    return {\r\n      video_id: v.video_id,\r\n      views,\r\n      likes,\r\n      comments,\r\n      shares,\r\n      saves,\r\n      dps,\r\n      engagement: engagementRate\r\n    };\r\n  }).filter",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "videos.map",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "Math.max",
+          "lineNumber": 56
+        },
+        {
+          "caller": "main",
+          "callee": "Math.min",
+          "lineNumber": 56
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 71
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 72
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.map(v => v.dps).sort",
+          "lineNumber": 75
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 77
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 78
+        },
+        {
+          "caller": "main",
+          "callee": "Math.floor",
+          "lineNumber": 79
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 81
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 82
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round(avgViews).toLocaleString",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 84
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round(avgLikes).toLocaleString",
+          "lineNumber": 84
+        },
+        {
+          "caller": "main",
+          "callee": "Math.round",
+          "lineNumber": 84
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "avgDPS.toFixed",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 86
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "p25.toFixed",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 88
+        },
+        {
+          "caller": "main",
+          "callee": "p50.toFixed",
+          "lineNumber": 88
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "p75.toFixed",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "p90.toFixed",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 92
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => b.dps - a.dps).slice(0, 10).forEach",
+          "lineNumber": 93
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => b.dps - a.dps).slice",
+          "lineNumber": 93
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort",
+          "lineNumber": 93
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "v.dps.toFixed",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "v.views.toLocaleString",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "v.likes.toLocaleString",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => a.dps - b.dps).slice(0, 5).forEach",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort((a, b) => a.dps - b.dps).slice",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.sort",
+          "lineNumber": 98
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "v.dps.toFixed",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "v.views.toLocaleString",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "v.likes.toLocaleString",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 104
+        },
+        {
+          "caller": "main",
+          "callee": "import",
+          "lineNumber": 106
+        },
+        {
+          "caller": "main",
+          "callee": "videosWithDPS.reduce",
+          "lineNumber": 112
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 121
+        },
+        {
+          "caller": "main",
+          "callee": "CreatorBaseline.analyze",
+          "lineNumber": 123
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 125
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 126
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 127
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 128
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 131
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 133
+        },
+        {
+          "caller": "main",
+          "callee": "CreatorBaseline.adjustPrediction",
+          "lineNumber": 136
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 137
+        },
+        {
+          "caller": "main",
+          "callee": "(adjustedDPS - testPrediction).toFixed",
+          "lineNumber": 137
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 139
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 139
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 140
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-agency-mapping.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 61,
+      "nonEmptyLines": 52,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-constraint.mjs",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 104,
+      "nonEmptyLines": 85,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 12,
+          "endLine": 102,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "main",
+          "callee": "supabase.rpc",
+          "lineNumber": 16
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('information_schema.check_constraints')\r\n      .select('*')\r\n      .ilike",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from('information_schema.check_constraints')\r\n      .select",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 38
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 40
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .rpc",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 61
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 65
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select('status')\r\n    .limit",
+          "lineNumber": 67
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select",
+          "lineNumber": 67
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 67
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "statuses.map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 76
+        },
+        {
+          "caller": "main",
+          "callee": "statuses.forEach",
+          "lineNumber": 80
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 83
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select('id, status, error_message, created_at, completed_at')\r\n    .order('created_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select('id, status, error_message, created_at, completed_at')\r\n    .order",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('prediction_runs')\r\n    .select",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 96
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "main",
+          "callee": "run.id.substring",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-creator-distribution-coverage.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 111,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 27,
+          "endLine": 106,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 28
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n    .from('training_features')\n    .select",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n    .from",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from('training_features')\n      .select('video_id')\n      .range",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from('training_features')\n      .select",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "allIds.push",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "data.map",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "allIds.slice",
+          "lineNumber": 67
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from('scraped_videos')\n      .select('video_id, creator_followers_count, upload_timestamp')\n      .in",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from('scraped_videos')\n      .select",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\n      .from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 74
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "Math.min",
+          "lineNumber": 85
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 89
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 90
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 91
+        },
+        {
+          "caller": "main",
+          "callee": "'-'.repeat",
+          "lineNumber": 91
+        },
+        {
+          "caller": "main",
+          "callee": "Object.entries",
+          "lineNumber": 94
+        },
+        {
+          "caller": "main",
+          "callee": "((count / total) * 100).toFixed",
+          "lineNumber": 95
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "signal.padEnd",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "String(count).padStart",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "String",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "pct.padStart",
+          "lineNumber": 97
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 101
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 102
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "main",
+          "callee": "'='.repeat",
+          "lineNumber": 105
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-creator-profile.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 33,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 13,
+          "endLine": 38,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('creator_profiles')\r\n    .select('*')\r\n    .eq('tiktok_username', 'sidehustlereview')\r\n    .maybeSingle",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('creator_profiles')\r\n    .select('*')\r\n    .eq",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('creator_profiles')\r\n    .select",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 14
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 21
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 31
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 35
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "JSON.stringify",
+          "lineNumber": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-distribution-coverage.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 59,
+      "nonEmptyLines": 46,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 16,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "pct",
+          "startLine": 55,
+          "endLine": 57,
+          "params": [
+            "n",
+            "total"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "createClient",
+          "lineNumber": 17
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "main",
+          "callee": "checkDistributionCoverage",
+          "lineNumber": 27
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 33
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 38
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 38
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 39
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 39
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 41
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 42
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 42
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 45
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 45
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 46
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 46
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 50
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 50
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 51
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 51
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 52
+        },
+        {
+          "caller": "main",
+          "callee": "pct",
+          "lineNumber": 52
+        },
+        {
+          "caller": "pct",
+          "callee": "Math.round((n / total) * 100).toString",
+          "lineNumber": 56
+        },
+        {
+          "caller": "pct",
+          "callee": "Math.round",
+          "lineNumber": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 0,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-dps-scores.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 93,
+      "nonEmptyLines": 66,
+      "functions": [
+        {
+          "name": "main",
+          "startLine": 19,
+          "endLine": 77,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 20
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, dps_score, dps_percentile, title, transcript, scraped_at')\r\n    .order('dps_score', { ascending: false })\r\n    .limit",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('video_id, dps_score, dps_percentile, title, transcript, scraped_at')\r\n    .order",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 23
+        },
+        {
+          "caller": "main",
+          "callee": "console.error",
+          "lineNumber": 30
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 34
+        },
+        {
+          "caller": "main",
+          "callee": "data.filter",
+          "lineNumber": 37
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 39
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 42
+        },
+        {
+          "caller": "main",
+          "callee": "highScoreVideos.forEach",
+          "lineNumber": 43
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 44
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 45
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 46
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 47
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "v.title?.substring",
+          "lineNumber": 48
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 50
+        },
+        {
+          "caller": "main",
+          "callee": "highScoreVideos.filter",
+          "lineNumber": 54
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 55
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 58
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 62
+        },
+        {
+          "caller": "main",
+          "callee": "data.filter(v => v.dps_score !== null).map",
+          "lineNumber": 65
+        },
+        {
+          "caller": "main",
+          "callee": "data.filter",
+          "lineNumber": 65
+        },
+        {
+          "caller": "main",
+          "callee": "Math.max",
+          "lineNumber": 67
+        },
+        {
+          "caller": "main",
+          "callee": "Math.min",
+          "lineNumber": 68
+        },
+        {
+          "caller": "main",
+          "callee": "scores.reduce",
+          "lineNumber": 69
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 70
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 71
+        },
+        {
+          "caller": "main",
+          "callee": "min.toFixed",
+          "lineNumber": 71
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 72
+        },
+        {
+          "caller": "main",
+          "callee": "max.toFixed",
+          "lineNumber": 72
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "avg.toFixed",
+          "lineNumber": 73
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-edge-case.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 29,
+      "functions": [
+        {
+          "name": "checkEdgeCase",
+          "startLine": 10,
+          "endLine": 32,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkEdgeCase",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "new Date().toISOString",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*')\r\n    .gte('calculated_at', `${today}T00:00:00`)\r\n    .gte('viral_score', 79.9)\r\n    .order",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*')\r\n    .gte('calculated_at', `${today}T00:00:00`)\r\n    .gte",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*')\r\n    .gte",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.error",
+          "lineNumber": 20
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "data.forEach",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "checkEdgeCase",
+          "callee": "console.log",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-exact-score.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 29,
+      "functions": [
+        {
+          "name": "checkExactScore",
+          "startLine": 10,
+          "endLine": 32,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .eq('video_id', '7556687934095723798')\r\n    .order('calculated_at', { ascending: false })\r\n    .limit(1)\r\n    .single",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .eq('video_id', '7556687934095723798')\r\n    .order('calculated_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .eq('video_id', '7556687934095723798')\r\n    .order",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .eq",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.error",
+          "lineNumber": 20
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "JSON.stringify",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "checkExactScore",
+          "callee": "console.log",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-extraction-ready.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 139,
+      "nonEmptyLines": 114,
+      "functions": [
+        {
+          "name": "checkReadiness",
+          "startLine": 14,
+          "endLine": 133,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 16
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "Object.entries",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 35
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 36
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "process.exit",
+          "lineNumber": 37
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 41
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "createClient",
+          "lineNumber": 43
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('video_patterns_detailed')\r\n      .select('count')\r\n      .limit",
+          "lineNumber": 49
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('video_patterns_detailed')\r\n      .select",
+          "lineNumber": 49
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 49
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 56
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 57
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 58
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 59
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "process.exit",
+          "lineNumber": 60
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 69
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "process.exit",
+          "lineNumber": 70
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 74
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "cutoffDate.setDate",
+          "lineNumber": 78
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "cutoffDate.getDate",
+          "lineNumber": 78
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, title, transcript, views_count, platform, dps_score, dps_percentile, scraped_at')\r\n      .gte('scraped_at', cutoffDate.toISOString())\r\n      .not('transcript', 'is', null)\r\n      .not('dps_score', 'is', null)\r\n      .order('dps_score', { ascending: false })\r\n      .limit",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, title, transcript, views_count, platform, dps_score, dps_percentile, scraped_at')\r\n      .gte('scraped_at', cutoffDate.toISOString())\r\n      .not('transcript', 'is', null)\r\n      .not('dps_score', 'is', null)\r\n      .order",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, title, transcript, views_count, platform, dps_score, dps_percentile, scraped_at')\r\n      .gte('scraped_at', cutoffDate.toISOString())\r\n      .not('transcript', 'is', null)\r\n      .not",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, title, transcript, views_count, platform, dps_score, dps_percentile, scraped_at')\r\n      .gte('scraped_at', cutoffDate.toISOString())\r\n      .not",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select('video_id, title, transcript, views_count, platform, dps_score, dps_percentile, scraped_at')\r\n      .gte",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from('scraped_videos')\r\n      .select",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 81
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "cutoffDate.toISOString",
+          "lineNumber": 84
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 93
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 94
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 95
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "process.exit",
+          "lineNumber": 96
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "videos.filter",
+          "lineNumber": 100
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 102
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 103
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 106
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 107
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 109
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "highDpsVideos.slice(0, 5).forEach",
+          "lineNumber": 110
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "highDpsVideos.slice",
+          "lineNumber": 110
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 111
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 112
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "v.dps_score.toFixed",
+          "lineNumber": 112
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "v.dps_percentile.toFixed",
+          "lineNumber": 112
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 113
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "(v.title || 'No title').substring",
+          "lineNumber": 113
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 114
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 115
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 116
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 121
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "process.exit",
+          "lineNumber": 122
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 126
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "'='.repeat",
+          "lineNumber": 126
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 127
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 128
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "'='.repeat",
+          "lineNumber": 128
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 129
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 130
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 131
+        },
+        {
+          "caller": "checkReadiness",
+          "callee": "console.log",
+          "lineNumber": 132
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-feat-002-003-status.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 204,
+      "nonEmptyLines": 161,
+      "functions": [
+        {
+          "name": "checkFEAT002",
+          "startLine": 9,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "checkFEAT003",
+          "startLine": 97,
+          "endLine": 189,
+          "params": []
+        },
+        {
+          "name": "main",
+          "startLine": 191,
+          "endLine": 202,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 11
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*')\r\n    .order('calculated_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 15
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*')\r\n    .order",
+          "lineNumber": 15
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 15
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 15
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 22
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "calculations.forEach",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "new Date(calc.calculated_at).toLocaleString",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 28
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 35
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 35
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 40
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 42
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 46
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 49
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 49
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "distribution?.forEach",
+          "lineNumber": 54
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 58
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "Object.entries(dist).forEach",
+          "lineNumber": 59
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "Object.entries",
+          "lineNumber": 59
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 60
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 63
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select('*', { count: 'exact', head: true })\r\n    .not",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('scraped_videos')\r\n    .select",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 71
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 72
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 74
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .is('viral_score', null)\r\n    .limit",
+          "lineNumber": 77
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('video_id, viral_score, classification')\r\n    .is",
+          "lineNumber": 77
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 77
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 77
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 84
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 85
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 90
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 91
+        },
+        {
+          "caller": "checkFEAT002",
+          "callee": "console.log",
+          "lineNumber": 92
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 98
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 99
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 100
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('viral_patterns')\r\n    .select",
+          "lineNumber": 103
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 103
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 108
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "patterns.forEach",
+          "lineNumber": 114
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 118
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "Object.entries(byNiche).forEach",
+          "lineNumber": 119
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "Object.entries",
+          "lineNumber": 119
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 120
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 124
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('viral_patterns')\r\n    .select",
+          "lineNumber": 127
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 127
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "patternTypes?.forEach",
+          "lineNumber": 132
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 136
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "expectedTypes.forEach",
+          "lineNumber": 138
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 140
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select('*', { count: 'exact', head: true })\r\n    .gte",
+          "lineNumber": 146
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('dps_calculations')\r\n    .select",
+          "lineNumber": 146
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 146
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 151
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 152
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 153
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 155
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('pattern_extraction_jobs')\r\n    .select('*')\r\n    .order('created_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 158
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('pattern_extraction_jobs')\r\n    .select('*')\r\n    .order",
+          "lineNumber": 158
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('pattern_extraction_jobs')\r\n    .select",
+          "lineNumber": 158
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 158
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 164
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "jobs?.forEach",
+          "lineNumber": 165
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 166
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 169
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('viral_patterns')\r\n    .select('*')\r\n    .gte",
+          "lineNumber": 172
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from('viral_patterns')\r\n    .select",
+          "lineNumber": 172
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 172
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 179
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 180
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 181
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "(accuracy * 100).toFixed",
+          "lineNumber": 181
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 183
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 185
+        },
+        {
+          "caller": "checkFEAT003",
+          "callee": "console.log",
+          "lineNumber": 186
+        },
+        {
+          "caller": "main",
+          "callee": "checkFEAT002",
+          "lineNumber": 192
+        },
+        {
+          "caller": "main",
+          "callee": "checkFEAT003",
+          "lineNumber": 193
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 195
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 196
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 197
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 198
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 199
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 200
+        },
+        {
+          "caller": "main",
+          "callee": "console.log",
+          "lineNumber": 201
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-feat060-table.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "checkTable",
+          "startLine": 16,
+          "endLine": 47,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkTable",
+          "callee": "supabase\r\n      .from('extracted_knowledge')\r\n      .select",
+          "lineNumber": 19
+        },
+        {
+          "caller": "checkTable",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 19
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.error",
+          "lineNumber": 24
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkTable",
+          "callee": "process.exit",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "checkTable",
+          "callee": "supabase\r\n      .from('extracted_knowledge')\r\n      .select('*')\r\n      .limit",
+          "lineNumber": 33
+        },
+        {
+          "caller": "checkTable",
+          "callee": "supabase\r\n      .from('extracted_knowledge')\r\n      .select",
+          "lineNumber": 33
+        },
+        {
+          "caller": "checkTable",
+          "callee": "supabase\r\n      .from",
+          "lineNumber": 33
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.log",
+          "lineNumber": 39
+        },
+        {
+          "caller": "checkTable",
+          "callee": "process.exit",
+          "lineNumber": 42
+        },
+        {
+          "caller": "checkTable",
+          "callee": "console.error",
+          "lineNumber": 44
+        },
+        {
+          "caller": "checkTable",
+          "callee": "process.exit",
+          "lineNumber": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-gemini-in-predictions.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 18,
+      "functions": [
+        {
+          "name": "check",
+          "startLine": 8,
+          "endLine": 20,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "check",
+          "callee": "supabase\r\n    .from('prediction_events')\r\n    .select('created_at, components_used')\r\n    .order('created_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 9
+        },
+        {
+          "caller": "check",
+          "callee": "supabase\r\n    .from('prediction_events')\r\n    .select('created_at, components_used')\r\n    .order",
+          "lineNumber": 9
+        },
+        {
+          "caller": "check",
+          "callee": "supabase\r\n    .from('prediction_events')\r\n    .select",
+          "lineNumber": 9
+        },
+        {
+          "caller": "check",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 9
+        },
+        {
+          "caller": "check",
+          "callee": "console.log",
+          "lineNumber": 15
+        },
+        {
+          "caller": "check",
+          "callee": "data?.forEach",
+          "lineNumber": 16
+        },
+        {
+          "caller": "check",
+          "callee": "p.components_used?.includes",
+          "lineNumber": 17
+        },
+        {
+          "caller": "check",
+          "callee": "console.log",
+          "lineNumber": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-knowledge.js",
+      "language": "javascript",
+      "fileCategory": "code",
+      "totalLines": 32,
+      "nonEmptyLines": 25,
+      "functions": [
+        {
+          "name": "checkData",
+          "startLine": 9,
+          "endLine": 30,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkData",
+          "callee": "console.log",
+          "lineNumber": 10
+        },
+        {
+          "caller": "checkData",
+          "callee": "supabase\r\n    .from(\"extracted_knowledge\")\r\n    .select(\"video_id, confidence_score, consensus_insights\")\r\n    .limit",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkData",
+          "callee": "supabase\r\n    .from(\"extracted_knowledge\")\r\n    .select",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkData",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 12
+        },
+        {
+          "caller": "checkData",
+          "callee": "console.error",
+          "lineNumber": 18
+        },
+        {
+          "caller": "checkData",
+          "callee": "console.log",
+          "lineNumber": 22
+        },
+        {
+          "caller": "checkData",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "checkData",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkData",
+          "callee": "JSON.stringify",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkData",
+          "callee": "console.log",
+          "lineNumber": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "scripts/check-last-prediction.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 30,
+      "nonEmptyLines": 24,
+      "functions": [
+        {
+          "name": "checkLastPrediction",
+          "startLine": 8,
+          "endLine": 28,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "checkLastPrediction",
+          "callee": "supabase\r\n    .from('kai_predictions')\r\n    .select('*')\r\n    .order('created_at', { ascending: false })\r\n    .limit",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "supabase\r\n    .from('kai_predictions')\r\n    .select('*')\r\n    .order",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "supabase\r\n    .from('kai_predictions')\r\n    .select",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "supabase\r\n    .from",
+          "lineNumber": 9
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "console.log",
+          "lineNumber": 16
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "console.log",
+          "lineNumber": 21
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "checkLastPrediction",
+          "callee": "JSON.stringify",
+          "lineNumber": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

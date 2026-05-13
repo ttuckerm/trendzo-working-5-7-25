@@ -1,0 +1,642 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/ops/dr/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/dr/status/route.ts",
+      "summary": "Disaster-recovery status endpoint that ensures the failover_events table exists and reports the most recent failover record plus a counter.",
+      "tags": ["api-handler", "ops", "monitoring", "disaster-recovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ops/dr/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ops/dr/status/route.ts",
+      "lineRange": [10, 20],
+      "summary": "GET handler returning the latest failover event and a basic event count for the disaster-recovery dashboard.",
+      "tags": ["api-handler", "get", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ops/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/health/route.ts",
+      "summary": "Ops health endpoint that aggregates alert manager state into a simple JSON status response for uptime monitors.",
+      "tags": ["api-handler", "ops", "health-check", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ops/health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ops/health/route.ts",
+      "lineRange": [7, 16],
+      "summary": "GET handler delegating to the alert manager and returning a health JSON payload.",
+      "tags": ["api-handler", "get", "health-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ops/metrics/prom/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/metrics/prom/route.ts",
+      "summary": "Prometheus-format metrics endpoint emitting text/plain counter and gauge lines for ops scraping.",
+      "tags": ["api-handler", "metrics", "prometheus", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ops/metrics/prom/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ops/metrics/prom/route.ts",
+      "lineRange": [7, 20],
+      "summary": "GET handler that returns a Prometheus-formatted metrics body with correct content-type for scraping.",
+      "tags": ["api-handler", "get", "prometheus"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ops/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/metrics/route.ts",
+      "summary": "Ops metrics endpoint that ensures the metrics tables exist, computes p95 latencies and returns aggregated JSON metrics for the dashboard.",
+      "tags": ["api-handler", "metrics", "ops", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ops/metrics/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ops/metrics/route.ts",
+      "lineRange": [35, 60],
+      "summary": "GET handler that queries metric tables, computes p95 latency from stored values, and returns an aggregated metrics JSON payload.",
+      "tags": ["api-handler", "get", "metrics", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ops/metrics/route.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/app/api/ops/metrics/route.ts",
+      "lineRange": [8, 26],
+      "summary": "Lazily creates the metrics persistence tables (latency events, counters) when the GET handler is first invoked.",
+      "tags": ["utility", "schema", "migration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ops/regions/failover/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/regions/failover/route.ts",
+      "summary": "Multi-region failover trigger endpoint that records a failover_events row when an operator initiates a region switch.",
+      "tags": ["api-handler", "ops", "disaster-recovery", "regions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ops/regions/failover/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ops/regions/failover/route.ts",
+      "lineRange": [10, 15],
+      "summary": "POST handler that logs a manual failover event and returns the recorded entry.",
+      "tags": ["api-handler", "post", "failover"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ops/regions/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ops/regions/health/route.ts",
+      "summary": "Per-region health endpoint returning a synthetic OK status for each configured region, used by the failover UI.",
+      "tags": ["api-handler", "health-check", "regions", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/ops/regions/health/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ops/regions/health/route.ts",
+      "lineRange": [6, 12],
+      "summary": "GET handler returning per-region health status objects for the multi-region failover console.",
+      "tags": ["api-handler", "get", "health-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/optimize/entities/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/optimize/entities/route.ts",
+      "summary": "Stub endpoint listing optimizer-managed entities (campaigns, ads) so the optimization UI has a typed contract to consume.",
+      "tags": ["api-handler", "optimization", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/optimize/entities/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/optimize/entities/route.ts",
+      "lineRange": [6, 13],
+      "summary": "GET handler returning a static list of optimizer entity descriptors for the optimization dashboard.",
+      "tags": ["api-handler", "get", "optimization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/optimize/schedule/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/optimize/schedule/route.ts",
+      "summary": "Authenticated, rate-limited endpoint that schedules an optimization job and returns a queued status to the caller.",
+      "tags": ["api-handler", "optimization", "scheduler", "authenticated"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/optimize/schedule/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/optimize/schedule/route.ts",
+      "lineRange": [10, 24],
+      "summary": "POST handler that authenticates the caller, enforces a rate limit, then schedules an optimization job.",
+      "tags": ["api-handler", "post", "authenticated", "rate-limited"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/orchestrator/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/orchestrator/predict/route.ts",
+      "summary": "MVP orchestrator prediction endpoint that validates input and dispatches the request to the orchestrator-mvp module for component fan-out.",
+      "tags": ["api-handler", "orchestrator", "prediction", "mvp"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/orchestrator/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/orchestrator/predict/route.ts",
+      "lineRange": [23, 65],
+      "summary": "POST handler that validates the MVP prediction input and invokes the orchestrator to produce a prediction response.",
+      "tags": ["api-handler", "post", "prediction", "orchestrator"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/orchestrator/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/orchestrator/predict/route.ts",
+      "lineRange": [67, 95],
+      "summary": "GET handler returning orchestrator status / capability metadata so clients can discover available components and modes.",
+      "tags": ["api-handler", "get", "orchestrator", "discovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/orchestrator/predict/route.ts:validateMVPInput",
+      "type": "function",
+      "name": "validateMVPInput",
+      "filePath": "src/app/api/orchestrator/predict/route.ts",
+      "lineRange": [16, 21],
+      "summary": "Helper that performs lightweight runtime validation on the incoming MVP prediction payload before orchestration.",
+      "tags": ["validation", "utility", "type-guard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/outcomes/ingest/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/outcomes/ingest/route.ts",
+      "summary": "Outcome ingestion endpoint that records post-publish performance data, updates DPS thresholds, and feeds the training accuracy store.",
+      "tags": ["api-handler", "outcomes", "training", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/outcomes/ingest/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/outcomes/ingest/route.ts",
+      "lineRange": [14, 78],
+      "summary": "POST handler that persists actual outcome metrics, recomputes DPS v2 thresholds, and records accuracy samples for training evaluation.",
+      "tags": ["api-handler", "post", "outcomes", "training", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/partner/signals/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/partner/signals/route.ts",
+      "summary": "Partner signal ingestion endpoint that accepts authenticated partner webhook payloads and writes them to the platform_events stream.",
+      "tags": ["api-handler", "partner", "webhook", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/partner/signals/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/partner/signals/route.ts",
+      "lineRange": [8, 49],
+      "summary": "POST handler that authenticates the partner, validates the signal payload and records it as a platform event for downstream consumers.",
+      "tags": ["api-handler", "post", "partner", "webhook"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/partners/kit/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/partners/kit/route.ts",
+      "summary": "Partner asset-kit endpoint that builds an on-the-fly ZIP archive (stored entries) containing partner marketing assets and returns it for download.",
+      "tags": ["api-handler", "partner", "download", "zip"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/partners/kit/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/partners/kit/route.ts",
+      "lineRange": [39, 70],
+      "summary": "GET handler that assembles the partner kit ZIP and streams it back with appropriate download headers.",
+      "tags": ["api-handler", "get", "download"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/partners/kit/route.ts:buildStoredZip",
+      "type": "function",
+      "name": "buildStoredZip",
+      "filePath": "src/app/api/partners/kit/route.ts",
+      "lineRange": [8, 37],
+      "summary": "Builds a STORED-method ZIP archive in memory from a list of name/buffer entries using manual CRC32 and central-directory construction.",
+      "tags": ["utility", "zip", "serialization"],
+      "complexity": "moderate",
+      "languageNotes": "Hand-rolled ZIP writer using DataView for cross-runtime compatibility (avoids native zlib dependency in the Edge runtime)."
+    },
+    {
+      "id": "file:src/app/api/partners/sheets/download/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/partners/sheets/download/route.ts",
+      "summary": "Endpoint that bundles partner Google-Sheet exports into a downloadable ZIP archive using a STORED-method builder.",
+      "tags": ["api-handler", "partner", "sheets", "download"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/partners/sheets/download/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/partners/sheets/download/route.ts",
+      "lineRange": [39, 53],
+      "summary": "GET handler producing the partner-sheets ZIP archive for download.",
+      "tags": ["api-handler", "get", "download"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/partners/sheets/download/route.ts:buildStoredZip",
+      "type": "function",
+      "name": "buildStoredZip",
+      "filePath": "src/app/api/partners/sheets/download/route.ts",
+      "lineRange": [8, 37],
+      "summary": "Local STORED-method ZIP builder (duplicated from the kit route) used to assemble partner sheet exports without external deps.",
+      "tags": ["utility", "zip", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/partners/sheets/example-feed/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/partners/sheets/example-feed/route.ts",
+      "summary": "Sample partner-feed endpoint returning a small static CSV-like example that partners can use to validate their integration.",
+      "tags": ["api-handler", "partner", "sample", "documentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/partners/utm/generate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/partners/utm/generate/route.ts",
+      "summary": "UTM link generator that signs partner referral codes and appends them to a destination URL for tracked outbound links.",
+      "tags": ["api-handler", "partner", "utm", "signing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/partners/utm/generate/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/partners/utm/generate/route.ts",
+      "lineRange": [13, 21],
+      "summary": "GET handler that constructs and returns a signed UTM-tagged partner referral URL.",
+      "tags": ["api-handler", "get", "utm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/partners/utm/generate/route.ts:signRef",
+      "type": "function",
+      "name": "signRef",
+      "filePath": "src/app/api/partners/utm/generate/route.ts",
+      "lineRange": [6, 11],
+      "summary": "Helper that produces a deterministic HMAC-style signature for a partner referral code + destination URL pair.",
+      "tags": ["utility", "signing", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/patterns/extract-enhanced/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/patterns/extract-enhanced/route.ts",
+      "summary": "Enhanced viral-pattern extraction endpoint that runs the enhanced extraction service over a video corpus and persists results via the enhanced database service.",
+      "tags": ["api-handler", "patterns", "extraction", "viral"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/patterns/extract-enhanced/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/patterns/extract-enhanced/route.ts",
+      "lineRange": [31, 79],
+      "summary": "POST handler that triggers an enhanced pattern-extraction run and persists the resulting patterns to the enhanced database service.",
+      "tags": ["api-handler", "post", "patterns", "extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/patterns/extract-enhanced/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/patterns/extract-enhanced/route.ts",
+      "lineRange": [85, 123],
+      "summary": "GET handler that queries the enhanced database for extracted patterns and returns them with filtering/pagination metadata.",
+      "tags": ["api-handler", "get", "patterns", "query"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/patterns/extract/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/patterns/extract/route.ts",
+      "summary": "Legacy pattern-extraction endpoint that runs the original extraction-pipeline against a request body and returns the discovered patterns.",
+      "tags": ["api-handler", "patterns", "extraction", "legacy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/patterns/extract/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/patterns/extract/route.ts",
+      "lineRange": [7, 22],
+      "summary": "POST handler that invokes the legacy extraction-pipeline and returns its output verbatim.",
+      "tags": ["api-handler", "post", "extraction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/patterns/library/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/patterns/library/route.ts",
+      "summary": "Pattern library endpoint exposing curated patterns with computed metrics (frequency, confidence) for the patterns explorer UI.",
+      "tags": ["api-handler", "patterns", "library", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/patterns/library/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/patterns/library/route.ts",
+      "lineRange": [16, 127],
+      "summary": "GET handler that loads curated patterns, decorates them with pattern-metrics computations, and returns a paginated library response.",
+      "tags": ["api-handler", "get", "patterns", "metrics"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/ping/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ping/route.ts",
+      "summary": "Lightweight liveness ping endpoint returning a constant JSON body for synthetic uptime checks.",
+      "tags": ["api-handler", "health-check", "ping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/pipeline/health/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/pipeline/health/route.ts",
+      "summary": "Trivial pipeline health probe returning a static OK payload for downstream monitoring of the prediction pipeline.",
+      "tags": ["api-handler", "health-check", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/pipeline/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/pipeline/summary/route.ts",
+      "summary": "Returns a high-level summary of the prediction pipeline (stages, counts) for the admin operations dashboard.",
+      "tags": ["api-handler", "pipeline", "summary", "ops"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/pipeline/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/pipeline/summary/route.ts",
+      "lineRange": [10, 19],
+      "summary": "GET handler returning a pipeline summary payload describing stages and counts.",
+      "tags": ["api-handler", "get", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/pixel/collect/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/pixel/collect/route.ts",
+      "summary": "Analytics pixel-collection endpoint that records partner pixel events, gated by billing enforcement and feature flags.",
+      "tags": ["api-handler", "pixel", "analytics", "billing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/pixel/collect/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/pixel/collect/route.ts",
+      "lineRange": [14, 35],
+      "summary": "POST handler that enforces billing/flag gates, then persists a pixel collection event to the database.",
+      "tags": ["api-handler", "post", "pixel", "billing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/placeholder-thumbnail/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/placeholder-thumbnail/route.ts",
+      "summary": "Generates an inline SVG placeholder thumbnail with category-based colors when a real video thumbnail is unavailable.",
+      "tags": ["api-handler", "thumbnail", "svg", "placeholder"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/placeholder-thumbnail/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/placeholder-thumbnail/route.ts",
+      "lineRange": [29, 101],
+      "summary": "GET handler that renders an SVG placeholder thumbnail based on category and title query parameters and returns it with image/svg+xml content type.",
+      "tags": ["api-handler", "get", "svg", "thumbnail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/placeholder-thumbnail/route.ts:getCategoryColor",
+      "type": "function",
+      "name": "getCategoryColor",
+      "filePath": "src/app/api/placeholder-thumbnail/route.ts",
+      "lineRange": [14, 27],
+      "summary": "Maps a category string to a deterministic background color used in the generated placeholder SVG.",
+      "tags": ["utility", "color", "mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/predict/legacy/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/legacy/route.ts",
+      "summary": "Legacy prediction endpoint kept for backwards compatibility; runs a simplified scoring path and returns a VPS-shaped response.",
+      "tags": ["api-handler", "prediction", "legacy", "compatibility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/legacy/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/legacy/route.ts",
+      "lineRange": [14, 93],
+      "summary": "POST handler that runs the legacy scoring path on a video payload and returns the legacy-compatible prediction response.",
+      "tags": ["api-handler", "post", "prediction", "legacy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/predict/legacy/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/predict/legacy/route.ts",
+      "lineRange": [95, 107],
+      "summary": "GET handler returning the legacy prediction endpoint's metadata/capability descriptor for clients sniffing the API.",
+      "tags": ["api-handler", "get", "metadata"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/predict/log/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/predict/log/route.ts",
+      "summary": "Validation-store endpoint that persists prediction-vs-actual log entries used for offline accuracy evaluation.",
+      "tags": ["api-handler", "prediction", "logging", "validation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/predict/log/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/predict/log/route.ts",
+      "lineRange": [7, 19],
+      "summary": "POST handler that writes a prediction log entry into the validation store for downstream accuracy analysis.",
+      "tags": ["api-handler", "post", "validation"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/ops/dr/status/route.ts", "target": "function:src/app/api/ops/dr/status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/dr/status/route.ts", "target": "function:src/app/api/ops/dr/status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ops/dr/status/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ops/health/route.ts", "target": "function:src/app/api/ops/health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/health/route.ts", "target": "function:src/app/api/ops/health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ops/health/route.ts", "target": "file:src/lib/monitoring/alert-manager.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ops/metrics/prom/route.ts", "target": "function:src/app/api/ops/metrics/prom/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/metrics/prom/route.ts", "target": "function:src/app/api/ops/metrics/prom/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/ops/metrics/route.ts", "target": "function:src/app/api/ops/metrics/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/metrics/route.ts", "target": "function:src/app/api/ops/metrics/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ops/metrics/route.ts", "target": "function:src/app/api/ops/metrics/route.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/metrics/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ops/regions/failover/route.ts", "target": "function:src/app/api/ops/regions/failover/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/regions/failover/route.ts", "target": "function:src/app/api/ops/regions/failover/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/ops/regions/failover/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/ops/regions/health/route.ts", "target": "function:src/app/api/ops/regions/health/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/ops/regions/health/route.ts", "target": "function:src/app/api/ops/regions/health/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/optimize/entities/route.ts", "target": "function:src/app/api/optimize/entities/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/optimize/entities/route.ts", "target": "function:src/app/api/optimize/entities/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/optimize/schedule/route.ts", "target": "function:src/app/api/optimize/schedule/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/optimize/schedule/route.ts", "target": "function:src/app/api/optimize/schedule/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/optimize/schedule/route.ts", "target": "file:src/lib/auth/server-auth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/optimize/schedule/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/optimize/schedule/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "function:src/app/api/orchestrator/predict/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "function:src/app/api/orchestrator/predict/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "function:src/app/api/orchestrator/predict/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "function:src/app/api/orchestrator/predict/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "function:src/app/api/orchestrator/predict/route.ts:validateMVPInput", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/orchestrator/predict/route.ts", "target": "file:src/lib/modules/orchestrator-mvp.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "function:src/app/api/outcomes/ingest/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "function:src/app/api/outcomes/ingest/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "file:src/lib/calibration/thresholds.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "file:src/lib/db/ensure.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "file:src/lib/dev/accuracyStore.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/outcomes/ingest/route.ts", "target": "file:src/lib/training/dps-v2.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/partner/signals/route.ts", "target": "function:src/app/api/partner/signals/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/partner/signals/route.ts", "target": "function:src/app/api/partner/signals/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/partner/signals/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/partners/kit/route.ts", "target": "function:src/app/api/partners/kit/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/partners/kit/route.ts", "target": "function:src/app/api/partners/kit/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/partners/kit/route.ts", "target": "function:src/app/api/partners/kit/route.ts:buildStoredZip", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/partners/sheets/download/route.ts", "target": "function:src/app/api/partners/sheets/download/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/partners/sheets/download/route.ts", "target": "function:src/app/api/partners/sheets/download/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/partners/sheets/download/route.ts", "target": "function:src/app/api/partners/sheets/download/route.ts:buildStoredZip", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/partners/utm/generate/route.ts", "target": "function:src/app/api/partners/utm/generate/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/partners/utm/generate/route.ts", "target": "function:src/app/api/partners/utm/generate/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/partners/utm/generate/route.ts", "target": "function:src/app/api/partners/utm/generate/route.ts:signRef", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "function:src/app/api/patterns/extract-enhanced/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "function:src/app/api/patterns/extract-enhanced/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "function:src/app/api/patterns/extract-enhanced/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "function:src/app/api/patterns/extract-enhanced/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "file:src/lib/services/pattern-extraction/enhanced-database-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "file:src/lib/services/pattern-extraction/enhanced-extraction-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/patterns/extract-enhanced/route.ts", "target": "file:src/lib/services/pattern-extraction/types-enhanced.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/patterns/extract/route.ts", "target": "function:src/app/api/patterns/extract/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/patterns/extract/route.ts", "target": "function:src/app/api/patterns/extract/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/patterns/extract/route.ts", "target": "file:src/lib/pattern-extraction/extraction-pipeline.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/patterns/library/route.ts", "target": "function:src/app/api/patterns/library/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/patterns/library/route.ts", "target": "function:src/app/api/patterns/library/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/patterns/library/route.ts", "target": "file:src/lib/patterns/pattern-metrics.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/pipeline/summary/route.ts", "target": "function:src/app/api/pipeline/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/pipeline/summary/route.ts", "target": "function:src/app/api/pipeline/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/pixel/collect/route.ts", "target": "function:src/app/api/pixel/collect/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/pixel/collect/route.ts", "target": "function:src/app/api/pixel/collect/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/pixel/collect/route.ts", "target": "file:src/lib/billing/enforcement.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/pixel/collect/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/pixel/collect/route.ts", "target": "file:src/lib/flags.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/placeholder-thumbnail/route.ts", "target": "function:src/app/api/placeholder-thumbnail/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/placeholder-thumbnail/route.ts", "target": "function:src/app/api/placeholder-thumbnail/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/placeholder-thumbnail/route.ts", "target": "function:src/app/api/placeholder-thumbnail/route.ts:getCategoryColor", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "file:src/app/api/predict/legacy/route.ts", "target": "function:src/app/api/predict/legacy/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/predict/legacy/route.ts", "target": "function:src/app/api/predict/legacy/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/predict/legacy/route.ts", "target": "function:src/app/api/predict/legacy/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/predict/legacy/route.ts", "target": "function:src/app/api/predict/legacy/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/predict/log/route.ts", "target": "function:src/app/api/predict/log/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/predict/log/route.ts", "target": "function:src/app/api/predict/log/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/predict/log/route.ts", "target": "file:src/lib/validation/store.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

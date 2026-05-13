@@ -1,0 +1,973 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/training/retrain/promote/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/retrain/promote/route.ts",
+      "summary": "Admin API route that promotes a candidate XGBoost model from a retrain run to active production status.",
+      "tags": ["api-handler", "admin", "training", "model-promotion"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/retrain/promote/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/retrain/promote/route.ts",
+      "lineRange": [16, 55],
+      "summary": "Handles model promotion requests, validates admin auth via api-guard, and marks a candidate retrain output as active.",
+      "tags": ["api-handler", "admin", "promotion", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training/retrain/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/retrain/route.ts",
+      "summary": "Admin API route that kicks off the S6 XGBoost retrain pipeline run on demand.",
+      "tags": ["api-handler", "admin", "training", "retrain"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/retrain/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/retrain/route.ts",
+      "lineRange": [16, 31],
+      "summary": "Triggers the S6 retrain workflow after admin auth and returns the resulting run summary.",
+      "tags": ["api-handler", "admin", "retrain", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/training/scraped-quality-gate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/training/scraped-quality-gate/route.ts",
+      "summary": "Admin API route running the scraped-video quality gate that decides whether scraped data is fit for training.",
+      "tags": ["api-handler", "admin", "training", "quality-gate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/training/scraped-quality-gate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/training/scraped-quality-gate/route.ts",
+      "lineRange": [16, 30],
+      "summary": "Invokes the scraped-video quality-gate evaluator and returns pass/fail report data to admins.",
+      "tags": ["api-handler", "admin", "quality-gate", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/transcribe/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/transcribe/route.ts",
+      "summary": "Admin transcription endpoint that resolves TikTok download URLs and produces speech-to-text transcripts for analysis.",
+      "tags": ["api-handler", "admin", "transcription", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/transcribe/route.ts:getTikTokDownloadURL",
+      "type": "function",
+      "name": "getTikTokDownloadURL",
+      "filePath": "src/app/api/admin/transcribe/route.ts",
+      "lineRange": [34, 60],
+      "summary": "Resolves a TikTok share/post URL into a direct video download URL usable by the transcription pipeline.",
+      "tags": ["utility", "tiktok", "url-resolution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/transcribe/route.ts:transcribeVideo",
+      "type": "function",
+      "name": "transcribeVideo",
+      "filePath": "src/app/api/admin/transcribe/route.ts",
+      "lineRange": [66, 131],
+      "summary": "Downloads a video and runs speech-to-text to produce a transcript with timing metadata.",
+      "tags": ["utility", "transcription", "video", "speech-to-text"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/transcribe/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/transcribe/route.ts",
+      "lineRange": [137, 163],
+      "summary": "GET handler exposing a transcribe-by-URL query operation for admins.",
+      "tags": ["api-handler", "admin", "get-handler", "transcription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/transcribe/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/transcribe/route.ts",
+      "lineRange": [170, 233],
+      "summary": "POST handler accepting a video URL or upload and returning the transcribed text plus metadata.",
+      "tags": ["api-handler", "admin", "post-handler", "transcription"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/unified-testing/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/unified-testing/route.ts",
+      "summary": "Admin endpoint that runs the unified testing framework across multiple modules and reports aggregate results.",
+      "tags": ["api-handler", "admin", "testing", "unified-testing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/unified-testing/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/unified-testing/route.ts",
+      "lineRange": [14, 90],
+      "summary": "Executes selected test suites through the unified testing framework and returns per-suite outcomes.",
+      "tags": ["api-handler", "testing", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/unified-testing/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/unified-testing/route.ts",
+      "lineRange": [92, 112],
+      "summary": "Returns metadata about available unified-testing suites and their last-run status.",
+      "tags": ["api-handler", "testing", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/usage/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/usage/summary/route.ts",
+      "summary": "Admin endpoint returning aggregate API usage and billing summary metrics.",
+      "tags": ["api-handler", "admin", "usage", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/usage/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/usage/summary/route.ts",
+      "lineRange": [8, 17],
+      "summary": "Returns the current usage summary payload for admin dashboards.",
+      "tags": ["api-handler", "usage", "get-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/validation-system/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation-system/route.ts",
+      "summary": "Admin orchestration endpoint for the validation system covering accuracy, drift, and calibration checks.",
+      "tags": ["api-handler", "admin", "validation", "calibration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/validation-system/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/validation-system/route.ts",
+      "lineRange": [14, 170],
+      "summary": "Runs validation actions (accuracy check, recalibration, drift scan) via the validation system service.",
+      "tags": ["api-handler", "validation", "post-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/validation-system/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation-system/route.ts",
+      "lineRange": [172, 305],
+      "summary": "Returns validation-system dashboards including last-run metrics, drift status, and recent error samples.",
+      "tags": ["api-handler", "validation", "get-handler", "dashboard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/48h/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/48h/route.ts",
+      "summary": "Admin endpoint reporting validation metrics over a rolling 48-hour window, including precision@K and ECE.",
+      "tags": ["api-handler", "admin", "validation", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/48h/route.ts:precisionAtK",
+      "type": "function",
+      "name": "precisionAtK",
+      "filePath": "src/app/api/admin/validation/48h/route.ts",
+      "lineRange": [11, 16],
+      "summary": "Computes precision@K for a ranked prediction list against ground-truth labels.",
+      "tags": ["utility", "metrics", "ranking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/48h/route.ts:expectedCalibrationError",
+      "type": "function",
+      "name": "expectedCalibrationError",
+      "filePath": "src/app/api/admin/validation/48h/route.ts",
+      "lineRange": [18, 38],
+      "summary": "Computes the expected calibration error (ECE) over binned confidence buckets.",
+      "tags": ["utility", "metrics", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/48h/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/48h/route.ts",
+      "lineRange": [40, 98],
+      "summary": "Returns validation metrics for the past 48 hours including precision@K and ECE per cohort.",
+      "tags": ["api-handler", "validation", "get-handler", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/breakdown/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/breakdown/route.ts",
+      "summary": "Admin endpoint breaking down validation metrics by cohort/niche for finer-grained debugging.",
+      "tags": ["api-handler", "admin", "validation", "breakdown"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/breakdown/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/breakdown/route.ts",
+      "lineRange": [22, 57],
+      "summary": "Returns per-cohort validation breakdown including precision@K and ECE per slice.",
+      "tags": ["api-handler", "validation", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/pending/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/pending/route.ts",
+      "summary": "Admin endpoint listing predictions that are still pending ground-truth validation.",
+      "tags": ["api-handler", "admin", "validation", "pending"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/pending/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/pending/route.ts",
+      "lineRange": [10, 34],
+      "summary": "Returns predictions awaiting evaluation, with auth and rate-limit gating.",
+      "tags": ["api-handler", "validation", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/recent_errors/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/recent_errors/route.ts",
+      "summary": "Admin endpoint returning recent validation errors for triage in dashboards.",
+      "tags": ["api-handler", "admin", "validation", "errors"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/recent_errors/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/recent_errors/route.ts",
+      "lineRange": [10, 32],
+      "summary": "Returns the most recent prediction validation errors with auth and rate-limit checks.",
+      "tags": ["api-handler", "validation", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/stream/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/stream/route.ts",
+      "summary": "Admin server-sent events stream emitting live validation events as predictions are graded.",
+      "tags": ["api-handler", "admin", "validation", "streaming"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/stream/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/stream/route.ts",
+      "lineRange": [9, 34],
+      "summary": "Opens an SSE connection that pushes live validation events sourced from the calibration store.",
+      "tags": ["api-handler", "validation", "get-handler", "sse"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/validation/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/validation/summary/route.ts",
+      "summary": "Admin endpoint returning a top-line validation summary (calibration, accuracy, drift) for dashboards.",
+      "tags": ["api-handler", "admin", "validation", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/validation/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/validation/summary/route.ts",
+      "lineRange": [11, 40],
+      "summary": "Aggregates current calibration stats into a summary payload for admin overview dashboards.",
+      "tags": ["api-handler", "validation", "get-handler", "summary"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-genomes/stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-genomes/stats/route.ts",
+      "summary": "Admin endpoint reporting statistics about the viral-genomes corpus (count, niches, recency, quality tiers).",
+      "tags": ["api-handler", "admin", "viral-genomes", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-genomes/stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-genomes/stats/route.ts",
+      "lineRange": [51, 183],
+      "summary": "Computes aggregate viral-genome statistics across niches and quality buckets and returns dashboard payload.",
+      "tags": ["api-handler", "viral-genomes", "get-handler", "stats"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction-hub/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "summary": "Admin viral prediction hub endpoint orchestrating omniscient databases, DNA sequencer, optimizer, singularity, validation, and the main prediction engine.",
+      "tags": ["api-handler", "admin", "viral-prediction", "orchestrator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [25, 57],
+      "summary": "GET handler returning composite viral-prediction hub status, recent predictions, and module health.",
+      "tags": ["api-handler", "viral-prediction", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [59, 102],
+      "summary": "POST handler dispatching actions (complete-prediction, DNA, optimize, singularity, validate) to the corresponding services.",
+      "tags": ["api-handler", "viral-prediction", "post-handler", "dispatcher"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemStatus",
+      "type": "function",
+      "name": "getSystemStatus",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [106, 144],
+      "summary": "Collects per-module readiness signals to produce an aggregate viral-prediction system status.",
+      "tags": ["utility", "viral-prediction", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:getOmniscienceStatus",
+      "type": "function",
+      "name": "getOmniscienceStatus",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [146, 170],
+      "summary": "Reports the omniscient database and integration readiness used by the prediction hub.",
+      "tags": ["utility", "omniscience", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:getRecentPredictions",
+      "type": "function",
+      "name": "getRecentPredictions",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [172, 216],
+      "summary": "Loads recent viral predictions from storage and shapes them for dashboard consumption.",
+      "tags": ["utility", "viral-prediction", "history"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemHealth",
+      "type": "function",
+      "name": "getSystemHealth",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [218, 227],
+      "summary": "Returns rolled-up health booleans for the viral-prediction subsystems.",
+      "tags": ["utility", "health-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemOverview",
+      "type": "function",
+      "name": "getSystemOverview",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [229, 249],
+      "summary": "Assembles a top-line overview of module counts, statuses, and capability flags for the hub UI.",
+      "tags": ["utility", "overview"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:runCompletePrediction",
+      "type": "function",
+      "name": "runCompletePrediction",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [251, 368],
+      "summary": "Runs the full prediction pipeline by wiring DNA sequencer, optimizer, singularity, and main prediction engine into a single result.",
+      "tags": ["orchestrator", "viral-prediction", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:runDNAAnalysis",
+      "type": "function",
+      "name": "runDNAAnalysis",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [370, 396],
+      "summary": "Invokes the script DNA sequencer to break a script into structural genes for downstream prediction.",
+      "tags": ["utility", "dna", "script-analysis"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:runOptimization",
+      "type": "function",
+      "name": "runOptimization",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [398, 421],
+      "summary": "Runs the real-time script optimizer against a given input and returns improved variants.",
+      "tags": ["utility", "optimization", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:runSingularity",
+      "type": "function",
+      "name": "runSingularity",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [423, 446],
+      "summary": "Invokes the script singularity service to generate convergent high-viral candidate scripts.",
+      "tags": ["utility", "singularity", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction-hub/route.ts:runValidation",
+      "type": "function",
+      "name": "runValidation",
+      "filePath": "src/app/api/admin/viral-prediction-hub/route.ts",
+      "lineRange": [448, 468],
+      "summary": "Runs validation-system checks on the most recent predictions and returns the verdict.",
+      "tags": ["utility", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts",
+      "summary": "Admin endpoint returning real-data accuracy validation results for viral predictions (no mock fallback).",
+      "tags": ["api-handler", "admin", "viral-prediction", "accuracy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts",
+      "lineRange": [12, 114],
+      "summary": "Pulls labeled-video outcomes from Supabase and computes accuracy metrics for shipped viral predictions.",
+      "tags": ["api-handler", "accuracy", "get-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "summary": "Admin endpoint orchestrating accuracy validation runs, evidence generation, and targeted prediction reruns.",
+      "tags": ["api-handler", "admin", "viral-prediction", "accuracy"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "lineRange": [19, 158],
+      "summary": "Returns aggregate and per-niche accuracy metrics for viral predictions over a configurable window.",
+      "tags": ["api-handler", "accuracy", "get-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:getDetailedValidationData",
+      "type": "function",
+      "name": "getDetailedValidationData",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "lineRange": [163, 217],
+      "summary": "Collects detailed per-prediction validation records used to drill into accuracy diagnostics.",
+      "tags": ["utility", "validation", "detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:generateAccuracyEvidence",
+      "type": "function",
+      "name": "generateAccuracyEvidence",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "lineRange": [222, 300],
+      "summary": "Builds an evidence bundle (charts, sample predictions, statistics) supporting the reported accuracy.",
+      "tags": ["utility", "evidence", "reporting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "lineRange": [302, 355],
+      "summary": "Re-runs accuracy validation across selected prediction IDs and returns updated metrics.",
+      "tags": ["api-handler", "accuracy", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:validateSpecificPredictions",
+      "type": "function",
+      "name": "validateSpecificPredictions",
+      "filePath": "src/app/api/admin/viral-prediction/accuracy-validation/route.ts",
+      "lineRange": [360, 396],
+      "summary": "Validates a specific set of prediction IDs against ground truth and aggregates per-id outcomes.",
+      "tags": ["utility", "validation", "batch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "summary": "Admin endpoint generating the daily viral recipe book with real or mock data and optional performance enhancement.",
+      "tags": ["api-handler", "admin", "viral-prediction", "recipe-book"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "lineRange": [19, 106],
+      "summary": "Returns the daily recipe book payload, falling back to a mock book when prediction data is unavailable.",
+      "tags": ["api-handler", "recipe-book", "get-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:generateRealRecipeBook",
+      "type": "function",
+      "name": "generateRealRecipeBook",
+      "filePath": "src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "lineRange": [111, 236],
+      "summary": "Builds the daily recipe book from real prediction-engine output and recent viral patterns.",
+      "tags": ["utility", "recipe-book", "generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:generateMockRecipeBook",
+      "type": "function",
+      "name": "generateMockRecipeBook",
+      "filePath": "src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "lineRange": [241, 442],
+      "summary": "Returns a richly seeded mock recipe book for dashboards when the real pipeline cannot produce a fresh one.",
+      "tags": ["utility", "recipe-book", "mock"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:enhanceWithPerformanceData",
+      "type": "function",
+      "name": "enhanceWithPerformanceData",
+      "filePath": "src/app/api/admin/viral-prediction/daily-recipe-book/route.ts",
+      "lineRange": [447, 477],
+      "summary": "Augments recipe-book entries with measured performance data (views, engagement, viral-score).",
+      "tags": ["utility", "performance", "enrichment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "summary": "Admin endpoint reporting the readiness and health of every module in the viral-prediction pipeline.",
+      "tags": ["api-handler", "admin", "pipeline", "status"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [18, 174],
+      "summary": "Aggregates module statuses, pipeline health, and processing statistics into a single dashboard payload.",
+      "tags": ["api-handler", "pipeline", "get-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getAllModuleStatus",
+      "type": "function",
+      "name": "getAllModuleStatus",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [179, 213],
+      "summary": "Probes every pipeline module to determine status (ready/degraded/down) and last-error metadata.",
+      "tags": ["utility", "pipeline", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getModuleDescription",
+      "type": "function",
+      "name": "getModuleDescription",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [215, 230],
+      "summary": "Maps a module key to a human-readable description for use in the pipeline status UI.",
+      "tags": ["utility", "metadata"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getDefaultModules",
+      "type": "function",
+      "name": "getDefaultModules",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [232, 437],
+      "summary": "Returns the canonical list of pipeline modules with stub statuses when live probing is unavailable.",
+      "tags": ["utility", "pipeline", "fallback"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:calculatePipelineHealth",
+      "type": "function",
+      "name": "calculatePipelineHealth",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [442, 457],
+      "summary": "Computes an overall pipeline health score from individual module statuses.",
+      "tags": ["utility", "health-score"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getProcessingStatistics",
+      "type": "function",
+      "name": "getProcessingStatistics",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [462, 502],
+      "summary": "Loads recent processing statistics (counts, latencies, errors) for the pipeline status dashboard.",
+      "tags": ["utility", "metrics", "statistics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/viral-prediction/pipeline-status/route.ts",
+      "lineRange": [504, 548],
+      "summary": "Accepts pipeline-control commands (restart module, retry failed runs) and dispatches them.",
+      "tags": ["api-handler", "pipeline", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/viral-prediction/real-time-analysis/route.ts",
+      "summary": "Admin endpoint for synchronous real-time viral-prediction analysis on submitted scripts/videos.",
+      "tags": ["api-handler", "admin", "viral-prediction", "real-time"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/viral-prediction/real-time-analysis/route.ts",
+      "lineRange": [14, 153],
+      "summary": "Runs the main viral-prediction engine on submitted input and returns the analysis result inline.",
+      "tags": ["api-handler", "viral-prediction", "post-handler", "real-time"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/viral-prediction/real-time-analysis/route.ts",
+      "lineRange": [155, 208],
+      "summary": "Returns the configuration and capabilities of the real-time viral-prediction analyzer.",
+      "tags": ["api-handler", "viral-prediction", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/ws/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/ws/route.ts",
+      "summary": "Admin websocket bootstrap endpoint that returns connection metadata or a graceful stub when sockets are disabled.",
+      "tags": ["api-handler", "admin", "websocket"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/ws/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/ws/route.ts",
+      "lineRange": [10, 39],
+      "summary": "Returns websocket connection info for admin clients, gated by env-configured feature flags.",
+      "tags": ["api-handler", "websocket", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/route.ts",
+      "summary": "Root admin API route delegating session checks to NextAuth admin auth options.",
+      "tags": ["api-handler", "admin", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/route.ts",
+      "lineRange": [7, 11],
+      "summary": "Returns the resolved NextAuth admin auth session payload.",
+      "tags": ["api-handler", "auth", "get-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/advisor/advise/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/advisor/advise/route.ts",
+      "summary": "Advisor API endpoint that runs the advisor-service to return recommendations and rationale for a user request.",
+      "tags": ["api-handler", "advisor", "recommendations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/advisor/advise/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/advisor/advise/route.ts",
+      "lineRange": [12, 72],
+      "summary": "Invokes the advisor service with a request payload and returns structured advice plus rationale.",
+      "tags": ["api-handler", "advisor", "post-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/advisor/advise/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/advisor/advise/route.ts",
+      "lineRange": [74, 102],
+      "summary": "Returns advisor capabilities and supported request shape for discovery clients.",
+      "tags": ["api-handler", "advisor", "get-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/affiliates/me/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/affiliates/me/route.ts",
+      "summary": "Affiliate self-lookup endpoint returning the authenticated user's affiliate record.",
+      "tags": ["api-handler", "affiliates", "self"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/affiliates/me/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/affiliates/me/route.ts",
+      "lineRange": [12, 16],
+      "summary": "Returns the authenticated user's affiliate row from the database.",
+      "tags": ["api-handler", "affiliates", "get-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/affiliates/payouts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/affiliates/payouts/route.ts",
+      "summary": "Affiliate payouts endpoint returning the payout history for the authenticated affiliate.",
+      "tags": ["api-handler", "affiliates", "payouts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/affiliates/payouts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/affiliates/payouts/route.ts",
+      "lineRange": [12, 21],
+      "summary": "Returns the authenticated affiliate's payout history with auth-aware filtering.",
+      "tags": ["api-handler", "affiliates", "get-handler"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/training/retrain/promote/route.ts", "target": "function:src/app/api/admin/training/retrain/promote/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/retrain/promote/route.ts", "target": "function:src/app/api/admin/training/retrain/promote/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/retrain/promote/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/retrain/route.ts", "target": "function:src/app/api/admin/training/retrain/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/retrain/route.ts", "target": "function:src/app/api/admin/training/retrain/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/retrain/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training/retrain/route.ts", "target": "file:src/lib/training/run-s6-retrain.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/training/scraped-quality-gate/route.ts", "target": "function:src/app/api/admin/training/scraped-quality-gate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/training/scraped-quality-gate/route.ts", "target": "function:src/app/api/admin/training/scraped-quality-gate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/training/scraped-quality-gate/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/training/scraped-quality-gate/route.ts", "target": "file:src/lib/training/scraped-video-quality-gate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:getTikTokDownloadURL", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:transcribeVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/transcribe/route.ts", "target": "function:src/app/api/admin/transcribe/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/unified-testing/route.ts", "target": "function:src/app/api/admin/unified-testing/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/unified-testing/route.ts", "target": "function:src/app/api/admin/unified-testing/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/unified-testing/route.ts", "target": "function:src/app/api/admin/unified-testing/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/unified-testing/route.ts", "target": "function:src/app/api/admin/unified-testing/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/unified-testing/route.ts", "target": "file:src/lib/services/unifiedTestingFramework.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/usage/summary/route.ts", "target": "function:src/app/api/admin/usage/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/usage/summary/route.ts", "target": "function:src/app/api/admin/usage/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/usage/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation-system/route.ts", "target": "function:src/app/api/admin/validation-system/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation-system/route.ts", "target": "function:src/app/api/admin/validation-system/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation-system/route.ts", "target": "function:src/app/api/admin/validation-system/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation-system/route.ts", "target": "function:src/app/api/admin/validation-system/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation-system/route.ts", "target": "file:src/lib/services/validationSystem.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "function:src/app/api/admin/validation/48h/route.ts:precisionAtK", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "function:src/app/api/admin/validation/48h/route.ts:expectedCalibrationError", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "function:src/app/api/admin/validation/48h/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "function:src/app/api/admin/validation/48h/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/48h/route.ts", "target": "file:src/lib/storage/object_store.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/breakdown/route.ts", "target": "function:src/app/api/admin/validation/breakdown/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/breakdown/route.ts", "target": "function:src/app/api/admin/validation/breakdown/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/breakdown/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/breakdown/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/breakdown/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/pending/route.ts", "target": "function:src/app/api/admin/validation/pending/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/pending/route.ts", "target": "function:src/app/api/admin/validation/pending/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/pending/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/pending/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/pending/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/recent_errors/route.ts", "target": "function:src/app/api/admin/validation/recent_errors/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/recent_errors/route.ts", "target": "function:src/app/api/admin/validation/recent_errors/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/recent_errors/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/recent_errors/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/recent_errors/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/stream/route.ts", "target": "function:src/app/api/admin/validation/stream/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/stream/route.ts", "target": "function:src/app/api/admin/validation/stream/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/stream/route.ts", "target": "file:src/lib/calibration/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/stream/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "function:src/app/api/admin/validation/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "function:src/app/api/admin/validation/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "file:src/lib/calibration/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/validation/summary/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/viral-genomes/stats/route.ts", "target": "function:src/app/api/admin/viral-genomes/stats/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-genomes/stats/route.ts", "target": "function:src/app/api/admin/viral-genomes/stats/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:getOmniscienceStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:getRecentPredictions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:getSystemOverview", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:runCompletePrediction", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:runDNAAnalysis", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:runOptimization", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:runSingularity", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:runValidation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "function:src/app/api/admin/viral-prediction-hub/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/abTestingSystem.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/multiModuleIntelligenceHarvester.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/omniscientDatabase.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/omniscientIntegration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/realTimeScriptOptimizer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/scriptDNASequencer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/scriptSingularity.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/templateAnalysisBackend.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/unifiedTestingFramework.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/validationSystem.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction-hub/route.ts", "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation-real/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:getDetailedValidationData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:generateAccuracyEvidence", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:validateSpecificPredictions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "function:src/app/api/admin/viral-prediction/accuracy-validation/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/accuracy-validation/route.ts", "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:generateRealRecipeBook", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:generateMockRecipeBook", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:enhanceWithPerformanceData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "function:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/daily-recipe-book/route.ts", "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getAllModuleStatus", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getModuleDescription", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getDefaultModules", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:calculatePipelineHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:getProcessingStatistics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/pipeline-status/route.ts", "target": "function:src/app/api/admin/viral-prediction/pipeline-status/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "function:src/app/api/admin/viral-prediction/real-time-analysis/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "file:src/lib/services/viral-prediction/main-prediction-engine.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/viral-prediction/real-time-analysis/route.ts", "target": "file:src/lib/types/viral-prediction.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/ws/route.ts", "target": "function:src/app/api/admin/ws/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/ws/route.ts", "target": "function:src/app/api/admin/ws/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/ws/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/route.ts", "target": "function:src/app/api/admin/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/route.ts", "target": "function:src/app/api/admin/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/route.ts", "target": "file:src/lib/auth/admin-auth-options.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/advisor/advise/route.ts", "target": "function:src/app/api/advisor/advise/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/advisor/advise/route.ts", "target": "function:src/app/api/advisor/advise/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/advisor/advise/route.ts", "target": "function:src/app/api/advisor/advise/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/advisor/advise/route.ts", "target": "function:src/app/api/advisor/advise/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/advisor/advise/route.ts", "target": "file:src/lib/modules/advisor-service.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/affiliates/me/route.ts", "target": "function:src/app/api/affiliates/me/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/affiliates/me/route.ts", "target": "function:src/app/api/affiliates/me/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/affiliates/me/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/affiliates/payouts/route.ts", "target": "function:src/app/api/affiliates/payouts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/affiliates/payouts/route.ts", "target": "function:src/app/api/affiliates/payouts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/affiliates/payouts/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "nodes": [
+    {
+      "id": "file:scripts/extract-test-videos.js",
+      "type": "file",
+      "name": "extract-test-videos.js",
+      "filePath": "scripts/extract-test-videos.js",
+      "summary": "One-off CLI script that selects representative test videos from the database and exports them for downstream evaluation runs.",
+      "tags": ["script", "data-extraction", "testing", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/extract-test-videos.js:extractTestVideos",
+      "type": "function",
+      "name": "extractTestVideos",
+      "filePath": "scripts/extract-test-videos.js",
+      "lineRange": [16, 81],
+      "summary": "Main driver that queries the videos table and writes a curated set of test cases to disk.",
+      "tags": ["entry-point", "data-extraction", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/extract-training-features.ts",
+      "type": "file",
+      "name": "extract-training-features.ts",
+      "filePath": "scripts/extract-training-features.ts",
+      "summary": "CLI script that invokes the shared training feature-extractor over a set of labeled videos to produce a feature dataset for model training.",
+      "tags": ["script", "training-pipeline", "feature-extraction", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/extract-training-features.ts:getCliArg",
+      "type": "function",
+      "name": "getCliArg",
+      "filePath": "scripts/extract-training-features.ts",
+      "lineRange": [37, 44],
+      "summary": "Parses a single named CLI flag value from process.argv.",
+      "tags": ["utility", "cli", "argument-parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/extract-training-features.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/extract-training-features.ts",
+      "lineRange": [50, 130],
+      "summary": "Entry point that loads target videos, delegates feature extraction, and writes the resulting dataset.",
+      "tags": ["entry-point", "training-pipeline", "feature-extraction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/extract-transcripts-from-subtitles.ts",
+      "type": "file",
+      "name": "extract-transcripts-from-subtitles.ts",
+      "filePath": "scripts/extract-transcripts-from-subtitles.ts",
+      "summary": "Parses raw VTT subtitle data attached to scraped TikTok videos and stores normalized transcripts back to the database.",
+      "tags": ["script", "transcript", "vtt-parser", "data-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/extract-transcripts-from-subtitles.ts:parseVTT",
+      "type": "function",
+      "name": "parseVTT",
+      "filePath": "scripts/extract-transcripts-from-subtitles.ts",
+      "lineRange": [12, 28],
+      "summary": "Converts WebVTT subtitle text into an array of cue objects with timestamps and text.",
+      "tags": ["parser", "vtt", "transcript", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/extract-transcripts-from-subtitles.ts:extractTranscript",
+      "type": "function",
+      "name": "extractTranscript",
+      "filePath": "scripts/extract-transcripts-from-subtitles.ts",
+      "lineRange": [30, 69],
+      "summary": "Selects the best subtitle source for a video, parses it into cues, and returns a normalized transcript object.",
+      "tags": ["transcript", "data-transformation", "video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/extract-transcripts-from-subtitles.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/extract-transcripts-from-subtitles.ts",
+      "lineRange": [71, 155],
+      "summary": "Iterates over videos lacking transcripts, derives them from stored subtitle data, and persists results to Supabase.",
+      "tags": ["entry-point", "data-pipeline", "transcript", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/fetch-missing-assets.js",
+      "type": "file",
+      "name": "fetch-missing-assets.js",
+      "filePath": "scripts/fetch-missing-assets.js",
+      "summary": "Downloads missing media assets (video files, thumbnails) referenced by database rows but absent locally, into a configurable destination directory.",
+      "tags": ["script", "asset-management", "download", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fetch-missing-assets.js:download",
+      "type": "function",
+      "name": "download",
+      "filePath": "scripts/fetch-missing-assets.js",
+      "lineRange": [22, 47],
+      "summary": "Streams a remote URL to a local destination file using node-fetch and fs streams with error handling.",
+      "tags": ["network", "download", "io", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fetch-missing-assets.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/fetch-missing-assets.js",
+      "lineRange": [53, 112],
+      "summary": "Driver that resolves missing-asset rows, fans out downloads, and reports per-file success or failure.",
+      "tags": ["entry-point", "asset-management", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/find-best-test-video.js",
+      "type": "file",
+      "name": "find-best-test-video.js",
+      "filePath": "scripts/find-best-test-video.js",
+      "summary": "Heuristic CLI utility that ranks recently scraped videos by completeness and viral signal to pick a high-quality manual QA target.",
+      "tags": ["script", "testing", "selection", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/find-best-test-video.js:findBestTestVideo",
+      "type": "function",
+      "name": "findBestTestVideo",
+      "filePath": "scripts/find-best-test-video.js",
+      "lineRange": [18, 107],
+      "summary": "Queries the videos table, scores rows on asset and engagement criteria, and prints the top candidate for manual testing.",
+      "tags": ["entry-point", "selection", "scoring", "testing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/find-mega-viral-video.js",
+      "type": "file",
+      "name": "find-mega-viral-video.js",
+      "filePath": "scripts/find-mega-viral-video.js",
+      "summary": "Locates an extreme outlier high-virality video from the database for use as a stress-test fixture in prediction pipeline development.",
+      "tags": ["script", "testing", "viral", "selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/find-mega-viral-video.js:findMegaViralVideo",
+      "type": "function",
+      "name": "findMegaViralVideo",
+      "filePath": "scripts/find-mega-viral-video.js",
+      "lineRange": [16, 74],
+      "summary": "Queries Supabase for the highest-engagement video meeting a configurable view-count threshold and prints its identifiers.",
+      "tags": ["entry-point", "selection", "viral", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/find-recent-videos.ts",
+      "type": "file",
+      "name": "find-recent-videos.ts",
+      "filePath": "scripts/find-recent-videos.ts",
+      "summary": "Lists the most recently ingested videos with key metadata for ad hoc inspection of the scraping pipeline.",
+      "tags": ["script", "inspection", "utility", "cli"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/find-recent-videos.ts:findRecentVideos",
+      "type": "function",
+      "name": "findRecentVideos",
+      "filePath": "scripts/find-recent-videos.ts",
+      "lineRange": [16, 52],
+      "summary": "Queries Supabase for the latest videos and pretty-prints id, niche, and engagement summary to the console.",
+      "tags": ["entry-point", "inspection", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/fix-and-seed-agency.ts",
+      "type": "file",
+      "name": "fix-and-seed-agency.ts",
+      "filePath": "scripts/fix-and-seed-agency.ts",
+      "summary": "Operational backfill that repairs and seeds the agency multi-tenant schema, including agency rows, memberships, content briefs, and feature flags.",
+      "tags": ["script", "migration", "seed", "agency", "data-fix"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/fix-and-seed-agency.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/fix-and-seed-agency.ts",
+      "lineRange": [54, 451],
+      "summary": "Single large entry point that orchestrates every step of the agency repair and seeding workflow against Supabase.",
+      "tags": ["entry-point", "migration", "seed", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/fix-audio-files.js",
+      "type": "file",
+      "name": "fix-audio-files.js",
+      "filePath": "scripts/fix-audio-files.js",
+      "summary": "Repairs broken or missing audio asset references for ingested videos by re-running extraction and updating database paths.",
+      "tags": ["script", "asset-repair", "audio", "data-fix"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fix-audio-files.js:checkAllCompleted",
+      "type": "function",
+      "name": "checkAllCompleted",
+      "filePath": "scripts/fix-audio-files.js",
+      "lineRange": [61, 99],
+      "summary": "Polls the audio-fix queue until every job completes and prints a summary of successes and failures.",
+      "tags": ["polling", "status-check", "audio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/fix-dps-score-column.ts",
+      "type": "file",
+      "name": "fix-dps-score-column.ts",
+      "filePath": "scripts/fix-dps-score-column.ts",
+      "summary": "Heavy data-fix utility that recomputes the DPS (Dynamic Percentile System) score column across legacy rows, distinguishing v1 and v2 formats and backfilling cohorts.",
+      "tags": ["script", "data-fix", "dps", "backfill", "migration"],
+      "complexity": "complex",
+      "languageNotes": "Mixes cohort fetching, version detection (v1 vs v2 row shape), and idempotent rescoring in a single CLI."
+    },
+    {
+      "id": "function:scripts/fix-dps-score-column.ts:fetchFullCohort",
+      "type": "function",
+      "name": "fetchFullCohort",
+      "filePath": "scripts/fix-dps-score-column.ts",
+      "lineRange": [44, 76],
+      "summary": "Pulls the full set of niche-and-account-size cohort rows from Supabase used as the baseline for DPS percentile computation.",
+      "tags": ["data-access", "cohort", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fix-dps-score-column.ts:fetchRowsToRescore",
+      "type": "function",
+      "name": "fetchRowsToRescore",
+      "filePath": "scripts/fix-dps-score-column.ts",
+      "lineRange": [78, 98],
+      "summary": "Selects prediction-run rows that need DPS rescoring based on column presence and version markers.",
+      "tags": ["data-access", "dps", "selection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fix-dps-score-column.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/fix-dps-score-column.ts",
+      "lineRange": [117, 460],
+      "summary": "Orchestrates the cohort load, row selection, DPS recomputation, and Supabase updates for the column backfill operation.",
+      "tags": ["entry-point", "data-fix", "dps", "backfill"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/fix-edge-case.js",
+      "type": "file",
+      "name": "fix-edge-case.js",
+      "filePath": "scripts/fix-edge-case.js",
+      "summary": "Targeted one-shot fix for a specific edge-case row discovered during prediction QA, applying a corrective Supabase update.",
+      "tags": ["script", "data-fix", "edge-case", "one-shot"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/fix-edge-case.js:fixEdgeCase",
+      "type": "function",
+      "name": "fixEdgeCase",
+      "filePath": "scripts/fix-edge-case.js",
+      "lineRange": [10, 68],
+      "summary": "Locates the offending row and applies the documented corrective update with logging of the before-and-after state.",
+      "tags": ["entry-point", "data-fix", "edge-case"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/generate-codes.ts",
+      "type": "file",
+      "name": "generate-codes.ts",
+      "filePath": "scripts/generate-codes.ts",
+      "summary": "Generates a batch of unique short codes (e.g., for ContentIQ Code Edition or invites) with optional Supabase persistence.",
+      "tags": ["script", "code-generation", "utility", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate-codes.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/generate-codes.ts",
+      "lineRange": [35, 80],
+      "summary": "Parses CLI arguments controlling code count, persistence destination, and dry-run mode.",
+      "tags": ["cli", "argument-parsing", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate-codes.ts:generateUniqueCodes",
+      "type": "function",
+      "name": "generateUniqueCodes",
+      "filePath": "scripts/generate-codes.ts",
+      "lineRange": [90, 96],
+      "summary": "Produces N unique random codes by looping generateCode and deduplicating.",
+      "tags": ["code-generation", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/generate-codes.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/generate-codes.ts",
+      "lineRange": [98, 149],
+      "summary": "Driver that parses args, generates codes, optionally inserts them into Supabase, and prints results.",
+      "tags": ["entry-point", "code-generation", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/generate-transcripts-with-whisper.ts",
+      "type": "file",
+      "name": "generate-transcripts-with-whisper.ts",
+      "filePath": "scripts/generate-transcripts-with-whisper.ts",
+      "summary": "Pipeline that downloads source videos, extracts audio with ffmpeg, and transcribes via OpenAI Whisper to backfill missing transcripts.",
+      "tags": ["script", "transcript", "whisper", "ffmpeg", "data-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate-transcripts-with-whisper.ts:downloadVideo",
+      "type": "function",
+      "name": "downloadVideo",
+      "filePath": "scripts/generate-transcripts-with-whisper.ts",
+      "lineRange": [20, 44],
+      "summary": "Fetches a remote video URL and streams it to a local file for downstream audio extraction.",
+      "tags": ["network", "download", "video"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate-transcripts-with-whisper.ts:extractAudio",
+      "type": "function",
+      "name": "extractAudio",
+      "filePath": "scripts/generate-transcripts-with-whisper.ts",
+      "lineRange": [46, 68],
+      "summary": "Runs ffmpeg to strip the audio track from a downloaded video into a Whisper-friendly format.",
+      "tags": ["ffmpeg", "audio", "media-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/generate-transcripts-with-whisper.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/generate-transcripts-with-whisper.ts",
+      "lineRange": [80, 191],
+      "summary": "Iterates videos missing transcripts, runs the download-extract-transcribe pipeline, and saves results to Supabase.",
+      "tags": ["entry-point", "transcript", "whisper", "data-pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/ingest-frameworks-from-md.js",
+      "type": "file",
+      "name": "ingest-frameworks-from-md.js",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "summary": "Parses markdown documents describing viral content frameworks into structured JSON gene and pattern records consumed by the prediction system.",
+      "tags": ["script", "ingestion", "markdown-parser", "framework", "data-pipeline"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of regex-based markdown parsing to extract checklists, examples, success rates, and tier metadata."
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:extractCodeBlocks",
+      "type": "function",
+      "name": "extractCodeBlocks",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [28, 36],
+      "summary": "Pulls fenced code blocks out of markdown text for downstream JSON parsing.",
+      "tags": ["markdown-parser", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:coerceFrameworkGenes",
+      "type": "function",
+      "name": "coerceFrameworkGenes",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [56, 70],
+      "summary": "Normalizes raw gene definitions into the framework-gene JSON shape used by the prediction system.",
+      "tags": ["normalization", "framework", "data-shaping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:coerceFrameworkPatterns",
+      "type": "function",
+      "name": "coerceFrameworkPatterns",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [72, 86],
+      "summary": "Normalizes raw pattern records into the framework-pattern JSON shape consumed by viral pattern matching.",
+      "tags": ["normalization", "framework", "pattern"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [88, 152],
+      "summary": "Reads source markdown files, extracts genes and patterns, merges with existing JSON, and writes the consolidated framework files.",
+      "tags": ["entry-point", "ingestion", "framework", "merge"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:parseFreeformFrameworks",
+      "type": "function",
+      "name": "parseFreeformFrameworks",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [157, 220],
+      "summary": "Parses unstructured framework descriptions in markdown into typed framework entries by section heuristics.",
+      "tags": ["markdown-parser", "framework", "ingestion"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:extractChecklist",
+      "type": "function",
+      "name": "extractChecklist",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [238, 246],
+      "summary": "Pulls bullet checklist items out of a framework description block.",
+      "tags": ["markdown-parser", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:extractSuccessRate",
+      "type": "function",
+      "name": "extractSuccessRate",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [258, 269],
+      "summary": "Detects and parses a success-rate percentage value from free-form framework text.",
+      "tags": ["markdown-parser", "metric", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/ingest-frameworks-from-md.js:extractKeywords",
+      "type": "function",
+      "name": "extractKeywords",
+      "filePath": "scripts/ingest-frameworks-from-md.js",
+      "lineRange": [286, 297],
+      "summary": "Builds a deduplicated keyword list from sample example text used for downstream framework matching.",
+      "tags": ["markdown-parser", "keywords", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/inspect_prediction_runs.ts",
+      "type": "file",
+      "name": "inspect_prediction_runs.ts",
+      "filePath": "scripts/inspect_prediction_runs.ts",
+      "summary": "Diagnostic CLI that prints recent prediction_runs rows from Supabase for ad hoc inspection.",
+      "tags": ["script", "inspection", "diagnostic", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/inspect_prediction_runs.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/inspect_prediction_runs.ts",
+      "lineRange": [9, 52],
+      "summary": "Loads recent prediction_runs rows from Supabase and pretty-prints key fields for debugging.",
+      "tags": ["entry-point", "diagnostic", "inspection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/introspect-20260417.ts",
+      "type": "file",
+      "name": "introspect-20260417.ts",
+      "filePath": "scripts/introspect-20260417.ts",
+      "summary": "Dated ad hoc introspection script (April 17, 2026) that queries Supabase for schema or data details supporting a specific investigation.",
+      "tags": ["script", "introspection", "ad-hoc", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/introspect-triage-schema.ts",
+      "type": "file",
+      "name": "introspect-triage-schema.ts",
+      "filePath": "scripts/introspect-triage-schema.ts",
+      "summary": "Inspects the triage-related table schema in Supabase to confirm column definitions during operational debugging.",
+      "tags": ["script", "introspection", "schema", "triage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/invoke-dryrun-simulator.ts",
+      "type": "file",
+      "name": "invoke-dryrun-simulator.ts",
+      "filePath": "scripts/invoke-dryrun-simulator.ts",
+      "summary": "Thin CLI wrapper that invokes the audience simulator in dry-run mode for local pipeline validation.",
+      "tags": ["script", "simulator", "dry-run", "cli"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/invoke-dryrun-simulator.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/invoke-dryrun-simulator.ts",
+      "lineRange": [4, 23],
+      "summary": "Builds a sample audience input, calls the simulator, and prints the resulting output for inspection.",
+      "tags": ["entry-point", "simulator", "dry-run"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/load-env.ts",
+      "type": "file",
+      "name": "load-env.ts",
+      "filePath": "scripts/load-env.ts",
+      "summary": "Tiny preload helper that loads .env.local for tsx-based scripts.",
+      "tags": ["script", "environment", "utility", "preload"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/load-report.js",
+      "type": "file",
+      "name": "load-report.js",
+      "filePath": "scripts/load-report.js",
+      "summary": "Loads a previously generated JSON report from disk and prints a summary of its high-level metrics.",
+      "tags": ["script", "report", "utility", "cli"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/log-experiment-full-backfill.ts",
+      "type": "file",
+      "name": "log-experiment-full-backfill.ts",
+      "filePath": "scripts/log-experiment-full-backfill.ts",
+      "summary": "Runs the evaluation benchmark over the full backfilled feature set and logs experiment results for analysis.",
+      "tags": ["script", "experiment", "evaluation", "benchmark"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/log-experiment-full-backfill.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/log-experiment-full-backfill.ts",
+      "lineRange": [28, 146],
+      "summary": "Loads benchmark inputs, invokes the benchmark runner, and persists experiment outputs for later comparison.",
+      "tags": ["entry-point", "experiment", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/log-experiment-phase1-final.ts",
+      "type": "file",
+      "name": "log-experiment-phase1-final.ts",
+      "filePath": "scripts/log-experiment-phase1-final.ts",
+      "summary": "Captures the final Phase 1 experiment run, logging metric results and metadata for the prediction model evaluation track.",
+      "tags": ["script", "experiment", "phase1", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/log-experiment-phase1-final.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/log-experiment-phase1-final.ts",
+      "lineRange": [26, 108],
+      "summary": "Orchestrates Phase 1 benchmark execution and persists the final experiment record.",
+      "tags": ["entry-point", "experiment", "phase1"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/log-experiment-vision-hooks.ts",
+      "type": "file",
+      "name": "log-experiment-vision-hooks.ts",
+      "filePath": "scripts/log-experiment-vision-hooks.ts",
+      "summary": "Logs a targeted experiment evaluating the impact of Pack V vision-based hooks on prediction accuracy.",
+      "tags": ["script", "experiment", "vision", "pack-v", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/log-experiment-vision-hooks.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/log-experiment-vision-hooks.ts",
+      "lineRange": [26, 100],
+      "summary": "Runs the vision-hooks benchmark variant and records experiment metadata and metrics.",
+      "tags": ["entry-point", "experiment", "vision"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/mark-contaminated-dps-rows.ts",
+      "type": "file",
+      "name": "mark-contaminated-dps-rows.ts",
+      "filePath": "scripts/mark-contaminated-dps-rows.ts",
+      "summary": "Flags prediction_runs rows whose DPS values were computed under contaminated training conditions so they can be excluded from evaluation.",
+      "tags": ["script", "data-quality", "dps", "contamination", "data-fix"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/mark-contaminated-dps-rows.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/mark-contaminated-dps-rows.ts",
+      "lineRange": [28, 98],
+      "summary": "Identifies contaminated DPS rows by run metadata and updates a contamination_lock flag in Supabase.",
+      "tags": ["entry-point", "data-quality", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/mcp-create-key.ts",
+      "type": "file",
+      "name": "mcp-create-key.ts",
+      "filePath": "scripts/mcp-create-key.ts",
+      "summary": "CLI for provisioning MCP server API keys with configurable scopes via the shared MCP auth module.",
+      "tags": ["script", "mcp", "auth", "key-management", "cli"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/mcp-create-key.ts:parseArgs",
+      "type": "function",
+      "name": "parseArgs",
+      "filePath": "scripts/mcp-create-key.ts",
+      "lineRange": [19, 30],
+      "summary": "Parses CLI flags controlling the new MCP key's owner, scope, and expiry.",
+      "tags": ["cli", "argument-parsing", "mcp"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/mcp-create-key.ts:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/mcp-create-key.ts",
+      "lineRange": [32, 88],
+      "summary": "Generates a new MCP API key via the auth module and prints the credentials for one-time copy.",
+      "tags": ["entry-point", "mcp", "auth", "key-management"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/extract-test-videos.js", "target": "function:scripts/extract-test-videos.js:extractTestVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/extract-training-features.ts", "target": "function:scripts/extract-training-features.ts:getCliArg", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/extract-training-features.ts", "target": "function:scripts/extract-training-features.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/extract-training-features.ts", "target": "file:src/lib/training/feature-extractor.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/extract-transcripts-from-subtitles.ts", "target": "function:scripts/extract-transcripts-from-subtitles.ts:parseVTT", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/extract-transcripts-from-subtitles.ts", "target": "function:scripts/extract-transcripts-from-subtitles.ts:extractTranscript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/extract-transcripts-from-subtitles.ts", "target": "function:scripts/extract-transcripts-from-subtitles.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fetch-missing-assets.js", "target": "function:scripts/fetch-missing-assets.js:download", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fetch-missing-assets.js", "target": "function:scripts/fetch-missing-assets.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/find-best-test-video.js", "target": "function:scripts/find-best-test-video.js:findBestTestVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/find-mega-viral-video.js", "target": "function:scripts/find-mega-viral-video.js:findMegaViralVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/find-recent-videos.ts", "target": "function:scripts/find-recent-videos.ts:findRecentVideos", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-and-seed-agency.ts", "target": "function:scripts/fix-and-seed-agency.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-audio-files.js", "target": "function:scripts/fix-audio-files.js:checkAllCompleted", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-dps-score-column.ts", "target": "function:scripts/fix-dps-score-column.ts:fetchFullCohort", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-dps-score-column.ts", "target": "function:scripts/fix-dps-score-column.ts:fetchRowsToRescore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-dps-score-column.ts", "target": "function:scripts/fix-dps-score-column.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/fix-edge-case.js", "target": "function:scripts/fix-edge-case.js:fixEdgeCase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-codes.ts", "target": "function:scripts/generate-codes.ts:parseArgs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-codes.ts", "target": "function:scripts/generate-codes.ts:generateUniqueCodes", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-codes.ts", "target": "function:scripts/generate-codes.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-transcripts-with-whisper.ts", "target": "function:scripts/generate-transcripts-with-whisper.ts:downloadVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-transcripts-with-whisper.ts", "target": "function:scripts/generate-transcripts-with-whisper.ts:extractAudio", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/generate-transcripts-with-whisper.ts", "target": "function:scripts/generate-transcripts-with-whisper.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:extractCodeBlocks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:coerceFrameworkGenes", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:coerceFrameworkPatterns", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:parseFreeformFrameworks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:extractChecklist", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:extractSuccessRate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/ingest-frameworks-from-md.js", "target": "function:scripts/ingest-frameworks-from-md.js:extractKeywords", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/inspect_prediction_runs.ts", "target": "function:scripts/inspect_prediction_runs.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/invoke-dryrun-simulator.ts", "target": "function:scripts/invoke-dryrun-simulator.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/invoke-dryrun-simulator.ts", "target": "file:src/lib/simulator/audience.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/log-experiment-full-backfill.ts", "target": "function:scripts/log-experiment-full-backfill.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/log-experiment-full-backfill.ts", "target": "file:src/lib/evaluation/benchmark-runner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/log-experiment-phase1-final.ts", "target": "function:scripts/log-experiment-phase1-final.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/log-experiment-vision-hooks.ts", "target": "function:scripts/log-experiment-vision-hooks.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/mark-contaminated-dps-rows.ts", "target": "function:scripts/mark-contaminated-dps-rows.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/mcp-create-key.ts", "target": "function:scripts/mcp-create-key.ts:parseArgs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/mcp-create-key.ts", "target": "function:scripts/mcp-create-key.ts:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/mcp-create-key.ts", "target": "file:src/mcp-server/auth.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "nodes": [
+    {
+      "id": "service:k8s/secrets-template.yaml",
+      "type": "service",
+      "name": "secrets-template.yaml",
+      "filePath": "k8s/secrets-template.yaml",
+      "summary": "Kubernetes manifest template defining the trendzo-secrets Opaque Secret, supplemental Secrets, and a ConfigMap in the trendzo-production namespace; values must be base64-encoded before applying.",
+      "tags": ["infrastructure", "kubernetes", "security", "configuration", "deployment"],
+      "complexity": "moderate",
+      "languageNotes": "Multi-document YAML (--- separators) — kubectl applies each document as a separate K8s object."
+    },
+    {
+      "id": "service:k8s/service.yaml",
+      "type": "service",
+      "name": "service.yaml",
+      "filePath": "k8s/service.yaml",
+      "summary": "Kubernetes Service manifests exposing the Trendzo app: a ClusterIP load-balanced service (AWS NLB annotations, Prometheus scraping on /api/metrics) plus a headless service for direct pod access.",
+      "tags": ["infrastructure", "kubernetes", "networking", "service", "monitoring"],
+      "complexity": "simple",
+      "languageNotes": "Multi-document YAML defining two Service objects in the trendzo-production namespace."
+    },
+    {
+      "id": "document:legal/SOW_design_partner.md",
+      "type": "document",
+      "name": "SOW_design_partner.md",
+      "filePath": "legal/SOW_design_partner.md",
+      "summary": "Design partner pilot Statement of Work template for ViralLab covering scope (Baseline Oracle, Predictive Scoring, Causal Uplift, Commerce Bridge), 2-4 week timeline, fees, and payment terms.",
+      "tags": ["documentation", "legal", "contract", "business"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:models/feature-scaler.pkl",
+      "type": "file",
+      "name": "feature-scaler.pkl",
+      "filePath": "models/feature-scaler.pkl",
+      "summary": "Python pickle binary containing a fitted feature scaler (e.g., StandardScaler) used to normalize feature vectors before XGBoost virality prediction.",
+      "tags": ["data-model", "ml-artifact", "preprocessing", "binary"],
+      "complexity": "simple",
+      "languageNotes": "Pickle (.pkl) binary; loaded by Python prediction service, not parseable as source."
+    },
+    {
+      "id": "file:models/xgboost-v6-scaler.pkl",
+      "type": "file",
+      "name": "xgboost-v6-scaler.pkl",
+      "filePath": "models/xgboost-v6-scaler.pkl",
+      "summary": "Pickled feature scaler paired with the XGBoost v6 virality model; restores the exact preprocessing transform applied during training.",
+      "tags": ["data-model", "ml-artifact", "preprocessing", "binary", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:models/xgboost-v7-scaler.pkl",
+      "type": "file",
+      "name": "xgboost-v7-scaler.pkl",
+      "filePath": "models/xgboost-v7-scaler.pkl",
+      "summary": "Pickled feature scaler paired with the XGBoost v7 virality model; applied to incoming feature vectors before prediction.",
+      "tags": ["data-model", "ml-artifact", "preprocessing", "binary", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/feature-names.json",
+      "type": "config",
+      "name": "feature-names.json",
+      "filePath": "models/feature-names.json",
+      "summary": "Ordered list of feature names expected by the legacy XGBoost prediction pipeline; the array order must align with the scaler and model column order.",
+      "tags": ["configuration", "ml-artifact", "feature-schema", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/holdout-video-ids.json",
+      "type": "config",
+      "name": "holdout-video-ids.json",
+      "filePath": "models/holdout-video-ids.json",
+      "summary": "Holdout set definition (description, created_at, total, tier_counts, video_ids) listing video IDs excluded from training so they can be used for unbiased evaluation of XGBoost models.",
+      "tags": ["configuration", "ml-artifact", "evaluation", "holdout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/training-metrics.json",
+      "type": "config",
+      "name": "training-metrics.json",
+      "filePath": "models/training-metrics.json",
+      "summary": "Aggregated training and validation metrics snapshot for the XGBoost virality pipeline, surfacing run-level performance numbers consumed by the readiness/health dashboards.",
+      "tags": ["configuration", "ml-artifact", "metrics", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:models/xgboost-dps-model.json",
+      "type": "config",
+      "name": "xgboost-dps-model.json",
+      "filePath": "models/xgboost-dps-model.json",
+      "summary": "Serialized XGBoost model (single-line JSON booster dump) for the legacy DPS-style virality scorer.",
+      "tags": ["configuration", "ml-artifact", "xgboost", "model-weights"],
+      "complexity": "complex",
+      "languageNotes": "Single minified JSON line encoding the full booster tree ensemble — large payload, opaque to humans."
+    },
+    {
+      "id": "config:models/xgboost-enhanced.json",
+      "type": "config",
+      "name": "xgboost-enhanced.json",
+      "filePath": "models/xgboost-enhanced.json",
+      "summary": "Serialized XGBoost booster JSON for an enhanced legacy virality variant, kept alongside the DPS model for comparison/fallback.",
+      "tags": ["configuration", "ml-artifact", "xgboost", "model-weights"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v10-features.json",
+      "type": "config",
+      "name": "xgboost-v10-features.json",
+      "filePath": "models/xgboost-v10-features.json",
+      "summary": "Feature name list for the XGBoost v10 virality model; defines exact column order required by the v10 predict pipeline.",
+      "tags": ["configuration", "ml-artifact", "feature-schema", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/xgboost-v10-metadata.json",
+      "type": "config",
+      "name": "xgboost-v10-metadata.json",
+      "filePath": "models/xgboost-v10-metadata.json",
+      "summary": "Training metadata for XGBoost v10 (hyperparameters, dataset stats, evaluation metrics, feature importance) consumed by the model-card UI and integrity checks.",
+      "tags": ["configuration", "ml-artifact", "metadata", "xgboost"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v10-model.json",
+      "type": "config",
+      "name": "xgboost-v10-model.json",
+      "filePath": "models/xgboost-v10-model.json",
+      "summary": "Serialized XGBoost v10 booster (single-line JSON tree ensemble) loaded by the Python prediction service at inference time.",
+      "tags": ["configuration", "ml-artifact", "xgboost", "model-weights"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v10-scaler.json",
+      "type": "config",
+      "name": "xgboost-v10-scaler.json",
+      "filePath": "models/xgboost-v10-scaler.json",
+      "summary": "JSON-serialized feature scaler parameters (mean/scale per feature) for XGBoost v10; portable alternative to the pickle scalers.",
+      "tags": ["configuration", "ml-artifact", "preprocessing", "xgboost"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:models/xgboost-v15-features.json",
+      "type": "config",
+      "name": "xgboost-v15-features.json",
+      "filePath": "models/xgboost-v15-features.json",
+      "summary": "Feature name list for XGBoost v15 (the current champion model per S9 backfill resume); column order must match the v15 scaler and model.",
+      "tags": ["configuration", "ml-artifact", "feature-schema", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/xgboost-v15-metadata.json",
+      "type": "config",
+      "name": "xgboost-v15-metadata.json",
+      "filePath": "models/xgboost-v15-metadata.json",
+      "summary": "Training metadata and headline metrics for XGBoost v15 (Spearman correlations, training dates, hyperparameters); v15 holds the current production baseline that v16-candidate failed to beat.",
+      "tags": ["configuration", "ml-artifact", "metadata", "xgboost", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:models/xgboost-v15-model.json",
+      "type": "config",
+      "name": "xgboost-v15-model.json",
+      "filePath": "models/xgboost-v15-model.json",
+      "summary": "Serialized XGBoost v15 booster JSON — the production-promoted model used by the prediction pipeline after S9 evaluation declined to promote v16.",
+      "tags": ["configuration", "ml-artifact", "xgboost", "model-weights", "production"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v15-scaler.json",
+      "type": "config",
+      "name": "xgboost-v15-scaler.json",
+      "filePath": "models/xgboost-v15-scaler.json",
+      "summary": "JSON feature scaler (mean/scale arrays plus feature names) paired with the XGBoost v15 booster; ensures inference uses the same normalization as training.",
+      "tags": ["configuration", "ml-artifact", "preprocessing", "xgboost"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v6-features.json",
+      "type": "config",
+      "name": "xgboost-v6-features.json",
+      "filePath": "models/xgboost-v6-features.json",
+      "summary": "Feature name list for XGBoost v6 (42 features after the fake-feature audit fix that moved xgboost-virality-ml into Phase 2 of the orchestrator).",
+      "tags": ["configuration", "ml-artifact", "feature-schema", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/xgboost-v6-metadata-baseline.json",
+      "type": "config",
+      "name": "xgboost-v6-metadata-baseline.json",
+      "filePath": "models/xgboost-v6-metadata-baseline.json",
+      "summary": "Baseline metadata snapshot for XGBoost v6 (pre-fix metrics, hyperparameters, training data summary); preserved for before/after comparison after the fake-feature remediation.",
+      "tags": ["configuration", "ml-artifact", "metadata", "xgboost", "baseline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:models/xgboost-v6-metadata.json",
+      "type": "config",
+      "name": "xgboost-v6-metadata.json",
+      "filePath": "models/xgboost-v6-metadata.json",
+      "summary": "Current XGBoost v6 training metadata (hyperparameters, feature importances, evaluation metrics) used by the readiness/health dashboards and model cards.",
+      "tags": ["configuration", "ml-artifact", "metadata", "xgboost"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v6-model.json",
+      "type": "config",
+      "name": "xgboost-v6-model.json",
+      "filePath": "models/xgboost-v6-model.json",
+      "summary": "Serialized XGBoost v6 booster JSON loaded by the Python prediction service for the v6 virality scorer.",
+      "tags": ["configuration", "ml-artifact", "xgboost", "model-weights"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:models/xgboost-v7-features.json",
+      "type": "config",
+      "name": "xgboost-v7-features.json",
+      "filePath": "models/xgboost-v7-features.json",
+      "summary": "Feature name list for the XGBoost v7 virality model; required to align live feature vectors with the v7 booster's expected column order.",
+      "tags": ["configuration", "ml-artifact", "feature-schema", "xgboost"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:models/xgboost-v7-metadata.json",
+      "type": "config",
+      "name": "xgboost-v7-metadata.json",
+      "filePath": "models/xgboost-v7-metadata.json",
+      "summary": "Training metadata for XGBoost v7 (hyperparameters, dataset composition, evaluation metrics, feature importances) used by readiness and health surfaces.",
+      "tags": ["configuration", "ml-artifact", "metadata", "xgboost"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:models/xgboost-v6-features.json",
+      "target": "config:models/xgboost-v6-model.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:models/xgboost-v6-metadata.json",
+      "target": "config:models/xgboost-v6-model.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:models/xgboost-v6-metadata-baseline.json",
+      "target": "config:models/xgboost-v6-model.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:models/xgboost-v6-scaler.pkl",
+      "target": "config:models/xgboost-v6-model.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:models/xgboost-v7-features.json",
+      "target": "config:models/xgboost-v7-metadata.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:models/xgboost-v7-scaler.pkl",
+      "target": "config:models/xgboost-v7-metadata.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:models/xgboost-v10-features.json",
+      "target": "config:models/xgboost-v10-model.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:models/xgboost-v10-metadata.json",
+      "target": "config:models/xgboost-v10-model.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:models/xgboost-v10-scaler.json",
+      "target": "config:models/xgboost-v10-model.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:models/xgboost-v15-features.json",
+      "target": "config:models/xgboost-v15-model.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:models/xgboost-v15-metadata.json",
+      "target": "config:models/xgboost-v15-model.json",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:models/xgboost-v15-scaler.json",
+      "target": "config:models/xgboost-v15-model.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:models/feature-names.json",
+      "target": "config:models/xgboost-dps-model.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:models/feature-names.json",
+      "target": "config:models/xgboost-enhanced.json",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:models/feature-scaler.pkl",
+      "target": "config:models/xgboost-dps-model.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:models/feature-scaler.pkl",
+      "target": "config:models/xgboost-enhanced.json",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:models/holdout-video-ids.json",
+      "target": "config:models/training-metrics.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:models/training-metrics.json",
+      "target": "config:models/xgboost-v15-metadata.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

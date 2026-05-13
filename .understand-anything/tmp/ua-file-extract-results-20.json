@@ -1,0 +1,1723 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "nine-attributes-framework/services/ranker/src/__init__.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 2,
+      "nonEmptyLines": 1,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "nine-attributes-framework/services/ranker/src/main.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 345,
+      "nonEmptyLines": 291,
+      "functions": [
+        {
+          "name": "compute_priors",
+          "startLine": 280,
+          "endLine": 286,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "rank_items",
+          "startLine": 290,
+          "endLine": 322,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "update_calibration",
+          "startLine": 326,
+          "endLine": 333,
+          "params": [
+            "cohort_key",
+            "data"
+          ]
+        },
+        {
+          "name": "health",
+          "startLine": 337,
+          "endLine": 338,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "PriorRequest",
+          "startLine": 32,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "attributes",
+            "creator_id",
+            "platform",
+            "cohort"
+          ]
+        },
+        {
+          "name": "PriorResponse",
+          "startLine": 40,
+          "endLine": 48,
+          "methods": [],
+          "properties": [
+            "prior_watch_time",
+            "prior_share_prob",
+            "prior_regret_prob",
+            "confidence_intervals",
+            "version",
+            "calibration_version",
+            "cohort_key"
+          ]
+        },
+        {
+          "name": "RankRequest",
+          "startLine": 51,
+          "endLine": 55,
+          "methods": [],
+          "properties": [
+            "items",
+            "user_features",
+            "context"
+          ]
+        },
+        {
+          "name": "RankResponse",
+          "startLine": 58,
+          "endLine": 62,
+          "methods": [],
+          "properties": [
+            "ranked_items",
+            "scores",
+            "exploration_bonus"
+          ]
+        },
+        {
+          "name": "CohortCalibration",
+          "startLine": 66,
+          "endLine": 75,
+          "methods": [],
+          "properties": [
+            "cohort_key",
+            "watch_time_model",
+            "share_model",
+            "regret_model",
+            "last_updated",
+            "sample_count",
+            "mape",
+            "ece"
+          ]
+        },
+        {
+          "name": "NineAttributesRanker",
+          "startLine": 78,
+          "endLine": 273,
+          "methods": [
+            "__init__",
+            "load_calibrations",
+            "initialize_default_calibrations",
+            "get_cohort_key",
+            "compute_attribute_features",
+            "compute_priors",
+            "apply_exploration_policy",
+            "apply_satisfaction_guardrails",
+            "update_calibration",
+            "calculate_ece",
+            "save_calibrations"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "PriorRequest",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "PriorResponse",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "RankRequest",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "RankResponse",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "CohortCalibration",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "NineAttributesRanker",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "compute_priors",
+          "line": 279,
+          "isDefault": false
+        },
+        {
+          "name": "rank_items",
+          "line": 289,
+          "isDefault": false
+        },
+        {
+          "name": "update_calibration",
+          "line": 325,
+          "isDefault": false
+        },
+        {
+          "name": "health",
+          "line": 336,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "os.getenv",
+          "lineNumber": 83
+        },
+        {
+          "caller": "__init__",
+          "callee": "int",
+          "lineNumber": 84
+        },
+        {
+          "caller": "__init__",
+          "callee": "os.getenv",
+          "lineNumber": 84
+        },
+        {
+          "caller": "__init__",
+          "callee": "redis.Redis",
+          "lineNumber": 86
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.load_calibrations",
+          "lineNumber": 89
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "open",
+          "lineNumber": 95
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "pickle.load",
+          "lineNumber": 96
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "logger.info",
+          "lineNumber": 98
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "self.initialize_default_calibrations",
+          "lineNumber": 99
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "logger.warning",
+          "lineNumber": 101
+        },
+        {
+          "caller": "load_calibrations",
+          "callee": "self.initialize_default_calibrations",
+          "lineNumber": 102
+        },
+        {
+          "caller": "initialize_default_calibrations",
+          "callee": "CohortCalibration",
+          "lineNumber": 115
+        },
+        {
+          "caller": "initialize_default_calibrations",
+          "callee": "IsotonicRegression",
+          "lineNumber": 117
+        },
+        {
+          "caller": "initialize_default_calibrations",
+          "callee": "IsotonicRegression",
+          "lineNumber": 118
+        },
+        {
+          "caller": "initialize_default_calibrations",
+          "callee": "IsotonicRegression",
+          "lineNumber": 119
+        },
+        {
+          "caller": "initialize_default_calibrations",
+          "callee": "datetime.now",
+          "lineNumber": 120
+        },
+        {
+          "caller": "get_cohort_key",
+          "callee": "request.cohort.get",
+          "lineNumber": 128
+        },
+        {
+          "caller": "get_cohort_key",
+          "callee": "request.cohort.get",
+          "lineNumber": 129
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "scores.append",
+          "lineNumber": 136
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "float",
+          "lineNumber": 136
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "attr.get",
+          "lineNumber": 136
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "sum",
+          "lineNumber": 138
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "sum",
+          "lineNumber": 139
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "sum",
+          "lineNumber": 140
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "float",
+          "lineNumber": 141
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "np.var",
+          "lineNumber": 141
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "len",
+          "lineNumber": 142
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "len",
+          "lineNumber": 143
+        },
+        {
+          "caller": "compute_attribute_features",
+          "callee": "np.array",
+          "lineNumber": 153
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "self.get_cohort_key",
+          "lineNumber": 156
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "self.calibrations.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "self.compute_attribute_features",
+          "lineNumber": 159
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "sum",
+          "lineNumber": 162
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "attr.get",
+          "lineNumber": 162
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "len",
+          "lineNumber": 165
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "len",
+          "lineNumber": 166
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "float",
+          "lineNumber": 168
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "np.mean",
+          "lineNumber": 168
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "float",
+          "lineNumber": 169
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "np.mean",
+          "lineNumber": 169
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "max",
+          "lineNumber": 171
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "float",
+          "lineNumber": 174
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "calibration.watch_time_model.predict",
+          "lineNumber": 174
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "float",
+          "lineNumber": 175
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "calibration.share_model.predict",
+          "lineNumber": 175
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "float",
+          "lineNumber": 176
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "calibration.regret_model.predict",
+          "lineNumber": 176
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "PriorResponse",
+          "lineNumber": 183
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "max",
+          "lineNumber": 188
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "min",
+          "lineNumber": 188
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "max",
+          "lineNumber": 189
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "min",
+          "lineNumber": 189
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "max",
+          "lineNumber": 190
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "min",
+          "lineNumber": 190
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "calibration.last_updated.strftime",
+          "lineNumber": 192
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "enumerate",
+          "lineNumber": 198
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "int",
+          "lineNumber": 199
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "item.get",
+          "lineNumber": 199
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "np.sqrt",
+          "lineNumber": 201
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "np.log",
+          "lineNumber": 201
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "max",
+          "lineNumber": 201
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "max",
+          "lineNumber": 201
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "np.sqrt",
+          "lineNumber": 203
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "np.log",
+          "lineNumber": 203
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "sum",
+          "lineNumber": 207
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "a.get",
+          "lineNumber": 207
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "item.get",
+          "lineNumber": 207
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "exploration_bonuses.append",
+          "lineNumber": 212
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "float",
+          "lineNumber": 212
+        },
+        {
+          "caller": "apply_exploration_policy",
+          "callee": "np.array",
+          "lineNumber": 214
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "scores.copy",
+          "lineNumber": 219
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "enumerate",
+          "lineNumber": 220
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "item.get",
+          "lineNumber": 221
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "next",
+          "lineNumber": 224
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "a.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "a.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "next",
+          "lineNumber": 225
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "a.get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "a.get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "logger.info",
+          "lineNumber": 228
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "float",
+          "lineNumber": 229
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "item.get",
+          "lineNumber": 229
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "min",
+          "lineNumber": 231
+        },
+        {
+          "caller": "apply_satisfaction_guardrails",
+          "callee": "logger.info",
+          "lineNumber": 232
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "self.calibrations.get",
+          "lineNumber": 236
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "calibration.watch_time_model.fit",
+          "lineNumber": 246
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "calibration.share_model.fit",
+          "lineNumber": 247
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "calibration.regret_model.fit",
+          "lineNumber": 248
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "float",
+          "lineNumber": 250
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "np.mean",
+          "lineNumber": 250
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "np.abs",
+          "lineNumber": 250
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "np.maximum",
+          "lineNumber": 250
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "self.calculate_ece",
+          "lineNumber": 251
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "len",
+          "lineNumber": 252
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "datetime.now",
+          "lineNumber": 253
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "calibration_error.labels(model='watch_time', cohort=cohort_key).set",
+          "lineNumber": 254
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "calibration_error.labels",
+          "lineNumber": 254
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "self.save_calibrations",
+          "lineNumber": 255
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "np.linspace",
+          "lineNumber": 258
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "range",
+          "lineNumber": 260
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "mask.sum",
+          "lineNumber": 262
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "float",
+          "lineNumber": 263
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "actual[mask].mean",
+          "lineNumber": 263
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "float",
+          "lineNumber": 264
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "predicted[mask].mean",
+          "lineNumber": 264
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "int",
+          "lineNumber": 265
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "mask.sum",
+          "lineNumber": 265
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "len",
+          "lineNumber": 266
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "abs",
+          "lineNumber": 266
+        },
+        {
+          "caller": "calculate_ece",
+          "callee": "float",
+          "lineNumber": 267
+        },
+        {
+          "caller": "save_calibrations",
+          "callee": "os.makedirs",
+          "lineNumber": 271
+        },
+        {
+          "caller": "save_calibrations",
+          "callee": "open",
+          "lineNumber": 272
+        },
+        {
+          "caller": "save_calibrations",
+          "callee": "pickle.dump",
+          "lineNumber": 273
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "ranking_requests.inc",
+          "lineNumber": 282
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "ranker.compute_priors",
+          "lineNumber": 283
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "logger.error",
+          "lineNumber": 285
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "HTTPException",
+          "lineNumber": 286
+        },
+        {
+          "caller": "compute_priors",
+          "callee": "str",
+          "lineNumber": 286
+        },
+        {
+          "caller": "rank_items",
+          "callee": "np.array",
+          "lineNumber": 292
+        },
+        {
+          "caller": "rank_items",
+          "callee": "float",
+          "lineNumber": 292
+        },
+        {
+          "caller": "rank_items",
+          "callee": "item.get",
+          "lineNumber": 292
+        },
+        {
+          "caller": "rank_items",
+          "callee": "enumerate",
+          "lineNumber": 293
+        },
+        {
+          "caller": "rank_items",
+          "callee": "PriorRequest",
+          "lineNumber": 295
+        },
+        {
+          "caller": "rank_items",
+          "callee": "request.context.get",
+          "lineNumber": 297
+        },
+        {
+          "caller": "rank_items",
+          "callee": "ranker.compute_priors",
+          "lineNumber": 300
+        },
+        {
+          "caller": "rank_items",
+          "callee": "float",
+          "lineNumber": 309
+        },
+        {
+          "caller": "rank_items",
+          "callee": "ranker.apply_exploration_policy",
+          "lineNumber": 311
+        },
+        {
+          "caller": "rank_items",
+          "callee": "ranker.apply_satisfaction_guardrails",
+          "lineNumber": 312
+        },
+        {
+          "caller": "rank_items",
+          "callee": "np.argsort",
+          "lineNumber": 313
+        },
+        {
+          "caller": "rank_items",
+          "callee": "RankResponse",
+          "lineNumber": 315
+        },
+        {
+          "caller": "rank_items",
+          "callee": "final_scores[sorted_indices].tolist",
+          "lineNumber": 317
+        },
+        {
+          "caller": "rank_items",
+          "callee": "exploration_bonuses[sorted_indices].tolist",
+          "lineNumber": 318
+        },
+        {
+          "caller": "rank_items",
+          "callee": "logger.error",
+          "lineNumber": 321
+        },
+        {
+          "caller": "rank_items",
+          "callee": "HTTPException",
+          "lineNumber": 322
+        },
+        {
+          "caller": "rank_items",
+          "callee": "str",
+          "lineNumber": 322
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "pd.DataFrame",
+          "lineNumber": 328
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "ranker.update_calibration",
+          "lineNumber": 329
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "int",
+          "lineNumber": 330
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "len",
+          "lineNumber": 330
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "logger.error",
+          "lineNumber": 332
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "HTTPException",
+          "lineNumber": 333
+        },
+        {
+          "caller": "update_calibration",
+          "callee": "str",
+          "lineNumber": 333
+        },
+        {
+          "caller": "health",
+          "callee": "len",
+          "lineNumber": 338
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 4,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "nine-attributes-framework/services/ranker/requirements.txt",
+      "language": "txt",
+      "fileCategory": "docs",
+      "totalLines": 12,
+      "nonEmptyLines": 11,
+      "metrics": {}
+    },
+    {
+      "path": "nine-attributes-framework/services/ranker/Dockerfile",
+      "language": "dockerfile",
+      "fileCategory": "infra",
+      "totalLines": 20,
+      "nonEmptyLines": 12,
+      "services": [
+        {
+          "name": "python",
+          "image": "python:3.10-slim",
+          "ports": [
+            8001
+          ],
+          "startLine": 1,
+          "endLine": 21
+        }
+      ],
+      "steps": [
+        {
+          "name": "FROM python:3.10-slim",
+          "startLine": 1,
+          "endLine": 1
+        },
+        {
+          "name": "ENV PYTHONDONTWRITEBYTECODE=1 \\",
+          "startLine": 3,
+          "endLine": 3
+        },
+        {
+          "name": "RUN apt-get update && apt-get install -y --no-install-recommends",
+          "startLine": 6,
+          "endLine": 6
+        },
+        {
+          "name": "WORKDIR /app",
+          "startLine": 10,
+          "endLine": 10
+        },
+        {
+          "name": "COPY requirements.txt /app/requirements.txt",
+          "startLine": 12,
+          "endLine": 12
+        },
+        {
+          "name": "RUN pip install --no-cache-dir -r /app/requirements.txt",
+          "startLine": 13,
+          "endLine": 13
+        },
+        {
+          "name": "COPY src /app/src",
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "EXPOSE 8001",
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "CMD [\"uvicorn\", \"src.main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"",
+          "startLine": 18,
+          "endLine": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "serviceCount": 1,
+        "stepCount": 9
+      }
+    },
+    {
+      "path": "nine-attributes-framework/tests/e2e/test_nine_attrs_pipeline.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 90,
+      "nonEmptyLines": 79,
+      "classes": [
+        {
+          "name": "TestNineAttributesPipeline",
+          "startLine": 14,
+          "endLine": 88,
+          "methods": [
+            "api_client",
+            "sample_video_path",
+            "test_full_analysis_pipeline",
+            "test_ranking_integration",
+            "test_performance_requirements"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestNineAttributesPipeline",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "api_client",
+          "callee": "httpx.AsyncClient",
+          "lineNumber": 19
+        },
+        {
+          "caller": "test_full_analysis_pipeline",
+          "callee": "api_client.post",
+          "lineNumber": 28
+        },
+        {
+          "caller": "test_full_analysis_pipeline",
+          "callee": "response.json",
+          "lineNumber": 37
+        },
+        {
+          "caller": "test_full_analysis_pipeline",
+          "callee": "len",
+          "lineNumber": 42
+        },
+        {
+          "caller": "test_full_analysis_pipeline",
+          "callee": "analysis.get",
+          "lineNumber": 42
+        },
+        {
+          "caller": "test_ranking_integration",
+          "callee": "range",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_ranking_integration",
+          "callee": "range",
+          "lineNumber": 60
+        },
+        {
+          "caller": "test_ranking_integration",
+          "callee": "api_client.post",
+          "lineNumber": 65
+        },
+        {
+          "caller": "test_ranking_integration",
+          "callee": "response.json",
+          "lineNumber": 74
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "range",
+          "lineNumber": 80
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "time.time",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "api_client.post",
+          "lineNumber": 82
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "latencies.append",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "time.time",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "float",
+          "lineNumber": 87
+        },
+        {
+          "caller": "test_performance_requirements",
+          "callee": "np.percentile",
+          "lineNumber": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "openapi/public_v1.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 7,
+      "sections": [
+        {
+          "heading": "openapi",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "paths",
+          "level": 1,
+          "line": 4
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "openapi/public_v2.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 18,
+      "nonEmptyLines": 7,
+      "sections": [
+        {
+          "heading": "openapi",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "info",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "paths",
+          "level": 1,
+          "line": 4
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "packages/shared/src/schemas/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 4,
+      "nonEmptyLines": 2,
+      "exports": [
+        {
+          "name": "VITSchema",
+          "line": 1,
+          "isDefault": false
+        },
+        {
+          "name": "TemplateSpecSchema",
+          "line": 2,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "packages/shared/src/vit_v1/vit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 20,
+      "nonEmptyLines": 16,
+      "exports": [
+        {
+          "name": "VITv1Schema",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "packages/shared/src/index.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 4,
+      "exports": [
+        {
+          "name": "IngressVITSchema",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "packages/shared/src/templateSpec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 81,
+      "nonEmptyLines": 71,
+      "functions": [
+        {
+          "name": "toPublicCard",
+          "startLine": 27,
+          "endLine": 37,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "toAnalystCard",
+          "startLine": 39,
+          "endLine": 50,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "toScriptCard",
+          "startLine": 52,
+          "endLine": 59,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "toLabCard",
+          "startLine": 61,
+          "endLine": 69,
+          "params": [
+            "spec"
+          ]
+        },
+        {
+          "name": "toAdminRow",
+          "startLine": 71,
+          "endLine": 79,
+          "params": [
+            "spec"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TemplateSpecSchema",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "toPublicCard",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "toAnalystCard",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "toScriptCard",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "toLabCard",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "toAdminRow",
+          "line": 71,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 5,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "packages/shared/src/vit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 120,
+      "nonEmptyLines": 113,
+      "functions": [
+        {
+          "name": "VIT_UPSERT_KEY",
+          "startLine": 100,
+          "endLine": 100,
+          "params": [
+            "platform",
+            "videoId"
+          ]
+        },
+        {
+          "name": "vitHash",
+          "startLine": 102,
+          "endLine": 118,
+          "params": [
+            "vit"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "VITSchema",
+          "line": 4,
+          "isDefault": false
+        },
+        {
+          "name": "VIT_VERSION",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "VIT_UPSERT_KEY",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "vitHash",
+          "line": 102,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "vitHash",
+          "callee": "JSON.stringify",
+          "lineNumber": 103
+        },
+        {
+          "caller": "vitHash",
+          "callee": "crypto.createHash('sha256').update(serialized).digest",
+          "lineNumber": 117
+        },
+        {
+          "caller": "vitHash",
+          "callee": "crypto.createHash('sha256').update",
+          "lineNumber": 117
+        },
+        {
+          "caller": "vitHash",
+          "callee": "crypto.createHash",
+          "lineNumber": 117
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "packages/shared/package.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 15,
+      "nonEmptyLines": 13,
+      "sections": [
+        {
+          "heading": "name",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "version",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "private",
+          "level": 1,
+          "line": 4
+        },
+        {
+          "heading": "main",
+          "level": 1,
+          "line": 5
+        },
+        {
+          "heading": "types",
+          "level": 1,
+          "line": 6
+        },
+        {
+          "heading": "scripts",
+          "level": 1,
+          "line": 7
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 7
+      }
+    },
+    {
+      "path": "packages/shared/tsconfig.json",
+      "language": "json",
+      "fileCategory": "config",
+      "totalLines": 13,
+      "nonEmptyLines": 11,
+      "sections": [
+        {
+          "heading": "extends",
+          "level": 1,
+          "line": 2
+        },
+        {
+          "heading": "compilerOptions",
+          "level": 1,
+          "line": 3
+        },
+        {
+          "heading": "include",
+          "level": 1,
+          "line": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "paths/chat.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 62,
+      "nonEmptyLines": 47,
+      "sections": [
+        {
+          "heading": "AI Chat App",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "paths/image-generation.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 29,
+      "nonEmptyLines": 24,
+      "sections": [
+        {
+          "heading": "AI Image Generation App",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "paths/social-media.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 14,
+      "nonEmptyLines": 10,
+      "sections": [
+        {
+          "heading": "Social Media App",
+          "level": 1,
+          "line": 1
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 1
+      }
+    },
+    {
+      "path": "paths/voice-notes.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 24,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "Voice Notes App",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Path system prompt:",
+          "level": 2,
+          "line": 3
+        },
+        {
+          "heading": "App description:",
+          "level": 2,
+          "line": 7
+        },
+        {
+          "heading": "App flow and functionality:",
+          "level": 2,
+          "line": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "playwright/tests/accuracy.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 30,
+      "nonEmptyLines": 23,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/criticalFlows.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 254,
+      "nonEmptyLines": 218,
+      "functions": [
+        {
+          "name": "loginAsDeveloper",
+          "startLine": 6,
+          "endLine": 11,
+          "params": [
+            "page"
+          ]
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "page.goto",
+          "lineNumber": 7
+        },
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "page.getByRole('button', { name: 'Enter Dashboard (Dev Mode)' }).click",
+          "lineNumber": 8
+        },
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "page.getByRole",
+          "lineNumber": 8
+        },
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible",
+          "lineNumber": 10
+        },
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "expect",
+          "lineNumber": 10
+        },
+        {
+          "caller": "loginAsDeveloper",
+          "callee": "page.getByRole",
+          "lineNumber": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/engine-room-ops.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 28,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/feature-flags.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 25,
+      "nonEmptyLines": 16,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/os-canvas-a11y.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 27,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/os-canvas-hooks.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 29,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "playwright/tests/recipeBookCanvas.spec.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    }
+  ]
+}

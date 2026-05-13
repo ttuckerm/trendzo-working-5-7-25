@@ -1,0 +1,362 @@
+{
+  "nodes": [
+    {
+      "id": "config:infrastructure/monitoring/complete-monitoring-stack.yaml",
+      "type": "config",
+      "name": "complete-monitoring-stack.yaml",
+      "filePath": "infrastructure/monitoring/complete-monitoring-stack.yaml",
+      "summary": "Complete Kubernetes monitoring stack manifest deploying Prometheus, Grafana, Alertmanager, and supporting resources into the monitoring namespace for the Trendzo platform.",
+      "tags": ["infrastructure", "monitoring", "orchestration", "observability", "kubernetes"],
+      "complexity": "complex",
+      "languageNotes": "Multi-document YAML containing 111 top-level documents/sections (Namespace, Deployments, Services, ConfigMaps, RBAC) for a production observability stack."
+    },
+    {
+      "id": "config:infrastructure/monitoring/grafana-setup.yaml",
+      "type": "config",
+      "name": "grafana-setup.yaml",
+      "filePath": "infrastructure/monitoring/grafana-setup.yaml",
+      "summary": "Grafana deployment manifest with provisioned datasources, dashboards, and configuration for visualizing Trendzo metrics and alerts.",
+      "tags": ["infrastructure", "monitoring", "configuration", "observability", "grafana"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:infrastructure/monitoring/prometheus-setup.yaml",
+      "type": "config",
+      "name": "prometheus-setup.yaml",
+      "filePath": "infrastructure/monitoring/prometheus-setup.yaml",
+      "summary": "Prometheus deployment manifest with scrape configs, alerting rules, and persistent storage for collecting metrics across the Trendzo platform.",
+      "tags": ["infrastructure", "monitoring", "configuration", "observability", "prometheus"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:integrations/make/blueprints/conversion_recorded.json",
+      "type": "config",
+      "name": "conversion_recorded.json",
+      "filePath": "integrations/make/blueprints/conversion_recorded.json",
+      "summary": "Make.com blueprint that listens for Trendzo conversion-recorded webhooks and routes payloads into downstream attribution flows.",
+      "tags": ["configuration", "integration", "webhook", "automation", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/make/blueprints/export_leaderboard.json",
+      "type": "config",
+      "name": "export_leaderboard.json",
+      "filePath": "integrations/make/blueprints/export_leaderboard.json",
+      "summary": "Make.com blueprint that exports the Trendzo template leaderboard on demand via an HTTP step.",
+      "tags": ["configuration", "integration", "automation", "leaderboard", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/make/blueprints/prediction_published.json",
+      "type": "config",
+      "name": "prediction_published.json",
+      "filePath": "integrations/make/blueprints/prediction_published.json",
+      "summary": "Make.com blueprint reacting to prediction-published webhooks, forwarding prediction events to external automations.",
+      "tags": ["configuration", "integration", "webhook", "automation", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/make/blueprints/preflight_passed.json",
+      "type": "config",
+      "name": "preflight_passed.json",
+      "filePath": "integrations/make/blueprints/preflight_passed.json",
+      "summary": "Make.com blueprint triggered when a Trendzo preflight check passes, fanning the event out to downstream tools.",
+      "tags": ["configuration", "integration", "webhook", "automation", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/make/blueprints/score_video.json",
+      "type": "config",
+      "name": "score_video.json",
+      "filePath": "integrations/make/blueprints/score_video.json",
+      "summary": "Make.com blueprint exposing the Trendzo video scoring API as a reusable automation step.",
+      "tags": ["configuration", "integration", "automation", "scoring", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/make/blueprints/telemetry_ingested.json",
+      "type": "config",
+      "name": "telemetry_ingested.json",
+      "filePath": "integrations/make/blueprints/telemetry_ingested.json",
+      "summary": "Make.com blueprint reacting to telemetry-ingested webhooks for analytics or auditing automations.",
+      "tags": ["configuration", "integration", "webhook", "automation", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:integrations/sheets/templates/conversions_template.csv",
+      "type": "table",
+      "name": "conversions_template.csv",
+      "filePath": "integrations/sheets/templates/conversions_template.csv",
+      "summary": "Sample CSV template defining the column layout for pushing conversion events from Google Sheets into the Trendzo pixel collector.",
+      "tags": ["data", "template", "spreadsheet", "conversions", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:integrations/sheets/templates/leaderboard_template.csv",
+      "type": "table",
+      "name": "leaderboard_template.csv",
+      "filePath": "integrations/sheets/templates/leaderboard_template.csv",
+      "summary": "Sample CSV template defining the column layout for the Trendzo template leaderboard pulled into Google Sheets.",
+      "tags": ["data", "template", "spreadsheet", "leaderboard", "integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:integrations/sheets/Trendzo.gs",
+      "type": "file",
+      "name": "Trendzo.gs",
+      "filePath": "integrations/sheets/Trendzo.gs",
+      "summary": "Google Apps Script add-on that bootstraps a Trendzo menu in Google Sheets to pull the leaderboard and push test conversion events to the Trendzo API.",
+      "tags": ["integration", "google-apps-script", "spreadsheet", "api-client", "automation"],
+      "complexity": "simple",
+      "languageNotes": "Apps Script (.gs) module using SpreadsheetApp.onOpen menu pattern plus UrlFetchApp and PropertiesService to call Trendzo HTTP endpoints with an X-API-Key header."
+    },
+    {
+      "id": "function:integrations/sheets/Trendzo.gs:onOpen",
+      "type": "function",
+      "name": "onOpen",
+      "filePath": "integrations/sheets/Trendzo.gs",
+      "lineRange": [1, 7],
+      "summary": "Apps Script trigger that adds a Trendzo menu to the Google Sheets UI on spreadsheet open with Setup, Pull Leaderboard, and Push Conversions actions.",
+      "tags": ["entry-point", "event-handler", "ui", "apps-script"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:integrations/sheets/Trendzo.gs:TZ_PullLeaderboard",
+      "type": "function",
+      "name": "TZ_PullLeaderboard",
+      "filePath": "integrations/sheets/Trendzo.gs",
+      "lineRange": [21, 35],
+      "summary": "Fetches the Trendzo leaderboard for a given window from /api/templates/leaderboard and rewrites the Leaderboard sheet with template_id, title, metric_value, and rank columns.",
+      "tags": ["api-client", "data-import", "spreadsheet", "leaderboard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:integrations/sheets/Trendzo.gs:TZ_PushConversionsTest",
+      "type": "function",
+      "name": "TZ_PushConversionsTest",
+      "filePath": "integrations/sheets/Trendzo.gs",
+      "lineRange": [39, 46],
+      "summary": "Posts a sample purchase event to /api/pixel/collect using the stored API key to verify the Sheets-to-Trendzo conversion pipeline.",
+      "tags": ["api-client", "diagnostic", "conversions", "testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:integrations/sheets/README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "integrations/sheets/README.md",
+      "summary": "Brief setup guide for the Trendzo Google Sheets pack covering CSV templates and Apps Script installation.",
+      "tags": ["documentation", "integration", "setup", "spreadsheet"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/conversion_recorded.json",
+      "type": "config",
+      "name": "conversion_recorded.json",
+      "filePath": "integrations/zapier/templates/conversion_recorded.json",
+      "summary": "Zapier template wiring a Trendzo conversion-recorded trigger to a configurable action for downstream workflows.",
+      "tags": ["configuration", "integration", "webhook", "automation", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/export_leaderboard.json",
+      "type": "config",
+      "name": "export_leaderboard.json",
+      "filePath": "integrations/zapier/templates/export_leaderboard.json",
+      "summary": "Zapier action template that posts to the Trendzo leaderboard export endpoint for scheduled exports from connected apps.",
+      "tags": ["configuration", "integration", "automation", "leaderboard", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/prediction_published.json",
+      "type": "config",
+      "name": "prediction_published.json",
+      "filePath": "integrations/zapier/templates/prediction_published.json",
+      "summary": "Zapier template wiring the Trendzo prediction-published trigger to a follow-up action for notification or storage.",
+      "tags": ["configuration", "integration", "webhook", "automation", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/preflight_passed.json",
+      "type": "config",
+      "name": "preflight_passed.json",
+      "filePath": "integrations/zapier/templates/preflight_passed.json",
+      "summary": "Zapier template triggered when a Trendzo preflight check passes, enabling downstream automation responses.",
+      "tags": ["configuration", "integration", "webhook", "automation", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/score_video.json",
+      "type": "config",
+      "name": "score_video.json",
+      "filePath": "integrations/zapier/templates/score_video.json",
+      "summary": "Zapier action template that calls the Trendzo video scoring API with configurable inputs from other Zapier steps.",
+      "tags": ["configuration", "integration", "automation", "scoring", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:integrations/zapier/templates/telemetry_ingested.json",
+      "type": "config",
+      "name": "telemetry_ingested.json",
+      "filePath": "integrations/zapier/templates/telemetry_ingested.json",
+      "summary": "Zapier template triggered when Trendzo ingests telemetry, used to fan analytics events out to connected apps.",
+      "tags": ["configuration", "integration", "webhook", "automation", "zapier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:ip-components/integration-readiness-audit.md",
+      "type": "document",
+      "name": "integration-readiness-audit.md",
+      "filePath": "ip-components/integration-readiness-audit.md",
+      "summary": "Audit document scoring the integration readiness of the 8 proprietary IP components (framework evolution, orchestration engine, script singularity, etc.) for production deployment.",
+      "tags": ["documentation", "audit", "ip-components", "readiness", "planning"],
+      "complexity": "complex"
+    },
+    {
+      "id": "service:k8s/configmap.yaml",
+      "type": "service",
+      "name": "configmap.yaml",
+      "filePath": "k8s/configmap.yaml",
+      "summary": "Kubernetes ConfigMap manifests carrying non-secret application configuration for the Trendzo production deployment.",
+      "tags": ["infrastructure", "configuration", "kubernetes", "deployment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:k8s/deployment.yaml",
+      "type": "service",
+      "name": "deployment.yaml",
+      "filePath": "k8s/deployment.yaml",
+      "summary": "Kubernetes Deployment manifest for the Trendzo app with rolling updates, security context, Prometheus scrape annotations, and 3 initial replicas managed by an HPA.",
+      "tags": ["infrastructure", "kubernetes", "deployment", "containerization", "production"],
+      "complexity": "complex",
+      "languageNotes": "Zero-downtime rolling update strategy (maxSurge 1, maxUnavailable 0) plus non-root securityContext for hardened production posture."
+    },
+    {
+      "id": "service:k8s/hpa.yaml",
+      "type": "service",
+      "name": "hpa.yaml",
+      "filePath": "k8s/hpa.yaml",
+      "summary": "Kubernetes HorizontalPodAutoscaler manifest that scales the Trendzo app deployment based on CPU and memory utilization.",
+      "tags": ["infrastructure", "kubernetes", "autoscaling", "scalability"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "service:k8s/ingress.yaml",
+      "type": "service",
+      "name": "ingress.yaml",
+      "filePath": "k8s/ingress.yaml",
+      "summary": "Kubernetes nginx Ingress manifest exposing the Trendzo app with TLS via cert-manager, rate limiting, CORS, security headers, and static asset caching.",
+      "tags": ["infrastructure", "kubernetes", "ingress", "routing", "tls"],
+      "complexity": "complex"
+    },
+    {
+      "id": "service:k8s/namespace.yaml",
+      "type": "service",
+      "name": "namespace.yaml",
+      "filePath": "k8s/namespace.yaml",
+      "summary": "Kubernetes Namespace manifest creating the trendzo-production namespace that houses the production workload.",
+      "tags": ["infrastructure", "kubernetes", "namespace", "deployment"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:integrations/sheets/Trendzo.gs",
+      "target": "function:integrations/sheets/Trendzo.gs:onOpen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:integrations/sheets/Trendzo.gs",
+      "target": "function:integrations/sheets/Trendzo.gs:TZ_PullLeaderboard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:integrations/sheets/Trendzo.gs",
+      "target": "function:integrations/sheets/Trendzo.gs:TZ_PushConversionsTest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "document:integrations/sheets/README.md",
+      "target": "file:integrations/sheets/Trendzo.gs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:integrations/sheets/README.md",
+      "target": "table:integrations/sheets/templates/conversions_template.csv",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:integrations/sheets/README.md",
+      "target": "table:integrations/sheets/templates/leaderboard_template.csv",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "service:k8s/namespace.yaml",
+      "target": "service:k8s/deployment.yaml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:k8s/configmap.yaml",
+      "target": "service:k8s/deployment.yaml",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:k8s/hpa.yaml",
+      "target": "service:k8s/deployment.yaml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "service:k8s/ingress.yaml",
+      "target": "service:k8s/deployment.yaml",
+      "type": "routes",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:infrastructure/monitoring/prometheus-setup.yaml",
+      "target": "service:k8s/deployment.yaml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:infrastructure/monitoring/grafana-setup.yaml",
+      "target": "config:infrastructure/monitoring/prometheus-setup.yaml",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:infrastructure/monitoring/complete-monitoring-stack.yaml",
+      "target": "config:infrastructure/monitoring/prometheus-setup.yaml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:infrastructure/monitoring/complete-monitoring-stack.yaml",
+      "target": "config:infrastructure/monitoring/grafana-setup.yaml",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

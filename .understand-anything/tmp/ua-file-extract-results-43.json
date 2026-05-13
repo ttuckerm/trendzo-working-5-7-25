@@ -1,0 +1,4187 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "scripts/add-viral-prediction-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 574,
+      "nonEmptyLines": 520,
+      "definitions": [
+        {
+          "name": "videos",
+          "kind": "table",
+          "fields": [
+            "id",
+            "tiktok_id",
+            "creator_id",
+            "creator_username",
+            "creator_followers",
+            "like_count",
+            "comment_count",
+            "share_count",
+            "save_count",
+            "duration_seconds",
+            "caption",
+            "hashtags",
+            "sound_id",
+            "sound_name",
+            "audio_features",
+            "text_features",
+            "viral_probability",
+            "cohort_percentile",
+            "prediction_confidence",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 16,
+          "endLine": 54
+        },
+        {
+          "name": "engagement_snapshots",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "snapshot_timestamp",
+            "hours_since_upload",
+            "view_count",
+            "like_count",
+            "comment_count",
+            "share_count",
+            "comments_per_hour",
+            "shares_per_hour",
+            "engagement_acceleration",
+            "created_at"
+          ],
+          "startLine": 57,
+          "endLine": 75
+        },
+        {
+          "name": "hook_frameworks",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "category",
+            "description",
+            "success_rate",
+            "usage_count",
+            "pattern_rules",
+            "example_videos",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 78,
+          "endLine": 89
+        },
+        {
+          "name": "video_hooks",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "hook_id",
+            "confidence_score",
+            "detected_elements",
+            "performance_impact",
+            "created_at"
+          ],
+          "startLine": 92,
+          "endLine": 100
+        },
+        {
+          "name": "content_series",
+          "kind": "table",
+          "fields": [
+            "id",
+            "creator_id",
+            "series_name",
+            "total_episodes",
+            "episode_schedule",
+            "average_retention_rate",
+            "follower_conversion_rate",
+            "total_series_views",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 103,
+          "endLine": 114
+        },
+        {
+          "name": "series_episodes",
+          "kind": "table",
+          "fields": [
+            "id",
+            "series_id",
+            "video_id",
+            "episode_number",
+            "cliffhanger_score",
+            "retention_to_next",
+            "created_at"
+          ],
+          "startLine": 116,
+          "endLine": 124
+        },
+        {
+          "name": "cross_platform_signals",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "platform",
+            "platform_post_id",
+            "engagement_metrics",
+            "virality_indicator",
+            "time_to_cross_platform",
+            "detected_at",
+            "created_at"
+          ],
+          "startLine": 131,
+          "endLine": 141
+        },
+        {
+          "name": "comment_analysis",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "total_comments_analyzed",
+            "positive_sentiment_ratio",
+            "engagement_sentiment_score",
+            "full_watch_indicators",
+            "replay_indicators",
+            "timestamp_patterns",
+            "emotion_categories",
+            "emotion_velocity",
+            "analyzed_at",
+            "created_at"
+          ],
+          "startLine": 144,
+          "endLine": 157
+        },
+        {
+          "name": "pattern_matches",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "pattern_type",
+            "matched_pattern_id",
+            "similarity_score",
+            "pattern_metadata",
+            "pattern_trending_score",
+            "pattern_usage_count",
+            "detected_at"
+          ],
+          "startLine": 160,
+          "endLine": 170
+        },
+        {
+          "name": "ai_conversations",
+          "kind": "table",
+          "fields": [
+            "id",
+            "conversation_type",
+            "messages",
+            "context",
+            "system_updates_made",
+            "parameters_adjusted",
+            "created_at"
+          ],
+          "startLine": 177,
+          "endLine": 185
+        },
+        {
+          "name": "system_learnings",
+          "kind": "table",
+          "fields": [
+            "id",
+            "learning_type",
+            "discovery_context",
+            "improvement_metrics",
+            "applied_to_system",
+            "approval_status",
+            "approval_mode",
+            "impact_score",
+            "created_at",
+            "applied_at"
+          ],
+          "startLine": 188,
+          "endLine": 199
+        },
+        {
+          "name": "performance_metrics",
+          "kind": "table",
+          "fields": [
+            "id",
+            "metric_date",
+            "predictions_made",
+            "correct_predictions",
+            "false_positives",
+            "false_negatives",
+            "accuracy_percentage",
+            "videos_analyzed",
+            "processing_time_avg_ms",
+            "cross_platform_signals_detected",
+            "comment_analyses_completed",
+            "pattern_matches_found",
+            "created_at"
+          ],
+          "startLine": 202,
+          "endLine": 216
+        },
+        {
+          "name": "system_configurations",
+          "kind": "table",
+          "fields": [
+            "id",
+            "config_version",
+            "viral_thresholds",
+            "decay_parameters",
+            "platform_weights",
+            "hook_effectiveness_scores",
+            "is_active",
+            "activated_at",
+            "performance_rating",
+            "created_at"
+          ],
+          "startLine": 219,
+          "endLine": 230
+        },
+        {
+          "name": "psychological_engagement",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "emotional_arousal_score",
+            "arousal_type",
+            "arousal_intensity",
+            "social_currency_score",
+            "in_the_know_indicators",
+            "shareability_factors",
+            "parasocial_strength",
+            "creator_viewer_connection_markers",
+            "expected_clv_multiplier",
+            "high_arousal_emotions",
+            "emotion_diversity_score",
+            "created_at",
+            "analyzed_at"
+          ],
+          "startLine": 237,
+          "endLine": 253
+        },
+        {
+          "name": "production_quality",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "shot_pacing_score",
+            "average_shot_duration",
+            "rapid_cut_percentage",
+            "pattern_interrupt_count",
+            "pattern_interrupt_effectiveness",
+            "lighting_balance",
+            "lighting_consistency",
+            "professional_score",
+            "accessibility_score",
+            "authenticity_score",
+            "audio_clarity",
+            "speech_clarity",
+            "audio_layering_quality",
+            "close_up_shot_percentage",
+            "on_screen_text_usage",
+            "visual_hook_strength",
+            "created_at"
+          ],
+          "startLine": 256,
+          "endLine": 276
+        },
+        {
+          "name": "perspective_analysis",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "second_person_usage_count",
+            "second_person_percentage",
+            "you_references",
+            "viewer_addressing_score",
+            "direct_engagement_score",
+            "created_at"
+          ],
+          "startLine": 279,
+          "endLine": 288
+        },
+        {
+          "name": "participation_potential",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "duet_potential_score",
+            "stitch_potential_score",
+            "recreation_ease_score",
+            "is_challenge_format",
+            "challenge_template_clarity",
+            "creative_barrier_score",
+            "expected_response_count",
+            "actual_response_count",
+            "response_quality_score",
+            "interactive_cta_count",
+            "question_prompts",
+            "poll_usage",
+            "created_at"
+          ],
+          "startLine": 291,
+          "endLine": 307
+        },
+        {
+          "name": "series_strategy_enhanced",
+          "kind": "table",
+          "fields": [
+            "id",
+            "series_id",
+            "cliffhanger_type",
+            "cliffhanger_effectiveness_score",
+            "part_two_request_count",
+            "target_return_rate",
+            "actual_return_rate",
+            "return_rate_optimization_suggestions",
+            "narrative_arc_type",
+            "multi_part_requirement_score",
+            "story_completion_necessity",
+            "created_at"
+          ],
+          "startLine": 310,
+          "endLine": 323
+        },
+        {
+          "name": "cultural_timing",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "trend_position",
+            "trend_age_hours",
+            "optimal_window_alignment",
+            "cultural_events",
+            "event_relevance_score",
+            "timing_precision_score",
+            "niche_category",
+            "niche_saturation_level",
+            "content_differentiation_score",
+            "timing_score",
+            "luck_factor_estimate",
+            "created_at"
+          ],
+          "startLine": 326,
+          "endLine": 341
+        },
+        {
+          "name": "creator_authority",
+          "kind": "table",
+          "fields": [
+            "id",
+            "creator_id",
+            "overall_authority_score",
+            "niche_authority_score",
+            "consistency_score",
+            "historical_viral_rate",
+            "algorithm_favor_score",
+            "initial_reach_multiplier",
+            "total_videos_analyzed",
+            "viral_video_count",
+            "average_performance_percentile",
+            "updated_at"
+          ],
+          "startLine": 344,
+          "endLine": 357
+        },
+        {
+          "name": "authenticity_paradox",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "spontaneity_appearance_score",
+            "strategic_planning_indicators",
+            "authenticity_strategy_balance",
+            "personal_story_present",
+            "universal_appeal_score",
+            "relatability_factors",
+            "viral_formula_adherence",
+            "formula_disguise_effectiveness",
+            "created_at"
+          ],
+          "startLine": 360,
+          "endLine": 372
+        },
+        {
+          "name": "algorithm_state",
+          "kind": "table",
+          "fields": [
+            "id",
+            "detected_change_date",
+            "change_type",
+            "change_magnitude",
+            "affected_metrics",
+            "performance_impact",
+            "adaptation_required",
+            "adaptation_completed",
+            "new_weights",
+            "created_at"
+          ],
+          "startLine": 375,
+          "endLine": 386
+        },
+        {
+          "name": "marketing_templates",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_name",
+            "template_type",
+            "source_video_id",
+            "source_viral_score",
+            "source_engagement_rate",
+            "viral_structure",
+            "hook_framework",
+            "emotional_triggers",
+            "replacement_markers",
+            "brand_insertion_points",
+            "times_used",
+            "average_viral_score",
+            "best_performing_variant",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 393,
+          "endLine": 410
+        },
+        {
+          "name": "one_click_optimizations",
+          "kind": "table",
+          "fields": [
+            "id",
+            "optimization_name",
+            "optimization_type",
+            "before_pattern",
+            "after_pattern",
+            "expected_improvement",
+            "applicable_platforms",
+            "context_requirements",
+            "times_applied",
+            "actual_improvement_avg",
+            "success_rate",
+            "created_at"
+          ],
+          "startLine": 413,
+          "endLine": 426
+        },
+        {
+          "name": "inception_analytics",
+          "kind": "table",
+          "fields": [
+            "id",
+            "content_id",
+            "content_type",
+            "views",
+            "engagement_rate",
+            "share_count",
+            "clicks_to_landing",
+            "signups_generated",
+            "conversion_rate",
+            "utm_source",
+            "utm_medium",
+            "utm_campaign",
+            "platform",
+            "platform_metrics",
+            "created_at"
+          ],
+          "startLine": 429,
+          "endLine": 445
+        },
+        {
+          "name": "marketing_queue",
+          "kind": "table",
+          "fields": [
+            "id",
+            "content_title",
+            "content_type",
+            "target_platform",
+            "original_score",
+            "optimized_score",
+            "optimizations_applied",
+            "scheduled_for",
+            "published_at",
+            "status",
+            "inception_analytics_id",
+            "created_at"
+          ],
+          "startLine": 448,
+          "endLine": 461
+        },
+        {
+          "name": "idx_videos_tiktok_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 467,
+          "endLine": 467
+        },
+        {
+          "name": "idx_videos_upload_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 468,
+          "endLine": 468
+        },
+        {
+          "name": "idx_videos_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 469,
+          "endLine": 469
+        },
+        {
+          "name": "idx_engagement_video_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 470,
+          "endLine": 470
+        },
+        {
+          "name": "idx_cross_platform_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 471,
+          "endLine": 471
+        },
+        {
+          "name": "idx_pattern_matches_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 472,
+          "endLine": 472
+        },
+        {
+          "name": "idx_psych_engagement_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 473,
+          "endLine": 473
+        },
+        {
+          "name": "idx_production_quality_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 474,
+          "endLine": 474
+        },
+        {
+          "name": "idx_cultural_timing_trend",
+          "kind": "index",
+          "fields": [],
+          "startLine": 475,
+          "endLine": 475
+        },
+        {
+          "name": "idx_creator_authority_creator",
+          "kind": "index",
+          "fields": [],
+          "startLine": 476,
+          "endLine": 476
+        },
+        {
+          "name": "idx_algorithm_state_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 477,
+          "endLine": 477
+        },
+        {
+          "name": "idx_marketing_templates_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 478,
+          "endLine": 478
+        },
+        {
+          "name": "idx_optimizations_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 479,
+          "endLine": 479
+        },
+        {
+          "name": "idx_inception_analytics_content",
+          "kind": "index",
+          "fields": [],
+          "startLine": 480,
+          "endLine": 480
+        },
+        {
+          "name": "idx_marketing_queue_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 481,
+          "endLine": 481
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 41
+      }
+    },
+    {
+      "path": "scripts/cleanup-unified-schema.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 289,
+      "nonEmptyLines": 251,
+      "definitions": [
+        {
+          "name": "viral_predictions_backup",
+          "kind": "table",
+          "fields": [
+            "will",
+            "video_id",
+            "caption",
+            "niche",
+            "hashtags",
+            "viral_score",
+            "confidence_score",
+            "confidence_level",
+            "content_score",
+            "timing_score",
+            "platform_fit_score",
+            "overall_score",
+            "predicted_engagement_rate",
+            "predicted_peak_time",
+            "time_to_peak_hours",
+            "actual_likes",
+            "actual_comments",
+            "actual_shares",
+            "actual_engagement_rate",
+            "actual_viral_score",
+            "prediction_error",
+            "is_correct",
+            "validation_status",
+            "validation_date",
+            "prediction_method",
+            "model_confidence",
+            "god_mode_analysis",
+            "recommendations",
+            "optimization_suggestions",
+            "confidence_upper_bound",
+            "confidence_interval_level",
+            "estimated_views_pessimistic",
+            "estimated_views_realistic",
+            "estimated_views_optimistic",
+            "share_velocity_predicted",
+            "retention_score_predicted",
+            "conversion_rate_predicted",
+            "audience_growth_predicted",
+            "cultural_impact_predicted",
+            "request_metadata",
+            "raw_analysis_data",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 15,
+          "endLine": 137
+        },
+        {
+          "name": "viral_predictions",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "caption",
+            "niche",
+            "hashtags",
+            "viral_score",
+            "confidence_score",
+            "confidence_level",
+            "content_score",
+            "timing_score",
+            "platform_fit_score",
+            "overall_score",
+            "predicted_engagement_rate",
+            "predicted_peak_time",
+            "time_to_peak_hours",
+            "actual_likes",
+            "actual_comments",
+            "actual_shares",
+            "actual_engagement_rate",
+            "actual_viral_score",
+            "prediction_error",
+            "is_correct",
+            "validation_status",
+            "validation_date",
+            "prediction_method",
+            "model_confidence",
+            "god_mode_analysis",
+            "recommendations",
+            "optimization_suggestions",
+            "confidence_upper_bound",
+            "confidence_interval_level",
+            "estimated_views_pessimistic",
+            "estimated_views_realistic",
+            "estimated_views_optimistic",
+            "share_velocity_predicted",
+            "retention_score_predicted",
+            "conversion_rate_predicted",
+            "audience_growth_predicted",
+            "cultural_impact_predicted",
+            "request_metadata",
+            "raw_analysis_data",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 36,
+          "endLine": 137
+        },
+        {
+          "name": "viral_predictions_clean",
+          "kind": "view",
+          "fields": [],
+          "startLine": 188,
+          "endLine": 188
+        },
+        {
+          "name": "idx_viral_predictions_prediction_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 144,
+          "endLine": 144
+        },
+        {
+          "name": "idx_viral_predictions_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 145,
+          "endLine": 145
+        },
+        {
+          "name": "idx_viral_predictions_tiktok_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 146,
+          "endLine": 146
+        },
+        {
+          "name": "idx_viral_predictions_user_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 147,
+          "endLine": 147
+        },
+        {
+          "name": "idx_viral_predictions_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 150,
+          "endLine": 150
+        },
+        {
+          "name": "idx_viral_predictions_confidence",
+          "kind": "index",
+          "fields": [],
+          "startLine": 151,
+          "endLine": 151
+        },
+        {
+          "name": "idx_viral_predictions_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 152,
+          "endLine": 152
+        },
+        {
+          "name": "idx_viral_predictions_validation_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 153,
+          "endLine": 153
+        },
+        {
+          "name": "idx_viral_predictions_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 156,
+          "endLine": 156
+        },
+        {
+          "name": "idx_viral_predictions_prediction_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 157,
+          "endLine": 157
+        },
+        {
+          "name": "idx_viral_predictions_platform_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 160,
+          "endLine": 160
+        },
+        {
+          "name": "idx_viral_predictions_user_recent",
+          "kind": "index",
+          "fields": [],
+          "startLine": 161,
+          "endLine": 161
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 15
+      }
+    },
+    {
+      "path": "scripts/create-ab-testing-schema.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 393,
+      "nonEmptyLines": 340,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "description",
+            "type",
+            "status",
+            "variants",
+            "traffic_split",
+            "target_metrics",
+            "min_sample_size",
+            "confidence_level",
+            "start_date",
+            "end_date",
+            "created_by",
+            "metadata",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 22
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "test_id",
+            "user_id",
+            "variant_id",
+            "assigned_at"
+          ],
+          "startLine": 25,
+          "endLine": 32
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "test_id",
+            "variant_id",
+            "user_id",
+            "event_type",
+            "conversion_type",
+            "value",
+            "metadata",
+            "timestamp"
+          ],
+          "startLine": 35,
+          "endLine": 45
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "test_id",
+            "variant_id",
+            "impressions",
+            "conversions",
+            "conversion_rate",
+            "confidence_level",
+            "lift_percentage",
+            "statistical_significance",
+            "calculated_at"
+          ],
+          "startLine": 48,
+          "endLine": 60
+        },
+        {
+          "name": "idx_ab_tests_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 63,
+          "endLine": 63
+        },
+        {
+          "name": "idx_ab_tests_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 64,
+          "endLine": 64
+        },
+        {
+          "name": "idx_ab_tests_created_by",
+          "kind": "index",
+          "fields": [],
+          "startLine": 65,
+          "endLine": 65
+        },
+        {
+          "name": "idx_ab_tests_dates",
+          "kind": "index",
+          "fields": [],
+          "startLine": 66,
+          "endLine": 66
+        },
+        {
+          "name": "idx_ab_test_assignments_test_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 68,
+          "endLine": 68
+        },
+        {
+          "name": "idx_ab_test_assignments_user_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 69,
+          "endLine": 69
+        },
+        {
+          "name": "idx_ab_test_events_test_variant",
+          "kind": "index",
+          "fields": [],
+          "startLine": 71,
+          "endLine": 71
+        },
+        {
+          "name": "idx_ab_test_events_user_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 72,
+          "endLine": 72
+        },
+        {
+          "name": "idx_ab_test_events_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 73,
+          "endLine": 73
+        },
+        {
+          "name": "idx_ab_test_events_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 74,
+          "endLine": 74
+        },
+        {
+          "name": "idx_ab_test_results_test_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 76,
+          "endLine": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 15
+      }
+    },
+    {
+      "path": "scripts/create-apify-scraper-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 231,
+      "nonEmptyLines": 197,
+      "definitions": [
+        {
+          "name": "scraping_jobs",
+          "kind": "table",
+          "fields": [
+            "job_id",
+            "total_videos_scraped",
+            "total_videos_downloaded",
+            "total_errors",
+            "apify_actor_id",
+            "started_at",
+            "completed_at",
+            "created_at"
+          ],
+          "startLine": 5,
+          "endLine": 20
+        },
+        {
+          "name": "scraped_videos",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "scraping_job_id",
+            "description",
+            "original_url",
+            "platform",
+            "platform_video_id",
+            "creator_username",
+            "creator_display_name",
+            "creator_followers_count",
+            "creator_verified",
+            "likes_count",
+            "shares_count",
+            "comments_count",
+            "video_url",
+            "mentions",
+            "music_title",
+            "music_artist",
+            "music_url",
+            "file_size_bytes",
+            "download_error",
+            "processing_priority",
+            "downloaded_at",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 23,
+          "endLine": 80
+        },
+        {
+          "name": "download_queue",
+          "kind": "table",
+          "fields": [
+            "queue_id",
+            "video_id",
+            "video_url",
+            "priority",
+            "max_retries",
+            "error_message",
+            "file_size_bytes",
+            "download_speed_kbps",
+            "started_at",
+            "completed_at",
+            "created_at"
+          ],
+          "startLine": 83,
+          "endLine": 97
+        },
+        {
+          "name": "scraping_keywords",
+          "kind": "table",
+          "fields": [
+            "category",
+            "scraping_frequency",
+            "last_scraped_at",
+            "total_videos_scraped",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 100,
+          "endLine": 111
+        },
+        {
+          "name": "idx_scraping_jobs_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        },
+        {
+          "name": "idx_scraping_jobs_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 115,
+          "endLine": 115
+        },
+        {
+          "name": "idx_scraping_jobs_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 116,
+          "endLine": 116
+        },
+        {
+          "name": "idx_scraped_videos_creator_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 118,
+          "endLine": 118
+        },
+        {
+          "name": "idx_scraped_videos_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 119,
+          "endLine": 119
+        },
+        {
+          "name": "idx_scraped_videos_upload_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 120,
+          "endLine": 120
+        },
+        {
+          "name": "idx_scraped_videos_views_count",
+          "kind": "index",
+          "fields": [],
+          "startLine": 121,
+          "endLine": 121
+        },
+        {
+          "name": "idx_scraped_videos_likes_count",
+          "kind": "index",
+          "fields": [],
+          "startLine": 122,
+          "endLine": 122
+        },
+        {
+          "name": "idx_scraped_videos_download_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 123,
+          "endLine": 123
+        },
+        {
+          "name": "idx_scraped_videos_needs_processing",
+          "kind": "index",
+          "fields": [],
+          "startLine": 124,
+          "endLine": 124
+        },
+        {
+          "name": "idx_scraped_videos_processing_priority",
+          "kind": "index",
+          "fields": [],
+          "startLine": 125,
+          "endLine": 125
+        },
+        {
+          "name": "idx_scraped_videos_scraped_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 126,
+          "endLine": 126
+        },
+        {
+          "name": "idx_download_queue_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 128,
+          "endLine": 128
+        },
+        {
+          "name": "idx_download_queue_priority",
+          "kind": "index",
+          "fields": [],
+          "startLine": 129,
+          "endLine": 129
+        },
+        {
+          "name": "idx_download_queue_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 130,
+          "endLine": 130
+        },
+        {
+          "name": "idx_scraping_keywords_is_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 132,
+          "endLine": 132
+        },
+        {
+          "name": "idx_scraping_keywords_category",
+          "kind": "index",
+          "fields": [],
+          "startLine": 133,
+          "endLine": 133
+        },
+        {
+          "name": "idx_scraping_keywords_last_scraped",
+          "kind": "index",
+          "fields": [],
+          "startLine": 134,
+          "endLine": 134
+        },
+        {
+          "name": "idx_scraped_videos_hashtags_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 137,
+          "endLine": 137
+        },
+        {
+          "name": "idx_scraped_videos_mentions_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 138,
+          "endLine": 138
+        },
+        {
+          "name": "idx_scraped_videos_raw_data_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 139,
+          "endLine": 139
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 25
+      }
+    },
+    {
+      "path": "scripts/create-bridge-tables-fixed.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 328,
+      "nonEmptyLines": 293,
+      "definitions": [
+        {
+          "name": "template_video_analysis",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_id",
+            "analysis_type"
+          ],
+          "startLine": 100,
+          "endLine": 107
+        },
+        {
+          "name": "user_viral_preferences",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "god_mode_enabled",
+            "inception_mode_access",
+            "target_accuracy_threshold",
+            "auto_optimization_enabled",
+            "preferred_platforms",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 110,
+          "endLine": 121
+        },
+        {
+          "name": "sound_viral_history",
+          "kind": "table",
+          "fields": [
+            "id",
+            "sound_id",
+            "video_count",
+            "viral_video_count",
+            "total_views",
+            "viral_effectiveness",
+            "trend_position",
+            "created_at"
+          ],
+          "startLine": 124,
+          "endLine": 134
+        },
+        {
+          "name": "expert_insight_enhancements",
+          "kind": "table",
+          "fields": [
+            "id",
+            "expert_insight_id",
+            "god_mode_factors",
+            "prediction_impact",
+            "accuracy_improvement",
+            "created_at"
+          ],
+          "startLine": 137,
+          "endLine": 145
+        },
+        {
+          "name": "video_complete_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 152,
+          "endLine": 152
+        },
+        {
+          "name": "viral_performance_dashboard",
+          "kind": "view",
+          "fields": [],
+          "startLine": 179,
+          "endLine": 179
+        },
+        {
+          "name": "hook_effectiveness_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 198,
+          "endLine": 198
+        },
+        {
+          "name": "god_mode_summary",
+          "kind": "view",
+          "fields": [],
+          "startLine": 218,
+          "endLine": 218
+        },
+        {
+          "name": "idx_template_video_analysis_template",
+          "kind": "index",
+          "fields": [],
+          "startLine": 251,
+          "endLine": 251
+        },
+        {
+          "name": "idx_template_video_analysis_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 252,
+          "endLine": 252
+        },
+        {
+          "name": "idx_user_viral_preferences_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 253,
+          "endLine": 253
+        },
+        {
+          "name": "idx_sound_viral_history_sound",
+          "kind": "index",
+          "fields": [],
+          "startLine": 254,
+          "endLine": 254
+        },
+        {
+          "name": "idx_sound_viral_history_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 255,
+          "endLine": 255
+        },
+        {
+          "name": "idx_expert_insight_enhancements_insight",
+          "kind": "index",
+          "fields": [],
+          "startLine": 256,
+          "endLine": 256
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 14
+      }
+    },
+    {
+      "path": "scripts/create-bridge-tables-minimal.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 232,
+      "nonEmptyLines": 204,
+      "definitions": [
+        {
+          "name": "template_video_analysis",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_id",
+            "analysis_type"
+          ],
+          "startLine": 103,
+          "endLine": 110
+        },
+        {
+          "name": "user_viral_preferences",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "god_mode_enabled",
+            "inception_mode_access",
+            "target_accuracy_threshold",
+            "auto_optimization_enabled",
+            "preferred_platforms",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 113,
+          "endLine": 124
+        },
+        {
+          "name": "sound_viral_history",
+          "kind": "table",
+          "fields": [
+            "id",
+            "sound_id",
+            "video_count",
+            "viral_video_count",
+            "total_views",
+            "viral_effectiveness",
+            "trend_position",
+            "created_at"
+          ],
+          "startLine": 127,
+          "endLine": 137
+        },
+        {
+          "name": "expert_insight_enhancements",
+          "kind": "table",
+          "fields": [
+            "id",
+            "expert_insight_id",
+            "god_mode_factors",
+            "prediction_impact",
+            "accuracy_improvement",
+            "created_at"
+          ],
+          "startLine": 140,
+          "endLine": 148
+        },
+        {
+          "name": "viral_performance_dashboard",
+          "kind": "view",
+          "fields": [],
+          "startLine": 155,
+          "endLine": 155
+        },
+        {
+          "name": "hook_effectiveness_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 174,
+          "endLine": 174
+        },
+        {
+          "name": "god_mode_summary",
+          "kind": "view",
+          "fields": [],
+          "startLine": 194,
+          "endLine": 194
+        },
+        {
+          "name": "idx_template_video_analysis_template",
+          "kind": "index",
+          "fields": [],
+          "startLine": 227,
+          "endLine": 227
+        },
+        {
+          "name": "idx_template_video_analysis_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 228,
+          "endLine": 228
+        },
+        {
+          "name": "idx_user_viral_preferences_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 229,
+          "endLine": 229
+        },
+        {
+          "name": "idx_sound_viral_history_sound",
+          "kind": "index",
+          "fields": [],
+          "startLine": 230,
+          "endLine": 230
+        },
+        {
+          "name": "idx_sound_viral_history_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 231,
+          "endLine": 231
+        },
+        {
+          "name": "idx_expert_insight_enhancements_insight",
+          "kind": "index",
+          "fields": [],
+          "startLine": 232,
+          "endLine": 232
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 13
+      }
+    },
+    {
+      "path": "scripts/create-bridge-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 347,
+      "nonEmptyLines": 310,
+      "definitions": [
+        {
+          "name": "template_video_analysis",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_id",
+            "analysis_type"
+          ],
+          "startLine": 100,
+          "endLine": 107
+        },
+        {
+          "name": "user_viral_preferences",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "god_mode_enabled",
+            "inception_mode_access",
+            "target_accuracy_threshold",
+            "auto_optimization_enabled",
+            "preferred_platforms",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 110,
+          "endLine": 121
+        },
+        {
+          "name": "sound_viral_history",
+          "kind": "table",
+          "fields": [
+            "id",
+            "sound_id",
+            "video_count",
+            "viral_video_count",
+            "total_views",
+            "viral_effectiveness",
+            "trend_position",
+            "created_at"
+          ],
+          "startLine": 124,
+          "endLine": 134
+        },
+        {
+          "name": "expert_insight_enhancements",
+          "kind": "table",
+          "fields": [
+            "id",
+            "expert_insight_id",
+            "god_mode_factors",
+            "prediction_impact",
+            "accuracy_improvement",
+            "created_at"
+          ],
+          "startLine": 137,
+          "endLine": 145
+        },
+        {
+          "name": "video_complete_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 152,
+          "endLine": 152
+        },
+        {
+          "name": "viral_performance_dashboard",
+          "kind": "view",
+          "fields": [],
+          "startLine": 179,
+          "endLine": 179
+        },
+        {
+          "name": "hook_effectiveness_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 198,
+          "endLine": 198
+        },
+        {
+          "name": "god_mode_summary",
+          "kind": "view",
+          "fields": [],
+          "startLine": 218,
+          "endLine": 218
+        },
+        {
+          "name": "idx_template_video_analysis_template",
+          "kind": "index",
+          "fields": [],
+          "startLine": 251,
+          "endLine": 251
+        },
+        {
+          "name": "idx_template_video_analysis_video",
+          "kind": "index",
+          "fields": [],
+          "startLine": 252,
+          "endLine": 252
+        },
+        {
+          "name": "idx_user_viral_preferences_user",
+          "kind": "index",
+          "fields": [],
+          "startLine": 253,
+          "endLine": 253
+        },
+        {
+          "name": "idx_sound_viral_history_sound",
+          "kind": "index",
+          "fields": [],
+          "startLine": 254,
+          "endLine": 254
+        },
+        {
+          "name": "idx_sound_viral_history_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 255,
+          "endLine": 255
+        },
+        {
+          "name": "idx_expert_insight_enhancements_insight",
+          "kind": "index",
+          "fields": [],
+          "startLine": 256,
+          "endLine": 256
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 14
+      }
+    },
+    {
+      "path": "scripts/create-evolution-engine-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 153,
+      "nonEmptyLines": 134,
+      "definitions": [
+        {
+          "name": "evolution_runs",
+          "kind": "table",
+          "fields": [
+            "run_id",
+            "hot_count",
+            "cooling_count",
+            "new_count",
+            "stable_count",
+            "total_templates_analyzed",
+            "duration_ms",
+            "error_message",
+            "run_ts",
+            "created_at"
+          ],
+          "startLine": 5,
+          "endLine": 16
+        },
+        {
+          "name": "template_status_history",
+          "kind": "table",
+          "fields": [
+            "history_id",
+            "template_id",
+            "run_id",
+            "status",
+            "trend_pct",
+            "current_rate",
+            "previous_rate",
+            "viral_count_current",
+            "viral_count_previous",
+            "template_age_days",
+            "analysis_metadata",
+            "created_at"
+          ],
+          "startLine": 19,
+          "endLine": 32
+        },
+        {
+          "name": "negative_pool",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "follower_bucket",
+            "platform",
+            "views",
+            "likes",
+            "creator_id",
+            "creator_followers",
+            "upload_date",
+            "created_at"
+          ],
+          "startLine": 35,
+          "endLine": 46
+        },
+        {
+          "name": "idx_evolution_runs_run_ts",
+          "kind": "index",
+          "fields": [],
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "idx_evolution_runs_duration",
+          "kind": "index",
+          "fields": [],
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "idx_evolution_runs_total_templates",
+          "kind": "index",
+          "fields": [],
+          "startLine": 51,
+          "endLine": 51
+        },
+        {
+          "name": "idx_template_status_history_template_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 53,
+          "endLine": 53
+        },
+        {
+          "name": "idx_template_status_history_run_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 54,
+          "endLine": 54
+        },
+        {
+          "name": "idx_template_status_history_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 55,
+          "endLine": 55
+        },
+        {
+          "name": "idx_template_status_history_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 56,
+          "endLine": 56
+        },
+        {
+          "name": "idx_negative_pool_follower_bucket",
+          "kind": "index",
+          "fields": [],
+          "startLine": 58,
+          "endLine": 58
+        },
+        {
+          "name": "idx_negative_pool_niche",
+          "kind": "index",
+          "fields": [],
+          "startLine": 59,
+          "endLine": 59
+        },
+        {
+          "name": "idx_negative_pool_upload_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 60,
+          "endLine": 60
+        },
+        {
+          "name": "idx_negative_pool_creator_followers",
+          "kind": "index",
+          "fields": [],
+          "startLine": 61,
+          "endLine": 61
+        },
+        {
+          "name": "idx_template_status_history_metadata_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 64,
+          "endLine": 64
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 15
+      }
+    },
+    {
+      "path": "scripts/create-feature-decomposer-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 183,
+      "nonEmptyLines": 156,
+      "definitions": [
+        {
+          "name": "video_features",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "title",
+            "description",
+            "duration",
+            "likes",
+            "shares",
+            "comments",
+            "creator_id",
+            "creator_name",
+            "creator_followers",
+            "upload_date",
+            "1080x1920",
+            "audio_sample_rate",
+            "audio_bitrate",
+            "contrast_avg",
+            "saturation_avg",
+            "motion_intensity",
+            "transcript",
+            "ocr_text",
+            "hashtags",
+            "mentions",
+            "views_1h",
+            "comments_1h",
+            "shares_1h",
+            "features_extracted",
+            "updated_at",
+            "processed_at"
+          ],
+          "startLine": 5,
+          "endLine": 60
+        },
+        {
+          "name": "feature_extraction_runs",
+          "kind": "table",
+          "fields": [
+            "run_id",
+            "video_id",
+            "extraction_type",
+            "file_paths",
+            "run_timestamp"
+          ],
+          "startLine": 63,
+          "endLine": 73
+        },
+        {
+          "name": "raw_videos",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "original_url",
+            "local_file_path",
+            "file_name",
+            "mime_type",
+            "file_hash",
+            "created_at"
+          ],
+          "startLine": 76,
+          "endLine": 87
+        },
+        {
+          "name": "idx_video_features_creator_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 90,
+          "endLine": 90
+        },
+        {
+          "name": "idx_video_features_upload_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 91,
+          "endLine": 91
+        },
+        {
+          "name": "idx_video_features_views",
+          "kind": "index",
+          "fields": [],
+          "startLine": 92,
+          "endLine": 92
+        },
+        {
+          "name": "idx_video_features_likes",
+          "kind": "index",
+          "fields": [],
+          "startLine": 93,
+          "endLine": 93
+        },
+        {
+          "name": "idx_video_features_processing_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 94,
+          "endLine": 94
+        },
+        {
+          "name": "idx_video_features_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 95,
+          "endLine": 95
+        },
+        {
+          "name": "idx_video_features_likes_1h",
+          "kind": "index",
+          "fields": [],
+          "startLine": 98,
+          "endLine": 98
+        },
+        {
+          "name": "idx_video_features_views_1h",
+          "kind": "index",
+          "fields": [],
+          "startLine": 99,
+          "endLine": 99
+        },
+        {
+          "name": "idx_video_features_creator_followers",
+          "kind": "index",
+          "fields": [],
+          "startLine": 100,
+          "endLine": 100
+        },
+        {
+          "name": "idx_feature_extraction_runs_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 103,
+          "endLine": 103
+        },
+        {
+          "name": "idx_feature_extraction_runs_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 104,
+          "endLine": 104
+        },
+        {
+          "name": "idx_feature_extraction_runs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 105,
+          "endLine": 105
+        },
+        {
+          "name": "idx_raw_videos_source_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 108,
+          "endLine": 108
+        },
+        {
+          "name": "idx_raw_videos_file_hash",
+          "kind": "index",
+          "fields": [],
+          "startLine": 109,
+          "endLine": 109
+        },
+        {
+          "name": "idx_raw_videos_download_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 110,
+          "endLine": 110
+        },
+        {
+          "name": "idx_video_features_hashtags_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 113,
+          "endLine": 113
+        },
+        {
+          "name": "idx_video_features_features_extracted_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 114,
+          "endLine": 114
+        },
+        {
+          "name": "idx_raw_videos_scraping_metadata_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 115,
+          "endLine": 115
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 21
+      }
+    },
+    {
+      "path": "scripts/create-gene-tagger-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 138,
+      "nonEmptyLines": 117,
+      "definitions": [
+        {
+          "name": "video_genes",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "genes",
+            "transcript",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 12
+        },
+        {
+          "name": "gene_analysis_runs",
+          "kind": "table",
+          "fields": [
+            "run_id",
+            "video_id",
+            "status",
+            "processing_time_ms",
+            "framework_version",
+            "features_processed",
+            "run_timestamp"
+          ],
+          "startLine": 15,
+          "endLine": 25
+        },
+        {
+          "name": "framework_genes",
+          "kind": "table",
+          "fields": [
+            "gene_id",
+            "name",
+            "description",
+            "type",
+            "pattern",
+            "text_pattern",
+            "visual_check",
+            "text_condition",
+            "threshold",
+            "frames_to_check",
+            "coverage_threshold",
+            "min_length",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 28,
+          "endLine": 44
+        },
+        {
+          "name": "idx_video_genes_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 47,
+          "endLine": 47
+        },
+        {
+          "name": "idx_video_genes_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 48,
+          "endLine": 48
+        },
+        {
+          "name": "idx_video_genes_genes_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 51,
+          "endLine": 51
+        },
+        {
+          "name": "idx_gene_analysis_runs_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 53,
+          "endLine": 53
+        },
+        {
+          "name": "idx_gene_analysis_runs_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 54,
+          "endLine": 54
+        },
+        {
+          "name": "idx_gene_analysis_runs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 55,
+          "endLine": 55
+        },
+        {
+          "name": "idx_framework_genes_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 57,
+          "endLine": 57
+        },
+        {
+          "name": "idx_framework_genes_name",
+          "kind": "index",
+          "fields": [],
+          "startLine": 58,
+          "endLine": 58
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 11
+      }
+    },
+    {
+      "path": "scripts/create-mvp-functions.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 336,
+      "nonEmptyLines": 314,
+      "definitions": [
+        {
+          "name": "idx_campaign_analytics_event_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 330,
+          "endLine": 330
+        },
+        {
+          "name": "idx_campaign_analytics_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 331,
+          "endLine": 331
+        },
+        {
+          "name": "idx_campaign_analytics_visitor_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 332,
+          "endLine": 332
+        },
+        {
+          "name": "idx_campaign_analytics_landing_page_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 333,
+          "endLine": 333
+        },
+        {
+          "name": "idx_email_captures_user_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 334,
+          "endLine": 334
+        },
+        {
+          "name": "idx_templates_niche_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 335,
+          "endLine": 335
+        },
+        {
+          "name": "idx_templates_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 336,
+          "endLine": 336
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 7
+      }
+    },
+    {
+      "path": "scripts/create-mvp-rls-policies.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 195,
+      "nonEmptyLines": 165,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 0
+      }
+    },
+    {
+      "path": "scripts/create-mvp-schema.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 305,
+      "nonEmptyLines": 270,
+      "definitions": [
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "email",
+            "created_at",
+            "last_active",
+            "conversion_source",
+            "entry_niche",
+            "entry_platform",
+            "attribution_given",
+            "total_templates_created",
+            "onboarding_completed"
+          ],
+          "startLine": 15,
+          "endLine": 26
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "category",
+            "niche",
+            "platform",
+            "viral_score",
+            "usage_count",
+            "original_creator",
+            "thumbnail_url",
+            "duration_seconds",
+            "is_featured",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 29,
+          "endLine": 45
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "niche",
+            "platform",
+            "content",
+            "ab_variant",
+            "is_active",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 48,
+          "endLine": 59
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "landing_page_id",
+            "visitor_id",
+            "event_type",
+            "metadata",
+            "utm_medium",
+            "utm_campaign",
+            "utm_content",
+            "device_type",
+            "created_at"
+          ],
+          "startLine": 62,
+          "endLine": 75
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "template_id",
+            "customization",
+            "attribution_given",
+            "export_count",
+            "last_edited",
+            "created_at"
+          ],
+          "startLine": 78,
+          "endLine": 88
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_id",
+            "template_id",
+            "creator_username",
+            "creator_platform",
+            "comment_text",
+            "comment_posted",
+            "engagement_result"
+          ],
+          "startLine": 91,
+          "endLine": 101
+        },
+        {
+          "name": "public",
+          "kind": "table",
+          "fields": [
+            "id",
+            "email",
+            "capture_source",
+            "niche",
+            "platform",
+            "template_id",
+            "magic_link_token",
+            "magic_link_used",
+            "created_at",
+            "used_at"
+          ],
+          "startLine": 104,
+          "endLine": 115
+        },
+        {
+          "name": "idx_analytics_visitor",
+          "kind": "index",
+          "fields": [],
+          "startLine": 118,
+          "endLine": 118
+        },
+        {
+          "name": "idx_analytics_event",
+          "kind": "index",
+          "fields": [],
+          "startLine": 119,
+          "endLine": 119
+        },
+        {
+          "name": "idx_analytics_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 120,
+          "endLine": 120
+        },
+        {
+          "name": "idx_templates_niche",
+          "kind": "index",
+          "fields": [],
+          "startLine": 121,
+          "endLine": 121
+        },
+        {
+          "name": "idx_templates_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 122,
+          "endLine": 122
+        },
+        {
+          "name": "idx_landing_pages_lookup",
+          "kind": "index",
+          "fields": [],
+          "startLine": 123,
+          "endLine": 123
+        },
+        {
+          "name": "idx_email_captures_token",
+          "kind": "index",
+          "fields": [],
+          "startLine": 124,
+          "endLine": 124
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 14
+      }
+    },
+    {
+      "path": "scripts/create-recipe-book-table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 36,
+      "nonEmptyLines": 27,
+      "definitions": [
+        {
+          "name": "recipe_book_daily",
+          "kind": "table",
+          "fields": [
+            "created_at",
+            "description",
+            "success_rate"
+          ],
+          "startLine": 3,
+          "endLine": 23
+        },
+        {
+          "name": "idx_recipe_book_daily_generation_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 26,
+          "endLine": 26
+        },
+        {
+          "name": "idx_recipe_book_daily_success_rate",
+          "kind": "index",
+          "fields": [],
+          "startLine": 27,
+          "endLine": 27
+        },
+        {
+          "name": "idx_recipe_book_daily_one_per_day",
+          "kind": "index",
+          "fields": [],
+          "startLine": 31,
+          "endLine": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 4
+      }
+    },
+    {
+      "path": "scripts/create-system-alerts-table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "definitions": [
+        {
+          "name": "system_alerts",
+          "kind": "table",
+          "fields": [
+            "id",
+            "created_at",
+            "severity",
+            "source",
+            "message",
+            "is_read"
+          ],
+          "startLine": 4,
+          "endLine": 11
+        },
+        {
+          "name": "idx_system_alerts_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "idx_system_alerts_severity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 15,
+          "endLine": 15
+        },
+        {
+          "name": "idx_system_alerts_source",
+          "kind": "index",
+          "fields": [],
+          "startLine": 16,
+          "endLine": 16
+        },
+        {
+          "name": "idx_system_alerts_is_read",
+          "kind": "index",
+          "fields": [],
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "idx_system_alerts_unread_severity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "scripts/create-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 61,
+      "nonEmptyLines": 53,
+      "definitions": [
+        {
+          "name": "tiktok_templates",
+          "kind": "table",
+          "fields": [
+            "id",
+            "title",
+            "description",
+            "category",
+            "duration",
+            "thumbnail_url",
+            "video_url",
+            "structure",
+            "engagement_metrics",
+            "growth_data",
+            "is_trending",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 2,
+          "endLine": 16
+        },
+        {
+          "name": "template_expert_insights",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_id",
+            "tags",
+            "notes",
+            "manual_adjustment",
+            "adjustment_reason",
+            "created_at",
+            "updated_at",
+            "created_by"
+          ],
+          "startLine": 21,
+          "endLine": 31
+        },
+        {
+          "name": "template_audit_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_id",
+            "action",
+            "changes",
+            "created_at",
+            "created_by"
+          ],
+          "startLine": 36,
+          "endLine": 43
+        },
+        {
+          "name": "tiktok_templates_category_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 48,
+          "endLine": 48
+        },
+        {
+          "name": "tiktok_templates_is_trending_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "template_expert_insights_template_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "template_audit_logs_template_id_idx",
+          "kind": "index",
+          "fields": [],
+          "startLine": 51,
+          "endLine": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 7
+      }
+    },
+    {
+      "path": "scripts/create-template-generator-tables-fixed.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 94,
+      "nonEmptyLines": 79,
+      "definitions": [
+        {
+          "name": "template_library",
+          "kind": "table",
+          "fields": [
+            "template_id",
+            "name",
+            "centroid",
+            "videos",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 15
+        },
+        {
+          "name": "template_membership",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "template_id",
+            "similarity_score"
+          ],
+          "startLine": 18,
+          "endLine": 24
+        },
+        {
+          "name": "template_generation_runs",
+          "kind": "table",
+          "fields": [
+            "run_id",
+            "status",
+            "videos_processed",
+            "clusters_found",
+            "duration_ms",
+            "algorithm_params",
+            "run_timestamp"
+          ],
+          "startLine": 27,
+          "endLine": 37
+        },
+        {
+          "name": "idx_template_library_niche",
+          "kind": "index",
+          "fields": [],
+          "startLine": 40,
+          "endLine": 40
+        },
+        {
+          "name": "idx_template_library_success_rate",
+          "kind": "index",
+          "fields": [],
+          "startLine": 41,
+          "endLine": 41
+        },
+        {
+          "name": "idx_template_library_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 42,
+          "endLine": 42
+        },
+        {
+          "name": "idx_template_library_cluster_size",
+          "kind": "index",
+          "fields": [],
+          "startLine": 43,
+          "endLine": 43
+        },
+        {
+          "name": "idx_template_membership_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 45,
+          "endLine": 45
+        },
+        {
+          "name": "idx_template_membership_template_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 46,
+          "endLine": 46
+        },
+        {
+          "name": "idx_template_membership_similarity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 47,
+          "endLine": 47
+        },
+        {
+          "name": "idx_template_generation_runs_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "idx_template_generation_runs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "idx_template_library_centroid_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 53,
+          "endLine": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 13
+      }
+    },
+    {
+      "path": "scripts/create-template-generator-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 114,
+      "nonEmptyLines": 96,
+      "definitions": [
+        {
+          "name": "template_library",
+          "kind": "table",
+          "fields": [
+            "template_id",
+            "name",
+            "centroid",
+            "videos",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 15
+        },
+        {
+          "name": "template_membership",
+          "kind": "table",
+          "fields": [
+            "video_id",
+            "template_id",
+            "similarity_score"
+          ],
+          "startLine": 18,
+          "endLine": 24
+        },
+        {
+          "name": "template_generation_runs",
+          "kind": "table",
+          "fields": [
+            "run_id",
+            "status",
+            "videos_processed",
+            "clusters_found",
+            "duration_ms",
+            "algorithm_params",
+            "run_timestamp"
+          ],
+          "startLine": 27,
+          "endLine": 37
+        },
+        {
+          "name": "idx_template_library_niche",
+          "kind": "index",
+          "fields": [],
+          "startLine": 40,
+          "endLine": 40
+        },
+        {
+          "name": "idx_template_library_success_rate",
+          "kind": "index",
+          "fields": [],
+          "startLine": 41,
+          "endLine": 41
+        },
+        {
+          "name": "idx_template_library_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 42,
+          "endLine": 42
+        },
+        {
+          "name": "idx_template_library_cluster_size",
+          "kind": "index",
+          "fields": [],
+          "startLine": 43,
+          "endLine": 43
+        },
+        {
+          "name": "idx_template_membership_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 45,
+          "endLine": 45
+        },
+        {
+          "name": "idx_template_membership_template_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 46,
+          "endLine": 46
+        },
+        {
+          "name": "idx_template_membership_similarity",
+          "kind": "index",
+          "fields": [],
+          "startLine": 47,
+          "endLine": 47
+        },
+        {
+          "name": "idx_template_generation_runs_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 49,
+          "endLine": 49
+        },
+        {
+          "name": "idx_template_generation_runs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 50,
+          "endLine": 50
+        },
+        {
+          "name": "idx_template_library_centroid_gin",
+          "kind": "index",
+          "fields": [],
+          "startLine": 53,
+          "endLine": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 13
+      }
+    },
+    {
+      "path": "scripts/create-trendzo-schema.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 130,
+      "nonEmptyLines": 115,
+      "definitions": [
+        {
+          "name": "viral_templates",
+          "kind": "table",
+          "fields": [
+            "id",
+            "name",
+            "description",
+            "success_rate",
+            "status",
+            "usage_count",
+            "framework_type",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 10,
+          "endLine": 20
+        },
+        {
+          "name": "prediction_accuracy",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "predicted_score",
+            "actual_views",
+            "actual_likes",
+            "actual_shares",
+            "accuracy_percentage",
+            "validated_at",
+            "created_at"
+          ],
+          "startLine": 26,
+          "endLine": 36
+        },
+        {
+          "name": "module_health",
+          "kind": "table",
+          "fields": [
+            "id",
+            "module_name",
+            "status",
+            "last_heartbeat",
+            "processed_count",
+            "error_message",
+            "uptime_percentage"
+          ],
+          "startLine": 39,
+          "endLine": 47
+        },
+        {
+          "name": "script_patterns",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "transcript_text",
+            "viral_score",
+            "framework_type",
+            "pattern_keywords",
+            "success_indicators",
+            "created_at"
+          ],
+          "startLine": 50,
+          "endLine": 59
+        },
+        {
+          "name": "recipe_book_daily",
+          "kind": "table",
+          "fields": [
+            "id",
+            "date",
+            "hot_templates",
+            "cooling_templates",
+            "new_templates",
+            "total_videos_analyzed",
+            "system_accuracy",
+            "created_at"
+          ],
+          "startLine": 62,
+          "endLine": 71
+        },
+        {
+          "name": "idx_viral_templates_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 88,
+          "endLine": 88
+        },
+        {
+          "name": "idx_prediction_accuracy_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 89,
+          "endLine": 89
+        },
+        {
+          "name": "idx_module_health_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 90,
+          "endLine": 90
+        },
+        {
+          "name": "idx_script_patterns_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 91,
+          "endLine": 91
+        },
+        {
+          "name": "idx_recipe_book_daily_date",
+          "kind": "index",
+          "fields": [],
+          "startLine": 92,
+          "endLine": 92
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 10
+      }
+    },
+    {
+      "path": "scripts/create-video-genes-table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 110,
+      "nonEmptyLines": 93,
+      "definitions": [
+        {
+          "name": "video_genes",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "genes",
+            "updated_at"
+          ],
+          "startLine": 2,
+          "endLine": 11
+        },
+        {
+          "name": "for",
+          "kind": "view",
+          "fields": [],
+          "startLine": 54,
+          "endLine": 54
+        },
+        {
+          "name": "video_genes_analysis",
+          "kind": "view",
+          "fields": [],
+          "startLine": 55,
+          "endLine": 55
+        },
+        {
+          "name": "idx_video_genes_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 14,
+          "endLine": 14
+        },
+        {
+          "name": "idx_video_genes_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "idx_video_genes_genes",
+          "kind": "index",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "scripts/create-video-intelligence-table.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 54,
+      "nonEmptyLines": 43,
+      "definitions": [
+        {
+          "name": "video_intelligence",
+          "kind": "table",
+          "fields": [
+            "created_at",
+            "platform",
+            "thumbnail_url",
+            "comment_count",
+            "share_count",
+            "view_count",
+            "engagement_score"
+          ],
+          "startLine": 4,
+          "endLine": 32
+        },
+        {
+          "name": "idx_video_intelligence_url",
+          "kind": "index",
+          "fields": [],
+          "startLine": 35,
+          "endLine": 35
+        },
+        {
+          "name": "idx_video_intelligence_platform",
+          "kind": "index",
+          "fields": [],
+          "startLine": 36,
+          "endLine": 36
+        },
+        {
+          "name": "idx_video_intelligence_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 37,
+          "endLine": 37
+        },
+        {
+          "name": "idx_video_intelligence_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 38,
+          "endLine": 38
+        },
+        {
+          "name": "idx_video_intelligence_platform_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 41,
+          "endLine": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 6
+      }
+    },
+    {
+      "path": "scripts/create-viral-dna-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 117,
+      "nonEmptyLines": 101,
+      "definitions": [
+        {
+          "name": "viral_dna_reports",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_handle",
+            "email",
+            "report_data",
+            "viral_score",
+            "generated_at",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 5,
+          "endLine": 14
+        },
+        {
+          "name": "viral_dna_analytics",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_handle",
+            "email",
+            "generated_at",
+            "source",
+            "ip_address",
+            "user_agent",
+            "created_at"
+          ],
+          "startLine": 23,
+          "endLine": 32
+        },
+        {
+          "name": "for",
+          "kind": "table",
+          "fields": [
+            "used",
+            "pattern_id",
+            "pattern_name",
+            "framework_id",
+            "framework_name",
+            "description",
+            "confidence_threshold",
+            "success_rate",
+            "category",
+            "tags",
+            "active",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 39,
+          "endLine": 54
+        },
+        {
+          "name": "viral_patterns",
+          "kind": "table",
+          "fields": [
+            "id",
+            "pattern_id",
+            "pattern_name",
+            "framework_id",
+            "framework_name",
+            "description",
+            "confidence_threshold",
+            "success_rate",
+            "category",
+            "tags",
+            "active",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 40,
+          "endLine": 54
+        },
+        {
+          "name": "idx_viral_dna_reports_user_handle",
+          "kind": "index",
+          "fields": [],
+          "startLine": 17,
+          "endLine": 17
+        },
+        {
+          "name": "idx_viral_dna_reports_email",
+          "kind": "index",
+          "fields": [],
+          "startLine": 18,
+          "endLine": 18
+        },
+        {
+          "name": "idx_viral_dna_reports_generated_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 19,
+          "endLine": 19
+        },
+        {
+          "name": "idx_viral_dna_reports_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 20,
+          "endLine": 20
+        },
+        {
+          "name": "idx_viral_dna_analytics_user_handle",
+          "kind": "index",
+          "fields": [],
+          "startLine": 35,
+          "endLine": 35
+        },
+        {
+          "name": "idx_viral_dna_analytics_generated_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 36,
+          "endLine": 36
+        },
+        {
+          "name": "idx_viral_dna_analytics_source",
+          "kind": "index",
+          "fields": [],
+          "startLine": 37,
+          "endLine": 37
+        },
+        {
+          "name": "idx_viral_patterns_pattern_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 57,
+          "endLine": 57
+        },
+        {
+          "name": "idx_viral_patterns_framework_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 58,
+          "endLine": 58
+        },
+        {
+          "name": "idx_viral_patterns_category",
+          "kind": "index",
+          "fields": [],
+          "startLine": 59,
+          "endLine": 59
+        },
+        {
+          "name": "idx_viral_patterns_active",
+          "kind": "index",
+          "fields": [],
+          "startLine": 60,
+          "endLine": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 15
+      }
+    },
+    {
+      "path": "scripts/create-viral-filter-tables.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 46,
+      "nonEmptyLines": 42,
+      "definitions": [
+        {
+          "name": "viral_pool",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "follower_bucket",
+            "engagement_score",
+            "views_1h",
+            "likes_1h",
+            "creator_followers",
+            "created_at"
+          ],
+          "startLine": 4,
+          "endLine": 14
+        },
+        {
+          "name": "negative_pool",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "follower_bucket",
+            "engagement_score",
+            "views_1h",
+            "likes_1h",
+            "creator_followers",
+            "created_at"
+          ],
+          "startLine": 17,
+          "endLine": 27
+        },
+        {
+          "name": "viral_filter_runs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "run_id",
+            "total_processed",
+            "viral_count",
+            "neg_count",
+            "run_timestamp",
+            "status",
+            "created_at"
+          ],
+          "startLine": 30,
+          "endLine": 39
+        },
+        {
+          "name": "idx_viral_pool_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 42,
+          "endLine": 42
+        },
+        {
+          "name": "idx_viral_pool_bucket",
+          "kind": "index",
+          "fields": [],
+          "startLine": 43,
+          "endLine": 43
+        },
+        {
+          "name": "idx_negative_pool_created",
+          "kind": "index",
+          "fields": [],
+          "startLine": 44,
+          "endLine": 44
+        },
+        {
+          "name": "idx_negative_pool_bucket",
+          "kind": "index",
+          "fields": [],
+          "startLine": 45,
+          "endLine": 45
+        },
+        {
+          "name": "idx_viral_filter_runs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 46,
+          "endLine": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 8
+      }
+    },
+    {
+      "path": "scripts/deploy-clean-schema.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 217,
+      "nonEmptyLines": 197,
+      "definitions": [
+        {
+          "name": "system_alerts",
+          "kind": "table",
+          "fields": [
+            "id",
+            "alert_id",
+            "level",
+            "source",
+            "message",
+            "details",
+            "acknowledged",
+            "resolved",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 26,
+          "endLine": 37
+        },
+        {
+          "name": "viral_dna_sequences",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "sequence_data",
+            "pattern_scores",
+            "viral_indicators",
+            "confidence_score",
+            "created_at"
+          ],
+          "startLine": 40,
+          "endLine": 48
+        },
+        {
+          "name": "template_generators",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_name",
+            "source_videos",
+            "pattern_data",
+            "success_rate",
+            "usage_count",
+            "status",
+            "created_at"
+          ],
+          "startLine": 51,
+          "endLine": 60
+        },
+        {
+          "name": "script_intelligence_data",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "transcript",
+            "linguistic_patterns",
+            "emotional_markers",
+            "viral_script_score",
+            "created_at"
+          ],
+          "startLine": 63,
+          "endLine": 71
+        },
+        {
+          "name": "viral_recipe_book",
+          "kind": "table",
+          "fields": [
+            "id",
+            "recipe_name",
+            "template_type",
+            "viral_elements",
+            "success_metrics",
+            "usage_frequency",
+            "effectiveness_score",
+            "status",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 74,
+          "endLine": 85
+        },
+        {
+          "name": "prediction_validation",
+          "kind": "table",
+          "fields": [
+            "id",
+            "prediction_id",
+            "video_id",
+            "predicted_viral_score",
+            "actual_viral_score",
+            "predicted_views",
+            "actual_views",
+            "validation_timestamp",
+            "accuracy_percentage",
+            "validation_status",
+            "created_at"
+          ],
+          "startLine": 88,
+          "endLine": 100
+        },
+        {
+          "name": "marketing_campaigns",
+          "kind": "table",
+          "fields": [
+            "id",
+            "campaign_name",
+            "content_type",
+            "generated_content",
+            "performance_metrics",
+            "viral_success",
+            "created_at"
+          ],
+          "startLine": 103,
+          "endLine": 111
+        },
+        {
+          "name": "system_health_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "module_name",
+            "status",
+            "metrics",
+            "error_details",
+            "timestamp"
+          ],
+          "startLine": 114,
+          "endLine": 121
+        },
+        {
+          "name": "process_intelligence",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_session",
+            "process_step",
+            "step_data",
+            "duration_ms",
+            "success",
+            "timestamp"
+          ],
+          "startLine": 124,
+          "endLine": 132
+        },
+        {
+          "name": "viral_filters",
+          "kind": "table",
+          "fields": [
+            "id",
+            "filter_name",
+            "filter_criteria",
+            "videos_processed",
+            "viral_videos_found",
+            "effectiveness_rate",
+            "created_at"
+          ],
+          "startLine": 135,
+          "endLine": 143
+        },
+        {
+          "name": "evolution_engines",
+          "kind": "table",
+          "fields": [
+            "id",
+            "algorithm_version",
+            "performance_data",
+            "accuracy_improvement",
+            "deployment_status",
+            "created_at"
+          ],
+          "startLine": 145,
+          "endLine": 152
+        },
+        {
+          "name": "feature_decomposers",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "extracted_features",
+            "feature_scores",
+            "processing_time_ms",
+            "created_at"
+          ],
+          "startLine": 154,
+          "endLine": 161
+        },
+        {
+          "name": "gene_taggers",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "detected_genes",
+            "gene_confidence",
+            "tagging_accuracy",
+            "created_at"
+          ],
+          "startLine": 163,
+          "endLine": 170
+        },
+        {
+          "name": "idx_viral_dna_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 173,
+          "endLine": 173
+        },
+        {
+          "name": "idx_viral_dna_confidence",
+          "kind": "index",
+          "fields": [],
+          "startLine": 174,
+          "endLine": 174
+        },
+        {
+          "name": "idx_template_generators_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 175,
+          "endLine": 175
+        },
+        {
+          "name": "idx_template_generators_success_rate",
+          "kind": "index",
+          "fields": [],
+          "startLine": 176,
+          "endLine": 176
+        },
+        {
+          "name": "idx_script_intelligence_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 177,
+          "endLine": 177
+        },
+        {
+          "name": "idx_script_intelligence_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 178,
+          "endLine": 178
+        },
+        {
+          "name": "idx_viral_recipe_book_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 179,
+          "endLine": 179
+        },
+        {
+          "name": "idx_viral_recipe_book_effectiveness",
+          "kind": "index",
+          "fields": [],
+          "startLine": 180,
+          "endLine": 180
+        },
+        {
+          "name": "idx_prediction_validation_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 181,
+          "endLine": 181
+        },
+        {
+          "name": "idx_prediction_validation_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 182,
+          "endLine": 182
+        },
+        {
+          "name": "idx_marketing_campaigns_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 183,
+          "endLine": 183
+        },
+        {
+          "name": "idx_system_health_logs_module",
+          "kind": "index",
+          "fields": [],
+          "startLine": 184,
+          "endLine": 184
+        },
+        {
+          "name": "idx_system_health_logs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 185,
+          "endLine": 185
+        },
+        {
+          "name": "idx_system_alerts_level",
+          "kind": "index",
+          "fields": [],
+          "startLine": 186,
+          "endLine": 186
+        },
+        {
+          "name": "idx_system_alerts_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 187,
+          "endLine": 187
+        },
+        {
+          "name": "idx_system_alerts_acknowledged",
+          "kind": "index",
+          "fields": [],
+          "startLine": 188,
+          "endLine": 188
+        },
+        {
+          "name": "idx_process_intelligence_session",
+          "kind": "index",
+          "fields": [],
+          "startLine": 189,
+          "endLine": 189
+        },
+        {
+          "name": "idx_feature_decomposers_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 190,
+          "endLine": 190
+        },
+        {
+          "name": "idx_gene_taggers_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 191,
+          "endLine": 191
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 32
+      }
+    },
+    {
+      "path": "scripts/deploy-complete-database.sql",
+      "language": "sql",
+      "fileCategory": "data",
+      "totalLines": 433,
+      "nonEmptyLines": 408,
+      "definitions": [
+        {
+          "name": "system_alerts",
+          "kind": "table",
+          "fields": [
+            "id",
+            "alert_id",
+            "level",
+            "source",
+            "message",
+            "details",
+            "acknowledged",
+            "resolved",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 27,
+          "endLine": 38
+        },
+        {
+          "name": "viral_dna_sequences",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "sequence_data",
+            "pattern_scores",
+            "viral_indicators",
+            "confidence_score",
+            "created_at"
+          ],
+          "startLine": 41,
+          "endLine": 49
+        },
+        {
+          "name": "template_generators",
+          "kind": "table",
+          "fields": [
+            "id",
+            "template_name",
+            "source_videos",
+            "pattern_data",
+            "success_rate",
+            "usage_count",
+            "status",
+            "created_at"
+          ],
+          "startLine": 52,
+          "endLine": 61
+        },
+        {
+          "name": "script_intelligence_data",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "transcript",
+            "linguistic_patterns",
+            "emotional_markers",
+            "viral_script_score",
+            "created_at"
+          ],
+          "startLine": 64,
+          "endLine": 72
+        },
+        {
+          "name": "viral_recipe_book",
+          "kind": "table",
+          "fields": [
+            "id",
+            "recipe_name",
+            "template_type",
+            "viral_elements",
+            "success_metrics",
+            "usage_frequency",
+            "effectiveness_score",
+            "status",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 75,
+          "endLine": 86
+        },
+        {
+          "name": "viral_video_gallery",
+          "kind": "table",
+          "fields": [
+            "id",
+            "title",
+            "creator_name",
+            "thumbnail_url",
+            "view_count",
+            "viral_score",
+            "platform",
+            "duration_seconds",
+            "is_featured",
+            "display_order",
+            "transcript",
+            "viral_elements",
+            "created_at"
+          ],
+          "startLine": 89,
+          "endLine": 103
+        },
+        {
+          "name": "video_framework_mapping",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "framework_id",
+            "mapping_confidence",
+            "workspace_config_cached",
+            "created_at",
+            "updated_at"
+          ],
+          "startLine": 106,
+          "endLine": 114
+        },
+        {
+          "name": "prediction_validation",
+          "kind": "table",
+          "fields": [
+            "id",
+            "prediction_id",
+            "video_id",
+            "predicted_viral_score",
+            "actual_viral_score",
+            "predicted_views",
+            "actual_views",
+            "validation_timestamp",
+            "accuracy_percentage",
+            "validation_status",
+            "created_at"
+          ],
+          "startLine": 117,
+          "endLine": 129
+        },
+        {
+          "name": "marketing_campaigns",
+          "kind": "table",
+          "fields": [
+            "id",
+            "campaign_name",
+            "content_type",
+            "generated_content",
+            "performance_metrics",
+            "viral_success",
+            "created_at"
+          ],
+          "startLine": 132,
+          "endLine": 140
+        },
+        {
+          "name": "system_health_logs",
+          "kind": "table",
+          "fields": [
+            "id",
+            "module_name",
+            "status",
+            "metrics",
+            "error_details",
+            "timestamp"
+          ],
+          "startLine": 143,
+          "endLine": 150
+        },
+        {
+          "name": "process_intelligence",
+          "kind": "table",
+          "fields": [
+            "id",
+            "user_session",
+            "process_step",
+            "step_data",
+            "duration_ms",
+            "success",
+            "timestamp"
+          ],
+          "startLine": 153,
+          "endLine": 161
+        },
+        {
+          "name": "viral_filters",
+          "kind": "table",
+          "fields": [
+            "id",
+            "filter_name",
+            "filter_criteria",
+            "videos_processed",
+            "viral_videos_found",
+            "effectiveness_rate",
+            "created_at"
+          ],
+          "startLine": 164,
+          "endLine": 172
+        },
+        {
+          "name": "evolution_engines",
+          "kind": "table",
+          "fields": [
+            "id",
+            "algorithm_version",
+            "performance_data",
+            "accuracy_improvement",
+            "deployment_status",
+            "created_at"
+          ],
+          "startLine": 174,
+          "endLine": 181
+        },
+        {
+          "name": "feature_decomposers",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "extracted_features",
+            "feature_scores",
+            "processing_time_ms",
+            "created_at"
+          ],
+          "startLine": 183,
+          "endLine": 190
+        },
+        {
+          "name": "gene_taggers",
+          "kind": "table",
+          "fields": [
+            "id",
+            "video_id",
+            "detected_genes",
+            "gene_confidence",
+            "tagging_accuracy",
+            "created_at"
+          ],
+          "startLine": 192,
+          "endLine": 199
+        },
+        {
+          "name": "idx_viral_dna_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 202,
+          "endLine": 202
+        },
+        {
+          "name": "idx_viral_dna_confidence",
+          "kind": "index",
+          "fields": [],
+          "startLine": 203,
+          "endLine": 203
+        },
+        {
+          "name": "idx_template_generators_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 204,
+          "endLine": 204
+        },
+        {
+          "name": "idx_template_generators_success_rate",
+          "kind": "index",
+          "fields": [],
+          "startLine": 205,
+          "endLine": 205
+        },
+        {
+          "name": "idx_script_intelligence_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 206,
+          "endLine": 206
+        },
+        {
+          "name": "idx_script_intelligence_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 207,
+          "endLine": 207
+        },
+        {
+          "name": "idx_viral_recipe_book_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 208,
+          "endLine": 208
+        },
+        {
+          "name": "idx_viral_recipe_book_effectiveness",
+          "kind": "index",
+          "fields": [],
+          "startLine": 209,
+          "endLine": 209
+        },
+        {
+          "name": "idx_prediction_validation_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 210,
+          "endLine": 210
+        },
+        {
+          "name": "idx_prediction_validation_status",
+          "kind": "index",
+          "fields": [],
+          "startLine": 211,
+          "endLine": 211
+        },
+        {
+          "name": "idx_marketing_campaigns_type",
+          "kind": "index",
+          "fields": [],
+          "startLine": 212,
+          "endLine": 212
+        },
+        {
+          "name": "idx_system_health_logs_module",
+          "kind": "index",
+          "fields": [],
+          "startLine": 213,
+          "endLine": 213
+        },
+        {
+          "name": "idx_system_health_logs_timestamp",
+          "kind": "index",
+          "fields": [],
+          "startLine": 214,
+          "endLine": 214
+        },
+        {
+          "name": "idx_system_alerts_level",
+          "kind": "index",
+          "fields": [],
+          "startLine": 215,
+          "endLine": 215
+        },
+        {
+          "name": "idx_system_alerts_created_at",
+          "kind": "index",
+          "fields": [],
+          "startLine": 216,
+          "endLine": 216
+        },
+        {
+          "name": "idx_system_alerts_acknowledged",
+          "kind": "index",
+          "fields": [],
+          "startLine": 217,
+          "endLine": 217
+        },
+        {
+          "name": "idx_process_intelligence_session",
+          "kind": "index",
+          "fields": [],
+          "startLine": 218,
+          "endLine": 218
+        },
+        {
+          "name": "idx_feature_decomposers_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 219,
+          "endLine": 219
+        },
+        {
+          "name": "idx_gene_taggers_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 220,
+          "endLine": 220
+        },
+        {
+          "name": "idx_viral_video_gallery_featured",
+          "kind": "index",
+          "fields": [],
+          "startLine": 221,
+          "endLine": 221
+        },
+        {
+          "name": "idx_viral_video_gallery_viral_score",
+          "kind": "index",
+          "fields": [],
+          "startLine": 222,
+          "endLine": 222
+        },
+        {
+          "name": "idx_video_framework_mapping_video_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 223,
+          "endLine": 223
+        },
+        {
+          "name": "idx_video_framework_mapping_framework_id",
+          "kind": "index",
+          "fields": [],
+          "startLine": 224,
+          "endLine": 224
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "definitionCount": 38
+      }
+    }
+  ]
+}

@@ -1,0 +1,5473 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 25,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "src/lib/etl/soundEtl.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 702,
+      "nonEmptyLines": 586,
+      "exports": [
+        {
+          "name": "soundEtl",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 19
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "Date.now",
+          "lineNumber": 20
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 24
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 25
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "rawVideos.map",
+          "lineNumber": 28
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "convertRawToNewFormat",
+          "lineNumber": 28
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 29
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 32
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 33
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 34
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "trendingTemplates.forEach",
+          "lineNumber": 38
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "trendingTemplateMap.set",
+          "lineNumber": 39
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "this.prioritizeVideoProcessing",
+          "lineNumber": 43
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 46
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "this.processSoundsProgressively",
+          "lineNumber": 47
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 50
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "this.calculateGrowthMetrics",
+          "lineNumber": 51
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 54
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "this.updateTemplateCorrelations",
+          "lineNumber": 55
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 58
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "this.generateSoundTrendReport",
+          "lineNumber": 59
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.log",
+          "lineNumber": 61
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "Date.now",
+          "lineNumber": 62
+        },
+        {
+          "caller": "processSoundsFromTrending",
+          "callee": "console.error",
+          "lineNumber": 74
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "trendingTemplates.forEach",
+          "lineNumber": 88
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "trendingTemplateMap.set",
+          "lineNumber": 89
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "trendingTemplateMap.has",
+          "lineNumber": 98
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "videoByTemplateId.set",
+          "lineNumber": 99
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "videos.map(video => {\r\n      let priority = 'low';\r\n      let reason = 'Standard processing';\r\n      \r\n      // Check if this video is associated with a trending template\r\n      if (trendingTemplateMap.has(video.id)) {\r\n        priority = 'high';\r\n        reason = 'Associated with trending template';\r\n      } \r\n      // Check engagement metrics\r\n      else if (video.stats.playCount > 500000 || video.stats.diggCount > 100000) {\r\n        priority = 'high';\r\n        reason = 'High engagement metrics';\r\n      }\r\n      // Check for music with high usage\r\n      else if (video.music?.usageCount && video.music.usageCount > 50000) {\r\n        priority = 'medium';\r\n        reason = 'Popular sound with high usage';\r\n      }\r\n      \r\n      return {\r\n        video,\r\n        priority,\r\n        reason,\r\n        processingOrder: priority === 'high' ? 1 : priority === 'medium' ? 2 : 3\r\n      };\r\n    }).sort",
+          "lineNumber": 104
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "videos.map",
+          "lineNumber": 104
+        },
+        {
+          "caller": "prioritizeVideoProcessing",
+          "callee": "trendingTemplateMap.has",
+          "lineNumber": 109
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "prioritizedVideos.slice",
+          "lineNumber": 154
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.log",
+          "lineNumber": 156
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "Math.floor",
+          "lineNumber": 156
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "Math.ceil",
+          "lineNumber": 156
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "extractSoundData",
+          "lineNumber": 162
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.log",
+          "lineNumber": 165
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "processedSoundIds.has",
+          "lineNumber": 170
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.log",
+          "lineNumber": 171
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "this.validateSoundData",
+          "lineNumber": 176
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.log",
+          "lineNumber": 178
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "new Date().toISOString",
+          "lineNumber": 194
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "existingTemplateUsage.find",
+          "lineNumber": 199
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 209
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "new Date().toISOString",
+          "lineNumber": 209
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "processedSoundIds.add",
+          "lineNumber": 214
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "soundService.storeSound",
+          "lineNumber": 218
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "results.sounds.push",
+          "lineNumber": 220
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.log",
+          "lineNumber": 222
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "console.error",
+          "lineNumber": 225
+        },
+        {
+          "caller": "processSoundsProgressively",
+          "callee": "setTimeout",
+          "lineNumber": 232
+        },
+        {
+          "caller": "validateSoundData",
+          "callee": "sound.title.includes",
+          "lineNumber": 256
+        },
+        {
+          "caller": "validateSoundData",
+          "callee": "sound.title.includes",
+          "lineNumber": 256
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "console.log",
+          "lineNumber": 283
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "soundService.getSoundById",
+          "lineNumber": 290
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "console.log",
+          "lineNumber": 293
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "Object.keys(usageHistory).sort",
+          "lineNumber": 298
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "Object.keys",
+          "lineNumber": 298
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "console.log",
+          "lineNumber": 302
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.findDateDaysAgo",
+          "lineNumber": 312
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.daysBetween",
+          "lineNumber": 315
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.findDateDaysAgo",
+          "lineNumber": 321
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.daysBetween",
+          "lineNumber": 324
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.findDateDaysAgo",
+          "lineNumber": 330
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "this.daysBetween",
+          "lineNumber": 333
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "soundService.updateSoundMetrics",
+          "lineNumber": 375
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "console.error",
+          "lineNumber": 395
+        },
+        {
+          "caller": "calculateGrowthMetrics",
+          "callee": "console.log",
+          "lineNumber": 400
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "targetDate.setDate",
+          "lineNumber": 414
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "targetDate.getDate",
+          "lineNumber": 414
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "Math.abs",
+          "lineNumber": 421
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "this.daysBetween",
+          "lineNumber": 421
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "targetDate.toISOString().split",
+          "lineNumber": 421
+        },
+        {
+          "caller": "findDateDaysAgo",
+          "callee": "targetDate.toISOString",
+          "lineNumber": 421
+        },
+        {
+          "caller": "daysBetween",
+          "callee": "Math.round",
+          "lineNumber": 438
+        },
+        {
+          "caller": "daysBetween",
+          "callee": "Math.abs",
+          "lineNumber": 438
+        },
+        {
+          "caller": "daysBetween",
+          "callee": "d2.getTime",
+          "lineNumber": 438
+        },
+        {
+          "caller": "daysBetween",
+          "callee": "d1.getTime",
+          "lineNumber": 438
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.log",
+          "lineNumber": 446
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "Date.now",
+          "lineNumber": 447
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "soundService.getTrendingSounds",
+          "lineNumber": 451
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.log",
+          "lineNumber": 452
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "apifyService.scrapeByHashtag",
+          "lineNumber": 463
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.log",
+          "lineNumber": 466
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "convertRawToNewFormat",
+          "lineNumber": 474
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "soundService.updateSoundUsage",
+          "lineNumber": 482
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.log",
+          "lineNumber": 484
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.error",
+          "lineNumber": 488
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.log",
+          "lineNumber": 493
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "Date.now",
+          "lineNumber": 494
+        },
+        {
+          "caller": "updateSoundStats",
+          "callee": "console.error",
+          "lineNumber": 503
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 512
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "Date.now",
+          "lineNumber": 513
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 517
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 518
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "trendingTemplateService.getTrendingTemplateById",
+          "lineNumber": 527
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 534
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "apifyService.scrapeByHashtag",
+          "lineNumber": 539
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 542
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "convertRawToNewFormat",
+          "lineNumber": 547
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "extractSoundData",
+          "lineNumber": 548
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 551
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "soundService.linkSoundToTemplate",
+          "lineNumber": 556
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 559
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.error",
+          "lineNumber": 562
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.log",
+          "lineNumber": 567
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "Date.now",
+          "lineNumber": 568
+        },
+        {
+          "caller": "linkSoundsToTemplates",
+          "callee": "console.error",
+          "lineNumber": 577
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "console.log",
+          "lineNumber": 586
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getTrendingSounds",
+          "lineNumber": 590
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getTrendingSounds",
+          "lineNumber": 591
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getTrendingSounds",
+          "lineNumber": 592
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getSoundsByLifecycleStage",
+          "lineNumber": 595
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getSoundsByLifecycleStage",
+          "lineNumber": 596
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getSoundsByLifecycleStage",
+          "lineNumber": 597
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.getGenreDistribution",
+          "lineNumber": 600
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "uuidv4",
+          "lineNumber": 604
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "new Date().toISOString().split",
+          "lineNumber": 605
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "new Date().toISOString",
+          "lineNumber": 605
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "trending7d.map",
+          "lineNumber": 607
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "trending14d.map",
+          "lineNumber": 608
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "trending30d.map",
+          "lineNumber": 609
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "emergingSounds.map",
+          "lineNumber": 611
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "peakingSounds.map",
+          "lineNumber": 612
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "decliningTrends.map",
+          "lineNumber": 613
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "soundService.storeTrendReport",
+          "lineNumber": 619
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "console.log",
+          "lineNumber": 621
+        },
+        {
+          "caller": "generateSoundTrendReport",
+          "callee": "console.error",
+          "lineNumber": 624
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "console.log",
+          "lineNumber": 633
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "soundService.getTemplatesUsingSound",
+          "lineNumber": 640
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "console.log",
+          "lineNumber": 643
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "trendingTemplateService.getTrendingTemplateById",
+          "lineNumber": 653
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "trendingTemplateService.getCategoryAverageEngagement",
+          "lineNumber": 660
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "Math.min",
+          "lineNumber": 669
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "Math.max",
+          "lineNumber": 669
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "templateCorrelations.push",
+          "lineNumber": 671
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "console.error",
+          "lineNumber": 677
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "templateCorrelations.sort",
+          "lineNumber": 683
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "soundService.updateTemplateCorrelations",
+          "lineNumber": 684
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "console.error",
+          "lineNumber": 689
+        },
+        {
+          "caller": "updateTemplateCorrelations",
+          "callee": "console.log",
+          "lineNumber": 694
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/test-apify.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "testApify",
+          "startLine": 9,
+          "endLine": 20,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "testApify",
+          "callee": "console.log",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/test-firebase.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 109,
+      "nonEmptyLines": 94,
+      "functions": [
+        {
+          "name": "testFirebaseStorage",
+          "startLine": 11,
+          "endLine": 70,
+          "params": [
+            "video"
+          ]
+        },
+        {
+          "name": "testFirebase",
+          "startLine": 87,
+          "endLine": 98,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "testFirebaseStorage",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 13
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "uuidv4().substring",
+          "lineNumber": 16
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "uuidv4",
+          "lineNumber": 16
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "createMockTikTokVideo",
+          "lineNumber": 21
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 25
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "templateAnalysisService.analyzeVideoForTemplates",
+          "lineNumber": 26
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 27
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 30
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "templateAnalysisService.categorizeVideo",
+          "lineNumber": 31
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "trendingTemplateService.createTrendingTemplate",
+          "lineNumber": 32
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 37
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 40
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "trendingTemplateService.getTrendingTemplateById",
+          "lineNumber": 41
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "trendingTemplateService.updateTrendingTemplate",
+          "lineNumber": 50
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "trendingTemplateService.getTrendingTemplateById",
+          "lineNumber": 53
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 55
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 61
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "trendingTemplateService.deactivateTemplate",
+          "lineNumber": 62
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.log",
+          "lineNumber": 63
+        },
+        {
+          "caller": "testFirebaseStorage",
+          "callee": "console.error",
+          "lineNumber": 67
+        },
+        {
+          "caller": "testFirebase",
+          "callee": "console.log",
+          "lineNumber": 89
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/test-scheduled-job.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "functions": [
+        {
+          "name": "testScheduledJob",
+          "startLine": 9,
+          "endLine": 20,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "testScheduledJob",
+          "callee": "console.log",
+          "lineNumber": 11
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/test-template-analyzer.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 420,
+      "nonEmptyLines": 346,
+      "functions": [
+        {
+          "name": "testVideoProcessing",
+          "startLine": 19,
+          "endLine": 94,
+          "params": [
+            "sampleSize"
+          ]
+        },
+        {
+          "name": "testTemplateCategorization",
+          "startLine": 103,
+          "endLine": 167,
+          "params": [
+            "sampleSize"
+          ]
+        },
+        {
+          "name": "testTemplateStructureExtraction",
+          "startLine": 176,
+          "endLine": 247,
+          "params": [
+            "sampleSize"
+          ]
+        },
+        {
+          "name": "logSectionSummary",
+          "startLine": 252,
+          "endLine": 259,
+          "params": [
+            "sections"
+          ]
+        },
+        {
+          "name": "validateSections",
+          "startLine": 264,
+          "endLine": 297,
+          "params": [
+            "sections",
+            "totalDuration"
+          ]
+        },
+        {
+          "name": "testTemplateSimilarity",
+          "startLine": 305,
+          "endLine": 362,
+          "params": []
+        },
+        {
+          "name": "runAllAnalyzerTests",
+          "startLine": 367,
+          "endLine": 412,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "testVideoProcessing",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "testTemplateCategorization",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "testTemplateStructureExtraction",
+          "line": 176,
+          "isDefault": false
+        },
+        {
+          "name": "testTemplateSimilarity",
+          "line": 305,
+          "isDefault": false
+        },
+        {
+          "name": "runAllAnalyzerTests",
+          "line": 367,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 20
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 21
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 25
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 26
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.error",
+          "lineNumber": 29
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 38
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "aiTemplateAnalysisEtl.validateTikTokVideo",
+          "lineNumber": 41
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.warn",
+          "lineNumber": 42
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 48
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 49
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 50
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "video.text.substring",
+          "lineNumber": 50
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 54
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "Date.now",
+          "lineNumber": 55
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "advancedTemplateAnalysisService.analyzeVideoWithAI",
+          "lineNumber": 58
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "Date.now",
+          "lineNumber": 60
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 63
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 64
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 65
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 66
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "templateSections.map(s => s.type).join",
+          "lineNumber": 66
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "templateSections.map",
+          "lineNumber": 66
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 69
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "Object.entries(analysis.detectedElements).forEach",
+          "lineNumber": 70
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "Object.entries",
+          "lineNumber": 70
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 71
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 76
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "analysis.engagementInsights.substring",
+          "lineNumber": 76
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.error",
+          "lineNumber": 81
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.log",
+          "lineNumber": 87
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "successRate.toFixed",
+          "lineNumber": 87
+        },
+        {
+          "caller": "testVideoProcessing",
+          "callee": "console.error",
+          "lineNumber": 91
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 104
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 105
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 109
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 110
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.error",
+          "lineNumber": 113
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 123
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "aiTemplateAnalysisEtl.validateTikTokVideo",
+          "lineNumber": 125
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.warn",
+          "lineNumber": 126
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 131
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 132
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "video.text.substring",
+          "lineNumber": 132
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 136
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "templateAnalysisService.categorizeVideo",
+          "lineNumber": 137
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 138
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 141
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "advancedTemplateAnalysisService.analyzeVideoWithAI",
+          "lineNumber": 142
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 143
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 146
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "categories.add",
+          "lineNumber": 148
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "categories.add",
+          "lineNumber": 149
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.error",
+          "lineNumber": 153
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 159
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "successRate.toFixed",
+          "lineNumber": 159
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.log",
+          "lineNumber": 160
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "Array.from(categories).join",
+          "lineNumber": 160
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "Array.from",
+          "lineNumber": 160
+        },
+        {
+          "caller": "testTemplateCategorization",
+          "callee": "console.error",
+          "lineNumber": 164
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 177
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 178
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 182
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 183
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.error",
+          "lineNumber": 186
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 195
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "aiTemplateAnalysisEtl.validateTikTokVideo",
+          "lineNumber": 197
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.warn",
+          "lineNumber": 198
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 203
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 204
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 208
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "templateAnalysisService.analyzeVideoForTemplates",
+          "lineNumber": 209
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 210
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "logSectionSummary",
+          "lineNumber": 211
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "validateSections",
+          "lineNumber": 212
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 215
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "advancedTemplateAnalysisService.analyzeVideoWithAI",
+          "lineNumber": 216
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 217
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "logSectionSummary",
+          "lineNumber": 218
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "validateSections",
+          "lineNumber": 219
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 222
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 223
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 224
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "basicSections.map",
+          "lineNumber": 226
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "aiSections.map",
+          "lineNumber": 227
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 229
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "basicTypes.join",
+          "lineNumber": 229
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 230
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "aiTypes.join",
+          "lineNumber": 230
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.error",
+          "lineNumber": 234
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.log",
+          "lineNumber": 240
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "successRate.toFixed",
+          "lineNumber": 240
+        },
+        {
+          "caller": "testTemplateStructureExtraction",
+          "callee": "console.error",
+          "lineNumber": 244
+        },
+        {
+          "caller": "logSectionSummary",
+          "callee": "sections.forEach",
+          "lineNumber": 253
+        },
+        {
+          "caller": "logSectionSummary",
+          "callee": "console.log",
+          "lineNumber": 254
+        },
+        {
+          "caller": "logSectionSummary",
+          "callee": "console.log",
+          "lineNumber": 256
+        },
+        {
+          "caller": "validateSections",
+          "callee": "sections.reduce",
+          "lineNumber": 266
+        },
+        {
+          "caller": "validateSections",
+          "callee": "console.log",
+          "lineNumber": 269
+        },
+        {
+          "caller": "validateSections",
+          "callee": "coveragePercent.toFixed",
+          "lineNumber": 269
+        },
+        {
+          "caller": "validateSections",
+          "callee": "console.warn",
+          "lineNumber": 279
+        },
+        {
+          "caller": "validateSections",
+          "callee": "(currentEnd - nextStart).toFixed",
+          "lineNumber": 279
+        },
+        {
+          "caller": "validateSections",
+          "callee": "console.log",
+          "lineNumber": 285
+        },
+        {
+          "caller": "validateSections",
+          "callee": "sections.filter",
+          "lineNumber": 290
+        },
+        {
+          "caller": "validateSections",
+          "callee": "validTypes.includes",
+          "lineNumber": 290
+        },
+        {
+          "caller": "validateSections",
+          "callee": "console.warn",
+          "lineNumber": 293
+        },
+        {
+          "caller": "validateSections",
+          "callee": "console.log",
+          "lineNumber": 295
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 306
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 310
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 311
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.warn",
+          "lineNumber": 314
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 318
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 322
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 323
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 324
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 327
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "advancedTemplateAnalysisService.findSimilarTemplates",
+          "lineNumber": 328
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.warn",
+          "lineNumber": 331
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 333
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 337
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 338
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 339
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 340
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "template.stats.engagementRate.toFixed",
+          "lineNumber": 340
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 349
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 350
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 351
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "advancedTemplateAnalysisService.calculateTemplateSimilarity",
+          "lineNumber": 353
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.log",
+          "lineNumber": 354
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "similarityScore.toFixed",
+          "lineNumber": 354
+        },
+        {
+          "caller": "testTemplateSimilarity",
+          "callee": "console.error",
+          "lineNumber": 359
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 368
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "testVideoProcessing",
+          "lineNumber": 371
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 373
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.error",
+          "lineNumber": 375
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "testTemplateCategorization",
+          "lineNumber": 379
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 381
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.error",
+          "lineNumber": 383
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "testTemplateStructureExtraction",
+          "lineNumber": 387
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 389
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.error",
+          "lineNumber": 391
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 396
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "testTemplateSimilarity",
+          "lineNumber": 398
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 400
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.error",
+          "lineNumber": 402
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 405
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.error",
+          "lineNumber": 408
+        },
+        {
+          "caller": "runAllAnalyzerTests",
+          "callee": "console.log",
+          "lineNumber": 411
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 5,
+        "functionCount": 7,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/test-utils.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 65,
+      "nonEmptyLines": 60,
+      "functions": [
+        {
+          "name": "createMockTikTokVideo",
+          "startLine": 10,
+          "endLine": 36,
+          "params": [
+            "testId"
+          ]
+        },
+        {
+          "name": "logTestResult",
+          "startLine": 41,
+          "endLine": 53,
+          "params": [
+            "testName",
+            "success",
+            "details"
+          ]
+        },
+        {
+          "name": "measureExecutionTime",
+          "startLine": 58,
+          "endLine": 65,
+          "params": [
+            "fn"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "createMockTikTokVideo",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "logTestResult",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "measureExecutionTime",
+          "line": 58,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "createMockTikTokVideo",
+          "callee": "Date.now",
+          "lineNumber": 14
+        },
+        {
+          "caller": "logTestResult",
+          "callee": "console.log",
+          "lineNumber": 43
+        },
+        {
+          "caller": "logTestResult",
+          "callee": "console.log",
+          "lineNumber": 45
+        },
+        {
+          "caller": "logTestResult",
+          "callee": "console.error",
+          "lineNumber": 48
+        },
+        {
+          "caller": "logTestResult",
+          "callee": "console.error",
+          "lineNumber": 50
+        },
+        {
+          "caller": "measureExecutionTime",
+          "callee": "Date.now",
+          "lineNumber": 59
+        },
+        {
+          "caller": "measureExecutionTime",
+          "callee": "fn",
+          "lineNumber": 60
+        },
+        {
+          "caller": "measureExecutionTime",
+          "callee": "Date.now",
+          "lineNumber": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/tiktokTemplateEtl.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 792,
+      "nonEmptyLines": 688,
+      "exports": [
+        {
+          "name": "tiktokTemplateEtl",
+          "line": 14,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "processHotTrends",
+          "callee": "etlJobService.createJob",
+          "lineNumber": 20
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "new Date().toISOString",
+          "lineNumber": 24
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 27
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "new Date().toISOString",
+          "lineNumber": 30
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "Date.now",
+          "lineNumber": 33
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 37
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 41
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 44
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "apifyService.scrapeTrending",
+          "lineNumber": 58
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "etlJobService.failJob",
+          "lineNumber": 64
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "String",
+          "lineNumber": 66
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 81
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "etlJobService.completeJob",
+          "lineNumber": 83
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "rawVideos.map",
+          "lineNumber": 100
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "convertRawToLegacyFormat",
+          "lineNumber": 100
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 102
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "new Date().toISOString",
+          "lineNumber": 110
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 116
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "this.processVideosWithRecovery",
+          "lineNumber": 122
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "Date.now",
+          "lineNumber": 125
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 127
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "etlJobService.completeJob",
+          "lineNumber": 136
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "logETLEvent",
+          "lineNumber": 147
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "Date.now",
+          "lineNumber": 151
+        },
+        {
+          "caller": "processHotTrends",
+          "callee": "etlJobService.failJob",
+          "lineNumber": 155
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "logETLEvent",
+          "lineNumber": 192
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "logETLEvent",
+          "lineNumber": 203
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "templateAnalysisService.analyzeVideoForTemplates",
+          "lineNumber": 225
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 228
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "logETLEvent",
+          "lineNumber": 258
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "templateAnalysisService.categorizeVideo",
+          "lineNumber": 270
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 273
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "trendingTemplateService.createTrendingTemplate",
+          "lineNumber": 304
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 311
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "trendingTemplateService.createTrendingTemplate",
+          "lineNumber": 333
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "results.templates.push",
+          "lineNumber": 348
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "logETLEvent",
+          "lineNumber": 350
+        },
+        {
+          "caller": "processVideosWithRecovery",
+          "callee": "logETLEvent",
+          "lineNumber": 358
+        },
+        {
+          "caller": "processVideos",
+          "callee": "this.processVideosWithRecovery",
+          "lineNumber": 377
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlJobService.createJob",
+          "lineNumber": 385
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "new Date().toISOString",
+          "lineNumber": 389
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 392
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "new Date().toISOString",
+          "lineNumber": 394
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "Date.now",
+          "lineNumber": 397
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "trendingTemplateService.getAllTrendingTemplates",
+          "lineNumber": 403
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 406
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 429
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 442
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "apifyService.scrapeByHashtag",
+          "lineNumber": 454
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 457
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "apifyService.scrapeByHashtag",
+          "lineNumber": 477
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 488
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "videos.map",
+          "lineNumber": 499
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "convertRawToLegacyFormat",
+          "lineNumber": 499
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 503
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "trendingTemplateService.updateTemplateStats",
+          "lineNumber": 515
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 518
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "trendingTemplateService.updateTemplateStats",
+          "lineNumber": 537
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 549
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 555
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "Date.now",
+          "lineNumber": 566
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 568
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlJobService.completeJob",
+          "lineNumber": 577
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "logETLEvent",
+          "lineNumber": 589
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "Date.now",
+          "lineNumber": 593
+        },
+        {
+          "caller": "updateTemplateStats",
+          "callee": "etlJobService.failJob",
+          "lineNumber": 597
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "etlJobService.createJob",
+          "lineNumber": 614
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "new Date().toISOString",
+          "lineNumber": 618
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 622
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "categories.join",
+          "lineNumber": 624
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "new Date().toISOString",
+          "lineNumber": 625
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "Date.now",
+          "lineNumber": 628
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 641
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "new Date().toISOString",
+          "lineNumber": 649
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "apifyService.scrapeByCategory",
+          "lineNumber": 656
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 659
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "String",
+          "lineNumber": 674
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "apifyService.scrapeByCategory",
+          "lineNumber": 685
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "rawVideos.map",
+          "lineNumber": 696
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "convertRawToLegacyFormat",
+          "lineNumber": 696
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 698
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "this.processVideosWithRecovery",
+          "lineNumber": 705
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 717
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "etlErrorHandlingService.handleError",
+          "lineNumber": 727
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 740
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "Date.now",
+          "lineNumber": 753
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 755
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "etlJobService.completeJob",
+          "lineNumber": 764
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "logETLEvent",
+          "lineNumber": 775
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "Date.now",
+          "lineNumber": 779
+        },
+        {
+          "caller": "processByCategories",
+          "callee": "etlJobService.failJob",
+          "lineNumber": 783
+        }
+      ],
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/etl/README.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 223,
+      "nonEmptyLines": 150,
+      "sections": [
+        {
+          "heading": "TikTok Templates ETL Process",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Overview",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Components",
+          "level": 2,
+          "line": 13
+        },
+        {
+          "heading": "TikTok Template ETL Coordinator (`tiktokTemplateEtl.ts`)",
+          "level": 3,
+          "line": 15
+        },
+        {
+          "heading": "AI Template Analysis ETL (`aiTemplateAnalysisEtl.ts`)",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "Apify Service (`apifyService.ts`)",
+          "level": 3,
+          "line": 32
+        },
+        {
+          "heading": "Template Analysis Service (`templateAnalysisService.ts`)",
+          "level": 3,
+          "line": 40
+        },
+        {
+          "heading": "Advanced Template Analysis Service (`advancedTemplateAnalysisService.ts`)",
+          "level": 3,
+          "line": 49
+        },
+        {
+          "heading": "Trending Template Service (`trendingTemplateService.ts`)",
+          "level": 3,
+          "line": 58
+        },
+        {
+          "heading": "Usage",
+          "level": 2,
+          "line": 66
+        },
+        {
+          "heading": "Via API",
+          "level": 3,
+          "line": 68
+        },
+        {
+          "heading": "Via Admin Dashboard",
+          "level": 3,
+          "line": 106
+        },
+        {
+          "heading": "Authentication",
+          "level": 2,
+          "line": 114
+        },
+        {
+          "heading": "Environment Variables",
+          "level": 2,
+          "line": 121
+        },
+        {
+          "heading": "Custom Deployment",
+          "level": 2,
+          "line": 133
+        },
+        {
+          "heading": "Testing the ETL System",
+          "level": 2,
+          "line": 143
+        },
+        {
+          "heading": "Prerequisites",
+          "level": 3,
+          "line": 147
+        },
+        {
+          "heading": "Running Tests",
+          "level": 3,
+          "line": 157
+        },
+        {
+          "heading": "Scheduling ETL Jobs",
+          "level": 3,
+          "line": 178
+        },
+        {
+          "heading": "Troubleshooting",
+          "level": 2,
+          "line": 206
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 20
+      }
+    },
+    {
+      "path": "src/lib/etl/TESTING.md",
+      "language": "markdown",
+      "fileCategory": "docs",
+      "totalLines": 125,
+      "nonEmptyLines": 86,
+      "sections": [
+        {
+          "heading": "Testing the Template Analyzer",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "Prerequisites",
+          "level": 2,
+          "line": 5
+        },
+        {
+          "heading": "Running Tests",
+          "level": 2,
+          "line": 19
+        },
+        {
+          "heading": "1. Run All Tests",
+          "level": 3,
+          "line": 23
+        },
+        {
+          "heading": "2. Test Individual Components",
+          "level": 3,
+          "line": 37
+        },
+        {
+          "heading": "3. Configure Sample Size",
+          "level": 3,
+          "line": 55
+        },
+        {
+          "heading": "What Each Test Verifies",
+          "level": 2,
+          "line": 64
+        },
+        {
+          "heading": "Video Processing Test",
+          "level": 3,
+          "line": 66
+        },
+        {
+          "heading": "Template Categorization Test",
+          "level": 3,
+          "line": 74
+        },
+        {
+          "heading": "Template Structure Extraction Test",
+          "level": 3,
+          "line": 81
+        },
+        {
+          "heading": "Template Similarity Test",
+          "level": 3,
+          "line": 90
+        },
+        {
+          "heading": "Troubleshooting",
+          "level": 2,
+          "line": 97
+        },
+        {
+          "heading": "Adding New Tests",
+          "level": 2,
+          "line": 117
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 13
+      }
+    },
+    {
+      "path": "src/lib/evaluation/benchmark-runner.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 347,
+      "nonEmptyLines": 294,
+      "functions": [
+        {
+          "name": "getVpsTier",
+          "startLine": 56,
+          "endLine": 61,
+          "params": [
+            "score"
+          ]
+        },
+        {
+          "name": "assignRanks",
+          "startLine": 65,
+          "endLine": 82,
+          "params": [
+            "arr"
+          ]
+        },
+        {
+          "name": "spearmanRho",
+          "startLine": 84,
+          "endLine": 104,
+          "params": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "name": "round4",
+          "startLine": 106,
+          "endLine": 108,
+          "params": [
+            "n"
+          ]
+        },
+        {
+          "name": "runBenchmarkEvaluation",
+          "startLine": 147,
+          "endLine": 300,
+          "params": [
+            "supabase",
+            "notes"
+          ]
+        },
+        {
+          "name": "computeFeatureImportanceFromTrees",
+          "startLine": 306,
+          "endLine": 347,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "runBenchmarkEvaluation",
+          "line": 147,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "assignRanks",
+          "callee": "arr.map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "assignRanks",
+          "callee": "indexed.sort",
+          "lineNumber": 68
+        },
+        {
+          "caller": "spearmanRho",
+          "callee": "assignRanks",
+          "lineNumber": 88
+        },
+        {
+          "caller": "spearmanRho",
+          "callee": "assignRanks",
+          "lineNumber": 89
+        },
+        {
+          "caller": "spearmanRho",
+          "callee": "rx.reduce",
+          "lineNumber": 91
+        },
+        {
+          "caller": "spearmanRho",
+          "callee": "ry.reduce",
+          "lineNumber": 92
+        },
+        {
+          "caller": "spearmanRho",
+          "callee": "Math.sqrt",
+          "lineNumber": 103
+        },
+        {
+          "caller": "round4",
+          "callee": "Math.round",
+          "lineNumber": 107
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "console.log",
+          "lineNumber": 151
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from('evaluation_benchmarks')\n    .select",
+          "lineNumber": 154
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 154
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "benchmarks.map",
+          "lineNumber": 161
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from('training_features')\n    .select('*')\n    .in",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from('training_features')\n    .select",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 164
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "featureMap.set",
+          "lineNumber": 173
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "featureMap.get",
+          "lineNumber": 180
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "Number",
+          "lineNumber": 192
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "predictXGBoostV10",
+          "lineNumber": 201
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "console.error",
+          "lineNumber": 203
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "Number",
+          "lineNumber": 207
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "getVpsTier",
+          "lineNumber": 210
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "getVpsTier",
+          "lineNumber": 211
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "predictions.push",
+          "lineNumber": 213
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 217
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "predictions.map",
+          "lineNumber": 229
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "predictions.map",
+          "lineNumber": 230
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "spearmanRho",
+          "lineNumber": 232
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "Math.abs",
+          "lineNumber": 240
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "computeFeatureImportanceFromTrees",
+          "lineNumber": 256
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "new Date().toISOString",
+          "lineNumber": 258
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 263
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 264
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 265
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 266
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "round4",
+          "lineNumber": 267
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "featureImportance.slice",
+          "lineNumber": 269
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from('evaluation_runs')\n    .insert",
+          "lineNumber": 274
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "supabase\n    .from",
+          "lineNumber": 274
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "console.error",
+          "lineNumber": 290
+        },
+        {
+          "caller": "runBenchmarkEvaluation",
+          "callee": "console.log",
+          "lineNumber": 294
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "require",
+          "lineNumber": 308
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "require",
+          "lineNumber": 309
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "join",
+          "lineNumber": 311
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "process.cwd",
+          "lineNumber": 311
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "JSON.parse",
+          "lineNumber": 312
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "readFileSync",
+          "lineNumber": 312
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "join",
+          "lineNumber": 312
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "JSON.parse",
+          "lineNumber": 313
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "readFileSync",
+          "lineNumber": 313
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "join",
+          "lineNumber": 313
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "splitCounts.set",
+          "lineNumber": 323
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "splitCounts.get",
+          "lineNumber": 323
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "Array.from(splitCounts.values()).reduce",
+          "lineNumber": 328
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "Array.from",
+          "lineNumber": 328
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "splitCounts.values",
+          "lineNumber": 328
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "importance.push",
+          "lineNumber": 334
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "round4",
+          "lineNumber": 336
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "importance.sort",
+          "lineNumber": 341
+        },
+        {
+          "caller": "computeFeatureImportanceFromTrees",
+          "callee": "console.error",
+          "lineNumber": 344
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/events/emit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "getSupabase",
+          "startLine": 4,
+          "endLine": 13,
+          "params": []
+        },
+        {
+          "name": "emitEvent",
+          "startLine": 17,
+          "endLine": 45,
+          "params": [
+            "params"
+          ]
+        },
+        {
+          "name": "emitEventStrict",
+          "startLine": 51,
+          "endLine": 75,
+          "params": [
+            "params"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "emitEvent",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "emitEventStrict",
+          "line": 51,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getSupabase",
+          "callee": "createClient",
+          "lineNumber": 6
+        },
+        {
+          "caller": "emitEvent",
+          "callee": "getSupabase().from('platform_events').insert",
+          "lineNumber": 28
+        },
+        {
+          "caller": "emitEvent",
+          "callee": "getSupabase().from",
+          "lineNumber": 28
+        },
+        {
+          "caller": "emitEvent",
+          "callee": "getSupabase",
+          "lineNumber": 28
+        },
+        {
+          "caller": "emitEvent",
+          "callee": "console.error",
+          "lineNumber": 40
+        },
+        {
+          "caller": "emitEvent",
+          "callee": "console.error",
+          "lineNumber": 43
+        },
+        {
+          "caller": "emitEventStrict",
+          "callee": "getSupabase().from('platform_events').insert",
+          "lineNumber": 61
+        },
+        {
+          "caller": "emitEventStrict",
+          "callee": "getSupabase().from",
+          "lineNumber": 61
+        },
+        {
+          "caller": "emitEventStrict",
+          "callee": "getSupabase",
+          "lineNumber": 61
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/ab.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 10,
+      "functions": [
+        {
+          "name": "hash",
+          "startLine": 3,
+          "endLine": 3,
+          "params": [
+            "str"
+          ]
+        },
+        {
+          "name": "assignAB",
+          "startLine": 5,
+          "endLine": 12,
+          "params": [
+            "exp",
+            "subjectId",
+            "videoId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "assignAB",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "hash",
+          "callee": "str.charCodeAt",
+          "lineNumber": 3
+        },
+        {
+          "caller": "hash",
+          "callee": "Math.imul",
+          "lineNumber": 3
+        },
+        {
+          "caller": "assignAB",
+          "callee": "hash",
+          "lineNumber": 7
+        },
+        {
+          "caller": "assignAB",
+          "callee": "Math.max",
+          "lineNumber": 9
+        },
+        {
+          "caller": "assignAB",
+          "callee": "Math.min",
+          "lineNumber": 10
+        },
+        {
+          "caller": "assignAB",
+          "callee": "Math.floor",
+          "lineNumber": 10
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/autopilot.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 8,
+      "functions": [
+        {
+          "name": "applyWinner",
+          "startLine": 3,
+          "endLine": 9,
+          "params": [
+            "experimentId",
+            "variantId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "applyWinner",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "applyWinner",
+          "callee": "setWinner",
+          "lineNumber": 5
+        },
+        {
+          "caller": "applyWinner",
+          "callee": "markDeployed",
+          "lineNumber": 6
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/bandit.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 34,
+      "functions": [
+        {
+          "name": "initPosterior",
+          "startLine": 5,
+          "endLine": 9,
+          "params": [
+            "exp"
+          ]
+        },
+        {
+          "name": "sampleBeta",
+          "startLine": 11,
+          "endLine": 17,
+          "params": [
+            "a",
+            "b"
+          ]
+        },
+        {
+          "name": "assignBandit",
+          "startLine": 19,
+          "endLine": 33,
+          "params": [
+            "exp",
+            "posterior"
+          ]
+        },
+        {
+          "name": "updatePosterior",
+          "startLine": 35,
+          "endLine": 39,
+          "params": [
+            "posterior",
+            "variantId",
+            "success"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "initPosterior",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "assignBandit",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "updatePosterior",
+          "line": 35,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "sampleBeta",
+          "callee": "Array.from({length:12}).reduce",
+          "lineNumber": 15
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Array.from",
+          "lineNumber": 15
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Math.random",
+          "lineNumber": 15
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Math.min",
+          "lineNumber": 15
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Math.sqrt",
+          "lineNumber": 15
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Math.min",
+          "lineNumber": 16
+        },
+        {
+          "caller": "sampleBeta",
+          "callee": "Math.max",
+          "lineNumber": 16
+        },
+        {
+          "caller": "assignBandit",
+          "callee": "Math.random",
+          "lineNumber": 21
+        },
+        {
+          "caller": "assignBandit",
+          "callee": "Math.floor",
+          "lineNumber": 22
+        },
+        {
+          "caller": "assignBandit",
+          "callee": "Math.random",
+          "lineNumber": 22
+        },
+        {
+          "caller": "assignBandit",
+          "callee": "sampleBeta",
+          "lineNumber": 29
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 4,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/simulator.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 22,
+      "nonEmptyLines": 18,
+      "functions": [
+        {
+          "name": "seededRandom",
+          "startLine": 4,
+          "endLine": 7,
+          "params": [
+            "seed"
+          ]
+        },
+        {
+          "name": "simulateTicks",
+          "startLine": 9,
+          "endLine": 20,
+          "params": [
+            "exp",
+            "ticks"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "simulateTicks",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "seededRandom",
+          "callee": "Math.sin",
+          "lineNumber": 5
+        },
+        {
+          "caller": "seededRandom",
+          "callee": "Math.floor",
+          "lineNumber": 6
+        },
+        {
+          "caller": "simulateTicks",
+          "callee": "Math.random",
+          "lineNumber": 15
+        },
+        {
+          "caller": "simulateTicks",
+          "callee": "appendReport",
+          "lineNumber": 17
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/store.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 82,
+      "functions": [
+        {
+          "name": "EXP_FILE",
+          "startLine": 6,
+          "endLine": 6,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "LOG_FILE",
+          "startLine": 7,
+          "endLine": 7,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "ensureDir",
+          "startLine": 9,
+          "endLine": 9,
+          "params": []
+        },
+        {
+          "name": "writeAtomic",
+          "startLine": 11,
+          "endLine": 16,
+          "params": [
+            "file",
+            "data"
+          ]
+        },
+        {
+          "name": "uid",
+          "startLine": 18,
+          "endLine": 18,
+          "params": []
+        },
+        {
+          "name": "createExperiment",
+          "startLine": 20,
+          "endLine": 32,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "getExperiment",
+          "startLine": 34,
+          "endLine": 36,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "listExperiments",
+          "startLine": 38,
+          "endLine": 49,
+          "params": []
+        },
+        {
+          "name": "appendReport",
+          "startLine": 51,
+          "endLine": 55,
+          "params": [
+            "id",
+            "rep"
+          ]
+        },
+        {
+          "name": "readReports",
+          "startLine": 57,
+          "endLine": 59,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "setStatus",
+          "startLine": 61,
+          "endLine": 66,
+          "params": [
+            "id",
+            "status"
+          ]
+        },
+        {
+          "name": "setWinner",
+          "startLine": 68,
+          "endLine": 74,
+          "params": [
+            "id",
+            "variantId"
+          ]
+        },
+        {
+          "name": "markDeployed",
+          "startLine": 76,
+          "endLine": 81,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "ensureDemoExperiment",
+          "startLine": 84,
+          "endLine": 95,
+          "params": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "createExperiment",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "getExperiment",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "listExperiments",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "appendReport",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "readReports",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "setStatus",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "setWinner",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "markDeployed",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "ensureDemoExperiment",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "EXP_FILE",
+          "callee": "path.join",
+          "lineNumber": 6
+        },
+        {
+          "caller": "LOG_FILE",
+          "callee": "path.join",
+          "lineNumber": 7
+        },
+        {
+          "caller": "ensureDir",
+          "callee": "fs.mkdir",
+          "lineNumber": 9
+        },
+        {
+          "caller": "writeAtomic",
+          "callee": "ensureDir",
+          "lineNumber": 12
+        },
+        {
+          "caller": "writeAtomic",
+          "callee": "fs.writeFile",
+          "lineNumber": 14
+        },
+        {
+          "caller": "writeAtomic",
+          "callee": "JSON.stringify",
+          "lineNumber": 14
+        },
+        {
+          "caller": "writeAtomic",
+          "callee": "fs.rename",
+          "lineNumber": 15
+        },
+        {
+          "caller": "uid",
+          "callee": "Math.random().toString(36).slice",
+          "lineNumber": 18
+        },
+        {
+          "caller": "uid",
+          "callee": "Math.random().toString",
+          "lineNumber": 18
+        },
+        {
+          "caller": "uid",
+          "callee": "Math.random",
+          "lineNumber": 18
+        },
+        {
+          "caller": "createExperiment",
+          "callee": "uid",
+          "lineNumber": 21
+        },
+        {
+          "caller": "createExperiment",
+          "callee": "new Date().toISOString",
+          "lineNumber": 24
+        },
+        {
+          "caller": "createExperiment",
+          "callee": "writeAtomic",
+          "lineNumber": 30
+        },
+        {
+          "caller": "createExperiment",
+          "callee": "EXP_FILE",
+          "lineNumber": 30
+        },
+        {
+          "caller": "getExperiment",
+          "callee": "fs.readFile",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getExperiment",
+          "callee": "EXP_FILE",
+          "lineNumber": 35
+        },
+        {
+          "caller": "getExperiment",
+          "callee": "JSON.parse",
+          "lineNumber": 35
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "ensureDir",
+          "lineNumber": 40
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "fs.readdir",
+          "lineNumber": 41
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "files.filter",
+          "lineNumber": 42
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "f.endsWith",
+          "lineNumber": 42
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "out.push",
+          "lineNumber": 45
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "JSON.parse",
+          "lineNumber": 45
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "fs.readFile",
+          "lineNumber": 45
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "path.join",
+          "lineNumber": 45
+        },
+        {
+          "caller": "listExperiments",
+          "callee": "out.sort",
+          "lineNumber": 47
+        },
+        {
+          "caller": "appendReport",
+          "callee": "ensureDir",
+          "lineNumber": 52
+        },
+        {
+          "caller": "appendReport",
+          "callee": "JSON.stringify",
+          "lineNumber": 53
+        },
+        {
+          "caller": "appendReport",
+          "callee": "new Date().toISOString",
+          "lineNumber": 53
+        },
+        {
+          "caller": "appendReport",
+          "callee": "fs.appendFile",
+          "lineNumber": 54
+        },
+        {
+          "caller": "appendReport",
+          "callee": "LOG_FILE",
+          "lineNumber": 54
+        },
+        {
+          "caller": "readReports",
+          "callee": "fs.readFile",
+          "lineNumber": 58
+        },
+        {
+          "caller": "readReports",
+          "callee": "LOG_FILE",
+          "lineNumber": 58
+        },
+        {
+          "caller": "readReports",
+          "callee": "text.split(/\\r?\\n/).filter(Boolean).map",
+          "lineNumber": 58
+        },
+        {
+          "caller": "readReports",
+          "callee": "text.split(/\\r?\\n/).filter",
+          "lineNumber": 58
+        },
+        {
+          "caller": "readReports",
+          "callee": "text.split",
+          "lineNumber": 58
+        },
+        {
+          "caller": "readReports",
+          "callee": "JSON.parse",
+          "lineNumber": 58
+        },
+        {
+          "caller": "setStatus",
+          "callee": "getExperiment",
+          "lineNumber": 62
+        },
+        {
+          "caller": "setStatus",
+          "callee": "writeAtomic",
+          "lineNumber": 65
+        },
+        {
+          "caller": "setStatus",
+          "callee": "EXP_FILE",
+          "lineNumber": 65
+        },
+        {
+          "caller": "setWinner",
+          "callee": "getExperiment",
+          "lineNumber": 69
+        },
+        {
+          "caller": "setWinner",
+          "callee": "writeAtomic",
+          "lineNumber": 73
+        },
+        {
+          "caller": "setWinner",
+          "callee": "EXP_FILE",
+          "lineNumber": 73
+        },
+        {
+          "caller": "markDeployed",
+          "callee": "getExperiment",
+          "lineNumber": 77
+        },
+        {
+          "caller": "markDeployed",
+          "callee": "writeAtomic",
+          "lineNumber": 80
+        },
+        {
+          "caller": "markDeployed",
+          "callee": "EXP_FILE",
+          "lineNumber": 80
+        },
+        {
+          "caller": "ensureDemoExperiment",
+          "callee": "listExperiments",
+          "lineNumber": 85
+        },
+        {
+          "caller": "ensureDemoExperiment",
+          "callee": "createExperiment",
+          "lineNumber": 87
+        },
+        {
+          "caller": "ensureDemoExperiment",
+          "callee": "Math.random",
+          "lineNumber": 91
+        },
+        {
+          "caller": "ensureDemoExperiment",
+          "callee": "appendReport",
+          "lineNumber": 92
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 9,
+        "functionCount": 14,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/summary.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 53,
+      "nonEmptyLines": 49,
+      "functions": [
+        {
+          "name": "clopperPearson",
+          "startLine": 4,
+          "endLine": 16,
+          "params": [
+            "n",
+            "k"
+          ]
+        },
+        {
+          "name": "buildSummary",
+          "startLine": 18,
+          "endLine": 51,
+          "params": [
+            "exp"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "buildSummary",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "clopperPearson",
+          "callee": "Math.sqrt",
+          "lineNumber": 10
+        },
+        {
+          "caller": "clopperPearson",
+          "callee": "isFinite",
+          "lineNumber": 13
+        },
+        {
+          "caller": "clopperPearson",
+          "callee": "isFinite",
+          "lineNumber": 14
+        },
+        {
+          "caller": "clopperPearson",
+          "callee": "Math.max",
+          "lineNumber": 15
+        },
+        {
+          "caller": "clopperPearson",
+          "callee": "Math.min",
+          "lineNumber": 15
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "readReports",
+          "lineNumber": 19
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "Object.values(byVar).map",
+          "lineNumber": 30
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "Object.values",
+          "lineNumber": 30
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "clopperPearson",
+          "lineNumber": 32
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "variants.reduce",
+          "lineNumber": 35
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "variants.reduce",
+          "lineNumber": 37
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "variants.every",
+          "lineNumber": 44
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "[...variants].sort",
+          "lineNumber": 45
+        },
+        {
+          "caller": "buildSummary",
+          "callee": "variants.find",
+          "lineNumber": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/types.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 47,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/experiments/uplift.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 164,
+      "nonEmptyLines": 149,
+      "functions": [
+        {
+          "name": "getDb",
+          "startLine": 6,
+          "endLine": 8,
+          "params": []
+        },
+        {
+          "name": "ensureExperimentTables",
+          "startLine": 10,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "assignArm",
+          "startLine": 63,
+          "endLine": 77,
+          "params": [
+            "experimentId",
+            "subjectId",
+            "context"
+          ]
+        },
+        {
+          "name": "weightedMean",
+          "startLine": 79,
+          "endLine": 84,
+          "params": [
+            "values",
+            "weights"
+          ]
+        },
+        {
+          "name": "weightedVariance",
+          "startLine": 86,
+          "endLine": 91,
+          "params": [
+            "values",
+            "weights",
+            "mean"
+          ]
+        },
+        {
+          "name": "computeUpliftIPW",
+          "startLine": 93,
+          "endLine": 156,
+          "params": [
+            "experimentId",
+            "metrics"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "getDb",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "ensureExperimentTables",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "assignArm",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "computeUpliftIPW",
+          "line": 93,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getDb",
+          "callee": "createClient",
+          "lineNumber": 7
+        },
+        {
+          "caller": "ensureExperimentTables",
+          "callee": "getDb",
+          "lineNumber": 11
+        },
+        {
+          "caller": "ensureExperimentTables",
+          "callee": "(db as any).rpc",
+          "lineNumber": 60
+        },
+        {
+          "caller": "assignArm",
+          "callee": "ensureExperimentTables",
+          "lineNumber": 64
+        },
+        {
+          "caller": "assignArm",
+          "callee": "getDb",
+          "lineNumber": 65
+        },
+        {
+          "caller": "assignArm",
+          "callee": "db.from('experiment_arms').select('id,name,weight,edits_json').eq",
+          "lineNumber": 66
+        },
+        {
+          "caller": "assignArm",
+          "callee": "db.from('experiment_arms').select",
+          "lineNumber": 66
+        },
+        {
+          "caller": "assignArm",
+          "callee": "db.from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "assignArm",
+          "callee": "arms.map",
+          "lineNumber": 68
+        },
+        {
+          "caller": "assignArm",
+          "callee": "Number",
+          "lineNumber": 68
+        },
+        {
+          "caller": "assignArm",
+          "callee": "weights.reduce",
+          "lineNumber": 69
+        },
+        {
+          "caller": "assignArm",
+          "callee": "weights.map",
+          "lineNumber": 70
+        },
+        {
+          "caller": "assignArm",
+          "callee": "Math.random",
+          "lineNumber": 71
+        },
+        {
+          "caller": "assignArm",
+          "callee": "Math.min",
+          "lineNumber": 73
+        },
+        {
+          "caller": "assignArm",
+          "callee": "Math.min",
+          "lineNumber": 74
+        },
+        {
+          "caller": "assignArm",
+          "callee": "db.from('assignments').insert",
+          "lineNumber": 75
+        },
+        {
+          "caller": "assignArm",
+          "callee": "db.from",
+          "lineNumber": 75
+        },
+        {
+          "caller": "weightedMean",
+          "callee": "weights.reduce",
+          "lineNumber": 80
+        },
+        {
+          "caller": "weightedMean",
+          "callee": "values.reduce",
+          "lineNumber": 82
+        },
+        {
+          "caller": "weightedVariance",
+          "callee": "weights.reduce",
+          "lineNumber": 87
+        },
+        {
+          "caller": "weightedVariance",
+          "callee": "values.reduce",
+          "lineNumber": 89
+        },
+        {
+          "caller": "weightedVariance",
+          "callee": "Math.pow",
+          "lineNumber": 89
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "ensureExperimentTables",
+          "lineNumber": 94
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "getDb",
+          "lineNumber": 95
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('experiment_arms').select('id,is_control,weight').eq",
+          "lineNumber": 97
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('experiment_arms').select",
+          "lineNumber": 97
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from",
+          "lineNumber": 97
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "arms.find",
+          "lineNumber": 99
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('assignments').select('subject_id,arm_id,propensity').eq('experiment_id', experimentId).limit",
+          "lineNumber": 103
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('assignments').select('subject_id,arm_id,propensity').eq",
+          "lineNumber": 103
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('assignments').select",
+          "lineNumber": 103
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from",
+          "lineNumber": 103
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('outcomes').select('subject_id,arm_id,value,metric').eq('experiment_id', experimentId).eq('metric', metric).limit",
+          "lineNumber": 104
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('outcomes').select('subject_id,arm_id,value,metric').eq('experiment_id', experimentId).eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('outcomes').select('subject_id,arm_id,value,metric').eq",
+          "lineNumber": 104
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('outcomes').select",
+          "lineNumber": 104
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from",
+          "lineNumber": 104
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "(asg as any[]).find",
+          "lineNumber": 111
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "String",
+          "lineNumber": 113
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "String",
+          "lineNumber": 114
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.max",
+          "lineNumber": 115
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Number",
+          "lineNumber": 115
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.max",
+          "lineNumber": 116
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Number",
+          "lineNumber": 116
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "arms.find",
+          "lineNumber": 116
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "String",
+          "lineNumber": 116
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "ctrlVals.push",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Number",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "ctrlW.push",
+          "lineNumber": 117
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "byArm[armId].values.push",
+          "lineNumber": 119
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Number",
+          "lineNumber": 119
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "byArm[armId].weights.push",
+          "lineNumber": 119
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "weightedMean",
+          "lineNumber": 121
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "weightedVariance",
+          "lineNumber": 122
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Object.entries",
+          "lineNumber": 123
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "String",
+          "lineNumber": 124
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "weightedMean",
+          "lineNumber": 125
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "weightedVariance",
+          "lineNumber": 126
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.sqrt",
+          "lineNumber": 129
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.max",
+          "lineNumber": 129
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "bucket.weights.reduce",
+          "lineNumber": 129
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.sqrt",
+          "lineNumber": 130
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.max",
+          "lineNumber": 130
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "ctrlW.reduce",
+          "lineNumber": 130
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "Math.sqrt",
+          "lineNumber": 131
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from('treatment_effects').insert",
+          "lineNumber": 135
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "db.from",
+          "lineNumber": 135
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "new Date().toISOString",
+          "lineNumber": 145
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "(await getDb()).from('integration_job_runs').upsert",
+          "lineNumber": 153
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "(await getDb()).from",
+          "lineNumber": 153
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "getDb",
+          "lineNumber": 153
+        },
+        {
+          "caller": "computeUpliftIPW",
+          "callee": "new Date().toISOString",
+          "lineNumber": 153
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 4,
+        "functionCount": 6,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/audience-quality.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 142,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 39,
+          "endLine": 41,
+          "params": []
+        },
+        {
+          "name": "classifyTier",
+          "startLine": 43,
+          "endLine": 49,
+          "params": [
+            "followers"
+          ]
+        },
+        {
+          "name": "extractAudienceFeatures",
+          "startLine": 57,
+          "endLine": 161,
+          "params": [
+            "creatorId",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AUDIENCE_FEATURE_NAMES",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "extractAudienceFeatures",
+          "line": 57,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 40
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "getServiceClient",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n      .from('onboarding_profiles')\n      .select('follower_count, creator_stage')\n      .eq('user_id', creatorId)\n      .single",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n      .from('onboarding_profiles')\n      .select('follower_count, creator_stage')\n      .eq",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n      .from('onboarding_profiles')\n      .select",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n      .from",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.log10",
+          "lineNumber": 84
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.max",
+          "lineNumber": 84
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "classifyTier",
+          "lineNumber": 87
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_views, actual_likes, actual_comments')\n        .eq('creator_id', creatorId)\n        .not('actual_views', 'is', null)\n        .gt('actual_views', 0)\n        .order('created_at', { ascending: false })\n        .limit",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_views, actual_likes, actual_comments')\n        .eq('creator_id', creatorId)\n        .not('actual_views', 'is', null)\n        .gt('actual_views', 0)\n        .order",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_views, actual_likes, actual_comments')\n        .eq('creator_id', creatorId)\n        .not('actual_views', 'is', null)\n        .gt",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_views, actual_likes, actual_comments')\n        .eq('creator_id', creatorId)\n        .not",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_views, actual_likes, actual_comments')\n        .eq",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from",
+          "lineNumber": 93
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.max",
+          "lineNumber": 110
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.min",
+          "lineNumber": 110
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_follower_count, created_at')\n        .eq('creator_id', creatorId)\n        .not('actual_follower_count', 'is', null)\n        .gt('actual_follower_count', 0)\n        .order('created_at', { ascending: true })\n        .limit",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_follower_count, created_at')\n        .eq('creator_id', creatorId)\n        .not('actual_follower_count', 'is', null)\n        .gt('actual_follower_count', 0)\n        .order",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_follower_count, created_at')\n        .eq('creator_id', creatorId)\n        .not('actual_follower_count', 'is', null)\n        .gt",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_follower_count, created_at')\n        .eq('creator_id', creatorId)\n        .not",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select('actual_follower_count, created_at')\n        .eq",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from('prediction_runs')\n        .select",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "client\n        .from",
+          "lineNumber": 121
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.max",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.min",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.max",
+          "lineNumber": 146
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.min",
+          "lineNumber": 146
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.round",
+          "lineNumber": 151
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.round",
+          "lineNumber": 152
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.round",
+          "lineNumber": 153
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "Math.round",
+          "lineNumber": 155
+        },
+        {
+          "caller": "extractAudienceFeatures",
+          "callee": "console.warn",
+          "lineNumber": 158
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/creator-trajectory.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 158,
+      "nonEmptyLines": 138,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 38,
+          "endLine": 40,
+          "params": []
+        },
+        {
+          "name": "extractCreatorFeatures",
+          "startLine": 48,
+          "endLine": 158,
+          "params": [
+            "creatorId",
+            "videoPostDate",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CREATOR_FEATURE_NAMES",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "extractCreatorFeatures",
+          "line": 48,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 39
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "getServiceClient",
+          "lineNumber": 53
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "ninetyDaysAgo.setDate",
+          "lineNumber": 69
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "ninetyDaysAgo.getDate",
+          "lineNumber": 69
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('actual_dps, dps_v2_display_score, created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .gte('created_at', ninetyDaysAgo.toISOString())\n      .not('actual_dps', 'is', null)\n      .order",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('actual_dps, dps_v2_display_score, created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .gte('created_at', ninetyDaysAgo.toISOString())\n      .not",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('actual_dps, dps_v2_display_score, created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .gte",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('actual_dps, dps_v2_display_score, created_at')\n      .eq('creator_id', creatorId)\n      .lt",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('actual_dps, dps_v2_display_score, created_at')\n      .eq",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "videoPostDate.toISOString",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "ninetyDaysAgo.toISOString",
+          "lineNumber": 76
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "runs.map",
+          "lineNumber": 83
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "actuals.map",
+          "lineNumber": 89
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "scores90d.reduce",
+          "lineNumber": 90
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "scores90d.reduce",
+          "lineNumber": 96
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.sqrt",
+          "lineNumber": 97
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.max",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.min",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "thirtyDaysAgo.setDate",
+          "lineNumber": 103
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "thirtyDaysAgo.getDate",
+          "lineNumber": 103
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "actuals.filter",
+          "lineNumber": 104
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "recent30d.map",
+          "lineNumber": 110
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "recent30d.map",
+          "lineNumber": 111
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "xs.reduce",
+          "lineNumber": 112
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "ys.reduce",
+          "lineNumber": 113
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "xs.reduce",
+          "lineNumber": 114
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "xs.reduce",
+          "lineNumber": 115
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.max",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.max",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.min",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.max",
+          "lineNumber": 119
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.min",
+          "lineNumber": 119
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .or('actual_dps.gte.70,dps_v2_display_score.gte.70')\n      .not('actual_dps', 'is', null)\n      .order('created_at', { ascending: false })\n      .limit",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .or('actual_dps.gte.70,dps_v2_display_score.gte.70')\n      .not('actual_dps', 'is', null)\n      .order",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .or('actual_dps.gte.70,dps_v2_display_score.gte.70')\n      .not",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq('creator_id', creatorId)\n      .lt('created_at', videoPostDate.toISOString())\n      .or",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq('creator_id', creatorId)\n      .lt",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select('created_at')\n      .eq",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from('prediction_runs')\n      .select",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "client\n      .from",
+          "lineNumber": 124
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "videoPostDate.toISOString",
+          "lineNumber": 128
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.floor",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "videoPostDate.getTime",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "new Date(viralRun[0].created_at).getTime",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.max",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.round",
+          "lineNumber": 148
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.round",
+          "lineNumber": 149
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "Math.round",
+          "lineNumber": 151
+        },
+        {
+          "caller": "extractCreatorFeatures",
+          "callee": "console.error",
+          "lineNumber": 155
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/cultural-momentum.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 152,
+      "nonEmptyLines": 130,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 53,
+          "endLine": 55,
+          "params": []
+        },
+        {
+          "name": "extractCulturalFeatures",
+          "startLine": 63,
+          "endLine": 152,
+          "params": [
+            "niche",
+            "topic",
+            "videoPostDate",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CULTURAL_FEATURE_NAMES",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "extractCulturalFeatures",
+          "line": 63,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 54
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "getServiceClient",
+          "lineNumber": 71
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "fourteenDaysAgo.setDate",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "fourteenDaysAgo.getDate",
+          "lineNumber": 75
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or(`niche.eq.${niche},activated_niches.cs.{${niche}}`)\n      .lte('created_at', videoPostDate.toISOString())\n      .gte('created_at', fourteenDaysAgo.toISOString())\n      .in('status', ['detected', 'approved'])\n      .order('confidence', { ascending: false })\n      .limit",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or(`niche.eq.${niche},activated_niches.cs.{${niche}}`)\n      .lte('created_at', videoPostDate.toISOString())\n      .gte('created_at', fourteenDaysAgo.toISOString())\n      .in('status', ['detected', 'approved'])\n      .order",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or(`niche.eq.${niche},activated_niches.cs.{${niche}}`)\n      .lte('created_at', videoPostDate.toISOString())\n      .gte('created_at', fourteenDaysAgo.toISOString())\n      .in",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or(`niche.eq.${niche},activated_niches.cs.{${niche}}`)\n      .lte('created_at', videoPostDate.toISOString())\n      .gte",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or(`niche.eq.${niche},activated_niches.cs.{${niche}}`)\n      .lte",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select('event_title, velocity_score, confidence, keywords, activated_niches, status')\n      .or",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from('cultural_events')\n      .select",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "client\n      .from",
+          "lineNumber": 79
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "videoPostDate.toISOString",
+          "lineNumber": 83
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "fourteenDaysAgo.toISOString",
+          "lineNumber": 84
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "console.warn",
+          "lineNumber": 90
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "(topic || '').toLowerCase",
+          "lineNumber": 97
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "topicLower.split(/\\s+/).filter",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "topicLower.split",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "matchingEvents.filter",
+          "lineNumber": 102
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "(e.event_title || '').toLowerCase",
+          "lineNumber": 103
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "(e.keywords || []).map",
+          "lineNumber": 104
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "k.toLowerCase",
+          "lineNumber": 104
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "topicWords.some",
+          "lineNumber": 105
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "titleLower.includes",
+          "lineNumber": 106
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "kwLower.some",
+          "lineNumber": 106
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "k.includes",
+          "lineNumber": 106
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "relevantEvents.slice",
+          "lineNumber": 112
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "eventsForScoring.map",
+          "lineNumber": 117
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "Math.min",
+          "lineNumber": 123
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "weightedScores.reduce",
+          "lineNumber": 123
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "Math.min",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "Math.round",
+          "lineNumber": 143
+        },
+        {
+          "caller": "extractCulturalFeatures",
+          "callee": "console.warn",
+          "lineNumber": 149
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/distribution-signals-check.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 103,
+      "nonEmptyLines": 91,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 33,
+          "endLine": 35,
+          "params": []
+        },
+        {
+          "name": "checkDistributionCoverage",
+          "startLine": 37,
+          "endLine": 103,
+          "params": [
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "checkDistributionCoverage",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 34
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "getServiceClient",
+          "lineNumber": 38
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client\n    .from('scraped_videos')\n    .select",
+          "lineNumber": 41
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client\n    .from",
+          "lineNumber": 41
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "Promise.all",
+          "lineNumber": 63
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 64
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 64
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 64
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 65
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 66
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 67
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 67
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 67
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 68
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 68
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 68
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 69
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 69
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 69
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 70
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 70
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 70
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select('video_id', { count: 'exact', head: true }).not",
+          "lineNumber": 71
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from('scraped_videos').select",
+          "lineNumber": 71
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "client.from",
+          "lineNumber": 71
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "counts.map",
+          "lineNumber": 74
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "Math.min",
+          "lineNumber": 76
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "Math.min",
+          "lineNumber": 77
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "Math.max",
+          "lineNumber": 82
+        },
+        {
+          "caller": "checkDistributionCoverage",
+          "callee": "Math.round",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/distribution-signals.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 188,
+      "nonEmptyLines": 163,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 41,
+          "endLine": 43,
+          "params": []
+        },
+        {
+          "name": "extractDistributionFeatures",
+          "startLine": 82,
+          "endLine": 188,
+          "params": [
+            "videoId",
+            "audienceSizeTier",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "DISTRIBUTION_FEATURE_NAMES",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "extractDistributionFeatures",
+          "line": 82,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 42
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "getServiceClient",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "client\n      .from('scraped_videos')\n      .select('posted_hour_utc, posted_day_of_week, hashtag_count, hashtag_niche_count, has_fyp_hashtag, hashtag_specificity_score, sound_type, sound_is_trending, sound_age_days, views_at_1h')\n      .eq('video_id', videoId)\n      .single",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "client\n      .from('scraped_videos')\n      .select('posted_hour_utc, posted_day_of_week, hashtag_count, hashtag_niche_count, has_fyp_hashtag, hashtag_specificity_score, sound_type, sound_is_trending, sound_age_days, views_at_1h')\n      .eq",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "client\n      .from('scraped_videos')\n      .select",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "client\n      .from",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.max",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.min",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.min",
+          "lineNumber": 155
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.min",
+          "lineNumber": 165
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 165
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 177
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 178
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 179
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 180
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 181
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "Math.round",
+          "lineNumber": 182
+        },
+        {
+          "caller": "extractDistributionFeatures",
+          "callee": "console.warn",
+          "lineNumber": 185
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "src/lib/features/feature-matrix-builder.ts",
+      "language": "typescript",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 106,
+      "functions": [
+        {
+          "name": "getServiceClient",
+          "startLine": 49,
+          "endLine": 51,
+          "params": []
+        },
+        {
+          "name": "buildFeatureRow",
+          "startLine": 65,
+          "endLine": 118,
+          "params": [
+            "contentFeatures",
+            "creatorId",
+            "videoPostDate",
+            "niche",
+            "topic",
+            "videoId",
+            "db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "V10_FEATURES",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "ALL_FEATURES",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "FEATURE_COUNT",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "buildFeatureRow",
+          "line": 65,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "getServiceClient",
+          "callee": "createClient",
+          "lineNumber": 50
+        },
+        {
+          "caller": "buildFeatureRow",
+          "callee": "getServiceClient",
+          "lineNumber": 74
+        },
+        {
+          "caller": "buildFeatureRow",
+          "callee": "extractCreatorFeatures",
+          "lineNumber": 79
+        },
+        {
+          "caller": "buildFeatureRow",
+          "callee": "extractCulturalFeatures",
+          "lineNumber": 94
+        },
+        {
+          "caller": "buildFeatureRow",
+          "callee": "extractAudienceFeatures",
+          "lineNumber": 101
+        },
+        {
+          "caller": "buildFeatureRow",
+          "callee": "extractDistributionFeatures",
+          "lineNumber": 109
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 4,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,808 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/admin/api-keys/[id]/regenerate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/api-keys/[id]/regenerate/route.ts",
+      "summary": "Admin API endpoint that regenerates an existing API key, rotating the secret while preserving permissions and audit history.",
+      "tags": ["api-handler", "admin", "security", "api-keys"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/regenerate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/api-keys/[id]/regenerate/route.ts",
+      "lineRange": [35, 157],
+      "summary": "POST handler that authenticates the admin caller, rate-limits the request, and regenerates the specified API key in storage.",
+      "tags": ["api-handler", "security", "key-rotation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/api-keys/[id]/toggle/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/api-keys/[id]/toggle/route.ts",
+      "summary": "Admin API endpoint that toggles the enabled/disabled state of an API key without revoking it.",
+      "tags": ["api-handler", "admin", "security", "api-keys"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/toggle/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/api-keys/[id]/toggle/route.ts",
+      "lineRange": [32, 135],
+      "summary": "PATCH handler that authenticates and rate-limits then flips an API key's active flag, returning the updated state.",
+      "tags": ["api-handler", "security", "toggle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/api-keys/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "summary": "Admin API endpoint for a single API key supporting GET (details and usage analytics) and PATCH (regenerate or toggle via action verbs).",
+      "tags": ["api-handler", "admin", "security", "api-keys"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [31, 130],
+      "summary": "GET handler returning a single API key with redacted secrets and aggregated usage metrics (popular endpoints, daily counts).",
+      "tags": ["api-handler", "analytics", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [136, 173],
+      "summary": "PATCH handler that dispatches to regenerate or toggle sub-actions based on the request body verb.",
+      "tags": ["api-handler", "dispatcher", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:handleRegenerate",
+      "type": "function",
+      "name": "handleRegenerate",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [178, 235],
+      "summary": "Internal helper that performs the key rotation, persists the new hash, and returns the freshly minted plaintext key once.",
+      "tags": ["security", "key-rotation", "helper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:handleToggle",
+      "type": "function",
+      "name": "handleToggle",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [237, 290],
+      "summary": "Internal helper that flips an API key's active status and audits the change.",
+      "tags": ["security", "toggle", "helper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:getPopularEndpoints",
+      "type": "function",
+      "name": "getPopularEndpoints",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [298, 310],
+      "summary": "Aggregates the most-called endpoints for a given API key from usage logs.",
+      "tags": ["analytics", "aggregation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/[id]/route.ts:getDailyUsage",
+      "type": "function",
+      "name": "getDailyUsage",
+      "filePath": "src/app/api/admin/api-keys/[id]/route.ts",
+      "lineRange": [312, 324],
+      "summary": "Aggregates per-day API call counts for the given key over a recent window.",
+      "tags": ["analytics", "aggregation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/api-keys/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/api-keys/route.ts",
+      "summary": "Admin API collection endpoint for API keys: lists, creates, updates, and deletes keys with auth, validation, and rate-limiting.",
+      "tags": ["api-handler", "admin", "security", "api-keys", "crud"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/api-keys/route.ts",
+      "lineRange": [55, 160],
+      "summary": "GET handler returning paginated list of API keys with redacted secrets and metadata.",
+      "tags": ["api-handler", "listing", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/api-keys/route.ts",
+      "lineRange": [166, 233],
+      "summary": "POST handler that validates input and creates a new API key, returning the plaintext value once for the operator to capture.",
+      "tags": ["api-handler", "creation", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/route.ts:PUT",
+      "type": "function",
+      "name": "PUT",
+      "filePath": "src/app/api/admin/api-keys/route.ts",
+      "lineRange": [239, 315],
+      "summary": "PUT handler that updates mutable fields of an existing API key (name, permissions, expiry) with validation.",
+      "tags": ["api-handler", "update", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/api-keys/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/admin/api-keys/route.ts",
+      "lineRange": [321, 373],
+      "summary": "DELETE handler that revokes and removes an API key after auth and confirmation checks.",
+      "tags": ["api-handler", "deletion", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/apify-cost/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/apify-cost/route.ts",
+      "summary": "Admin endpoint reporting current Apify usage costs for the account, used by ops dashboards.",
+      "tags": ["api-handler", "admin", "apify", "cost-reporting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-cost/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/apify-cost/route.ts",
+      "lineRange": [4, 34],
+      "summary": "GET handler that fetches Apify account usage/cost data and returns it as JSON.",
+      "tags": ["api-handler", "cost-reporting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/apify-scrapers/scheduler/route.ts",
+      "summary": "Admin endpoint controlling the Apify scraper scheduler: starts/stops scheduled runs and returns scheduler status.",
+      "tags": ["api-handler", "admin", "scheduler", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/apify-scrapers/scheduler/route.ts",
+      "lineRange": [22, 137],
+      "summary": "POST handler that starts, stops, or updates the Apify scraper scheduling configuration.",
+      "tags": ["api-handler", "scheduler", "control"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/apify-scrapers/scheduler/route.ts",
+      "lineRange": [139, 234],
+      "summary": "GET handler that returns the current Apify scheduler state, including next-run timestamps and active jobs.",
+      "tags": ["api-handler", "scheduler", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/apify-scrapers/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/apify-scrapers/route.ts",
+      "summary": "Admin endpoint to list, configure, and trigger Apify scraper runs against the scraper manager.",
+      "tags": ["api-handler", "admin", "apify", "scraper"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-scrapers/route.ts:getScraperManager",
+      "type": "function",
+      "name": "getScraperManager",
+      "filePath": "src/app/api/admin/apify-scrapers/route.ts",
+      "lineRange": [17, 32],
+      "summary": "Lazy factory that constructs and caches the singleton Apify scraper manager instance.",
+      "tags": ["singleton", "factory", "lazy-init"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-scrapers/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/apify-scrapers/route.ts",
+      "lineRange": [34, 192],
+      "summary": "POST handler that triggers or configures Apify scraper runs based on the action and scraper identifier in the body.",
+      "tags": ["api-handler", "scraper", "control"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/apify-scrapers/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/apify-scrapers/route.ts",
+      "lineRange": [194, 282],
+      "summary": "GET handler returning a summary of available Apify scrapers, recent run history, and current state.",
+      "tags": ["api-handler", "scraper", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/apify-status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/apify-status/route.ts",
+      "summary": "Tiny admin health endpoint reporting Apify integration availability.",
+      "tags": ["api-handler", "admin", "health-check", "apify"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/backfill/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/backfill/run/route.ts",
+      "summary": "Admin endpoint that dispatches one of several backfill jobs (actual performance, follower counts, training features) on demand.",
+      "tags": ["api-handler", "admin", "backfill", "data-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/backfill/run/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/backfill/run/route.ts",
+      "lineRange": [24, 64],
+      "summary": "POST handler that picks the requested backfill job by name and invokes it under admin auth.",
+      "tags": ["api-handler", "backfill", "dispatcher"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/bandit/allocate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/bandit/allocate/route.ts",
+      "summary": "Admin endpoint that allocates a Thompson-sampling arm for a multi-armed bandit experiment.",
+      "tags": ["api-handler", "admin", "bandit", "experimentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/bandit/allocate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/bandit/allocate/route.ts",
+      "lineRange": [9, 23],
+      "summary": "POST handler that samples and returns the chosen bandit arm for a given experiment.",
+      "tags": ["api-handler", "bandit", "thompson-sampling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/bandit/allocate/route.ts:gammaSample",
+      "type": "function",
+      "name": "gammaSample",
+      "filePath": "src/app/api/admin/bandit/allocate/route.ts",
+      "lineRange": [31, 46],
+      "summary": "Numerical helper drawing a Gamma-distributed random sample used by Thompson sampling.",
+      "tags": ["math", "sampling", "helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/bandit/experiments/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/bandit/experiments/route.ts",
+      "summary": "Admin endpoint that creates or returns bandit experiment definitions, ensuring required tables exist.",
+      "tags": ["api-handler", "admin", "bandit", "experimentation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/bandit/experiments/route.ts:ensureTables",
+      "type": "function",
+      "name": "ensureTables",
+      "filePath": "src/app/api/admin/bandit/experiments/route.ts",
+      "lineRange": [7, 38],
+      "summary": "Bootstraps required Supabase tables for bandit experiments if they are missing.",
+      "tags": ["bootstrap", "schema", "migration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/bandit/experiments/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/bandit/experiments/route.ts",
+      "lineRange": [40, 51],
+      "summary": "POST handler that registers a new bandit experiment definition.",
+      "tags": ["api-handler", "bandit", "creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/bandit/record/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/bandit/record/route.ts",
+      "summary": "Admin endpoint that records a bandit arm pull outcome to update posterior counts.",
+      "tags": ["api-handler", "admin", "bandit", "experimentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/bandit/record/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/bandit/record/route.ts",
+      "lineRange": [7, 20],
+      "summary": "POST handler that records a reward observation for a chosen arm of a bandit experiment.",
+      "tags": ["api-handler", "bandit", "feedback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/baselines/metrics_30d/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/baselines/metrics_30d/route.ts",
+      "summary": "Admin endpoint returning rolling 30-day baseline metrics used by prediction calibration dashboards.",
+      "tags": ["api-handler", "admin", "baselines", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/baselines/metrics_30d/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/baselines/metrics_30d/route.ts",
+      "lineRange": [8, 27],
+      "summary": "GET handler that loads the most recent 30-day baseline snapshot for the requested cohort.",
+      "tags": ["api-handler", "metrics", "baselines"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/baselines/run-now/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/baselines/run-now/route.ts",
+      "summary": "Admin endpoint to trigger immediate recomputation of baseline metrics outside the regular schedule.",
+      "tags": ["api-handler", "admin", "baselines", "trigger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/baselines/run-now/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/baselines/run-now/route.ts",
+      "lineRange": [13, 31],
+      "summary": "POST handler that kicks off an on-demand baseline recompute job.",
+      "tags": ["api-handler", "trigger", "baselines"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/baselines/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/baselines/summary/route.ts",
+      "summary": "Admin endpoint returning a summary of baseline calibration values across cohorts, used by readiness dashboards.",
+      "tags": ["api-handler", "admin", "baselines", "calibration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/baselines/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/baselines/summary/route.ts",
+      "lineRange": [9, 87],
+      "summary": "GET handler that aggregates calibration baselines and returns summary stats per niche/cohort.",
+      "tags": ["api-handler", "aggregation", "baselines"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/bulk-import/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/bulk-import/route.ts",
+      "summary": "Admin endpoint that ingests bulk video data from Apify exports, normalizes records, extracts transcripts, and inserts them into the database.",
+      "tags": ["api-handler", "admin", "bulk-import", "data-pipeline", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/bulk-import/route.ts:extractTranscript",
+      "type": "function",
+      "name": "extractTranscript",
+      "filePath": "src/app/api/admin/bulk-import/route.ts",
+      "lineRange": [112, 128],
+      "summary": "Pulls and normalizes the transcript field from an Apify video record into plain text.",
+      "tags": ["normalization", "transcript", "helper"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/bulk-import/route.ts:normalizeApifyVideo",
+      "type": "function",
+      "name": "normalizeApifyVideo",
+      "filePath": "src/app/api/admin/bulk-import/route.ts",
+      "lineRange": [133, 278],
+      "summary": "Converts a raw Apify video record into the canonical schema used by the prediction pipeline, handling missing fields and type coercion.",
+      "tags": ["normalization", "data-pipeline", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/bulk-import/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/bulk-import/route.ts",
+      "lineRange": [280, 384],
+      "summary": "POST handler that accepts an array of Apify video records, normalizes them, and bulk-inserts the canonical rows.",
+      "tags": ["api-handler", "bulk-import", "ingestion"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/bulk-import/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/bulk-import/route.ts",
+      "lineRange": [389, 448],
+      "summary": "GET handler reporting status, recent counts, and last-run info for bulk imports.",
+      "tags": ["api-handler", "status", "bulk-import"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/cache-stats/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/cache-stats/route.ts",
+      "summary": "Admin endpoint exposing cache hit/miss statistics for the prediction, framework, and database-pool caches and supports cache flushing.",
+      "tags": ["api-handler", "admin", "cache", "observability"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/cache-stats/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/cache-stats/route.ts",
+      "lineRange": [14, 84],
+      "summary": "GET handler that collects stats from all instrumented caches and returns a combined snapshot.",
+      "tags": ["api-handler", "cache", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/cache-stats/route.ts:DELETE",
+      "type": "function",
+      "name": "DELETE",
+      "filePath": "src/app/api/admin/cache-stats/route.ts",
+      "lineRange": [86, 111],
+      "summary": "DELETE handler that flushes one or more named caches based on query params.",
+      "tags": ["api-handler", "cache", "flush"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/chairman-alerts/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/chairman-alerts/summary/route.ts",
+      "summary": "Admin endpoint returning a summary count of open chairman alerts grouped by severity for the dashboard widget.",
+      "tags": ["api-handler", "admin", "alerts", "observability"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/chairman-alerts/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/chairman-alerts/summary/route.ts",
+      "lineRange": [27, 99],
+      "summary": "GET handler that aggregates open chairman alerts by severity and recency.",
+      "tags": ["api-handler", "alerts", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/chairman-alerts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/chairman-alerts/route.ts",
+      "summary": "Admin endpoint that lists chairman alerts and lets operators acknowledge or update their status.",
+      "tags": ["api-handler", "admin", "alerts", "observability"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/admin/chairman-alerts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/chairman-alerts/route.ts",
+      "lineRange": [39, 114],
+      "summary": "GET handler returning a filtered, paginated list of chairman alerts.",
+      "tags": ["api-handler", "alerts", "listing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/admin/chairman-alerts/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/chairman-alerts/route.ts",
+      "lineRange": [116, 185],
+      "summary": "POST handler that creates or updates a chairman alert, including acknowledgement transitions.",
+      "tags": ["api-handler", "alerts", "mutation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/admin/coach/generate_variants/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/coach/generate_variants/route.ts",
+      "summary": "Admin endpoint that triggers generation of coach-suggested content variants for a given input.",
+      "tags": ["api-handler", "admin", "coach", "content-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/coach/generate_variants/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/coach/generate_variants/route.ts",
+      "lineRange": [5, 15],
+      "summary": "POST handler that authenticates the request and proxies it to the coach variant-generation service.",
+      "tags": ["api-handler", "coach", "proxy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/coach/suggest_edits/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/coach/suggest_edits/route.ts",
+      "summary": "Admin endpoint that requests editing suggestions from the coach engine for a piece of content.",
+      "tags": ["api-handler", "admin", "coach", "editing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/coach/suggest_edits/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/coach/suggest_edits/route.ts",
+      "lineRange": [7, 37],
+      "summary": "POST handler that calls the coach suggest-edits service and returns the resulting recommendations.",
+      "tags": ["api-handler", "coach", "suggestions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/commerce/attribution/run-now/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/commerce/attribution/run-now/route.ts",
+      "summary": "Admin endpoint that immediately runs the commerce attribution job via the shared job runner.",
+      "tags": ["api-handler", "admin", "commerce", "attribution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/commerce/attribution/run-now/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/commerce/attribution/run-now/route.ts",
+      "lineRange": [10, 29],
+      "summary": "POST handler that triggers an ad-hoc commerce attribution run and notifies on completion.",
+      "tags": ["api-handler", "trigger", "attribution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/commerce/attribution/summary/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/commerce/attribution/summary/route.ts",
+      "summary": "Admin endpoint returning a summary of commerce attribution results for the dashboard.",
+      "tags": ["api-handler", "admin", "commerce", "attribution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/commerce/attribution/summary/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/commerce/attribution/summary/route.ts",
+      "lineRange": [9, 27],
+      "summary": "GET handler returning aggregated attribution totals over the requested window.",
+      "tags": ["api-handler", "attribution", "summary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/commerce/top_creatives/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/commerce/top_creatives/route.ts",
+      "summary": "Admin endpoint listing the top-performing commerce creatives by attributed conversions.",
+      "tags": ["api-handler", "admin", "commerce", "ranking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/commerce/top_creatives/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/admin/commerce/top_creatives/route.ts",
+      "lineRange": [9, 28],
+      "summary": "GET handler that returns the top N creatives ranked by attributed revenue or conversions.",
+      "tags": ["api-handler", "ranking", "creatives"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts",
+      "summary": "Admin endpoint that finalizes a cross-niche transfer learning operation by promoting the candidate model.",
+      "tags": ["api-handler", "admin", "coordinator", "transfer-learning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts:getServiceDb",
+      "type": "function",
+      "name": "getServiceDb",
+      "filePath": "src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts",
+      "lineRange": [20, 30],
+      "summary": "Returns a service-role Supabase client used by the finalize handler.",
+      "tags": ["helper", "database", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts",
+      "lineRange": [32, 48],
+      "summary": "POST handler that invokes the cross-niche transfer finalize routine and returns its result.",
+      "tags": ["api-handler", "transfer-learning", "finalize"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/api/admin/api-keys/[id]/regenerate/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/regenerate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/regenerate/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/regenerate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/[id]/regenerate/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/[id]/regenerate/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/api-keys/[id]/toggle/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/toggle/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/toggle/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/toggle/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/[id]/toggle/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/[id]/toggle/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:PATCH", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:PATCH", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:handleRegenerate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:handleToggle", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:getPopularEndpoints", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "function:src/app/api/admin/api-keys/[id]/route.ts:getDailyUsage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/[id]/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:PUT", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:PUT", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "function:src/app/api/admin/api-keys/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/api-keys/route.ts", "target": "file:src/lib/security/validation-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/apify-cost/route.ts", "target": "function:src/app/api/admin/apify-cost/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-cost/route.ts", "target": "function:src/app/api/admin/apify-cost/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "function:src/app/api/admin/apify-scrapers/scheduler/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "file:src/lib/services/viral-prediction/apify-scraper-manager.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/apify-scrapers/scheduler/route.ts", "target": "file:src/lib/services/viral-prediction/scraping-scheduler.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "function:src/app/api/admin/apify-scrapers/route.ts:getScraperManager", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "function:src/app/api/admin/apify-scrapers/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "function:src/app/api/admin/apify-scrapers/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "function:src/app/api/admin/apify-scrapers/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "function:src/app/api/admin/apify-scrapers/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/apify-scrapers/route.ts", "target": "file:src/lib/services/viral-prediction/apify-scraper-manager.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "function:src/app/api/admin/backfill/run/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "function:src/app/api/admin/backfill/run/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "file:src/lib/auth/api-guard.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "file:src/lib/backfill/backfill-actual-performance.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "file:src/lib/backfill/backfill-follower-counts.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/backfill/run/route.ts", "target": "file:src/lib/backfill/backfill-training-features.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/bandit/allocate/route.ts", "target": "function:src/app/api/admin/bandit/allocate/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bandit/allocate/route.ts", "target": "function:src/app/api/admin/bandit/allocate/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/bandit/allocate/route.ts", "target": "function:src/app/api/admin/bandit/allocate/route.ts:gammaSample", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bandit/allocate/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/bandit/allocate/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/bandit/experiments/route.ts", "target": "function:src/app/api/admin/bandit/experiments/route.ts:ensureTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bandit/experiments/route.ts", "target": "function:src/app/api/admin/bandit/experiments/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bandit/experiments/route.ts", "target": "function:src/app/api/admin/bandit/experiments/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/bandit/experiments/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/bandit/experiments/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/bandit/record/route.ts", "target": "function:src/app/api/admin/bandit/record/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bandit/record/route.ts", "target": "function:src/app/api/admin/bandit/record/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/bandit/record/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/bandit/record/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/baselines/metrics_30d/route.ts", "target": "function:src/app/api/admin/baselines/metrics_30d/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/baselines/metrics_30d/route.ts", "target": "function:src/app/api/admin/baselines/metrics_30d/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/baselines/metrics_30d/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/metrics_30d/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/metrics_30d/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/baselines/run-now/route.ts", "target": "function:src/app/api/admin/baselines/run-now/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/baselines/run-now/route.ts", "target": "function:src/app/api/admin/baselines/run-now/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/baselines/run-now/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/run-now/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "function:src/app/api/admin/baselines/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "function:src/app/api/admin/baselines/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "file:src/lib/calibration/calibration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/baselines/summary/route.ts", "target": "file:src/lib/security/rate-limiter.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:extractTranscript", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:normalizeApifyVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/bulk-import/route.ts", "target": "function:src/app/api/admin/bulk-import/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "function:src/app/api/admin/cache-stats/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "function:src/app/api/admin/cache-stats/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "function:src/app/api/admin/cache-stats/route.ts:DELETE", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "function:src/app/api/admin/cache-stats/route.ts:DELETE", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "file:src/lib/services/database-pool.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "file:src/lib/services/framework-cache.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/cache-stats/route.ts", "target": "file:src/lib/services/prediction-cache.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/chairman-alerts/summary/route.ts", "target": "function:src/app/api/admin/chairman-alerts/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/chairman-alerts/summary/route.ts", "target": "function:src/app/api/admin/chairman-alerts/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/chairman-alerts/route.ts", "target": "function:src/app/api/admin/chairman-alerts/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/chairman-alerts/route.ts", "target": "function:src/app/api/admin/chairman-alerts/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/chairman-alerts/route.ts", "target": "function:src/app/api/admin/chairman-alerts/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/chairman-alerts/route.ts", "target": "function:src/app/api/admin/chairman-alerts/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/api/admin/coach/generate_variants/route.ts", "target": "function:src/app/api/admin/coach/generate_variants/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/coach/generate_variants/route.ts", "target": "function:src/app/api/admin/coach/generate_variants/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/coach/generate_variants/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/coach/suggest_edits/route.ts", "target": "function:src/app/api/admin/coach/suggest_edits/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/coach/suggest_edits/route.ts", "target": "function:src/app/api/admin/coach/suggest_edits/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/coach/suggest_edits/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/coach/suggest_edits/route.ts", "target": "file:src/lib/security/auth-middleware.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "function:src/app/api/admin/commerce/attribution/run-now/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "function:src/app/api/admin/commerce/attribution/run-now/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "file:src/app/api/admin/jobs/runner.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "file:src/lib/commerce/attribution.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "file:src/lib/ops/notifier.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/attribution/run-now/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/commerce/attribution/summary/route.ts", "target": "function:src/app/api/admin/commerce/attribution/summary/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/commerce/attribution/summary/route.ts", "target": "function:src/app/api/admin/commerce/attribution/summary/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/commerce/attribution/summary/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/attribution/summary/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/commerce/top_creatives/route.ts", "target": "function:src/app/api/admin/commerce/top_creatives/route.ts:GET", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/commerce/top_creatives/route.ts", "target": "function:src/app/api/admin/commerce/top_creatives/route.ts:GET", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/commerce/top_creatives/route.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/api/admin/commerce/top_creatives/route.ts", "target": "file:src/lib/utils/adminAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts", "target": "function:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts:getServiceDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts", "target": "function:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts:POST", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts", "target": "function:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts:POST", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/api/admin/coordinator/cross-niche-transfer/finalize/route.ts", "target": "file:src/lib/coordinator/cross-niche-transfer-finalize.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

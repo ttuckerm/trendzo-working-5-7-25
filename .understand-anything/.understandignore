@@ -1,0 +1,157 @@
+# .understandignore — aggressive ignore for whole-repo /understand analysis
+# Syntax: same as .gitignore. ! negates. Trailing / is dir-only.
+#
+# Built-in defaults already exclude: node_modules/, .git/, dist/, build/, obj/,
+# *.lock, *.min.js, *.png, *.jpg, *.svg, etc.
+# Patterns below add to those defaults.
+
+# ============================================================
+# SENSITIVE — never analyze (contain secrets)
+# ============================================================
+.env
+.env.*
+*.env
+.supasecrets.env
+.npmrc.backup
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials.json
+auth.json
+
+# ============================================================
+# Tooling and AI-assistant metadata (not architecture)
+# ============================================================
+.bmad-core/
+.claude/
+.cursor/
+.gstack/
+.planning/
+.ralph/
+.vercel/
+.windsurf/
+.agents/
+.github/
+.idea/
+.vscode/
+.replit
+.expertcursorrules
+.mcp.json
+.ralphrc
+.gitattributes
+.editorconfig
+.prettierrc
+.eslintrc*
+.eslintignore
+.prettierignore
+
+# ============================================================
+# Build/runtime caches and outputs
+# ============================================================
+.next/
+.turbo/
+.cache/
+out/
+coverage/
+target/
+*.tsbuildinfo
+next-env.d.ts
+build-timing*.txt
+*.bundle
+LAZY_INIT_BATCH_2026-05-11.md
+
+# ============================================================
+# Sub-projects, archives, scratch dirs (separate from main app)
+# ============================================================
+agent-starter-python/
+frameworks-and-research/
+Research & Framework Data For Algorithm/
+Unicorn UX/
+model-backups/
+artifacts/
+logs/
+data/
+pipeline-progress/
+ffmpeg-master-latest-linux64-gpl/
+whisper_env/
+whisper_env_moved/
+temp-install/
+temp-backup-compare/
+dr-archive-push-*/
+.git-backup/
+tonee/
+bootstrap.ps1
+
+# ============================================================
+# Root-level docs noise (210+ audit/planning files at repo root)
+# Excludes all *.md/*.sql/*.txt/*.html ONLY at root, not in subdirs
+# ============================================================
+/*.md
+/*.sql
+/*.txt
+/*.html
+/*.bundle
+/*.zip
+/*.tar.xz
+/*.tar.gz
+/0
+# Keep canonical docs at root if they exist
+!/README.md
+!/CHANGELOG.md
+!/LICENSE
+!/LICENSE.md
+!/CONTRIBUTING.md
+!/ARCHITECTURE.md
+!/CLAUDE.md
+
+# ============================================================
+# Logs everywhere
+# ============================================================
+*.log
+logs/
+**/*.log
+
+# ============================================================
+# Media files (graph nodes for these don't add value)
+# ============================================================
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wmv
+*.webm
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.pdf
+*.bmp
+*.tiff
+*.webp
+*.ttf
+*.woff
+*.woff2
+*.eot
+*.otf
+
+# ============================================================
+# Test fixtures and snapshots (reduce graph noise)
+# ============================================================
+fixtures/
+testdata/
+**/__snapshots__/
+**/*.snap
+
+# ============================================================
+# Misc gitignored stuff that may still be on disk
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+nul
+*.zip
+*.tar.xz
+src/lib/training/data/
+autoresearch/data/snapshot-*.json

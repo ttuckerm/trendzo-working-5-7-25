@@ -1,0 +1,1019 @@
+{
+  "nodes": [
+    {
+      "id": "document:src/docs/admin-integration-checklist.md",
+      "type": "document",
+      "name": "admin-integration-checklist.md",
+      "filePath": "src/docs/admin-integration-checklist.md",
+      "summary": "Comprehensive QA/integration checklist for the CleanCopy admin panel covering navigation, role-based permissions, page-level functionality, performance, accessibility, security, and deployment readiness across 80+ checkpoint sections.",
+      "tags": ["documentation", "checklist", "qa", "admin", "testing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/features/Brain/useBrain.ts",
+      "type": "file",
+      "name": "useBrain.ts",
+      "filePath": "src/features/Brain/useBrain.ts",
+      "summary": "Custom React hook providing chat state management against the Brain assistant API, including message history, optimistic updates, error handling, and a companion hook for persisted chat histories.",
+      "tags": ["hook", "react", "chat", "brain", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/Brain/useBrain.ts:useBrain",
+      "type": "function",
+      "name": "useBrain",
+      "filePath": "src/features/Brain/useBrain.ts",
+      "lineRange": [24, 128],
+      "summary": "Primary Brain chat hook that manages local message state, dispatches user input to the assistant endpoint, and reconciles streamed/error responses.",
+      "tags": ["hook", "chat", "async", "state-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/Brain/useBrain.ts:useChatHistory",
+      "type": "function",
+      "name": "useChatHistory",
+      "filePath": "src/features/Brain/useBrain.ts",
+      "lineRange": [130, 168],
+      "summary": "Loads and exposes paginated past Brain chat sessions for the current user.",
+      "tags": ["hook", "history", "pagination"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/features/Brain/useBrainSimple.ts",
+      "type": "file",
+      "name": "useBrainSimple.ts",
+      "filePath": "src/features/Brain/useBrainSimple.ts",
+      "summary": "Lightweight variant of the Brain hook offering a minimal request/response surface for embedded UI widgets that need ad-hoc assistant queries without full chat state.",
+      "tags": ["hook", "react", "brain", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/features/Brain/useBrainSimple.ts:useBrainSimple",
+      "type": "function",
+      "name": "useBrainSimple",
+      "filePath": "src/features/Brain/useBrainSimple.ts",
+      "lineRange": [24, 99],
+      "summary": "Single-turn Brain query hook returning loading/error/data states for a single prompt.",
+      "tags": ["hook", "brain", "simple"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto",
+      "type": "schema",
+      "name": "viral_prediction.proto",
+      "filePath": "src/grpc/protos/viral_prediction.proto",
+      "summary": "Protobuf schema defining the gRPC contract for the viral prediction service, including 39 messages covering prediction requests/responses, video metadata, content analysis features, batch processing, feature extraction, health check, and metrics endpoints.",
+      "tags": ["schema-definition", "grpc", "protobuf", "viral-prediction", "api-schema"],
+      "complexity": "complex"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:ViralPredictionRequest",
+      "type": "schema",
+      "name": "ViralPredictionRequest",
+      "summary": "Request message carrying video metadata and prediction options for a viral-prediction call.",
+      "tags": ["protobuf", "message", "request"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:ViralPredictionResponse",
+      "type": "schema",
+      "name": "ViralPredictionResponse",
+      "summary": "Response message containing the prediction result, score breakdown, and content analysis.",
+      "tags": ["protobuf", "message", "response"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:BatchViralPredictionRequest",
+      "type": "schema",
+      "name": "BatchViralPredictionRequest",
+      "summary": "Batch variant accepting multiple prediction requests in one call.",
+      "tags": ["protobuf", "message", "batch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:FeatureExtractionRequest",
+      "type": "schema",
+      "name": "FeatureExtractionRequest",
+      "summary": "Request to extract text/visual/audio features from a video without running a full prediction.",
+      "tags": ["protobuf", "message", "features"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:HealthCheckRequest",
+      "type": "schema",
+      "name": "HealthCheckRequest",
+      "summary": "Liveness/readiness probe request for the viral-prediction gRPC service.",
+      "tags": ["protobuf", "message", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "schema:src/grpc/protos/viral_prediction.proto:MetricsRequest",
+      "type": "schema",
+      "name": "MetricsRequest",
+      "summary": "Request for service-level performance and throughput metrics.",
+      "tags": ["protobuf", "message", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/grpc/services/viral-prediction-service.ts",
+      "type": "file",
+      "name": "viral-prediction-service.ts",
+      "filePath": "src/grpc/services/viral-prediction-service.ts",
+      "summary": "TypeScript implementation of the viral prediction gRPC server that wires protobuf RPCs (predictViral, predictTikTokOptimized, batch, feature extraction, health, metrics) to the master viral algorithm and TikTok-specific analyzer services.",
+      "tags": ["service", "grpc", "viral-prediction", "server", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/grpc/services/viral-prediction-service.ts:ViralPredictionGrpcService",
+      "type": "class",
+      "name": "ViralPredictionGrpcService",
+      "filePath": "src/grpc/services/viral-prediction-service.ts",
+      "lineRange": [34, 483],
+      "summary": "gRPC service class exposing twelve methods that route incoming requests to the master viral algorithm and TikTok analyzer, including lifecycle (start/stop), performance logging, and tier classification.",
+      "tags": ["grpc", "service", "viral-prediction", "server"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/unified-interface/useModeManager.ts",
+      "type": "file",
+      "name": "useModeManager.ts",
+      "filePath": "src/hooks/unified-interface/useModeManager.ts",
+      "summary": "React hooks controlling the unified-interface mode state machine, including primary mode switching, per-component mode overrides, and transition orchestration.",
+      "tags": ["hook", "state-management", "unified-interface", "mode"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/unified-interface/useModeManager.ts:useModeManager",
+      "type": "function",
+      "name": "useModeManager",
+      "filePath": "src/hooks/unified-interface/useModeManager.ts",
+      "lineRange": [70, 236],
+      "summary": "Top-level hook managing the application's active mode, persisting selection and broadcasting changes to subscribed components.",
+      "tags": ["hook", "state-management", "mode"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/unified-interface/useModeManager.ts:useComponentMode",
+      "type": "function",
+      "name": "useComponentMode",
+      "filePath": "src/hooks/unified-interface/useModeManager.ts",
+      "lineRange": [239, 271],
+      "summary": "Per-component mode hook letting an individual component override or read the global mode context.",
+      "tags": ["hook", "mode", "component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/unified-interface/useModeManager.ts:useModeTransitions",
+      "type": "function",
+      "name": "useModeTransitions",
+      "filePath": "src/hooks/unified-interface/useModeManager.ts",
+      "lineRange": [274, 327],
+      "summary": "Hook coordinating mode transition animations and lifecycle callbacks (entering/exiting).",
+      "tags": ["hook", "mode", "transition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "src/hooks/index.ts",
+      "summary": "Barrel module re-exporting all admin-domain React hooks (users, agencies, creators, campaigns, mini-apps, payouts, notifications, audit log, dashboards, operations) along with their filter types for consumer convenience.",
+      "tags": ["barrel", "entry-point", "hook", "exports"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/useAdminUser.ts",
+      "type": "file",
+      "name": "useAdminUser.ts",
+      "filePath": "src/hooks/useAdminUser.ts",
+      "summary": "Hooks resolving the current admin user's profile, role, and effective permissions from Supabase, with a mock variant and a dev fallback wrapper for local development.",
+      "tags": ["hook", "auth", "admin", "permissions", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useAdminUser.ts:useAdminUser",
+      "type": "function",
+      "name": "useAdminUser",
+      "filePath": "src/hooks/useAdminUser.ts",
+      "lineRange": [35, 225],
+      "summary": "Primary hook that loads the authenticated user's admin profile and permission set from Supabase, exposing loading and error states.",
+      "tags": ["hook", "auth", "supabase", "admin"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useAdminUser.ts:useMockAdminUser",
+      "type": "function",
+      "name": "useMockAdminUser",
+      "filePath": "src/hooks/useAdminUser.ts",
+      "lineRange": [231, 265],
+      "summary": "Returns a synthetic admin user for local development and storybook scenarios.",
+      "tags": ["hook", "mock", "dev"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/useAgencies.ts",
+      "type": "file",
+      "name": "useAgencies.ts",
+      "filePath": "src/hooks/useAgencies.ts",
+      "summary": "Suite of agency-domain hooks (list, single, with stats, mutations) backed by Supabase queries with filter support and optimistic update helpers.",
+      "tags": ["hook", "agency", "supabase", "data-fetching", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useAgencies.ts:useAgencies",
+      "type": "function",
+      "name": "useAgencies",
+      "filePath": "src/hooks/useAgencies.ts",
+      "lineRange": [42, 116],
+      "summary": "Lists agencies with optional filters and pagination from Supabase.",
+      "tags": ["hook", "list", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAgencies.ts:useAgency",
+      "type": "function",
+      "name": "useAgency",
+      "filePath": "src/hooks/useAgencies.ts",
+      "lineRange": [121, 164],
+      "summary": "Fetches a single agency by id with error/loading state.",
+      "tags": ["hook", "detail", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAgencies.ts:useAgenciesWithStats",
+      "type": "function",
+      "name": "useAgenciesWithStats",
+      "filePath": "src/hooks/useAgencies.ts",
+      "lineRange": [169, 243],
+      "summary": "Returns agencies joined with aggregated stats (creator count, payout totals, campaign performance).",
+      "tags": ["hook", "stats", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAgencies.ts:useAgencyMutations",
+      "type": "function",
+      "name": "useAgencyMutations",
+      "filePath": "src/hooks/useAgencies.ts",
+      "lineRange": [249, 352],
+      "summary": "Exposes create/update/delete mutations for agency records with optimistic UI updates.",
+      "tags": ["hook", "mutations", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useAgencyMutations.ts",
+      "type": "file",
+      "name": "useAgencyMutations.ts",
+      "filePath": "src/hooks/useAgencyMutations.ts",
+      "summary": "Standalone agency-mutation hook exposing typed insert/update/delete operations against the Supabase agencies table.",
+      "tags": ["hook", "mutations", "agency", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAgencyMutations.ts:useAgencyMutations",
+      "type": "function",
+      "name": "useAgencyMutations",
+      "filePath": "src/hooks/useAgencyMutations.ts",
+      "lineRange": [9, 81],
+      "summary": "Provides typed create/update/delete handlers for agencies with error normalization.",
+      "tags": ["hook", "mutations", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/useAuditLog.ts",
+      "type": "file",
+      "name": "useAuditLog.ts",
+      "filePath": "src/hooks/useAuditLog.ts",
+      "summary": "Audit-log query hooks for filtering, by-resource, by-user, action enumeration, resource enumeration, and CSV export, all backed by Supabase.",
+      "tags": ["hook", "audit", "supabase", "filtering", "export"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useAuditLog.ts:useAuditLog",
+      "type": "function",
+      "name": "useAuditLog",
+      "filePath": "src/hooks/useAuditLog.ts",
+      "lineRange": [49, 166],
+      "summary": "Primary audit log fetch hook supporting compound filters, pagination, and reactive refetch.",
+      "tags": ["hook", "audit", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useAuditLog.ts:useAuditLogActions",
+      "type": "function",
+      "name": "useAuditLogActions",
+      "filePath": "src/hooks/useAuditLog.ts",
+      "lineRange": [199, 228],
+      "summary": "Returns the distinct set of audit-log action names for use in filter dropdowns.",
+      "tags": ["hook", "audit", "enum"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAuditLog.ts:useAuditLogResourceTypes",
+      "type": "function",
+      "name": "useAuditLogResourceTypes",
+      "filePath": "src/hooks/useAuditLog.ts",
+      "lineRange": [233, 262],
+      "summary": "Returns the distinct resource-type values present in audit log entries.",
+      "tags": ["hook", "audit", "enum"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useAuditLog.ts:useAuditLogExport",
+      "type": "function",
+      "name": "useAuditLogExport",
+      "filePath": "src/hooks/useAuditLog.ts",
+      "lineRange": [267, 319],
+      "summary": "Exports filtered audit-log entries to CSV with progress tracking and download trigger.",
+      "tags": ["hook", "audit", "export", "csv"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/useAuth.ts",
+      "type": "file",
+      "name": "useAuth.ts",
+      "filePath": "src/hooks/useAuth.ts",
+      "summary": "Thin wrapper hook exposing the Supabase auth context to consumer components.",
+      "tags": ["hook", "auth", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/useAuth.ts:useAuth",
+      "type": "function",
+      "name": "useAuth",
+      "filePath": "src/hooks/useAuth.ts",
+      "lineRange": [5, 20],
+      "summary": "Reads the auth context, throwing if no provider is present.",
+      "tags": ["hook", "auth", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/useCampaigns.ts",
+      "type": "file",
+      "name": "useCampaigns.ts",
+      "filePath": "src/hooks/useCampaigns.ts",
+      "summary": "Campaign-domain hook suite covering base list, platform/content/app/active variants, single and stats queries, and mutation helpers against Supabase.",
+      "tags": ["hook", "campaign", "supabase", "data-fetching", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useCampaigns.ts:useCampaignsBase",
+      "type": "function",
+      "name": "useCampaignsBase",
+      "filePath": "src/hooks/useCampaigns.ts",
+      "lineRange": [45, 164],
+      "summary": "Underlying hook implementing filter/sort/pagination for campaigns; the typed wrappers (platform/content/app/active) call into it.",
+      "tags": ["hook", "campaign", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useCampaigns.ts:useCampaign",
+      "type": "function",
+      "name": "useCampaign",
+      "filePath": "src/hooks/useCampaigns.ts",
+      "lineRange": [208, 257],
+      "summary": "Fetches a single campaign with its relations.",
+      "tags": ["hook", "campaign", "detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useCampaigns.ts:useCampaignWithStats",
+      "type": "function",
+      "name": "useCampaignWithStats",
+      "filePath": "src/hooks/useCampaigns.ts",
+      "lineRange": [262, 281],
+      "summary": "Fetches a campaign together with engagement/payout aggregates.",
+      "tags": ["hook", "campaign", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useCampaigns.ts:useCampaignMutations",
+      "type": "function",
+      "name": "useCampaignMutations",
+      "filePath": "src/hooks/useCampaigns.ts",
+      "lineRange": [287, 436],
+      "summary": "Exposes create/update/archive/launch mutations for campaigns with optimistic UI handling.",
+      "tags": ["hook", "campaign", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useCreators.ts",
+      "type": "file",
+      "name": "useCreators.ts",
+      "filePath": "src/hooks/useCreators.ts",
+      "summary": "Creator-domain hook suite providing list, single, pending, by-agency, and mutation hooks backed by Supabase.",
+      "tags": ["hook", "creator", "supabase", "data-fetching", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useCreators.ts:useCreators",
+      "type": "function",
+      "name": "useCreators",
+      "filePath": "src/hooks/useCreators.ts",
+      "lineRange": [46, 147],
+      "summary": "Lists creators with filtering, sorting, and pagination.",
+      "tags": ["hook", "creator", "list"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useCreators.ts:useCreator",
+      "type": "function",
+      "name": "useCreator",
+      "filePath": "src/hooks/useCreators.ts",
+      "lineRange": [152, 195],
+      "summary": "Fetches a single creator by id with profile and stats joined.",
+      "tags": ["hook", "creator", "detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useCreators.ts:useAgencyCreators",
+      "type": "function",
+      "name": "useAgencyCreators",
+      "filePath": "src/hooks/useCreators.ts",
+      "lineRange": [211, 254],
+      "summary": "Returns creators belonging to a specified agency.",
+      "tags": ["hook", "creator", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useCreators.ts:useCreatorMutations",
+      "type": "function",
+      "name": "useCreatorMutations",
+      "filePath": "src/hooks/useCreators.ts",
+      "lineRange": [260, 374],
+      "summary": "Create/update/approve/reject mutations for creator records.",
+      "tags": ["hook", "creator", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useDashboardStats.ts",
+      "type": "file",
+      "name": "useDashboardStats.ts",
+      "filePath": "src/hooks/useDashboardStats.ts",
+      "summary": "Role-specific dashboard aggregation hooks (chairman, agency, developer, clipper) that compose multiple Supabase queries into a single stats payload per role.",
+      "tags": ["hook", "dashboard", "stats", "supabase", "aggregation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useDashboardStats.ts:useChairmanDashboardStats",
+      "type": "function",
+      "name": "useChairmanDashboardStats",
+      "filePath": "src/hooks/useDashboardStats.ts",
+      "lineRange": [108, 289],
+      "summary": "Platform-wide aggregate stats hook for the chairman role including totals across users, agencies, campaigns, payouts, and revenue.",
+      "tags": ["hook", "dashboard", "chairman", "stats"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useDashboardStats.ts:useAgencyDashboardStats",
+      "type": "function",
+      "name": "useAgencyDashboardStats",
+      "filePath": "src/hooks/useDashboardStats.ts",
+      "lineRange": [294, 351],
+      "summary": "Aggregate stats hook scoped to an individual agency's creators, campaigns, and earnings.",
+      "tags": ["hook", "dashboard", "agency", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useDashboardStats.ts:useDeveloperDashboardStats",
+      "type": "function",
+      "name": "useDeveloperDashboardStats",
+      "filePath": "src/hooks/useDashboardStats.ts",
+      "lineRange": [356, 417],
+      "summary": "Aggregate stats hook for the developer role focused on mini-app installs, revenue, and performance.",
+      "tags": ["hook", "dashboard", "developer", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useDashboardStats.ts:useClipperDashboardStats",
+      "type": "function",
+      "name": "useClipperDashboardStats",
+      "filePath": "src/hooks/useDashboardStats.ts",
+      "lineRange": [422, 479],
+      "summary": "Aggregate stats hook for the clipper role covering clip submissions, approvals, and earnings.",
+      "tags": ["hook", "dashboard", "clipper", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/useFeature.ts",
+      "type": "file",
+      "name": "useFeature.ts",
+      "filePath": "src/hooks/useFeature.ts",
+      "summary": "Thin feature-flag hook that evaluates a flag key via the flags evaluator and returns its boolean/value result for the current user context.",
+      "tags": ["hook", "feature-flag", "evaluator"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/useImpersonation.ts",
+      "type": "file",
+      "name": "useImpersonation.ts",
+      "filePath": "src/hooks/useImpersonation.ts",
+      "summary": "Admin impersonation hook enabling chairman/sub-admin roles to assume the identity of another user, with start/stop, banner state, and Supabase session swapping.",
+      "tags": ["hook", "impersonation", "admin", "auth", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useImpersonation.ts:useImpersonation",
+      "type": "function",
+      "name": "useImpersonation",
+      "filePath": "src/hooks/useImpersonation.ts",
+      "lineRange": [38, 168],
+      "summary": "Provides start/stop impersonation actions and current impersonation state, integrating with Supabase auth and audit log.",
+      "tags": ["hook", "impersonation", "auth"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useMiniApps.ts",
+      "type": "file",
+      "name": "useMiniApps.ts",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "summary": "Mini-app marketplace hooks (list, single, featured, pending, developer-owned, categories, mutations) backed by Supabase with filter/pagination support.",
+      "tags": ["hook", "mini-apps", "marketplace", "supabase", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useMiniApps",
+      "type": "function",
+      "name": "useMiniApps",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [47, 160],
+      "summary": "Lists mini-apps with filter, sort, and pagination.",
+      "tags": ["hook", "mini-apps", "list"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useMiniApp",
+      "type": "function",
+      "name": "useMiniApp",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [165, 208],
+      "summary": "Fetches a single mini-app by id with related developer info.",
+      "tags": ["hook", "mini-apps", "detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useFeaturedMiniApps",
+      "type": "function",
+      "name": "useFeaturedMiniApps",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [213, 222],
+      "summary": "Returns the curated list of featured mini-apps.",
+      "tags": ["hook", "mini-apps", "featured"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useDeveloperApps",
+      "type": "function",
+      "name": "useDeveloperApps",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [238, 278],
+      "summary": "Returns mini-apps owned by a given developer id.",
+      "tags": ["hook", "mini-apps", "developer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useMiniAppCategories",
+      "type": "function",
+      "name": "useMiniAppCategories",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [283, 317],
+      "summary": "Returns the available mini-app categories for filtering UI.",
+      "tags": ["hook", "mini-apps", "categories"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useMiniApps.ts:useMiniAppMutations",
+      "type": "function",
+      "name": "useMiniAppMutations",
+      "filePath": "src/hooks/useMiniApps.ts",
+      "lineRange": [323, 481],
+      "summary": "Create/update/publish/feature mutations for mini-app records.",
+      "tags": ["hook", "mini-apps", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useNotifications.ts",
+      "type": "file",
+      "name": "useNotifications.ts",
+      "filePath": "src/hooks/useNotifications.ts",
+      "summary": "Notification hooks providing a filtered, paginated notification feed plus an unread-count badge query backed by Supabase realtime subscriptions.",
+      "tags": ["hook", "notifications", "supabase", "realtime"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useNotifications.ts:useNotifications",
+      "type": "function",
+      "name": "useNotifications",
+      "filePath": "src/hooks/useNotifications.ts",
+      "lineRange": [35, 290],
+      "summary": "Main notifications hook providing filter, pagination, mark-as-read, and realtime updates.",
+      "tags": ["hook", "notifications", "realtime"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useNotifications.ts:useUnreadNotificationCount",
+      "type": "function",
+      "name": "useUnreadNotificationCount",
+      "filePath": "src/hooks/useNotifications.ts",
+      "lineRange": [295, 354],
+      "summary": "Returns and subscribes to the unread notification count for the current user.",
+      "tags": ["hook", "notifications", "count"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/useOperations.ts",
+      "type": "file",
+      "name": "useOperations.ts",
+      "filePath": "src/hooks/useOperations.ts",
+      "summary": "Operations / MLOps hook suite covering model metrics, training data, training jobs, system health, alerts, experiments, and a composed dashboard, all sourced from Supabase.",
+      "tags": ["hook", "operations", "mlops", "training", "monitoring", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useModelMetrics",
+      "type": "function",
+      "name": "useModelMetrics",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [129, 184],
+      "summary": "Loads viral-prediction model performance metrics (accuracy, Spearman, etc.) for the dashboard.",
+      "tags": ["hook", "metrics", "model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useTrainingData",
+      "type": "function",
+      "name": "useTrainingData",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [198, 276],
+      "summary": "Lists training dataset rows with filter and pagination for the training-readiness UI.",
+      "tags": ["hook", "training", "dataset"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useTrainingJobs",
+      "type": "function",
+      "name": "useTrainingJobs",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [282, 351],
+      "summary": "Lists and monitors active/historical model-training jobs.",
+      "tags": ["hook", "training", "jobs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useSystemHealth",
+      "type": "function",
+      "name": "useSystemHealth",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [357, 436],
+      "summary": "Periodically polls and exposes platform component health (Python service, DB, scheduler, etc.).",
+      "tags": ["hook", "health", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useOperationsAlerts",
+      "type": "function",
+      "name": "useOperationsAlerts",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [442, 523],
+      "summary": "Streams operational alerts and lets the operator acknowledge them.",
+      "tags": ["hook", "alerts", "operations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useExperiments",
+      "type": "function",
+      "name": "useExperiments",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [529, 598],
+      "summary": "Lists A/B experiments and exposes start/stop/promote actions.",
+      "tags": ["hook", "experiments", "operations"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/useOperations.ts:useOperationsDashboard",
+      "type": "function",
+      "name": "useOperationsDashboard",
+      "filePath": "src/hooks/useOperations.ts",
+      "lineRange": [631, 713],
+      "summary": "Composite hook that bundles model metrics, training, health, alerts and experiments for the main Operations dashboard view.",
+      "tags": ["hook", "operations", "dashboard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useOptimizedTemplateEngine.ts",
+      "type": "file",
+      "name": "useOptimizedTemplateEngine.ts",
+      "filePath": "src/hooks/useOptimizedTemplateEngine.ts",
+      "summary": "Hook exposing the optimized template engine with caching, preloaded common templates, and rendering helpers used by the content generation pipeline.",
+      "tags": ["hook", "template-engine", "cache", "performance"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useOptimizedTemplateEngine.ts:useOptimizedTemplateEngine",
+      "type": "function",
+      "name": "useOptimizedTemplateEngine",
+      "filePath": "src/hooks/useOptimizedTemplateEngine.ts",
+      "lineRange": [28, 219],
+      "summary": "Main hook providing memoized template lookup, render dispatch, and cache invalidation.",
+      "tags": ["hook", "template-engine", "cache"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useOptimizedTemplateEngine.ts:preloadCommonTemplates",
+      "type": "function",
+      "name": "preloadCommonTemplates",
+      "filePath": "src/hooks/useOptimizedTemplateEngine.ts",
+      "lineRange": [222, 250],
+      "summary": "Eagerly loads and warms the cache with the most common templates at startup.",
+      "tags": ["preload", "cache", "template-engine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/hooks/usePayouts.ts",
+      "type": "file",
+      "name": "usePayouts.ts",
+      "filePath": "src/hooks/usePayouts.ts",
+      "summary": "Payout-domain hooks (list, single, pending, stats, mutations) backed by Supabase covering filter/pagination, status updates, and aggregated metrics.",
+      "tags": ["hook", "payouts", "supabase", "mutations", "stats"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/usePayouts.ts:usePayouts",
+      "type": "function",
+      "name": "usePayouts",
+      "filePath": "src/hooks/usePayouts.ts",
+      "lineRange": [54, 152],
+      "summary": "Lists payout records with filter, sort, and pagination.",
+      "tags": ["hook", "payouts", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/usePayouts.ts:usePayout",
+      "type": "function",
+      "name": "usePayout",
+      "filePath": "src/hooks/usePayouts.ts",
+      "lineRange": [157, 200],
+      "summary": "Fetches a single payout record with related entities.",
+      "tags": ["hook", "payouts", "detail"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/usePayouts.ts:usePayoutStats",
+      "type": "function",
+      "name": "usePayoutStats",
+      "filePath": "src/hooks/usePayouts.ts",
+      "lineRange": [216, 276],
+      "summary": "Aggregates payout totals, pending volume, average amount, etc.",
+      "tags": ["hook", "payouts", "stats"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/hooks/usePayouts.ts:usePayoutMutations",
+      "type": "function",
+      "name": "usePayoutMutations",
+      "filePath": "src/hooks/usePayouts.ts",
+      "lineRange": [282, 434],
+      "summary": "Approve/reject/process/bulk mutations for payout records with optimistic updates.",
+      "tags": ["hook", "payouts", "mutations"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/usePermission.ts",
+      "type": "file",
+      "name": "usePermission.ts",
+      "filePath": "src/hooks/usePermission.ts",
+      "summary": "Tiny permission-check hook that combines the auth context with the project's permissions table to return a boolean for a given permission key.",
+      "tags": ["hook", "permissions", "auth", "rbac"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/hooks/useStrategy.ts",
+      "type": "file",
+      "name": "useStrategy.ts",
+      "filePath": "src/hooks/useStrategy.ts",
+      "summary": "Hook orchestrating content strategy retrieval from Supabase and exposing strategy state plus refresh actions for strategy planning UI.",
+      "tags": ["hook", "strategy", "supabase", "content"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useStrategy.ts:useStrategy",
+      "type": "function",
+      "name": "useStrategy",
+      "filePath": "src/hooks/useStrategy.ts",
+      "lineRange": [19, 157],
+      "summary": "Loads the current user's content strategy, exposes refresh, and handles loading/error states.",
+      "tags": ["hook", "strategy", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/hooks/useVideoCreation.ts",
+      "type": "file",
+      "name": "useVideoCreation.ts",
+      "filePath": "src/hooks/useVideoCreation.ts",
+      "summary": "Hook managing the video creation flow state, including current step, draft project payload, and submission progress used by the creator studio UI.",
+      "tags": ["hook", "video", "creation", "studio", "state-machine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/hooks/useVideoCreation.ts:useVideoCreation",
+      "type": "function",
+      "name": "useVideoCreation",
+      "filePath": "src/hooks/useVideoCreation.ts",
+      "lineRange": [21, 200],
+      "summary": "State machine hook driving the multi-step video creation wizard with draft persistence and submit handling.",
+      "tags": ["hook", "video", "wizard"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/features/Brain/useBrain.ts", "target": "function:src/features/Brain/useBrain.ts:useBrain", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/features/Brain/useBrain.ts", "target": "function:src/features/Brain/useBrain.ts:useChatHistory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/features/Brain/useBrain.ts", "target": "function:src/features/Brain/useBrain.ts:useBrain", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/features/Brain/useBrain.ts", "target": "function:src/features/Brain/useBrain.ts:useChatHistory", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/features/Brain/useBrainSimple.ts", "target": "function:src/features/Brain/useBrainSimple.ts:useBrainSimple", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/features/Brain/useBrainSimple.ts", "target": "function:src/features/Brain/useBrainSimple.ts:useBrainSimple", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:ViralPredictionRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:ViralPredictionResponse", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:BatchViralPredictionRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:FeatureExtractionRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:HealthCheckRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "schema:src/grpc/protos/viral_prediction.proto:MetricsRequest", "type": "contains", "direction": "forward", "weight": 1.0},
+
+    {"source": "schema:src/grpc/protos/viral_prediction.proto", "target": "file:src/grpc/services/viral-prediction-service.ts", "type": "defines_schema", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/grpc/services/viral-prediction-service.ts", "target": "class:src/grpc/services/viral-prediction-service.ts:ViralPredictionGrpcService", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/grpc/services/viral-prediction-service.ts", "target": "class:src/grpc/services/viral-prediction-service.ts:ViralPredictionGrpcService", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/grpc/services/viral-prediction-service.ts", "target": "file:src/lib/services/master-viral-algorithm.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/grpc/services/viral-prediction-service.ts", "target": "file:src/lib/services/tiktok-specific-analyzer.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useModeManager", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useComponentMode", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useModeTransitions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useModeManager", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useComponentMode", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "function:src/hooks/unified-interface/useModeManager.ts:useModeTransitions", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/unified-interface/useModeManager.ts", "target": "file:src/types/unified-interface.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useAdminUser.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useAgencies.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useAuditLog.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useCampaigns.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useCreators.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useDashboardStats.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useImpersonation.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useMiniApps.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useNotifications.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/useOperations.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/index.ts", "target": "file:src/hooks/usePayouts.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "function:src/hooks/useAdminUser.ts:useAdminUser", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "function:src/hooks/useAdminUser.ts:useMockAdminUser", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "function:src/hooks/useAdminUser.ts:useAdminUser", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "function:src/hooks/useAdminUser.ts:useMockAdminUser", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "file:src/lib/permissions/index.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useAdminUser.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgencies", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgency", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgenciesWithStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgencyMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgencies", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgency", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgenciesWithStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "function:src/hooks/useAgencies.ts:useAgencyMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useAgencies.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useAgencyMutations.ts", "target": "function:src/hooks/useAgencyMutations.ts:useAgencyMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAgencyMutations.ts", "target": "function:src/hooks/useAgencyMutations.ts:useAgencyMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAgencyMutations.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useAgencyMutations.ts", "target": "file:src/lib/supabase/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLog", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogActions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogResourceTypes", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogExport", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLog", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogActions", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogResourceTypes", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "function:src/hooks/useAuditLog.ts:useAuditLogExport", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useAuditLog.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useAuth.ts", "target": "function:src/hooks/useAuth.ts:useAuth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useAuth.ts", "target": "function:src/hooks/useAuth.ts:useAuth", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useAuth.ts", "target": "file:src/lib/supabase/auth-context.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaignsBase", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaign", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaignWithStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaignMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaign", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaignWithStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "function:src/hooks/useCampaigns.ts:useCampaignMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useCampaigns.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreators", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreator", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useAgencyCreators", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreatorMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreators", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreator", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useAgencyCreators", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCreators.ts", "target": "function:src/hooks/useCreators.ts:useCreatorMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useCreators.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useCreators.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useChairmanDashboardStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useAgencyDashboardStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useDeveloperDashboardStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useClipperDashboardStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useChairmanDashboardStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useAgencyDashboardStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useDeveloperDashboardStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "function:src/hooks/useDashboardStats.ts:useClipperDashboardStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useDashboardStats.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useFeature.ts", "target": "file:src/lib/flags/evaluator.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useImpersonation.ts", "target": "function:src/hooks/useImpersonation.ts:useImpersonation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useImpersonation.ts", "target": "function:src/hooks/useImpersonation.ts:useImpersonation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useImpersonation.ts", "target": "file:src/hooks/useAdminUser.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useImpersonation.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useImpersonation.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniApps", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniApp", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useFeaturedMiniApps", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useDeveloperApps", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniAppCategories", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniAppMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniApps", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniApp", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useFeaturedMiniApps", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useDeveloperApps", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniAppCategories", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "function:src/hooks/useMiniApps.ts:useMiniAppMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useMiniApps.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useNotifications.ts", "target": "function:src/hooks/useNotifications.ts:useNotifications", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useNotifications.ts", "target": "function:src/hooks/useNotifications.ts:useUnreadNotificationCount", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useNotifications.ts", "target": "function:src/hooks/useNotifications.ts:useNotifications", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useNotifications.ts", "target": "function:src/hooks/useNotifications.ts:useUnreadNotificationCount", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useNotifications.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useNotifications.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useModelMetrics", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useTrainingData", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useTrainingJobs", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useSystemHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useOperationsAlerts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useExperiments", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useOperationsDashboard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useModelMetrics", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useTrainingData", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useTrainingJobs", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useSystemHealth", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useOperationsAlerts", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useExperiments", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "function:src/hooks/useOperations.ts:useOperationsDashboard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOperations.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "function:src/hooks/useOptimizedTemplateEngine.ts:useOptimizedTemplateEngine", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "function:src/hooks/useOptimizedTemplateEngine.ts:preloadCommonTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "function:src/hooks/useOptimizedTemplateEngine.ts:useOptimizedTemplateEngine", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "function:src/hooks/useOptimizedTemplateEngine.ts:preloadCommonTemplates", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "file:src/lib/services/templateEngineIntegration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useOptimizedTemplateEngine.ts", "target": "file:src/lib/types/database.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayouts", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayout", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayoutStats", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayoutMutations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayouts", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayout", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayoutStats", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "function:src/hooks/usePayouts.ts:usePayoutMutations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "file:src/lib/supabase/types.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/usePayouts.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/usePermission.ts", "target": "file:src/hooks/useAuth.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/usePermission.ts", "target": "file:src/lib/auth/permissions.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/usePermission.ts", "target": "file:src/types/admin.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useStrategy.ts", "target": "function:src/hooks/useStrategy.ts:useStrategy", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useStrategy.ts", "target": "function:src/hooks/useStrategy.ts:useStrategy", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useStrategy.ts", "target": "file:src/lib/supabase/client.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/hooks/useStrategy.ts", "target": "file:src/types/database.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/hooks/useVideoCreation.ts", "target": "function:src/hooks/useVideoCreation.ts:useVideoCreation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/hooks/useVideoCreation.ts", "target": "function:src/hooks/useVideoCreation.ts:useVideoCreation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/hooks/useVideoCreation.ts", "target": "file:src/types/database.ts", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

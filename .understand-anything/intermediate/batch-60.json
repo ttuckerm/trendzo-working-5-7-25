@@ -1,0 +1,501 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/admin/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "src/app/admin/layout.tsx",
+      "summary": "Next.js App Router layout for the /admin section: wraps children in AdminAuthGate, mounts MasterNavigation, GlobalHeader, AICommandPalette, JARVIS interface/overlay, and the dynamically loaded QaOverlay. Has a feature flag for switching to a newer role-based AdminSidebar/AdminHeader layout.",
+      "tags": ["layout", "admin", "entry-point", "auth-gate", "component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/admin/layout.tsx:AdminLayout",
+      "type": "function",
+      "name": "AdminLayout",
+      "filePath": "src/app/admin/layout.tsx",
+      "lineRange": [23, 91],
+      "summary": "Default-exported layout component selecting between original master-nav layout and role-based AdminSidebar+AdminHeader layout via a USE_NEW_NAVIGATION flag, always wrapping in AdminAuthGate and mounting JARVIS/QA overlays.",
+      "tags": ["layout", "react-component", "feature-flag"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/admin/loading.tsx",
+      "type": "file",
+      "name": "loading.tsx",
+      "filePath": "src/app/admin/loading.tsx",
+      "summary": "Next.js loading.tsx UI shown during admin segment route transitions.",
+      "tags": ["loading-state", "admin", "react-component", "suspense"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/admin/not-found.tsx",
+      "type": "file",
+      "name": "not-found.tsx",
+      "filePath": "src/app/admin/not-found.tsx",
+      "summary": "Custom 404 page rendered when an /admin route does not match.",
+      "tags": ["error-page", "admin", "react-component", "not-found"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/admin/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/admin/page.tsx",
+      "summary": "Root /admin page; small dashboard entry point marked dynamic so it renders fresh on each request.",
+      "tags": ["page", "admin", "entry-point", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:src/app/admin/admin.css",
+      "type": "config",
+      "name": "admin.css",
+      "filePath": "src/app/admin/admin.css",
+      "summary": "Admin-section CSS containing shared styles, color tokens, and component classes for the admin shell UI.",
+      "tags": ["stylesheet", "admin", "design-tokens", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:src/app/admin/layout.css",
+      "type": "config",
+      "name": "layout.css",
+      "filePath": "src/app/admin/layout.css",
+      "summary": "Layout-specific CSS for the admin shell (sidebar widths, header offsets, grid scaffolding).",
+      "tags": ["stylesheet", "admin", "layout", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/cards/CardsManager.tsx",
+      "type": "file",
+      "name": "CardsManager.tsx",
+      "filePath": "src/app/agency/cards/CardsManager.tsx",
+      "summary": "Client component for agency operators to manage shareable creator cards: create new cards, copy share links, toggle agent enablement, and edit each card's system prompt via the /api/cards endpoints.",
+      "tags": ["agency", "client-component", "cards", "crud", "share-link"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/agency/cards/CardsManager.tsx:CardsManager",
+      "type": "function",
+      "name": "CardsManager",
+      "filePath": "src/app/agency/cards/CardsManager.tsx",
+      "lineRange": [31, 357],
+      "summary": "Default-exported React component rendering the agency cards table; manages creation form state, copy-to-clipboard feedback, agent toggle, and inline system-prompt editing through PATCH calls to /api/cards.",
+      "tags": ["react-component", "form", "crud", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/agency/cards/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/agency/cards/page.tsx",
+      "summary": "Server component that resolves the operator's agency, loads cards from Supabase using the service key, and renders the client-side CardsManager.",
+      "tags": ["page", "agency", "server-component", "supabase", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/cards/page.tsx:AgencyCardsPage",
+      "type": "function",
+      "name": "AgencyCardsPage",
+      "filePath": "src/app/agency/cards/page.tsx",
+      "lineRange": [8, 38],
+      "summary": "Async server-component page that authenticates the user, resolves their agencyId via agency-utils, fetches cards through the service Supabase client, and renders CardsManager with the data.",
+      "tags": ["server-component", "data-fetch", "agency", "auth"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/client-portal/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/agency/client-portal/page.tsx",
+      "summary": "Agency client-portal landing page placeholder rendered as a dynamic route.",
+      "tags": ["page", "agency", "client-portal", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/clients/ClientsGrid.tsx",
+      "type": "file",
+      "name": "ClientsGrid.tsx",
+      "filePath": "src/app/agency/clients/ClientsGrid.tsx",
+      "summary": "Client component rendering a responsive grid of ClientCard tiles for an agency's creators, accepting a precomputed clients array with status, niche, and recent VPS.",
+      "tags": ["agency", "client-component", "grid", "react-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/clients/ClientsGrid.tsx:ClientsGrid",
+      "type": "function",
+      "name": "ClientsGrid",
+      "filePath": "src/app/agency/clients/ClientsGrid.tsx",
+      "lineRange": [15, 52],
+      "summary": "Renders a grid layout iterating client records and delegating per-creator rendering to the shared ClientCard component.",
+      "tags": ["react-component", "grid", "list-view"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/clients/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/agency/clients/page.tsx",
+      "summary": "Server page that fetches the agency's creators, joins their onboarding profiles and 7-day script history from Supabase, derives per-creator VPS/status/videoCount, and renders ClientsGrid.",
+      "tags": ["page", "agency", "server-component", "supabase", "aggregation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/clients/page.tsx:ClientsPage",
+      "type": "function",
+      "name": "ClientsPage",
+      "filePath": "src/app/agency/clients/page.tsx",
+      "lineRange": [8, 100],
+      "summary": "Async page resolving auth + agencyId, querying onboarding_profiles and recent generated_scripts, computing client status (active/warning/inactive) and last VPS, then sorting and rendering ClientsGrid.",
+      "tags": ["server-component", "data-fetch", "agency", "agency-creators"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/agency/competitive/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "src/app/agency/competitive/page.tsx",
+      "summary": "Agency competitive-intelligence landing page placeholder marked as a dynamic route.",
+      "tags": ["page", "agency", "competitive-intel", "dynamic-route"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/components/AgencyCommandCenter.tsx",
+      "type": "file",
+      "name": "AgencyCommandCenter.tsx",
+      "filePath": "src/app/agency/components/AgencyCommandCenter.tsx",
+      "summary": "Agency dashboard composition component: builds morning-brief cards (best script, inactive creators, weekly VPS) and KPI tiles from an AgencyDashboardData payload, with sparkline generation helpers.",
+      "tags": ["agency", "dashboard", "react-component", "kpi", "composition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/components/AgencyCommandCenter.tsx:AgencyCommandCenter",
+      "type": "function",
+      "name": "AgencyCommandCenter",
+      "filePath": "src/app/agency/components/AgencyCommandCenter.tsx",
+      "lineRange": [38, 151],
+      "summary": "Default-exported dashboard component that derives morning-brief items from real agency data and lays them out alongside KPICard tiles.",
+      "tags": ["react-component", "dashboard", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/agency/components/AgencySidebar.tsx",
+      "type": "file",
+      "name": "AgencySidebar.tsx",
+      "filePath": "src/app/agency/components/AgencySidebar.tsx",
+      "summary": "Animated collapsible sidebar for the /agency section featuring custom easing curves, design tokens, staggered icon-drop animations, localStorage-persisted expanded state, and per-route navigation links with active highlighting.",
+      "tags": ["agency", "sidebar", "navigation", "client-component", "animation"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of inline CSS strings injected via a <style> tag for keyframe animations; design tokens centralized in an `S` const object."
+    },
+    {
+      "id": "function:src/app/agency/components/AgencySidebar.tsx:AgencySidebar",
+      "type": "function",
+      "name": "AgencySidebar",
+      "filePath": "src/app/agency/components/AgencySidebar.tsx",
+      "lineRange": [202, 425],
+      "summary": "Main sidebar React component with collapse toggle, animated icon nav, localStorage persistence of expanded state, and dynamic styling driven by usePathname.",
+      "tags": ["react-component", "navigation", "animation", "local-storage"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/agency/components/AgencySidebar.tsx:SidebarLink",
+      "type": "function",
+      "name": "SidebarLink",
+      "filePath": "src/app/agency/components/AgencySidebar.tsx",
+      "lineRange": [429, 505],
+      "summary": "Internal helper component rendering a single nav link with hover/active state, icon, tooltip, and staggered entry animation tied to its position.",
+      "tags": ["react-component", "nav-item", "animation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/ChatPanel.tsx",
+      "type": "file",
+      "name": "ChatPanel.tsx",
+      "filePath": "src/app/agency/components/ChatPanel.tsx",
+      "summary": "Slide-in chat panel for the agency dashboard featuring suggestion chips, mic icon, autoscroll, and PulseDot loading indicator; manages messages, loading state, and posts to a chat endpoint.",
+      "tags": ["agency", "chat", "client-component", "panel", "ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/agency/components/ChatPanel.tsx:ChatPanel",
+      "type": "function",
+      "name": "ChatPanel",
+      "filePath": "src/app/agency/components/ChatPanel.tsx",
+      "lineRange": [25, 227],
+      "summary": "Main chat panel component handling open/close, input state, send-on-enter, autoscroll behaviour, suggestion prompts, and PulseDot status indication.",
+      "tags": ["react-component", "chat", "agency"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/agency/components/ClientCard.tsx",
+      "type": "file",
+      "name": "ClientCard.tsx",
+      "filePath": "src/app/agency/components/ClientCard.tsx",
+      "summary": "Card UI for a single agency client/creator showing VPS-coded badge, status indicator, niche, and video count, with helpers to map VPS and status to color tokens.",
+      "tags": ["agency", "card", "client-component", "vps", "status-badge"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/components/ClientCard.tsx:ClientCard",
+      "type": "function",
+      "name": "ClientCard",
+      "filePath": "src/app/agency/components/ClientCard.tsx",
+      "lineRange": [28, 127],
+      "summary": "Default-exported card rendering creator name, niche, VPS score badge, and status pill using getVPSColor and getStatusColor helpers.",
+      "tags": ["react-component", "card", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/ConceptCard.tsx",
+      "type": "file",
+      "name": "ConceptCard.tsx",
+      "filePath": "src/app/agency/components/ConceptCard.tsx",
+      "summary": "Compact card displaying a generated content concept (title, hook, predicted VPS) with color-coded VPS badge.",
+      "tags": ["agency", "card", "concept", "vps", "react-component"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/components/ConceptCard.tsx:ConceptCard",
+      "type": "function",
+      "name": "ConceptCard",
+      "filePath": "src/app/agency/components/ConceptCard.tsx",
+      "lineRange": [20, 73],
+      "summary": "Default-exported concept-card component rendering title, hook excerpt, and predicted VPS with color-driven styling.",
+      "tags": ["react-component", "card", "concept"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/CreatorRow.tsx",
+      "type": "file",
+      "name": "CreatorRow.tsx",
+      "filePath": "src/app/agency/components/CreatorRow.tsx",
+      "summary": "Tabular row component for displaying a creator's name, niche, last VPS, last active date, and script count with VPS color helper and formatDate utility.",
+      "tags": ["agency", "row", "react-component", "table-row", "vps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/components/CreatorRow.tsx:formatDate",
+      "type": "function",
+      "name": "formatDate",
+      "filePath": "src/app/agency/components/CreatorRow.tsx",
+      "lineRange": [20, 31],
+      "summary": "Local helper formatting an ISO date string into a relative or short human label for the lastActive column.",
+      "tags": ["utility", "date", "formatting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/components/CreatorRow.tsx:CreatorRow",
+      "type": "function",
+      "name": "CreatorRow",
+      "filePath": "src/app/agency/components/CreatorRow.tsx",
+      "lineRange": [33, 72],
+      "summary": "Default-exported row component for a creator listing in the agency dashboard.",
+      "tags": ["react-component", "row", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/EngineOrb.tsx",
+      "type": "file",
+      "name": "EngineOrb.tsx",
+      "filePath": "src/app/agency/components/EngineOrb.tsx",
+      "summary": "SVG-based animated orb component representing the agency AI engine's state (idle, thinking, streaming, error) via data-state-driven CSS animations, gradients, and pulsing rings.",
+      "tags": ["agency", "svg", "animation", "indicator", "client-component"],
+      "complexity": "complex",
+      "languageNotes": "Uses a data-state attribute toggle and inline SVG <defs> with multiple radial gradients to drive per-state animation styles."
+    },
+    {
+      "id": "function:src/app/agency/components/EngineOrb.tsx:EngineOrb",
+      "type": "function",
+      "name": "EngineOrb",
+      "filePath": "src/app/agency/components/EngineOrb.tsx",
+      "lineRange": [10, 263],
+      "summary": "Default-exported SVG orb component that updates its data-state attribute on prop change and renders gradient-filled core, glow, and outer rings for each engine state.",
+      "tags": ["react-component", "svg", "animation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/agency/components/KPICard.tsx",
+      "type": "file",
+      "name": "KPICard.tsx",
+      "filePath": "src/app/agency/components/KPICard.tsx",
+      "summary": "Reusable KPI tile showing a label, large value, and delta/trend indicator for the agency dashboard.",
+      "tags": ["agency", "kpi", "card", "react-component", "dashboard"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/components/KPICard.tsx:KPICard",
+      "type": "function",
+      "name": "KPICard",
+      "filePath": "src/app/agency/components/KPICard.tsx",
+      "lineRange": [12, 48],
+      "summary": "Default-exported KPI card rendering label, value, and optional trend delta with sign-aware styling.",
+      "tags": ["react-component", "kpi", "card"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/components/MiniChart.tsx",
+      "type": "file",
+      "name": "MiniChart.tsx",
+      "filePath": "src/app/agency/components/MiniChart.tsx",
+      "summary": "Lightweight inline SVG sparkline that renders a polyline from a numeric array, used inside KPI and morning-brief cards.",
+      "tags": ["agency", "chart", "sparkline", "svg", "react-component"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/components/MiniChart.tsx:MiniChart",
+      "type": "function",
+      "name": "MiniChart",
+      "filePath": "src/app/agency/components/MiniChart.tsx",
+      "lineRange": [11, 35],
+      "summary": "Default-exported sparkline component computing min/max from data, generating a normalized SVG polyline, and styling stroke via prop.",
+      "tags": ["react-component", "sparkline", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/components/MorningBriefCard.tsx",
+      "type": "file",
+      "name": "MorningBriefCard.tsx",
+      "filePath": "src/app/agency/components/MorningBriefCard.tsx",
+      "summary": "Briefing card component rendering success/warning/info status with title, description, optional metric, action button, sparkline (MiniChart), and AI agent attribution; supports staggered entry animation.",
+      "tags": ["agency", "briefing", "card", "react-component", "animation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/agency/components/MorningBriefCard.tsx:MorningBriefCard",
+      "type": "function",
+      "name": "MorningBriefCard",
+      "filePath": "src/app/agency/components/MorningBriefCard.tsx",
+      "lineRange": [50, 126],
+      "summary": "Default-exported briefing card component switching styles by BriefType, embedding optional MiniChart sparkline and action CTA with agent-attribution caption.",
+      "tags": ["react-component", "card", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/PulseDot.tsx",
+      "type": "file",
+      "name": "PulseDot.tsx",
+      "filePath": "src/app/agency/components/PulseDot.tsx",
+      "summary": "Tiny pulsing-dot indicator used to convey live/typing/loading state in chat and dashboard surfaces.",
+      "tags": ["agency", "indicator", "react-component", "animation", "ui"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/agency/components/PulseDot.tsx:PulseDot",
+      "type": "function",
+      "name": "PulseDot",
+      "filePath": "src/app/agency/components/PulseDot.tsx",
+      "lineRange": [10, 25],
+      "summary": "Default-exported small SVG/CSS animated dot used as a status indicator.",
+      "tags": ["react-component", "indicator", "animation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/agency/components/TrendItem.tsx",
+      "type": "file",
+      "name": "TrendItem.tsx",
+      "filePath": "src/app/agency/components/TrendItem.tsx",
+      "summary": "List-item component for displaying a single trend (name, niche, score) with score-color coding inside the agency dashboard trends panel.",
+      "tags": ["agency", "trend", "list-item", "react-component", "ui"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/agency/components/TrendItem.tsx:TrendItem",
+      "type": "function",
+      "name": "TrendItem",
+      "filePath": "src/app/agency/components/TrendItem.tsx",
+      "lineRange": [17, 58],
+      "summary": "Default-exported list-item component showing a trend name, optional niche tag, and score badge styled via getScoreColor.",
+      "tags": ["react-component", "list-item", "trend"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/agency/components/TrendzoChatPanel.tsx",
+      "type": "file",
+      "name": "TrendzoChatPanel.tsx",
+      "filePath": "src/app/agency/components/TrendzoChatPanel.tsx",
+      "summary": "Alternate Trendzo-branded slide-in chat panel for agency operators with autoscroll, input focus management, and assistant streaming state — sibling implementation to ChatPanel without PulseDot.",
+      "tags": ["agency", "chat", "client-component", "panel", "ui"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/agency/components/TrendzoChatPanel.tsx:TrendzoChatPanel",
+      "type": "function",
+      "name": "TrendzoChatPanel",
+      "filePath": "src/app/agency/components/TrendzoChatPanel.tsx",
+      "lineRange": [17, 200],
+      "summary": "Default-exported chat panel managing message list, input state, autoscroll, focus on open, and assistant request lifecycle.",
+      "tags": ["react-component", "chat", "agency"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/app/admin/layout.tsx", "target": "function:src/app/admin/layout.tsx:AdminLayout", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/admin/layout.tsx", "target": "function:src/app/admin/layout.tsx:AdminLayout", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/cards/CardsManager.tsx", "target": "function:src/app/agency/cards/CardsManager.tsx:CardsManager", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/cards/CardsManager.tsx", "target": "function:src/app/agency/cards/CardsManager.tsx:CardsManager", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "function:src/app/agency/cards/page.tsx:AgencyCardsPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "function:src/app/agency/cards/page.tsx:AgencyCardsPage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/clients/ClientsGrid.tsx", "target": "function:src/app/agency/clients/ClientsGrid.tsx:ClientsGrid", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/clients/ClientsGrid.tsx", "target": "function:src/app/agency/clients/ClientsGrid.tsx:ClientsGrid", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "function:src/app/agency/clients/page.tsx:ClientsPage", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "function:src/app/agency/clients/page.tsx:ClientsPage", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/AgencyCommandCenter.tsx", "target": "function:src/app/agency/components/AgencyCommandCenter.tsx:AgencyCommandCenter", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/AgencyCommandCenter.tsx", "target": "function:src/app/agency/components/AgencyCommandCenter.tsx:AgencyCommandCenter", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/AgencySidebar.tsx", "target": "function:src/app/agency/components/AgencySidebar.tsx:AgencySidebar", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/AgencySidebar.tsx", "target": "function:src/app/agency/components/AgencySidebar.tsx:SidebarLink", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/AgencySidebar.tsx", "target": "function:src/app/agency/components/AgencySidebar.tsx:AgencySidebar", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/ChatPanel.tsx", "target": "function:src/app/agency/components/ChatPanel.tsx:ChatPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/ChatPanel.tsx", "target": "function:src/app/agency/components/ChatPanel.tsx:ChatPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/ClientCard.tsx", "target": "function:src/app/agency/components/ClientCard.tsx:ClientCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/ClientCard.tsx", "target": "function:src/app/agency/components/ClientCard.tsx:ClientCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/ConceptCard.tsx", "target": "function:src/app/agency/components/ConceptCard.tsx:ConceptCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/ConceptCard.tsx", "target": "function:src/app/agency/components/ConceptCard.tsx:ConceptCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/CreatorRow.tsx", "target": "function:src/app/agency/components/CreatorRow.tsx:formatDate", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/CreatorRow.tsx", "target": "function:src/app/agency/components/CreatorRow.tsx:CreatorRow", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/CreatorRow.tsx", "target": "function:src/app/agency/components/CreatorRow.tsx:CreatorRow", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/EngineOrb.tsx", "target": "function:src/app/agency/components/EngineOrb.tsx:EngineOrb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/EngineOrb.tsx", "target": "function:src/app/agency/components/EngineOrb.tsx:EngineOrb", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/KPICard.tsx", "target": "function:src/app/agency/components/KPICard.tsx:KPICard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/KPICard.tsx", "target": "function:src/app/agency/components/KPICard.tsx:KPICard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/MiniChart.tsx", "target": "function:src/app/agency/components/MiniChart.tsx:MiniChart", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/MiniChart.tsx", "target": "function:src/app/agency/components/MiniChart.tsx:MiniChart", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/MorningBriefCard.tsx", "target": "function:src/app/agency/components/MorningBriefCard.tsx:MorningBriefCard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/MorningBriefCard.tsx", "target": "function:src/app/agency/components/MorningBriefCard.tsx:MorningBriefCard", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/PulseDot.tsx", "target": "function:src/app/agency/components/PulseDot.tsx:PulseDot", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/PulseDot.tsx", "target": "function:src/app/agency/components/PulseDot.tsx:PulseDot", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/TrendItem.tsx", "target": "function:src/app/agency/components/TrendItem.tsx:TrendItem", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/TrendItem.tsx", "target": "function:src/app/agency/components/TrendItem.tsx:TrendItem", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/app/agency/components/TrendzoChatPanel.tsx", "target": "function:src/app/agency/components/TrendzoChatPanel.tsx:TrendzoChatPanel", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/app/agency/components/TrendzoChatPanel.tsx", "target": "function:src/app/agency/components/TrendzoChatPanel.tsx:TrendzoChatPanel", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/AuthGate.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/components/AICommandPalette.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/components/GlobalHeader.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/components/MasterNavigation.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/super-admin-components/JarvisInterface.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/app/admin/super-admin-components/JarvisOverlay.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/components/admin/AdminHeader.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/components/admin/AdminSidebar.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/components/admin/ImpersonationBanner.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/admin/layout.tsx", "target": "file:src/components/qa/QaOverlay.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "file:src/app/agency/cards/CardsManager.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/cards/page.tsx", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/clients/ClientsGrid.tsx", "target": "file:src/app/agency/components/ClientCard.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "file:src/app/agency/clients/ClientsGrid.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "file:src/lib/auth/agency-utils.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/clients/page.tsx", "target": "file:src/lib/supabase/server.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/components/AgencyCommandCenter.tsx", "target": "file:src/app/agency/components/KPICard.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/app/agency/components/AgencyCommandCenter.tsx", "target": "file:src/app/agency/components/MorningBriefCard.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/components/ChatPanel.tsx", "target": "file:src/app/agency/components/PulseDot.tsx", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/app/agency/components/MorningBriefCard.tsx", "target": "file:src/app/agency/components/MiniChart.tsx", "type": "imports", "direction": "forward", "weight": 0.7}
+  ]
+}

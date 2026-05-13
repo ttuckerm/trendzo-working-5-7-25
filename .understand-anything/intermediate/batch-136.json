@@ -1,0 +1,771 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/lib/db/ensure.ts",
+      "type": "file",
+      "name": "ensure.ts",
+      "filePath": "src/lib/db/ensure.ts",
+      "summary": "Provides a Supabase service-role client factory and an idempotent DDL helper that ensures the P1 accuracy tracking tables (predictions, outcomes, labels) and indexes exist.",
+      "tags": ["database", "supabase", "schema", "bootstrap", "ddl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/db/ensure.ts:getServerDb",
+      "type": "function",
+      "name": "getServerDb",
+      "filePath": "src/lib/db/ensure.ts",
+      "lineRange": [8, 15],
+      "summary": "Constructs a Supabase service-role client when both URL and service key env vars are present; returns null in development to enable graceful in-memory fallbacks.",
+      "tags": ["factory", "supabase", "service-role"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/db/ensure.ts:ensureP1AccuracyTables",
+      "type": "function",
+      "name": "ensureP1AccuracyTables",
+      "filePath": "src/lib/db/ensure.ts",
+      "lineRange": [17, 81],
+      "summary": "Issues DDL via Supabase RPC to create predictions/outcomes/labels tables plus supporting indexes on demand, guarded by a public preflight check.",
+      "tags": ["ddl", "migration", "bootstrap", "supabase"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/db/pg.ts",
+      "type": "file",
+      "name": "pg.ts",
+      "filePath": "src/lib/db/pg.ts",
+      "summary": "Thin postgres.js client wrapper exposing helpers to initialize and upsert the viral idea tracking (VIT) table and count rows processed in the last 24 hours.",
+      "tags": ["database", "postgres", "data-access", "tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/db/pg.ts:initVitTable",
+      "type": "function",
+      "name": "initVitTable",
+      "filePath": "src/lib/db/pg.ts",
+      "lineRange": [12, 23],
+      "summary": "Creates the viral_idea_tracking table and indexes if they do not yet exist on the configured Postgres connection.",
+      "tags": ["ddl", "migration", "postgres"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/db/pg.ts:upsertVit",
+      "type": "function",
+      "name": "upsertVit",
+      "filePath": "src/lib/db/pg.ts",
+      "lineRange": [25, 33],
+      "summary": "Upserts a viral idea record keyed by source/external id, persisting metadata, hashtag, payload and processed_at timestamps.",
+      "tags": ["upsert", "postgres", "data-access"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/debug/fetch-instrumentation.ts",
+      "type": "file",
+      "name": "fetch-instrumentation.ts",
+      "filePath": "src/lib/debug/fetch-instrumentation.ts",
+      "summary": "Monkey-patches globalThis.fetch in development to record request URLs, statuses, and durations into the networkLog store for the in-browser debug overlay.",
+      "tags": ["instrumentation", "debugging", "fetch", "dev-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/debug/fetch-instrumentation.ts:installFetchInstrumentation",
+      "type": "function",
+      "name": "installFetchInstrumentation",
+      "filePath": "src/lib/debug/fetch-instrumentation.ts",
+      "lineRange": [10, 56],
+      "summary": "Idempotently wraps the global fetch with timing and error capture, emitting structured entries to the networkLog store.",
+      "tags": ["instrumentation", "fetch", "dev-tooling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/debug/networkLog.ts",
+      "type": "file",
+      "name": "networkLog.ts",
+      "filePath": "src/lib/debug/networkLog.ts",
+      "summary": "In-memory observable log of network entries (capped at 200) with a pub/sub subscribe API consumed by the dev network panel.",
+      "tags": ["debugging", "pubsub", "in-memory", "dev-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/debug/networkLog.ts:addLog",
+      "type": "function",
+      "name": "addLog",
+      "filePath": "src/lib/debug/networkLog.ts",
+      "lineRange": [39, 51],
+      "summary": "Appends a network entry to the bounded log buffer and notifies all subscribers of the updated snapshot.",
+      "tags": ["pubsub", "logging", "in-memory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/design-system/glass-config.ts",
+      "type": "file",
+      "name": "glass-config.ts",
+      "filePath": "src/lib/design-system/glass-config.ts",
+      "summary": "Centralizes glassmorphism design tokens plus DPS (Dynamic Percentile System) tier thresholds with helpers mapping scores to colors, glows, and labels.",
+      "tags": ["design-system", "tokens", "theming", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/dev/accuracyStore.ts",
+      "type": "file",
+      "name": "accuracyStore.ts",
+      "filePath": "src/lib/dev/accuracyStore.ts",
+      "summary": "Dev-only in-memory accuracy store maintaining predictions, outcomes, labels and calibration profiles with both new and legacy dev-prefixed export names.",
+      "tags": ["dev-tooling", "in-memory", "accuracy", "store"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/dev/upsertStore.ts",
+      "type": "file",
+      "name": "upsertStore.ts",
+      "filePath": "src/lib/dev/upsertStore.ts",
+      "summary": "Tiny dev singleton tracking the most recent client upsert payload for inspection in the debug UI.",
+      "tags": ["dev-tooling", "in-memory", "singleton"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:src/lib/dev/upsertStore.ts:DevUpsertStore",
+      "type": "class",
+      "name": "DevUpsertStore",
+      "filePath": "src/lib/dev/upsertStore.ts",
+      "lineRange": [3, 18],
+      "summary": "Minimal in-memory holder that records and exposes the last write attempted by the client, exported as a singleton.",
+      "tags": ["singleton", "dev-tooling", "store"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/discovery/discovery_readiness.ts",
+      "type": "file",
+      "name": "discovery_readiness.ts",
+      "filePath": "src/lib/discovery/discovery_readiness.ts",
+      "summary": "Computes a readiness scorecard for the discovery subsystem by sampling analyzer outputs, A/B variant coverage, and validation history from Supabase.",
+      "tags": ["discovery", "readiness", "scorecard", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/discovery/discovery_readiness.ts:computeDiscoveryReadiness",
+      "type": "function",
+      "name": "computeDiscoveryReadiness",
+      "filePath": "src/lib/discovery/discovery_readiness.ts",
+      "lineRange": [57, 162],
+      "summary": "Aggregates analyzer, A/B, and validation health checks into a single readiness report with rolled-up status flags and metrics.",
+      "tags": ["readiness", "aggregation", "discovery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/donna/services/apify-integration.ts",
+      "type": "file",
+      "name": "apify-integration.ts",
+      "filePath": "src/lib/donna/services/apify-integration.ts",
+      "summary": "Wraps the Apify TikTok scraper actor to fetch creator and hashtag content for Donna viral-creator pipelines, including config and singleton instance.",
+      "tags": ["service", "apify", "tiktok", "scraping", "donna"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/services/apify-integration.ts:ApifyIntegration",
+      "type": "class",
+      "name": "ApifyIntegration",
+      "filePath": "src/lib/donna/services/apify-integration.ts",
+      "lineRange": [78, 293],
+      "summary": "Client class that builds Apify run inputs, polls runs to completion, and normalizes results for downstream viral analysis with configurable concurrency and filters.",
+      "tags": ["service", "apify", "scraping", "client"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/donna/services/enhanced-framework-integration.ts",
+      "type": "file",
+      "name": "enhanced-framework-integration.ts",
+      "filePath": "src/lib/donna/services/enhanced-framework-integration.ts",
+      "summary": "Exposes the 61 growth frameworks plus analysis helpers that score videos against frameworks and viral style archetypes for the Donna workflow.",
+      "tags": ["service", "frameworks", "analysis", "donna"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/donna/services/enhanced-framework-integration.ts:analyzeEnhancedFrameworks",
+      "type": "function",
+      "name": "analyzeEnhancedFrameworks",
+      "filePath": "src/lib/donna/services/enhanced-framework-integration.ts",
+      "lineRange": [167, 286],
+      "summary": "Scores a video against the 61 growth frameworks plus 24 viral styles and returns ranked recommendations with confidence metadata.",
+      "tags": ["analysis", "frameworks", "ranking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/donna/services/enhanced-framework-integration.ts:getFrameworkRecommendations",
+      "type": "function",
+      "name": "getFrameworkRecommendations",
+      "filePath": "src/lib/donna/services/enhanced-framework-integration.ts",
+      "lineRange": [291, 322],
+      "summary": "Filters and orders growth-framework matches by similarity to produce a short recommendation list for the UI.",
+      "tags": ["recommendation", "frameworks"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/donna/services/enhanced-framework-integration.ts:getStyleRecommendations",
+      "type": "function",
+      "name": "getStyleRecommendations",
+      "filePath": "src/lib/donna/services/enhanced-framework-integration.ts",
+      "lineRange": [327, 353],
+      "summary": "Returns the top viral video-style recommendations along with rationale strings drawn from the 24-style catalog.",
+      "tags": ["recommendation", "styles"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/donna/testing/testing-framework.ts",
+      "type": "file",
+      "name": "testing-framework.ts",
+      "filePath": "src/lib/donna/testing/testing-framework.ts",
+      "summary": "Donna's end-to-end testing framework providing historical backtests, live tracking simulations, and an aggregator that orchestrates runs and reports.",
+      "tags": ["testing", "donna", "backtest", "framework"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/testing/testing-framework.ts:HistoricalTest",
+      "type": "class",
+      "name": "HistoricalTest",
+      "filePath": "src/lib/donna/testing/testing-framework.ts",
+      "lineRange": [75, 352],
+      "summary": "Runs historical backtests of the Donna prediction pipeline against past creator data, scoring accuracy and surfacing per-framework breakdowns.",
+      "tags": ["testing", "backtest", "donna"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/testing/testing-framework.ts:LiveTrackingTest",
+      "type": "class",
+      "name": "LiveTrackingTest",
+      "filePath": "src/lib/donna/testing/testing-framework.ts",
+      "lineRange": [358, 463],
+      "summary": "Simulates live tracking by polling near-real-time metrics for monitored videos and comparing predictions to early performance.",
+      "tags": ["testing", "live", "tracking"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/testing/testing-framework.ts:TestingFramework",
+      "type": "class",
+      "name": "TestingFramework",
+      "filePath": "src/lib/donna/testing/testing-framework.ts",
+      "lineRange": [469, 530],
+      "summary": "Top-level orchestrator that runs both historical and live tracking suites and aggregates the combined results into a single test report.",
+      "tags": ["testing", "orchestrator", "framework"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/donna/workflows/viral-creator-config.ts",
+      "type": "file",
+      "name": "viral-creator-config.ts",
+      "filePath": "src/lib/donna/workflows/viral-creator-config.ts",
+      "summary": "Static configuration of viral creators and hashtags by niche along with lookup helpers used to seed Donna scraping workflows.",
+      "tags": ["configuration", "donna", "creators", "niches"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/donna/workflows/viral-scraping-workflow.ts",
+      "type": "file",
+      "name": "viral-scraping-workflow.ts",
+      "filePath": "src/lib/donna/workflows/viral-scraping-workflow.ts",
+      "summary": "Implements Donna's end-to-end viral scraping workflow: configures targets, drives Apify integration, classifies and tracks results across the lifecycle.",
+      "tags": ["workflow", "donna", "scraping", "tracking", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:ViralScrapingWorkflow",
+      "type": "class",
+      "name": "ViralScrapingWorkflow",
+      "filePath": "src/lib/donna/workflows/viral-scraping-workflow.ts",
+      "lineRange": [175, 658],
+      "summary": "Coordinates niche-aware scraping runs through Apify, ranking and persisting viral candidates with batching, retries, and dedupe across creators and hashtags.",
+      "tags": ["workflow", "scraping", "donna", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:TrackingSystem",
+      "type": "class",
+      "name": "TrackingSystem",
+      "filePath": "src/lib/donna/workflows/viral-scraping-workflow.ts",
+      "lineRange": [664, 885],
+      "summary": "In-process tracker that records scraped candidates, schedules re-checks, and surfaces lifecycle status for downstream analytics.",
+      "tags": ["tracking", "scheduler", "donna"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/drift/feature-importance.ts",
+      "type": "file",
+      "name": "feature-importance.ts",
+      "filePath": "src/lib/drift/feature-importance.ts",
+      "summary": "Computes per-feature drift importance by neutralizing one feature at a time, recalibrating probabilities, and measuring AUROC delta against the baseline.",
+      "tags": ["drift", "feature-importance", "ml", "calibration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/drift/feature-importance.ts:computeFeatureImportance",
+      "type": "function",
+      "name": "computeFeatureImportance",
+      "filePath": "src/lib/drift/feature-importance.ts",
+      "lineRange": [109, 211],
+      "summary": "Iterates each feature in a model, neutralizes it across a sample, recalibrates probabilities, and reports ranked AUROC drops as drift signal.",
+      "tags": ["feature-importance", "drift", "ml"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/ecom/forecastScoring.ts",
+      "type": "file",
+      "name": "forecastScoring.ts",
+      "filePath": "src/lib/ecom/forecastScoring.ts",
+      "summary": "Defines zod schemas and the pure scoring function that produces the e-commerce live forecast score with reason codes from input metrics.",
+      "tags": ["ecom", "scoring", "validation", "zod"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/forecastScoring.ts:calculateEcomForecastScore",
+      "type": "function",
+      "name": "calculateEcomForecastScore",
+      "filePath": "src/lib/ecom/forecastScoring.ts",
+      "lineRange": [36, 79],
+      "summary": "Weighted scoring function that converts validated ecom metrics into a 0-100 forecast score plus an ordered list of reason codes.",
+      "tags": ["ecom", "scoring", "weights"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/ecom/live-recipe-generator.ts",
+      "type": "file",
+      "name": "live-recipe-generator.ts",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "summary": "Generates a tiered live-stream playbook (hooks, run-of-show, objections, offers, CTAs, pivots) tailored to the forecast tier and product context.",
+      "tags": ["ecom", "playbook", "generator", "live"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:generateLiveRecipe",
+      "type": "function",
+      "name": "generateLiveRecipe",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [43, 83],
+      "summary": "Top-level recipe assembler that composes hooks, run-of-show, objections, offers, CTAs, and pivot triggers into a single structured playbook.",
+      "tags": ["playbook", "generator", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildHooks",
+      "type": "function",
+      "name": "buildHooks",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [85, 119],
+      "summary": "Constructs tiered hook variants for the opening minute of a live session based on niche and forecast tier.",
+      "tags": ["playbook", "hooks", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildRunOfShow",
+      "type": "function",
+      "name": "buildRunOfShow",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [121, 155],
+      "summary": "Builds a timestamped run-of-show outline for the live session with tier-specific segment durations and beats.",
+      "tags": ["playbook", "run-of-show", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildObjections",
+      "type": "function",
+      "name": "buildObjections",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [157, 191],
+      "summary": "Generates objection-handling prompts tailored to product category and tier, used during the live recipe segment.",
+      "tags": ["playbook", "objections", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildOfferStack",
+      "type": "function",
+      "name": "buildOfferStack",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [193, 221],
+      "summary": "Assembles the layered offer stack (base, bonus, urgency) appropriate to the tier and product attributes.",
+      "tags": ["playbook", "offers", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildCtaMoments",
+      "type": "function",
+      "name": "buildCtaMoments",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [223, 246],
+      "summary": "Places CTA prompts at tier-specific moments throughout the live session for consistent conversion pressure.",
+      "tags": ["playbook", "cta", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/live-recipe-generator.ts:buildPivotTriggers",
+      "type": "function",
+      "name": "buildPivotTriggers",
+      "filePath": "src/lib/ecom/live-recipe-generator.ts",
+      "lineRange": [248, 274],
+      "summary": "Defines threshold-based pivot triggers (engagement drop, viewer churn) with recommended next moves during the live session.",
+      "tags": ["playbook", "pivots", "ecom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/ecom/session-health.ts",
+      "type": "file",
+      "name": "session-health.ts",
+      "filePath": "src/lib/ecom/session-health.ts",
+      "summary": "Computes live-session health KPIs (engagement averages, drop percentages) and translates them into recommended in-session actions.",
+      "tags": ["ecom", "health", "session", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/session-health.ts:computeHealth",
+      "type": "function",
+      "name": "computeHealth",
+      "filePath": "src/lib/ecom/session-health.ts",
+      "lineRange": [42, 128],
+      "summary": "Calculates rolling engagement averages, drop ratios, and an overall health score from a windowed series of live session datapoints.",
+      "tags": ["health", "metrics", "rolling-average"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/ecom/session-health.ts:buildActions",
+      "type": "function",
+      "name": "buildActions",
+      "filePath": "src/lib/ecom/session-health.ts",
+      "lineRange": [130, 191],
+      "summary": "Maps health metrics and thresholds onto a prioritized list of recommended live-session actions for the host.",
+      "tags": ["health", "actions", "recommendation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/ecom/supabase.ts",
+      "type": "file",
+      "name": "supabase.ts",
+      "filePath": "src/lib/ecom/supabase.ts",
+      "summary": "Small factory that returns a cached Supabase service-role client scoped to the e-commerce subsystem.",
+      "tags": ["ecom", "supabase", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/lib/email-templates/viral-dna-report.html",
+      "type": "file",
+      "name": "viral-dna-report.html",
+      "filePath": "src/lib/email-templates/viral-dna-report.html",
+      "summary": "Static HTML template rendered into emails delivering the Viral DNA Report with branded styling and report sections.",
+      "tags": ["email-template", "html", "marketing", "viral-dna"],
+      "complexity": "moderate",
+      "languageNotes": "Email-safe inline CSS targeting major mail clients."
+    },
+    {
+      "id": "file:src/lib/email/brief-ack-token.ts",
+      "type": "file",
+      "name": "brief-ack-token.ts",
+      "filePath": "src/lib/email/brief-ack-token.ts",
+      "summary": "HMAC-signed token utilities used to authenticate creator brief acknowledgement links coming from outbound emails.",
+      "tags": ["email", "security", "hmac", "token"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/email/brief-ack-token.ts:signBriefAckToken",
+      "type": "function",
+      "name": "signBriefAckToken",
+      "filePath": "src/lib/email/brief-ack-token.ts",
+      "lineRange": [39, 43],
+      "summary": "Produces a base64url-encoded HMAC-signed token binding a brief id and creator email for safe inclusion in email links.",
+      "tags": ["hmac", "token", "email"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/email/brief-ack-token.ts:verifyBriefAckToken",
+      "type": "function",
+      "name": "verifyBriefAckToken",
+      "filePath": "src/lib/email/brief-ack-token.ts",
+      "lineRange": [45, 65],
+      "summary": "Validates a brief acknowledgement token against the shared secret with constant-time comparison and expiry checks.",
+      "tags": ["hmac", "verification", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/email/send-brief.ts",
+      "type": "file",
+      "name": "send-brief.ts",
+      "filePath": "src/lib/email/send-brief.ts",
+      "summary": "Composes and sends the creator brief email, rendering branded HTML/text bodies and embedding a signed acknowledgement link.",
+      "tags": ["email", "transactional", "brief", "creator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/email/send-brief.ts:buildEmailHtml",
+      "type": "function",
+      "name": "buildEmailHtml",
+      "filePath": "src/lib/email/send-brief.ts",
+      "lineRange": [34, 100],
+      "summary": "Builds the HTML body for the brief email with safely escaped fields and embedded acknowledgement CTA.",
+      "tags": ["email", "html", "templating"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/email/send-brief.ts:buildEmailText",
+      "type": "function",
+      "name": "buildEmailText",
+      "filePath": "src/lib/email/send-brief.ts",
+      "lineRange": [102, 121],
+      "summary": "Produces the plain-text fallback body for the brief email mirroring the HTML version.",
+      "tags": ["email", "text", "templating"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/email/send-brief.ts:sendBriefToCreator",
+      "type": "function",
+      "name": "sendBriefToCreator",
+      "filePath": "src/lib/email/send-brief.ts",
+      "lineRange": [123, 202],
+      "summary": "Sends the assembled brief email through the configured provider with retry, logging, and acknowledgement-token injection.",
+      "tags": ["email", "transactional", "delivery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/email/send-invite.ts",
+      "type": "file",
+      "name": "send-invite.ts",
+      "filePath": "src/lib/email/send-invite.ts",
+      "summary": "Composes and dispatches creator invite emails, including branded HTML/text rendering and acknowledgement token wiring.",
+      "tags": ["email", "transactional", "invite", "creator"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/email/send-invite.ts:sendCreatorInvite",
+      "type": "function",
+      "name": "sendCreatorInvite",
+      "filePath": "src/lib/email/send-invite.ts",
+      "lineRange": [76, 185],
+      "summary": "Builds and sends the creator invite email, persisting metadata and adding a signed acknowledgement link.",
+      "tags": ["email", "transactional", "invite"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/lib/email/send-invite.ts:sendInviteFor",
+      "type": "function",
+      "name": "sendInviteFor",
+      "filePath": "src/lib/email/send-invite.ts",
+      "lineRange": [194, 238],
+      "summary": "Higher-level helper that loads a creator record and routes through sendCreatorInvite with the right payload.",
+      "tags": ["email", "wrapper", "invite"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/etl/aiTemplateAnalysisEtl.ts",
+      "type": "file",
+      "name": "aiTemplateAnalysisEtl.ts",
+      "filePath": "src/lib/etl/aiTemplateAnalysisEtl.ts",
+      "summary": "ETL pipeline that ingests Apify-collected videos, runs the advanced template analysis service, and persists scored trending templates with ETL job logging.",
+      "tags": ["etl", "templates", "apify", "pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/lib/etl/endpoint-test.ts",
+      "type": "file",
+      "name": "endpoint-test.ts",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "summary": "Developer smoke-test script that exercises core ETL-facing API endpoints (analyze, trending, filter) and reports pass/fail summaries.",
+      "tags": ["etl", "smoke-test", "dev-tooling", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/endpoint-test.ts:runAllTests",
+      "type": "function",
+      "name": "runAllTests",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "lineRange": [103, 137],
+      "summary": "Runs all individual endpoint smoke tests in sequence and prints a consolidated success/failure report.",
+      "tags": ["smoke-test", "runner"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/endpoint-test.ts:testApiEndpoints",
+      "type": "function",
+      "name": "testApiEndpoints",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "lineRange": [7, 31],
+      "summary": "Pings core API endpoints and validates basic shape of their responses for the ETL smoke suite.",
+      "tags": ["smoke-test", "api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/endpoint-test.ts:testAnalyzeVideo",
+      "type": "function",
+      "name": "testAnalyzeVideo",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "lineRange": [34, 60],
+      "summary": "Smoke-tests the analyze-video endpoint with a representative payload and asserts the response is well-formed.",
+      "tags": ["smoke-test", "analyze"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/endpoint-test.ts:testTrendingTemplates",
+      "type": "function",
+      "name": "testTrendingTemplates",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "lineRange": [63, 80],
+      "summary": "Smoke-tests the trending-templates listing endpoint and verifies pagination/filter parameters work.",
+      "tags": ["smoke-test", "trending"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/endpoint-test.ts:testTemplateFiltering",
+      "type": "function",
+      "name": "testTemplateFiltering",
+      "filePath": "src/lib/etl/endpoint-test.ts",
+      "lineRange": [83, 100],
+      "summary": "Validates the template filtering endpoint by issuing a representative filter query and inspecting the result count.",
+      "tags": ["smoke-test", "filter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/lib/etl/run-test.ts",
+      "type": "file",
+      "name": "run-test.ts",
+      "filePath": "src/lib/etl/run-test.ts",
+      "summary": "CLI runner that shells out to predefined ETL test commands sequentially and reports overall success of the suite.",
+      "tags": ["etl", "script", "runner", "dev-tooling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/lib/etl/run-test.ts:runAllTests",
+      "type": "function",
+      "name": "runAllTests",
+      "filePath": "src/lib/etl/run-test.ts",
+      "lineRange": [26, 46],
+      "summary": "Iterates the predefined test command list, executes each via runCommand, and prints a final pass/fail summary.",
+      "tags": ["runner", "script"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/lib/etl/run-test.ts:runCommand",
+      "type": "function",
+      "name": "runCommand",
+      "filePath": "src/lib/etl/run-test.ts",
+      "lineRange": [12, 24],
+      "summary": "Spawns a child process for a single CLI command, captures stdout/stderr, and resolves with a structured result.",
+      "tags": ["script", "child-process"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {"source": "file:src/lib/db/ensure.ts", "target": "function:src/lib/db/ensure.ts:getServerDb", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/db/ensure.ts", "target": "function:src/lib/db/ensure.ts:ensureP1AccuracyTables", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/db/ensure.ts", "target": "function:src/lib/db/ensure.ts:getServerDb", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/db/ensure.ts", "target": "function:src/lib/db/ensure.ts:ensureP1AccuracyTables", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/db/ensure.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/db/pg.ts", "target": "function:src/lib/db/pg.ts:initVitTable", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/db/pg.ts", "target": "function:src/lib/db/pg.ts:upsertVit", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/db/pg.ts", "target": "function:src/lib/db/pg.ts:initVitTable", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/db/pg.ts", "target": "function:src/lib/db/pg.ts:upsertVit", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/debug/fetch-instrumentation.ts", "target": "function:src/lib/debug/fetch-instrumentation.ts:installFetchInstrumentation", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/debug/fetch-instrumentation.ts", "target": "function:src/lib/debug/fetch-instrumentation.ts:installFetchInstrumentation", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/debug/fetch-instrumentation.ts", "target": "file:src/lib/debug/networkLog.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "function:src/lib/debug/fetch-instrumentation.ts:installFetchInstrumentation", "target": "function:src/lib/debug/networkLog.ts:addLog", "type": "calls", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/debug/networkLog.ts", "target": "function:src/lib/debug/networkLog.ts:addLog", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/debug/networkLog.ts", "target": "function:src/lib/debug/networkLog.ts:addLog", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/discovery/discovery_readiness.ts", "target": "function:src/lib/discovery/discovery_readiness.ts:computeDiscoveryReadiness", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/discovery/discovery_readiness.ts", "target": "function:src/lib/discovery/discovery_readiness.ts:computeDiscoveryReadiness", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/discovery/discovery_readiness.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/donna/services/apify-integration.ts", "target": "class:src/lib/donna/services/apify-integration.ts:ApifyIntegration", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/services/apify-integration.ts", "target": "class:src/lib/donna/services/apify-integration.ts:ApifyIntegration", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:analyzeEnhancedFrameworks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:getFrameworkRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:getStyleRecommendations", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:analyzeEnhancedFrameworks", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:getFrameworkRecommendations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "function:src/lib/donna/services/enhanced-framework-integration.ts:getStyleRecommendations", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/services/enhanced-framework-integration.ts", "target": "file:src/lib/frameworks/video-styles-24.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:HistoricalTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:LiveTrackingTest", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:TestingFramework", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:HistoricalTest", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:LiveTrackingTest", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/testing/testing-framework.ts", "target": "class:src/lib/donna/testing/testing-framework.ts:TestingFramework", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/donna/workflows/viral-creator-config.ts", "target": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:ViralScrapingWorkflow", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:TrackingSystem", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:ViralScrapingWorkflow", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "class:src/lib/donna/workflows/viral-scraping-workflow.ts:TrackingSystem", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "file:src/lib/donna/services/apify-integration.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/donna/workflows/viral-scraping-workflow.ts", "target": "file:src/lib/donna/workflows/viral-creator-config.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/drift/feature-importance.ts", "target": "function:src/lib/drift/feature-importance.ts:computeFeatureImportance", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/drift/feature-importance.ts", "target": "function:src/lib/drift/feature-importance.ts:computeFeatureImportance", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/drift/feature-importance.ts", "target": "file:src/config/drift.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/drift/feature-importance.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/drift/feature-importance.ts", "target": "file:src/lib/ops/notifier.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/ecom/forecastScoring.ts", "target": "function:src/lib/ecom/forecastScoring.ts:calculateEcomForecastScore", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/forecastScoring.ts", "target": "function:src/lib/ecom/forecastScoring.ts:calculateEcomForecastScore", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:generateLiveRecipe", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildHooks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildRunOfShow", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildObjections", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildOfferStack", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildCtaMoments", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:buildPivotTriggers", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/live-recipe-generator.ts", "target": "function:src/lib/ecom/live-recipe-generator.ts:generateLiveRecipe", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/ecom/session-health.ts", "target": "function:src/lib/ecom/session-health.ts:computeHealth", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/session-health.ts", "target": "function:src/lib/ecom/session-health.ts:buildActions", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/ecom/session-health.ts", "target": "function:src/lib/ecom/session-health.ts:computeHealth", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/email/brief-ack-token.ts", "target": "function:src/lib/email/brief-ack-token.ts:signBriefAckToken", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/brief-ack-token.ts", "target": "function:src/lib/email/brief-ack-token.ts:verifyBriefAckToken", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/brief-ack-token.ts", "target": "function:src/lib/email/brief-ack-token.ts:signBriefAckToken", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/email/brief-ack-token.ts", "target": "function:src/lib/email/brief-ack-token.ts:verifyBriefAckToken", "type": "exports", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/email/send-brief.ts", "target": "function:src/lib/email/send-brief.ts:buildEmailHtml", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/send-brief.ts", "target": "function:src/lib/email/send-brief.ts:buildEmailText", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/send-brief.ts", "target": "function:src/lib/email/send-brief.ts:sendBriefToCreator", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/send-brief.ts", "target": "function:src/lib/email/send-brief.ts:sendBriefToCreator", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/email/send-brief.ts", "target": "file:src/lib/email/brief-ack-token.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/email/send-brief.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "function:src/lib/email/send-brief.ts:sendBriefToCreator", "target": "function:src/lib/email/brief-ack-token.ts:signBriefAckToken", "type": "calls", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/email/send-invite.ts", "target": "function:src/lib/email/send-invite.ts:sendCreatorInvite", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/send-invite.ts", "target": "function:src/lib/email/send-invite.ts:sendInviteFor", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/email/send-invite.ts", "target": "function:src/lib/email/send-invite.ts:sendCreatorInvite", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/email/send-invite.ts", "target": "function:src/lib/email/send-invite.ts:sendInviteFor", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/email/send-invite.ts", "target": "file:src/lib/email/brief-ack-token.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/email/send-invite.ts", "target": "file:src/lib/env.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "function:src/lib/email/send-invite.ts:sendCreatorInvite", "target": "function:src/lib/email/brief-ack-token.ts:signBriefAckToken", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/lib/email/send-invite.ts:sendInviteFor", "target": "function:src/lib/email/send-invite.ts:sendCreatorInvite", "type": "calls", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/services/advancedTemplateAnalysisService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/services/apifyService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/services/etlJobService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/services/trendingTemplateService.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/types/trendingTemplate.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+    {"source": "file:src/lib/etl/aiTemplateAnalysisEtl.ts", "target": "file:src/lib/utils/etlLogger.ts", "type": "imports", "direction": "forward", "weight": 0.7},
+
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:runAllTests", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testApiEndpoints", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testAnalyzeVideo", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testTrendingTemplates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testTemplateFiltering", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:runAllTests", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testApiEndpoints", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testAnalyzeVideo", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testTrendingTemplates", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:src/lib/etl/endpoint-test.ts", "target": "function:src/lib/etl/endpoint-test.ts:testTemplateFiltering", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/lib/etl/endpoint-test.ts:runAllTests", "target": "function:src/lib/etl/endpoint-test.ts:testApiEndpoints", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/lib/etl/endpoint-test.ts:runAllTests", "target": "function:src/lib/etl/endpoint-test.ts:testAnalyzeVideo", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/lib/etl/endpoint-test.ts:runAllTests", "target": "function:src/lib/etl/endpoint-test.ts:testTrendingTemplates", "type": "calls", "direction": "forward", "weight": 0.8},
+    {"source": "function:src/lib/etl/endpoint-test.ts:runAllTests", "target": "function:src/lib/etl/endpoint-test.ts:testTemplateFiltering", "type": "calls", "direction": "forward", "weight": 0.8},
+
+    {"source": "file:src/lib/etl/run-test.ts", "target": "function:src/lib/etl/run-test.ts:runAllTests", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:src/lib/etl/run-test.ts", "target": "function:src/lib/etl/run-test.ts:runCommand", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "function:src/lib/etl/run-test.ts:runAllTests", "target": "function:src/lib/etl/run-test.ts:runCommand", "type": "calls", "direction": "forward", "weight": 0.8}
+  ]
+}

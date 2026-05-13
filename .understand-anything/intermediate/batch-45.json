@@ -1,0 +1,833 @@
+{
+  "nodes": [
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:viral_patterns",
+      "type": "table",
+      "name": "viral_patterns",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Catalog of reusable viral pattern templates (hooks, transitions, climaxes, CTAs) keyed by framework and platform, with JSONB pattern definitions.",
+      "tags": ["database", "schema-definition", "viral-pattern"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:video_content",
+      "type": "table",
+      "name": "video_content",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Stores ingested videos with platform metadata, transcripts, and links to the viral patterns the intelligence engine detects in them.",
+      "tags": ["database", "video-data", "ingestion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:pattern_matches",
+      "type": "table",
+      "name": "pattern_matches",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Junction table recording each detected match between a viral pattern and a video, with confidence and timing fields.",
+      "tags": ["database", "viral-pattern", "join-table"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:approval_queue",
+      "type": "table",
+      "name": "approval_queue",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Queue of newly-detected patterns awaiting human review before promotion into the curated template library.",
+      "tags": ["database", "moderation", "workflow"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:generated_templates",
+      "type": "table",
+      "name": "generated_templates",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Stores AI-generated viral video templates produced from approved patterns, ready for surfacing in the template gallery.",
+      "tags": ["database", "templates", "ai-generated"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:template_usage",
+      "type": "table",
+      "name": "template_usage",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Tracks each time a generated template is applied by a user, capturing performance feedback for the intelligence engine.",
+      "tags": ["database", "analytics", "usage-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:newsletter_links",
+      "type": "table",
+      "name": "newsletter_links",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Stores newsletter-curated viral video links used as a discovery source for the intelligence pipeline.",
+      "tags": ["database", "ingestion", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql:viral_intelligence_jobs",
+      "type": "table",
+      "name": "viral_intelligence_jobs",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Background-job ledger for the viral intelligence engine recording job type, status, payload, and timing.",
+      "tags": ["database", "job-queue", "background-work"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:videos",
+      "type": "table",
+      "name": "videos",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Core videos table holding every uploaded or scraped video record with title, source, and platform metadata.",
+      "tags": ["database", "video-data", "core-entity"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:video_features",
+      "type": "table",
+      "name": "video_features",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Extracted feature vectors for videos (hook strength, pacing, audio, visuals) consumed by the ML prediction pipeline.",
+      "tags": ["database", "ml-features", "vector"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:video_metrics",
+      "type": "table",
+      "name": "video_metrics",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Time-series performance metrics (views, likes, shares) collected post-publication for each video.",
+      "tags": ["database", "metrics", "time-series"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:viral_predictions",
+      "type": "table",
+      "name": "viral_predictions",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Stores predicted virality scores, confidence ranges, and model version for each video run through the prediction pipeline.",
+      "tags": ["database", "predictions", "ml"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:viral_templates",
+      "type": "table",
+      "name": "viral_templates",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Library of viral video templates with structure, hook patterns, and historical performance for recommendation.",
+      "tags": ["database", "templates", "recommendation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:template_usage",
+      "type": "table",
+      "name": "template_usage",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Per-user template adoption log used to track which viral templates drive outcomes.",
+      "tags": ["database", "analytics", "usage-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:optimization_suggestions",
+      "type": "table",
+      "name": "optimization_suggestions",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Stores AI-generated optimization suggestions (hook rewrite, pacing fix, etc.) attached to specific videos.",
+      "tags": ["database", "ai-suggestions", "optimization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:ab_test_runs",
+      "type": "table",
+      "name": "ab_test_runs",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Header table for A/B tests comparing creative variants of a video.",
+      "tags": ["database", "experimentation", "ab-testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:ab_test_variants",
+      "type": "table",
+      "name": "ab_test_variants",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Per-variant rows attached to an A/B test run, each containing the creative payload under test.",
+      "tags": ["database", "experimentation", "ab-testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:ab_test_results",
+      "type": "table",
+      "name": "ab_test_results",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Per-variant outcomes (impressions, engagement, virality) captured after an A/B test concludes.",
+      "tags": ["database", "experimentation", "results"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:validation_runs",
+      "type": "table",
+      "name": "validation_runs",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Tracks each backtest/validation pass of a prediction model against historical videos.",
+      "tags": ["database", "ml-validation", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:validation_predictions",
+      "type": "table",
+      "name": "validation_predictions",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Per-video predicted vs. actual VPS scores from a validation run, used to compute Spearman correlation and other accuracy metrics.",
+      "tags": ["database", "ml-validation", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql:system_metrics",
+      "type": "table",
+      "name": "system_metrics",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "General system telemetry: pipeline latencies, error rates, and component health snapshots.",
+      "tags": ["database", "monitoring", "telemetry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:limited_users",
+      "type": "table",
+      "name": "limited_users",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Beta-program user registry with TikTok handle, controlled access flags, and onboarding state.",
+      "tags": ["database", "user-management", "beta-access"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:user_analytics",
+      "type": "table",
+      "name": "user_analytics",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Aggregated per-user activity counts (predictions run, templates used, sessions) for product analytics.",
+      "tags": ["database", "analytics", "user-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:success_stories",
+      "type": "table",
+      "name": "success_stories",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Curated case studies of creators who hit viral results using the platform, shown on marketing surfaces.",
+      "tags": ["database", "marketing", "case-studies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:marketing_campaigns",
+      "type": "table",
+      "name": "marketing_campaigns",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Outbound marketing campaign records with channel, target audience, and budget.",
+      "tags": ["database", "marketing", "campaigns"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:marketing_conversions",
+      "type": "table",
+      "name": "marketing_conversions",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Per-campaign conversion events for attribution, joined back to marketing_campaigns and user signups.",
+      "tags": ["database", "marketing", "attribution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:module_status",
+      "type": "table",
+      "name": "module_status",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Snapshot of operational health for each platform module (prediction, ingestion, generation) for the ops dashboard.",
+      "tags": ["database", "monitoring", "module-health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:pipeline_flows",
+      "type": "table",
+      "name": "pipeline_flows",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Configured prediction pipeline flows linking modules together with version and feature flags.",
+      "tags": ["database", "pipeline", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:prediction_validation",
+      "type": "table",
+      "name": "prediction_validation",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Stores prediction validation outcomes (predicted vs actual) for each pipeline flow over time.",
+      "tags": ["database", "ml-validation", "metrics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:accuracy_metrics",
+      "type": "table",
+      "name": "accuracy_metrics",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Time-windowed accuracy metrics (precision, recall, Spearman, MAE) per model and niche.",
+      "tags": ["database", "ml-metrics", "evaluation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:template_intelligence",
+      "type": "table",
+      "name": "template_intelligence",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Aggregated intelligence about each viral template (usage, win rate, freshness) powering the recommendation engine.",
+      "tags": ["database", "templates", "intelligence"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:rate_limits",
+      "type": "table",
+      "name": "rate_limits",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Per-user/API-key rate-limit counters tracking request volume across windows.",
+      "tags": ["database", "rate-limiting", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:security_events",
+      "type": "table",
+      "name": "security_events",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Audit log of security-relevant events (login failures, suspicious access patterns, admin actions).",
+      "tags": ["database", "security", "audit-log"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:api_performance",
+      "type": "table",
+      "name": "api_performance",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Per-endpoint API performance samples (latency, status, payload size) for observability.",
+      "tags": ["database", "monitoring", "api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:module_health_dashboard",
+      "type": "table",
+      "name": "module_health_dashboard",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "View aggregating module_status into a dashboard-friendly health rollup with derived status colors.",
+      "tags": ["database", "view", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:template_status_summary",
+      "type": "table",
+      "name": "template_status_summary",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "View summarizing template_intelligence into per-template status with usage and freshness scores.",
+      "tags": ["database", "view", "templates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:limited_user_activity",
+      "type": "table",
+      "name": "limited_user_activity",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "View joining limited_users with user_analytics to expose beta-user engagement at a glance.",
+      "tags": ["database", "view", "user-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql:marketing_performance",
+      "type": "table",
+      "name": "marketing_performance",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "View aggregating marketing_campaigns with marketing_conversions to compute campaign ROI and CAC.",
+      "tags": ["database", "view", "marketing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:scripts/viral-intelligence-schema.sql",
+      "type": "table",
+      "name": "viral-intelligence-schema.sql",
+      "filePath": "scripts/viral-intelligence-schema.sql",
+      "summary": "Defines the Trendzo viral intelligence engine schema (8 tables, 27 indexes) covering pattern catalog, video ingestion, match queue, generation, and job tracking.",
+      "tags": ["database", "schema-definition", "migration", "viral-intelligence"],
+      "complexity": "complex",
+      "languageNotes": "JSONB columns and CHECK constraints encode platform/pattern enumerations."
+    },
+    {
+      "id": "table:scripts/viral-prediction-database-schema.sql",
+      "type": "table",
+      "name": "viral-prediction-database-schema.sql",
+      "filePath": "scripts/viral-prediction-database-schema.sql",
+      "summary": "Core viral prediction platform schema (13 tables, 24 indexes) covering videos, ML feature/metric storage, predictions, templates, A/B testing, and validation runs.",
+      "tags": ["database", "schema-definition", "ml-pipeline", "core-schema"],
+      "complexity": "complex",
+      "languageNotes": "Enables uuid-ossp and pgvector extensions for vector feature storage."
+    },
+    {
+      "id": "table:scripts/viral-prediction-platform-schema.sql",
+      "type": "table",
+      "name": "viral-prediction-platform-schema.sql",
+      "filePath": "scripts/viral-prediction-platform-schema.sql",
+      "summary": "Platform-layer schema extension (13 tables, 4 views, 24 indexes) for beta user management, marketing, security audit, and operational monitoring.",
+      "tags": ["database", "schema-definition", "platform-extensions", "monitoring"],
+      "complexity": "complex",
+      "languageNotes": "Uses Postgres views to materialize cross-table dashboards."
+    },
+    {
+      "id": "document:scripts/README-process-scraped-videos.md",
+      "type": "document",
+      "name": "README-process-scraped-videos.md",
+      "filePath": "scripts/README-process-scraped-videos.md",
+      "summary": "Operator guide for the scraped-video DPS scoring script, covering migration prerequisites, environment variables, and batch usage patterns.",
+      "tags": ["documentation", "runbook", "dps"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:scripts/requirements.txt",
+      "type": "document",
+      "name": "requirements.txt",
+      "filePath": "scripts/requirements.txt",
+      "summary": "Python dependency manifest pinning xgboost, scikit-learn, pandas, and numpy for the future training pipeline v2 implementation.",
+      "tags": ["documentation", "dependencies", "python", "training-pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/clone-os-site.ps1",
+      "type": "file",
+      "name": "clone-os-site.ps1",
+      "filePath": "scripts/clone-os-site.ps1",
+      "summary": "PowerShell scraper that mirrors os.ryo.lu and rewrites asset URLs to local paths, producing the snapshots/os.ryo.lu/site bundle used for design reference.",
+      "tags": ["script", "powershell", "web-scraper", "snapshot"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/clone-os-site.ps1:Join-Url",
+      "type": "function",
+      "name": "Join-Url",
+      "filePath": "scripts/clone-os-site.ps1",
+      "lineRange": [9, 15],
+      "summary": "Resolves a path against a base URL, handling absolute, relative, and protocol-prefixed inputs.",
+      "tags": ["utility", "url"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-os-site.ps1:Ensure-Directory",
+      "type": "function",
+      "name": "Ensure-Directory",
+      "filePath": "scripts/clone-os-site.ps1",
+      "lineRange": [17, 22],
+      "summary": "Creates the parent directory for a file path if it does not yet exist.",
+      "tags": ["utility", "filesystem"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-os-site.ps1:Get-IfNeeded",
+      "type": "function",
+      "name": "Get-IfNeeded",
+      "filePath": "scripts/clone-os-site.ps1",
+      "lineRange": [24, 33],
+      "summary": "Downloads a URL to disk only if the destination is missing, swallowing transient failures with a warning.",
+      "tags": ["utility", "http", "caching"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/clone-os-site.ps1:Rewrite-AndGetAssets",
+      "type": "function",
+      "name": "Rewrite-AndGetAssets",
+      "filePath": "scripts/clone-os-site.ps1",
+      "lineRange": [35, 60],
+      "summary": "Parses href/src attributes in HTML, downloads referenced same-origin assets, and rewrites the markup to point at the local mirror.",
+      "tags": ["html-parsing", "scraper", "rewriting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:scripts/deploy-monitoring-stack.sh",
+      "type": "file",
+      "name": "deploy-monitoring-stack.sh",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "summary": "End-to-end bash installer that provisions the Kubernetes monitoring stack (Prometheus, Grafana, dashboards, certs) and runs post-deploy health checks.",
+      "tags": ["script", "deployment", "kubernetes", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:check_prerequisites",
+      "type": "function",
+      "name": "check_prerequisites",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [44, 72],
+      "summary": "Validates that kubectl, helm, cluster connectivity, and required environment variables are present before deployment begins.",
+      "tags": ["validation", "preflight", "kubernetes"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:create_namespace",
+      "type": "function",
+      "name": "create_namespace",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [75, 85],
+      "summary": "Creates the monitoring namespace if missing and applies standard labels.",
+      "tags": ["kubernetes", "namespace"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:create_secrets",
+      "type": "function",
+      "name": "create_secrets",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [88, 173],
+      "summary": "Generates and applies Kubernetes secrets for Grafana, alertmanager, and external integrations from local env vars.",
+      "tags": ["kubernetes", "secrets", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:create_configmaps",
+      "type": "function",
+      "name": "create_configmaps",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [176, 256],
+      "summary": "Builds Prometheus rules and alertmanager configuration ConfigMaps and applies them to the cluster.",
+      "tags": ["kubernetes", "configmap", "prometheus"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:build_monitoring_dashboard",
+      "type": "function",
+      "name": "build_monitoring_dashboard",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [259, 322],
+      "summary": "Generates Grafana dashboard JSON for the Trendzo viral-prediction services and uploads it as a ConfigMap.",
+      "tags": ["grafana", "dashboard", "configmap"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:deploy_monitoring_stack",
+      "type": "function",
+      "name": "deploy_monitoring_stack",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [325, 332],
+      "summary": "Runs helm upgrade --install for the kube-prometheus-stack chart with the project's values overrides.",
+      "tags": ["helm", "deployment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:wait_for_deployments",
+      "type": "function",
+      "name": "wait_for_deployments",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [335, 349],
+      "summary": "Polls kubectl rollout status for each monitoring deployment until ready or timeout.",
+      "tags": ["kubernetes", "polling", "readiness"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:setup_certificates",
+      "type": "function",
+      "name": "setup_certificates",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [352, 361],
+      "summary": "Provisions TLS certificates via cert-manager for the monitoring ingress hosts.",
+      "tags": ["tls", "cert-manager", "ingress"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:display_access_info",
+      "type": "function",
+      "name": "display_access_info",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [364, 401],
+      "summary": "Prints Grafana, Prometheus, and Alertmanager access URLs and bootstrap credentials at the end of deployment.",
+      "tags": ["reporting", "user-output"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:run_health_checks",
+      "type": "function",
+      "name": "run_health_checks",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [404, 450],
+      "summary": "Hits each monitoring service health endpoint after deploy and reports any failures, returning non-zero on errors.",
+      "tags": ["health-check", "smoke-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:scripts/deploy-monitoring-stack.sh:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "scripts/deploy-monitoring-stack.sh",
+      "lineRange": [453, 468],
+      "summary": "Top-level orchestrator chaining prerequisites, namespace, secrets, configmaps, deploy, wait, certs, and health checks.",
+      "tags": ["entry-point", "orchestration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/deploy-trendzo-schema.sh",
+      "type": "file",
+      "name": "deploy-trendzo-schema.sh",
+      "filePath": "scripts/deploy-trendzo-schema.sh",
+      "summary": "Bash wrapper that runs supabase db push and prints follow-up verification SQL queries for the Trendzo schema deploy.",
+      "tags": ["script", "deployment", "supabase", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/llm-smoke.ps1",
+      "type": "file",
+      "name": "llm-smoke.ps1",
+      "filePath": "scripts/llm-smoke.ps1",
+      "summary": "PowerShell smoke test that POSTs a small prompt to the local /api/llm/{teacher,scout,judge} routes and prints the response from each.",
+      "tags": ["script", "smoke-test", "llm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/run-clone.ps1",
+      "type": "file",
+      "name": "run-clone.ps1",
+      "filePath": "scripts/run-clone.ps1",
+      "summary": "Convenience PowerShell launcher that loads FIRECRAWL_API_KEY from env and invokes clone-site-firecrawl.js in crawl or batch mode.",
+      "tags": ["script", "launcher", "firecrawl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/run-ffmpeg-test.bat",
+      "type": "file",
+      "name": "run-ffmpeg-test.bat",
+      "filePath": "scripts/run-ffmpeg-test.bat",
+      "summary": "Windows batch wrapper that loads .env.local variables and runs the test-ffmpeg-single.ts smoke script via tsx.",
+      "tags": ["script", "batch", "ffmpeg", "windows"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:scripts/test-apify-webhook.ps1",
+      "type": "file",
+      "name": "test-apify-webhook.ps1",
+      "filePath": "scripts/test-apify-webhook.ps1",
+      "summary": "PowerShell harness that exercises the Apify webhook ingestion endpoint with multiple payload shapes and verifies the downstream pipeline reaction.",
+      "tags": ["script", "powershell", "webhook-test", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:scripts/test-apify-webhook.sh",
+      "type": "file",
+      "name": "test-apify-webhook.sh",
+      "filePath": "scripts/test-apify-webhook.sh",
+      "summary": "Bash equivalent of the Apify webhook harness, posting sample payloads with curl and asserting on the API response.",
+      "tags": ["script", "shell", "webhook-test", "apify"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:sdk/js/commerce.ts",
+      "type": "file",
+      "name": "commerce.ts",
+      "filePath": "sdk/js/commerce.ts",
+      "summary": "Browser-side ViralLab commerce pixel SDK exposing init/track/order helpers that send beacons to /px.gif and /api/commerce/order with a sticky session cookie.",
+      "tags": ["sdk", "browser", "commerce-pixel", "analytics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:sdk/js/commerce.ts:track",
+      "type": "function",
+      "name": "track",
+      "filePath": "sdk/js/commerce.ts",
+      "lineRange": [7, 13],
+      "summary": "Fires a tracking beacon for view/click/add_to_cart/order_confirm events using sendBeacon with an image fallback.",
+      "tags": ["analytics", "beacon", "event-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:sdk/js/commerce.ts:order",
+      "type": "function",
+      "name": "order",
+      "filePath": "sdk/js/commerce.ts",
+      "lineRange": [15, 17],
+      "summary": "POSTs an order confirmation payload (order_id, revenue, sku) to /api/commerce/order.",
+      "tags": ["analytics", "commerce", "api-call"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:sdk/js/commerce.ts:getSid",
+      "type": "function",
+      "name": "getSid",
+      "filePath": "sdk/js/commerce.ts",
+      "lineRange": [19, 26],
+      "summary": "Returns the visitor session id, reading or minting a vl_sid cookie with a 180-day lifetime.",
+      "tags": ["session", "cookie", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:sdk/js/index.ts",
+      "type": "file",
+      "name": "index.ts",
+      "filePath": "sdk/js/index.ts",
+      "summary": "Public JS SDK entry that exports a score() helper which POSTs URL or features to /public/score with an x-api-key header.",
+      "tags": ["sdk", "entry-point", "public-api", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:sdk/js/index.ts:score",
+      "type": "function",
+      "name": "score",
+      "filePath": "sdk/js/index.ts",
+      "lineRange": [3, 15],
+      "summary": "Calls the /public/score endpoint with the caller's API key and returns the parsed prediction response, throwing on non-OK status.",
+      "tags": ["api-client", "scoring", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:sdk/python/virallab/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "sdk/python/virallab/__init__.py",
+      "summary": "Public Python SDK package entry that exposes a score() function calling the ViralLab /public/score endpoint via urllib.",
+      "tags": ["sdk", "entry-point", "python", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:security/owasp-compliance-checklist.md",
+      "type": "document",
+      "name": "owasp-compliance-checklist.md",
+      "filePath": "security/owasp-compliance-checklist.md",
+      "summary": "Mapping of OWASP Top 10 2021 controls to the Trendzo platform's mitigations (Kong, Istio, K8s RBAC, network policies) targeting SOC2 + OWASP compliance.",
+      "tags": ["documentation", "security", "owasp", "compliance"],
+      "complexity": "complex"
+    },
+    {
+      "id": "config:snapshots/os-canvas/report.json",
+      "type": "config",
+      "name": "report.json",
+      "filePath": "snapshots/os-canvas/report.json",
+      "summary": "Visual-regression report from the os-canvas snapshot run recording pass/fail and baseline-created status for the editor and dashboard pages.",
+      "tags": ["configuration", "visual-regression", "snapshot", "report"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/playwright/rendered.html",
+      "type": "file",
+      "name": "rendered.html",
+      "filePath": "snapshots/os.ryo.lu/playwright/rendered.html",
+      "summary": "Captured Playwright render of os.ryo.lu used as a static design reference snapshot of the ryOS look-and-feel.",
+      "tags": ["snapshot", "html", "design-reference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/audio-2ku44osQ.js",
+      "type": "file",
+      "name": "audio-2ku44osQ.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/audio-2ku44osQ.js",
+      "summary": "Vendored, minified audio-player chunk captured from the os.ryo.lu site mirror; not used directly by Trendzo code.",
+      "tags": ["snapshot", "vendor", "minified", "audio"],
+      "complexity": "complex",
+      "languageNotes": "Minified bundle output; structure counts come from tree-sitter parsing of bundled code, not project-authored sources."
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/DailyMotion-JdN0tP3z.js",
+      "type": "file",
+      "name": "DailyMotion-JdN0tP3z.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/DailyMotion-JdN0tP3z.js",
+      "summary": "Single-line minified DailyMotion react-player adapter from the os.ryo.lu snapshot; reference asset only.",
+      "tags": ["snapshot", "vendor", "minified", "video-player"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/Facebook-CbU42lwg.js",
+      "type": "file",
+      "name": "Facebook-CbU42lwg.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/Facebook-CbU42lwg.js",
+      "summary": "Single-line minified Facebook react-player adapter from the os.ryo.lu snapshot; reference asset only.",
+      "tags": ["snapshot", "vendor", "minified", "video-player"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/FilePlayer-eDWVeVwj.js",
+      "type": "file",
+      "name": "FilePlayer-eDWVeVwj.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/FilePlayer-eDWVeVwj.js",
+      "summary": "Single-line minified FilePlayer react-player adapter from the os.ryo.lu snapshot; reference asset only.",
+      "tags": ["snapshot", "vendor", "minified", "video-player"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/index-BNCHctH8.js",
+      "type": "file",
+      "name": "index-BNCHctH8.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/index-BNCHctH8.js",
+      "summary": "Minified secondary entry chunk captured from the os.ryo.lu snapshot; vendor bundle, not project source.",
+      "tags": ["snapshot", "vendor", "minified", "entry-chunk"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:snapshots/os.ryo.lu/site/assets/index-fS-_NvYr.js",
+      "type": "file",
+      "name": "index-fS-_NvYr.js",
+      "filePath": "snapshots/os.ryo.lu/site/assets/index-fS-_NvYr.js",
+      "summary": "Primary minified application bundle captured from the os.ryo.lu snapshot (~5k lines, 1543 functions, 176 classes); vendor reference only.",
+      "tags": ["snapshot", "vendor", "minified", "bundle"],
+      "complexity": "complex",
+      "languageNotes": "Snapshot of a third-party SPA bundle, retained only as a design and behavior reference; Trendzo code does not import it."
+    }
+  ],
+  "edges": [
+    {"source": "file:scripts/clone-os-site.ps1", "target": "function:scripts/clone-os-site.ps1:Join-Url", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-os-site.ps1", "target": "function:scripts/clone-os-site.ps1:Ensure-Directory", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-os-site.ps1", "target": "function:scripts/clone-os-site.ps1:Get-IfNeeded", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/clone-os-site.ps1", "target": "function:scripts/clone-os-site.ps1:Rewrite-AndGetAssets", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:check_prerequisites", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:create_namespace", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:create_secrets", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:create_configmaps", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:build_monitoring_dashboard", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:deploy_monitoring_stack", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:wait_for_deployments", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:setup_certificates", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:display_access_info", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:run_health_checks", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:scripts/deploy-monitoring-stack.sh", "target": "function:scripts/deploy-monitoring-stack.sh:main", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:sdk/js/commerce.ts", "target": "function:sdk/js/commerce.ts:track", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:sdk/js/commerce.ts", "target": "function:sdk/js/commerce.ts:order", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:sdk/js/commerce.ts", "target": "function:sdk/js/commerce.ts:getSid", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:sdk/js/commerce.ts", "target": "function:sdk/js/commerce.ts:track", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:sdk/js/commerce.ts", "target": "function:sdk/js/commerce.ts:order", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "file:sdk/js/index.ts", "target": "function:sdk/js/index.ts:score", "type": "contains", "direction": "forward", "weight": 1.0},
+    {"source": "file:sdk/js/index.ts", "target": "function:sdk/js/index.ts:score", "type": "exports", "direction": "forward", "weight": 0.8},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:viral_patterns", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:video_content", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:pattern_matches", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:approval_queue", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:generated_templates", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:template_usage", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:newsletter_links", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-intelligence-schema.sql", "target": "table:scripts/viral-intelligence-schema.sql:viral_intelligence_jobs", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:videos", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:video_features", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:video_metrics", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:viral_predictions", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:viral_templates", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:template_usage", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:optimization_suggestions", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:ab_test_runs", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:ab_test_variants", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:ab_test_results", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:validation_runs", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:validation_predictions", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-database-schema.sql", "target": "table:scripts/viral-prediction-database-schema.sql:system_metrics", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:limited_users", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:user_analytics", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:success_stories", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:marketing_campaigns", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:marketing_conversions", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:module_status", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:pipeline_flows", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:prediction_validation", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:accuracy_metrics", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:template_intelligence", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:rate_limits", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:security_events", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:api_performance", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:module_health_dashboard", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:template_status_summary", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:limited_user_activity", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "table:scripts/viral-prediction-platform-schema.sql", "target": "table:scripts/viral-prediction-platform-schema.sql:marketing_performance", "type": "migrates", "direction": "forward", "weight": 0.7},
+    {"source": "file:scripts/deploy-trendzo-schema.sh", "target": "table:scripts/viral-prediction-database-schema.sql", "type": "depends_on", "direction": "forward", "weight": 0.6},
+    {"source": "file:scripts/deploy-trendzo-schema.sh", "target": "table:scripts/viral-prediction-platform-schema.sql", "type": "depends_on", "direction": "forward", "weight": 0.6},
+    {"source": "file:scripts/deploy-trendzo-schema.sh", "target": "table:scripts/viral-intelligence-schema.sql", "type": "depends_on", "direction": "forward", "weight": 0.6},
+    {"source": "document:scripts/README-process-scraped-videos.md", "target": "table:scripts/viral-prediction-database-schema.sql:videos", "type": "documents", "direction": "forward", "weight": 0.5},
+    {"source": "file:sdk/js/index.ts", "target": "file:sdk/js/commerce.ts", "type": "related", "direction": "forward", "weight": 0.5}
+  ]
+}

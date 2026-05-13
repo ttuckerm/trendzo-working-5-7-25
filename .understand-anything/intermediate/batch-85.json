@@ -1,0 +1,1033 @@
+{
+  "nodes": [
+    {
+      "id": "file:src/app/api/ingest/metrics/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ingest/metrics/route.ts",
+      "summary": "Tiny Next.js route that connects to Redis (Upstash) and returns ingest-related metric keys for monitoring.",
+      "tags": ["api-handler", "metrics", "redis", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/ingest/upsert/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/ingest/upsert/route.ts",
+      "summary": "Ingest endpoint accepting upsert payloads, writing through Postgres pool and an in-memory dev store fallback.",
+      "tags": ["api-handler", "ingest", "upsert", "database"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ingest/upsert/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/ingest/upsert/route.ts",
+      "lineRange": [24, 57],
+      "summary": "Validates incoming upsert payloads against the shared schema and persists rows to Postgres or the dev store.",
+      "tags": ["api-handler", "upsert", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/ingest/upsert/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/ingest/upsert/route.ts",
+      "lineRange": [59, 74],
+      "summary": "Returns the most recent upsert records for inspection in dev or admin diagnostics.",
+      "tags": ["api-handler", "diagnostics", "ingest"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/insights/sound-experts/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/insights/sound-experts/route.ts",
+      "summary": "Serves curated static expert insights and recommendations about sound usage in viral video content.",
+      "tags": ["api-handler", "insights", "content", "static-data"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/insights/sound-experts/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/insights/sound-experts/route.ts",
+      "lineRange": [194, 251],
+      "summary": "Filters and paginates the embedded expert insight catalog by category or featured expert.",
+      "tags": ["api-handler", "insights", "filter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/integrations/make/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/integrations/make/test/route.ts",
+      "summary": "Test endpoint for the Make (Integromat) integration that echoes the incoming payload for connector verification.",
+      "tags": ["api-handler", "integration", "test", "make"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/integrations/zapier/catalog/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/integrations/zapier/catalog/route.ts",
+      "summary": "Returns the catalog of supported triggers and actions for the Zapier integration.",
+      "tags": ["api-handler", "integration", "zapier", "catalog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/integrations/zapier/test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/integrations/zapier/test/route.ts",
+      "summary": "Test endpoint for the Zapier integration that validates auth and echoes a sample event.",
+      "tags": ["api-handler", "integration", "zapier", "test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/integrations/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/integrations/route.ts",
+      "summary": "Top-level integrations index endpoint listing available third-party connectors.",
+      "tags": ["api-handler", "integration", "catalog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/intel/orchestrate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/intel/orchestrate/route.ts",
+      "summary": "Multi-provider LLM orchestration endpoint that fans out to OpenAI and Anthropic with timeouts and audit logging.",
+      "tags": ["api-handler", "llm", "orchestration", "multi-provider"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/intel/orchestrate/route.ts:callOpenAI",
+      "type": "function",
+      "name": "callOpenAI",
+      "filePath": "src/app/api/intel/orchestrate/route.ts",
+      "lineRange": [27, 67],
+      "summary": "Invokes the OpenAI chat completion API with timeout and audit logging for an idea-orchestration prompt.",
+      "tags": ["llm", "openai", "api-call"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/intel/orchestrate/route.ts:callAnthropic",
+      "type": "function",
+      "name": "callAnthropic",
+      "filePath": "src/app/api/intel/orchestrate/route.ts",
+      "lineRange": [69, 109],
+      "summary": "Invokes the Anthropic messages API with timeout and audit logging for an idea-orchestration prompt.",
+      "tags": ["llm", "anthropic", "api-call"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/intel/orchestrate/route.ts:callProvider",
+      "type": "function",
+      "name": "callProvider",
+      "filePath": "src/app/api/intel/orchestrate/route.ts",
+      "lineRange": [111, 134],
+      "summary": "Dispatches an orchestration request to the appropriate provider implementation.",
+      "tags": ["llm", "dispatcher", "router"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/intel/orchestrate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/intel/orchestrate/route.ts",
+      "lineRange": [136, 180],
+      "summary": "Validates the idea payload, fans out to all enabled providers in parallel, and aggregates orchestration results.",
+      "tags": ["api-handler", "llm", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/intel/status/orchestrate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/intel/status/orchestrate/route.ts",
+      "summary": "Status-specific orchestration endpoint that runs lightweight LLM status checks across providers with timeouts.",
+      "tags": ["api-handler", "llm", "status", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/intel/status/orchestrate/route.ts:callOpenAI",
+      "type": "function",
+      "name": "callOpenAI",
+      "filePath": "src/app/api/intel/status/orchestrate/route.ts",
+      "lineRange": [27, 47],
+      "summary": "Compact OpenAI invocation for status-check orchestration with a strict timeout.",
+      "tags": ["llm", "openai", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/intel/status/orchestrate/route.ts:callAnthropic",
+      "type": "function",
+      "name": "callAnthropic",
+      "filePath": "src/app/api/intel/status/orchestrate/route.ts",
+      "lineRange": [49, 71],
+      "summary": "Compact Anthropic invocation for status-check orchestration with a strict timeout.",
+      "tags": ["llm", "anthropic", "status"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/intel/status/orchestrate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/intel/status/orchestrate/route.ts",
+      "lineRange": [83, 114],
+      "summary": "Coordinates status-check calls across providers and aggregates their availability and latency.",
+      "tags": ["api-handler", "status", "orchestration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/intel/status/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/intel/status/route.ts",
+      "summary": "Returns the latest intel/LLM-audit status snapshot for monitoring dashboards by querying the Supabase admin client.",
+      "tags": ["api-handler", "status", "monitoring", "supabase"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/intel/status/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/intel/status/route.ts",
+      "lineRange": [8, 39],
+      "summary": "Fetches recent intel audit rows and computes provider health summaries.",
+      "tags": ["api-handler", "status", "monitoring"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/intelligence/run/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/intelligence/run/route.ts",
+      "summary": "Thin wrapper around the intelligence run service that triggers a single intelligence pipeline execution.",
+      "tags": ["api-handler", "intelligence", "trigger"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/invite-acknowledge/[id]/route.ts",
+      "summary": "HMAC-protected brief-acknowledge endpoint that verifies the signed token, records the event, and renders an HTML confirmation page.",
+      "tags": ["api-handler", "auth", "invite", "hmac"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/invite-acknowledge/[id]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/invite-acknowledge/[id]/route.ts",
+      "lineRange": [22, 116],
+      "summary": "Verifies the HMAC token for a brief, emits an acknowledge event, and returns a styled HTML confirmation response.",
+      "tags": ["api-handler", "auth", "hmac", "html"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/invites/accept/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/invites/accept/route.ts",
+      "summary": "Endpoint for an invitee to accept an invitation, validating the token and provisioning the user.",
+      "tags": ["api-handler", "invite", "auth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/invites/send/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/invites/send/route.ts",
+      "summary": "Sends an agency invitation email after authenticating the caller, applying agency-scoped permissions, and emitting an event.",
+      "tags": ["api-handler", "invite", "email", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/invites/send/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/invites/send/route.ts",
+      "lineRange": [10, 93],
+      "summary": "Authenticates the agency owner, creates an invite token, dispatches the invitation email, and emits a platform event.",
+      "tags": ["api-handler", "invite", "email", "agency"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/invites/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/invites/route.ts",
+      "summary": "Invitation listing and creation endpoint that lazily ensures the invite tables exist before serving requests.",
+      "tags": ["api-handler", "invite", "database"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/jarvis-admin/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/jarvis-admin/route.ts",
+      "summary": "Admin command surface for the Jarvis assistant exposing system status reads and privileged command execution.",
+      "tags": ["api-handler", "admin", "jarvis", "system-status"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/jarvis-admin/route.ts:getSystemStatus",
+      "type": "function",
+      "name": "getSystemStatus",
+      "filePath": "src/app/api/jarvis-admin/route.ts",
+      "lineRange": [37, 54],
+      "summary": "Returns a mocked snapshot of overall service health, key metrics, and active alerts.",
+      "tags": ["status", "monitoring", "mock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/jarvis-admin/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/jarvis-admin/route.ts",
+      "lineRange": [78, 111],
+      "summary": "Receives an admin command, validates it, and dispatches to the executor.",
+      "tags": ["api-handler", "admin", "command"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/jarvis-admin/route.ts:executeAdminCommand",
+      "type": "function",
+      "name": "executeAdminCommand",
+      "filePath": "src/app/api/jarvis-admin/route.ts",
+      "lineRange": [114, 204],
+      "summary": "Executes a named admin command (restart, clear-cache, deploy, etc.) and returns its result for Jarvis to relay.",
+      "tags": ["admin", "command", "executor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/jarvis/confirm/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/jarvis/confirm/route.ts",
+      "summary": "Confirms a previously proposed Jarvis action via the orchestrator before execution.",
+      "tags": ["api-handler", "jarvis", "confirmation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/jarvis/execute/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/jarvis/execute/route.ts",
+      "summary": "Executes a confirmed Jarvis action through the orchestrator.",
+      "tags": ["api-handler", "jarvis", "executor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/jarvis/intent/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/jarvis/intent/route.ts",
+      "summary": "Resolves user intent for a Jarvis utterance via the orchestrator and returns the proposed plan.",
+      "tags": ["api-handler", "jarvis", "nlu", "intent"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/jobs/calibrate/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/jobs/calibrate/route.ts",
+      "summary": "Calibration job endpoint that computes reliability bins, ECE, and AUC for prediction cohorts, with a deterministic dev mode.",
+      "tags": ["api-handler", "calibration", "metrics", "job"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/jobs/calibrate/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/jobs/calibrate/route.ts",
+      "lineRange": [27, 131],
+      "summary": "Runs a calibration pass over accuracy-store data and persists the resulting metrics and bins.",
+      "tags": ["calibration", "metrics", "job"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:src/app/api/kai/ab-test/[testId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/kai/ab-test/[testId]/route.ts",
+      "summary": "Returns the status and results of a single Kai A/B prediction test by id.",
+      "tags": ["api-handler", "kai", "ab-test"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:src/app/api/kai/ab-test/[testId]/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/kai/ab-test/[testId]/route.ts",
+      "lineRange": [17, 45],
+      "summary": "Loads a single A/B Kai test by id via the integration service and returns its current state.",
+      "tags": ["api-handler", "ab-test", "kai"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/kai/ab-test/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/kai/ab-test/route.ts",
+      "summary": "CRUD-style endpoint for managing Kai A/B tests: listing, creating, and updating test configurations.",
+      "tags": ["api-handler", "kai", "ab-test", "experimentation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/kai/ab-test/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/kai/ab-test/route.ts",
+      "lineRange": [19, 55],
+      "summary": "Lists existing Kai A/B tests filtered by status and pagination params.",
+      "tags": ["api-handler", "ab-test", "list"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/kai/ab-test/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/kai/ab-test/route.ts",
+      "lineRange": [68, 98],
+      "summary": "Creates a new Kai A/B test configuration via the integration service.",
+      "tags": ["api-handler", "ab-test", "create"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/kai/ab-test/route.ts:PATCH",
+      "type": "function",
+      "name": "PATCH",
+      "filePath": "src/app/api/kai/ab-test/route.ts",
+      "lineRange": [104, 180],
+      "summary": "Updates an existing Kai A/B test (status changes, variant updates, results capture).",
+      "tags": ["api-handler", "ab-test", "update"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/kai/drift/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/kai/drift/route.ts",
+      "summary": "Endpoint for monitoring temporal drift in Kai predictions, returning consistency metrics and triggering drift checks.",
+      "tags": ["api-handler", "kai", "drift", "monitoring"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/kai/drift/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/kai/drift/route.ts",
+      "lineRange": [23, 65],
+      "summary": "Reads current temporal consistency metrics from the drift monitor for a niche or model version.",
+      "tags": ["api-handler", "drift", "metrics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:src/app/api/kai/drift/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/kai/drift/route.ts",
+      "lineRange": [76, 124],
+      "summary": "Triggers a fresh drift evaluation pass and persists results via the temporal consistency monitor.",
+      "tags": ["api-handler", "drift", "evaluation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:src/app/api/kai/predict/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/kai/predict/route.ts",
+      "summary": "Canonical Kai prediction endpoint that ingests videos or TikTok URLs, runs the VPS v2 pipeline, and persists prediction runs to Supabase.",
+      "tags": ["api-handler", "kai", "prediction", "vps-pipeline"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/kai/predict/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/kai/predict/route.ts",
+      "lineRange": [32, 404],
+      "summary": "Parses uploaded video form data, optionally scrapes TikTok metadata, invokes the VPS v2 pipeline, and writes the resulting prediction run.",
+      "tags": ["api-handler", "prediction", "vps-pipeline", "tiktok"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/kai/predict/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/kai/predict/route.ts",
+      "lineRange": [419, 434],
+      "summary": "Lightweight health/status response describing the Kai predict route configuration.",
+      "tags": ["api-handler", "status", "health"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:src/app/api/knowledge/extract/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "src/app/api/knowledge/extract/route.ts",
+      "summary": "FEAT-060 knowledge extraction endpoint that runs the GPPT knowledge-extraction engine over a stored video and persists matched patterns.",
+      "tags": ["api-handler", "knowledge", "extraction", "gppt"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/knowledge/extract/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "src/app/api/knowledge/extract/route.ts",
+      "lineRange": [27, 179],
+      "summary": "Loads the requested video, invokes the knowledge-extraction engine, matches patterns, and writes the results back to Supabase.",
+      "tags": ["knowledge", "extraction", "supabase"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:src/app/api/knowledge/extract/route.ts:GET",
+      "type": "function",
+      "name": "GET",
+      "filePath": "src/app/api/knowledge/extract/route.ts",
+      "lineRange": [182, 210],
+      "summary": "Returns the most recent knowledge-extraction results for a given video id.",
+      "tags": ["api-handler", "knowledge", "list"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "file:packages/shared/src/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "file:src/lib/db/pg.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "file:src/lib/dev/upsertStore.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "file:src/lib/server/supabaseAdmin.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/intel/status/route.ts",
+      "target": "file:src/lib/server/supabaseAdmin.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/intelligence/run/route.ts",
+      "target": "file:src/lib/intelligence/run.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "target": "file:src/lib/email/brief-ack-token.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "target": "file:src/lib/events/emit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/accept/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "file:src/lib/auth/agency-utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "file:src/lib/email/send-invite.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "file:src/lib/events/emit.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "file:src/lib/supabase/server.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/invites/route.ts",
+      "target": "file:src/lib/env.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jarvis/confirm/route.ts",
+      "target": "file:src/lib/jarvis/orchestrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jarvis/execute/route.ts",
+      "target": "file:src/lib/jarvis/orchestrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jarvis/intent/route.ts",
+      "target": "file:src/lib/jarvis/orchestrator.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jobs/calibrate/route.ts",
+      "target": "file:src/lib/calibration/binning.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jobs/calibrate/route.ts",
+      "target": "file:src/lib/calibration/metrics.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/jobs/calibrate/route.ts",
+      "target": "file:src/lib/dev/accuracyStore.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/[testId]/route.ts",
+      "target": "file:src/lib/services/ab-kai-integration.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "file:src/lib/services/ab-kai-integration.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/drift/route.ts",
+      "target": "file:src/lib/services/temporal-consistency-monitor.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "file:src/lib/prediction/run-vps-pipeline-v2.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "file:src/lib/services/apify-tiktok-client.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "file:src/lib/services/tiktok-downloader.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "file:src/lib/training/scrape-label.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "function:src/app/api/ingest/upsert/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "function:src/app/api/ingest/upsert/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "function:src/app/api/ingest/upsert/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/ingest/upsert/route.ts",
+      "target": "function:src/app/api/ingest/upsert/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/insights/sound-experts/route.ts",
+      "target": "function:src/app/api/insights/sound-experts/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/insights/sound-experts/route.ts",
+      "target": "function:src/app/api/insights/sound-experts/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/orchestrate/route.ts:callOpenAI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/orchestrate/route.ts:callAnthropic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/orchestrate/route.ts:callProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/orchestrate/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/orchestrate/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/intel/status/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/status/orchestrate/route.ts:callOpenAI",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/status/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/status/orchestrate/route.ts:callAnthropic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/status/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/status/orchestrate/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/status/orchestrate/route.ts",
+      "target": "function:src/app/api/intel/status/orchestrate/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/intel/status/route.ts",
+      "target": "function:src/app/api/intel/status/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/intel/status/route.ts",
+      "target": "function:src/app/api/intel/status/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "target": "function:src/app/api/invite-acknowledge/[id]/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/invite-acknowledge/[id]/route.ts",
+      "target": "function:src/app/api/invite-acknowledge/[id]/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "function:src/app/api/invites/send/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/invites/send/route.ts",
+      "target": "function:src/app/api/invites/send/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/jarvis-admin/route.ts",
+      "target": "function:src/app/api/jarvis-admin/route.ts:getSystemStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/jarvis-admin/route.ts",
+      "target": "function:src/app/api/jarvis-admin/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/jarvis-admin/route.ts",
+      "target": "function:src/app/api/jarvis-admin/route.ts:executeAdminCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/jarvis-admin/route.ts",
+      "target": "function:src/app/api/jarvis-admin/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/jobs/calibrate/route.ts",
+      "target": "function:src/app/api/jobs/calibrate/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/jobs/calibrate/route.ts",
+      "target": "function:src/app/api/jobs/calibrate/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/[testId]/route.ts",
+      "target": "function:src/app/api/kai/ab-test/[testId]/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/[testId]/route.ts",
+      "target": "function:src/app/api/kai/ab-test/[testId]/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:PATCH",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/ab-test/route.ts",
+      "target": "function:src/app/api/kai/ab-test/route.ts:PATCH",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/drift/route.ts",
+      "target": "function:src/app/api/kai/drift/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/drift/route.ts",
+      "target": "function:src/app/api/kai/drift/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/drift/route.ts",
+      "target": "function:src/app/api/kai/drift/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/drift/route.ts",
+      "target": "function:src/app/api/kai/drift/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "function:src/app/api/kai/predict/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "function:src/app/api/kai/predict/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "function:src/app/api/kai/predict/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/kai/predict/route.ts",
+      "target": "function:src/app/api/kai/predict/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/knowledge/extract/route.ts",
+      "target": "function:src/app/api/knowledge/extract/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/knowledge/extract/route.ts",
+      "target": "function:src/app/api/knowledge/extract/route.ts:GET",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:src/app/api/knowledge/extract/route.ts",
+      "target": "function:src/app/api/knowledge/extract/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:src/app/api/knowledge/extract/route.ts",
+      "target": "function:src/app/api/knowledge/extract/route.ts:GET",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}
