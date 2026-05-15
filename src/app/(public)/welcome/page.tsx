@@ -92,7 +92,7 @@ export default async function WelcomePage({
         />
         <div className="relative max-w-4xl mx-auto">
           <p className="text-center font-mono text-[11px] tracking-[0.32em] uppercase text-instrument-tertiary mb-12 sm:mb-16">
-            TRENDZO :: ESCAPE ASSESSMENT
+            THE ESCAPE ASSESSMENT
           </p>
 
           <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
