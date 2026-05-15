@@ -7,7 +7,7 @@ import { verifySession } from '@/lib/stripe/verify'
 import '@/styles/instrument.css'
 
 export const metadata: Metadata = {
-  title: 'Your Escape Assessment is Ready | Trendzo',
+  title: 'Your Escape Assessment is Ready',
   description:
     "Three minutes from now, you'll have a Freedom Number, a business that fits your life, a 14-day sprint, and an AI advisor trained on your situation.",
 }

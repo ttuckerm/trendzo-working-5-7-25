@@ -5,7 +5,7 @@ import { CODE_PATH_COOKIE_NAME, verifyCodePathCookieValue } from '@/lib/stripe/c
 import { verifySession } from '@/lib/stripe/verify'
 
 export const metadata = {
-  title: 'Generate Your Escape Assessment | Trendzo',
+  title: 'Generate Your Escape Assessment',
   description: 'Answer 9 questions. Get a personalized 14-day sprint, a 90-day roadmap, your Freedom Number, and a personal AI advisor. Three minutes.',
 }
 

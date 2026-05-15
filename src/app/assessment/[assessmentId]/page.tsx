@@ -19,7 +19,7 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 export const metadata: Metadata = {
-  title: 'Your Escape Assessment — Trendzo',
+  title: 'Your Escape Assessment',
   description: 'The personalized 14-day sprint, calibrated to your inputs.',
   robots: { index: false, follow: false },
 }

@@ -28,7 +28,7 @@ import { CloseSection } from '@/components/landing/CloseSection';
 import { CheckoutBanner } from '@/components/landing/CheckoutBanner';
 
 export const metadata: Metadata = {
-  title: 'The Escape Assessment — Trendzo',
+  title: 'The Escape Assessment',
   description:
     "A personalized 14-day sprint, calibrated to your income, your runway, and the life you're trying to build. Free with a code.",
   openGraph: {
