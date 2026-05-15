@@ -27,6 +27,39 @@ const PUBLIC_PREFIXES = [
   '/api/cron',
 ]
 
+// Funnel-deploy allowlist. When DEPLOY_TARGET=funnel is set
+// (techyai.co Vercel project), every URL not matching one of
+// these prefixes returns 404.
+const FUNNEL_ALLOWLIST = [
+  '/',                          // landing (exact)
+  '/welcome',
+  '/free/freedom-os',
+  '/assessment/',               // dynamic [assessmentId]
+  '/api/landing/',
+  '/api/checkout/',
+  '/api/assessment/',
+  '/api/freedom-agent/chat',
+  '/api/freedom-agent/conversation',
+]
+
+function isFunnelPath(pathname: string): boolean {
+  // Static asset passthrough is handled by matcher config, but
+  // belt-and-suspenders for Next internals:
+  if (pathname.startsWith('/_next/')) return true
+  if (pathname === '/favicon.ico' || pathname === '/favicon.svg') return true
+  if (pathname === '/robots.txt' || pathname === '/sitemap.xml') return true
+
+  // Exact match for landing
+  if (pathname === '/') return true
+
+  // Prefix matches for the rest
+  return FUNNEL_ALLOWLIST.some((p) => {
+    if (p === '/') return false  // handled above
+    if (p.endsWith('/')) return pathname.startsWith(p)
+    return pathname === p || pathname.startsWith(p + '/')
+  })
+}
+
 /**
  * Protected route prefixes and the roles allowed to access them.
  */
@@ -166,6 +199,17 @@ async function fetchUserProfile(userId: string): Promise<{ role: string; onboard
 }
 
 export async function middleware(request: NextRequest) {
+  // FUNNEL-ONLY DEPLOY GATE
+  // Set DEPLOY_TARGET=funnel in the techyai.co Vercel project.
+  // Any non-funnel URL returns 404. This must run first so the
+  // NEXT_PUBLIC_DISABLE_AUTH dev short-circuit does not bypass it.
+  if (process.env.DEPLOY_TARGET === 'funnel') {
+    const pathname = request.nextUrl.pathname
+    if (!isFunnelPath(pathname)) {
+      return new NextResponse(null, { status: 404 })
+    }
+  }
+
   if (process.env.NEXT_PUBLIC_DISABLE_AUTH === 'true') {
     return NextResponse.next()
   }
