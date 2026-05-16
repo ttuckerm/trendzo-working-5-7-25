@@ -8,9 +8,6 @@ import RootLayout from './_app';
 import { StateProvider } from '@/lib/contexts/StateContext';
 import FlagProviderClient from '@/components/FlagProviderClient';
 
-// ⬇️ Add this import
-import SupabaseUrlShim from './_supabase-url-shim';
-
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', weight: ['400', '700'] });
 const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600', '700'] });
@@ -37,9 +34,6 @@ export default function Layout({
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body className={`${inter.variable} ${playfair.variable} ${dmSans.variable} ${inter.className}`}>
-        {/* ⬇️ Mount the shim once, near the top of <body> */}
-        <SupabaseUrlShim />
-
         <StateProvider>
           <Providers>
             <RootLayout>

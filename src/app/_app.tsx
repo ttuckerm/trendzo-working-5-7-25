@@ -5,7 +5,6 @@ import type { ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import { initializeComponentResolution } from '@/lib/utils/import-resolver';
 import ErrorBoundary from '@/components/ui/error-boundary';
-import DeprecationBanner from '@/app/components/DeprecationBanner'
 import { installFetchInstrumentation } from '@/lib/debug/fetch-instrumentation'
 import { usePathname } from 'next/navigation'
 import { TopBanner } from '@/components/ui/TopBanner'
@@ -43,7 +42,6 @@ export default function RootLayout({
     <ErrorBoundary>
       <GlobalBrainProvider>
         <div id="app-root">
-          <DeprecationBanner />
           <TopBanner />
           {children}
           {!isAgencyRoute && <FloatingBrainChat />}
