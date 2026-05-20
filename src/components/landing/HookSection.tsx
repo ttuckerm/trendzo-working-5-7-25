@@ -14,18 +14,14 @@ export function HookSection() {
         }}
       />
       <div className="relative max-w-4xl mx-auto">
-        <p className="text-center font-mono text-[11px] tracking-[0.32em] uppercase text-instrument-tertiary mb-12 sm:mb-16">
-          THE ESCAPE ASSESSMENT
-        </p>
-
         <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
           The Escape Assessment
         </h1>
-        <p className="text-center font-body text-lg sm:text-xl text-instrument-secondary leading-relaxed max-w-2xl mx-auto mb-4">
-          A personalized 14-day sprint, calibrated to your income, your runway, and the life you&apos;re trying to build.
+        <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-relaxed max-w-2xl mx-auto mb-4">
+          You don&apos;t have a motivation problem. You have a plan problem. Here&apos;s the plan.
         </p>
         <p className="text-center font-body text-base text-instrument-tertiary mb-10 sm:mb-12">
-          Normally <span className="text-instrument-secondary">$97</span>. Free with a code from our YouTube channel.
+          Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
         </p>
 
         <div className="mb-2">
@@ -37,7 +33,7 @@ export function HookSection() {
         </div>
 
         <p className="text-center font-body text-sm text-instrument-tertiary mb-16 sm:mb-20">
-          No email required. No card on file. No upsell. Three minutes.
+          No email. No card. Three minutes. Unlimited Freedom Agent access.
         </p>
 
         <div className="max-w-3xl mx-auto">
