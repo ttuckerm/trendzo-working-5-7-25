@@ -14,6 +14,7 @@ import {
   parseShareIdParam,
 } from '@/lib/assessment/fetch-assessment'
 import { AssessmentHUD } from '@/components/assessment/AssessmentHUD'
+import MetaPixelAssessmentEvent from '@/components/analytics/MetaPixelAssessmentEvent'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -36,11 +37,14 @@ export default async function AssessmentPage({ params }: PageProps) {
   if (!row) notFound()
 
   return (
-    <AssessmentHUD
-      assessmentId={row.assessment_id}
-      shareToken={row.share_token}
-      payload={row.payload}
-      sprintProgress={row.sprint_progress}
-    />
+    <>
+      <MetaPixelAssessmentEvent assessmentId={row.assessment_id} />
+      <AssessmentHUD
+        assessmentId={row.assessment_id}
+        shareToken={row.share_token}
+        payload={row.payload}
+        sprintProgress={row.sprint_progress}
+      />
+    </>
   )
 }

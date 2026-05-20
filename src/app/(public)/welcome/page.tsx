@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import { CODE_PATH_COOKIE_NAME, verifyCodePathCookieValue } from '@/lib/stripe/cookie'
 import { verifySession } from '@/lib/stripe/verify'
+import MetaPixelWelcomeEvents from '@/components/analytics/MetaPixelWelcomeEvents'
 import '@/styles/instrument.css'
 
 export const metadata: Metadata = {
@@ -81,6 +82,7 @@ export default async function WelcomePage({
 
   return (
     <main className="min-h-screen bg-instrument-bg text-instrument-primary font-body antialiased">
+      <MetaPixelWelcomeEvents isPaid={isPaid} isCode={isCode} sessionId={sessionId} />
       <section className="relative px-4 sm:px-6 pt-16 sm:pt-20 pb-20 sm:pb-24">
         <div
           aria-hidden
