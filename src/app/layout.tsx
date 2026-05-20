@@ -35,6 +35,7 @@ export default function Layout({
   // Facebook hosts are contacted.
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const showPixel = process.env.DEPLOY_TARGET === 'funnel' && !!pixelId;
+  const isFunnelDeploy = process.env.DEPLOY_TARGET === 'funnel';
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -64,7 +65,7 @@ fbq('track', 'PageView');
       <body className={`${inter.variable} ${playfair.variable} ${dmSans.variable} ${inter.className}`}>
         <StateProvider>
           <Providers>
-            <RootLayout>
+            <RootLayout isFunnelDeploy={isFunnelDeploy}>
               <FlagProviderClient>
                 {showPixel && <MetaPixelTracker />}
                 {children}

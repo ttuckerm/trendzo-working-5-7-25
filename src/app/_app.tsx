@@ -21,9 +21,11 @@ const QaOverlay = dynamic(() => import('@/components/qa/QaOverlay'), { ssr: fals
  * to prevent React reconciliation errors from crashing the application.
  */
 export default function RootLayout({
-  children
+  children,
+  isFunnelDeploy = false,
 }: {
   children: ReactNode
+  isFunnelDeploy?: boolean
 }) {
   const pathname = usePathname()
   const isMembershipRoute = (pathname || '').startsWith('/membership')
@@ -44,8 +46,8 @@ export default function RootLayout({
         <div id="app-root">
           <TopBanner />
           {children}
-          {!isAgencyRoute && <FloatingBrainChat />}
-          {!isAgencyRoute && <FloatingBrainTrigger />}
+          {!isAgencyRoute && !isFunnelDeploy && <FloatingBrainChat />}
+          {!isAgencyRoute && !isFunnelDeploy && <FloatingBrainTrigger />}
           <QaOverlay />
         </div>
       </GlobalBrainProvider>
