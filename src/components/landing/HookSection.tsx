@@ -14,6 +14,13 @@ export function HookSection() {
         }}
       />
       <div className="relative max-w-4xl mx-auto">
+        {/* Plain <img> so a missing asset degrades to a broken-image icon
+            instead of breaking the layout. */}
+        <img
+          src="/images/escape-assessment-logo.png"
+          alt="Escape Assessment"
+          className="mx-auto block w-56 sm:w-64 h-auto mb-10 sm:mb-12"
+        />
         <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
           The Escape Assessment
         </h1>
