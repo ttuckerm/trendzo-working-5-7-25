@@ -4,7 +4,7 @@ import { PaidCheckoutButton } from './PaidCheckoutButton';
 
 export function HookSection() {
   return (
-    <section className="relative px-4 sm:px-6 pt-20 sm:pt-28 pb-20 sm:pb-24">
+    <section className="relative px-4 sm:px-6 pt-6 sm:pt-8 pb-20 sm:pb-24">
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -19,7 +19,7 @@ export function HookSection() {
         <img
           src="/images/escape-assessment-logo.png"
           alt="Escape Assessment"
-          className="mx-auto block w-56 sm:w-64 h-auto mb-10 sm:mb-12"
+          className="mx-auto block w-56 sm:w-64 h-auto mb-3 sm:mb-4"
         />
         <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
           The Escape Assessment
