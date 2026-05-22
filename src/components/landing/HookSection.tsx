@@ -13,7 +13,7 @@ export function HookSection() {
             'radial-gradient(circle at 50% 30%, rgba(240, 74, 77, 0.10) 0%, transparent 60%)',
         }}
       />
-      <div className="relative max-w-4xl mx-auto">
+      <div className="relative max-w-7xl mx-auto">
         {/* Plain <img> so a missing asset degrades to a broken-image icon
             instead of breaking the layout. */}
         <img
@@ -21,7 +21,7 @@ export function HookSection() {
           alt="Escape Assessment"
           className="mx-auto block w-56 sm:w-64 h-auto mb-1 sm:mb-1.5"
         />
-        <h1 className="text-center font-display text-4xl sm:text-6xl md:text-7xl font-extrabold text-instrument-primary leading-tight mb-6 max-w-5xl mx-auto">
+        <h1 className="text-center font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic text-instrument-primary leading-tight mb-6 mx-auto">
           &ldquo;This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one annoying thing!&rdquo;
         </h1>
         <p className="text-center font-body text-2xl sm:text-3xl text-instrument-secondary leading-relaxed max-w-4xl mx-auto mb-4">

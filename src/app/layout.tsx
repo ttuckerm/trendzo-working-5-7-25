@@ -14,7 +14,7 @@ import MetaPixelTracker from '@/components/analytics/MetaPixelTracker';
 // keep the existing Tailwind classes (`font-sans` / `font-display` / `font-body`)
 // resolving to their CSS variables without any callsite changes.
 const montserratSans = Montserrat({ subsets: ['latin'], variable: '--font-sans' });
-const montserratDisplay = Montserrat({ subsets: ['latin'], variable: '--font-display', weight: ['400', '600', '700', '800'] });
+const montserratDisplay = Montserrat({ subsets: ['latin'], variable: '--font-display', weight: ['400', '600', '700', '800', '900'], style: ['normal', 'italic'] });
 const montserratBody = Montserrat({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600', '700'] });
 
 export const dynamic = 'force-dynamic';
