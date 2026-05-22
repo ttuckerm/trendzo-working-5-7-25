@@ -27,8 +27,8 @@ export function HookSection() {
         <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-snug max-w-6xl mx-auto mb-2">
           <span className="font-bold text-instrument-primary underline decoration-[#f04a4d] decoration-4 underline-offset-4">Take the Free Escape Assessment</span> and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
         </p>
-        <p className="text-center font-body text-base text-instrument-tertiary mb-4 sm:mb-5">
-          Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
+        <p className="text-center font-body text-base font-bold text-instrument-primary mb-4 sm:mb-5">
+          No email. No card. Three minutes. Unlimited Freedom Agent access.
         </p>
 
         <div className="mb-2">
@@ -40,7 +40,7 @@ export function HookSection() {
         </div>
 
         <p className="text-center font-body text-sm text-instrument-tertiary mb-16 sm:mb-20">
-          No email. No card. Three minutes. Unlimited Freedom Agent access.
+          Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
         </p>
 
         <div className="max-w-3xl mx-auto">
