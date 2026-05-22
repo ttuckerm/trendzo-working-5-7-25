@@ -137,7 +137,7 @@ export default async function SavedPlanPage({
             </div>
             <p
               className="text-xs sm:text-sm leading-snug"
-              style={{ color: 'rgba(255,255,255,0.8)', fontFamily: "'DM Sans', sans-serif" }}
+              style={{ color: 'rgba(255,255,255,0.8)', fontFamily: "'Montserrat', sans-serif" }}
             >
               <span className="font-bold text-white">Your AI business advisor is ready</span>
               <span style={{ color: 'rgba(255,255,255,0.55)' }}> — it already knows your plan, your niche, and your numbers.</span>

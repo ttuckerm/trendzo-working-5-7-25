@@ -82,7 +82,7 @@ export function DeliverablesHeader({ firstName, reducedMotion, delayMs }: Props)
     >
       <h1
         style={{
-          fontFamily: "'Playfair Display', serif",
+          fontFamily: "'Montserrat', sans-serif",
           fontSize: 28,
           fontWeight: 700,
           color: '#f4f4f6',

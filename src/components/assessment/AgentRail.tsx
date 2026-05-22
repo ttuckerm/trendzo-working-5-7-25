@@ -623,7 +623,7 @@ function ExpandedHeader({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <span
             style={{
-              fontFamily: "'Playfair Display', Georgia, serif",
+              fontFamily: "'Montserrat', sans-serif",
               fontSize: 18,
               fontWeight: 700,
               color: '#f4f4f6',

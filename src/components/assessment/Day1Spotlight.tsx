@@ -199,7 +199,7 @@ export function Day1Spotlight({
               </div>
               <div
                 style={{
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Montserrat', sans-serif",
                   fontSize: 22,
                   fontWeight: 700,
                   color: '#f4f4f6',

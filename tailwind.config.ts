@@ -89,9 +89,9 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        display: ["var(--font-display)", "Playfair Display", "serif"],
-        body: ["var(--font-body)", "DM Sans", ...fontFamily.sans],
+        sans: ["var(--font-sans)", "Montserrat", ...fontFamily.sans],
+        display: ["var(--font-display)", "Montserrat", ...fontFamily.sans],
+        body: ["var(--font-body)", "Montserrat", ...fontFamily.sans],
         mono: ["JetBrains Mono", "Fira Code", "monospace"],
         "mono-label": ["JetBrains Mono", "Fira Code", "monospace"],
       },

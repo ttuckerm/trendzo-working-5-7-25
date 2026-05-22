@@ -1,5 +1,5 @@
 import './globals.css';
-import { Inter, Playfair_Display, DM_Sans } from 'next/font/google';
+import { Montserrat } from 'next/font/google';
 import type { Metadata } from 'next';
 import React from 'react';
 import type { ReactNode } from 'react';
@@ -10,9 +10,12 @@ import { StateProvider } from '@/lib/contexts/StateContext';
 import FlagProviderClient from '@/components/FlagProviderClient';
 import MetaPixelTracker from '@/components/analytics/MetaPixelTracker';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
-const playfair = Playfair_Display({ subsets: ['latin'], variable: '--font-display', weight: ['400', '700'] });
-const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600', '700'] });
+// Single-font policy on the funnel deploy: Montserrat everywhere. Three instances
+// keep the existing Tailwind classes (`font-sans` / `font-display` / `font-body`)
+// resolving to their CSS variables without any callsite changes.
+const montserratSans = Montserrat({ subsets: ['latin'], variable: '--font-sans' });
+const montserratDisplay = Montserrat({ subsets: ['latin'], variable: '--font-display', weight: ['400', '600', '700', '800'] });
+const montserratBody = Montserrat({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600', '700'] });
 
 export const dynamic = 'force-dynamic';
 
@@ -62,7 +65,7 @@ fbq('track', 'PageView');
           />
         )}
       </head>
-      <body className={`${inter.variable} ${playfair.variable} ${dmSans.variable} ${inter.className}`}>
+      <body className={`${montserratSans.variable} ${montserratDisplay.variable} ${montserratBody.variable} ${montserratSans.className}`}>
         <StateProvider>
           <Providers>
             <RootLayout isFunnelDeploy={isFunnelDeploy}>

@@ -224,13 +224,13 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
       <div className="text-center mb-8">
         <h1
           className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
-          style={{ fontFamily: "'Playfair Display', serif" }}
+          style={{ fontFamily: "'Montserrat', sans-serif" }}
         >
           Generate Your Escape Assessment
         </h1>
         <p
           className="text-sm sm:text-base"
-          style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'DM Sans', sans-serif" }}
+          style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Montserrat', sans-serif" }}
         >
           Answer 9 questions. Get a personalized 14-day sprint, a 90-day roadmap, your Freedom Number, and a personal AI advisor. Three minutes.
         </p>
