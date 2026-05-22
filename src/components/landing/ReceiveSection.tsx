@@ -68,9 +68,15 @@ export function ReceiveSection() {
         <h2 className="text-center font-display text-3xl sm:text-4xl text-instrument-primary mb-6 leading-tight">
           What you receive
         </h2>
-        <p className="text-center font-body text-instrument-secondary text-base sm:text-lg max-w-2xl mx-auto mb-14 leading-relaxed">
+        <p className="text-center font-body text-instrument-secondary text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
           When you enter your code and answer the five questions, you receive — in roughly 90 seconds — a personalized assessment that includes:
         </p>
+
+        <img
+          src="/images/escape-assessment-product.png"
+          alt="The Escape Assessment — book, dashboard, and Freedom Agent"
+          className="block w-full max-w-2xl h-auto mx-auto mb-14"
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
           {DELIVERABLES.map((d) => (

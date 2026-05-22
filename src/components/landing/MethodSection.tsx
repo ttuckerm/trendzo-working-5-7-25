@@ -2,9 +2,14 @@ export function MethodSection() {
   return (
     <section className="px-4 sm:px-6 py-16 sm:py-24">
       <div className="max-w-[680px] mx-auto">
-        <h2 className="text-center font-display text-3xl sm:text-4xl text-instrument-primary mb-12 leading-tight">
+        <h2 className="text-center font-display text-3xl sm:text-4xl text-instrument-primary mb-8 leading-tight">
           The Tomorrow-Morning Method
         </h2>
+        <img
+          src="/images/escape-assessment-modules.png"
+          alt="The Escape Assessment modules"
+          className="block w-full max-w-lg h-auto mx-auto mb-12"
+        />
         <div className="space-y-6 font-body text-instrument-primary text-base sm:text-lg leading-relaxed">
           <p>Here is what nobody tells you, because nobody can monetize telling you:</p>
           <p className="font-display text-xl sm:text-2xl text-instrument-primary leading-snug">

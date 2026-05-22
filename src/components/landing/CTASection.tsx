@@ -7,9 +7,15 @@ export function CTASection() {
   return (
     <section className="px-4 sm:px-6 py-16 sm:py-24">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-center font-display text-3xl sm:text-4xl text-instrument-primary mb-12 leading-tight">
+        <h2 className="text-center font-display text-3xl sm:text-4xl text-instrument-primary mb-8 leading-tight">
           Redeem Your Code
         </h2>
+
+        <img
+          src="/images/escape-assessment-results.png"
+          alt="The Escape Assessment results"
+          className="block w-full max-w-xl h-auto mx-auto mb-12"
+        />
 
         <div className="mb-2">
           <CodeEntry idPrefix="code-cta" />

@@ -93,9 +93,11 @@ export default async function WelcomePage({
           }}
         />
         <div className="relative max-w-4xl mx-auto">
-          <p className="text-center font-mono text-[11px] tracking-[0.32em] uppercase text-instrument-tertiary mb-12 sm:mb-16">
-            THE ESCAPE ASSESSMENT
-          </p>
+          <img
+            src="/images/escape-assessment-logo.png"
+            alt="Escape Assessment"
+            className="mx-auto block w-56 sm:w-64 h-auto mb-8 sm:mb-10"
+          />
 
           <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
             Your Escape Assessment is ready.
