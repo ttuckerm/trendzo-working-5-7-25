@@ -21,11 +21,11 @@ export function HookSection() {
           alt="Escape Assessment"
           className="mx-auto block w-56 sm:w-64 h-auto mb-1 sm:mb-1.5"
         />
-        <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
-          This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one annoying thing!
+        <h1 className="text-center font-display text-4xl sm:text-6xl md:text-7xl font-extrabold text-instrument-primary leading-tight mb-6 max-w-5xl mx-auto">
+          &ldquo;This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one annoying thing!&rdquo;
         </h1>
-        <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-relaxed max-w-2xl mx-auto mb-4">
-          Take the Free Escape Assessment and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
+        <p className="text-center font-body text-2xl sm:text-3xl text-instrument-secondary leading-relaxed max-w-4xl mx-auto mb-4">
+          <span className="font-bold text-instrument-primary">Take the Free Escape Assessment</span> and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
         </p>
         <p className="text-center font-body text-base text-instrument-tertiary mb-10 sm:mb-12">
           Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
