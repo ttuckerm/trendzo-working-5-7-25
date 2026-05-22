@@ -22,10 +22,10 @@ export function HookSection() {
           className="mx-auto block w-56 sm:w-64 h-auto mb-1 sm:mb-1.5"
         />
         <h1 className="text-center font-display text-3xl sm:text-5xl text-instrument-primary leading-tight mb-6">
-          The Escape Assessment
+          This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one annoying thing!
         </h1>
         <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-relaxed max-w-2xl mx-auto mb-4">
-          You don&apos;t have a motivation problem. You have a plan problem. Here&apos;s the plan.
+          Take the Free Escape Assessment and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
         </p>
         <p className="text-center font-body text-base text-instrument-tertiary mb-10 sm:mb-12">
           Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
