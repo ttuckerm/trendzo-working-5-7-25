@@ -222,6 +222,11 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8">
       <div className="text-center mb-8">
+        <img
+          src="/images/escape-assessment-logo.png"
+          alt="Escape Assessment"
+          className="mx-auto block w-56 sm:w-64 h-auto mb-6"
+        />
         <h1
           className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
           style={{ fontFamily: "'Montserrat', sans-serif" }}
