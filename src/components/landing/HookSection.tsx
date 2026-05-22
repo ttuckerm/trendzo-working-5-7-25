@@ -21,11 +21,11 @@ export function HookSection() {
           alt="Escape Assessment"
           className="mx-auto block w-56 sm:w-64 h-auto mb-1 sm:mb-1.5"
         />
-        <h1 className="text-center font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black italic text-instrument-primary leading-[1.05] mb-3 mx-auto">
-          &ldquo;This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one annoying thing!&rdquo;
+        <h1 className="text-center font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black italic text-instrument-primary leading-[1.05] mb-3 mx-auto">
+          &ldquo;This is the best 9 to 5 escape strategy I know, but it is going to require you to do this one <span className="underline decoration-[#f04a4d] decoration-[6px] underline-offset-[6px]">annoying thing</span>!&rdquo;
         </h1>
-        <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-snug max-w-4xl mx-auto mb-2">
-          <span className="font-bold text-instrument-primary">Take the Free Escape Assessment</span> and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
+        <p className="text-center font-body text-xl sm:text-2xl text-instrument-secondary leading-snug max-w-6xl mx-auto mb-2">
+          <span className="font-bold text-instrument-primary underline decoration-[#f04a4d] decoration-4 underline-offset-4">Take the Free Escape Assessment</span> and do the one thing most stuck employees avoid: calculate the exact number, timeline, and first move required to stop needing your 9-to-5!
         </p>
         <p className="text-center font-body text-base text-instrument-tertiary mb-4 sm:mb-5">
           Normally <span className="text-instrument-secondary line-through">$97</span>. Free with a code from our YouTube channel.
