@@ -1,0 +1,3694 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Trendzo — AI Command Surface</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body, #root { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Space Grotesk', system-ui, sans-serif;
+      color: #3a2e30;
+    }
+    button:focus { outline: none; }
+  </style>
+
+  <script>
+    // Suppress noisy framer-motion key warning false-positive on keyframe arrays
+    (() => {
+      const origError = console.error;
+      console.error = function(...args) {
+        if (typeof args[0] === 'string' && args[0].includes('unique "key" prop')) return;
+        return origError.apply(console, args);
+      };
+    })();
+  </script>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/framer-motion@11.11.17/dist/framer-motion.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react">
+
+// ====== tweaks-panel.jsx ======
+
+// tweaks-panel.jsx
+// Reusable Tweaks shell + form-control helpers.
+//
+// Owns the host protocol (listens for __activate_edit_mode / __deactivate_edit_mode,
+// posts __edit_mode_available / __edit_mode_set_keys / __edit_mode_dismissed) so
+// individual prototypes don't re-roll it. Ships a consistent set of controls so you
+// don't hand-draw <input type="range">, segmented radios, steppers, etc.
+//
+// Usage (in an HTML file that loads React + Babel):
+//
+//   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+//     "primaryColor": "#D97757",
+//     "fontSize": 16,
+//     "density": "regular",
+//     "dark": false
+//   }/*EDITMODE-END*/;
+//
+//   function App() {
+//     const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+//     return (
+//       <div style={{ fontSize: t.fontSize, color: t.primaryColor }}>
+//         Hello
+//         <TweaksPanel>
+//           <TweakSection label="Typography" />
+//           <TweakSlider label="Font size" value={t.fontSize} min={10} max={32} unit="px"
+//                        onChange={(v) => setTweak('fontSize', v)} />
+//           <TweakRadio  label="Density" value={t.density}
+//                        options={['compact', 'regular', 'comfy']}
+//                        onChange={(v) => setTweak('density', v)} />
+//           <TweakSection label="Theme" />
+//           <TweakColor  label="Primary" value={t.primaryColor}
+//                        onChange={(v) => setTweak('primaryColor', v)} />
+//           <TweakToggle label="Dark mode" value={t.dark}
+//                        onChange={(v) => setTweak('dark', v)} />
+//         </TweaksPanel>
+//       </div>
+//     );
+//   }
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;
+    max-height:calc(100vh - 32px);display:flex;flex-direction:column;
+    background:rgba(250,249,247,.78);color:#29261b;
+    -webkit-backdrop-filter:blur(24px) saturate(160%);backdrop-filter:blur(24px) saturate(160%);
+    border:.5px solid rgba(255,255,255,.6);border-radius:14px;
+    box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 12px 40px rgba(0,0,0,.18);
+    font:11.5px/1.4 ui-sans-serif,system-ui,-apple-system,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600;letter-spacing:.01em}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);
+    width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;
+    overflow-y:auto;overflow-x:hidden;min-height:0;
+    scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.15) transparent}
+  .twk-body::-webkit-scrollbar{width:8px}
+  .twk-body::-webkit-scrollbar-track{background:transparent;margin:2px}
+  .twk-body::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:4px;
+    border:2px solid transparent;background-clip:content-box}
+  .twk-body::-webkit-scrollbar-thumb:hover{background:rgba(0,0,0,.25);
+    border:2px solid transparent;background-clip:content-box}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;
+    color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-val{color:rgba(41,38,27,.5);font-variant-numeric:tabular-nums}
+
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-sect:first-child{padding-top:0}
+
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;
+    background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25);background:rgba(255,255,255,.85)}
+  select.twk-field{padding-right:22px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='rgba(0,0,0,.5)' d='M0 0h10L5 6z'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center}
+
+  .twk-slider{appearance:none;-webkit-appearance:none;width:100%;height:4px;margin:6px 0;
+    border-radius:999px;background:rgba(0,0,0,.12);outline:none}
+  .twk-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:14px;height:14px;border-radius:50%;background:#fff;
+    border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+  .twk-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+    background:#fff;border:.5px solid rgba(0,0,0,.12);box-shadow:0 1px 3px rgba(0,0,0,.2);cursor:default}
+
+  .twk-seg{position:relative;display:flex;padding:2px;border-radius:8px;
+    background:rgba(0,0,0,.06);user-select:none}
+  .twk-seg-thumb{position:absolute;top:2px;bottom:2px;border-radius:6px;
+    background:rgba(255,255,255,.9);box-shadow:0 1px 2px rgba(0,0,0,.12);
+    transition:left .15s cubic-bezier(.3,.7,.4,1),width .15s}
+  .twk-seg.dragging .twk-seg-thumb{transition:none}
+  .twk-seg button{appearance:none;position:relative;z-index:1;flex:1;border:0;
+    background:transparent;color:inherit;font:inherit;font-weight:500;min-height:22px;
+    border-radius:6px;cursor:default;padding:4px 6px;line-height:1.2;
+    overflow-wrap:anywhere}
+
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;
+    background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+
+  .twk-num{display:flex;align-items:center;height:26px;padding:0 0 0 8px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6)}
+  .twk-num-lbl{font-weight:500;color:rgba(41,38,27,.6);cursor:ew-resize;
+    user-select:none;padding-right:8px}
+  .twk-num input{flex:1;min-width:0;height:100%;border:0;background:transparent;
+    font:inherit;font-variant-numeric:tabular-nums;text-align:right;padding:0 8px 0 0;
+    outline:none;color:inherit;-moz-appearance:textfield}
+  .twk-num input::-webkit-inner-spin-button,.twk-num input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0}
+  .twk-num-unit{padding-right:8px;color:rgba(41,38,27,.45)}
+
+  .twk-btn{appearance:none;height:26px;padding:0 12px;border:0;border-radius:7px;
+    background:rgba(0,0,0,.78);color:#fff;font:inherit;font-weight:500;cursor:default}
+  .twk-btn:hover{background:rgba(0,0,0,.88)}
+  .twk-btn.secondary{background:rgba(0,0,0,.06);color:inherit}
+  .twk-btn.secondary:hover{background:rgba(0,0,0,.1)}
+
+  .twk-swatch{appearance:none;-webkit-appearance:none;width:56px;height:22px;
+    border:.5px solid rgba(0,0,0,.1);border-radius:6px;padding:0;cursor:default;
+    background:transparent;flex-shrink:0}
+  .twk-swatch::-webkit-color-swatch-wrapper{padding:0}
+  .twk-swatch::-webkit-color-swatch{border:0;border-radius:5.5px}
+  .twk-swatch::-moz-color-swatch{border:0;border-radius:5.5px}
+`;
+
+// ── useTweaks ───────────────────────────────────────────────────────────────
+// Single source of truth for tweak values. setTweak persists via the host
+// (__edit_mode_set_keys → host rewrites the EDITMODE block on disk).
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  // Accepts either setTweak('key', value) or setTweak({ key: value, ... }) so a
+  // useState-style call doesn't write a "[object Object]" key into the persisted
+  // JSON block.
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null
+      ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits }, '*');
+  }, []);
+  return [values, setTweak];
+}
+
+// ── TweaksPanel ─────────────────────────────────────────────────────────────
+// Floating shell. Registers the protocol listener BEFORE announcing
+// availability — if the announce ran first, the host's activate could land
+// before our handler exists and the toolbar toggle would silently no-op.
+// The close button posts __edit_mode_dismissed so the host's toolbar toggle
+// flips off in lockstep; the host echoes __deactivate_edit_mode back which
+// is what actually hides the panel.
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(false);
+  const dragRef = React.useRef(null);
+  const offsetRef = React.useRef({ x: 16, y: 16 });
+  const PAD = 16;
+
+  const clampToViewport = React.useCallback(() => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    const maxRight = Math.max(PAD, window.innerWidth - w - PAD);
+    const maxBottom = Math.max(PAD, window.innerHeight - h - PAD);
+    offsetRef.current = {
+      x: Math.min(maxRight, Math.max(PAD, offsetRef.current.x)),
+      y: Math.min(maxBottom, Math.max(PAD, offsetRef.current.y)),
+    };
+    panel.style.right = offsetRef.current.x + 'px';
+    panel.style.bottom = offsetRef.current.y + 'px';
+  }, []);
+
+  React.useEffect(() => {
+    if (!open) return;
+    clampToViewport();
+    if (typeof ResizeObserver === 'undefined') {
+      window.addEventListener('resize', clampToViewport);
+      return () => window.removeEventListener('resize', clampToViewport);
+    }
+    const ro = new ResizeObserver(clampToViewport);
+    ro.observe(document.documentElement);
+    return () => ro.disconnect();
+  }, [open, clampToViewport]);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      const t = e?.data?.type;
+      if (t === '__activate_edit_mode') setOpen(true);
+      else if (t === '__deactivate_edit_mode') setOpen(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const dismiss = () => {
+    setOpen(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const onDragStart = (e) => {
+    const panel = dragRef.current;
+    if (!panel) return;
+    const r = panel.getBoundingClientRect();
+    const sx = e.clientX, sy = e.clientY;
+    const startRight = window.innerWidth - r.right;
+    const startBottom = window.innerHeight - r.bottom;
+    const move = (ev) => {
+      offsetRef.current = {
+        x: startRight - (ev.clientX - sx),
+        y: startBottom - (ev.clientY - sy),
+      };
+      clampToViewport();
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+  };
+
+  if (!open) return null;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div ref={dragRef} className="twk-panel"
+           style={{ right: offsetRef.current.x, bottom: offsetRef.current.y }}>
+        <div className="twk-hd" onMouseDown={onDragStart}>
+          <b>{title}</b>
+          <button className="twk-x" aria-label="Close tweaks"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onClick={dismiss}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+// ── Layout helpers ──────────────────────────────────────────────────────────
+
+function TweakSection({ label, children }) {
+  return (
+    <>
+      <div className="twk-sect">{label}</div>
+      {children}
+    </>
+  );
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl">
+        <span>{label}</span>
+        {value != null && <span className="twk-val">{value}</span>}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+// ── Controls ────────────────────────────────────────────────────────────────
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" className="twk-slider" min={min} max={max} step={step}
+             value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'}
+              role="switch" aria-checked={!!value}
+              onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakRadio({ label, value, options, onChange }) {
+  const trackRef = React.useRef(null);
+  const [dragging, setDragging] = React.useState(false);
+  const opts = options.map((o) => (typeof o === 'object' ? o : { value: o, label: o }));
+  const idx = Math.max(0, opts.findIndex((o) => o.value === value));
+  const n = opts.length;
+
+  // The active value is read by pointer-move handlers attached for the lifetime
+  // of a drag — ref it so a stale closure doesn't fire onChange for every move.
+  const valueRef = React.useRef(value);
+  valueRef.current = value;
+
+  const segAt = (clientX) => {
+    const r = trackRef.current.getBoundingClientRect();
+    const inner = r.width - 4;
+    const i = Math.floor(((clientX - r.left - 2) / inner) * n);
+    return opts[Math.max(0, Math.min(n - 1, i))].value;
+  };
+
+  const onPointerDown = (e) => {
+    setDragging(true);
+    const v0 = segAt(e.clientX);
+    if (v0 !== valueRef.current) onChange(v0);
+    const move = (ev) => {
+      if (!trackRef.current) return;
+      const v = segAt(ev.clientX);
+      if (v !== valueRef.current) onChange(v);
+    };
+    const up = () => {
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+
+  return (
+    <TweakRow label={label}>
+      <div ref={trackRef} role="radiogroup" onPointerDown={onPointerDown}
+           className={dragging ? 'twk-seg dragging' : 'twk-seg'}>
+        <div className="twk-seg-thumb"
+             style={{ left: `calc(2px + ${idx} * (100% - 4px) / ${n})`,
+                      width: `calc((100% - 4px) / ${n})` }} />
+        {opts.map((o) => (
+          <button key={o.value} type="button" role="radio" aria-checked={o.value === value}>
+            {o.label}
+          </button>
+        ))}
+      </div>
+    </TweakRow>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakText({ label, value, placeholder, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <input className="twk-field" type="text" value={value} placeholder={placeholder}
+             onChange={(e) => onChange(e.target.value)} />
+    </TweakRow>
+  );
+}
+
+function TweakNumber({ label, value, min, max, step = 1, unit = '', onChange }) {
+  const clamp = (n) => {
+    if (min != null && n < min) return min;
+    if (max != null && n > max) return max;
+    return n;
+  };
+  const startRef = React.useRef({ x: 0, val: 0 });
+  const onScrubStart = (e) => {
+    e.preventDefault();
+    startRef.current = { x: e.clientX, val: value };
+    const decimals = (String(step).split('.')[1] || '').length;
+    const move = (ev) => {
+      const dx = ev.clientX - startRef.current.x;
+      const raw = startRef.current.val + dx * step;
+      const snapped = Math.round(raw / step) * step;
+      onChange(clamp(Number(snapped.toFixed(decimals))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  };
+  return (
+    <div className="twk-num">
+      <span className="twk-num-lbl" onPointerDown={onScrubStart}>{label}</span>
+      <input type="number" value={value} min={min} max={max} step={step}
+             onChange={(e) => onChange(clamp(Number(e.target.value)))} />
+      {unit && <span className="twk-num-unit">{unit}</span>}
+    </div>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" className="twk-swatch" value={value}
+             onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return (
+    <button type="button" className={secondary ? 'twk-btn secondary' : 'twk-btn'}
+            onClick={onClick}>{label}</button>
+  );
+}
+
+Object.assign(window, {
+  useTweaks, TweaksPanel, TweakSection, TweakRow,
+  TweakSlider, TweakToggle, TweakRadio, TweakSelect,
+  TweakText, TweakNumber, TweakColor, TweakButton,
+});
+
+
+// ====== orb.jsx ======
+/* global React, Motion */
+const { useEffect, useRef, useState, useMemo } = React;
+const M = window.Motion;
+
+// Particle definitions — five real operational entities, organically scattered
+const PARTICLES = [
+  {
+    id: "creator-jake",
+    type: "creator",
+    label: "Jake Chen — 3 days overdue",
+    color: "coral",
+    // position in 3D-ish orb space (x,y in -1..1, z depth)
+    // radial distance maps to a temporal horizon arc:
+    //   ~0.42 = NOW   ~0.62 = NEXT 24H   ~0.86 = THIS WEEK
+    // z=0..1 controls perceived depth: 0 = back of sphere, 1 = front glass
+    x: -0.38, y: -0.18, z: 0.95, // almost touching the front glass
+    size: 1.18,
+    priority: "high",
+  },
+  {
+    id: "creator-noah",
+    type: "creator",
+    label: "Noah Kim — 2 days overdue",
+    color: "coral",
+    x: 0.30, y: 0.30, z: 0.58, // mid-front
+    size: 1.0,
+    priority: "medium",
+  },
+  {
+    id: "trend-agents",
+    type: "trend",
+    label: "AI Creator Agents — emerging trend",
+    color: "gold",
+    // between NOW and NEXT 24H — sits on the inner edge of NEXT 24H
+    x: 0.48, y: -0.32, z: 0.42, // mid-depth
+    size: 1.0,
+    priority: "medium",
+  },
+  {
+    id: "calendar-launch",
+    type: "calendar",
+    label: "Q3 Brand Sync — Tue 9:00",
+    color: "sage",
+    // NEXT 24H arc — radial ~0.62
+    x: -0.22, y: 0.58, z: 0.28, // mid-back
+    size: 0.78,
+    priority: "background",
+  },
+  {
+    id: "memory-fact",
+    type: "memory",
+    label: "Maya prefers async briefs",
+    color: "lavender",
+    // THIS WEEK arc — radial ~0.86, deepest in z (back of sphere)
+    x: -0.62, y: -0.60, z: 0.05, // deep at the back
+    size: 0.72,
+    priority: "background",
+  },
+  {
+    id: "memory-context",
+    type: "memory",
+    label: "Q3 brand voice: warmer, less hedged",
+    color: "lavender",
+    // Lower-left quadrant, mid-depth — fills the gap between Noah
+    // (front-right) and the deep memory speck at the back-left
+    x: -0.45, y: 0.42, z: 0.55,
+    size: 0.88,
+    priority: "background",
+  },
+];
+
+// Threads — 3 meaningful connections
+const THREADS = [
+  ["creator-jake", "trend-agents"],
+  ["creator-noah", "trend-agents"],
+  ["calendar-launch", "memory-fact"],
+  ["memory-context", "creator-noah"],
+];
+
+const PARTICLE_PALETTE = {
+  coral:    { core: "#dfa8a2", glow: "#c07b74", halo: "rgba(192,123,116,0.55)" },
+  gold:     { core: "#ffd9a8", glow: "#e8a878", halo: "rgba(232,168,120,0.5)" },
+  sage:     { core: "#a8c4cc", glow: "#6c92a0", halo: "rgba(108,146,160,0.55)" },
+  lavender: { core: "#d4d4d4", glow: "#a8a9a9", halo: "rgba(168,169,169,0.5)" },
+};
+
+// ── Particle icons — inscribed in light, not stamped on top ───────────
+// Each icon is rendered as luminous filaments: a soft glow layer beneath,
+// a bright filament on top, with a subtle inner shadow to feel etched.
+function ParticleIcon({ type, size = 14, tint = "#ffffff" }) {
+  const uid = React.useId();
+  const glowId = `glow-${uid}`;
+  const innerId = `inner-${uid}`;
+  const filamentId = `fil-${uid}`;
+
+  const defs = (
+    <defs>
+      <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="0.9" result="b1" />
+        <feGaussianBlur stdDeviation="2.2" in="SourceGraphic" result="b2" />
+        <feMerge>
+          <feMergeNode in="b2" />
+          <feMergeNode in="b1" />
+        </feMerge>
+      </filter>
+      <linearGradient id={filamentId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="1" />
+        <stop offset="0.5" stopColor="#fff5ea" stopOpacity="0.95" />
+        <stop offset="1" stopColor={tint} stopOpacity="0.85" />
+      </linearGradient>
+      <radialGradient id={innerId} cx="0.4" cy="0.35" r="0.7">
+        <stop offset="0" stopColor="#ffffff" stopOpacity="1" />
+        <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.6" />
+        <stop offset="1" stopColor={tint} stopOpacity="0.4" />
+      </radialGradient>
+    </defs>
+  );
+
+  if (type === "creator") {
+    // person — head + shoulders, drawn as glowing filament
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" overflow="visible">
+        {defs}
+        {/* outer halo of the icon itself */}
+        <g filter={`url(#${glowId})`} opacity="0.85">
+          <circle cx="12" cy="9.2" r="3.2" fill="none" stroke={tint} strokeWidth="2.4" />
+          <path d="M5.2 19.2c1.4-3.2 4-4.8 6.8-4.8s5.4 1.6 6.8 4.8" stroke={tint} strokeWidth="2.4" strokeLinecap="round" fill="none" />
+        </g>
+        {/* bright filament */}
+        <circle cx="12" cy="9.2" r="3.2" fill="none" stroke={`url(#${filamentId})`} strokeWidth="1.4" />
+        <path d="M5.2 19.2c1.4-3.2 4-4.8 6.8-4.8s5.4 1.6 6.8 4.8" stroke={`url(#${filamentId})`} strokeWidth="1.4" strokeLinecap="round" fill="none" />
+        {/* core highlight */}
+        <circle cx="11" cy="8.2" r="0.9" fill="#ffffff" opacity="0.9" />
+      </svg>
+    );
+  }
+  if (type === "trend") {
+    // up-and-right arrow with a kink — emerging trend line
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" overflow="visible">
+        {defs}
+        <g filter={`url(#${glowId})`} opacity="0.9">
+          <path d="M4 16.5l5-5 3.5 3.5L20 7" stroke={tint} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          <path d="M14 7h6v6" stroke={tint} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </g>
+        <path d="M4 16.5l5-5 3.5 3.5L20 7" stroke={`url(#${filamentId})`} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <path d="M14 7h6v6" stroke={`url(#${filamentId})`} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <circle cx="20" cy="7" r="1.2" fill="#ffffff" opacity="0.95" />
+      </svg>
+    );
+  }
+  if (type === "calendar") {
+    // calendar — grid with two pegs above
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" overflow="visible">
+        {defs}
+        <g filter={`url(#${glowId})`} opacity="0.85">
+          <rect x="4" y="6.2" width="16" height="13.6" rx="2.6" stroke={tint} strokeWidth="2.4" fill="none" />
+          <path d="M4 10.4h16M9 4.2v4M15 4.2v4" stroke={tint} strokeWidth="2.4" strokeLinecap="round" />
+        </g>
+        <rect x="4" y="6.2" width="16" height="13.6" rx="2.6" stroke={`url(#${filamentId})`} strokeWidth="1.4" fill="none" />
+        <path d="M4 10.4h16" stroke={`url(#${filamentId})`} strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M9 4.2v4M15 4.2v4" stroke={`url(#${filamentId})`} strokeWidth="1.4" strokeLinecap="round" />
+        {/* inscribed glyph — a tiny luminous dot on a date */}
+        <circle cx="12" cy="14.4" r="1.4" fill={`url(#${innerId})`} />
+      </svg>
+    );
+  }
+  // memory — sparkle cluster, the largest spark feels the most "inscribed"
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" overflow="visible">
+      {defs}
+      <g filter={`url(#${glowId})`} opacity="0.9">
+        <path d="M12 3.6l1.6 4L17.6 9.2l-4 1.6L12 14.8l-1.6-4L6.4 9.2l4-1.6z" fill={tint} opacity="0.6" />
+      </g>
+      <path d="M12 3.6l1.6 4L17.6 9.2l-4 1.6L12 14.8l-1.6-4L6.4 9.2l4-1.6z" fill={`url(#${filamentId})`} />
+      <path d="M18.4 14l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill={`url(#${filamentId})`} opacity="0.85" />
+      <path d="M6.4 15.2l.55 1.4 1.4.55-1.4.55L6.4 19.1l-.55-1.4-1.4-.55 1.4-.55z" fill={`url(#${filamentId})`} opacity="0.7" />
+      <circle cx="12" cy="9.2" r="0.9" fill="#ffffff" />
+    </svg>
+  );
+}
+
+// ── A single glowing particle inside the orb ──────────────────────────
+function Particle({ p, orbSize, hovered, onHover, onLeave, onClick, hidden, pulsing }) {
+  const palette = PARTICLE_PALETTE[p.color];
+  // Map (-1..1) to pixel offset within orb radius (use 0.62 of radius for inset)
+  const r = orbSize * 0.31;
+  const px = p.x * r;
+  const py = p.y * r;
+  const scaleByDepth = 0.78 + p.z * 0.32; // closer = bigger
+  const baseSize = 46 * p.size * scaleByDepth;
+
+  // ── Atmospheric depth: deeper particles get a *subtle* haze, but we
+  //    must keep their lantern quality intact — they're glowing objects
+  //    seen through a tinted volume, not gray spheres in fog. The filter
+  //    is intentionally gentle: a hint of blur, a touch of desaturation,
+  //    and brightness floored at 92% so the icon stays inscribed in light.
+  const depthBlur = (1 - p.z) * 0.8;          // up to 0.8px on the deepest
+  const depthHaze = (1 - p.z) * 0.18;         // up to 18% desaturation
+  const depthDim  = 0.92 + p.z * 0.08;        // 92% → 100% across z range
+
+  // ── Priority → felt presence ────────────────────────────────────────
+  // High: sharp 2s pulse, brightest, biggest halo, frontmost.
+  // Medium: gentle 5s breath, standard glow.
+  // Background: 7s slow breath only (no scale pulse), softer halo, lower opacity,
+  // pushed visually deeper (no inner-light brightness).
+  const priority = p.priority || "medium";
+  const presence = priority === "high"
+    ? { haloMul: 1.05, haloOp: 1.05, glowMul: 1.35, breathDur: 2,   breathScale: [1, 1.18, 1], breathOp: [0.7, 1.0, 0.7], coreBoost: 1.2,  particleOpacity: 1,    pulseRing: true }
+    : priority === "background"
+    // Background particles still need to read as alive lanterns — boosted
+    // ~60% from the previous dim values so they match the gold trend
+    // particle's lantern quality. Slow 7s breath stays as the cue that
+    // these are "supporting" rather than "urgent".
+    ? { haloMul: 0.85, haloOp: 0.95, glowMul: 1.1,  breathDur: 7,   breathScale: [1, 1.04, 1], breathOp: [0.75, 0.95, 0.75], coreBoost: 1.35, particleOpacity: 1,    pulseRing: false }
+    : { haloMul: 1.0,  haloOp: 1.0,  glowMul: 1.2,  breathDur: 5,   breathScale: [1, 1.1,  1], breathOp: [0.78, 1.0,  0.78], coreBoost: 1.45, particleOpacity: 1,    pulseRing: false };
+
+  return (
+    <M.motion.button
+      type="button"
+      onMouseEnter={() => onHover(p.id)}
+      onMouseLeave={onLeave}
+      onClick={() => onClick(p)}
+      initial={false}
+      animate={{
+        opacity: hidden ? 0 : presence.particleOpacity,
+        scale: hidden ? 0.4 : (hovered ? 1.18 : 1) * (pulsing ? 1.25 : 1),
+      }}
+      transition={{ type: "spring", stiffness: 120, damping: 18 }}
+      style={{
+        position: "absolute",
+        left: `calc(50% + ${px}px)`,
+        top: `calc(50% + ${py}px)`,
+        width: baseSize,
+        height: baseSize,
+        marginLeft: -baseSize / 2,
+        marginTop: -baseSize / 2,
+        border: 0,
+        background: "transparent",
+        cursor: "pointer",
+        zIndex: 10 + Math.round(p.z * 10),
+        // Atmospheric haze on deeper particles — read as "seen through glass"
+        filter: hovered
+          ? "none"
+          : `blur(${depthBlur}px) saturate(${1 - depthHaze}) brightness(${depthDim})`,
+        transition: "filter 280ms",
+      }}
+    >
+      {/* outer halo — scaled by priority */}
+      <div style={{
+        position: "absolute", inset: -baseSize * 0.7 * presence.haloMul,
+        background: `radial-gradient(circle, ${palette.halo} 0%, ${palette.halo.replace(/[\d.]+\)$/, "0)")} 65%)`,
+        filter: "blur(2px)",
+        pointerEvents: "none",
+        opacity: (hovered ? 1 : 0.85) * presence.haloOp,
+        transition: "opacity 280ms",
+      }} />
+
+      {/* sharp rhythmic pulse ring — only on high-priority */}
+      {presence.pulseRing && !hidden && (
+        <M.motion.div
+          animate={{ scale: [1, 2.2, 2.2], opacity: [0.65, 0, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+          style={{
+            position: "absolute", inset: 0,
+            borderRadius: "50%",
+            border: `1.5px solid ${palette.glow}`,
+            pointerEvents: "none",
+            mixBlendMode: "screen",
+          }}
+        />
+      )}
+
+      {/* breathing soft glow — duration & amplitude vary by priority */}
+      <M.motion.div
+        animate={{ opacity: presence.breathOp, scale: presence.breathScale }}
+        transition={{ duration: presence.breathDur, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute", inset: -baseSize * 0.25 * presence.glowMul,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, ${palette.glow}cc 0%, ${palette.glow}33 55%, transparent 75%)`,
+          filter: "blur(6px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* core lantern — high priority gets brighter, background gets dimmer */}
+      <div style={{
+        position: "absolute", inset: 0,
+        borderRadius: "50%",
+        background: priority === "high"
+          ? `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 32%, ${palette.glow} 78%, ${palette.glow}cc 100%)`
+          : priority === "background"
+          // Lit-from-within: white pip → core tint → outer glow. Same
+          // lantern recipe as medium/high, just slightly more saturated
+          // outer rim so the calendar / sparkle icons read clearly.
+          ? `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 36%, ${palette.glow} 76%, ${palette.glow}aa 100%)`
+          : `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 38%, ${palette.glow} 78%, ${palette.glow}88 100%)`,
+        boxShadow: `0 0 ${baseSize * 0.6 * presence.coreBoost}px ${palette.glow}aa, inset 0 0 ${baseSize * 0.3}px rgba(255,255,255,${0.5 * presence.coreBoost})`,
+        display: "grid", placeItems: "center",
+      }}>
+        <div style={{ filter: `drop-shadow(0 0 ${6 * presence.coreBoost}px ${palette.glow}) drop-shadow(0 0 2px rgba(255,255,255,${0.95 * presence.coreBoost}))` }}>
+          <ParticleIcon type={p.type} size={baseSize * 0.42} tint={palette.core} />
+        </div>
+      </div>
+    </M.motion.button>
+  );
+}
+
+// ── Threads connecting particles ──────────────────────────────────────
+function Threads({ orbSize, hiddenIds }) {
+  const r = orbSize * 0.31;
+  return (
+    <svg
+      width={orbSize}
+      height={orbSize}
+      style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 6 }}
+      viewBox={`${-orbSize/2} ${-orbSize/2} ${orbSize} ${orbSize}`}
+    >
+      <defs>
+        {/* Almost-invisible filament — soft warm gradient that fades to
+            nothing at both ends, peaking just above 20% opacity in the
+            middle. The kind of detail you only notice on second look. */}
+        <linearGradient id="thread-grad" x1="0" x2="1">
+          <stop offset="0"   stopColor="#ffe0d2" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#ffe0d2" stopOpacity="0.22" />
+          <stop offset="1"   stopColor="#ffe0d2" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {THREADS.map(([a, b], i) => {
+        const pa = PARTICLES.find(p => p.id === a);
+        const pb = PARTICLES.find(p => p.id === b);
+        if (!pa || !pb) return null;
+        if (hiddenIds.has(a) || hiddenIds.has(b)) return null;
+        const x1 = pa.x * r, y1 = pa.y * r;
+        const x2 = pb.x * r, y2 = pb.y * r;
+        // Curve away from the chord toward the orb's interior so threads
+        // arc through the volumetric haze rather than cutting straight.
+        const mx = (x1 + x2) / 2 + (y2 - y1) * 0.22;
+        const my = (y1 + y2) / 2 - (x2 - x1) * 0.22;
+        const pathD = `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+        // Threads inherit the deeper particle's depth — atmospheric blur
+        // increases on connections that run through the back of the orb.
+        const minZ = Math.min(pa.z, pb.z);
+        const filamentBlur = (1 - minZ) * 1.2 + 0.4;
+        return (
+          <g key={`thread-${i}`} style={{ filter: `blur(${filamentBlur}px)` }}>
+            <path
+              d={pathD}
+              stroke="url(#thread-grad)"
+              strokeWidth="0.7"
+              fill="none"
+              opacity="0.55"
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+// ── The orb itself ────────────────────────────────────────────────────
+function Orb({
+  size = 520,
+  hoveredId,
+  setHoveredId,
+  onParticleClick,
+  hiddenIds,
+  pulsingId,
+  rippleAt,
+  intensity = 1,
+}) {
+  return (
+    <div style={{ position: "relative", width: size, height: size }}>
+      {/* gravitational ground shadow — anchors the orb */}
+      <div style={{
+        position: "absolute",
+        left: "50%", bottom: -size * 0.04,
+        transform: "translateX(-50%)",
+        width: size * 0.85, height: size * 0.1,
+        background: "radial-gradient(ellipse, rgba(120,80,90,0.32) 0%, rgba(120,80,90,0) 70%)",
+        filter: "blur(14px)",
+        pointerEvents: "none",
+        zIndex: 1,
+      }} />
+
+      {/* far ambient bloom — slow 5s breath */}
+      <M.motion.div
+        animate={{ opacity: [0.55, 0.95, 0.55], scale: [0.98, 1.06, 0.98] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute", inset: -size * 0.55,
+          background: `radial-gradient(circle, rgba(192,123,116,${0.42 * intensity}) 0%, rgba(168,158,156,${0.2 * intensity}) 30%, rgba(108,146,160,${0.12 * intensity}) 55%, transparent 72%)`,
+          filter: "blur(28px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* near corona — synced 5s breath */}
+      <M.motion.div
+        animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.035, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute", inset: -size * 0.18,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, rgba(192,123,116,0) 56%, rgba(192,123,116,${0.45 * intensity}) 62%, rgba(168,150,148,${0.18 * intensity}) 72%, transparent 88%)`,
+          filter: "blur(10px)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* sphere body — breathing on the same 5s cycle */}
+      <M.motion.div
+        animate={{ scale: [1, 1.022, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{ position: "absolute", inset: 0, borderRadius: "50%" }}
+      >
+        {/* deep crystal interior — back-to-front depth stack */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          background: `
+            radial-gradient(circle at 50% 55%, rgba(192,123,116,0.55) 0%, rgba(192,123,116,0.3) 22%, rgba(168,158,156,0.18) 50%, rgba(108,146,160,0.18) 80%, transparent 100%)
+          `,
+          filter: "blur(2px)",
+        }} />
+
+        {/* warm internal light — pulsing glow at the heart */}
+        <M.motion.div
+          animate={{ opacity: [0.75, 1, 0.75], scale: [0.94, 1.04, 0.94] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            position: "absolute", inset: "20%", borderRadius: "50%",
+            background: `radial-gradient(circle at 48% 58%, rgba(255,232,222,0.85) 0%, rgba(223,168,162,0.6) 25%, rgba(192,123,116,0.3) 55%, transparent 80%)`,
+            filter: "blur(14px)",
+            mixBlendMode: "screen",
+          }}
+        />
+
+        {/* soft drifting current — primary */}
+        <M.motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute", inset: "6%", borderRadius: "50%",
+            background: `
+              conic-gradient(from 0deg,
+                rgba(192,123,116,0.0) 0deg,
+                rgba(223,168,162,0.42) 50deg,
+                rgba(192,123,116,0.12) 110deg,
+                rgba(168,169,169,0.08) 170deg,
+                rgba(108,146,160,0.36) 220deg,
+                rgba(108,146,160,0.1) 290deg,
+                rgba(192,123,116,0.0) 360deg)
+            `,
+            filter: "blur(26px)",
+            mixBlendMode: "screen",
+            opacity: 0.95,
+          }}
+        />
+
+        {/* counter-drifting current — softer, deeper */}
+        <M.motion.div
+          animate={{ rotate: -360 }}
+          transition={{ duration: 78, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute", inset: "14%", borderRadius: "50%",
+            background: `
+              conic-gradient(from 90deg,
+                rgba(255,232,222,0.32),
+                rgba(192,123,116,0.08),
+                rgba(168,180,190,0.28),
+                rgba(192,123,116,0.06),
+                rgba(223,168,162,0.3),
+                rgba(108,146,160,0.28))
+            `,
+            filter: "blur(22px)",
+            mixBlendMode: "screen",
+            opacity: 0.85,
+          }}
+        />
+
+        {/* tertiary slow swirl for parallax depth */}
+        <M.motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+          style={{
+            position: "absolute", inset: "26%", borderRadius: "50%",
+            background: `
+              conic-gradient(from 200deg,
+                rgba(255,240,232,0.0),
+                rgba(223,168,162,0.4) 30%,
+                rgba(192,123,116,0.1) 60%,
+                rgba(255,240,232,0.0))
+            `,
+            filter: "blur(16px)",
+            mixBlendMode: "screen",
+            opacity: 0.8,
+          }}
+        />
+
+        {/* ── volumetric weather: soft drifting cloud-cells inside the sphere ──
+            Three off-center radial blobs that translate slowly across the
+            interior on different orbits, simulating warm light forming &
+            dispersing like weather inside a glass globe. */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          overflow: "hidden", mixBlendMode: "screen", pointerEvents: "none",
+        }}>
+          <M.motion.div
+            animate={{
+              x: ["-12%", "10%", "-8%", "-12%"],
+              y: ["8%",   "-6%", "12%", "8%"],
+              scale: [1, 1.14, 0.92, 1],
+              opacity: [0.55, 0.85, 0.55],
+            }}
+            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              left: "30%", top: "30%",
+              width: "55%", height: "55%",
+              background: "radial-gradient(circle, rgba(255,224,210,0.55) 0%, rgba(223,168,162,0.28) 35%, transparent 70%)",
+              filter: "blur(28px)",
+              borderRadius: "50%",
+            }}
+          />
+          <M.motion.div
+            animate={{
+              x: ["10%", "-14%", "6%", "10%"],
+              y: ["-10%","8%",  "-4%", "-10%"],
+              scale: [0.95, 1.1, 0.85, 0.95],
+              opacity: [0.4, 0.7, 0.4],
+            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              left: "20%", top: "35%",
+              width: "60%", height: "55%",
+              background: "radial-gradient(circle, rgba(232,168,120,0.32) 0%, rgba(192,123,116,0.18) 40%, transparent 72%)",
+              filter: "blur(34px)",
+              borderRadius: "50%",
+            }}
+          />
+          <M.motion.div
+            animate={{
+              x: ["-4%", "12%", "-10%", "-4%"],
+              y: ["12%", "-8%", "6%",  "12%"],
+              scale: [1.05, 0.9, 1.15, 1.05],
+              opacity: [0.32, 0.55, 0.32],
+            }}
+            transition={{ duration: 38, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              left: "25%", top: "20%",
+              width: "55%", height: "60%",
+              background: "radial-gradient(circle, rgba(184,200,210,0.38) 0%, rgba(108,146,160,0.18) 40%, transparent 72%)",
+              filter: "blur(30px)",
+              borderRadius: "50%",
+            }}
+          />
+          {/* Slow vertical "fall-into-it" gradient — a column of warmer light
+              drifting up through the orb's center, never quite repeating */}
+          <M.motion.div
+            animate={{
+              y: ["20%", "-25%", "20%"],
+              opacity: [0.0, 0.45, 0.0],
+            }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: "absolute",
+              left: "30%", top: 0,
+              width: "40%", height: "100%",
+              background: "linear-gradient(180deg, transparent 0%, rgba(255,228,212,0.55) 45%, rgba(223,168,162,0.4) 60%, transparent 100%)",
+              filter: "blur(24px)",
+              borderRadius: "50%",
+            }}
+          />
+        </div>
+
+        {/* glass body & rim — translucent crystal shell */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          background: `
+            radial-gradient(circle at 30% 26%, rgba(255,255,255,0.9) 0%, rgba(240,232,228,0.4) 16%, transparent 36%),
+            radial-gradient(circle at 70% 78%, rgba(192,123,116,0.26) 0%, rgba(108,146,160,0.12) 45%, transparent 70%)
+          `,
+          boxShadow: `
+            inset 0 0 ${size * 0.22}px rgba(223,168,162,0.5),
+            inset 0 -${size*0.08}px ${size*0.18}px rgba(108,146,160,0.3),
+            inset ${size*0.05}px ${size*0.05}px ${size*0.14}px rgba(255,255,255,0.6),
+            inset -${size*0.04}px -${size*0.06}px ${size*0.1}px rgba(192,123,116,0.22),
+            0 ${size*0.06}px ${size*0.18}px rgba(74,94,104,0.28)
+          `,
+        }} />
+
+        {/* faint constellation specks — drifting motes inside */}
+        <ConstellationSpecks size={size} />
+
+        {/* primary highlight pip */}
+        <div style={{
+          position: "absolute",
+          left: "20%", top: "14%",
+          width: size * 0.22, height: size * 0.14,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%)",
+          filter: "blur(2px)",
+          transform: "rotate(-22deg)",
+        }} />
+
+        {/* secondary catchlight — sharper specular */}
+        <div style={{
+          position: "absolute",
+          left: "24%", top: "18%",
+          width: size * 0.07, height: size * 0.05,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 75%)",
+        }} />
+
+        {/* bottom-rim warm refraction */}
+        <div style={{
+          position: "absolute",
+          left: "18%", right: "18%", bottom: "8%", height: size * 0.08,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(192,123,116,0.45) 0%, rgba(192,123,116,0) 70%)",
+          filter: "blur(6px)",
+        }} />
+
+        {/* rim — crisp edge */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          boxShadow: `inset 0 0 1px rgba(255,255,255,0.95), inset 0 0 ${size*0.05}px rgba(223,168,162,0.55), inset 0 -${size*0.005}px 0 rgba(255,255,255,0.6)`,
+          pointerEvents: "none",
+        }} />
+      </M.motion.div>
+
+      {/* sonar scan-line — sweeps across the orb every ~13s, barely
+          perceptible, implies continuous processing not just glow */}
+      <div style={{
+        position: "absolute", inset: 0, borderRadius: "50%",
+        overflow: "hidden", pointerEvents: "none", zIndex: 4,
+        mixBlendMode: "screen",
+      }}>
+        <M.motion.div
+          animate={{ x: ["-110%", "110%"] }}
+          transition={{
+            duration: 3.2,        // sweep itself is ~3s
+            repeat: Infinity,
+            repeatDelay: 10,      // then 10s of quiet — total ~13s cycle
+            ease: "easeInOut",
+          }}
+          style={{
+            position: "absolute",
+            top: "-10%", bottom: "-10%",
+            left: 0, width: "60%",
+            background: "linear-gradient(90deg, rgba(255,232,222,0) 0%, rgba(255,232,222,0.18) 45%, rgba(255,232,222,0.32) 50%, rgba(255,232,222,0.18) 55%, rgba(255,232,222,0) 100%)",
+            filter: "blur(2px)",
+            transform: "skewX(-8deg)",
+          }}
+        />
+      </div>
+
+      {/* threads */}
+      <Threads orbSize={size} hiddenIds={hiddenIds} />
+
+      {/* particles */}
+      {PARTICLES.map(p => (
+        <Particle
+          key={p.id}
+          p={p}
+          orbSize={size}
+          hovered={hoveredId === p.id}
+          onHover={setHoveredId}
+          onLeave={() => setHoveredId(null)}
+          onClick={onParticleClick}
+          hidden={hiddenIds.has(p.id)}
+          pulsing={pulsingId === p.id}
+        />
+      ))}
+
+      {/* ripple effect from particle takeoff */}
+      {rippleAt && (
+        <M.motion.div
+          key={rippleAt.key}
+          initial={{ scale: 0.4, opacity: 0.7 }}
+          animate={{ scale: 2.4, opacity: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+          style={{
+            position: "absolute",
+            left: `calc(50% + ${rippleAt.x * size * 0.31}px)`,
+            top: `calc(50% + ${rippleAt.y * size * 0.31}px)`,
+            width: 80, height: 80, marginLeft: -40, marginTop: -40,
+            borderRadius: "50%",
+            border: "1.5px solid rgba(255,232,222,0.75)",
+            boxShadow: "0 0 24px rgba(223,168,162,0.65)",
+            pointerEvents: "none",
+            zIndex: 30,
+          }}
+        />
+      )}
+
+      {/* tooltip on hover */}
+      <Tooltip orbSize={size} hoveredId={hoveredId} />
+
+      {/* base reflection puddle — warm light spill on the ground */}
+      <M.motion.div
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "absolute",
+          left: "50%", bottom: -size * 0.1,
+          transform: "translateX(-50%)",
+          width: size * 1.25, height: size * 0.22,
+          background: "radial-gradient(ellipse, rgba(192,123,116,0.45) 0%, rgba(168,158,156,0.15) 45%, rgba(168,158,156,0) 75%)",
+          filter: "blur(10px)",
+          pointerEvents: "none",
+        }}
+      />
+    </div>
+  );
+}
+
+function ConstellationSpecks({ size }) {
+  // deterministic specks
+  const specks = useMemo(() => {
+    const list = [];
+    for (let i = 0; i < 28; i++) {
+      const a = (i * 137.508) % 360;
+      const r = 0.18 + ((i * 41) % 60) / 100 * 0.55;
+      const rad = (a * Math.PI) / 180;
+      list.push({
+        x: Math.cos(rad) * r,
+        y: Math.sin(rad) * r,
+        s: 0.6 + ((i * 17) % 14) / 10,
+        d: 2 + ((i * 7) % 30) / 10,
+      });
+    }
+    return list;
+  }, []);
+  return (
+    <div style={{ position: "absolute", inset: "10%", pointerEvents: "none" }}>
+      {specks.map((s, i) => (
+        <M.motion.div
+          key={i}
+          animate={{ opacity: [0.2, 0.8, 0.2] }}
+          transition={{ duration: 3 + s.d, repeat: Infinity, ease: "easeInOut", delay: s.d * 0.3 }}
+          style={{
+            position: "absolute",
+            left: `calc(50% + ${s.x * 50}%)`,
+            top: `calc(50% + ${s.y * 50}%)`,
+            width: s.s * 2.2, height: s.s * 2.2,
+            borderRadius: "50%",
+            background: "rgba(255,240,232,0.9)",
+            boxShadow: "0 0 4px rgba(223,168,162,0.8)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Tooltip({ orbSize, hoveredId }) {
+  const p = PARTICLES.find(x => x.id === hoveredId);
+  return (
+    <M.AnimatePresence>
+      {p && (
+        <M.motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 6 }}
+          transition={{ duration: 0.18 }}
+          style={{
+            position: "absolute",
+            left: `calc(50% + ${p.x * orbSize * 0.31}px)`,
+            top: `calc(50% + ${p.y * orbSize * 0.31 - 44}px)`,
+            transform: "translateX(-50%)",
+            background: "rgba(255,250,245,0.85)",
+            backdropFilter: "blur(14px)",
+            border: "1px solid rgba(255,255,255,0.7)",
+            color: "#5a4a48",
+            padding: "7px 12px",
+            borderRadius: 999,
+            fontSize: 12,
+            letterSpacing: 0.2,
+            whiteSpace: "nowrap",
+            boxShadow: "0 8px 24px rgba(180,140,150,0.18)",
+            pointerEvents: "none",
+            zIndex: 50,
+          }}
+        >
+          {p.label}
+        </M.motion.div>
+      )}
+    </M.AnimatePresence>
+  );
+}
+
+window.Orb = Orb;
+window.PARTICLES = PARTICLES;
+window.PARTICLE_PALETTE = PARTICLE_PALETTE;
+window.ParticleIcon = ParticleIcon;
+
+
+// ====== cards.jsx ======
+/* global React, Motion */
+const M2 = window.Motion;
+
+// ── Palette ──────────────────────────────────────────────────────────
+// Dark Danger #2D0E0E — deepest ink for primary text
+// All Systems Red #B30303 — alert/warning ONLY
+// Apollo Bay #768596 — slate-blue mid (secondary accents)
+// Blue Ash #404654 — primary text/deep neutral
+// Festival Orange #DF6043 — coral accent — INTERACTIVE ONLY (buttons, hotspots)
+//
+// Typography hierarchy:
+//   creator name      — 16px / 700 / -0.2 letter-spacing / Blue Ash
+//   brief title       — 14.5px / 500 / 1.4 line-height / Blue Ash
+//   urgency           — 9.5px / 500 / uppercase / Apollo Bay (quiet)
+//   meta / status     — 11px / 400 / Apollo Bay
+//   action button     — 13px / 500 / Festival Orange surface
+//
+const C = {
+  ink: "#2D0E0E",        // primary heading ink (creator names)
+  text: "#404654",       // body text (Blue Ash)
+  mute: "#768596",       // secondary text (Apollo Bay)
+  alert: "#B30303",      // alert state only — overdue dot, urgency >= 7
+  action: "#DF6043",     // Festival Orange — INTERACTIVE ONLY
+  actionDeep: "#c64d2e",
+};
+
+const BRIEFING_CARDS = [
+  {
+    id: "card-jake",
+    particleId: "creator-jake",
+    kind: "creator",
+    chipLabel: "CREATOR SIGNAL",
+    creator: "Jake Chen",
+    avatar: "JC",
+    avatarTone: "#94707a",
+    timestamp: "73h overdue",
+    urgency: 4,
+    urgencyTone: "alert",
+    title: "GLP-1 Privacy Gauntlet: We Exposed Your Health App Data",
+    rationale: "Surfaced because Jake hasn't acknowledged in 73h · 2nd consecutive miss this month",
+    matters: "Jake's silence is breaking a 12-week response pattern. If unresolved, his queue stalls for the GLP-1 window.",
+    recommend: "Draft a revised brief and nudge with priority flag.",
+    consequence: "Brief becomes stale; momentum drops below 1.5× within 24h.",
+  },
+  {
+    id: "card-maya",
+    particleId: "memory-fact",
+    kind: "creator",
+    chipLabel: "CREATOR SIGNAL",
+    creator: "Maya Patel",
+    avatar: "MP",
+    avatarTone: "#7a8090",
+    timestamp: "27h overdue",
+    urgency: 6,
+    urgencyTone: "alert",
+    title: "AI Compliance Watch: What Just Changed",
+    rationale: "Surfaced because Maya's compliance niche overlaps 4 active client briefs · regulatory window narrowing",
+    matters: "Four active briefs depend on her angle landing this week. The regulatory window narrows in 38h.",
+    recommend: "Send a tightened brief with the new EU AI Act citations attached.",
+    consequence: "Four client briefs lose their compliance angle when the window closes.",
+  },
+  {
+    id: "card-noah",
+    particleId: "creator-noah",
+    kind: "creator",
+    chipLabel: "CREATOR SIGNAL",
+    creator: "Noah Kim",
+    avatar: "NK",
+    avatarTone: "#7a8786",
+    timestamp: "opens in 14h",
+    urgency: 3,
+    urgencyTone: "calm",
+    title: "Creator Trends Brief: Signals Rising Across Gaming, Health & Productivity",
+    rationale: "Surfaced because Noah's posting window opens in 14h · last 3 posts in this slot averaged 47K views",
+    matters: "His Saturday-morning slot consistently outperforms baseline by 3.2×. Missing it costs ~30K reach.",
+    recommend: "Draft a brief now so Noah has 14h to record before the window opens.",
+    consequence: "Creator misses the trend window in 14h.",
+  },
+];
+
+// ── "Why surfaced" — the line that proves the AI is reasoning ───────
+// A small italicized line under each card title, prefixed with a sparkle.
+// 70% opacity, lighter weight, lighter color so it reads as system thought
+// rather than user-facing copy.
+function WhySurfaced({ text, color }) {
+  return (
+    <div style={{
+      marginTop: 8,
+      display: "flex",
+      alignItems: "flex-start",
+      gap: 6,
+      opacity: 0.72,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      fontWeight: 400,
+      fontStyle: "italic",
+      fontSize: 11.5,
+      lineHeight: 1.45,
+      color: color || "#5a6470",
+      letterSpacing: 0.05,
+      textWrap: "pretty",
+    }}>
+      <span style={{
+        flexShrink: 0,
+        fontSize: 10,
+        lineHeight: 1.45,
+        fontStyle: "normal",
+        color: "#c08a52",
+        textShadow: "0 0 6px rgba(232,168,120,0.55)",
+        letterSpacing: 0,
+        marginTop: 0.5,
+      }}>✦</span>
+      <span>{text}</span>
+    </div>
+  );
+}
+
+function Avatar({ initials, tone }) {  return (
+    <div style={{
+      width: 38, height: 38, borderRadius: "50%",
+      display: "grid", placeItems: "center",
+      background: `radial-gradient(circle at 35% 30%, #fff 0%, ${tone} 60%, ${tone} 100%)`,
+      color: "rgba(255,255,255,0.95)",
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      fontWeight: 600, fontSize: 12.5,
+      boxShadow: "0 0 0 3px rgba(255,255,255,0.55), 0 0 12px rgba(118,133,150,0.3), inset 0 1px 0 rgba(255,255,255,0.6)",
+      textShadow: "0 1px 1px rgba(0,0,0,0.18)",
+      letterSpacing: 0.5,
+    }}>{initials}</div>
+  );
+}
+
+// Primary action — uses Festival Orange (the only place coral appears)
+function NudgeBtn() {
+  return (
+    <button style={{
+      flex: 1, height: 36, borderRadius: 999, border: 0,
+      background: `linear-gradient(180deg, ${C.action} 0%, ${C.actionDeep} 100%)`,
+      color: "#fff",
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      fontWeight: 500, fontSize: 13, letterSpacing: 0.2, cursor: "pointer",
+      boxShadow: `0 6px 14px rgba(223,96,67,0.35), inset 0 1px 0 rgba(255,255,255,0.4)`,
+    }}>Nudge</button>
+  );
+}
+
+// Secondary action — neutral, no coral
+function CheckBtn() {
+  return (
+    <button style={{
+      flex: 1, height: 36, borderRadius: 999,
+      border: "1px solid rgba(64,70,84,0.2)",
+      background: "rgba(255,250,245,0.55)",
+      color: C.text,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      fontWeight: 500, fontSize: 13, letterSpacing: 0.2, cursor: "pointer",
+      backdropFilter: "blur(8px)",
+    }}>Check delivery</button>
+  );
+}
+
+function BriefingCard({ data, style, hidden, depth = 0, compact = false }) {
+  const d = Math.max(-1, Math.min(1, depth));
+  const scale = 1 + d * 0.07;
+  const baseOpacity = 0.82 + d * 0.15;
+  const surfaceBlur = 22 + Math.max(0, -d) * 6;
+  const tintFar = d < 0 ? 0.06 * Math.abs(d) : 0;
+  const yLift = -d * 6;
+  const sCloseY = 4 + d * 4;
+  const sCloseB = 12 + d * 6;
+  const sFarY = 24 + d * 26;
+  const sFarB = 60 + d * 34;
+  const sFarA = 0.18 + d * 0.12;
+  const overdue = data.urgency >= 7;
+  return (
+    <M2.motion.div
+      initial={false}
+      animate={{ opacity: hidden ? 0 : baseOpacity, y: hidden ? 12 : yLift, scale: hidden ? 0.96 : scale }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "absolute",
+        width: compact ? 268 : 282,
+        padding: compact ? 16 : 18,
+        borderRadius: 24,
+        background: `linear-gradient(160deg, rgba(255,250,245,${0.78 - tintFar}) 0%, rgba(245,232,225,${0.55 - tintFar}) 60%, rgba(232,225,232,${0.5 - tintFar}) 100%)`,
+        backdropFilter: `blur(${surfaceBlur}px) saturate(1.1)`,
+        WebkitBackdropFilter: `blur(${surfaceBlur}px) saturate(1.1)`,
+        border: `1px solid rgba(255,255,255,${0.7 + d * 0.1})`,
+        boxShadow: `
+          0 ${sCloseY}px ${sCloseB}px rgba(64,70,84,0.12),
+          0 ${sFarY}px ${sFarB}px rgba(45,14,14,${sFarA}),
+          0 ${sFarY * 1.6}px ${sFarB * 1.5}px rgba(64,70,84,${sFarA * 0.4}),
+          inset 0 1px 0 rgba(255,255,255,0.85)
+        `,
+        zIndex: 20 + Math.round(d * 10),
+        ...style,
+      }}
+    >
+      {/* 1 — chip row: signal type · urgency · timestamp */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 7,
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        fontSize: 9, letterSpacing: 1.3, fontWeight: 600,
+        textTransform: "uppercase",
+        color: C.mute,
+      }}>
+        <span style={{ color: data.urgencyTone === "alert" ? "#a07a4a" : C.mute }}>
+          {data.chipLabel || "CREATOR SIGNAL"}
+        </span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span>{data.urgencyTone === "alert" ? "Urgent" : "Watch"} {data.urgency}/10</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span style={{
+          color: data.urgencyTone === "alert" ? "#a07a4a" : C.mute,
+          fontWeight: 500,
+        }}>{data.timestamp}</span>
+      </div>
+
+      {/* 2 — title (punchy, high contrast headline) */}
+      <div style={{
+        marginTop: 8,
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        fontWeight: 700, fontSize: 14, lineHeight: 1.2,
+        color: C.ink, letterSpacing: -0.25, textWrap: "pretty",
+        display: "-webkit-box",
+        WebkitLineClamp: 2,
+        WebkitBoxOrient: "vertical",
+        overflow: "hidden",
+      }}>{data.title}</div>
+
+      {/* 3 — why surfaced: the AI reasoning line */}
+      {data.rationale && <WhySurfaced text={data.rationale} />}
+
+      {/* 3.5 — why it matters: the punch. Slightly larger body text, no
+          icon, no italics — the most readable line on the card.
+          Translates AI reasoning into business consequence. */}
+      {data.matters && (
+        <div style={{
+          marginTop: 10,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontSize: 13.5,
+          lineHeight: 1.42,
+          fontWeight: 500,
+          color: C.ink,
+          textWrap: "pretty",
+          letterSpacing: -0.05,
+        }}>
+          {data.matters}
+        </div>
+      )}
+
+      {/* 4 — recommended action: arrow-prefixed sentence (replaces 'matters') */}
+      {data.recommend && (
+        <div style={{
+          marginTop: 10,
+          display: "flex", alignItems: "flex-start", gap: 7,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontWeight: 500, fontSize: 11.5, lineHeight: 1.4,
+          color: C.ink, textWrap: "pretty",
+        }}>
+          <span style={{
+            flexShrink: 0,
+            color: C.action,
+            fontWeight: 600,
+            marginTop: 0.5,
+          }}>→</span>
+          <span>{data.recommend}</span>
+        </div>
+      )}
+
+      {/* 5 — consequence preview: stakes line, just above the actions */}
+      {data.consequence && (
+        <div style={{
+          marginTop: 11,
+          paddingTop: 9,
+          borderTop: "1px dashed rgba(64,70,84,0.15)",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          lineHeight: 1.4,
+          textWrap: "pretty",
+        }}>
+          <span style={{
+            fontSize: 8.5, letterSpacing: 1.4, fontWeight: 600,
+            textTransform: "uppercase",
+            color: "#9a8d8a", // warm gray — slightly muted
+            marginRight: 6,
+          }}>If ignored</span>
+          <span style={{
+            fontSize: 11.5, fontWeight: 400,
+            color: C.text,
+          }}>{data.consequence}</span>
+        </div>
+      )}
+
+      {/* 6 — action row: primary · secondary · dismiss */}
+      <div style={{ display: "flex", gap: 6, marginTop: 12, alignItems: "center" }}>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999, border: 0,
+          background: `linear-gradient(180deg, ${C.action} 0%, ${C.actionDeep} 100%)`,
+          color: "#fff",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontWeight: 500, fontSize: 11.5, letterSpacing: 0.2, cursor: "pointer",
+          boxShadow: `0 6px 14px rgba(223,96,67,0.32), inset 0 1px 0 rgba(255,255,255,0.4)`,
+        }}>{data.kind === "trend" ? "Brief" : "Draft"}</button>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999,
+          border: "1px solid rgba(64,70,84,0.22)",
+          background: "rgba(255,250,245,0.55)",
+          color: C.text,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontWeight: 500, fontSize: 11.5, letterSpacing: 0.2, cursor: "pointer",
+        }}>{data.kind === "trend" ? "Track" : "Nudge"}</button>
+        <button style={{
+          padding: "0 8px", height: 30, borderRadius: 999,
+          border: 0, background: "transparent",
+          color: C.mute,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontWeight: 400, fontSize: 11, cursor: "pointer",
+        }}>Dismiss</button>
+      </div>
+    </M2.motion.div>
+  );
+}
+
+// Legacy emerging card — replaced by TrendBriefingCard in card layer
+function EmergingCard() { return null; }
+
+window.BriefingCard = BriefingCard;
+window.EmergingCard = EmergingCard;
+window.BRIEFING_CARDS = BRIEFING_CARDS;
+
+// ── Depth-aware trend briefing card (the 4th card) ───────────────────
+function TrendBriefingCard({ style, depth = 0 }) {
+  const d = Math.max(-1, Math.min(1, depth));
+  const scale = 1 + d * 0.07;
+  const baseOpacity = 0.82 + d * 0.15;
+  const surfaceBlur = 22 + Math.max(0, -d) * 6;
+  const yLift = -d * 6;
+  const sCloseY = 4 + d * 4;
+  const sCloseB = 12 + d * 6;
+  const sFarY = 24 + d * 26;
+  const sFarB = 60 + d * 34;
+  const sFarA = 0.18 + d * 0.12;
+  return (
+    <M2.motion.div
+      initial={false}
+      animate={{ opacity: baseOpacity, y: yLift, scale }}
+      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "absolute",
+        width: 254, padding: 14, borderRadius: 22,
+        background: `linear-gradient(160deg, rgba(255,250,245,0.88) 0%, rgba(232,232,236,0.7) 100%)`,
+        backdropFilter: `blur(${surfaceBlur}px) saturate(1.1)`,
+        WebkitBackdropFilter: `blur(${surfaceBlur}px) saturate(1.1)`,
+        border: `1px solid rgba(255,255,255,${0.7 + d * 0.1})`,
+        boxShadow: `
+          0 ${sCloseY}px ${sCloseB}px rgba(64,70,84,0.12),
+          0 ${sFarY}px ${sFarB}px rgba(45,14,14,${sFarA}),
+          0 ${sFarY * 1.6}px ${sFarB * 1.5}px rgba(64,70,84,${sFarA * 0.4}),
+          0 0 60px rgba(118,133,150,${0.18 + d * 0.1}),
+          inset 0 1px 0 rgba(255,255,255,0.9)
+        `,
+        zIndex: 20 + Math.round(d * 10),
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        ...style,
+      }}
+    >
+      {/* 1 — chip row */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 8,
+        fontSize: 9.5, letterSpacing: 1.3, fontWeight: 600,
+        textTransform: "uppercase", color: C.mute,
+      }}>
+        <span style={{ color: "#a07a4a" }}>Emerging Trend</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span>Watch 5/10</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span style={{ color: "#a07a4a", fontWeight: 500 }}>14h window</span>
+      </div>
+
+      {/* 2 — title */}
+      <div style={{
+        marginTop: 8, fontWeight: 700, fontSize: 14, lineHeight: 1.2,
+        color: C.ink, letterSpacing: -0.25, textWrap: "pretty",
+      }}>
+        AI Creator Agents Go Mainstream
+      </div>
+
+      {/* 3 — why surfaced */}
+      <WhySurfaced text="3 client niches overlap · momentum +4.7× · competitor gap" />
+
+      {/* 3.5 — why it matters: the punch */}
+      <div style={{
+        marginTop: 10,
+        fontSize: 13.5, lineHeight: 1.42, fontWeight: 500,
+        color: C.ink, textWrap: "pretty", letterSpacing: -0.05,
+      }}>
+        This trend cuts across business, creator-economy, and SaaS content — three of your active client niches. The 14h window can lift performance across multiple briefs simultaneously.
+      </div>
+
+      {/* 4 — recommended */}
+      <div style={{
+        marginTop: 10, display: "flex", alignItems: "flex-start", gap: 7,
+        fontWeight: 500, fontSize: 11.5, lineHeight: 1.4,
+        color: C.ink, textWrap: "pretty",
+      }}>
+        <span style={{ flexShrink: 0, color: C.action, fontWeight: 600, marginTop: 0.5 }}>→</span>
+        <span>Brief Maya or Jake while the window is open.</span>
+      </div>
+
+      {/* 4.5 — consequence preview */}
+      <div style={{
+        marginTop: 11,
+        paddingTop: 9,
+        borderTop: "1px dashed rgba(64,70,84,0.15)",
+        lineHeight: 1.4, textWrap: "pretty",
+      }}>
+        <span style={{
+          fontSize: 8.5, letterSpacing: 1.4, fontWeight: 600,
+          textTransform: "uppercase", color: "#9a8d8a",
+          marginRight: 6,
+        }}>If ignored</span>
+        <span style={{ fontSize: 11.5, fontWeight: 400, color: C.text }}>
+          Competitor claims the trend; window closes in 14h.
+        </span>
+      </div>
+
+      {/* 5 — actions */}
+      <div style={{ display: "flex", gap: 6, marginTop: 12, alignItems: "center" }}>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999, border: 0,
+          background: `linear-gradient(180deg, ${C.action} 0%, ${C.actionDeep} 100%)`,
+          color: "#fff",
+          fontWeight: 500, fontSize: 11.5, letterSpacing: 0.2, cursor: "pointer",
+          boxShadow: `0 6px 14px rgba(223,96,67,0.32), inset 0 1px 0 rgba(255,255,255,0.4)`,
+        }}>Brief</button>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999,
+          border: "1px solid rgba(64,70,84,0.22)",
+          background: "rgba(255,250,245,0.55)",
+          color: C.text,
+          fontWeight: 500, fontSize: 11.5, letterSpacing: 0.2, cursor: "pointer",
+        }}>Track</button>
+        <button style={{
+          padding: "0 8px", height: 30, borderRadius: 999,
+          border: 0, background: "transparent",
+          color: C.mute,
+          fontWeight: 400, fontSize: 11, cursor: "pointer",
+        }}>Dismiss</button>
+      </div>
+    </M2.motion.div>
+  );
+}
+
+window.TrendBriefingCard = TrendBriefingCard;
+
+
+// ====== flight.jsx ======
+/* global React, Motion */
+// ── Flight layer ──────────────────────────────────────────────────────
+// The hero interaction. A particle is lifted out of the orb along an
+// arcing luminous trail and expands into a glassmorphic foreground card.
+// 1.2 seconds, slow & confident. The orb surface ripples softly where
+// the particle emerged.
+
+const MF = window.Motion;
+const { useEffect: uEF, useState: uSF, useMemo: uMF } = React;
+
+// Cubic-bezier evaluator (we sample the path manually so trail + card share it)
+function bezier(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return u*u*u*p0 + 3*u*u*t*p1 + 3*u*t*t*p2 + t*t*t*p3;
+}
+
+// Build the arc control points for a particle's flight from its orb
+// position to the foreground card position.
+function buildArc({ from, to }) {
+  // First control point: pull *out* of the orb (slight upward bias) — the
+  // particle is breaking the surface tension of the glass.
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const c1 = {
+    x: from.x + dx * 0.12 - 30,
+    y: from.y - 80,            // lift sharply on exit
+  };
+  // Second control point: settle near the card destination from above so
+  // the particle arrives gracefully rather than from below.
+  const c2 = {
+    x: to.x - dx * 0.15,
+    y: to.y - 110,
+  };
+  return { c1, c2 };
+}
+
+// ── Surface ripple where the particle broke through ──────────────────
+function SurfaceRipple({ orbPx, particle, palette }) {
+  const r = orbPx.size * 0.31;
+  const cx = orbPx.cx + particle.x * r;
+  const cy = orbPx.cy + particle.y * r;
+  return (
+    <div style={{
+      position: "fixed",
+      left: cx, top: cy,
+      pointerEvents: "none",
+      zIndex: 40,
+      transform: "translate(-50%, -50%)",
+    }}>
+      {/* Three concentric ripples expanding at offset times */}
+      {[0, 0.18, 0.36].map((delay, i) => (
+        <MF.motion.div
+          key={i}
+          initial={{ scale: 0.3, opacity: 0 }}
+          animate={{ scale: [0.3, 1.6 + i * 0.4], opacity: [0, 0.8 - i * 0.22, 0] }}
+          transition={{ duration: 1.4, delay, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            position: "absolute",
+            left: -70, top: -70,
+            width: 140, height: 140,
+            borderRadius: "50%",
+            border: `1.4px solid ${palette.halo}`,
+            boxShadow: `0 0 30px ${palette.halo}, inset 0 0 20px ${palette.halo}`,
+          }}
+        />
+      ))}
+      {/* Bright flash at the exit point */}
+      <MF.motion.div
+        initial={{ scale: 0.4, opacity: 0 }}
+        animate={{ scale: [0.4, 1.4, 0.8], opacity: [0, 1, 0] }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+        style={{
+          position: "absolute",
+          left: -40, top: -40,
+          width: 80, height: 80,
+          borderRadius: "50%",
+          background: `radial-gradient(circle, #ffffff 0%, ${palette.core} 30%, ${palette.glow}00 70%)`,
+          filter: "blur(2px)",
+        }}
+      />
+      {/* Lingering surface dimple — a glassy depression that fades */}
+      <MF.motion.div
+        initial={{ scale: 0.6, opacity: 0.7 }}
+        animate={{ scale: 1.1, opacity: 0 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        style={{
+          position: "absolute",
+          left: -30, top: -30,
+          width: 60, height: 60,
+          borderRadius: "50%",
+          background: `radial-gradient(circle at 40% 35%, rgba(255,255,255,0.4) 0%, ${palette.halo} 40%, transparent 70%)`,
+          mixBlendMode: "screen",
+        }}
+      />
+    </div>
+  );
+}
+
+// ── The lifting particle + trail ─────────────────────────────────────
+// Travels along the arc for ~0.7s lifting, then morphs into card from
+// 0.55s onward (overlap creates the "becoming" feeling).
+function FlightTrail({ from, to, c1, c2, palette }) {
+  // Sample the curve into a polyline for the trail path
+  const pathD = uMF(() => {
+    return `M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}`;
+  }, [from.x, from.y, to.x, to.y, c1.x, c1.y, c2.x, c2.y]);
+
+  const trailId = "flight-trail-" + Math.random().toString(36).slice(2, 7);
+
+  return (
+    <svg style={{
+      position: "fixed", inset: 0, width: "100vw", height: "100vh",
+      pointerEvents: "none", zIndex: 65,
+    }}>
+      <defs>
+        <linearGradient id={trailId} gradientUnits="userSpaceOnUse"
+          x1={from.x} y1={from.y} x2={to.x} y2={to.y}>
+          <stop offset="0" stopColor={palette.glow} stopOpacity="0" />
+          <stop offset="0.3" stopColor={palette.core} stopOpacity="0.9" />
+          <stop offset="0.7" stopColor="#ffffff" stopOpacity="0.95" />
+          <stop offset="1" stopColor={palette.core} stopOpacity="0.4" />
+        </linearGradient>
+        <filter id={trailId + "-glow"} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" />
+        </filter>
+      </defs>
+      {/* Soft halo behind the trail */}
+      <MF.motion.path
+        d={pathD}
+        stroke={palette.glow}
+        strokeOpacity="0.55"
+        strokeWidth="9"
+        fill="none"
+        strokeLinecap="round"
+        filter={`url(#${trailId}-glow)`}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: [0, 1, 1], opacity: [0, 0.85, 0] }}
+        transition={{ duration: 1.2, times: [0, 0.55, 1], ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* Bright filament on top */}
+      <MF.motion.path
+        d={pathD}
+        stroke={`url(#${trailId})`}
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: [0, 1, 1], opacity: [0, 1, 0] }}
+        transition={{ duration: 1.2, times: [0, 0.55, 1], ease: [0.4, 0, 0.2, 1] }}
+      />
+    </svg>
+  );
+}
+
+// ── The lift-and-morph object: a luminous orb that arcs along the
+// trail and then expands into the card ──────────────────────────────
+function FlightObject({ from, to, c1, c2, particle, palette, onLand }) {
+  // Sample arc at frame times — we use motion path via offsetPath
+  // BUT for cross-browser glow + scale + rotation we drive x/y manually.
+  const steps = 24;
+  const xs = [];
+  const ys = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    xs.push(bezier(from.x, c1.x, c2.x, to.x, t));
+    ys.push(bezier(from.y, c1.y, c2.y, to.y, t));
+  }
+
+  uEF(() => {
+    const t = setTimeout(onLand, 1200);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <>
+      {/* The lifting lantern */}
+      <MF.motion.div
+        initial={{
+          x: from.x, y: from.y,
+          scale: 0.6, opacity: 1,
+        }}
+        animate={{
+          x: xs,
+          y: ys,
+          // Lantern grows as it rises, then collapses into the card during morph
+          scale: [0.6, 0.9, 1.15, 1.1, 0.4],
+          opacity: [1, 1, 1, 0.8, 0],
+        }}
+        transition={{
+          duration: 1.2,
+          times: [0, 0.3, 0.55, 0.75, 1],
+          ease: [0.4, 0, 0.2, 1],
+        }}
+        style={{
+          position: "fixed",
+          left: 0, top: 0,
+          width: 64, height: 64,
+          marginLeft: -32, marginTop: -32,
+          pointerEvents: "none",
+          zIndex: 70,
+          willChange: "transform",
+        }}
+      >
+        {/* outer halo, breathing during flight */}
+        <MF.motion.div
+          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.15, 1] }}
+          transition={{ duration: 0.6, repeat: 2, ease: "easeInOut" }}
+          style={{
+            position: "absolute", inset: -36,
+            background: `radial-gradient(circle, ${palette.halo} 0%, transparent 65%)`,
+            filter: "blur(4px)",
+          }}
+        />
+        {/* core lantern */}
+        <div style={{
+          position: "absolute", inset: 0,
+          borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 38%, ${palette.glow} 78%)`,
+          boxShadow: `0 0 40px ${palette.glow}, 0 0 80px ${palette.halo}, inset 0 0 16px rgba(255,255,255,0.6)`,
+          display: "grid", placeItems: "center",
+        }}>
+          <div style={{ filter: `drop-shadow(0 0 6px ${palette.glow}) drop-shadow(0 0 2px rgba(255,255,255,0.95))` }}>
+            <window.ParticleIcon type={particle.type} size={26} tint={palette.core} />
+          </div>
+        </div>
+      </MF.motion.div>
+
+      {/* The card materializing at the destination — slightly delayed,
+          overlapping with the lantern's collapse */}
+      <MF.motion.div
+        initial={{
+          opacity: 0, scale: 0.3,
+          x: to.x, y: to.y,
+        }}
+        animate={{
+          opacity: [0, 0, 0.5, 1, 1],
+          scale: [0.3, 0.4, 0.85, 1.02, 1],
+          x: to.x, y: to.y,
+        }}
+        transition={{
+          duration: 1.2,
+          times: [0, 0.5, 0.72, 0.92, 1],
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        style={{
+          position: "fixed",
+          left: 0, top: 0,
+          marginLeft: -180, marginTop: -130,
+          width: 360,
+          zIndex: 68,
+          willChange: "transform, opacity",
+          transformOrigin: "center center",
+          pointerEvents: "none",
+        }}
+      >
+        <FlightCard particle={particle} palette={palette} />
+      </MF.motion.div>
+    </>
+  );
+}
+
+// ── The glassmorphic card that the particle becomes ──────────────────
+function FlightCard({ particle, palette }) {
+  return (
+    <div style={{
+      width: "100%",
+      padding: 22,
+      borderRadius: 28,
+      background: `linear-gradient(160deg, rgba(255,250,245,0.9) 0%, rgba(255,232,218,0.78) 100%)`,
+      backdropFilter: "blur(28px) saturate(1.15)",
+      WebkitBackdropFilter: "blur(28px) saturate(1.15)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      boxShadow: `
+        0 40px 90px rgba(170,120,130,0.32),
+        0 0 80px ${palette.halo},
+        0 0 30px rgba(255,255,255,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.95),
+        inset 0 0 30px rgba(255,220,200,0.18)
+      `,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+    }}>
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+        <div style={{
+          width: 48, height: 48, borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 32%, #fff 0%, ${palette.core} 50%, ${palette.glow} 100%)`,
+          boxShadow: `0 0 28px ${palette.glow}, inset 0 0 12px rgba(255,255,255,0.55)`,
+          display: "grid", placeItems: "center",
+        }}>
+          <div style={{ filter: `drop-shadow(0 0 5px ${palette.glow})` }}>
+            <window.ParticleIcon type={particle.type} size={22} tint={palette.core} />
+          </div>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{
+            fontSize: 10, letterSpacing: 1.4, color: "#e35c3a",
+            fontWeight: 600, textTransform: "uppercase",
+          }}>
+            {particle.type === "creator" ? "Creator" :
+             particle.type === "trend" ? "Emerging Trend" :
+             particle.type === "calendar" ? "Upcoming" :
+             "Memory"}
+          </div>
+          <div style={{
+            marginTop: 6, fontWeight: 600, fontSize: 19, lineHeight: 1.28,
+            color: "#3a2e30", letterSpacing: -0.2, textWrap: "pretty",
+          }}>
+            {particle.label}
+          </div>
+        </div>
+      </div>
+      <div style={{
+        marginTop: 16, fontSize: 13.5, color: "#7a5e5b", lineHeight: 1.5,
+      }}>
+        Surfaced from the Creator Operations Graph. Connected to two other entities.
+      </div>
+    </div>
+  );
+}
+
+// ── Wrapped foreground card after landing — interactive, dismissable ─
+function LandedCard({ particle, palette, to, onClose }) {
+  return (
+    <MF.motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.2 }}
+      style={{
+        position: "fixed",
+        left: 0, top: 0,
+        marginLeft: -180, marginTop: -130,
+        transform: `translate(${to.x}px, ${to.y}px)`,
+        width: 360,
+        zIndex: 72,
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      }}
+    >
+      <div style={{
+        width: "100%",
+        padding: 22,
+        borderRadius: 28,
+        background: `linear-gradient(160deg, rgba(255,250,245,0.9) 0%, rgba(255,232,218,0.78) 100%)`,
+        backdropFilter: "blur(28px) saturate(1.15)",
+        WebkitBackdropFilter: "blur(28px) saturate(1.15)",
+        border: "1px solid rgba(255,255,255,0.85)",
+        boxShadow: `
+          0 40px 90px rgba(170,120,130,0.32),
+          0 0 70px ${palette.halo},
+          0 0 24px rgba(255,255,255,0.35),
+          inset 0 1px 0 rgba(255,255,255,0.95),
+          inset 0 0 30px rgba(255,220,200,0.18)
+        `,
+      }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
+          <div style={{
+            width: 48, height: 48, borderRadius: "50%",
+            background: `radial-gradient(circle at 35% 32%, #fff 0%, ${palette.core} 50%, ${palette.glow} 100%)`,
+            boxShadow: `0 0 28px ${palette.glow}, inset 0 0 12px rgba(255,255,255,0.55)`,
+            display: "grid", placeItems: "center",
+          }}>
+            <div style={{ filter: `drop-shadow(0 0 5px ${palette.glow})` }}>
+              <window.ParticleIcon type={particle.type} size={22} tint={palette.core} />
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{
+              fontSize: 10, letterSpacing: 1.4, color: "#e35c3a",
+              fontWeight: 600, textTransform: "uppercase",
+            }}>
+              {particle.type === "creator" ? "Creator" :
+               particle.type === "trend" ? "Emerging Trend" :
+               particle.type === "calendar" ? "Upcoming" :
+               "Memory"}
+            </div>
+            <div style={{
+              marginTop: 6, fontWeight: 600, fontSize: 19, lineHeight: 1.28,
+              color: "#3a2e30", letterSpacing: -0.2, textWrap: "pretty",
+            }}>
+              {particle.label}
+            </div>
+          </div>
+          <button onClick={onClose} style={{
+            width: 28, height: 28, borderRadius: "50%", border: 0,
+            background: "rgba(255,235,225,0.7)", cursor: "pointer",
+            color: "#9a7e7c", fontSize: 16, lineHeight: 1, flexShrink: 0,
+          }}>×</button>
+        </div>
+        <div style={{
+          marginTop: 16, fontSize: 13.5, color: "#7a5e5b", lineHeight: 1.5,
+        }}>
+          Surfaced from the Creator Operations Graph. Connected to two other entities.
+        </div>
+        <div style={{ display: "flex", gap: 8, marginTop: 18 }}>
+          <button style={{
+            flex: 1, height: 40, borderRadius: 999, border: 0,
+            background: "linear-gradient(180deg, #ff8b6c 0%, #f06a4a 100%)",
+            color: "#fff", fontWeight: 500, fontSize: 13.5, cursor: "pointer",
+            boxShadow: "0 6px 14px rgba(240,106,74,0.35)",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          }}>Take action</button>
+          <button onClick={onClose} style={{
+            flex: 1, height: 40, borderRadius: 999,
+            border: "1px solid rgba(180,140,140,0.35)",
+            background: "rgba(255,250,245,0.5)", color: "#7a5e5b",
+            fontWeight: 500, fontSize: 13.5, cursor: "pointer",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          }}>Return to orb</button>
+        </div>
+      </div>
+    </MF.motion.div>
+  );
+}
+
+// ── The orchestrator ────────────────────────────────────────────────
+function FlightLayer({ flight, orbPx, onLanded, onClose }) {
+  if (!flight) return null;
+  const palette = window.PARTICLE_PALETTE[flight.particle.color];
+  const r = orbPx.size * 0.31;
+  const from = {
+    x: orbPx.cx + flight.particle.x * r,
+    y: orbPx.cy + flight.particle.y * r,
+  };
+  // Destination: upper-right quadrant relative to orb, clamped to viewport
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+  const to = {
+    x: Math.min(orbPx.cx + 360, vw - 220),
+    y: Math.max(orbPx.cy - 180, 220),
+  };
+  const { c1, c2 } = buildArc({ from, to });
+
+  return (
+    <>
+      <SurfaceRipple orbPx={orbPx} particle={flight.particle} palette={palette} />
+      <FlightTrail from={from} to={to} c1={c1} c2={c2} palette={palette} />
+      {flight.phase === "flying" && (
+        <FlightObject
+          from={from} to={to} c1={c1} c2={c2}
+          particle={flight.particle} palette={palette}
+          onLand={onLanded}
+        />
+      )}
+      {flight.phase === "landed" && (
+        <LandedCard particle={flight.particle} palette={palette} to={to} onClose={onClose} />
+      )}
+    </>
+  );
+}
+
+window.FlightLayer = FlightLayer;
+
+// ── VC Demo: frozen mid-expansion default state ──────────────────────
+// The first thing a viewer sees: the gold trend particle is already
+// rising out of the orb's upper-right. The arc trail is drawn, the
+// luminous lantern is paused ~70% along the path, and a partially-
+// materialized card has appeared with a signal graph showing momentum.
+//
+// This is a static composition, not an animated flight — but the
+// elements still breathe softly so it feels alive.
+
+function VCDemoFlight({ orbPx, particle, onPromote, onDismiss }) {
+  if (!particle) return null;
+  const palette = window.PARTICLE_PALETTE[particle.color];
+  const r = orbPx.size * 0.31;
+  const from = {
+    x: orbPx.cx + particle.x * r,
+    y: orbPx.cy + particle.y * r,
+  };
+  const vw = typeof window !== "undefined" ? window.innerWidth : 1200;
+  const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+  // Card destination — upper-right area but inset from edge.
+  // y pulled up 80px so the card's bottom edge clears the chat input
+  // (chips top sits ~bottom 110; card bottom must sit ≥40px above that).
+  const to = {
+    x: Math.min(orbPx.cx + 320, vw - 200),
+    y: Math.max(orbPx.cy - 280, 140),
+  };
+  const { c1, c2 } = buildArc({ from, to });
+
+  // Position of the paused lantern — pulled to t=0.10 so it reads as
+  // "just emerged from the orb's surface" rather than hovering over the
+  // card. The actual orb particle (trend-agents) is also visible directly
+  // beneath it on the orb's upper-right; together they form a partially-
+  // emerged ember with a luminous trail arcing outward to the card.
+  const t = 0.10;
+  const lanternX = bezier(from.x, c1.x, c2.x, to.x, t);
+  const lanternY = bezier(from.y, c1.y, c2.y, to.y, t);
+
+  const pathD = `M ${from.x} ${from.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${to.x} ${to.y}`;
+  const trailId = "vc-demo-trail";
+
+  return (
+    <>
+      {/* Persistent ambient surface dimple where the particle emerged */}
+      <div style={{
+        position: "fixed",
+        left: from.x, top: from.y,
+        pointerEvents: "none",
+        zIndex: 40,
+        transform: "translate(-50%, -50%)",
+      }}>
+        <MF.motion.div
+          animate={{ opacity: [0.5, 0.85, 0.5], scale: [1, 1.08, 1] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          style={{
+            width: 60, height: 60, borderRadius: "50%",
+            background: `radial-gradient(circle at 40% 35%, rgba(255,255,255,0.4) 0%, ${palette.halo} 45%, transparent 75%)`,
+            filter: "blur(2px)",
+            mixBlendMode: "screen",
+          }}
+        />
+      </div>
+
+      {/* Static arc trail — visible filament from particle origin to card */}
+      <svg style={{
+        position: "fixed", inset: 0, width: "100vw", height: "100vh",
+        pointerEvents: "none", zIndex: 65,
+      }}>
+        <defs>
+          <linearGradient id={trailId} gradientUnits="userSpaceOnUse"
+            x1={from.x} y1={from.y} x2={to.x} y2={to.y}>
+            <stop offset="0" stopColor={palette.glow} stopOpacity="0.3" />
+            <stop offset="0.4" stopColor={palette.core} stopOpacity="0.9" />
+            <stop offset="0.7" stopColor="#ffffff" stopOpacity="0.95" />
+            <stop offset="1" stopColor={palette.core} stopOpacity="0.55" />
+          </linearGradient>
+          <filter id={trailId + "-glow"} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3.5" />
+          </filter>
+        </defs>
+        {/* Soft halo behind the trail */}
+        <MF.motion.path
+          d={pathD}
+          stroke={palette.glow}
+          strokeWidth="10"
+          fill="none"
+          strokeLinecap="round"
+          filter={`url(#${trailId}-glow)`}
+          animate={{ opacity: [0.45, 0.7, 0.45] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        />
+        {/* Bright filament on top */}
+        <path
+          d={pathD}
+          stroke={`url(#${trailId})`}
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          opacity="0.95"
+        />
+        {/* A traveling spark for life — slow loop */}
+        <circle r="2.4" fill="#fff8e8"
+          style={{
+            filter: `drop-shadow(0 0 6px ${palette.core}) drop-shadow(0 0 2px #fff)`,
+            offsetPath: `path("${pathD}")`,
+            animation: "vc-demo-spark 7s ease-in-out infinite",
+          }}
+        />
+        <style>{`
+          @keyframes vc-demo-spark {
+            0%   { offset-distance: 0%;   opacity: 0; }
+            10%  { opacity: 1; }
+            70%  { offset-distance: 95%; opacity: 1; }
+            85%  { opacity: 0; }
+            100% { offset-distance: 100%; opacity: 0; }
+          }
+        `}</style>
+      </svg>
+
+      {/* Paused lantern partway along the arc — softly breathing */}
+      <MF.motion.div
+        animate={{ y: [0, -3, 0], scale: [1, 1.04, 1] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "fixed",
+          left: lanternX - 28, top: lanternY - 28,
+          width: 56, height: 56,
+          pointerEvents: "none",
+          zIndex: 70,
+        }}
+      >
+        <div style={{
+          position: "absolute", inset: -32,
+          background: `radial-gradient(circle, ${palette.halo} 0%, transparent 65%)`,
+          filter: "blur(4px)",
+        }} />
+        <div style={{
+          position: "absolute", inset: 0,
+          borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 38%, ${palette.glow} 78%)`,
+          boxShadow: `0 0 36px ${palette.glow}, 0 0 70px ${palette.halo}, inset 0 0 14px rgba(255,255,255,0.6)`,
+          display: "grid", placeItems: "center",
+        }}>
+          <div style={{ filter: `drop-shadow(0 0 5px ${palette.glow}) drop-shadow(0 0 2px rgba(255,255,255,0.95))` }}>
+            <window.ParticleIcon type={particle.type} size={22} tint={palette.core} />
+          </div>
+        </div>
+      </MF.motion.div>
+
+      {/* Partially-materialized card — slightly translucent, settling in */}
+      <MF.motion.div
+        initial={false}
+        animate={{ opacity: [0.85, 1, 0.85], y: [0, -2, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        style={{
+          position: "fixed",
+          left: to.x - 144, top: to.y - 100,
+          width: 288,
+          zIndex: 68,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        }}
+      >
+        <VCTrendCard particle={particle} palette={palette} onPromote={onPromote} onDismiss={onDismiss} />
+      </MF.motion.div>
+    </>
+  );
+}
+
+// ── The VC trend card — shows signal graph + headline ────────────────
+function VCTrendCard({ particle, palette, onPromote, onDismiss }) {
+  return (
+    <div style={{
+      width: "100%",
+      padding: "11px 12px 12px",
+      borderRadius: 20,
+      // Slightly under-opaque so it reads as still-coalescing
+      background: `linear-gradient(160deg, rgba(252,250,248,0.86) 0%, rgba(238,238,242,0.78) 100%)`,
+      backdropFilter: "blur(28px) saturate(1.15)",
+      WebkitBackdropFilter: "blur(28px) saturate(1.15)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      boxShadow: `
+        0 40px 90px rgba(45,14,14,0.32),
+        0 0 80px ${palette.halo},
+        0 0 28px rgba(255,255,255,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.95)
+      `,
+    }}>
+      {/* eyebrow */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{
+          fontSize: 9, letterSpacing: 1.3, color: "#768596",
+          fontWeight: 600, textTransform: "uppercase",
+        }}>
+          Emerging Trend · Watch 5/10
+        </div>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 5,
+          fontSize: 9.5, color: "#a07a4a", letterSpacing: 0.4,
+        }}>
+          <span style={{
+            width: 4, height: 4, borderRadius: "50%",
+            background: palette.core,
+            boxShadow: `0 0 6px ${palette.core}`,
+          }} />
+          14m ago
+        </div>
+      </div>
+
+      {/* headline */}
+      <div style={{
+        marginTop: 6, fontWeight: 700, fontSize: 14.5, lineHeight: 1.18,
+        color: "#2D0E0E", letterSpacing: -0.25, textWrap: "pretty",
+      }}>
+        AI Creator Agents Go Mainstream
+      </div>
+
+      {/* AI reasoning — surfaced because... */}
+      <WhySurfaced text="3 niches overlap · momentum +4.7× · competitor gap" />
+
+      {/* why it matters — the punch line, business consequence */}
+      <div style={{
+        marginTop: 6,
+        fontSize: 12, lineHeight: 1.34, fontWeight: 500,
+        color: "#2D0E0E", textWrap: "pretty", letterSpacing: -0.05,
+      }}>
+        Cuts across three of your active client niches. The 14h window lifts performance across multiple briefs.
+      </div>
+
+      {/* signal graph */}
+      <SignalGraph palette={palette} />
+
+      {/* metrics — compressed to inline strip */}
+      <div style={{
+        display: "flex", gap: 10, marginTop: 4,
+        fontSize: 10.5, color: "#404654", letterSpacing: 0.1,
+      }}>
+        <span><span style={{ color: palette.core, fontWeight: 700 }}>↑ 4.7×</span> momentum</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span>+213/hr</span>
+        <span style={{ opacity: 0.4 }}>·</span>
+        <span>1,284 sources</span>
+      </div>
+
+      {/* recommended — gap between chart and this line halved per spec */}
+      <div style={{
+        marginTop: 5, display: "flex", alignItems: "flex-start", gap: 7,
+        fontWeight: 500, fontSize: 11.5, lineHeight: 1.35,
+        color: "#2D0E0E", textWrap: "pretty",
+      }}>
+        <span style={{ flexShrink: 0, color: "#df6043", fontWeight: 600, marginTop: 0.5 }}>→</span>
+        <span>Brief Maya or Jake while the 14h window is open.</span>
+      </div>
+
+      {/* consequence preview */}
+      <div style={{
+        marginTop: 6,
+        paddingTop: 5,
+        borderTop: "1px dashed rgba(64,70,84,0.15)",
+        lineHeight: 1.35, textWrap: "pretty",
+      }}>
+        <span style={{
+          fontSize: 8.5, letterSpacing: 1.4, fontWeight: 600,
+          textTransform: "uppercase", color: "#9a8d8a",
+          marginRight: 6,
+        }}>If ignored</span>
+        <span style={{ fontSize: 11.5, fontWeight: 400, color: "#404654" }}>
+          Competitors claim the trend; window closes in 14h.
+        </span>
+      </div>
+
+      {/* actions */}
+      <div style={{ display: "flex", gap: 6, marginTop: 7 }}>
+        <button onClick={onPromote} style={{
+          flex: 1, height: 28, borderRadius: 999, border: 0,
+          background: "linear-gradient(180deg, #e57555 0%, #c64d2e 100%)",
+          color: "#fff", fontWeight: 500, fontSize: 12, cursor: "pointer",
+          boxShadow: "0 6px 14px rgba(223,96,67,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          letterSpacing: 0.2,
+        }}>Brief</button>
+        <button onClick={onDismiss} style={{
+          flex: 1, height: 28, borderRadius: 999,
+          border: "1px solid rgba(64,70,84,0.2)",
+          background: "rgba(255,253,250,0.55)", color: "#404654",
+          fontWeight: 500, fontSize: 12, cursor: "pointer",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          letterSpacing: 0.2,
+        }}>Track</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Signal graph — small momentum sparkline with filled area ─────────
+function SignalGraph({ palette }) {
+  // Hand-tuned series — flat → slow rise → inflection → steep climb
+  const pts = [
+    [0,  44],
+    [12, 42],
+    [24, 41],
+    [36, 39],
+    [48, 36],
+    [60, 32],
+    [72, 26],
+    [84, 18],
+    [96,  9],
+  ];
+  const w = 320, h = 32, pad = 4;
+  const sx = i => pad + (pts[i][0] / 96) * (w - pad * 2);
+  const sy = i => pad + (pts[i][1] / 50) * (h - pad * 2);
+  const linePath = pts.map((_, i) => `${i === 0 ? "M" : "L"} ${sx(i)} ${sy(i)}`).join(" ");
+  const areaPath = `${linePath} L ${sx(pts.length - 1)} ${h - pad} L ${sx(0)} ${h - pad} Z`;
+
+  return (
+    <div style={{ marginTop: 7, position: "relative" }}>
+      <svg width="100%" height={h} viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ display: "block" }}>
+        <defs>
+          <linearGradient id="vc-graph-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor={palette.core} stopOpacity="0.45" />
+            <stop offset="1" stopColor={palette.core} stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="vc-graph-line" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor={palette.glow} stopOpacity="0.5" />
+            <stop offset="0.7" stopColor={palette.core} stopOpacity="1" />
+            <stop offset="1" stopColor="#ffffff" stopOpacity="1" />
+          </linearGradient>
+          {/* baseline ticks */}
+        </defs>
+        {/* baseline */}
+        <line x1={pad} x2={w - pad} y1={h - pad} y2={h - pad}
+              stroke="rgba(64,70,84,0.15)" strokeWidth="1" strokeDasharray="2 3" />
+        {/* filled area */}
+        <path d={areaPath} fill="url(#vc-graph-fill)" />
+        {/* line */}
+        <path d={linePath} stroke="url(#vc-graph-line)" strokeWidth="2"
+              fill="none" strokeLinecap="round" strokeLinejoin="round"
+              style={{ filter: `drop-shadow(0 0 4px ${palette.glow})` }} />
+        {/* leading dot */}
+        <circle cx={sx(pts.length - 1)} cy={sy(pts.length - 1)} r="3.5"
+                fill="#fff"
+                style={{ filter: `drop-shadow(0 0 6px ${palette.core}) drop-shadow(0 0 2px #fff)` }} />
+        {/* breathing pulse on the leading dot */}
+        <circle cx={sx(pts.length - 1)} cy={sy(pts.length - 1)} r="3.5"
+                fill="none" stroke={palette.core} strokeWidth="1">
+          <animate attributeName="r" values="3.5;9;3.5" dur="2.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0.8;0;0.8" dur="2.6s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+      {/* x-axis labels */}
+      <div style={{
+        display: "flex", justifyContent: "space-between",
+        fontSize: 9, color: "#768596", letterSpacing: 0.6,
+        marginTop: 4, padding: "0 2px",
+      }}>
+        <span>72h ago</span>
+        <span>48h</span>
+        <span>24h</span>
+        <span>now</span>
+      </div>
+    </div>
+  );
+}
+
+window.VCDemoFlight = VCDemoFlight;
+
+
+// ====== chrome.jsx ======
+/* global React, Motion */
+const M3 = window.Motion;
+const { useState: useS, useRef: useR, useEffect: useE } = React;
+
+function ChatInput({ onSend }) {
+  const [val, setVal] = useS("");
+  const inputRef = useR(null);
+  const submit = (text) => {
+    const t = (text != null ? text : val).trim();
+    if (!t) return;
+    onSend(t);
+    setVal("");
+  };
+  const suggestions = [
+    "What changed today?",
+    "What needs me first?",
+    "Draft a brief",
+    "Why surfaced?",
+  ];
+  return (
+    <div style={{
+      width: "min(720px, 70vw)",
+      display: "flex", flexDirection: "column",
+      gap: 10,
+    }}>
+      {/* ambient suggestion chips — fade in slightly delayed */}
+      <M.motion.div
+        initial={{ opacity: 0, y: 4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, delay: 1.2, ease: "easeOut" }}
+        style={{
+          display: "flex", flexWrap: "wrap", gap: 6,
+          paddingLeft: 14,
+        }}
+      >
+        {suggestions.map((s, i) => (
+          <M.motion.button
+            key={s}
+            type="button"
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.2 + i * 0.08, ease: "easeOut" }}
+            onClick={() => {
+              setVal(s);
+              if (inputRef.current) inputRef.current.focus();
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = "rgba(64,70,84,0.78)";
+              e.currentTarget.style.boxShadow = "inset 0 1px 1.5px rgba(255,255,255,0.85), inset 0 -1.5px 3px rgba(118,133,150,0.18), 0 1.5px 4px rgba(64,70,84,0.06)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "rgba(64,70,84,0.55)";
+              e.currentTarget.style.boxShadow = "inset 0 1px 1.5px rgba(255,255,255,0.7), inset 0 -1.5px 3px rgba(118,133,150,0.12), 0 1px 2px rgba(64,70,84,0.04)";
+            }}
+            style={{
+              border: 0,
+              padding: "5px 11px",
+              borderRadius: 999,
+              background: "linear-gradient(180deg, rgba(246,244,242,0.85) 0%, rgba(232,230,230,0.7) 100%)",
+              boxShadow: "inset 0 1px 1.5px rgba(255,255,255,0.7), inset 0 -1.5px 3px rgba(118,133,150,0.12), 0 1px 2px rgba(64,70,84,0.04)",
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+              fontSize: 11.5,
+              fontWeight: 500,
+              letterSpacing: 0.15,
+              color: "rgba(64,70,84,0.55)",
+              cursor: "pointer",
+              transition: "color 180ms, box-shadow 180ms",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+            }}
+          >
+            {s}
+          </M.motion.button>
+        ))}
+      </M.motion.div>
+
+    <div style={{
+      width: "100%",
+      height: 64,
+      borderRadius: 999,
+      display: "flex",
+      alignItems: "center",
+      padding: "0 8px 0 22px",
+      gap: 14,
+      background: "linear-gradient(180deg, #f6f4f2 0%, #e8e6e6 100%)",
+      boxShadow: `
+        inset 0 2px 4px rgba(255,255,255,0.9),
+        inset 0 -3px 6px rgba(200,160,160,0.18),
+        inset 0 0 0 1px rgba(255,255,255,0.7),
+        0 18px 40px rgba(180,130,130,0.18),
+        0 4px 10px rgba(180,140,150,0.1)
+      `,
+    }}>
+      <button style={{
+        width: 40, height: 40, borderRadius: "50%", border: 0,
+        background: "linear-gradient(180deg, #f0eef0 0%, #d8d8de 100%)",
+        boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -2px 4px rgba(118,133,150,0.25), 0 2px 4px rgba(64,70,84,0.15)",
+        display: "grid", placeItems: "center", cursor: "pointer",
+      }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <rect x="9" y="3" width="6" height="12" rx="3" stroke="#404654" strokeWidth="1.8" />
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="#404654" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
+      </button>
+      <input
+        ref={inputRef}
+        value={val}
+        onChange={e => setVal(e.target.value)}
+        onKeyDown={e => { if (e.key === "Enter") submit(); }}
+        placeholder="Ask Origin to explain, prioritize, draft, or act…"
+        style={{
+          flex: 1, border: 0, background: "transparent",
+          outline: "none",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          fontSize: 15.5, color: "#404654",
+          letterSpacing: 0.1,
+        }}
+      />
+      <button onClick={() => submit()} style={{
+        width: 48, height: 48, borderRadius: "50%", border: 0,
+        background: "linear-gradient(180deg, #e57555 0%, #c64d2e 100%)",
+        display: "grid", placeItems: "center",
+        cursor: "pointer",
+        boxShadow: `
+          0 8px 20px rgba(223,96,67,0.45),
+          0 0 28px rgba(223,96,67,0.3),
+          inset 0 1px 0 rgba(255,255,255,0.5)
+        `,
+      }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 19V5M6 11l6-6 6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    </div>
+  );
+}
+
+// Side-rail icon nav
+function SideRail() {
+  const items = [
+    { id: "home", icon: <path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" /> },
+    { id: "chat", icon: <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4V6z" />, active: true },
+    { id: "grid", icon: <><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></> },
+    { id: "doc", icon: <path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm9 0v4h4M8 12h8M8 16h8M8 8h4" /> },
+    { id: "people", icon: <><circle cx="9" cy="8" r="3.4"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c1-3 3.5-4.4 6-4.4S14 16 15 19M14 14.6c1-.4 2-.6 3-.6 2 0 3.5 1 4 3"/></> },
+    { id: "cal", icon: <><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16M9 4v4M15 4v4"/></> },
+    { id: "chart", icon: <path d="M5 19V9m5 10V5m5 14v-7m5 7v-4" /> },
+  ];
+  return (
+    <div style={{
+      width: 64,
+      height: "100%",
+      display: "flex", flexDirection: "column",
+      alignItems: "center",
+      paddingTop: 22, paddingBottom: 22, gap: 8,
+      position: "relative",
+      zIndex: 20,
+    }}>
+      {/* T logo */}
+      <div style={{
+        width: 38, height: 38, borderRadius: 12,
+        background: "linear-gradient(180deg, #525968 0%, #404654 100%)",
+        display: "grid", placeItems: "center",
+        color: "#fff", fontWeight: 700, fontSize: 17,
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        boxShadow: "0 8px 18px rgba(64,70,84,0.4), inset 0 1px 0 rgba(255,255,255,0.18)",
+        marginBottom: 10,
+      }}>T</div>
+      {items.map(it => (
+        <button key={it.id} style={{
+          width: 38, height: 38, borderRadius: 12, border: 0,
+          background: it.active
+            ? "linear-gradient(180deg, #e2e4e8 0%, #c8ccd2 100%)"
+            : "linear-gradient(180deg, rgba(255,253,250,0.5) 0%, rgba(232,232,235,0.3) 100%)",
+          boxShadow: it.active
+            ? "inset 0 2px 4px rgba(64,70,84,0.25), inset 0 -1px 0 rgba(255,255,255,0.6)"
+            : "inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 2px rgba(64,70,84,0.08)",
+          display: "grid", placeItems: "center",
+          cursor: "pointer",
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke={it.active ? "#404654" : "#768596"}
+               strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            {it.icon}
+          </svg>
+        </button>
+      ))}
+      <div style={{ flex: 1 }} />
+      {[
+        <circle key="c" cx="12" cy="12" r="9" />,
+        <g key="g"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></g>,
+      ].map((p, i) => (
+        <button key={i} style={{
+          width: 36, height: 36, borderRadius: 12, border: 0,
+          background: "transparent", cursor: "pointer",
+          display: "grid", placeItems: "center",
+        }}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#768596" strokeWidth="1.5" strokeLinecap="round">
+            {p}
+          </svg>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function TopChrome() {
+  // ── Live status text — rotates every 8s through four states ──────────
+  const STATUS_STATES = [
+    "All systems in harmony",
+    "Scanning 47 niches",
+    "3 trend windows open",
+    "Memory consolidation running",
+  ];
+  const [statusIdx, setStatusIdx] = useS(0);
+  useE(() => {
+    const id = setInterval(() => {
+      setStatusIdx(i => (i + 1) % STATUS_STATES.length);
+    }, 8000);
+    return () => clearInterval(id);
+  }, []);
+
+  // ── Classification dot — color-shifts through 4 categories on 4s cycle ─
+  // Implies the system is actively classifying coral/gold/sage/lavender signals
+  const DOT_COLORS = [
+    { bg: "#dfa8a2", glow: "rgba(192,123,116,0.7)" },   // coral
+    { bg: "#ffd9a8", glow: "rgba(232,168,120,0.7)" },   // gold
+    { bg: "#a8c4cc", glow: "rgba(108,146,160,0.7)" },   // sage
+    { bg: "#d4d4d4", glow: "rgba(168,169,169,0.65)" },  // lavender (silver)
+  ];
+
+  return (
+    <>
+      {/* wordmark */}
+      <div style={{
+        position: "absolute", top: 28, left: 92,
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        fontWeight: 600, fontSize: 16, letterSpacing: 6,
+        color: "#404654",
+        zIndex: 20,
+      }}>TRENDZO</div>
+
+      {/* center status */}
+      <div style={{
+        position: "absolute", top: 24, left: "50%", transform: "translateX(-50%)",
+        display: "flex", alignItems: "center", gap: 12,
+        zIndex: 20,
+      }}>
+        <div style={{
+          width: 22, height: 22, borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 30%, #fff 0%, #d4d6db 50%, #768596 100%)`,
+          boxShadow: "0 0 12px rgba(118,133,150,0.55), inset 0 0 4px rgba(255,255,255,0.7)",
+        }} />
+        <div>
+          <div style={{
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            fontWeight: 600, fontSize: 11, letterSpacing: 1.6,
+            color: "#404654",
+            display: "flex", alignItems: "center", gap: 7,
+          }}>
+            TRENDZO ORIGIN
+            {/* Classification activity dot — color-shifts through the four
+                signal categories on a 4-second cycle (coral/gold/sage/lavender) */}
+            <M3.motion.span
+              animate={{
+                backgroundColor: DOT_COLORS.map(c => c.bg),
+                boxShadow: DOT_COLORS.map(c => `0 0 5px ${c.glow}, 0 0 10px ${c.glow}`),
+                scale: [1, 1.18, 1, 1.18, 1, 1.18, 1, 1.18, 1],
+              }}
+              transition={{
+                backgroundColor: { duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.25, 0.5, 0.75, 1] },
+                boxShadow:       { duration: 4, repeat: Infinity, ease: "easeInOut", times: [0, 0.25, 0.5, 0.75, 1] },
+                scale:           { duration: 4, repeat: Infinity, ease: "easeInOut" },
+              }}
+              style={{
+                display: "inline-block",
+                width: 6, height: 6,
+                borderRadius: "50%",
+              }}
+            />
+          </div>
+          <div style={{
+            fontSize: 11, color: "#768596", marginTop: 2,
+            display: "flex", alignItems: "center", gap: 6,
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            minWidth: 220, // prevents layout shift when text rotates
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: "#7a9a8a", boxShadow: "0 0 6px rgba(122,154,138,0.7)",
+            }} />
+            <M3.AnimatePresence mode="wait">
+              <M3.motion.span
+                key={statusIdx}
+                initial={{ opacity: 0, y: 3 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -3 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              >
+                {STATUS_STATES[statusIdx]}
+              </M3.motion.span>
+            </M3.AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* top right */}
+      <div style={{
+        position: "absolute", top: 24, right: 32,
+        display: "flex", gap: 10, alignItems: "center",
+        zIndex: 20,
+      }}>
+        <button style={{
+          height: 40, padding: "0 18px", borderRadius: 999, border: 0,
+          background: "linear-gradient(180deg, #f6f4f2 0%, #e6e4e6 100%)",
+          color: "#404654", fontWeight: 500, fontSize: 13.5,
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          letterSpacing: 0.2,
+          display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 10px rgba(64,70,84,0.15), inset 0 -2px 4px rgba(118,133,150,0.15)",
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#404654" strokeWidth="1.7">
+            <rect x="4" y="4" width="7" height="7" rx="1.5"/>
+            <rect x="13" y="4" width="7" height="7" rx="1.5"/>
+            <rect x="4" y="13" width="7" height="7" rx="1.5"/>
+            <rect x="13" y="13" width="7" height="7" rx="1.5"/>
+          </svg>
+          Dashboard
+        </button>
+        <button style={{
+          width: 40, height: 40, borderRadius: "50%", border: 0,
+          background: "linear-gradient(180deg, #f6f4f2 0%, #e6e4e6 100%)",
+          cursor: "pointer",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 10px rgba(64,70,84,0.15)",
+          display: "grid", placeItems: "center",
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#404654">
+            <circle cx="6" cy="12" r="1.7"/>
+            <circle cx="12" cy="12" r="1.7"/>
+            <circle cx="18" cy="12" r="1.7"/>
+          </svg>
+        </button>
+      </div>
+    </>
+  );
+}
+
+window.ChatInput = ChatInput;
+window.SideRail = SideRail;
+window.TopChrome = TopChrome;
+
+// ── Intelligence ribbon — quiet status line under the orb ───────────
+// Single-line, restrained typography. Same tone family as the
+// "All systems in harmony" status in the top chrome (#768596).
+// Specific, non-round numbers that imply real telemetry.
+function IntelligenceRibbon() {
+  return (
+    <div style={{
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      fontSize: 11.5,
+      fontWeight: 400,
+      letterSpacing: 0.2,
+      color: "rgba(118,133,150,0.78)",
+      whiteSpace: "normal",
+      textAlign: "center",
+      lineHeight: 1.4,
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "center",
+      rowGap: 2,
+      gap: 10,
+      padding: "0 14px",
+      userSelect: "none",
+    }}>
+      <span style={{
+        width: 4, height: 4, borderRadius: "50%",
+        background: "rgba(122,154,138,0.55)",
+        boxShadow: "0 0 4px rgba(122,154,138,0.45)",
+        flexShrink: 0,
+      }} />
+      <span>
+        <span style={{ color: "rgba(64,70,84,0.78)", fontWeight: 500 }}>Origin</span>
+        <span> surfaced </span>
+        <span style={{ color: "rgba(64,70,84,0.85)", fontVariantNumeric: "tabular-nums" }}>5</span>
+        <span> signals from </span>
+        <span style={{ color: "rgba(64,70,84,0.85)", fontVariantNumeric: "tabular-nums" }}>142</span>
+        <span> tracked events</span>
+      </span>
+      <span style={{ color: "rgba(118,133,150,0.4)" }}>·</span>
+      <span>
+        <span style={{ color: "rgba(64,70,84,0.85)", fontVariantNumeric: "tabular-nums" }}>3</span>
+        <span> require action</span>
+      </span>
+      <span style={{ color: "rgba(118,133,150,0.4)" }}>·</span>
+      <span>
+        <span style={{ color: "rgba(160,122,74,0.85)", fontVariantNumeric: "tabular-nums" }}>1</span>
+        <span> trend window closing in </span>
+        <span style={{ color: "rgba(160,122,74,0.85)", fontVariantNumeric: "tabular-nums" }}>14h</span>
+      </span>
+    </div>
+  );
+}
+
+window.IntelligenceRibbon = IntelligenceRibbon;
+
+
+// ====== app.jsx ======
+/* global React, ReactDOM, Motion */
+const MM = window.Motion;
+const { useState: uS, useEffect: uE, useRef: uR } = React;
+
+function HorizonArcs({ orbSize }) {
+  // Three faint concentric arcs that sweep behind the orb, suggesting a
+  // temporal coordinate system. Each arc has a subtle right-edge label.
+  // Multipliers tuned so all three arcs fit within standard viewports while
+  // still feeling like atmospheric distance markers.
+  const arcs = [
+    { id: "now",    label: "NOW",        mul: 1.08 },
+    { id: "next",   label: "NEXT 24H",   mul: 1.26 },
+    { id: "week",   label: "THIS WEEK",  mul: 1.46 },
+  ];
+  // SVG canvas needs to be large enough to contain the outermost arc + label.
+  const pad = orbSize * 0.7; // room for outermost arc + label
+  const half = orbSize / 2 + pad / 2;
+  const cx = half, cy = half;
+  const total = orbSize + pad;
+  return (
+    <div style={{
+      position: "absolute",
+      left: "50%", top: "50%",
+      width: total, height: total,
+      marginLeft: -total / 2, marginTop: -total / 2,
+      pointerEvents: "none",
+      zIndex: 0, // behind orb
+      overflow: "visible",
+    }}>
+      <svg
+        width={total} height={total}
+        viewBox={`0 0 ${total} ${total}`}
+        style={{ position: "absolute", inset: 0, overflow: "visible" }}
+      >
+        {arcs.map(a => {
+          const r = (orbSize / 2) * a.mul;
+          // Slight ellipse — squashes vertically to read like a horizon plane
+          const rx = r;
+          const ry = r * 0.96;
+          return (
+            <g key={a.id} style={{ opacity: 0.42 }}>
+              {/* The arc itself — full ellipse with very low contrast */}
+              <ellipse
+                cx={cx} cy={cy} rx={rx} ry={ry}
+                fill="none"
+                stroke="rgba(154,141,138,0.32)"
+                strokeWidth="0.8"
+                style={{ filter: "blur(0.3px)" }}
+              />
+              {/* Subtle highlight on the right side where the label sits */}
+              <ellipse
+                cx={cx} cy={cy} rx={rx} ry={ry}
+                fill="none"
+                stroke="rgba(255,232,222,0.18)"
+                strokeWidth="0.4"
+              />
+              {/* Right-edge label — sits just inside the arc's right edge
+                  so it never clips the viewport on tighter screens */}
+              <text
+                x={cx + rx - 8}
+                y={cy + 3}
+                textAnchor="end"
+                fontFamily="'Space Grotesk', system-ui, sans-serif"
+                fontSize="9"
+                fontWeight="500"
+                letterSpacing="2.2"
+                fill="rgba(154,141,138,0.6)"
+                style={{ textTransform: "uppercase", filter: "drop-shadow(0 0 3px rgba(45,42,42,0.85))" }}
+              >
+                {a.label}
+              </text>
+              {/* Mask the label background — a tiny dimming behind the text
+                  so the arc line doesn't read through the letters */}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+
+function App() {
+  const [t, setTweak] = window.useTweaks(/*EDITMODE-BEGIN*/{
+    "atmosphere": "dusk",
+    "accent": "coral",
+    "showThreads": true,
+    "orbScale": 1.0
+  }/*EDITMODE-END*/);
+
+  const [hoveredId, setHoveredId] = uS(null);
+  const [hiddenIds, setHiddenIds] = uS(new Set()); // trend particle stays on the orb; only its trail arcs outward
+  const [pulsingId, setPulsingId] = uS(null);
+  const [chatPulse, setChatPulse] = uS(null);
+  const [emerging, setEmerging] = uS({ active: true, completed: false }); // initial mid-expansion
+  const [flight, setFlight] = uS(null); // { particle, phase: 'flying' | 'landed' }
+  const [vcDemo, setVcDemo] = uS(true); // default landing state: trend particle frozen mid-expansion
+  const [orbPx, setOrbPx] = uS({ cx: 0, cy: 0, size: 520 });
+  const stageRef = uR(null);
+
+  // ── Default-state urgency pulse ─────────────────────────────────────
+  // While the VC-demo composition is on screen and no other interaction
+  // is happening, Jake (the only HIGH-priority creator) pulses sharply
+  // every ~2.6s. He's "3 days overdue" — the eye-catch after the trend
+  // card. Stops the moment the user starts exploring (flight active or
+  // vcDemo dismissed) so it doesn't fight foreground UI.
+  uE(() => {
+    if (flight || !vcDemo) return;
+    let cancelled = false;
+    function tick() {
+      if (cancelled) return;
+      setPulsingId("creator-jake");
+      setTimeout(() => { if (!cancelled) setPulsingId(null); }, 700);
+    }
+    // Initial pulse 800ms after landing so it's noticed *after* the eye
+    // has parsed the orb and trend card.
+    const initial = setTimeout(tick, 800);
+    const interval = setInterval(tick, 2600);
+    return () => {
+      cancelled = true;
+      clearTimeout(initial);
+      clearInterval(interval);
+    };
+  }, [flight, vcDemo]);
+
+  // Track orb center in viewport coords
+  uE(() => {
+    function measure() {
+      if (!stageRef.current) return;
+      const r = stageRef.current.getBoundingClientRect();
+      setOrbPx({
+        cx: r.left + r.width / 2,
+        cy: r.top + r.height / 2,
+        size: Math.min(r.width, r.height) * 1.0 * t.orbScale,
+      });
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [t.orbScale]);
+
+  const handleParticleClick = (p) => {
+    if (flight) return; // already in flight
+    setHiddenIds(prev => { const n = new Set(prev); n.add(p.id); return n; });
+    setFlight({ particle: p, phase: "flying" });
+    // briefly brighten neighbors as their connected sibling lifts away
+    const neighbors = window.PARTICLES.filter(x => x.id !== p.id).slice(0, 2);
+    neighbors.forEach((n, i) => {
+      setTimeout(() => setPulsingId(n.id), 200 + i * 100);
+      setTimeout(() => setPulsingId(null), 200 + i * 100 + 320);
+    });
+  };
+
+  const handleLanded = () => {
+    setFlight(prev => prev ? { ...prev, phase: "landed" } : prev);
+  };
+
+  const dismissExpanded = () => {
+    if (!flight) return;
+    const pid = flight.particle.id;
+    setFlight(null);
+    setTimeout(() => {
+      setHiddenIds(prev => { const n = new Set(prev); n.delete(pid); return n; });
+    }, 600);
+  };
+
+  const dismissVCDemo = () => {
+    setVcDemo(false);
+    setTimeout(() => {
+      setHiddenIds(prev => { const n = new Set(prev); n.delete("trend-agents"); return n; });
+    }, 400);
+  };
+
+  const promoteVCDemo = () => {
+    // "Brief a creator" — pulse a creator particle to suggest the next step
+    setPulsingId("creator-jake");
+    setTimeout(() => setPulsingId(null), 1200);
+  };
+
+  const handleChatSend = (msg) => {
+    setChatPulse({ key: Date.now() });
+    setTimeout(() => setChatPulse(null), 1400);
+
+    // Match query to a category
+    const lower = msg.toLowerCase();
+    let matchId = null;
+    if (/trend|sign|emerg|hot|risin/.test(lower)) matchId = "trend-agents";
+    else if (/jake|overdue|creator|nudge/.test(lower)) matchId = "creator-jake";
+    else if (/maya|memory|prefer/.test(lower)) matchId = "memory-fact";
+    else if (/calend|sched|meet|launch/.test(lower)) matchId = "calendar-launch";
+    else if (/noah/.test(lower)) matchId = "creator-noah";
+
+    if (matchId) {
+      setTimeout(() => {
+        setPulsingId(matchId);
+        setTimeout(() => setPulsingId(null), 800);
+      }, 900);
+    }
+  };
+
+  // Compute initial mid-expansion source/dest in viewport-relative coords
+  const trendP = window.PARTICLES.find(p => p.id === "trend-agents");
+  const r = orbPx.size * 0.31;
+  const fromXY = {
+    x: orbPx.cx + trendP.x * r - 120,
+    y: orbPx.cy + trendP.y * r - 70,
+  };
+  // Clamp upper-right destination so the card stays inside the viewport
+  const toXY = {
+    x: Math.min(orbPx.cx + 140, (typeof window !== "undefined" ? window.innerWidth : 1200) - 280),
+    y: Math.max(orbPx.cy - 220, 110),
+  };
+
+  // Background gradient — cool slate horizon, warmed by the orb's rose-light
+  const dusk = `
+    radial-gradient(ellipse 140% 70% at 50% 100%, #c08680 0%, rgba(192,123,116,0) 55%),
+    radial-gradient(ellipse 120% 60% at 50% 95%, #b8918e 0%, rgba(184,145,142,0) 50%),
+    radial-gradient(ellipse 90% 55% at 50% 50%, #d4d4d4 0%, rgba(212,212,212,0) 70%),
+    radial-gradient(ellipse 130% 80% at 50% 0%, #6c92a0 0%, rgba(108,146,160,0) 60%),
+    linear-gradient(180deg, #4a5e68 0%, #6c8290 18%, #9aa6ad 42%, #c2a8a4 68%, #c07b74 100%)
+  `;
+  const bg = t.atmosphere === "dawn"
+    ? "radial-gradient(ellipse at 50% 110%, #c07b74 0%, #c89691 18%, #b8a09c 38%, #8a9aa3 65%, #6c92a0 100%)"
+    : t.atmosphere === "haze"
+    ? "radial-gradient(ellipse at 50% 110%, #c89691 0%, #b8a09c 25%, #8a9aa3 60%, #5a7280 100%)"
+    : t.atmosphere === "ember"
+    ? "radial-gradient(ellipse at 50% 110%, #c07b74 0%, #b88a86 22%, #948590 50%, #6c8290 100%)"
+    : /* dusk */ dusk;
+
+  return (
+    <div style={{
+      width: "100vw", height: "100vh", overflow: "hidden",
+      position: "relative",
+      background: bg,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+    }}>
+      {/* atmospheric clouds */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: `
+          radial-gradient(ellipse at 20% 80%, rgba(192,123,116,0.35) 0%, transparent 40%),
+          radial-gradient(ellipse at 80% 70%, rgba(108,146,160,0.35) 0%, transparent 35%),
+          radial-gradient(ellipse at 50% 95%, rgba(212,212,212,0.4) 0%, transparent 50%)
+        `,
+      }} />
+
+      {/* horizon haze near bottom */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: "30%",
+        background: "linear-gradient(180deg, transparent, rgba(192,123,116,0.32) 60%, rgba(176,108,102,0.4) 100%)",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{ position: "absolute", inset: 0, display: "flex" }}>
+        <window.SideRail />
+
+        <div style={{ flex: 1, position: "relative" }}>
+          <window.TopChrome />
+
+          {/* Orb stage — centered */}
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "grid", placeItems: "center",
+          }}>
+            <div ref={stageRef} style={{
+              width: "min(64vh, 44vw)", height: "min(64vh, 44vw)",
+              minWidth: 460, minHeight: 460,
+              maxWidth: 700, maxHeight: 700,
+              position: "relative",
+              transform: "translateY(-44px) scale(0.92)",
+            }}>
+              {/* Faint horizon arcs behind orb — temporal coordinate system */}
+              <HorizonArcs orbSize={orbPx.size} />
+              <window.Orb
+                size={orbPx.size}
+                hoveredId={hoveredId}
+                setHoveredId={setHoveredId}
+                onParticleClick={handleParticleClick}
+                hiddenIds={t.showThreads ? hiddenIds : hiddenIds}
+                pulsingId={pulsingId}
+                rippleAt={null}
+              />
+            </div>
+          </div>
+
+          {/* Briefing cards anchored around orb */}
+          <CardLayer orbPx={orbPx} />
+
+          {/* Hero interaction: lift particle out of orb into glassmorphic card */}
+          <window.FlightLayer
+            flight={flight}
+            orbPx={orbPx}
+            onLanded={handleLanded}
+            onClose={dismissExpanded}
+          />
+
+          {/* Default landing state: gold trend particle frozen mid-expansion */}
+          {vcDemo && !flight && (
+            <window.VCDemoFlight
+              orbPx={orbPx}
+              particle={window.PARTICLES.find(p => p.id === "trend-agents")}
+              onPromote={promoteVCDemo}
+              onDismiss={dismissVCDemo}
+            />
+          )}
+
+          {/* Intelligence ribbon — quiet status line in the empty band
+              directly under the orb. zIndex set above the cards (z 68) so
+              its sentence is never occluded; a soft frosted plate behind
+              the text guarantees legibility even when content is dense. */}
+          <div style={{
+            position: "absolute", bottom: 108, left: 0, right: 0,
+            display: "grid", placeItems: "center",
+            zIndex: 90,
+            pointerEvents: "none",
+          }}>
+            <div style={{
+              padding: "7px 14px",
+              borderRadius: 18,
+              maxWidth: 210,
+              background: "linear-gradient(180deg, rgba(244,238,232,0.7) 0%, rgba(228,220,216,0.55) 100%)",
+              backdropFilter: "blur(14px) saturate(1.1)",
+              WebkitBackdropFilter: "blur(14px) saturate(1.1)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 14px rgba(64,70,84,0.08)",
+              border: "0.5px solid rgba(255,255,255,0.4)",
+            }}>
+              <window.IntelligenceRibbon />
+            </div>
+          </div>
+
+          {/* Chat input */}
+          <div style={{
+            position: "absolute", bottom: 24, left: 0, right: 0,
+            display: "grid", placeItems: "center",
+            zIndex: 30,
+          }}>
+            <window.ChatInput onSend={handleChatSend} />
+          </div>
+
+          {/* Chat → orb pulse */}
+          {chatPulse && (
+            <ChatPulse key={chatPulse.key} orbPx={orbPx} />
+          )}
+        </div>
+      </div>
+
+      {/* Tweaks panel */}
+      <window.TweaksPanel title="Tweaks">
+        <window.TweakSection title="Atmosphere">
+          <window.TweakRadio
+            label="Light"
+            value={t.atmosphere}
+            options={[
+              { value: "dusk", label: "Dusk" },
+              { value: "dawn", label: "Dawn" },
+              { value: "haze", label: "Haze" },
+              { value: "ember", label: "Ember" },
+            ]}
+            onChange={v => setTweak("atmosphere", v)}
+          />
+        </window.TweakSection>
+        <window.TweakSection title="Orb">
+          <window.TweakSlider
+            label="Scale"
+            value={t.orbScale}
+            min={0.7} max={1.25} step={0.01}
+            onChange={v => setTweak("orbScale", v)}
+          />
+          <window.TweakToggle
+            label="Show threads"
+            value={t.showThreads}
+            onChange={v => setTweak("showThreads", v)}
+          />
+        </window.TweakSection>
+      </window.TweaksPanel>
+    </div>
+  );
+}
+
+// ── Card layer: positions briefing cards at varying depths around the orb ──
+function CardLayer({ orbPx }) {
+  // Track viewport so layout adapts to short/narrow windows
+  const [vp, setVp] = uS({
+    w: typeof window !== "undefined" ? window.innerWidth : 1200,
+    h: typeof window !== "undefined" ? window.innerHeight : 800,
+  });
+  uE(() => {
+    const onR = () => setVp({ w: window.innerWidth, h: window.innerHeight });
+    window.addEventListener("resize", onR);
+    return () => window.removeEventListener("resize", onR);
+  }, []);
+  const tall = vp.h >= 720;
+
+  // Each card has an anchor (viewport-relative position) and a depth.
+  // Depth = -1 (back) to +1 (close). The cards inhabit a shallow z-space,
+  // floating at different planes rather than sitting on a flat grid.
+  // On short viewports (< 720h) we drop the two back-row cards (Maya, Noah)
+  // to keep the hero composition (Jake + VC trend) uncluttered.
+  const cards = tall ? [
+    { id: "card-jake",  style: { left: 24,   top: 56  }, depth:  0.6,  compact: true  }, // close, top-left
+    { id: "card-maya",  style: { left: 24,   bottom: 200 }, depth: -0.45, compact: true  }, // back, bottom-left
+    { id: "card-noah",  style: { right: 24,  bottom: 200 }, depth:  0.2,  compact: true  }, // mid, bottom-right
+  ] : [
+    { id: "card-jake",  style: { left: 24,   top: 56  }, depth:  0.6,  compact: true  }, // close, top-left
+  ];
+  const viewW = vp.w;
+  const viewH = vp.h;
+
+  // Compute card centers in viewport coords for thread drawing
+  const cardCenters = cards.map(c => {
+    const w = c.compact ? 268 : 282;
+    const cardH = c.compact ? 240 : 280;
+    const left = c.style.left != null ? c.style.left : viewW - c.style.right - w;
+    const top = c.style.top != null ? c.style.top : viewH - c.style.bottom - cardH;
+    const cx = left + w / 2;
+    const cy = top + (c.compact ? 56 : 80);
+    return { id: c.id, cx, cy, depth: c.depth };
+  });
+
+  return (
+    <>
+      <CardThreads cardCenters={cardCenters} orbPx={orbPx} />
+      {window.BRIEFING_CARDS.map(c => {
+        const cfg = cards.find(x => x.id === c.id);
+        if (!cfg) return null;
+        return (
+          <window.BriefingCard
+            key={c.id}
+            data={c}
+            style={cfg.style}
+            depth={cfg.depth}
+            compact={cfg.compact}
+          />
+        );
+      })}
+      {/* Trend card removed — replaced by frozen VCDemoFlight on landing.
+          When the user dismisses the demo, the trend card surfaces instead
+          if we want — but keep this clean for now. */}
+    </>
+  );
+}
+
+// ── Luminous threads from each card back to the orb ──────────────────
+// Drawn beneath the cards, above the background. Subtle warm filaments
+// with a slow-traveling spark for life.
+function CardThreads({ cardCenters, orbPx }) {
+  return (
+    <svg style={{
+      position: "absolute", inset: 0, width: "100%", height: "100%",
+      pointerEvents: "none", zIndex: 4,
+    }}>
+      <defs>
+        <linearGradient id="card-thread-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#ffd1b8" stopOpacity="0" />
+          <stop offset="0.3" stopColor="#ffc09a" stopOpacity="0.5" />
+          <stop offset="0.7" stopColor="#ffb89a" stopOpacity="0.45" />
+          <stop offset="1" stopColor="#ff9a78" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <style>{`
+        @keyframes card-thread-flow {
+          from { offset-distance: 0%; opacity: 0; }
+          10%  { opacity: 0.9; }
+          90%  { opacity: 0.7; }
+          to   { offset-distance: 100%; opacity: 0; }
+        }
+      `}</style>
+      {cardCenters.map((c, i) => {
+        // Curve from card edge nearest the orb toward the orb center,
+        // arriving slightly inside the orb's surface for a "tethered" feel.
+        const dx = orbPx.cx - c.cx;
+        const dy = orbPx.cy - c.cy;
+        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+        const ux = dx / dist, uy = dy / dist;
+        // Pull thread endpoints inward so they don't poke out of the boxes
+        const sx = c.cx + ux * 110;
+        const sy = c.cy + uy * 50;
+        const tx = orbPx.cx - ux * orbPx.size * 0.42;
+        const ty = orbPx.cy - uy * orbPx.size * 0.42;
+        // Gentle perpendicular bow for organic curvature
+        const px = -uy, py = ux;
+        const bow = (i % 2 === 0 ? 1 : -1) * (40 + i * 12);
+        const mx = (sx + tx) / 2 + px * bow;
+        const my = (sy + ty) / 2 + py * bow;
+        const pathD = `M ${sx} ${sy} Q ${mx} ${my} ${tx} ${ty}`;
+        // Closer cards (higher depth) get slightly more visible threads
+        const opacity = 0.4 + Math.max(0, c.depth) * 0.25;
+        return (
+          <g key={c.id}>
+            <path
+              d={pathD}
+              stroke="url(#card-thread-grad)"
+              strokeWidth="1.1"
+              fill="none"
+              opacity={opacity}
+            />
+            <circle
+              r="1.3"
+              fill="#fff4e8"
+              style={{
+                filter: "blur(0.3px) drop-shadow(0 0 3px rgba(223,168,162,0.9))",
+                offsetPath: `path("${pathD}")`,
+                animation: `card-thread-flow ${7 + i * 1.6}s ease-in-out ${i * 0.8}s infinite`,
+              }}
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
+// ── Settled emerging card (after initial flight completes) ───────────
+function SettledTrendCard({ onClose }) {
+  return (
+    <MM.motion.div
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      style={{
+        position: "absolute",
+        left: "calc(50% - 110px)",
+        top: 92,
+        width: 220, padding: 14, borderRadius: 20,
+        background: "linear-gradient(160deg, rgba(255,250,245,0.92) 0%, rgba(255,225,210,0.78) 100%)",
+        backdropFilter: "blur(22px)",
+        border: "1px solid rgba(255,255,255,0.8)",
+        boxShadow: "0 30px 70px rgba(255,150,120,0.35), 0 0 60px rgba(255,200,160,0.4), inset 0 1px 0 rgba(255,255,255,0.9)",
+        zIndex: 600,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div style={{ fontSize: 10, letterSpacing: 1.4, color: "#e35c3a", fontWeight: 600 }}>EMERGING TREND</div>
+        <button onClick={onClose} style={{
+          width: 22, height: 22, borderRadius: "50%", border: 0,
+          background: "rgba(255,235,225,0.7)", cursor: "pointer",
+          display: "grid", placeItems: "center", color: "#9a7e7c", fontSize: 14, lineHeight: 1,
+        }}>×</button>
+      </div>
+      <div style={{ marginTop: 8, fontWeight: 600, fontSize: 16, lineHeight: 1.28, color: "#3a2e30" }}>
+        AI Creator Agents Go Mainstream
+      </div>
+      <div style={{
+        marginTop: 10, paddingTop: 8,
+        borderTop: "1px solid rgba(220,160,140,0.25)",
+        fontSize: 11, color: "#9a7e7c",
+      }}>
+        Momentum<br/>
+        <span style={{ color: "#3a2e30", fontWeight: 600, fontSize: 12 }}>Strong ↑ 4.7×</span>
+      </div>
+    </MM.motion.div>
+  );
+}
+
+// ── Arc trail from particle origin to expanded card position ─────────
+function ArcTrail({ orbPx, particle }) {
+  const r = orbPx.size * 0.31;
+  const x1 = orbPx.cx + particle.x * r;
+  const y1 = orbPx.cy + particle.y * r;
+  const x2 = window.innerWidth / 2 + 220;
+  const y2 = window.innerHeight / 2 - 180;
+  const mx = (x1 + x2) / 2 + 40;
+  const my = Math.min(y1, y2) - 80;
+  return (
+    <svg style={{
+      position: "absolute", inset: 0,
+      width: "100%", height: "100%",
+      pointerEvents: "none", zIndex: 55,
+    }}>
+      <defs>
+        <linearGradient id="arc-grad" x1="0" x2="1">
+          <stop offset="0" stopColor="#ffb89a" stopOpacity="0.9"/>
+          <stop offset="1" stopColor="#ff8a6b" stopOpacity="0.2"/>
+        </linearGradient>
+      </defs>
+      <MM.motion.path
+        d={`M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`}
+        stroke="url(#arc-grad)" strokeWidth="1.6" fill="none"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: [0, 1, 0.4] }}
+        transition={{ duration: 1.0, ease: "easeInOut" }}
+      />
+    </svg>
+  );
+}
+
+// ── Expanded card from particle click ───────────────────────────────
+function ExpandedCard({ particle, orbPx, onClose }) {
+  const palette = window.PARTICLE_PALETTE[particle.color];
+  return (
+    <MM.motion.div
+      initial={{ scale: 0.2, opacity: 0, y: 60 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      exit={{ scale: 0.2, opacity: 0 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "absolute",
+        left: "50%", top: "50%",
+        transform: "translate(60px, -200px)",
+        width: 320, padding: 20, borderRadius: 26,
+        background: "linear-gradient(160deg, rgba(255,250,245,0.85) 0%, rgba(255,228,215,0.7) 100%)",
+        backdropFilter: "blur(24px) saturate(1.1)",
+        border: "1px solid rgba(255,255,255,0.85)",
+        boxShadow: `0 36px 90px rgba(170,120,130,0.32), 0 0 80px ${palette.halo}, inset 0 1px 0 rgba(255,255,255,0.9)`,
+        zIndex: 70,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+        <div style={{
+          width: 44, height: 44, borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 32%, #fff 0%, ${palette.core} 50%, ${palette.glow} 100%)`,
+          boxShadow: `0 0 24px ${palette.glow}, inset 0 0 10px rgba(255,255,255,0.5)`,
+          display: "grid", placeItems: "center",
+        }}>
+          <window.ParticleIcon type={particle.type} size={20} />
+        </div>
+        <button onClick={onClose} style={{
+          width: 26, height: 26, borderRadius: "50%", border: 0,
+          background: "rgba(255,235,225,0.7)", cursor: "pointer",
+          color: "#9a7e7c", fontSize: 16, lineHeight: 1,
+        }}>×</button>
+      </div>
+      <div style={{ marginTop: 16, fontSize: 10, letterSpacing: 1.4, color: "#e35c3a", fontWeight: 600 }}>
+        {particle.type.toUpperCase()}
+      </div>
+      <div style={{ marginTop: 6, fontWeight: 600, fontSize: 18, lineHeight: 1.28, color: "#3a2e30" }}>
+        {particle.label}
+      </div>
+      <div style={{ marginTop: 12, fontSize: 13, color: "#7a5e5b", lineHeight: 1.5 }}>
+        Surfaced from the Creator Operations Graph. Connected to 2 other entities in the index.
+      </div>
+      <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+        <button style={{
+          flex: 1, height: 38, borderRadius: 999, border: 0,
+          background: "linear-gradient(180deg, #ff8b6c 0%, #f06a4a 100%)",
+          color: "#fff", fontWeight: 500, fontSize: 13, cursor: "pointer",
+          boxShadow: "0 6px 14px rgba(240,106,74,0.35)",
+        }}>Take action</button>
+        <button onClick={onClose} style={{
+          flex: 1, height: 38, borderRadius: 999,
+          border: "1px solid rgba(180,140,140,0.35)",
+          background: "rgba(255,250,245,0.5)", color: "#7a5e5b",
+          fontWeight: 500, fontSize: 13, cursor: "pointer",
+        }}>Return to orb</button>
+      </div>
+    </MM.motion.div>
+  );
+}
+
+// ── Chat → orb light pulse ──────────────────────────────────────────
+// A warm filament travels from the input up to the orb center, growing
+// brighter as it nears the surface, then breaking into a soft burst on
+// arrival — as if the query is reaching into the system.
+function ChatPulse({ orbPx }) {
+  const x1 = orbPx.cx;
+  const y1 = (typeof window !== "undefined" ? window.innerHeight : 800) - 56;
+  const x2 = orbPx.cx;
+  const y2 = orbPx.cy;
+  const mx = x1 + 18;
+  const my = (y1 + y2) / 2 + 30;
+  const pathD = `M ${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}`;
+  return (
+    <svg style={{
+      position: "absolute", inset: 0, width: "100%", height: "100%",
+      pointerEvents: "none", zIndex: 25,
+    }}>
+      <defs>
+        <radialGradient id="chat-pulse-head">
+          <stop offset="0" stopColor="#ffe9e0" stopOpacity="1"/>
+          <stop offset="0.4" stopColor="#dfa8a2" stopOpacity="0.85"/>
+          <stop offset="1" stopColor="#6c92a0" stopOpacity="0"/>
+        </radialGradient>
+        <linearGradient id="chat-pulse-tail" x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#c07b74" stopOpacity="0"/>
+          <stop offset="0.5" stopColor="#dfa8a2" stopOpacity="0.6"/>
+          <stop offset="1" stopColor="#fff0e8" stopOpacity="0.95"/>
+        </linearGradient>
+      </defs>
+      {/* drawing trail line */}
+      <MM.motion.path
+        d={pathD}
+        stroke="url(#chat-pulse-tail)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: [0, 1, 1], opacity: [0, 0.9, 0] }}
+        transition={{ duration: 1.4, times: [0, 0.65, 1], ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* soft halo behind the trail */}
+      <MM.motion.path
+        d={pathD}
+        stroke="#c07b74"
+        strokeOpacity="0.35"
+        strokeWidth="8"
+        strokeLinecap="round"
+        fill="none"
+        style={{ filter: "blur(4px)" }}
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: [0, 1, 1], opacity: [0, 0.5, 0] }}
+        transition={{ duration: 1.4, times: [0, 0.65, 1], ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* traveling head — a luminous mote */}
+      <MM.motion.circle
+        r="6" fill="url(#chat-pulse-head)"
+        style={{ filter: "drop-shadow(0 0 12px rgba(192,123,116,0.75))" }}
+        initial={{ cx: x1, cy: y1, opacity: 0, scale: 0.6 }}
+        animate={{
+          cx: [x1, mx, x2],
+          cy: [y1, my, y2],
+          opacity: [0, 1, 1, 0.4, 0],
+          scale: [0.6, 1, 1.4, 1.6, 0.4],
+        }}
+        transition={{ duration: 1.3, times: [0, 0.4, 0.7, 0.9, 1], ease: [0.4, 0, 0.2, 1] }}
+      />
+      {/* arrival burst at orb center */}
+      <MM.motion.circle
+        cx={x2} cy={y2}
+        fill="rgba(255,235,225,0.6)"
+        style={{ filter: "blur(2px)" }}
+        initial={{ r: 0, opacity: 0 }}
+        animate={{ r: [0, 8, 28], opacity: [0, 0.9, 0] }}
+        transition={{ duration: 0.8, delay: 0.85, ease: "easeOut" }}
+      />
+      <MM.motion.circle
+        cx={x2} cy={y2}
+        fill="none"
+        stroke="rgba(192,123,116,0.6)"
+        strokeWidth="1.4"
+        initial={{ r: 0, opacity: 0 }}
+        animate={{ r: [0, 50], opacity: [0, 0.8, 0] }}
+        transition={{ duration: 1.0, delay: 0.85, ease: "easeOut" }}
+      />
+    </svg>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+
+  </script>
+</body>
+</html>

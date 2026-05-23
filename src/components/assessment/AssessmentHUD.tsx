@@ -9,10 +9,11 @@ import type { SprintProgressMap } from '@/lib/assessment/fetch-assessment'
 import { OperatorPanel } from './OperatorPanel'
 import { FreedomNumberRing } from './FreedomNumberRing'
 import { BusinessMatchPanel } from './BusinessMatchPanel'
-import { SprintGrid } from './SprintGrid'
+import { SprintGrid, SPRINT_TOGGLE_EVENT } from './SprintGrid'
 import { RoadmapList } from './RoadmapList'
 import { LeadsPanel } from './LeadsPanel'
 import { AgentRail } from './AgentRail'
+import { AgentHeroBanner } from './AgentHeroBanner'
 import { DeliverablesHeader } from './DeliverablesHeader'
 import { Day1Spotlight } from './Day1Spotlight'
 import { RailClickGate } from './AgentGate'
@@ -28,18 +29,21 @@ interface Props {
 }
 
 // Boot sequence timeline in ms.
+// agentBanner was inserted between deliverables (0) and operator; every slot
+// after it was shifted by +400ms to preserve the existing reveal rhythm.
 const TIMELINE = {
   deliverables: 0,
-  operator: 200,
-  ring: 600,
-  business: 1400,
-  day1Spotlight: 2000,
-  sprint: 2400,
-  roadmap: 3000,
-  leads: 3400,
-  emailCapture: 3800,
-  rail: 4000,
-  done: 4400,
+  agentBanner: 400,
+  operator: 600,
+  ring: 900,
+  business: 1600,
+  day1Spotlight: 2200,
+  sprint: 2600,
+  roadmap: 3200,
+  leads: 3600,
+  emailCapture: 4000,
+  rail: 4200,
+  done: 4600,
 } as const
 
 export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgress }: Props) {
@@ -59,6 +63,46 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
 
   const day1 = payload.sprint.days.find(d => d.dayNumber === 1) ?? payload.sprint.days[0]
   const day1Completed = sprintProgress['1']?.completed === true
+
+  // Mirror the set of completed sprint days so LeadsPanel can drive its
+  // Cold/Warming/Active state indicator without us having to lift SprintGrid's
+  // local state up here. We seed from the same prop the grid uses for its
+  // initial state, then track every SPRINT_TOGGLE_EVENT the grid (or
+  // Day1Spotlight) dispatches after a successful POST.
+  const [completedSprintDays, setCompletedSprintDays] = useState<Set<number>>(
+    () => {
+      const s = new Set<number>()
+      for (const [k, v] of Object.entries(sprintProgress)) {
+        if (v?.completed === true) {
+          const n = Number(k)
+          if (Number.isFinite(n)) s.add(n)
+        }
+      }
+      return s
+    },
+  )
+
+  useEffect(() => {
+    function onToggle(e: Event) {
+      const detail = (e as CustomEvent<{ dayNumber: number; completed: boolean }>)
+        .detail
+      if (!detail || typeof detail.dayNumber !== 'number') return
+      setCompletedSprintDays(prev => {
+        const next = new Set(prev)
+        if (detail.completed) next.add(detail.dayNumber)
+        else next.delete(detail.dayNumber)
+        return next
+      })
+    }
+    window.addEventListener(SPRINT_TOGGLE_EVENT, onToggle as EventListener)
+    return () =>
+      window.removeEventListener(
+        SPRINT_TOGGLE_EVENT,
+        onToggle as EventListener,
+      )
+  }, [])
+
+  const sprintCompletedCount = completedSprintDays.size
 
   return (
     <div
@@ -92,6 +136,13 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
             firstName={payload.operator.firstName}
             reducedMotion={reduced}
             delayMs={TIMELINE.deliverables}
+          />
+        </div>
+
+        <div style={{ gridColumn: 'span 12' }} className="hud-cell hud-cell-agent-banner">
+          <AgentHeroBanner
+            reducedMotion={reduced}
+            delayMs={TIMELINE.agentBanner}
           />
         </div>
 
@@ -158,7 +209,7 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
           />
         </div>
 
-        <div style={{ gridColumn: 'span 8' }} className="hud-cell hud-cell-sprint">
+        <div style={{ gridColumn: 'span 12' }} className="hud-cell hud-cell-sprint">
           <Chassis
             intensity="standard"
             statusLabel="SPRINT://14_DAY"
@@ -175,7 +226,7 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
             />
           </Chassis>
         </div>
-        <div style={{ gridColumn: 'span 4' }} className="hud-cell hud-cell-roadmap">
+        <div style={{ gridColumn: 'span 6' }} className="hud-cell hud-cell-roadmap">
           <Chassis
             id="roadmap"
             intensity="standard"
@@ -189,7 +240,7 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
             />
           </Chassis>
         </div>
-        <div style={{ gridColumn: 'span 12' }} className="hud-cell">
+        <div style={{ gridColumn: 'span 6' }} className="hud-cell hud-cell-leads">
           <Chassis
             id="leads"
             intensity="standard"
@@ -198,6 +249,7 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
           >
             <LeadsPanel
               leads={payload.leads}
+              sprintCompletedCount={sprintCompletedCount}
               reducedMotion={reduced}
               delayMs={TIMELINE.leads}
             />
@@ -223,8 +275,9 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
           .hud-grid > .hud-cell { grid-column: span 1 !important; }
         }
         @media (min-width: 1024px) {
-          .hud-grid > .hud-cell-sprint { grid-column: span 8; }
-          .hud-grid > .hud-cell-roadmap { grid-column: span 4; }
+          .hud-grid > .hud-cell-sprint   { grid-column: span 12; }
+          .hud-grid > .hud-cell-roadmap  { grid-column: span 6; }
+          .hud-grid > .hud-cell-leads    { grid-column: span 6; }
         }
       `}</style>
     </div>

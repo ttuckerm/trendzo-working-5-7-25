@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import type { SprintDay } from '@/types/assessment'
 import { SPRINT_TOGGLE_EVENT } from './SprintGrid'
+import { OPEN_DAY_PANEL_EVENT, type OpenDayPanelDetail } from './SprintDayPanel'
 import { Chassis } from './Chassis'
 
 interface Props {
@@ -105,6 +106,14 @@ export function Day1Spotlight({
 
   const dateLabel = format(parseStartDate(sprintStartDate), 'EEEE, MMM d')
 
+  const requestPanel = useCallback(() => {
+    window.dispatchEvent(
+      new CustomEvent<OpenDayPanelDetail>(OPEN_DAY_PANEL_EVENT, {
+        detail: { dayNumber: day1.dayNumber },
+      }),
+    )
+  }, [day1.dayNumber])
+
   return (
     <Chassis
       intensity="prominent"
@@ -138,6 +147,16 @@ export function Day1Spotlight({
         {collapsed ? (
           <motion.div
             key="collapsed"
+            role="button"
+            tabIndex={0}
+            aria-label={`Open Day ${day1.dayNumber} brief: ${day1.task}`}
+            onClick={requestPanel}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                requestPanel()
+              }
+            }}
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -147,6 +166,8 @@ export function Day1Spotlight({
               alignItems: 'center',
               gap: 12,
               width: '100%',
+              cursor: 'pointer',
+              outline: 'none',
             }}
           >
             <CompletedCheckbox onToggle={toggle} disabled={saving} />
@@ -174,6 +195,16 @@ export function Day1Spotlight({
         ) : (
           <motion.div
             key="expanded"
+            role="button"
+            tabIndex={0}
+            aria-label={`Open Day ${day1.dayNumber} brief: ${day1.task}`}
+            onClick={requestPanel}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                requestPanel()
+              }
+            }}
             initial={reducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -183,6 +214,8 @@ export function Day1Spotlight({
               alignItems: 'center',
               gap: 16,
               width: '100%',
+              cursor: 'pointer',
+              outline: 'none',
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
@@ -247,7 +280,10 @@ export function Day1Spotlight({
             </div>
             <button
               type="button"
-              onClick={toggle}
+              onClick={(e) => {
+                e.stopPropagation()
+                toggle()
+              }}
               disabled={saving}
               aria-label={
                 completed
@@ -292,7 +328,11 @@ function CompletedCheckbox({
   return (
     <button
       type="button"
-      onClick={onToggle}
+      onClick={(e) => {
+        // Don't let the row's open-panel handler fire too.
+        e.stopPropagation()
+        onToggle()
+      }}
       disabled={disabled}
       aria-label="Mark Day 1 not complete"
       aria-pressed={true}

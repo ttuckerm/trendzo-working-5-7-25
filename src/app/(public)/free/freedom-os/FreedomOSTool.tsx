@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { buildInputFromForm, type FormState } from '@/lib/assessment/build-input-from-form'
+import type { AssessmentReadyData } from '@/lib/assessment/types'
 import { FreedomMultiplierControl } from '@/components/freedom-os/FreedomMultiplierControl'
 import { HamsterLoader } from '@/components/freedom-os/HamsterLoader'
 
@@ -70,7 +70,6 @@ export interface FreedomOSToolProps {
 }
 
 export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps = {}) {
-  const router = useRouter()
   const [form, setForm] = useState<FormState>(DEFAULT_FORM)
   const [runwayMode, setRunwayMode] = useState<RunwayMode>('months')
   const [savingsAmount, setSavingsAmount] = useState<number | string>('')
@@ -79,6 +78,10 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // Set once the generator API responds successfully. Passed to HamsterLoader,
+  // which derives isAssessmentReady from it and performs the auto-route to
+  // the HUD (or hands off to an onAssessmentReady callback when wired up).
+  const [assessmentData, setAssessmentData] = useState<AssessmentReadyData | null>(null)
 
   // Restore from localStorage on mount.
   useEffect(() => {
@@ -212,12 +215,16 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         typeof data.shareUrlId === 'string' && data.shareUrlId
           ? data.shareUrlId
           : data.assessmentId
-      router.push(`/assessment/${shareUrlId}`)
+      // Hand the ready payload to HamsterLoader. The loader either auto-routes
+      // (default behavior) or fires onAssessmentReady when a caller wires one
+      // up. isSubmitting stays true so the overlay remains visible through
+      // the transition.
+      setAssessmentData({ assessmentId: data.assessmentId, shareUrlId })
     } catch {
       setSubmitError('Network error. Please check your connection and try again.')
       setIsSubmitting(false)
     }
-  }, [form, runwayMode, savingsAmount, freedomMultiplier, router, sessionId])
+  }, [form, runwayMode, savingsAmount, freedomMultiplier, sessionId])
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8">
@@ -480,7 +487,7 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         )}
       </div>
 
-      <HamsterLoader visible={isSubmitting} />
+      <HamsterLoader visible={isSubmitting} assessmentData={assessmentData} />
 
       <style>{`
         .fos-submit-btn:hover:not(:disabled) {

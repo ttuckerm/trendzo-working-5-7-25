@@ -360,6 +360,7 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
         />
       )}
     <motion.div
+      id="freedom-agent-rail"
       ref={containerRef}
       role="region"
       aria-label="Freedom Agent"

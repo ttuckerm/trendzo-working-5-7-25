@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Trendzo — Client Roster</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body, #root { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { font-family: 'Space Grotesk', system-ui, sans-serif; color: #3a2e30; }
+    button:focus { outline: none; }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.78; transform: scale(1); }
+      50%      { opacity: 1;    transform: scale(1.04); }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1);   opacity: 0.7; }
+      100% { transform: scale(2.3); opacity: 0; }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateY(0px); }
+      50%      { transform: translateY(-3px); }
+    }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+const { useState, useEffect, useRef, useMemo } = React;
+
+// ── Status palette — same color logic as Orb file's particle colors ──
+// critical    → pale red       (cousin of coral, drained / desaturated)
+// attention   → warm orange    (cousin of gold)
+// healthy     → soft white     (luminous cream)
+// quiet       → faint blue     (cousin of sage, but cooler / quieter)
+const STATUS = {
+  critical:  { core: "#e8a8a4", glow: "#c8736d", halo: "rgba(200,115,109,0.55)", label: "Critical"    },
+  attention: { core: "#ffd9a8", glow: "#e8a878", halo: "rgba(232,168,120,0.55)", label: "Needs you"   },
+  healthy:   { core: "#fff2e6", glow: "#e8d5c0", halo: "rgba(232,213,192,0.45)", label: "Healthy"     },
+  quiet:     { core: "#bdcdd4", glow: "#90a8b2", halo: "rgba(144,168,178,0.45)", label: "Quiet"       },
+};
+
+// ── Client roster ────────────────────────────────────────────────────
+// Positions on an unevenly-spaced orbit. angle in degrees (0=right, 90=down),
+// radial = distance from center as multiple of agency-orb radius
+// (closer = more recent activity). size = relative scale (1 = baseline).
+const CLIENTS = [
+  { id: "jake",   name: "Jake Morrison", niche: "Finance / GLP-1",   status: "critical",  angle: 165, radial: 1.55, size: 1.10, note: "Brief overdue 73h" },
+  { id: "diego",  name: "Diego Santos",  niche: "Comedy",            status: "critical",  angle: 30,  radial: 1.55, size: 1.05, note: "3 underperforming in a row" },
+  { id: "sarah",  name: "Sarah Patel",   niche: "Beauty",            status: "attention", angle: 215, radial: 1.85, size: 1.00, note: "Brief due in 4h" },
+  { id: "aisha",  name: "Aisha Williams",niche: "Lifestyle",         status: "attention", angle: 350, radial: 2.20, size: 0.95, note: "Cadence slipped 12d" },
+  { id: "maya",   name: "Maya Chen",     niche: "Fitness",           status: "healthy",   angle: 100, radial: 1.55, size: 1.08, note: "Driving +6% week lift" },
+  { id: "priya",  name: "Priya Shah",    niche: "Tech reviews",      status: "healthy",   angle: 10,  radial: 1.85, size: 1.00, note: "Driving +4% week lift" },
+  { id: "marcus", name: "Marcus Rivera", niche: "Gaming",            status: "healthy",   angle: 145, radial: 2.20, size: 0.92, note: "Steady cadence" },
+  { id: "tom",    name: "Tom Becker",    niche: "Food / cooking",    status: "quiet",     angle: 270, radial: 1.85, size: 0.82, note: "No posts · 14d" },
+];
+
+// ── Side rail — copied recipe from Orb file ──────────────────────────
+function SideRail() {
+  const items = [
+    { id: "home",   icon: <path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" /> },
+    { id: "chat",   icon: <path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4V6z" /> },
+    { id: "grid",   icon: <><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></> },
+    { id: "doc",    icon: <path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm9 0v4h4M8 12h8M8 16h8M8 8h4" /> },
+    { id: "people", icon: <><circle cx="9" cy="8" r="3.4"/><circle cx="17" cy="9" r="2.5"/><path d="M3 19c1-3 3.5-4.4 6-4.4S14 16 15 19M14 14.6c1-.4 2-.6 3-.6 2 0 3.5 1 4 3"/></>, active: true },
+    { id: "cal",    icon: <><rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10h16M9 4v4M15 4v4"/></> },
+    { id: "chart",  icon: <path d="M5 19V9m5 10V5m5 14v-7m5 7v-4" /> },
+  ];
+  return (
+    <div style={{
+      width: 64, height: "100%", display: "flex", flexDirection: "column",
+      alignItems: "center", paddingTop: 22, paddingBottom: 22, gap: 8,
+      position: "relative", zIndex: 20,
+    }}>
+      <div style={{
+        width: 38, height: 38, borderRadius: 12,
+        background: "linear-gradient(180deg, #525968 0%, #404654 100%)",
+        display: "grid", placeItems: "center",
+        color: "#fff", fontWeight: 700, fontSize: 17,
+        boxShadow: "0 8px 18px rgba(64,70,84,0.4), inset 0 1px 0 rgba(255,255,255,0.18)",
+        marginBottom: 10,
+      }}>T</div>
+      {items.map(it => (
+        <button key={it.id} style={{
+          width: 38, height: 38, borderRadius: 12, border: 0,
+          background: it.active
+            ? "linear-gradient(180deg, #e2e4e8 0%, #c8ccd2 100%)"
+            : "linear-gradient(180deg, rgba(255,253,250,0.5) 0%, rgba(232,232,235,0.3) 100%)",
+          boxShadow: it.active
+            ? "inset 0 2px 4px rgba(64,70,84,0.25), inset 0 -1px 0 rgba(255,255,255,0.6)"
+            : "inset 0 1px 1px rgba(255,255,255,0.6), 0 1px 2px rgba(64,70,84,0.08)",
+          display: "grid", placeItems: "center", cursor: "pointer",
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+               stroke={it.active ? "#404654" : "#768596"}
+               strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+            {it.icon}
+          </svg>
+        </button>
+      ))}
+      <div style={{ flex: 1 }} />
+      {[
+        <circle key="c" cx="12" cy="12" r="9" />,
+        <g key="g"><circle cx="12" cy="12" r="3.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4"/></g>,
+      ].map((p, i) => (
+        <button key={i} style={{
+          width: 36, height: 36, borderRadius: 12, border: 0,
+          background: "transparent", cursor: "pointer",
+          display: "grid", placeItems: "center",
+        }}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#768596" strokeWidth="1.5" strokeLinecap="round">{p}</svg>
+        </button>
+      ))}
+    </div>
+  );
+}
+
+// ── Top chrome — wordmark + status + Dashboard ──────────────────────
+function TopChrome() {
+  return (
+    <>
+      <div style={{
+        position: "absolute", top: 28, left: 92,
+        fontWeight: 600, fontSize: 16, letterSpacing: 6,
+        color: "#404654", zIndex: 20,
+      }}>TRENDZO</div>
+
+      <div style={{
+        position: "absolute", top: 24, left: "50%", transform: "translateX(-50%)",
+        display: "flex", alignItems: "center", gap: 12, zIndex: 20,
+      }}>
+        <div style={{
+          width: 22, height: 22, borderRadius: "50%",
+          background: `radial-gradient(circle at 35% 30%, #fff 0%, #d4d6db 50%, #768596 100%)`,
+          boxShadow: "0 0 12px rgba(118,133,150,0.55), inset 0 0 4px rgba(255,255,255,0.7)",
+        }} />
+        <div>
+          <div style={{
+            fontWeight: 600, fontSize: 11, letterSpacing: 1.6,
+            color: "#404654", display: "flex", alignItems: "center", gap: 7,
+          }}>
+            CLIENT ROSTER
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: "#e8a878",
+              boxShadow: "0 0 6px rgba(232,168,120,0.7)",
+            }} />
+          </div>
+          <div style={{
+            fontSize: 11, color: "#768596", marginTop: 2,
+            display: "flex", alignItems: "center", gap: 6, minWidth: 220,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: "#7a9a8a", boxShadow: "0 0 6px rgba(122,154,138,0.7)",
+            }} />
+            8 clients tracked · 47 niches scanned
+          </div>
+        </div>
+      </div>
+
+      <div style={{
+        position: "absolute", top: 24, right: 32,
+        display: "flex", gap: 10, alignItems: "center", zIndex: 20,
+      }}>
+        <button style={{
+          height: 40, padding: "0 18px", borderRadius: 999, border: 0,
+          background: "linear-gradient(180deg, #f6f4f2 0%, #e6e4e6 100%)",
+          color: "#404654", fontWeight: 500, fontSize: 13.5, letterSpacing: 0.2,
+          display: "flex", alignItems: "center", gap: 8, cursor: "pointer",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 10px rgba(64,70,84,0.15), inset 0 -2px 4px rgba(118,133,150,0.15)",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        }}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#404654" strokeWidth="1.7">
+            <rect x="4" y="4" width="7" height="7" rx="1.5"/>
+            <rect x="13" y="4" width="7" height="7" rx="1.5"/>
+            <rect x="4" y="13" width="7" height="7" rx="1.5"/>
+            <rect x="13" y="13" width="7" height="7" rx="1.5"/>
+          </svg>
+          Dashboard
+        </button>
+        <button style={{
+          width: 40, height: 40, borderRadius: "50%", border: 0,
+          background: "linear-gradient(180deg, #f6f4f2 0%, #e6e4e6 100%)",
+          cursor: "pointer",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.8), 0 4px 10px rgba(64,70,84,0.15)",
+          display: "grid", placeItems: "center",
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#404654">
+            <circle cx="6" cy="12" r="1.7"/>
+            <circle cx="12" cy="12" r="1.7"/>
+            <circle cx="18" cy="12" r="1.7"/>
+          </svg>
+        </button>
+      </div>
+    </>
+  );
+}
+
+// ── Agency orb — same crystal recipe as Trendzo Origin orb ──────────
+function AgencyOrb({ size = 260 }) {
+  return (
+    <div style={{ position: "relative", width: size, height: size }}>
+      {/* gravitational shadow */}
+      <div style={{
+        position: "absolute", left: "50%", bottom: -size * 0.04,
+        transform: "translateX(-50%)",
+        width: size * 0.85, height: size * 0.1,
+        background: "radial-gradient(ellipse, rgba(120,80,90,0.32) 0%, rgba(120,80,90,0) 70%)",
+        filter: "blur(14px)", pointerEvents: "none", zIndex: 1,
+      }} />
+
+      {/* far ambient bloom */}
+      <div style={{
+        position: "absolute", inset: -size * 0.55,
+        background: `radial-gradient(circle, rgba(192,123,116,0.42) 0%, rgba(168,158,156,0.2) 30%, rgba(108,146,160,0.12) 55%, transparent 72%)`,
+        filter: "blur(28px)", pointerEvents: "none",
+        animation: "breathe 5s ease-in-out infinite",
+      }} />
+
+      {/* near corona */}
+      <div style={{
+        position: "absolute", inset: -size * 0.18,
+        borderRadius: "50%",
+        background: `radial-gradient(circle, rgba(192,123,116,0) 56%, rgba(192,123,116,0.45) 62%, rgba(168,150,148,0.18) 72%, transparent 88%)`,
+        filter: "blur(10px)", pointerEvents: "none",
+      }} />
+
+      {/* sphere body */}
+      <div style={{ position: "absolute", inset: 0, borderRadius: "50%", animation: "breathe 5s ease-in-out infinite" }}>
+        {/* deep crystal interior */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          background: `radial-gradient(circle at 50% 55%, rgba(192,123,116,0.55) 0%, rgba(192,123,116,0.3) 22%, rgba(168,158,156,0.18) 50%, rgba(108,146,160,0.18) 80%, transparent 100%)`,
+          filter: "blur(2px)",
+        }} />
+        {/* warm internal light */}
+        <div style={{
+          position: "absolute", inset: "20%", borderRadius: "50%",
+          background: `radial-gradient(circle at 48% 58%, rgba(255,232,222,0.85) 0%, rgba(223,168,162,0.6) 25%, rgba(192,123,116,0.3) 55%, transparent 80%)`,
+          filter: "blur(14px)", mixBlendMode: "screen",
+        }} />
+        {/* glass body & rim */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          background: `
+            radial-gradient(circle at 30% 26%, rgba(255,255,255,0.9) 0%, rgba(240,232,228,0.4) 16%, transparent 36%),
+            radial-gradient(circle at 70% 78%, rgba(192,123,116,0.26) 0%, rgba(108,146,160,0.12) 45%, transparent 70%)
+          `,
+          boxShadow: `
+            inset 0 0 ${size * 0.22}px rgba(223,168,162,0.5),
+            inset 0 -${size*0.08}px ${size*0.18}px rgba(108,146,160,0.3),
+            inset ${size*0.05}px ${size*0.05}px ${size*0.14}px rgba(255,255,255,0.6),
+            inset -${size*0.04}px -${size*0.06}px ${size*0.1}px rgba(192,123,116,0.22),
+            0 ${size*0.06}px ${size*0.18}px rgba(74,94,104,0.28)
+          `,
+        }} />
+        {/* primary highlight pip */}
+        <div style={{
+          position: "absolute", left: "20%", top: "14%",
+          width: size * 0.22, height: size * 0.14,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 70%)",
+          filter: "blur(2px)", transform: "rotate(-22deg)",
+        }} />
+        {/* secondary catchlight */}
+        <div style={{
+          position: "absolute", left: "24%", top: "18%",
+          width: size * 0.07, height: size * 0.05,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 75%)",
+        }} />
+        {/* rim */}
+        <div style={{
+          position: "absolute", inset: 0, borderRadius: "50%",
+          boxShadow: `inset 0 0 1px rgba(255,255,255,0.95), inset 0 0 ${size*0.05}px rgba(223,168,162,0.55)`,
+          pointerEvents: "none",
+        }} />
+      </div>
+
+      {/* TRENDZO label embedded in the orb's heart — scales with orb size */}
+      <div style={{
+        position: "absolute", inset: 0,
+        display: "grid", placeItems: "center",
+        pointerEvents: "none", zIndex: 5,
+      }}>
+        <div style={{
+          fontWeight: 600,
+          fontSize: Math.max(8, size * 0.085),
+          letterSpacing: Math.max(1.4, size * 0.028),
+          color: "rgba(58,46,48,0.78)",
+          textShadow: "0 0 10px rgba(255,232,222,0.6), 0 0 2px rgba(255,255,255,0.8)",
+        }}>TRENDZO</div>
+        <div style={{
+          position: "absolute", marginTop: size * 0.22,
+          fontSize: Math.max(7, size * 0.062), letterSpacing: 1.4, fontWeight: 500,
+          color: "rgba(74,94,104,0.6)",
+          textTransform: "uppercase",
+          opacity: size > 90 ? 1 : 0,
+        }}>your agency</div>
+      </div>
+    </div>
+  );
+}
+
+// ── Client orb — smaller, status-colored sphere ─────────────────────
+function ClientOrb({ client, x, y, base, hovered, onHover, onLeave }) {
+  const palette = STATUS[client.status];
+  const baseSize = base * client.size;
+  const isCritical = client.status === "critical";
+  const isAttention = client.status === "attention";
+  const isQuiet = client.status === "quiet";
+
+  return (
+    <div
+      onMouseEnter={() => onHover(client.id)}
+      onMouseLeave={onLeave}
+      style={{
+        position: "absolute",
+        left: `calc(50% + ${x}px)`,
+        top: `calc(50% + ${y}px)`,
+        width: baseSize, height: baseSize,
+        marginLeft: -baseSize / 2, marginTop: -baseSize / 2,
+        cursor: "pointer",
+        zIndex: 10 + Math.round((1 - client.radial / 3) * 10),
+        animation: `drift ${4 + (client.size * 2)}s ease-in-out infinite`,
+        animationDelay: `${-client.angle / 60}s`,
+      }}
+    >
+      {/* halo */}
+      <div style={{
+        position: "absolute", inset: -baseSize * 0.65,
+        background: `radial-gradient(circle, ${palette.halo} 0%, transparent 65%)`,
+        filter: "blur(2px)", pointerEvents: "none",
+        opacity: isQuiet ? 0.55 : (hovered ? 1 : 0.85),
+        transition: "opacity 280ms",
+      }} />
+
+      {/* sharp pulse ring for critical only */}
+      {isCritical && (
+        <div style={{
+          position: "absolute", inset: 0,
+          borderRadius: "50%",
+          border: `1.5px solid ${palette.glow}`,
+          pointerEvents: "none",
+          mixBlendMode: "screen",
+          animation: "pulse-ring 2s ease-out infinite",
+        }} />
+      )}
+
+      {/* core lantern */}
+      <div style={{
+        position: "absolute", inset: 0,
+        borderRadius: "50%",
+        background: `radial-gradient(circle at 35% 32%, #ffffff 0%, ${palette.core} 38%, ${palette.glow} 78%, ${palette.glow}aa 100%)`,
+        boxShadow: `0 0 ${baseSize * 0.7}px ${palette.glow}aa, inset 0 0 ${baseSize * 0.3}px rgba(255,255,255,0.55)`,
+        display: "grid", placeItems: "center",
+        opacity: isQuiet ? 0.78 : 1,
+        animation: isAttention ? "breathe 3.5s ease-in-out infinite" : (isQuiet ? "breathe 7s ease-in-out infinite" : "breathe 5s ease-in-out infinite"),
+      }}>
+        {/* initial */}
+        <div style={{
+          fontWeight: 600, fontSize: baseSize * 0.32,
+          color: "rgba(58,46,48,0.7)",
+          textShadow: `0 0 6px ${palette.core}, 0 0 1px rgba(255,255,255,0.9)`,
+        }}>
+          {client.name.split(" ").map(n => n[0]).join("")}
+        </div>
+      </div>
+
+      {/* label below */}
+      <div style={{
+        position: "absolute", left: "50%", top: "100%", marginTop: 8,
+        transform: "translateX(-50%)",
+        textAlign: "center", whiteSpace: "nowrap",
+        pointerEvents: "none",
+        opacity: isQuiet ? 0.6 : 0.95,
+        transition: "opacity 200ms",
+      }}>
+        <div style={{
+          fontWeight: 500, fontSize: 11, letterSpacing: 0.15,
+          color: "#3a2e30",
+          textShadow: "0 1px 4px rgba(255,235,222,0.6)",
+        }}>
+          {client.name}
+        </div>
+        <div style={{
+          fontSize: 8.5, letterSpacing: 0.6, marginTop: 1,
+          color: isCritical ? palette.glow : (isAttention ? "#a07a4a" : "#768596"),
+          fontWeight: isCritical || isAttention ? 600 : 500,
+          textTransform: "uppercase",
+        }}>
+          {client.niche}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Why-surfaced subtitle (small italic-feeling reasoning) ──────────
+function WhySurfaced({ text }) {
+  return (
+    <div style={{
+      marginTop: 7,
+      fontSize: 10, lineHeight: 1.4, letterSpacing: 0.1,
+      color: "rgba(118,133,150,0.85)", fontWeight: 400,
+      fontStyle: "italic",
+      display: "flex", alignItems: "flex-start", gap: 6,
+    }}>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0, marginTop: 2 }}>
+        <circle cx="12" cy="12" r="9" stroke="rgba(118,133,150,0.65)" strokeWidth="1.6" />
+        <path d="M12 8v5l3 2" stroke="rgba(118,133,150,0.65)" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+      <span style={{ opacity: 0.9 }}>Surfaced because {text}</span>
+    </div>
+  );
+}
+
+// ── Horizontal alert strip — replaces full-height card at top-row layout ──
+function AlertStrip({ eyebrow, eyebrowTone, title, body, consequence, action }) {
+  const toneColor = eyebrowTone === "alert" ? "#c8736d"
+                  : eyebrowTone === "warm"  ? "#a07a4a"
+                  : "#768596";
+  return (
+    <div style={{
+      flex: 1, minWidth: 0,
+      padding: "10px 14px",
+      borderRadius: 16,
+      background: "linear-gradient(160deg, rgba(255,250,245,0.86) 0%, rgba(245,232,225,0.72) 60%, rgba(232,225,232,0.65) 100%)",
+      backdropFilter: "blur(28px) saturate(1.15)",
+      WebkitBackdropFilter: "blur(28px) saturate(1.15)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      boxShadow: `
+        0 20px 50px rgba(45,14,14,0.18),
+        0 0 30px rgba(232,168,120,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.95)
+      `,
+      display: "flex", alignItems: "center", gap: 12,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+    }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 6,
+          fontSize: 8.5, letterSpacing: 1.5, fontWeight: 600,
+          textTransform: "uppercase", color: toneColor,
+        }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: "50%",
+            background: toneColor, boxShadow: `0 0 6px ${toneColor}`,
+          }} />
+          {eyebrow}
+        </div>
+        <div style={{
+          marginTop: 3,
+          fontWeight: 700, fontSize: 13.5, lineHeight: 1.2,
+          color: "#2D0E0E", letterSpacing: -0.2, textWrap: "pretty",
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>
+          {title}
+        </div>
+        <div style={{
+          marginTop: 2,
+          fontSize: 10.5, lineHeight: 1.3,
+          color: "#404654", textWrap: "pretty",
+          whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+        }}>
+          <span style={{
+            fontSize: 8, letterSpacing: 1.2, fontWeight: 600,
+            textTransform: "uppercase", color: "#9a8d8a", marginRight: 5,
+          }}>If ignored</span>
+          {consequence}
+        </div>
+      </div>
+      <button style={{
+        flexShrink: 0,
+        height: 30, padding: "0 14px", borderRadius: 999, border: 0,
+        background: "linear-gradient(180deg, #e57555 0%, #c64d2e 100%)",
+        color: "#fff", fontWeight: 500, fontSize: 11.5,
+        cursor: "pointer",
+        boxShadow: "0 6px 14px rgba(223,96,67,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
+        fontFamily: "'Space Grotesk', system-ui, sans-serif",
+        letterSpacing: 0.2,
+      }}>{action}</button>
+    </div>
+  );
+}
+
+// ── Floating glassmorphic card — same recipe as Orb file ────────────
+function FloatingCard({ position, eyebrow, eyebrowTone, title, why, body, consequence, actions }) {
+  const toneColor = eyebrowTone === "alert" ? "#c8736d"
+                  : eyebrowTone === "warm"  ? "#a07a4a"
+                  : "#768596";
+  return (
+    <div style={{
+      position: "absolute",
+      ...position,
+      width: 252,
+      padding: 14,
+      borderRadius: 20,
+      background: "linear-gradient(160deg, rgba(255,250,245,0.86) 0%, rgba(245,232,225,0.72) 60%, rgba(232,225,232,0.65) 100%)",
+      backdropFilter: "blur(28px) saturate(1.15)",
+      WebkitBackdropFilter: "blur(28px) saturate(1.15)",
+      border: "1px solid rgba(255,255,255,0.85)",
+      boxShadow: `
+        0 30px 70px rgba(45,14,14,0.22),
+        0 0 40px rgba(232,168,120,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.95)
+      `,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+      zIndex: 40,
+    }}>
+      {/* eyebrow */}
+      <div style={{
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        marginBottom: 8,
+      }}>
+        <div style={{
+          fontSize: 9, letterSpacing: 1.5, fontWeight: 600,
+          textTransform: "uppercase", color: toneColor,
+          display: "flex", alignItems: "center", gap: 6,
+        }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: "50%",
+            background: toneColor,
+            boxShadow: `0 0 6px ${toneColor}`,
+          }} />
+          {eyebrow}
+        </div>
+      </div>
+
+      {/* title */}
+      <div style={{
+        fontWeight: 700, fontSize: 14.5, lineHeight: 1.2,
+        color: "#2D0E0E", letterSpacing: -0.25, textWrap: "pretty",
+      }}>
+        {title}
+      </div>
+
+      {/* why surfaced */}
+      <WhySurfaced text={why} />
+
+      {/* body */}
+      <div style={{
+        marginTop: 9,
+        fontSize: 12, lineHeight: 1.42, fontWeight: 500,
+        color: "#2D0E0E", textWrap: "pretty",
+      }}>
+        {body}
+      </div>
+
+      {/* if-ignored */}
+      <div style={{
+        marginTop: 10, paddingTop: 8,
+        borderTop: "1px dashed rgba(64,70,84,0.15)",
+        lineHeight: 1.4, textWrap: "pretty",
+      }}>
+        <span style={{
+          fontSize: 8.5, letterSpacing: 1.4, fontWeight: 600,
+          textTransform: "uppercase", color: "#9a8d8a",
+          marginRight: 6,
+        }}>If ignored</span>
+        <span style={{ fontSize: 11.5, color: "#404654" }}>
+          {consequence}
+        </span>
+      </div>
+
+      {/* actions */}
+      <div style={{ display: "flex", gap: 6, marginTop: 11 }}>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999, border: 0,
+          background: "linear-gradient(180deg, #e57555 0%, #c64d2e 100%)",
+          color: "#fff", fontWeight: 500, fontSize: 12,
+          cursor: "pointer",
+          boxShadow: "0 6px 14px rgba(223,96,67,0.35), inset 0 1px 0 rgba(255,255,255,0.4)",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          letterSpacing: 0.2,
+        }}>{actions[0]}</button>
+        <button style={{
+          flex: 1, height: 30, borderRadius: 999,
+          border: "1px solid rgba(64,70,84,0.2)",
+          background: "rgba(255,253,250,0.55)", color: "#404654",
+          fontWeight: 500, fontSize: 12, cursor: "pointer",
+          fontFamily: "'Space Grotesk', system-ui, sans-serif",
+          letterSpacing: 0.2,
+        }}>{actions[1]}</button>
+      </div>
+    </div>
+  );
+}
+
+// ── Intelligence ribbon — same restrained style ─────────────────────
+function Ribbon() {
+  return (
+    <div style={{
+      padding: "7px 16px",
+      borderRadius: 18,
+      maxWidth: 360,
+      background: "linear-gradient(180deg, rgba(244,238,232,0.7) 0%, rgba(228,220,216,0.55) 100%)",
+      backdropFilter: "blur(14px) saturate(1.1)",
+      WebkitBackdropFilter: "blur(14px) saturate(1.1)",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 14px rgba(64,70,84,0.08)",
+      border: "0.5px solid rgba(255,255,255,0.4)",
+    }}>
+      <div style={{
+        fontSize: 11.5, fontWeight: 400, letterSpacing: 0.2,
+        color: "rgba(118,133,150,0.78)",
+        textAlign: "center", lineHeight: 1.4,
+      }}>
+        <span style={{ color: "rgba(64,70,84,0.78)", fontWeight: 500 }}>Agency</span>
+        <span> surfaced </span>
+        <span style={{ color: "rgba(64,70,84,0.85)", fontVariantNumeric: "tabular-nums" }}>8</span>
+        <span> clients</span>
+        <span style={{ color: "rgba(118,133,150,0.4)", margin: "0 6px" }}>·</span>
+        <span style={{ color: "rgba(64,70,84,0.85)", fontVariantNumeric: "tabular-nums" }}>3</span>
+        <span> require action</span>
+        <span style={{ color: "rgba(118,133,150,0.4)", margin: "0 6px" }}>·</span>
+        <span style={{ color: "rgba(160,122,74,0.85)", fontVariantNumeric: "tabular-nums" }}>1</span>
+        <span> quiet for </span>
+        <span style={{ color: "rgba(160,122,74,0.85)", fontVariantNumeric: "tabular-nums" }}>14d</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Chat input + chips — same recipe ────────────────────────────────
+function ChatInput() {
+  const [val, setVal] = useState("");
+  const inputRef = useRef(null);
+  const suggestions = [
+    "Who needs me first?",
+    "Show me the quiet ones",
+    "What's working this week?",
+    "Triage all alerts",
+  ];
+  return (
+    <div style={{
+      width: "min(720px, 70vw)",
+      display: "flex", flexDirection: "column", gap: 10,
+    }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 6, paddingLeft: 14 }}>
+        {suggestions.map((s) => (
+          <button
+            key={s} type="button"
+            onClick={() => { setVal(s); if (inputRef.current) inputRef.current.focus(); }}
+            style={{
+              border: 0,
+              padding: "5px 11px",
+              borderRadius: 999,
+              background: "linear-gradient(180deg, rgba(246,244,242,0.85) 0%, rgba(232,230,230,0.7) 100%)",
+              boxShadow: "inset 0 1px 1.5px rgba(255,255,255,0.7), inset 0 -1.5px 3px rgba(118,133,150,0.12), 0 1px 2px rgba(64,70,84,0.04)",
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+              fontSize: 11.5, fontWeight: 500, letterSpacing: 0.15,
+              color: "rgba(64,70,84,0.55)",
+              cursor: "pointer",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
+      <div style={{
+        width: "100%", height: 64, borderRadius: 999,
+        display: "flex", alignItems: "center",
+        padding: "0 8px 0 22px", gap: 14,
+        background: "linear-gradient(180deg, #f6f4f2 0%, #e8e6e6 100%)",
+        boxShadow: `
+          inset 0 2px 4px rgba(255,255,255,0.9),
+          inset 0 -3px 6px rgba(200,160,160,0.18),
+          inset 0 0 0 1px rgba(255,255,255,0.7),
+          0 18px 40px rgba(180,130,130,0.18),
+          0 4px 10px rgba(180,140,150,0.1)
+        `,
+      }}>
+        <button style={{
+          width: 40, height: 40, borderRadius: "50%", border: 0,
+          background: "linear-gradient(180deg, #f0eef0 0%, #d8d8de 100%)",
+          boxShadow: "inset 0 1px 2px rgba(255,255,255,0.9), inset 0 -2px 4px rgba(118,133,150,0.25), 0 2px 4px rgba(64,70,84,0.15)",
+          display: "grid", placeItems: "center", cursor: "pointer",
+        }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <rect x="9" y="3" width="6" height="12" rx="3" stroke="#404654" strokeWidth="1.8" />
+            <path d="M5 11a7 7 0 0 0 14 0M12 18v3" stroke="#404654" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
+        <input
+          ref={inputRef}
+          value={val}
+          onChange={e => setVal(e.target.value)}
+          placeholder="Ask about any client, any pattern, any moment…"
+          style={{
+            flex: 1, border: 0, background: "transparent", outline: "none",
+            fontFamily: "'Space Grotesk', system-ui, sans-serif",
+            fontSize: 15.5, color: "#404654", letterSpacing: 0.1,
+          }}
+        />
+        <button style={{
+          width: 48, height: 48, borderRadius: "50%", border: 0,
+          background: "linear-gradient(180deg, #e57555 0%, #c64d2e 100%)",
+          display: "grid", placeItems: "center", cursor: "pointer",
+          boxShadow: `0 8px 20px rgba(223,96,67,0.45), 0 0 28px rgba(223,96,67,0.3), inset 0 1px 0 rgba(255,255,255,0.5)`,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 19V5M6 11l6-6 6 6" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Orbital field — agency in center, clients around. Viewport-aware. ──
+function OrbitalField() {
+  const stageRef = useRef(null);
+  const [hovered, setHovered] = useState(null);
+  const [vp, setVp] = useState({ w: 1200, h: 800 });
+
+  useEffect(() => {
+    const measure = () => setVp({ w: window.innerWidth, h: window.innerHeight });
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  // Layout: top card row + chrome ≈ 110px. Bottom: ribbon (b:140) + chat
+  // column ≈ 180px. Orbital field gets what's between.
+  const topPad = 110;
+  const botPad = 180;
+  const sidePad = 24;
+  const innerW = Math.max(360, vp.w - 64 - sidePad * 2);
+  const innerH = Math.max(220, vp.h - topPad - botPad);
+
+  // Use a higher squash so vertical orbit room is sufficient and inner
+  // clearance can be reasonable. (At very low squash, clearance forces
+  // ring0 to be huge → outer ring overflows the height budget.)
+  const squash = 0.55;
+  // The outer ring's vertical extent is the binding constraint. To keep
+  // this from cascading into a circular dependency, assume the worst-case
+  // ring0 (∼0.8/squash + small clientBase term) when computing the budget.
+  const worstRing0 = 0.8 / squash + 0.5;     // ≈ 1.95 at squash=0.55
+  const worstRing2 = worstRing0 + 0.95;       // ≈ 2.90
+  const orbHalf = 22;
+  const labelPad = 22;
+  const agencyRByH = (innerH / 2 - orbHalf - labelPad) / (worstRing2 * squash);
+  const agencyRByW = (innerW / 2 - orbHalf - 30) / worstRing2;
+  const agencyR = Math.max(38, Math.min(110, Math.min(agencyRByH, agencyRByW)));
+  const agencySize = agencyR * 1.6;
+  const clientBase = Math.max(28, Math.min(46, agencyR * 0.38));
+
+  // Innermost orbit must clear the agency orb at ALL angles. The squashed
+  // ellipse pulls clients CLOSEST to the agency center at θ=90°/270°
+  // (the minor-axis tips) — there the actual screen distance is
+  // radial · squash, not radial. So ring0 must satisfy:
+  //   agencyR · ring0 · squash  ≥  agencyR · 0.8 + clientBase/2 + gap
+  // (agencyR · 0.8 ≈ agency-orb outer radius, since agencySize = agencyR · 1.6)
+  const innerClearance = agencyR * 0.8 + clientBase / 2 + 14;
+  const minRing0 = innerClearance / (agencyR * squash);
+  const ring0 = Math.max(1.5, minRing0);
+  const ring1 = ring0 + 0.45;
+  const ring2 = ring0 + 0.95;
+  const rings = [
+    { mul: ring0, label: "ACTIVE TODAY" },
+    { mul: ring1, label: "THIS WEEK"    },
+    { mul: ring2, label: "QUIETER"      },
+  ];
+  const radialFor = (orig) => orig < 1.7 ? ring0 : orig < 2.1 ? ring1 : ring2;
+
+  return (
+    <div ref={stageRef} style={{
+      position: "absolute",
+      left: sidePad, right: sidePad,
+      top: topPad, bottom: botPad,
+      display: "grid", placeItems: "center",
+      pointerEvents: "none",
+    }}>
+      <div style={{ position: "relative", width: 0, height: 0, pointerEvents: "auto" }}>
+        {/* orbital rings */}
+        <svg
+          width="1200" height="900"
+          viewBox="-600 -450 1200 900"
+          style={{ position: "absolute", left: -600, top: -450, pointerEvents: "none", overflow: "visible" }}
+        >
+          {rings.map((ring, i) => {
+            const rx = agencyR * ring.mul;
+            const ry = rx * squash; // match the orbital plane the orbs sit on
+            return (
+              <g key={i} style={{ opacity: 0.4 }}>
+                <ellipse
+                  cx={0} cy={0} rx={rx} ry={ry}
+                  fill="none"
+                  stroke="rgba(154,141,138,0.32)"
+                  strokeWidth="0.8"
+                  strokeDasharray="2 6"
+                />
+                <text
+                  x={rx - 8} y={3}
+                  textAnchor="end"
+                  fontFamily="'Space Grotesk', system-ui, sans-serif"
+                  fontSize="9" fontWeight="500" letterSpacing="2.2"
+                  fill="rgba(154,141,138,0.55)"
+                  style={{ filter: "drop-shadow(0 0 3px rgba(45,42,42,0.85))" }}
+                >
+                  {ring.label}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Agency orb at center */}
+        <div style={{
+          position: "absolute", left: -agencySize / 2, top: -agencySize / 2,
+        }}>
+          <AgencyOrb size={agencySize} />
+        </div>
+
+        {/* Client orbs */}
+        {CLIENTS.map(c => {
+          const rad = (c.angle * Math.PI) / 180;
+          const dist = agencyR * radialFor(c.radial);
+          const x = Math.cos(rad) * dist;
+          const y = Math.sin(rad) * dist * squash;
+          return (
+            <ClientOrb
+              key={c.id}
+              client={c}
+              x={x} y={y}
+              base={clientBase}
+              hovered={hovered === c.id}
+              onHover={setHovered}
+              onLeave={() => setHovered(null)}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── App ─────────────────────────────────────────────────────────────
+function App() {
+  // Same dusk gradient as Orb file
+  const bg = `
+    radial-gradient(ellipse 140% 70% at 50% 100%, #c08680 0%, rgba(192,123,116,0) 55%),
+    radial-gradient(ellipse 120% 60% at 50% 95%, #b8918e 0%, rgba(184,145,142,0) 50%),
+    radial-gradient(ellipse 90% 55% at 50% 50%, #d4d4d4 0%, rgba(212,212,212,0) 70%),
+    radial-gradient(ellipse 130% 80% at 50% 0%, #6c92a0 0%, rgba(108,146,160,0) 60%),
+    linear-gradient(180deg, #4a5e68 0%, #6c8290 18%, #9aa6ad 42%, #c2a8a4 68%, #c07b74 100%)
+  `;
+
+  return (
+    <div style={{
+      width: "100vw", height: "100vh", overflow: "hidden",
+      position: "relative", background: bg,
+      fontFamily: "'Space Grotesk', system-ui, sans-serif",
+    }}>
+      {/* atmospheric clouds */}
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: `
+          radial-gradient(ellipse at 20% 80%, rgba(192,123,116,0.35) 0%, transparent 40%),
+          radial-gradient(ellipse at 80% 70%, rgba(108,146,160,0.35) 0%, transparent 35%),
+          radial-gradient(ellipse at 50% 95%, rgba(212,212,212,0.4) 0%, transparent 50%)
+        `,
+      }} />
+      {/* horizon haze */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0, height: "30%",
+        background: "linear-gradient(180deg, transparent, rgba(192,123,116,0.32) 60%, rgba(176,108,102,0.4) 100%)",
+        pointerEvents: "none",
+      }} />
+
+      <div style={{ position: "absolute", inset: 0, display: "flex" }}>
+        <SideRail />
+
+        <div style={{ flex: 1, position: "relative" }}>
+          <TopChrome />
+
+          {/* Orbital field — agency + 8 clients */}
+          <OrbitalField />
+
+          {/* Top card row — two horizontal alert strips */}
+          <div style={{
+            position: "absolute", top: 60, left: 88, right: 24,
+            display: "flex", gap: 12, zIndex: 40,
+          }}>
+            <AlertStrip
+              eyebrow="Roster Alert · 3 clients"
+              eyebrowTone="alert"
+              title="Three clients need you this morning"
+              consequence="Two relationships at risk; momentum loss across portfolio."
+              action="Triage all"
+            />
+            <AlertStrip
+              eyebrow="Portfolio Momentum · this week"
+              eyebrowTone="warm"
+              title="+12% engagement vs last week"
+              consequence="Pattern visibility lost; can't replicate what's working."
+              action="See breakdown"
+            />
+          </div>
+
+          {/* Ribbon — clear band above the chat-input column (chips + pill) */}
+          <div style={{
+            position: "absolute", bottom: 140, left: 0, right: 0,
+            display: "grid", placeItems: "center", zIndex: 90,
+            pointerEvents: "none",
+          }}>
+            <Ribbon />
+          </div>
+
+          {/* Chat input */}
+          <div style={{
+            position: "absolute", bottom: 24, left: 0, right: 0,
+            display: "grid", placeItems: "center", zIndex: 30,
+          }}>
+            <ChatInput />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>

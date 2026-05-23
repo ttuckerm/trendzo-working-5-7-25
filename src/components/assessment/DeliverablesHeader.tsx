@@ -162,18 +162,6 @@ export function DeliverablesHeader({ firstName, reducedMotion, delayMs }: Props)
         ))}
       </div>
 
-      <p
-        style={{
-          marginTop: 14,
-          fontFamily: '"DM Sans", system-ui, sans-serif',
-          fontSize: 12,
-          color: '#5b5b63',
-        }}
-      >
-        Your Freedom Agent (bottom of page) knows everything here. Ask it
-        anything.
-      </p>
-
       <style>{`
         .deliverables-grid {
           display: flex;
