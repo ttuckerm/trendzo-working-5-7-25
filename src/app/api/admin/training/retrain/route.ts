@@ -11,7 +11,7 @@ import { requireAuth } from '@/lib/auth/api-guard';
 import { runS6Retrain } from '@/lib/training/run-s6-retrain';
 
 export const dynamic = 'force-dynamic';
-export const maxDuration = 3600;
+export const maxDuration = 800;
 
 export async function POST() {
   const auth = await requireAuth();
