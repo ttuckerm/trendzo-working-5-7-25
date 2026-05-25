@@ -15,6 +15,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 export const maxDuration = 300
 
 // ── Job-run monitoring ─────────────────────────────────────────────────

@@ -17,6 +17,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 export const maxDuration = 120
 
 const AUTO_APPROVE_THRESHOLD = 0.8
