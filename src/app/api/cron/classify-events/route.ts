@@ -14,7 +14,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -128,6 +128,25 @@ Return ONLY a JSON array (no markdown, no code fences).`
   }
 }
 
+// ── Batch processing — timeout-safe, resumable, idempotent ───────────────
+//
+// The classifier pulls ONLY detected_trends with classification_status =
+// 'pending', in batches of CLASSIFY_BATCH_SIZE, and marks each trend
+// 'completed' / 'failed' as it goes. A trend is never re-classified once
+// 'completed', so reruns cannot create duplicate cultural_events.
+
+const CLASSIFY_BATCH_SIZE = Math.max(1, parseInt(process.env.CLASSIFY_BATCH_SIZE || '10', 10))
+const CLASSIFY_STALE_MS = Math.max(60000, parseInt(process.env.CLASSIFY_STALE_MS || '600000', 10))
+
+/** Update a trend's classification status (classified_at doubles as last-touch time). */
+async function markTrend(db: SupabaseClient, id: number, status: 'pending' | 'processing' | 'completed' | 'failed') {
+  const { error } = await db
+    .from('detected_trends')
+    .update({ classification_status: status, classified_at: new Date().toISOString() })
+    .eq('id', id)
+  if (error) console.error(`[EventClassifier] mark ${status} failed for trend ${id}:`, error.message)
+}
+
 // ── Main Handler ────────────────────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
@@ -151,109 +170,190 @@ export async function GET(request: NextRequest) {
   const db = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } })
   const startTime = Date.now()
 
-  // Fetch detected trends that haven't been classified yet
-  // (no matching cultural_event with same source_trend_id)
+  console.log(`[EventClassifier] START batch_size=${CLASSIFY_BATCH_SIZE}${targetNiche ? ` niche=${targetNiche}` : ''}`)
+
+  // Reclaim trends stuck in 'processing' from a crashed/killed run so they retry.
+  const staleCutoff = new Date(Date.now() - CLASSIFY_STALE_MS).toISOString()
+  {
+    let reclaim = db.from('detected_trends')
+      .update({ classification_status: 'pending', classified_at: new Date().toISOString() })
+      .eq('classification_status', 'processing').lt('classified_at', staleCutoff)
+    if (targetNiche) reclaim = reclaim.eq('niche', targetNiche)
+    const { error: reclaimErr } = await reclaim
+    if (reclaimErr) console.error('[EventClassifier] stale reclaim failed:', reclaimErr.message)
+  }
+
+  // Pull ONLY pending trends, newest first, capped at the batch size.
   let query = db
     .from('detected_trends')
     .select('id, niche, trend_summary, velocity_score, confidence, sources, evidence, detected_date')
+    .eq('classification_status', 'pending')
     .order('detected_date', { ascending: false })
-    .limit(20)
+    .limit(CLASSIFY_BATCH_SIZE)
+  if (targetNiche) query = query.eq('niche', targetNiche)
 
-  if (targetNiche) {
-    query = query.eq('niche', targetNiche)
+  const { data: pendingTrends, error: fetchErr } = await query
+
+  if (fetchErr) {
+    console.error('[EventClassifier] fetch pending trends failed:', fetchErr.message)
+    return NextResponse.json(
+      { success: false, error: fetchErr.message, classified: 0, elapsed_ms: Date.now() - startTime },
+      { status: 500 },
+    )
   }
 
-  const { data: trends, error: fetchErr } = await query
-
-  if (fetchErr || !trends || trends.length === 0) {
+  if (!pendingTrends || pendingTrends.length === 0) {
+    console.log('[EventClassifier] COMPLETE — no pending trends to classify')
     return NextResponse.json({
       success: true,
-      message: 'No trends to classify',
+      message: 'No pending trends to classify',
+      trends_found: 0,
       classified: 0,
+      auto_approved: 0,
+      failed: 0,
+      skipped: 0,
+      remaining: 0,
+      more: false,
+      done: true,
       elapsed_ms: Date.now() - startTime,
     })
   }
 
-  // Filter out trends that already have corresponding cultural_events
-  const trendIds = trends.map(t => t.id)
-  const { data: existingEvents } = await db
-    .from('cultural_events')
-    .select('source_trend_ids')
+  console.log(`[EventClassifier] FOUND ${pendingTrends.length} pending trend(s)`)
 
-  const alreadyClassifiedIds = new Set<number>()
-  ;(existingEvents || []).forEach((e: any) => {
-    ;(e.source_trend_ids || []).forEach((id: number) => alreadyClassifiedIds.add(id))
-  })
+  // Claim this batch (pending -> processing) so overlapping runs don't double-classify.
+  const ids = pendingTrends.map(t => t.id)
+  const { data: claimedRows, error: claimErr } = await db
+    .from('detected_trends')
+    .update({ classification_status: 'processing', classified_at: new Date().toISOString() })
+    .in('id', ids)
+    .eq('classification_status', 'pending')
+    .select('id')
+  if (claimErr) console.error('[EventClassifier] claim failed:', claimErr.message)
+  const claimedIds = new Set<number>((claimedRows || []).map((r: any) => r.id))
+  let toProcess = pendingTrends.filter(t => claimedIds.has(t.id))
+  const skipped = pendingTrends.length - toProcess.length
+  if (skipped > 0) console.log(`[EventClassifier] SKIP ${skipped} trend(s) — claimed by another run`)
 
-  const unclassified = trends.filter(t => !alreadyClassifiedIds.has(t.id))
-
-  if (unclassified.length === 0) {
-    return NextResponse.json({
-      success: true,
-      message: 'All trends already classified',
-      classified: 0,
-      elapsed_ms: Date.now() - startTime,
-    })
+  // Idempotency guard: drop any claimed trend that already has a cultural_event
+  // (e.g. a prior run inserted the event but didn't mark the trend completed).
+  if (toProcess.length > 0) {
+    const { data: existing } = await db
+      .from('cultural_events')
+      .select('source_trend_ids')
+      .overlaps('source_trend_ids', toProcess.map(t => t.id))
+    const alreadyHas = new Set<number>()
+    ;(existing || []).forEach((e: any) => (e.source_trend_ids || []).forEach((id: number) => alreadyHas.add(id)))
+    if (alreadyHas.size > 0) {
+      for (const t of toProcess.filter(t => alreadyHas.has(t.id))) await markTrend(db, t.id, 'completed')
+      toProcess = toProcess.filter(t => !alreadyHas.has(t.id))
+      console.log(`[EventClassifier] ${alreadyHas.size} trend(s) already had events — marked completed, skipping`)
+    }
   }
-
-  console.log(`[EventClassifier] Classifying ${unclassified.length} trends...`)
 
   const errors: string[] = []
   let classified = 0
   let autoApproved = 0
+  let failed = 0
+  const nichesSeen = new Set<string>()
 
-  try {
-    const events = await classifyTrends(unclassified)
+  if (toProcess.length > 0) {
+    let events: any[] | null = null
+    try {
+      events = await classifyTrends(toProcess)
+    } catch (err: any) {
+      // Whole-batch LLM failure is transient — release the claim so the next run retries.
+      errors.push(`Classification call failed: ${err?.message}`)
+      console.error('[EventClassifier] classifyTrends failed, releasing batch back to pending:', err?.message)
+      for (const t of toProcess) await markTrend(db, t.id, 'pending')
+    }
 
-    for (let i = 0; i < events.length && i < unclassified.length; i++) {
-      const event = events[i]
-      const trend = unclassified[i]
+    if (events) {
+      for (let i = 0; i < toProcess.length; i++) {
+        const trend = toProcess[i]
+        const event = events[i]
+        nichesSeen.add(trend.niche)
 
-      const shouldAutoApprove = trend.confidence >= AUTO_APPROVE_THRESHOLD
-      const expiresAt = new Date(Date.now() + (event.expires_in_days || 7) * 24 * 3600 * 1000).toISOString()
+        // One trend failing must NOT abort the rest of the batch.
+        if (!event) {
+          await markTrend(db, trend.id, 'failed')
+          failed++
+          errors.push(`${trend.niche}/trend#${trend.id}: no classification returned`)
+          console.warn(`[EventClassifier] FAIL trend#${trend.id} (${trend.niche}) — no classification returned`)
+          continue
+        }
 
-      const { error: insertErr } = await db
-        .from('cultural_events')
-        .insert({
-          niche: trend.niche,
-          event_title: event.event_title,
-          event_summary: event.event_summary,
-          taxonomy_classification: event.taxonomy || {},
-          velocity_score: trend.velocity_score,
-          confidence: trend.confidence,
-          decay_rate_estimate: Math.max(0, Math.min(1, event.decay_rate || 0.3)),
-          activated_niches: event.activated_niches || [trend.niche],
-          source_trend_ids: [trend.id],
-          keywords: event.keywords || [],
-          status: shouldAutoApprove ? 'approved' : 'detected',
-          auto_approved: shouldAutoApprove,
-          reviewed_at: shouldAutoApprove ? new Date().toISOString() : null,
-          reviewed_by: shouldAutoApprove ? 'auto' : null,
-          expires_at: expiresAt,
-          generated_by_agent: 'Trend Scout',
-        })
+        try {
+          const shouldAutoApprove = trend.confidence >= AUTO_APPROVE_THRESHOLD
+          const expiresAt = new Date(Date.now() + (event.expires_in_days || 7) * 24 * 3600 * 1000).toISOString()
 
-      if (insertErr) {
-        errors.push(`${trend.niche}/${event.event_title}: ${insertErr.message}`)
-      } else {
-        classified++
-        if (shouldAutoApprove) autoApproved++
+          const { error: insertErr } = await db
+            .from('cultural_events')
+            .insert({
+              niche: trend.niche,
+              event_title: event.event_title,
+              event_summary: event.event_summary,
+              taxonomy_classification: event.taxonomy || {},
+              velocity_score: trend.velocity_score,
+              confidence: trend.confidence,
+              decay_rate_estimate: Math.max(0, Math.min(1, event.decay_rate || 0.3)),
+              activated_niches: event.activated_niches || [trend.niche],
+              source_trend_ids: [trend.id],
+              keywords: event.keywords || [],
+              status: shouldAutoApprove ? 'approved' : 'detected',
+              auto_approved: shouldAutoApprove,
+              reviewed_at: shouldAutoApprove ? new Date().toISOString() : null,
+              reviewed_by: shouldAutoApprove ? 'auto' : null,
+              expires_at: expiresAt,
+              generated_by_agent: 'Trend Scout',
+            })
+
+          if (insertErr) {
+            await markTrend(db, trend.id, 'failed')
+            failed++
+            errors.push(`${trend.niche}/${event.event_title}: ${insertErr.message}`)
+            console.warn(`[EventClassifier] FAIL trend#${trend.id} (${trend.niche}) — insert error: ${insertErr.message}`)
+          } else {
+            await markTrend(db, trend.id, 'completed')
+            classified++
+            if (shouldAutoApprove) autoApproved++
+            console.log(`[EventClassifier] DONE trend#${trend.id} (${trend.niche}) -> "${event.event_title}"${shouldAutoApprove ? ' [auto-approved]' : ''}`)
+          }
+        } catch (err: any) {
+          await markTrend(db, trend.id, 'failed')
+          failed++
+          errors.push(`${trend.niche}/trend#${trend.id}: ${err?.message}`)
+          console.error(`[EventClassifier] ERROR trend#${trend.id} (${trend.niche}):`, err?.message)
+        }
       }
     }
-  } catch (err: any) {
-    errors.push(`Classification failed: ${err.message}`)
   }
 
+  // How many pending trends remain after this batch?
+  let remainingQuery = db.from('detected_trends').select('id', { count: 'exact', head: true }).eq('classification_status', 'pending')
+  if (targetNiche) remainingQuery = remainingQuery.eq('niche', targetNiche)
+  const { count: remaining } = await remainingQuery
+  const remainingCount = remaining ?? 0
+
   const elapsed = Date.now() - startTime
-  console.log(`[EventClassifier] Done: ${classified} classified, ${autoApproved} auto-approved in ${(elapsed / 1000).toFixed(1)}s`)
+  console.log(`[EventClassifier] COMPLETE — classified=${classified} auto_approved=${autoApproved} failed=${failed} skipped=${skipped} remaining=${remainingCount} elapsed_ms=${elapsed}`)
 
   return NextResponse.json({
     success: true,
-    trends_found: unclassified.length,
+    batch_size: CLASSIFY_BATCH_SIZE,
+    trends_found: pendingTrends.length,
+    // Legacy fields preserved for src/lib/cron/scheduler.ts logging.
+    niches_processed: nichesSeen.size,
     classified,
     auto_approved: autoApproved,
     needs_review: classified - autoApproved,
     auto_approve_threshold: AUTO_APPROVE_THRESHOLD,
+    // Batch observability.
+    failed,
+    skipped,
+    remaining: remainingCount,
+    more: remainingCount > 0,
+    done: remainingCount === 0,
     elapsed_ms: elapsed,
     errors: errors.length > 0 ? errors : undefined,
   })

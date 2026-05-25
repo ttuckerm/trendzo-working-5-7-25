@@ -510,6 +510,127 @@ Return ONLY a JSON array (no markdown, no code fences) with objects:
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 // ═══════════════════════════════════════════════════════════════════════
+// Batch processing — timeout-safe, resumable, idempotent
+// ═══════════════════════════════════════════════════════════════════════
+//
+// The unit of work is ONE niche. Each invocation processes at most BATCH_SIZE
+// niches and stops STARTING new niches once TIME_BUDGET_MS is reached, so a
+// single invocation can never run the full 20-niche pipeline (the cause of the
+// old 300s timeout). Per-niche state lives in cultural_scan_jobs (one row per
+// niche+scan_date); reruns resume where the last run stopped and never re-scan
+// a niche already 'completed' today.
+
+const ALL_SCAN_NICHES = Object.keys(NICHE_SUBREDDITS)
+
+// Configurable via env. Defaults are conservative so the budget plus the
+// slowest single niche (~70-90s observed) stays under Vercel's hard 300s kill.
+const BATCH_SIZE = Math.max(1, parseInt(process.env.CULTURAL_SCAN_BATCH_SIZE || '5', 10))
+const TIME_BUDGET_MS = Math.max(30000, parseInt(process.env.CULTURAL_SCAN_TIME_BUDGET_MS || '180000', 10))
+const STALE_PROCESSING_MS = Math.max(60000, parseInt(process.env.CULTURAL_SCAN_STALE_MS || '600000', 10))
+const MAX_NICHE_ATTEMPTS = Math.max(1, parseInt(process.env.CULTURAL_SCAN_MAX_ATTEMPTS || '3', 10))
+
+interface ScanJob { id: number; niche: string; status: string; attempts: number; started_at: string | null }
+
+/** Ensure one job row exists per niche for today. Idempotent — never resets existing rows. */
+async function ensureTodayJobs(db: SupabaseClient, niches: string[], today: string) {
+  const rows = niches.map(niche => ({ niche, scan_date: today }))
+  const { error } = await db
+    .from('cultural_scan_jobs')
+    .upsert(rows, { onConflict: 'niche,scan_date', ignoreDuplicates: true })
+  if (error) console.error('[CulturalScanner] ensureTodayJobs failed:', error.message)
+}
+
+/** Pick the next batch of niches: pending, retryable-failed, or stale 'processing' (a crashed run). */
+async function selectNicheBatch(db: SupabaseClient, today: string, limit: number): Promise<ScanJob[]> {
+  const staleCutoff = new Date(Date.now() - STALE_PROCESSING_MS).toISOString()
+  const cols = 'id, niche, status, attempts, started_at'
+
+  const { data: pending, error: e1 } = await db
+    .from('cultural_scan_jobs').select(cols)
+    .eq('scan_date', today).in('status', ['pending', 'failed'])
+    .order('attempts', { ascending: true }).order('id', { ascending: true })
+    .limit(limit)
+  if (e1) console.error('[CulturalScanner] selectNicheBatch(pending) failed:', e1.message)
+
+  const { data: stale, error: e2 } = await db
+    .from('cultural_scan_jobs').select(cols)
+    .eq('scan_date', today).eq('status', 'processing').lt('started_at', staleCutoff)
+    .order('id', { ascending: true }).limit(limit)
+  if (e2) console.error('[CulturalScanner] selectNicheBatch(stale) failed:', e2.message)
+
+  const merged: ScanJob[] = [
+    ...((pending || []) as ScanJob[]).filter(j => j.status === 'pending' || (j.status === 'failed' && j.attempts < MAX_NICHE_ATTEMPTS)),
+    ...((stale || []) as ScanJob[]),
+  ]
+  const seen = new Set<number>()
+  const out: ScanJob[] = []
+  for (const j of merged) {
+    if (seen.has(j.id)) continue
+    seen.add(j.id); out.push(j)
+    if (out.length >= limit) break
+  }
+  return out
+}
+
+/** Optimistically claim a job so two overlapping invocations cannot process the same niche. Returns true if we won the claim. */
+async function claimNicheJob(db: SupabaseClient, job: ScanJob): Promise<boolean> {
+  const now = new Date().toISOString()
+  let q = db.from('cultural_scan_jobs')
+    .update({ status: 'processing', started_at: now, attempts: (job.attempts || 0) + 1, error_message: null, updated_at: now })
+    .eq('id', job.id)
+  // Exclusivity guard: only the first updater transitions the row.
+  q = job.status === 'processing' ? q.eq('started_at', job.started_at as string) : q.eq('status', job.status)
+  const { data, error } = await q.select('id')
+  if (error) { console.error(`[CulturalScanner] claim failed for ${job.niche}:`, error.message); return false }
+  return (data?.length || 0) > 0
+}
+
+/** Record the terminal outcome of a niche job. */
+async function finishNicheJob(db: SupabaseClient, id: number, ok: boolean, durationMs: number, errorMessage: string | null) {
+  const now = new Date().toISOString()
+  const { error } = await db.from('cultural_scan_jobs').update({
+    status: ok ? 'completed' : 'failed',
+    completed_at: now,
+    duration_ms: durationMs,
+    error_message: ok ? null : (errorMessage || 'unknown error').slice(0, 1000),
+    updated_at: now,
+  }).eq('id', id)
+  if (error) console.error(`[CulturalScanner] finish update failed for job ${id}:`, error.message)
+}
+
+/** Count niches still needing work today (drives the `remaining`/`done` response fields). */
+async function countRemainingNiches(db: SupabaseClient, today: string): Promise<number> {
+  const staleCutoff = new Date(Date.now() - STALE_PROCESSING_MS).toISOString()
+  const base = () => db.from('cultural_scan_jobs').select('id', { count: 'exact', head: true }).eq('scan_date', today)
+  const { count: c1 } = await base().eq('status', 'pending')
+  const { count: c2 } = await base().eq('status', 'failed').lt('attempts', MAX_NICHE_ATTEMPTS)
+  const { count: c3 } = await base().eq('status', 'processing').lt('started_at', staleCutoff)
+  return (c1 || 0) + (c2 || 0) + (c3 || 0)
+}
+
+/** Run all enabled phases for ONE niche, reusing the existing scan/synthesis helpers unchanged. */
+async function processNiche(db: SupabaseClient, niche: string, today: string, phase: string) {
+  const errors: string[] = []
+  let reddit = { rows: 0, posts: 0 }
+  let twitter = { rows: 0, posts: 0 }
+  let synthesis = { trends: 0 }
+
+  if (phase === 'all' || phase === 'reddit') {
+    const r = await scanReddit(db, [niche], today)
+    reddit = { rows: r.rows, posts: r.posts }; errors.push(...r.errors)
+  }
+  if (phase === 'all' || phase === 'twitter') {
+    const t = await scanTwitter(db, [niche], today)
+    twitter = { rows: t.rows, posts: t.posts }; errors.push(...t.errors)
+  }
+  if (phase === 'all' || phase === 'synthesize') {
+    const s = await synthesizeTrends(db, [niche], today)
+    synthesis = { trends: s.trends }; errors.push(...s.errors)
+  }
+  return { reddit, twitter, synthesis, posts: reddit.posts + twitter.posts, rows: reddit.rows + twitter.rows, errors }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
 // Main Handler
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -533,44 +654,101 @@ export async function GET(request: NextRequest) {
   await recordJobRun('cultural_scanner')
 
   const db = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } })
-  const nichesToScan = targetNiche ? [targetNiche] : Object.keys(NICHE_SUBREDDITS)
   const today = new Date().toISOString().split('T')[0]
   const startTime = Date.now()
 
+  // Make sure today's per-niche job rows exist (single niche for manual/scheduler
+  // calls, otherwise the full set). Idempotent: existing rows are left untouched.
+  const targeted = targetNiche ? [targetNiche] : ALL_SCAN_NICHES
+  await ensureTodayJobs(db, targeted, today)
+
+  // Pick only the work for THIS invocation — never the whole list.
+  let batch: ScanJob[]
+  if (targetNiche) {
+    const { data } = await db.from('cultural_scan_jobs')
+      .select('id, niche, status, attempts, started_at')
+      .eq('scan_date', today).eq('niche', targetNiche).limit(1)
+    batch = (data || []) as ScanJob[]
+  } else {
+    batch = await selectNicheBatch(db, today, BATCH_SIZE)
+  }
+
+  console.log(`[CulturalScanner] START scan_date=${today} mode=${targetNiche ? `single:${targetNiche}` : 'batch'} batch_size=${BATCH_SIZE} time_budget_ms=${TIME_BUDGET_MS} candidates=${batch.length}`)
+
   const results: Record<string, any> = {}
   const allErrors: string[] = []
+  let processed = 0, failed = 0, skipped = 0
+  let totalPosts = 0, totalRows = 0
+  let stoppedEarly = false
 
-  console.log(`[CulturalScanner] Starting phase=${phase} for ${nichesToScan.length} niche(s)...`)
+  for (const job of batch) {
+    // SAFETY CUTOFF — checked BEFORE starting each niche. This is the code path
+    // that prevents the 300s timeout: we never begin a new niche past the budget,
+    // so per-invocation wall-clock is bounded to (budget + one in-flight niche).
+    if (Date.now() - startTime > TIME_BUDGET_MS) {
+      stoppedEarly = true
+      console.warn(`[CulturalScanner] STOP EARLY — ${TIME_BUDGET_MS}ms budget reached after ${processed} niche(s); remaining work left for next run`)
+      break
+    }
 
-  // Phase 1: Reddit
-  if (phase === 'all' || phase === 'reddit') {
-    const reddit = await scanReddit(db, nichesToScan, today)
-    results.reddit = { rows: reddit.rows, posts: reddit.posts }
-    allErrors.push(...reddit.errors)
+    if (!(await claimNicheJob(db, job))) {
+      skipped++
+      console.log(`[CulturalScanner] SKIP ${job.niche} — claimed by another run`)
+      continue
+    }
+
+    const nicheStart = Date.now()
+    try {
+      console.log(`[CulturalScanner] PROCESS ${job.niche} (attempt ${(job.attempts || 0) + 1})`)
+      const r = await processNiche(db, job.niche, today, phase)
+      const durationMs = Date.now() - nicheStart
+      const hadErrors = r.errors.length > 0
+      // Retry the niche only if it errored AND produced no trends. Partial data
+      // (e.g. Reddit saved but synthesis cleanly returned nothing) counts as done.
+      const isFailed = hadErrors && r.synthesis.trends === 0
+
+      if (isFailed) {
+        await finishNicheJob(db, job.id, false, durationMs, r.errors.slice(0, 5).join(' | '))
+        failed++
+        console.warn(`[CulturalScanner] FAIL ${job.niche} in ${durationMs}ms — ${r.errors.length} error(s): ${r.errors.slice(0, 3).join(' | ')}`)
+      } else {
+        await finishNicheJob(db, job.id, true, durationMs, null)
+        processed++
+        totalPosts += r.posts; totalRows += r.rows
+        console.log(`[CulturalScanner] DONE ${job.niche} in ${durationMs}ms — reddit ${r.reddit.rows}r/${r.reddit.posts}p, twitter ${r.twitter.rows}r/${r.twitter.posts}p, trends ${r.synthesis.trends}`)
+      }
+      results[job.niche] = { reddit: r.reddit, twitter: r.twitter, synthesis: r.synthesis, duration_ms: durationMs, errors: r.errors.length ? r.errors : undefined }
+      if (hadErrors) allErrors.push(...r.errors)
+    } catch (err: any) {
+      const durationMs = Date.now() - nicheStart
+      await finishNicheJob(db, job.id, false, durationMs, err?.message || 'exception')
+      failed++
+      allErrors.push(`${job.niche}: ${err?.message}`)
+      console.error(`[CulturalScanner] ERROR ${job.niche} in ${durationMs}ms:`, err?.message)
+    }
   }
 
-  // Phase 2: Twitter (via Gemini + Google Search)
-  if (phase === 'all' || phase === 'twitter') {
-    const twitter = await scanTwitter(db, nichesToScan, today)
-    results.twitter = { rows: twitter.rows, posts: twitter.posts }
-    allErrors.push(...twitter.errors)
-  }
-
-  // Phase 3: Trend Synthesis
-  if (phase === 'all' || phase === 'synthesize') {
-    const synthesis = await synthesizeTrends(db, nichesToScan, today)
-    results.synthesis = { trends_created: synthesis.trends }
-    allErrors.push(...synthesis.errors)
-  }
-
+  const remaining = await countRemainingNiches(db, today)
   const elapsed = Date.now() - startTime
-  console.log(`[CulturalScanner] Done in ${(elapsed / 1000).toFixed(1)}s`)
+  console.log(`[CulturalScanner] COMPLETE — processed=${processed} failed=${failed} skipped=${skipped} remaining=${remaining} stopped_early=${stoppedEarly} elapsed_ms=${elapsed}`)
 
   return NextResponse.json({
     success: true,
-    phase,
-    niches_scanned: nichesToScan.length,
     scan_date: today,
+    phase,
+    batch_size: BATCH_SIZE,
+    // Legacy fields preserved for src/lib/cron/scheduler.ts logging.
+    niches_scanned: processed,
+    total_posts: totalPosts,
+    rows_upserted: totalRows,
+    // Batch observability.
+    processed,
+    failed,
+    skipped,
+    remaining,
+    more: remaining > 0,
+    done: remaining === 0,
+    stopped_early: stoppedEarly,
     elapsed_ms: elapsed,
     results,
     errors: allErrors.length > 0 ? allErrors : undefined,
