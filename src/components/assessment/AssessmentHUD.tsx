@@ -115,6 +115,11 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
       }}
     >
       <FontStyles />
+      <img
+        src="/images/escape-assessment-logo.png"
+        alt="Escape Assessment"
+        style={{ display: 'block', width: 224, maxWidth: '60%', height: 'auto', margin: '0 auto 32px' }}
+      />
       <div
         style={{
           maxWidth: 1280,
