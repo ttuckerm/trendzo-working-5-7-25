@@ -1,10 +1,32 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+// State exposure pattern: render-prop via children-as-function.
+// Chosen over React Context because HamsterLoader is a simple single-purpose
+// overlay with one consumer (the loading-screen mini-game). Context would add
+// boilerplate without clarity gain for a single-consumer surface.
+
+import { useEffect, useState, type ReactNode } from 'react'
+import { useRouter } from 'next/navigation'
+import type { AssessmentReadyData } from '@/lib/assessment/types'
 import '../../app/(public)/free/freedom-os/hamster-loader.css'
+
+interface ChildrenRenderProps {
+  isAssessmentReady: boolean
+  assessmentData: AssessmentReadyData | null
+}
 
 interface Props {
   visible: boolean
+  // Parent passes the generator's success payload here as soon as
+  // POST /api/assessment/generate returns. Null while still generating.
+  assessmentData?: AssessmentReadyData | null
+  // When provided, called once instead of the default auto-route. Lets a
+  // sibling (e.g. the mini-game's end-state modal) take over the
+  // "generation finished" hand-off.
+  onAssessmentReady?: (data: AssessmentReadyData) => void
+  // Optional render-prop for children that need to react to the ready state
+  // (e.g. a mini-game showing its "Your escape plan is ready" end screen).
+  children?: (state: ChildrenRenderProps) => ReactNode
 }
 
 const PHRASES = [
@@ -14,8 +36,18 @@ const PHRASES = [
   'Finding your first 50 leads…',
 ]
 
-export function HamsterLoader({ visible }: Props) {
+export function HamsterLoader({
+  visible,
+  assessmentData = null,
+  onAssessmentReady,
+  children,
+}: Props) {
+  const router = useRouter()
   const [phraseIndex, setPhraseIndex] = useState(0)
+  // Pure derivation: a synced useState would just shadow the prop and could
+  // drift if a setter was missed. The render-prop consumer gets the same
+  // signal computed every render.
+  const isAssessmentReady = assessmentData !== null
 
   useEffect(() => {
     if (!visible) {
@@ -28,6 +60,18 @@ export function HamsterLoader({ visible }: Props) {
     )
     return () => window.clearInterval(id)
   }, [visible])
+
+  // When the parent reports a successful generation, either hand off to the
+  // caller-supplied callback or perform the default auto-route that previously
+  // lived in FreedomOSTool.submit().
+  useEffect(() => {
+    if (!assessmentData) return
+    if (onAssessmentReady) {
+      onAssessmentReady(assessmentData)
+    } else {
+      router.push(`/assessment/${assessmentData.shareUrlId}`)
+    }
+  }, [assessmentData, onAssessmentReady, router])
 
   if (!visible) return null
 
@@ -119,6 +163,8 @@ export function HamsterLoader({ visible }: Props) {
       >
         This usually takes about 90 seconds.
       </p>
+
+      {children?.({ isAssessmentReady, assessmentData })}
 
       <style>{`
         @keyframes fosVolumetricGlow {

@@ -7,6 +7,10 @@ interface Props {
   messages: FreedomAgentMessage[]
   isStreaming: boolean
   streamingContent: string
+  // Optional standing welcome from the Agent, rendered as the first bubble
+  // in the scroll list. Hardcoded copy — never from a live model call. Used
+  // by the rail's locked/empty states.
+  welcomeMessage?: string
 }
 
 function formatTime(iso: string): string {
@@ -25,6 +29,7 @@ export function AgentMessages({
   messages,
   isStreaming,
   streamingContent,
+  welcomeMessage,
 }: Props) {
   const scrollerRef = useRef<HTMLDivElement | null>(null)
 
@@ -34,7 +39,7 @@ export function AgentMessages({
     el.scrollTop = el.scrollHeight
   }, [messages.length, streamingContent, isStreaming])
 
-  if (messages.length === 0 && !isStreaming) return null
+  if (messages.length === 0 && !isStreaming && !welcomeMessage) return null
 
   return (
     <div
@@ -48,6 +53,16 @@ export function AgentMessages({
         gap: 14,
       }}
     >
+      {welcomeMessage && (
+        <Bubble
+          message={{
+            role: 'assistant',
+            content: welcomeMessage,
+            timestamp: '',
+          }}
+          hideTimestamp
+        />
+      )}
       {messages.map((m, i) => (
         <Bubble key={i} message={m} />
       ))}
@@ -70,10 +85,12 @@ function Bubble({
   message,
   showCursor,
   streaming,
+  hideTimestamp,
 }: {
   message: FreedomAgentMessage
   showCursor?: boolean
   streaming?: boolean
+  hideTimestamp?: boolean
 }) {
   const isUser = message.role === 'user'
   return (
@@ -113,17 +130,19 @@ function Bubble({
         {message.content}
         {showCursor && <BlinkingCursor />}
       </div>
-      <div
-        style={{
-          marginTop: 4,
-          fontFamily: '"JetBrains Mono", ui-monospace, monospace',
-          fontSize: 10,
-          color: '#5b5b63',
-          alignSelf: 'center',
-        }}
-      >
-        {formatTime(message.timestamp)}
-      </div>
+      {!hideTimestamp && (
+        <div
+          style={{
+            marginTop: 4,
+            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+            fontSize: 10,
+            color: '#5b5b63',
+            alignSelf: 'center',
+          }}
+        >
+          {formatTime(message.timestamp)}
+        </div>
+      )}
     </div>
   )
 }

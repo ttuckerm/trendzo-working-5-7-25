@@ -1,10 +1,16 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { buildInputFromForm, type FormState } from '@/lib/assessment/build-input-from-form'
+import type { AssessmentReadyData } from '@/lib/assessment/types'
 import { FreedomMultiplierControl } from '@/components/freedom-os/FreedomMultiplierControl'
 import { HamsterLoader } from '@/components/freedom-os/HamsterLoader'
+import { StepOffGame } from '@/components/freedom-os/StepOffGame/StepOffGame'
+
+// Module-level stable reference so HamsterLoader's effect deps don't re-fire
+// on every render. Suppresses the loader's default auto-route — the mini-game's
+// "View My Plan →" CTA owns the navigation now.
+const SUPPRESS_AUTO_ROUTE = () => {}
 
 const STORAGE_KEY = 'dl:freedom-os:v1:state'
 
@@ -70,7 +76,6 @@ export interface FreedomOSToolProps {
 }
 
 export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps = {}) {
-  const router = useRouter()
   const [form, setForm] = useState<FormState>(DEFAULT_FORM)
   const [runwayMode, setRunwayMode] = useState<RunwayMode>('months')
   const [savingsAmount, setSavingsAmount] = useState<number | string>('')
@@ -79,6 +84,10 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  // Set once the generator API responds successfully. Passed to HamsterLoader,
+  // which derives isAssessmentReady from it and performs the auto-route to
+  // the HUD (or hands off to an onAssessmentReady callback when wired up).
+  const [assessmentData, setAssessmentData] = useState<AssessmentReadyData | null>(null)
 
   // Restore from localStorage on mount.
   useEffect(() => {
@@ -212,30 +221,29 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         typeof data.shareUrlId === 'string' && data.shareUrlId
           ? data.shareUrlId
           : data.assessmentId
-      router.push(`/assessment/${shareUrlId}`)
+      // Hand the ready payload to HamsterLoader. The loader either auto-routes
+      // (default behavior) or fires onAssessmentReady when a caller wires one
+      // up. isSubmitting stays true so the overlay remains visible through
+      // the transition.
+      setAssessmentData({ assessmentId: data.assessmentId, shareUrlId })
     } catch {
       setSubmitError('Network error. Please check your connection and try again.')
       setIsSubmitting(false)
     }
-  }, [form, runwayMode, savingsAmount, freedomMultiplier, router, sessionId])
+  }, [form, runwayMode, savingsAmount, freedomMultiplier, sessionId])
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-8">
       <div className="text-center mb-8">
-        <img
-          src="/images/escape-assessment-logo.png"
-          alt="Escape Assessment"
-          className="mx-auto block w-56 sm:w-64 h-auto mb-6"
-        />
         <h1
           className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2"
-          style={{ fontFamily: "'Montserrat', sans-serif" }}
+          style={{ fontFamily: "'Playfair Display', serif" }}
         >
           Generate Your Escape Assessment
         </h1>
         <p
           className="text-sm sm:text-base"
-          style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'Montserrat', sans-serif" }}
+          style={{ color: 'rgba(255,255,255,0.45)', fontFamily: "'DM Sans', sans-serif" }}
         >
           Answer 9 questions. Get a personalized 14-day sprint, a 90-day roadmap, your Freedom Number, and a personal AI advisor. Three minutes.
         </p>
@@ -485,7 +493,15 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         )}
       </div>
 
-      <HamsterLoader visible={isSubmitting} />
+      <HamsterLoader
+        visible={isSubmitting}
+        assessmentData={assessmentData}
+        onAssessmentReady={SUPPRESS_AUTO_ROUTE}
+      >
+        {({ isAssessmentReady, assessmentData: data }) => (
+          <StepOffGame isAssessmentReady={isAssessmentReady} assessmentData={data} />
+        )}
+      </HamsterLoader>
 
       <style>{`
         .fos-submit-btn:hover:not(:disabled) {

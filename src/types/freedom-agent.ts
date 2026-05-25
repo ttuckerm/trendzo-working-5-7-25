@@ -4,6 +4,10 @@ export interface FreedomAgentMessage {
   role: FreedomAgentMessageRole
   content: string
   timestamp: string // ISO 8601
+  // Local-only marker: true when the bubble was inserted client-side as a
+  // chip-preview (pre-unlock teaser) and never sent to or stored on the
+  // server. Real conversation history never has this flag.
+  preview?: boolean
 }
 
 export interface FreedomAgentConversation {

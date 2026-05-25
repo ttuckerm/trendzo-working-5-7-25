@@ -1,9 +1,14 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { SprintBlock, SprintDay } from '@/types/assessment'
 import type { SprintProgressMap } from '@/lib/assessment/fetch-assessment'
+import {
+  SprintDayPanel,
+  OPEN_DAY_PANEL_EVENT,
+  type OpenDayPanelDetail,
+} from './SprintDayPanel'
 
 interface Props {
   assessmentId: string // EA-X-XXX display ID
@@ -44,6 +49,7 @@ export function SprintGrid({
 }: Props) {
   const [progress, setProgress] = useState<SprintProgressMap>(initialProgress)
   const [toast, setToast] = useState<string | null>(null)
+  const [expandedDay, setExpandedDay] = useState<number | null>(null)
 
   // Listen for external toggles (e.g. Day1Spotlight) so this grid stays in sync.
   useEffect(() => {
@@ -65,6 +71,35 @@ export function SprintGrid({
         onExternalToggle as EventListener,
       )
   }, [])
+
+  // Day1Spotlight (and any other surface) can request the shared SprintDayPanel
+  // by dispatching OPEN_DAY_PANEL_EVENT with { dayNumber }. We're the single
+  // mount point for the panel — keeping it here avoids two parallel modal
+  // instances ever being open at once.
+  useEffect(() => {
+    function onOpenRequest(e: Event) {
+      const detail = (e as CustomEvent<OpenDayPanelDetail>).detail
+      if (!detail || typeof detail.dayNumber !== 'number') return
+      if (!sprint.days.some(d => d.dayNumber === detail.dayNumber)) return
+      setExpandedDay(detail.dayNumber)
+    }
+    window.addEventListener(OPEN_DAY_PANEL_EVENT, onOpenRequest as EventListener)
+    return () =>
+      window.removeEventListener(
+        OPEN_DAY_PANEL_EVENT,
+        onOpenRequest as EventListener,
+      )
+  }, [sprint.days])
+
+  // Resolve the day object + merge in completion flag so the panel header
+  // can show " · COMPLETED" without re-querying state.
+  const expandedDayData = useMemo(() => {
+    if (expandedDay == null) return null
+    const day = sprint.days.find(d => d.dayNumber === expandedDay)
+    if (!day) return null
+    const completed = progress[String(day.dayNumber)]?.completed === true
+    return { ...day, completed }
+  }, [expandedDay, sprint.days, progress])
 
   const toggle = useCallback(
     async (day: SprintDay) => {
@@ -166,6 +201,20 @@ export function SprintGrid({
           return (
             <motion.div
               key={day.dayNumber}
+              role="button"
+              tabIndex={interactionEnabled ? 0 : -1}
+              aria-label={`Open Day ${day.dayNumber} brief: ${day.task}`}
+              onClick={() => {
+                if (!interactionEnabled) return
+                setExpandedDay(day.dayNumber)
+              }}
+              onKeyDown={(e) => {
+                if (!interactionEnabled) return
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  setExpandedDay(day.dayNumber)
+                }
+              }}
               initial={reducedMotion ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={
@@ -187,6 +236,8 @@ export function SprintGrid({
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 6,
+                cursor: interactionEnabled ? 'pointer' : 'default',
+                outline: 'none',
               }}
             >
               <div
@@ -219,7 +270,11 @@ export function SprintGrid({
                   }
                   aria-pressed={completed}
                   disabled={!interactionEnabled}
-                  onClick={() => toggle(day)}
+                  onClick={(e) => {
+                    // Don't let the cell's open-panel handler fire too.
+                    e.stopPropagation()
+                    toggle(day)
+                  }}
                   style={{
                     width: 18,
                     height: 18,
@@ -296,6 +351,12 @@ export function SprintGrid({
           {toast}
         </div>
       )}
+
+      <SprintDayPanel
+        day={expandedDayData}
+        onClose={() => setExpandedDay(null)}
+        reducedMotion={reducedMotion}
+      />
 
       <style>{`
         .sprint-grid {
