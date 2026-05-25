@@ -21,6 +21,29 @@ export const maxDuration = 120
 
 const AUTO_APPROVE_THRESHOLD = 0.8
 
+// ── Job-run monitoring ─────────────────────────────────────────────────
+
+/**
+ * Records that this cron invocation ran, updating integration_job_runs.last_run.
+ * Called on every invocation BEFORE any work so monitoring stays observable
+ * regardless of which code path the handler takes. Surfaces Supabase errors
+ * instead of failing silently.
+ */
+async function recordJobRun(jobName: string) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_KEY
+  if (!supabaseUrl || !supabaseKey) return
+
+  const db = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } })
+  const { error } = await db
+    .from('integration_job_runs')
+    .upsert({ job: jobName, last_run: new Date().toISOString() } as any)
+
+  if (error) {
+    console.error(`[recordJobRun] Failed to record run for "${jobName}":`, error.message)
+  }
+}
+
 // ── All known niches for cross-niche activation ────────────────────────
 
 const ALL_NICHES = [
@@ -121,6 +144,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing Supabase env vars' }, { status: 500 })
   }
 
+  // Record this invocation immediately so monitoring sees every run,
+  // even when there are no trends to classify (early returns below).
+  await recordJobRun('event_classifier')
+
   const db = createClient(supabaseUrl, supabaseKey, { auth: { persistSession: false } })
   const startTime = Date.now()
 
@@ -216,11 +243,6 @@ export async function GET(request: NextRequest) {
   } catch (err: any) {
     errors.push(`Classification failed: ${err.message}`)
   }
-
-  // Track job run
-  try {
-    await db.from('integration_job_runs').upsert({ job: 'event_classifier', last_run: new Date().toISOString() } as any)
-  } catch {}
 
   const elapsed = Date.now() - startTime
   console.log(`[EventClassifier] Done: ${classified} classified, ${autoApproved} auto-approved in ${(elapsed / 1000).toFixed(1)}s`)
