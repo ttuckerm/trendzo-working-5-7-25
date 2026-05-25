@@ -541,7 +541,8 @@ async function ensureTodayJobs(db: SupabaseClient, niches: string[], today: stri
   if (error) console.error('[CulturalScanner] ensureTodayJobs failed:', error.message)
 }
 
-/** Pick the next batch of niches: pending, retryable-failed, or stale 'processing' (a crashed run). */
+/** Pick the next batch of niches. Priority: stale 'processing' (a crashed run, recovered first so a
+ *  retryable-failed backlog can't starve it), then pending, then retryable-failed. */
 async function selectNicheBatch(db: SupabaseClient, today: string, limit: number): Promise<ScanJob[]> {
   const staleCutoff = new Date(Date.now() - STALE_PROCESSING_MS).toISOString()
   const cols = 'id, niche, status, attempts, started_at'
@@ -560,8 +561,9 @@ async function selectNicheBatch(db: SupabaseClient, today: string, limit: number
   if (e2) console.error('[CulturalScanner] selectNicheBatch(stale) failed:', e2.message)
 
   const merged: ScanJob[] = [
-    ...((pending || []) as ScanJob[]).filter(j => j.status === 'pending' || (j.status === 'failed' && j.attempts < MAX_NICHE_ATTEMPTS)),
+    // Stale-processing recovery FIRST so a backlog of retryable-failed jobs can't starve it.
     ...((stale || []) as ScanJob[]),
+    ...((pending || []) as ScanJob[]).filter(j => j.status === 'pending' || (j.status === 'failed' && j.attempts < MAX_NICHE_ATTEMPTS)),
   ]
   const seen = new Set<number>()
   const out: ScanJob[] = []
