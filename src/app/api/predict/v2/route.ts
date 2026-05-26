@@ -16,6 +16,7 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import { createClient } from '@supabase/supabase-js';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
+import { getVpsTier } from '@/lib/prediction/system-registry';
 
 export const dynamic = 'force-dynamic';
 
@@ -133,7 +134,7 @@ export async function POST(request: NextRequest) {
       .update({
         status: 'completed',
         predicted_dps_7d: result.vps,
-        predicted_tier_7d: getVpsTierLabel(result.vps),
+        predicted_tier_7d: getVpsTier(result.vps).label,
         confidence: 0.75,
         components_used: ['xgboost-virality-ml'],
         latency_ms_total: totalLatencyMs,
@@ -195,8 +196,8 @@ export async function POST(request: NextRequest) {
           Math.max(0, result.vps - 10),
           Math.min(100, result.vps + 10),
         ],
-        viralPotential: getVpsTierLabel(result.vps),
-        tier: getVpsTierLabel(result.vps),
+        viralPotential: getVpsTier(result.vps).label,
+        tier: getVpsTier(result.vps).label,
       },
     });
   } catch (err: any) {
@@ -206,14 +207,4 @@ export async function POST(request: NextRequest) {
       { status: 500 },
     );
   }
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function getVpsTierLabel(vps: number): string {
-  if (vps >= 80) return 'Viral-Ready';
-  if (vps >= 65) return 'High Potential';
-  if (vps >= 50) return 'Moderate';
-  if (vps >= 35) return 'Needs Work';
-  return 'Low Potential';
 }

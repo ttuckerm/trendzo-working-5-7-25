@@ -12,6 +12,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { existsSync } from 'fs';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
+import { getVpsTier } from '@/lib/prediction/system-registry';
 
 // Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
 export const dynamic = 'force-dynamic'
@@ -141,7 +142,7 @@ export async function POST(request: NextRequest) {
       }, { status: 500 });
     }
 
-    const tierLabel = getVpsTierLabel(v2Result.vps);
+    const tierLabel = getVpsTier(v2Result.vps).label;
 
     // Finalize prediction_runs row
     const { error: runUpdateError } = await supabase
@@ -229,16 +230,6 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function getVpsTierLabel(vps: number): string {
-  if (vps >= 80) return 'Viral-Ready';
-  if (vps >= 65) return 'High Potential';
-  if (vps >= 50) return 'Moderate';
-  if (vps >= 35) return 'Needs Work';
-  return 'Low Potential';
 }
 
 // ============================================================================

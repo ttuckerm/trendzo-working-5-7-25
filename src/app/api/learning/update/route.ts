@@ -74,6 +74,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Guard: a stuck/unfinalized run has no predicted score. Inserting a null
+    // predicted_dps into prediction_outcomes (NOT NULL) would throw a raw 500.
+    // Return a clear, actionable message instead.
+    if (prediction.predicted_dps_7d == null) {
+      console.warn(
+        `[Learning] Prediction ${body.prediction_id} has no predicted_dps_7d — run did not finalize a score`
+      );
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'This prediction did not finish saving its score. Re-run the prediction, then enter the actual metrics.',
+          code: 'PREDICTION_SCORE_MISSING',
+        },
+        { status: 422 }
+      );
+    }
+
     // Compute actual DPS via canonical v2 module
     const { actual_views, actual_likes, actual_comments, actual_shares, actual_saves } = body;
 
