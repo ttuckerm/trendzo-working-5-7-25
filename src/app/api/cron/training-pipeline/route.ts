@@ -22,9 +22,13 @@ export async function GET(request: NextRequest) {
   const step = (searchParams.get('step') || 'all') as Step;
   const dryRun = searchParams.get('dry_run') === 'true';
 
-  // Auth check (optional — only if CRON_SECRET is set)
+  // Auth check (optional — only if CRON_SECRET is set).
+  // Accept either the Vercel cron `Authorization: Bearer` header (scheduled runs)
+  // or a ?token= query param (manual testing). Matches the cultural-scan pattern.
   const cronSecret = process.env.CRON_SECRET;
-  if (cronSecret && token !== cronSecret) {
+  const headerOk = request.headers.get('authorization') === `Bearer ${cronSecret}`;
+  const tokenOk = token === cronSecret;
+  if (cronSecret && !headerOk && !tokenOk) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
