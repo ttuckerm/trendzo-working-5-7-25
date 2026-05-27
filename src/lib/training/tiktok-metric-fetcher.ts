@@ -14,7 +14,10 @@
 
 import type { TikTokMetricsPayload } from './training-ingest-types';
 
-const APIFY_ACTOR = 'clockworks~free-tiktok-scraper';
+// Use the configured paid scraper (TIKTOK_SCRAPER_ACTOR_ID = clockworks/tiktok-scraper).
+// The free actor is anti-bot blocked and returns "Post not found or private" for live
+// posts. Apify's REST path wants '/' encoded as '~'.
+const APIFY_ACTOR = (process.env.TIKTOK_SCRAPER_ACTOR_ID || 'clockworks/tiktok-scraper').replace('/', '~');
 const APIFY_RUN_URL = `https://api.apify.com/v2/acts/${APIFY_ACTOR}/run-sync-get-dataset-items`;
 
 /**
@@ -121,23 +124,46 @@ export async function fetchTikTokMetrics(
   }
 
   const item = data[0];
+
+  // Guard: unavailable/private posts come back as { url, error } — don't fabricate
+  // zero metrics; return null so the collector marks the schedule failed (retryable).
+  if (item?.error) {
+    console.warn(`[TikTokMetrics] Apify item error for ${parsed.url}: ${item.error}`);
+    return null;
+  }
+
+  // clockworks actors expose engagement at the TOP LEVEL (playCount/diggCount/…),
+  // not under `stats`. Fall back to stats.* for older/alternate shapes.
   const stats = item.stats || {};
+  const views = item.playCount ?? stats.playCount ?? null;
+  const likes = item.diggCount ?? stats.diggCount ?? null;
+  const comments = item.commentCount ?? stats.commentCount ?? null;
+  const shares = item.shareCount ?? stats.shareCount ?? null;
+  const saves = item.collectCount ?? stats.collectCount ?? null;
+
+  // Guard: a resolved post must carry a real view count. Missing playCount = failed
+  // fetch, not a zero-metric "success". (A genuine 0 is preserved, since ?? only
+  // falls through on null/undefined.)
+  if (views == null) {
+    console.warn(`[TikTokMetrics] No playCount for ${parsed.url} — treating as failed`);
+    return null;
+  }
+
   const authorMeta = item.authorMeta || {};
 
   const payload: TikTokMetricsPayload = {
-    views: stats.playCount ?? 0,
-    likes: stats.diggCount ?? 0,
-    comments: stats.commentCount ?? 0,
-    shares: stats.shareCount ?? 0,
-    saves: stats.collectCount ?? null,
+    views,
+    likes: likes ?? 0,
+    comments: comments ?? 0,
+    shares: shares ?? 0,
+    saves: saves ?? null,
     author: authorMeta.name || authorMeta.nickName || null,
     follower_count: authorMeta.fans ?? null,
-    posted_at: item.createTime
-      ? new Date(Number(item.createTime) * 1000).toISOString()
-      : null,
+    posted_at: item.createTimeISO
+      || (item.createTime ? new Date(Number(item.createTime) * 1000).toISOString() : null),
     collected_at: new Date().toISOString(),
     source: 'apify',
-    raw_stats: stats,
+    raw_stats: { playCount: views, diggCount: likes, commentCount: comments, shareCount: shares, collectCount: saves },
   };
 
   console.log(
