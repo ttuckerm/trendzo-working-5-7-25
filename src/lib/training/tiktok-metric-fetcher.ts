@@ -72,11 +72,18 @@ export async function fetchTikTokMetrics(
   }
 
   // Clockworks free-tiktok-scraper input schema:
-  //   Video URLs (/video/) → postURLs: ["<url>"]  (array of strings)
-  //   Profile/other URLs   → startUrls: [{ url }]  (array of objects)
-  const isVideoUrl = /\/video\//i.test(parsed.url);
+  //   Post/video URLs → postURLs: ["<url>"]  (array of strings)
+  //   Profile/other URLs → startUrls: [{ url }]  (array of objects)
+  // TikTok share links (/t/…) and short links (vm./vt.tiktok.com) are single
+  // posts too and must use postURLs — the actor follows the redirect. Sending
+  // them as startUrls makes the actor reject the run with a 400
+  // ("Input must contain postURLs, hashtags, search queries, music…").
+  const isPostUrl =
+    /\/video\//i.test(parsed.url) ||
+    /tiktok\.com\/t\//i.test(parsed.url) ||
+    /(vm|vt)\.tiktok\.com/i.test(parsed.url);
 
-  const apifyInput: Record<string, unknown> = isVideoUrl
+  const apifyInput: Record<string, unknown> = isPostUrl
     ? { postURLs: [parsed.url], resultsPerPage: 1 }
     : {
         startUrls: [{ url: parsed.url }],
@@ -88,7 +95,7 @@ export async function fetchTikTokMetrics(
       };
 
   console.log(
-    `[TikTokMetrics] actor=${APIFY_ACTOR} isVideoUrl=${isVideoUrl} input=${JSON.stringify(apifyInput)}`
+    `[TikTokMetrics] actor=${APIFY_ACTOR} isPostUrl=${isPostUrl} input=${JSON.stringify(apifyInput)}`
   );
 
   const response = await fetch(APIFY_RUN_URL, {
