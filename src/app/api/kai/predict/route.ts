@@ -16,6 +16,7 @@ import { existsSync } from 'fs';
 import { createClient } from '@supabase/supabase-js';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
 import { getVpsTier } from '@/lib/prediction/system-registry';
+import { cacheRunCulturalFeatures } from '@/lib/training/cache-run-features';
 
 // Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
 export const dynamic = 'force-dynamic'
@@ -206,7 +207,10 @@ export async function POST(request: NextRequest) {
         ? parseInt(followerCountStr)
         : undefined;
 
-    // Create prediction_runs row (pending)
+    // Create prediction_runs row (pending).
+    // Capture run-creation timestamp once so the per-run training-feature
+    // cache write (Step 6) uses the SAME postDate that lands in DB.
+    const runCreatedAt = new Date();
     const { data: runRecord, error: runInsertError } = await supabase
       .from('prediction_runs')
       .insert({
@@ -219,7 +223,7 @@ export async function POST(request: NextRequest) {
           platform: 'tiktok',
           ...(scrapeMethod === 'apify' ? { scrape_method: 'apify' } : {}),
         } : undefined,
-        created_at: new Date().toISOString(),
+        created_at: runCreatedAt.toISOString(),
       })
       .select('id')
       .single();
@@ -281,6 +285,16 @@ export async function POST(request: NextRequest) {
       `[Kai API] VPS v2 done: VPS=${v2Result.vps}, raw=${v2Result.raw_prediction.toFixed(2)}, ` +
       `features=${v2Result.features_provided}/${v2Result.features_total}, latency=${totalLatency}ms`,
     );
+
+    // ─── Per-run cache: cultural training features (Step 6) ───────────────
+    // Awaited (not fire-and-forget) so Vercel does not drop the write when
+    // the response returns. Helper swallows errors internally.
+    await cacheRunCulturalFeatures({
+      runId,
+      niche,
+      postDate: runCreatedAt,
+      db: supabase,
+    });
 
     // ─── Post-prediction: label-on-scrape for mature videos ───────────────
     let scrapeLabel: any = null;
