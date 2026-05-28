@@ -89,6 +89,34 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Bulk Predict] Running VPS v2 pipeline for item ${body.itemId}`);
 
+    // Insert a video_files row and use its UUID for prediction_runs.video_id.
+    // Required because metric_check_schedule.video_id is UUID REFERENCES
+    // video_files(id) (migration 20260213_training_ingest_v1.sql:8) while
+    // bulk_download_items.video_id holds the TikTok numeric ID as TEXT.
+    // Mirrors the kai/predict pattern. The TikTok numeric ID is preserved
+    // in source_meta.platform_video_id so downstream queries can still find
+    // the original platform identifier.
+    const { data: videoRecord, error: videoInsertError } = await supabase
+      .from('video_files')
+      .insert({
+        tiktok_url: item.tiktok_url,
+        storage_path: item.local_path,
+        niche: body.niche,
+        goal: body.goal,
+        account_size_band: body.accountSize,
+        platform: 'tiktok',
+        created_at: new Date().toISOString(),
+      })
+      .select('id')
+      .single();
+
+    if (videoInsertError || !videoRecord) {
+      return NextResponse.json(
+        { success: false, error: `Failed to create video record: ${videoInsertError?.message}` },
+        { status: 500 },
+      );
+    }
+
     // Parse follower count
     const followerCount =
       body.followerCount && body.followerCount > 0
@@ -105,7 +133,7 @@ export async function POST(request: NextRequest) {
     const { data: runRecord, error: runInsertError } = await supabase
       .from('prediction_runs')
       .insert({
-        video_id: item.video_id,
+        video_id: videoRecord.id,
         status: 'running',
         score_version: 'vps-v2-xgboost-sole',
         source: 'manual',
@@ -114,6 +142,10 @@ export async function POST(request: NextRequest) {
           job_id: item.job_id,
           item_id: body.itemId,
           platform: 'tiktok',
+          // Preserve the TikTok numeric ID so downstream lookups can still
+          // find the platform-level video even though prediction_runs.video_id
+          // is now the video_files UUID.
+          ...(item.video_id ? { platform_video_id: item.video_id } : {}),
           // Required for schedule-backfill → metric-collector to find a URL.
           ...(item.tiktok_url ? { post_url: item.tiktok_url } : {}),
         },
