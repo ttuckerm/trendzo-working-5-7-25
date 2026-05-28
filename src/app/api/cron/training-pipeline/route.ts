@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 export const maxDuration = 300; // 5 minutes max for Vercel Pro
 
 type Step = 'scan' | 'backfill' | 'collect' | 'label' | 'evaluate' | 'scrape-creators' | 'pattern-extract' | 'pattern-metrics' | 'cultural-scan' | 'classify-events' | 'autodream' | 'all';
