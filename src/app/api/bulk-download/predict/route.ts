@@ -13,6 +13,7 @@ import { createClient } from '@supabase/supabase-js';
 import { existsSync } from 'fs';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
 import { getVpsTier } from '@/lib/prediction/system-registry';
+import { cacheRunCulturalFeatures } from '@/lib/training/cache-run-features';
 
 // Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
 export const dynamic = 'force-dynamic'
@@ -96,6 +97,10 @@ export async function POST(request: NextRequest) {
           ? item.follower_count
           : undefined;
 
+    // Capture run-creation timestamp once so the Step-6 cache write uses
+    // the SAME postDate as prediction_runs.created_at.
+    const runCreatedAt = new Date();
+
     // Create prediction_runs row (pending)
     const { data: runRecord, error: runInsertError } = await supabase
       .from('prediction_runs')
@@ -104,8 +109,15 @@ export async function POST(request: NextRequest) {
         status: 'running',
         score_version: 'vps-v2-xgboost-sole',
         source: 'manual',
-        source_meta: { origin: 'bulk-download', job_id: item.job_id, item_id: body.itemId },
-        created_at: new Date().toISOString(),
+        source_meta: {
+          origin: 'bulk-download',
+          job_id: item.job_id,
+          item_id: body.itemId,
+          platform: 'tiktok',
+          // Required for schedule-backfill → metric-collector to find a URL.
+          ...(item.tiktok_url ? { post_url: item.tiktok_url } : {}),
+        },
+        created_at: runCreatedAt.toISOString(),
       })
       .select('id')
       .single();
@@ -172,6 +184,17 @@ export async function POST(request: NextRequest) {
     if (runUpdateError) {
       console.error('[Bulk Predict] Failed to finalize run:', runUpdateError);
     }
+
+    // ─── Per-run cache: cultural training features (Step 6) ───────────────
+    // Awaited (not fire-and-forget) so Vercel doesn't drop the write when
+    // the response returns. Helper swallows errors internally so a cache
+    // failure does not fail the prediction.
+    await cacheRunCulturalFeatures({
+      runId,
+      niche: body.niche,
+      postDate: runCreatedAt,
+      db: supabase,
+    });
 
     // Derive viral potential for bulk_download_items
     let viralPotential = 'unknown';
