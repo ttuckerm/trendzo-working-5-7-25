@@ -58,7 +58,11 @@ export async function GET(request: NextRequest) {
 
     if (step === 'collect' || step === 'all') {
       const { runMetricCollector } = await import('@/lib/training/metric-collector');
-      results.collect = await runMetricCollector({ limit: 50, dryRun });
+      // Optional ?limit= override, clamped to the 50 ceiling (never raises it).
+      // Lets the collect-only cron run smaller, time-safe batches at higher cadence.
+      const qLimit = Number(searchParams.get('limit'));
+      const collectLimit = Number.isFinite(qLimit) && qLimit > 0 ? Math.min(qLimit, 50) : 50;
+      results.collect = await runMetricCollector({ limit: collectLimit, dryRun });
     }
 
     if (step === 'label' || step === 'all') {

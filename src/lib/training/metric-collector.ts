@@ -57,24 +57,54 @@ export async function runMetricCollector(
       ')'
   );
 
-  // 1. Query due schedules (include rows with null platform_video_id so we can fail them explicitly)
-  let query = getSupabase()
-    .from('metric_check_schedule')
-    .select('id, prediction_run_id, video_id, platform, platform_video_id, check_type, scheduled_at, status')
-    .in('status', ['pending', 'failed'])
-    .lte('scheduled_at', new Date().toISOString())
-    .eq('platform', 'tiktok')
+  // 1. Query due schedules — PENDING rows take priority over FAILED retries so
+  //    fresh checkpoints are never starved by an old backlog of failed rows.
+  //    Terminal failures (e.g. missing_tiktok_url) can never succeed and are
+  //    excluded from retry so they don't permanently occupy the queue head.
+  const nowIso = new Date().toISOString();
+  const TERMINAL_ERRORS = ['missing_tiktok_url'];
+
+  const base = () => {
+    let q = getSupabase()
+      .from('metric_check_schedule')
+      .select('id, prediction_run_id, video_id, platform, platform_video_id, check_type, scheduled_at, status, actual_metrics')
+      .lte('scheduled_at', nowIso)
+      .eq('platform', 'tiktok');
+    if (opts.runId) {
+      q = q.eq('prediction_run_id', opts.runId);
+    }
+    return q;
+  };
+
+  // Pass 1 — fresh PENDING rows, oldest-first, up to the full budget.
+  const { data: pendingRows, error: pendingError } = await base()
+    .eq('status', 'pending')
     .order('scheduled_at', { ascending: true })
     .limit(limit);
 
-  if (opts.runId) {
-    query = query.eq('prediction_run_id', opts.runId);
+  if (pendingError) {
+    throw new Error(`Failed to query pending schedules: ${pendingError.message || JSON.stringify(pendingError)}`);
   }
 
-  const { data: schedules, error: queryError } = await query;
+  let schedules: any[] = pendingRows ?? [];
 
-  if (queryError) {
-    throw new Error(`Failed to query schedules: ${queryError.message || JSON.stringify(queryError)}`);
+  // Pass 2 — only if budget remains, retry non-terminal FAILED rows, oldest-first.
+  const remaining = limit - schedules.length;
+  if (remaining > 0) {
+    const { data: failedRows, error: failedError } = await base()
+      .eq('status', 'failed')
+      .order('scheduled_at', { ascending: true })
+      .limit(200); // failed set is small; fetch generously, filter terminal in code
+
+    if (failedError) {
+      throw new Error(`Failed to query failed schedules: ${failedError.message || JSON.stringify(failedError)}`);
+    }
+
+    const retryable = (failedRows ?? [])
+      .filter((r: any) => !TERMINAL_ERRORS.includes(r.actual_metrics?.error))
+      .slice(0, remaining);
+
+    schedules = schedules.concat(retryable);
   }
 
   if (!schedules || schedules.length === 0) {
