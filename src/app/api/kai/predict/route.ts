@@ -17,6 +17,7 @@ import { createClient } from '@supabase/supabase-js';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
 import { getVpsTier } from '@/lib/prediction/system-registry';
 import { cacheRunCulturalFeatures } from '@/lib/training/cache-run-features';
+import { runTranscriptionPipeline } from '@/lib/services/transcription-pipeline';
 
 // Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
 export const dynamic = 'force-dynamic'
@@ -239,7 +240,32 @@ export async function POST(request: NextRequest) {
     console.log(`[Kai API] Created VPS v2 run ${runId} for video ${videoRecord.id}`);
 
     // Run VPS v2 pipeline (pure compute — no DB writes)
-    const resolvedTranscript = transcript || apifyTranscript || undefined;
+    // Transcript priority: user-pasted > Apify subtitles > Whisper auto-transcription.
+    // Fix B (stage 1): when neither a user transcript nor Apify subtitles are present,
+    // auto-transcribe the video via the existing transcription pipeline so the text /
+    // hook / content-strategy features populate (otherwise ~35 features stay null).
+    let resolvedTranscript = transcript || apifyTranscript || undefined;
+    let transcriptSource = transcript ? 'user' : apifyTranscript ? 'apify-subtitles' : 'none';
+    if (!resolvedTranscript && videoPath) {
+      try {
+        const transcription = await runTranscriptionPipeline({ videoPath });
+        if (transcription.transcript && transcription.transcript.trim().length > 0) {
+          resolvedTranscript = transcription.transcript;
+          transcriptSource = transcription.source;
+          console.log(
+            `[Kai API] Auto-transcribed (${transcription.source}): ` +
+            `${transcription.transcript.length} chars, confidence=${transcription.confidence}`,
+          );
+        } else {
+          console.log(
+            `[Kai API] Auto-transcription produced no usable transcript ` +
+            `(${transcription.skipped_reason || 'none'})`,
+          );
+        }
+      } catch (transcribeErr: any) {
+        console.warn(`[Kai API] Auto-transcription failed (non-fatal): ${transcribeErr.message}`);
+      }
+    }
     const v2Result = await runVpsPipelineV2({
       videoFilePath: videoPath || undefined,
       transcript: resolvedTranscript,
@@ -393,7 +419,7 @@ export async function POST(request: NextRequest) {
         userTranscriptLength: transcript?.length || 0,
         resolvedTranscriptLength: resolvedTranscript?.length || 0,
         resolvedTranscriptPreview: resolvedTranscript?.substring(0, 200) || '',
-        transcriptSource: transcript ? 'user' : apifyTranscript ? 'apify-subtitles' : 'none',
+        transcriptSource,
         transcriptConfidence: 0,
         executedComponentCount: 1,
         executedComponentIds: ['xgboost-virality-ml'],
