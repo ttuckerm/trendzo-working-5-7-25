@@ -11,9 +11,24 @@
 import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Lazily instantiate the OpenAI client so that simply importing this module
+// (e.g. during Next.js build-time page-data collection) does NOT require
+// OPENAI_API_KEY. The OpenAI SDK constructor throws when the key is missing,
+// which previously broke the build. The client is only created on first use,
+// at request time, where a missing key produces a clear runtime error.
+let openaiClient: OpenAI | null = null;
+
+function getOpenAI(): OpenAI {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('OPENAI_API_KEY environment variable is missing or empty');
+  }
+  if (!openaiClient) {
+    openaiClient = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+  return openaiClient;
+}
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -109,7 +124,7 @@ IMPORTANT SCORING GUIDELINES:
 
 Be specific and analytical. Base scores on the ACTUAL content, not assumptions.`;
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [{ role: 'user', content: prompt }],
     response_format: { type: 'json_object' },

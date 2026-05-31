@@ -22,6 +22,18 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
+    // Genome extraction requires OpenAI. Guard at request time (NOT import time)
+    // so the build does not depend on OPENAI_API_KEY being set.
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'OPENAI_API_KEY is not configured. Set it to run genome extraction.',
+        },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json().catch(() => ({}));
     const limit = Math.min(body.limit || 50, 100); // Max 100 per request
     const minDps = body.minDps || 0;
