@@ -64,6 +64,13 @@ export async function runMetricCollector(
   const nowIso = new Date().toISOString();
   const TERMINAL_ERRORS = ['missing_tiktok_url'];
 
+  // Don't retry FAILED checkpoints whose scheduled check time is older than this.
+  // Stale dead URLs (deleted/private videos, expired /t/ share links, actor run-failed)
+  // never return data, so retrying them forever just burns Apify credits. Recent
+  // failures (transient Apify hiccups) still retry normally. Env-overridable.
+  const RETRY_MAX_AGE_DAYS = Math.max(1, parseInt(process.env.METRIC_RETRY_MAX_AGE_DAYS || '14', 10));
+  const retryCutoffIso = new Date(Date.now() - RETRY_MAX_AGE_DAYS * 86_400_000).toISOString();
+
   const base = () => {
     let q = getSupabase()
       .from('metric_check_schedule')
@@ -93,6 +100,7 @@ export async function runMetricCollector(
   if (remaining > 0) {
     const { data: failedRows, error: failedError } = await base()
       .eq('status', 'failed')
+      .gte('scheduled_at', retryCutoffIso) // skip stale dead URLs; recent failures still retry
       .order('scheduled_at', { ascending: true })
       .limit(200); // failed set is small; fetch generously, filter terminal in code
 
