@@ -25,6 +25,61 @@ const PLACEHOLDER_REGEX = /\{\{\s*SPRINT_START_DATE\s*\}\}/
 // the placeholder by writing a relative phrase like "tomorrow".
 const RESOLVED_YEAR_REGEX = /\b20\d{2}\b/
 
+// Day-1 sprint task must start with an active outreach verb. Anything else is
+// rejected — research/setup/preparation openers are HARD FAILURES on Day 1.
+const DAY1_OPENER_VERB_REGEX = /^\s*(send|post|dm|email|comment|call|reach\s+out|reply|message)\b/i
+
+// Days 1-10 banned verb+object combinations. The LLM cannot game the category
+// label by writing infrastructure tasks dressed as customer-facing — these
+// patterns are content-side and fire regardless of the category field.
+// Verbs that are otherwise fine (draft, write, outline) are NOT in this list
+// because they're valid when paired with customer-facing objects (DMs, emails,
+// scripts). The verbs here are setup/research/planning-flavored AND the object
+// list is strictly infrastructure-flavored.
+const INFRASTRUCTURE_TASK_REGEX = new RegExp(
+  '\\b(?:' +
+    // Branch 1: setup-verb + (articles)* + infrastructure noun.
+    '(?:set\\s*up|setup|build|create|design|research|prepare|develop|launch)\\s+' +
+    '(?:your\\s+|a\\s+|an\\s+|the\\s+|new\\s+)*' +
+    '(?:domain|website|web\\s*site|landing\\s*page|portfolio|logo|brand(?:ing)?|' +
+    'lead\\s*magnet|email\\s*list|email\\s*sequence|funnel|automation|' +
+    'bio|about\\s*page|home\\s*page|sales\\s*page|opt[-\\s]?in|signup\\s*form|' +
+    'sign[-\\s]?up\\s*form|newsletter\\s*platform|payment\\s*setup|payment\\s*processor|' +
+    'payment\\s*system|payment\\s*gateway|stripe\\s*account|subscription\\s*page)' +
+    '|' +
+    // Branch 2 (4.1): setup-verb within ~6 words of an acceptance verb +
+    // "payment". Catches loose phrasing like "set up a basic way to accept
+    // payment" without catching customer-facing payment tasks ("send payment
+    // link", "follow up on payment").
+    '(?:set\\s*up|setting\\s*up|create|creating|build|building)\\b' +
+    '(?:\\s+[\\w-]+){0,6}?\\s+' +
+    '(?:' +
+      '(?:accept|accepting|process|processing|collect|collecting|take|taking|receive|receiving)\\s+payments?' +
+      '|' +
+      'payments?\\s+(?:collection|processing|infrastructure|portal)' +
+    ')' +
+  ')\\b',
+  'i',
+)
+
+// Catches "outline your offer", "plan your email sequence" — outline/plan are
+// banned when followed by infrastructure-flavored offer/sequence/strategy
+// objects. Outline + customer object (questions, DMs) is fine — that's caught
+// by exclusion, not by this regex.
+const PLAN_OUTLINE_INFRASTRUCTURE_REGEX = new RegExp(
+  '\\b(outline|plan)\\s+' +
+    '(your\\s+|a\\s+|an\\s+|the\\s+|new\\s+)*' +
+    '(offer|email\\s*sequence|funnel|content\\s*strategy|launch\\s*strategy|' +
+    'marketing\\s*strategy|brand\\s*voice|pricing\\s*tier|business\\s*plan)\\b',
+  'i',
+)
+
+// Aspirational/invented group-size phrases that imply a community count
+// the generator has no source for. Catches "join 12,000 operators",
+// "with 5,000 members", "over 10,000 users".
+const FABRICATED_GROUP_COUNT_REGEX =
+  /\b(join|with|over|among|alongside)\s+\d[\d,]*\+?\s*(operators?|users?|members?|subscribers?|customers?|investors?|founders?|creators?|readers?)\b/i
+
 function isObj(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === 'object' && !Array.isArray(v)
 }
@@ -154,10 +209,25 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
   // Sprint structural rules (Tomorrow-Morning Method)
   if (sprintDays.length === 14) {
     const cat = (i: number) => sprintDays[i]?.category as string | undefined
+    const task = (i: number) => typeof sprintDays[i]?.task === 'string'
+      ? (sprintDays[i].task as string)
+      : ''
 
     if (cat(0) !== 'customer-facing') {
       fail('sprint.days[0].category must be "customer-facing"')
     }
+
+    // Day 1 task must open with an active outreach verb. Catches the LLM
+    // dressing setup as "customer-facing" by tagging the category correctly
+    // but writing a research/setup task underneath it.
+    const day1Task = task(0)
+    if (day1Task && !DAY1_OPENER_VERB_REGEX.test(day1Task)) {
+      fail(
+        'Day 1 task must start with an active outreach verb ' +
+        '(Send, Post, DM, Email, Comment, Call, Reach out, Reply, Message)',
+      )
+    }
+
     const days1to3 = [0, 1, 2].map(cat)
     if (!days1to3.includes('customer-facing')) {
       fail('At least one of Days 1-3 must have category "customer-facing"')
@@ -174,6 +244,59 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
     days1to10.forEach((c, i) => {
       if (c === 'infrastructure') fail(`Day ${i + 1} category cannot be "infrastructure" (must compress into Days 11-14 or sub-tasks)`)
     })
+
+    // Days 1-10 task COPY may not be a setup/research/planning task even when
+    // tagged with a customer-facing category. Category-independent content
+    // check — banned verb+infrastructure-object combinations.
+    for (let i = 0; i < 10; i++) {
+      const t = task(i)
+      if (!t) continue
+      if (INFRASTRUCTURE_TASK_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task is a banned infrastructure setup/build/research/etc. ` +
+          `phrased to look customer-facing. Move infrastructure to Days 11-14 or ` +
+          `compress into a sub-task. Task: "${t.slice(0, 120)}"`,
+        )
+      }
+      if (PLAN_OUTLINE_INFRASTRUCTURE_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task uses outline/plan with an infrastructure-flavored ` +
+          `object (offer/sequence/strategy/brand voice/etc.). Replace with a ` +
+          `customer-facing action. Task: "${t.slice(0, 120)}"`,
+        )
+      }
+      if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task contains a fabricated group-size phrase ` +
+          `(e.g. "join 12,000 operators"). Task: "${t.slice(0, 120)}"`,
+        )
+      }
+      if (PARENTHETICAL_COUNT_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task contains a parenthetical member count. ` +
+          `Task: "${t.slice(0, 120)}"`,
+        )
+      }
+    }
+
+    // Days 11-14 still get the fabrication scan even though the
+    // verb/category rules relax.
+    for (let i = 10; i < 14; i++) {
+      const t = task(i)
+      if (!t) continue
+      if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task contains a fabricated group-size phrase ` +
+          `(e.g. "join 12,000 operators"). Task: "${t.slice(0, 120)}"`,
+        )
+      }
+      if (PARENTHETICAL_COUNT_REGEX.test(t)) {
+        fail(
+          `Day ${i + 1} task contains a parenthetical member count. ` +
+          `Task: "${t.slice(0, 120)}"`,
+        )
+      }
+    }
   }
 
   // roadmap
@@ -260,6 +383,9 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
     if (DECIMAL_PERCENT_REGEX.test(t)) {
       fail(`leads.scripts[${i}].template contains a specific decimal percentage (prohibited fabrication)`)
     }
+    if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
+      fail(`leads.scripts[${i}].template contains a fabricated group-size phrase (e.g. "join 12,000 operators")`)
+    }
   })
 
   // agentContext
@@ -290,25 +416,41 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
     }
   }
 
-  // "Not sure" niche handling
+  // "Not sure" niche handling — niche-selection mode. The generator must NOT
+  // silently pick a niche. The greeting must acknowledge selection is pending
+  // and quickReplies must offer a niche-picking helper.
   const nicheRaw = operatorInputs?.nicheSignal
   if (typeof nicheRaw === 'string' && nicheRaw.trim().toLowerCase() === 'not sure') {
-    const greetingLower = isNonEmptyString((ag as Record<string, unknown> | undefined)?.greeting)
-      ? (((ag as Record<string, unknown>).greeting as string).toLowerCase())
+    const greetingText = isNonEmptyString((ag as Record<string, unknown> | undefined)?.greeting)
+      ? ((ag as Record<string, unknown>).greeting as string)
       : ''
-    const greetingHasMarker =
-      greetingLower.includes('i picked') || greetingLower.includes('starter niche')
-    if (!greetingHasMarker) {
-      fail('Not sure niche input not handled explicitly: greeting missing "I picked" or "starter niche"')
+    // Apostrophe-tolerant: straight ('), curly (’), or omitted.
+    const greetingMarkerRegex = /let[’']?s\s+pick\s+your\s+niche/i
+    if (!greetingMarkerRegex.test(greetingText)) {
+      fail('Not sure niche input not handled explicitly: greeting missing required marker "let\'s pick your niche"')
     }
     const replies = Array.isArray((ag as Record<string, unknown> | undefined)?.quickReplies)
       ? ((ag as Record<string, unknown>).quickReplies as unknown[])
       : []
     const replyMatch = replies.some(r =>
-      typeof r === 'string' && /different niche|pick.*niche|change.*niche/i.test(r)
+      typeof r === 'string' && /pick\s+my\s+niche|help\s+me\s+pick|pick\s+(a|the)\s+niche/i.test(r)
     )
     if (!replyMatch) {
-      fail('Not sure niche input not handled explicitly: quickReplies missing a niche-change option')
+      fail('Not sure niche input not handled explicitly: quickReplies missing a niche-picking helper option')
+    }
+    // businessMatch.businessName must be the canonical generic shape for the
+    // Not-sure path so the operator sees the niche is unsettled, not silently
+    // assumed.
+    const businessName = isNonEmptyString(
+      (payload.businessMatch as Record<string, unknown> | undefined)?.businessName,
+    )
+      ? ((payload.businessMatch as Record<string, unknown>).businessName as string)
+      : ''
+    if (businessName && businessName.trim() !== 'Your first paid niche test') {
+      fail(
+        'Not sure niche input requires businessMatch.businessName === "Your first paid niche test" ' +
+        `(got: "${businessName.slice(0, 80)}")`,
+      )
     }
   }
 

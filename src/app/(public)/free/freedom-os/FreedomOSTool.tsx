@@ -5,6 +5,12 @@ import { buildInputFromForm, type FormState } from '@/lib/assessment/build-input
 import type { AssessmentReadyData } from '@/lib/assessment/types'
 import { FreedomMultiplierControl } from '@/components/freedom-os/FreedomMultiplierControl'
 import { HamsterLoader } from '@/components/freedom-os/HamsterLoader'
+import { StepOffGame } from '@/components/freedom-os/StepOffGame/StepOffGame'
+
+// Module-level stable reference so HamsterLoader's effect deps don't re-fire
+// on every render. Suppresses the loader's default auto-route — the mini-game's
+// "View My Plan →" CTA owns the navigation now.
+const SUPPRESS_AUTO_ROUTE = () => {}
 
 const STORAGE_KEY = 'dl:freedom-os:v1:state'
 
@@ -487,7 +493,15 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
         )}
       </div>
 
-      <HamsterLoader visible={isSubmitting} assessmentData={assessmentData} />
+      <HamsterLoader
+        visible={isSubmitting}
+        assessmentData={assessmentData}
+        onAssessmentReady={SUPPRESS_AUTO_ROUTE}
+      >
+        {({ isAssessmentReady, assessmentData: data }) => (
+          <StepOffGame isAssessmentReady={isAssessmentReady} assessmentData={data} />
+        )}
+      </HamsterLoader>
 
       <style>{`
         .fos-submit-btn:hover:not(:disabled) {

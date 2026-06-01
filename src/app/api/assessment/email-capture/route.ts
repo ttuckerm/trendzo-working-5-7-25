@@ -19,7 +19,7 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const VALID_SOURCES: readonly EmailCaptureSource[] = ['hud_panel', 'agent_conversation']
+const VALID_SOURCES: readonly EmailCaptureSource[] = ['hud_panel', 'agent_conversation', 'rail_gate']
 
 function getServerSupabase() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL

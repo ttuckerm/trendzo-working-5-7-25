@@ -1,4 +1,4 @@
-export type EmailCaptureSource = 'hud_panel' | 'agent_conversation'
+export type EmailCaptureSource = 'hud_panel' | 'agent_conversation' | 'rail_gate'
 
 export interface EmailCaptureRequest {
   assessmentId: string

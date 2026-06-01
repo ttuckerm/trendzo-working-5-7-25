@@ -16,7 +16,6 @@ import { AgentRail } from './AgentRail'
 import { AgentHeroBanner } from './AgentHeroBanner'
 import { DeliverablesHeader } from './DeliverablesHeader'
 import { Day1Spotlight } from './Day1Spotlight'
-import { RailClickGate } from './AgentGate'
 import { Chassis } from './Chassis'
 import { SaveYourLinkNotice } from './SaveYourLinkNotice'
 import '@/styles/instrument.css'
@@ -41,7 +40,6 @@ const TIMELINE = {
   sprint: 2600,
   roadmap: 3200,
   leads: 3600,
-  emailCapture: 4000,
   rail: 4200,
   done: 4600,
 } as const
@@ -258,16 +256,12 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
 
       </div>
 
-      <RailClickGate
+      <AgentRail
         assessmentId={payload.assessmentId}
         shareToken={shareToken}
-      >
-        <AgentRail
-          assessmentId={payload.assessmentId}
-          shareToken={shareToken}
-          agentContext={payload.agentContext}
-        />
-      </RailClickGate>
+        agentContext={payload.agentContext}
+        operatorFirstName={payload.operator.firstName}
+      />
 
       <style>{`
         @media (max-width: 1023px) {

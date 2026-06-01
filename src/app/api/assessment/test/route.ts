@@ -44,7 +44,11 @@ interface QualityChecks {
   estimatedMinutesIs2xish: boolean
   month3HasEstimatedHoursPerWeek: boolean
   // Niche-specific (only meaningful when nicheSignal === "Not sure")
-  notSureNiche?: { greetingExplains: boolean; quickReplyOffersChange: boolean }
+  notSureNiche?: {
+    greetingExplains: boolean
+    quickReplyOffersChange: boolean
+    businessNameIsNicheAgnostic: boolean
+  }
   // Feasibility-specific (only meaningful when low hours + high income)
   feasibility?: {
     fitsBudget: boolean
@@ -125,13 +129,18 @@ function runQualityChecks(input: AssessmentInput, payload: AssessmentPayload): Q
   }
 
   if (input.nicheSignal === 'Not sure') {
-    const greetingLower = greeting.toLowerCase()
-    const greetingExplains =
-      greetingLower.includes('i picked') || greetingLower.includes('starter niche')
+    // Apostrophe-tolerant: matches "let's", "let’s", or "lets".
+    const greetingExplains = /let[’']?s\s+pick\s+your\s+niche/i.test(greeting)
     const quickReplyOffersChange = payload.agentContext.quickReplies.some(r =>
-      /different niche|pick.*niche|change.*niche/i.test(r),
+      /pick\s+my\s+niche|help\s+me\s+pick|pick\s+(a|the)\s+niche/i.test(r),
     )
-    checks.notSureNiche = { greetingExplains, quickReplyOffersChange }
+    const businessNameIsNicheAgnostic =
+      payload.businessMatch.businessName.trim() === 'Your first paid niche test'
+    checks.notSureNiche = {
+      greetingExplains,
+      quickReplyOffersChange,
+      businessNameIsNicheAgnostic,
+    }
   }
 
   // Feasibility-flagged inputs: very low hours + high target

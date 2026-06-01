@@ -44,7 +44,10 @@ export function HamsterLoader({
 }: Props) {
   const router = useRouter()
   const [phraseIndex, setPhraseIndex] = useState(0)
-  const [isAssessmentReady, setIsAssessmentReady] = useState(false)
+  // Pure derivation: a synced useState would just shadow the prop and could
+  // drift if a setter was missed. The render-prop consumer gets the same
+  // signal computed every render.
+  const isAssessmentReady = assessmentData !== null
 
   useEffect(() => {
     if (!visible) {
@@ -58,15 +61,11 @@ export function HamsterLoader({
     return () => window.clearInterval(id)
   }, [visible])
 
-  // When the parent reports a successful generation, flip the ready flag and
-  // either hand off to the caller-supplied callback or perform the default
-  // auto-route that previously lived in FreedomOSTool.submit().
+  // When the parent reports a successful generation, either hand off to the
+  // caller-supplied callback or perform the default auto-route that previously
+  // lived in FreedomOSTool.submit().
   useEffect(() => {
-    if (!assessmentData) {
-      setIsAssessmentReady(false)
-      return
-    }
-    setIsAssessmentReady(true)
+    if (!assessmentData) return
     if (onAssessmentReady) {
       onAssessmentReady(assessmentData)
     } else {

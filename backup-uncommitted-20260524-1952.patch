@@ -1,0 +1,2892 @@
+diff --git a/src/app/(public)/free/freedom-os/FreedomOSTool.tsx b/src/app/(public)/free/freedom-os/FreedomOSTool.tsx
+index b11ebcd..9752dbf 100644
+--- a/src/app/(public)/free/freedom-os/FreedomOSTool.tsx
++++ b/src/app/(public)/free/freedom-os/FreedomOSTool.tsx
+@@ -5,6 +5,12 @@ import { buildInputFromForm, type FormState } from '@/lib/assessment/build-input
+ import type { AssessmentReadyData } from '@/lib/assessment/types'
+ import { FreedomMultiplierControl } from '@/components/freedom-os/FreedomMultiplierControl'
+ import { HamsterLoader } from '@/components/freedom-os/HamsterLoader'
++import { StepOffGame } from '@/components/freedom-os/StepOffGame/StepOffGame'
++
++// Module-level stable reference so HamsterLoader's effect deps don't re-fire
++// on every render. Suppresses the loader's default auto-route — the mini-game's
++// "View My Plan →" CTA owns the navigation now.
++const SUPPRESS_AUTO_ROUTE = () => {}
+ 
+ const STORAGE_KEY = 'dl:freedom-os:v1:state'
+ 
+@@ -487,7 +493,15 @@ export default function FreedomOSTool({ sessionId = null }: FreedomOSToolProps =
+         )}
+       </div>
+ 
+-      <HamsterLoader visible={isSubmitting} assessmentData={assessmentData} />
++      <HamsterLoader
++        visible={isSubmitting}
++        assessmentData={assessmentData}
++        onAssessmentReady={SUPPRESS_AUTO_ROUTE}
++      >
++        {({ isAssessmentReady, assessmentData: data }) => (
++          <StepOffGame isAssessmentReady={isAssessmentReady} assessmentData={data} />
++        )}
++      </HamsterLoader>
+ 
+       <style>{`
+         .fos-submit-btn:hover:not(:disabled) {
+diff --git a/src/app/api/assessment/email-capture/route.ts b/src/app/api/assessment/email-capture/route.ts
+index d4930b7..89fc407 100644
+--- a/src/app/api/assessment/email-capture/route.ts
++++ b/src/app/api/assessment/email-capture/route.ts
+@@ -19,7 +19,7 @@ export const runtime = 'nodejs'
+ export const dynamic = 'force-dynamic'
+ 
+ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+-const VALID_SOURCES: readonly EmailCaptureSource[] = ['hud_panel', 'agent_conversation']
++const VALID_SOURCES: readonly EmailCaptureSource[] = ['hud_panel', 'agent_conversation', 'rail_gate']
+ 
+ function getServerSupabase() {
+   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+diff --git a/src/app/api/assessment/test/route.ts b/src/app/api/assessment/test/route.ts
+index 79e5b2c..09abcde 100644
+--- a/src/app/api/assessment/test/route.ts
++++ b/src/app/api/assessment/test/route.ts
+@@ -44,7 +44,11 @@ interface QualityChecks {
+   estimatedMinutesIs2xish: boolean
+   month3HasEstimatedHoursPerWeek: boolean
+   // Niche-specific (only meaningful when nicheSignal === "Not sure")
+-  notSureNiche?: { greetingExplains: boolean; quickReplyOffersChange: boolean }
++  notSureNiche?: {
++    greetingExplains: boolean
++    quickReplyOffersChange: boolean
++    businessNameIsNicheAgnostic: boolean
++  }
+   // Feasibility-specific (only meaningful when low hours + high income)
+   feasibility?: {
+     fitsBudget: boolean
+@@ -125,13 +129,18 @@ function runQualityChecks(input: AssessmentInput, payload: AssessmentPayload): Q
+   }
+ 
+   if (input.nicheSignal === 'Not sure') {
+-    const greetingLower = greeting.toLowerCase()
+-    const greetingExplains =
+-      greetingLower.includes('i picked') || greetingLower.includes('starter niche')
++    // Apostrophe-tolerant: matches "let's", "let’s", or "lets".
++    const greetingExplains = /let[’']?s\s+pick\s+your\s+niche/i.test(greeting)
+     const quickReplyOffersChange = payload.agentContext.quickReplies.some(r =>
+-      /different niche|pick.*niche|change.*niche/i.test(r),
++      /pick\s+my\s+niche|help\s+me\s+pick|pick\s+(a|the)\s+niche/i.test(r),
+     )
+-    checks.notSureNiche = { greetingExplains, quickReplyOffersChange }
++    const businessNameIsNicheAgnostic =
++      payload.businessMatch.businessName.trim() === 'Your first paid niche test'
++    checks.notSureNiche = {
++      greetingExplains,
++      quickReplyOffersChange,
++      businessNameIsNicheAgnostic,
++    }
+   }
+ 
+   // Feasibility-flagged inputs: very low hours + high target
+diff --git a/src/components/assessment/AgentGate.tsx b/src/components/assessment/AgentGate.tsx
+deleted file mode 100644
+index 1e2e4dc..0000000
+--- a/src/components/assessment/AgentGate.tsx
++++ /dev/null
+@@ -1,457 +0,0 @@
+-'use client'
+-
+-// Email gate built as a click-trigger pattern. The Freedom Agent rail
+-// renders fully and looks identical to the unlocked state. Until an email
+-// is captured, a sibling <RailClickGate> wraps the rail and intercepts
+-// every click + focus on its children, popping the <AgentEmailModal>
+-// instead. Once the user submits a valid email, the wrapper detaches and
+-// the rail becomes natively interactive.
+-//
+-// Server-side enforcement (the 403 in /api/freedom-agent/chat) stays as the
+-// real gate — this UI is just the "show, don't hide" experience layer.
+-
+-import {
+-  useCallback,
+-  useEffect,
+-  useRef,
+-  useState,
+-  type FormEvent,
+-  type ReactNode,
+-  type FocusEvent as ReactFocusEvent,
+-  type MouseEvent as ReactMouseEvent,
+-} from 'react'
+-import type {
+-  EmailStatusResponse,
+-  EmailCaptureResponse,
+-  EmailCaptureErrorResponse,
+-} from '@/types/email-capture'
+-
+-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+-const ASK_FLAG_KEY_PREFIX = 'agent_email_asked:'
+-const EMAIL_CAPTURED_EVENT = 'assessment:email-captured'
+-
+-// ─── RailClickGate ──────────────────────────────────────────────────────────
+-// Wraps the agent rail. Intercepts clicks + focus while locked; transparent
+-// pass-through once unlocked. Decides locked/unlocked from the email-status
+-// endpoint on mount and listens for cross-component capture events.
+-
+-interface RailClickGateProps {
+-  assessmentId: string
+-  shareToken: string
+-  children: ReactNode
+-}
+-
+-export function RailClickGate({ assessmentId, shareToken, children }: RailClickGateProps) {
+-  const [hasCapture, setHasCapture] = useState<boolean | null>(null) // null = unknown
+-  const [modalOpen, setModalOpen] = useState(false)
+-
+-  // Status check on mount.
+-  useEffect(() => {
+-    let cancelled = false
+-    async function check() {
+-      try {
+-        const res = await fetch(
+-          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
+-          { method: 'GET', cache: 'no-store' },
+-        )
+-        if (!res.ok) {
+-          if (!cancelled) setHasCapture(false)
+-          return
+-        }
+-        const data = (await res.json()) as EmailStatusResponse
+-        if (!cancelled) setHasCapture(Boolean(data.hasCapture))
+-      } catch {
+-        if (!cancelled) setHasCapture(false)
+-      }
+-    }
+-    check()
+-    return () => {
+-      cancelled = true
+-    }
+-  }, [assessmentId, shareToken])
+-
+-  // Listen for captures from elsewhere (legacy panel, agent-conversation
+-  // ask path) and detach the interceptor when one fires.
+-  useEffect(() => {
+-    function onCaptured(e: Event) {
+-      const detail = (e as CustomEvent<{ assessmentId: string }>).detail
+-      if (!detail || detail.assessmentId !== assessmentId) return
+-      setHasCapture(true)
+-      setModalOpen(false)
+-    }
+-    window.addEventListener(EMAIL_CAPTURED_EVENT, onCaptured as EventListener)
+-    return () =>
+-      window.removeEventListener(EMAIL_CAPTURED_EVENT, onCaptured as EventListener)
+-  }, [assessmentId])
+-
+-  const onSuccess = useCallback(() => {
+-    setHasCapture(true)
+-    setModalOpen(false)
+-  }, [])
+-
+-  // Treat unknown-status the same as locked: deny clicks until we hear
+-  // back from /email-status. Status check is fast (single Supabase query).
+-  const locked = hasCapture !== true
+-
+-  const onClickCapture = useCallback(
+-    (e: ReactMouseEvent<HTMLDivElement>) => {
+-      if (!locked) return
+-      e.preventDefault()
+-      e.stopPropagation()
+-      setModalOpen(true)
+-    },
+-    [locked],
+-  )
+-
+-  const onFocusCapture = useCallback(
+-    (e: ReactFocusEvent<HTMLDivElement>) => {
+-      if (!locked) return
+-      // Pull focus off the child (e.g. textarea) so the user can re-tab and
+-      // we re-trigger this branch cleanly. Otherwise the field stays focused
+-      // behind the modal.
+-      const target = e.target as HTMLElement
+-      if (typeof target?.blur === 'function') target.blur()
+-      setModalOpen(true)
+-    },
+-    [locked],
+-  )
+-
+-  const onKeyDownCapture = useCallback(
+-    (e: React.KeyboardEvent<HTMLDivElement>) => {
+-      if (!locked) return
+-      // Block Enter/Space/typing into a child input from sneaking past the
+-      // click interceptor (rare but possible if focus-capture fired before
+-      // we attached and the user starts typing).
+-      if (
+-        e.key === 'Enter' ||
+-        e.key === ' ' ||
+-        (e.key.length === 1 && !e.metaKey && !e.ctrlKey && !e.altKey)
+-      ) {
+-        e.preventDefault()
+-        e.stopPropagation()
+-        setModalOpen(true)
+-      }
+-    },
+-    [locked],
+-  )
+-
+-  return (
+-    <>
+-      <div
+-        // Wrapper exists in both states; only attaches handlers when locked
+-        // so React doesn't re-mount the rail on transition.
+-        onClickCapture={locked ? onClickCapture : undefined}
+-        onFocusCapture={locked ? onFocusCapture : undefined}
+-        onKeyDownCapture={locked ? onKeyDownCapture : undefined}
+-        // No visual styling: the rail must look identical to the unlocked
+-        // state. Wrapper is invisible.
+-        style={{ display: 'contents' }}
+-      >
+-        {children}
+-      </div>
+-
+-      {locked && (
+-        <AgentEmailModal
+-          assessmentId={assessmentId}
+-          shareToken={shareToken}
+-          isOpen={modalOpen}
+-          onClose={() => setModalOpen(false)}
+-          onSuccess={onSuccess}
+-        />
+-      )}
+-    </>
+-  )
+-}
+-
+-// ─── AgentEmailModal ────────────────────────────────────────────────────────
+-// Centered modal with copy that matches the prior gate. Closeable via X,
+-// scrim click, or Escape — none of those unlock the rail.
+-
+-interface AgentEmailModalProps {
+-  assessmentId: string
+-  shareToken: string
+-  isOpen: boolean
+-  onClose: () => void
+-  onSuccess: () => void
+-}
+-
+-type Phase = 'idle' | 'submitting'
+-
+-export function AgentEmailModal({
+-  assessmentId,
+-  shareToken,
+-  isOpen,
+-  onClose,
+-  onSuccess,
+-}: AgentEmailModalProps) {
+-  const [email, setEmail] = useState('')
+-  const [phase, setPhase] = useState<Phase>('idle')
+-  const [error, setError] = useState<string | null>(null)
+-  const inputRef = useRef<HTMLInputElement | null>(null)
+-
+-  // Escape closes.
+-  useEffect(() => {
+-    if (!isOpen) return
+-    function onKey(e: KeyboardEvent) {
+-      if (e.key === 'Escape') onClose()
+-    }
+-    window.addEventListener('keydown', onKey)
+-    return () => window.removeEventListener('keydown', onKey)
+-  }, [isOpen, onClose])
+-
+-  // Auto-focus the input when opened.
+-  useEffect(() => {
+-    if (!isOpen) return
+-    const t = window.setTimeout(() => inputRef.current?.focus(), 30)
+-    return () => window.clearTimeout(t)
+-  }, [isOpen])
+-
+-  // Reset transient state when closed.
+-  useEffect(() => {
+-    if (!isOpen) {
+-      setError(null)
+-      setPhase('idle')
+-    }
+-  }, [isOpen])
+-
+-  const onSubmit = useCallback(
+-    async (e: FormEvent) => {
+-      e.preventDefault()
+-      const trimmed = email.trim()
+-      setError(null)
+-      if (!EMAIL_REGEX.test(trimmed)) {
+-        setError('That email looks off, try again.')
+-        return
+-      }
+-      setPhase('submitting')
+-      try {
+-        const res = await fetch('/api/assessment/email-capture', {
+-          method: 'POST',
+-          headers: { 'Content-Type': 'application/json' },
+-          body: JSON.stringify({
+-            assessmentId,
+-            shareToken,
+-            email: trimmed,
+-            source: 'hud_panel',
+-            notifyOnCodes: true,
+-          }),
+-        })
+-        if (res.ok) {
+-          const data = (await res.json()) as EmailCaptureResponse
+-          if (data.ok) {
+-            try {
+-              window.localStorage.setItem(
+-                ASK_FLAG_KEY_PREFIX + assessmentId,
+-                'true',
+-              )
+-            } catch {
+-              /* quota — ignore */
+-            }
+-            window.dispatchEvent(
+-              new CustomEvent(EMAIL_CAPTURED_EVENT, {
+-                detail: { assessmentId, source: 'hud_panel' },
+-              }),
+-            )
+-            onSuccess()
+-            return
+-          }
+-        }
+-        let friendly = "Couldn't save that just now. Try again in a moment."
+-        if (res.status >= 400 && res.status < 500) {
+-          try {
+-            const data = (await res.json()) as EmailCaptureErrorResponse
+-            if (data?.error) friendly = data.error
+-          } catch {
+-            /* leave generic */
+-          }
+-        }
+-        setError(friendly)
+-        setPhase('idle')
+-      } catch {
+-        setError("Couldn't save that just now. Try again in a moment.")
+-        setPhase('idle')
+-      }
+-    },
+-    [assessmentId, shareToken, email, onSuccess],
+-  )
+-
+-  if (!isOpen) return null
+-
+-  const submitting = phase === 'submitting'
+-
+-  return (
+-    <div
+-      role="dialog"
+-      aria-modal="true"
+-      aria-label="Unlock the Freedom Agent"
+-      onClick={onClose}
+-      style={{
+-        position: 'fixed',
+-        inset: 0,
+-        zIndex: 80,
+-        background: 'rgba(8, 8, 13, 0.55)',
+-        display: 'flex',
+-        alignItems: 'center',
+-        justifyContent: 'center',
+-        padding: 16,
+-        fontFamily: '"DM Sans", system-ui, sans-serif',
+-      }}
+-    >
+-      <form
+-        onClick={e => e.stopPropagation()}
+-        onSubmit={onSubmit}
+-        style={{
+-          position: 'relative',
+-          width: '100%',
+-          maxWidth: 440,
+-          background: '#1c1c24',
+-          border: '1px solid rgba(240, 74, 77, 0.22)',
+-          borderRadius: 14,
+-          padding: '24px 22px',
+-          boxShadow:
+-            '0 16px 48px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.04)',
+-        }}
+-      >
+-        <button
+-          type="button"
+-          onClick={onClose}
+-          aria-label="Close"
+-          style={{
+-            position: 'absolute',
+-            top: 10,
+-            right: 10,
+-            width: 28,
+-            height: 28,
+-            border: 'none',
+-            background: 'transparent',
+-            color: '#8b8b94',
+-            cursor: 'pointer',
+-            display: 'inline-flex',
+-            alignItems: 'center',
+-            justifyContent: 'center',
+-            borderRadius: 6,
+-          }}
+-        >
+-          <CloseIcon />
+-        </button>
+-
+-        <div
+-          style={{
+-            fontFamily: '"Playfair Display", serif',
+-            fontSize: 22,
+-            fontWeight: 600,
+-            color: '#f4f4f6',
+-            marginBottom: 6,
+-            letterSpacing: -0.2,
+-            textAlign: 'center',
+-            paddingRight: 24,
+-          }}
+-        >
+-          Meet your Freedom Agent.
+-        </div>
+-        <div
+-          style={{
+-            fontSize: 14,
+-            color: '#c5c5cc',
+-            lineHeight: 1.5,
+-            textAlign: 'center',
+-            marginBottom: 14,
+-          }}
+-        >
+-          Don&apos;t worry — still totally free, still unlimited. Where should I
+-          send your sprint updates?
+-        </div>
+-
+-        <input
+-          ref={inputRef}
+-          type="email"
+-          autoComplete="email"
+-          value={email}
+-          onChange={e => {
+-            setEmail(e.target.value)
+-            if (error) setError(null)
+-          }}
+-          placeholder="your@email.com"
+-          aria-label="Your email address"
+-          disabled={submitting}
+-          style={{
+-            width: '100%',
+-            background: '#08080d',
+-            border: '1px solid #2a2a35',
+-            borderRadius: 8,
+-            padding: '11px 13px',
+-            fontSize: 15,
+-            color: '#f4f4f6',
+-            outline: 'none',
+-            marginBottom: error ? 6 : 12,
+-            fontFamily: 'inherit',
+-          }}
+-        />
+-        {error && (
+-          <div
+-            role="alert"
+-            style={{
+-              marginBottom: 10,
+-              fontSize: 12,
+-              color: '#f04a4d',
+-            }}
+-          >
+-            {error}
+-          </div>
+-        )}
+-
+-        <button
+-          type="submit"
+-          disabled={submitting}
+-          className="glow-amber-pulse"
+-          style={{
+-            width: '100%',
+-            background: '#fbbf24',
+-            color: '#1c1306',
+-            borderRadius: 10,
+-            padding: '12px 14px',
+-            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+-            fontSize: 13,
+-            fontWeight: 700,
+-            letterSpacing: 1.2,
+-            cursor: submitting ? 'wait' : 'pointer',
+-          }}
+-        >
+-          {submitting ? 'UNLOCKING…' : 'UNLOCK MY AGENT'}
+-        </button>
+-
+-        <div
+-          style={{
+-            marginTop: 12,
+-            fontSize: 11,
+-            color: '#5b5b63',
+-            lineHeight: 1.5,
+-            textAlign: 'center',
+-          }}
+-        >
+-          We&apos;ll email you sprint check-ins on day 3, 7, and 14. Unsubscribe
+-          anytime.
+-        </div>
+-      </form>
+-    </div>
+-  )
+-}
+-
+-function CloseIcon() {
+-  return (
+-    <svg
+-      aria-hidden
+-      width="14"
+-      height="14"
+-      viewBox="0 0 24 24"
+-      fill="none"
+-      stroke="currentColor"
+-      strokeWidth="2"
+-      strokeLinecap="round"
+-      strokeLinejoin="round"
+-    >
+-      <line x1="18" y1="6" x2="6" y2="18" />
+-      <line x1="6" y1="6" x2="18" y2="18" />
+-    </svg>
+-  )
+-}
+diff --git a/src/components/assessment/AgentHeroBanner.tsx b/src/components/assessment/AgentHeroBanner.tsx
+index ab3df6e..58fe3c2 100644
+--- a/src/components/assessment/AgentHeroBanner.tsx
++++ b/src/components/assessment/AgentHeroBanner.tsx
+@@ -1,199 +1,196 @@
+ 'use client'
+ 
+ // Hero entry-point banner for the Freedom Agent. Sits between the OVERVIEW
+-// (DeliverablesHeader) and the OPERATOR / FREEDOM_NUMBER row, lifting the
+-// Agent from a buried mention to a first-class touchpoint.
++// (DeliverablesHeader) and the OPERATOR / FREEDOM_NUMBER row.
+ //
+-// Clicking anywhere on the banner smooth-scrolls to the AgentRail at the
+-// bottom of the page (#freedom-agent-rail) and dispatches a
+-// `assessment:agent-focus` window event. We do NOT change AgentRail's
+-// behavior — if no listener picks the event up, it's a no-op.
++// Visually distinct from the surrounding HUD panels by design: this is the
++// advisor introducing itself (a character), not another framed data section.
++// No Chassis wrapper, no corner brackets, no status eyebrow — a centered,
++// recessed crimson pill with the orb bleeding past its left edge.
++//
++// Clicking anywhere on the banner dispatches `assessment:agent-focus`, which
++// AgentRail listens for and uses to expand into the chat input. The rail is
++// `position: fixed`, so no scroll is needed (or possible).
+ 
+ import { motion } from 'framer-motion'
+ import { useCallback } from 'react'
+-import { Chassis } from './Chassis'
+ import { AgentIdentityGlyph } from './AgentIdentityGlyph'
+ 
+ interface Props {
+   reducedMotion: boolean
+   delayMs: number
+-  // Optional name slot — reserved for a future personalized copy variant.
+-  // Intentionally unread today so v1 ships the generic line.
++  // Reserved for a future personalized copy variant. Intentionally unread
++  // today so v1 ships the generic line.
+   operatorName?: string
+ }
+ 
+ export function AgentHeroBanner({ reducedMotion, delayMs }: Props) {
+   const onActivate = useCallback(() => {
+-    if (typeof document !== 'undefined') {
+-      const el = document.getElementById('freedom-agent-rail')
+-      if (el) {
+-        el.scrollIntoView({
+-          behavior: reducedMotion ? 'auto' : 'smooth',
+-          block: 'center',
+-        })
+-      }
+-    }
+     if (typeof window !== 'undefined') {
+       window.dispatchEvent(new CustomEvent('assessment:agent-focus'))
+     }
+-  }, [reducedMotion])
++  }, [])
+ 
+   return (
+-    <Chassis
+-      id="freedom-agent-banner"
+-      intensity="standard"
+-      statusLabel="SYS://FREEDOM_AGENT — READY"
+-      status="active"
+-      innerGlow
+-    >
+-      <motion.div
+-        role="button"
+-        tabIndex={0}
+-        aria-label="Open Freedom Agent"
+-        onClick={onActivate}
+-        onKeyDown={(e) => {
+-          if (e.key === 'Enter' || e.key === ' ') {
+-            e.preventDefault()
+-            onActivate()
+-          }
+-        }}
+-        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+-        animate={{ opacity: 1, y: 0 }}
+-        transition={
+-          reducedMotion
+-            ? { duration: 0 }
+-            : { duration: 0.35, delay: delayMs / 1000, ease: 'easeOut' }
++    <motion.div
++      role="button"
++      tabIndex={0}
++      aria-label="Open Freedom Agent"
++      onClick={onActivate}
++      onKeyDown={(e) => {
++        if (e.key === 'Enter' || e.key === ' ') {
++          e.preventDefault()
++          onActivate()
+         }
+-        className="agent-hero-banner"
++      }}
++      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
++      animate={{ opacity: 1, y: 0 }}
++      transition={
++        reducedMotion
++          ? { duration: 0 }
++          : { duration: 0.35, delay: delayMs / 1000, ease: 'easeOut' }
++      }
++      className="agent-hero-banner chassis-glow-soft"
++      style={{
++        position: 'relative',
++        // Centered in the span-12 cell with breathing room on each side.
++        maxWidth: 760,
++        margin: '0 auto',
++        // Recessed crimson well: deeper than the #1c1c24 panels around it,
++        // with a radial glow emanating from the left where the orb sits.
++        background:
++          'radial-gradient(120% 100% at 14% 50%, rgba(240, 74, 77, 0.22) 0%, rgba(240, 74, 77, 0.08) 30%, transparent 62%), #0a0a10',
++        border: '1px solid rgba(240, 74, 77, 0.28)',
++        borderRadius: 999,
++        // Left padding reserves space for the absolutely-positioned orb.
++        padding: '18px 28px 18px 100px',
++        display: 'grid',
++        gridTemplateColumns: '1fr auto',
++        alignItems: 'center',
++        gap: 20,
++        cursor: 'pointer',
++        // Lets the orb halo bleed past the container's left edge.
++        overflow: 'visible',
++        outline: 'none',
++      }}
++    >
++      {/* Orb — absolutely positioned, bleeds 14px past the container's left
++          edge so it visually emits the banner rather than sitting inside it.
++          The 110px halo wrapper carries a soft radial glow behind the 72px
++          glyph. pointer-events: none keeps clicks falling through to the
++          banner body. */}
++      <div
++        className="agent-hero-banner-orb"
+         style={{
+-          // Subtle crimson wash over the standard panel surface. With the
+-          // Chassis's gray corner brackets sitting outside the surface, the
+-          // 1px crimson inner border traces the surface edge cleanly and
+-          // doesn't visually compete (see DeliverablesHeader / others — same
+-          // bracket-outside + inner-border-on-surface pattern).
+-          background:
+-            'linear-gradient(180deg, rgba(240, 74, 77, 0.04) 0%, rgba(240, 74, 77, 0.02) 100%), #1c1c24',
+-          border: '1px solid rgba(240, 74, 77, 0.18)',
+-          borderRadius: 12,
+-          padding: '20px 24px',
+-          minWidth: 0,
+-          display: 'grid',
+-          gridTemplateColumns: 'auto 1fr auto',
++          position: 'absolute',
++          left: -14,
++          top: '50%',
++          transform: 'translateY(-50%)',
++          width: 110,
++          height: 110,
++          display: 'flex',
+           alignItems: 'center',
+-          gap: 24,
+-          cursor: 'pointer',
+-          outline: 'none',
++          justifyContent: 'center',
++          background:
++            'radial-gradient(circle, rgba(240, 74, 77, 0.42) 0%, rgba(240, 74, 77, 0.14) 38%, transparent 70%)',
++          pointerEvents: 'none',
+         }}
+       >
+-        {/* Left: orb — reuses the rail's identity glyph so the visual
+-            language is identical at both touchpoints. */}
+-        <div
+-          style={{
+-            flexShrink: 0,
+-            display: 'inline-flex',
+-            alignItems: 'center',
+-            justifyContent: 'center',
+-          }}
+-        >
+-          <AgentIdentityGlyph
+-            size={52}
+-            active
+-            reducedMotion={reducedMotion}
+-          />
+-        </div>
++        <AgentIdentityGlyph
++          size={72}
++          active
++          reducedMotion={reducedMotion}
++        />
++      </div>
+ 
+-        {/* Center: status eyebrow + invitation line */}
+-        <div
+-          style={{
+-            minWidth: 0,
+-            display: 'flex',
+-            flexDirection: 'column',
+-            gap: 6,
+-          }}
+-        >
+-          <div
+-            style={{
+-              fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+-              fontSize: 11,
+-              color: '#5b5b63',
+-              letterSpacing: 1.4,
+-              textTransform: 'uppercase',
+-            }}
+-          >
+-            SYS://FREEDOM_AGENT — READY
+-          </div>
+-          <div
+-            style={{
+-              fontFamily: '"DM Sans", system-ui, sans-serif',
+-              fontSize: 16,
+-              color: '#e8e8ec',
+-              lineHeight: 1.5,
+-            }}
+-          >
+-            Your advisor read the whole assessment. Ask it anything — about
+-            your sprint, your pricing, your niche, your next move.
+-          </div>
+-        </div>
++      {/* Body line — no eyebrow. The orb + this sentence are enough. */}
++      <div
++        className="agent-hero-banner-body"
++        style={{
++          minWidth: 0,
++          fontFamily: '"DM Sans", system-ui, sans-serif',
++          fontSize: 16,
++          lineHeight: 1.55,
++          color: '#e8e8ec',
++        }}
++      >
++        Your advisor read the whole assessment. Ask it anything — about
++        your sprint, your pricing, your niche, your next move.
++      </div>
+ 
+-        {/* Right: CTA. The whole banner is clickable, but the button keeps
+-            an obvious visible target. stopPropagation prevents the bubble
+-            from double-firing the outer handler. */}
+-        <button
+-          type="button"
+-          onClick={(e) => {
+-            e.stopPropagation()
+-            onActivate()
+-          }}
+-          onKeyDown={(e) => {
+-            // Swallow Enter/Space on the button so the outer motion.div's
+-            // keyhandler doesn't also fire.
+-            if (e.key === 'Enter' || e.key === ' ') e.stopPropagation()
+-          }}
+-          className="agent-hero-banner-cta"
+-          aria-label="Open Freedom Agent"
+-          style={{
+-            background: 'transparent',
+-            border: '1px solid rgba(240, 74, 77, 0.55)',
+-            color: '#f04a4d',
+-            padding: '12px 20px',
+-            borderRadius: 8,
+-            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+-            fontSize: 11,
+-            fontWeight: 600,
+-            letterSpacing: 1.8,
+-            textTransform: 'uppercase',
+-            cursor: 'pointer',
+-            transition: 'background 0.15s ease, box-shadow 0.15s ease',
+-            whiteSpace: 'nowrap',
+-          }}
+-        >
+-          OPEN ADVISOR →
+-        </button>
++      {/* CTA — pill matching the container. Outlined by default; on hover
++          fills with a soft crimson + glow so it feels like the action of
++          the banner. stopPropagation prevents the outer click from
++          double-firing onActivate. */}
++      <button
++        type="button"
++        onClick={(e) => {
++          e.stopPropagation()
++          onActivate()
++        }}
++        onKeyDown={(e) => {
++          if (e.key === 'Enter' || e.key === ' ') e.stopPropagation()
++        }}
++        className="agent-hero-banner-cta"
++        aria-label="Open Freedom Agent"
++        style={{
++          background: 'transparent',
++          border: '1px solid rgba(240, 74, 77, 0.6)',
++          color: '#f04a4d',
++          padding: '11px 22px',
++          borderRadius: 999,
++          fontFamily: '"JetBrains Mono", ui-monospace, monospace',
++          fontSize: 11,
++          fontWeight: 600,
++          letterSpacing: 1.8,
++          textTransform: 'uppercase',
++          cursor: 'pointer',
++          transition:
++            'background 0.18s ease, box-shadow 0.18s ease, color 0.18s ease',
++          whiteSpace: 'nowrap',
++        }}
++      >
++        OPEN ADVISOR →
++      </button>
+ 
+-        <style>{`
+-          .agent-hero-banner:focus-visible {
+-            outline: 2px solid #f04a4d;
+-            outline-offset: 3px;
+-          }
+-          .agent-hero-banner-cta:hover {
+-            background: rgba(240, 74, 77, 0.08) !important;
+-            box-shadow: 0 0 14px rgba(240, 74, 77, 0.22);
++      <style>{`
++        .agent-hero-banner:focus-visible {
++          outline: 2px solid #f04a4d;
++          outline-offset: 4px;
++        }
++        .agent-hero-banner-cta:hover {
++          background: rgba(240, 74, 77, 0.18) !important;
++          box-shadow: 0 0 18px rgba(240, 74, 77, 0.35);
++          color: #ff8a8c !important;
++        }
++        .agent-hero-banner-cta:focus-visible {
++          outline: 2px solid #f04a4d;
++          outline-offset: 2px;
++        }
++        @media (max-width: 767px) {
++          .agent-hero-banner {
++            grid-template-columns: 1fr !important;
++            padding: 28px 24px !important;
++            border-radius: 28px !important;
++            gap: 16px !important;
++            background:
++              radial-gradient(70% 50% at 50% 14%, rgba(240, 74, 77, 0.25) 0%, rgba(240, 74, 77, 0.08) 40%, transparent 70%),
++              #0a0a10 !important;
++            text-align: center;
+           }
+-          .agent-hero-banner-cta:focus-visible {
+-            outline: 2px solid #f04a4d;
+-            outline-offset: 2px;
++          .agent-hero-banner-orb {
++            position: static !important;
++            transform: none !important;
++            left: auto !important;
++            top: auto !important;
++            margin: 0 auto !important;
++            justify-self: center;
+           }
+-          @media (max-width: 767px) {
+-            .agent-hero-banner {
+-              grid-template-columns: 1fr !important;
+-              gap: 16px !important;
+-            }
+-            .agent-hero-banner-cta {
+-              width: 100%;
+-            }
++          .agent-hero-banner-cta {
++            width: 100%;
+           }
+-        `}</style>
+-      </motion.div>
+-    </Chassis>
++        }
++      `}</style>
++    </motion.div>
+   )
+ }
+diff --git a/src/components/assessment/AgentMessages.tsx b/src/components/assessment/AgentMessages.tsx
+index 31a7f04..26dba47 100644
+--- a/src/components/assessment/AgentMessages.tsx
++++ b/src/components/assessment/AgentMessages.tsx
+@@ -7,6 +7,10 @@ interface Props {
+   messages: FreedomAgentMessage[]
+   isStreaming: boolean
+   streamingContent: string
++  // Optional standing welcome from the Agent, rendered as the first bubble
++  // in the scroll list. Hardcoded copy — never from a live model call. Used
++  // by the rail's locked/empty states.
++  welcomeMessage?: string
+ }
+ 
+ function formatTime(iso: string): string {
+@@ -25,6 +29,7 @@ export function AgentMessages({
+   messages,
+   isStreaming,
+   streamingContent,
++  welcomeMessage,
+ }: Props) {
+   const scrollerRef = useRef<HTMLDivElement | null>(null)
+ 
+@@ -34,7 +39,7 @@ export function AgentMessages({
+     el.scrollTop = el.scrollHeight
+   }, [messages.length, streamingContent, isStreaming])
+ 
+-  if (messages.length === 0 && !isStreaming) return null
++  if (messages.length === 0 && !isStreaming && !welcomeMessage) return null
+ 
+   return (
+     <div
+@@ -48,6 +53,16 @@ export function AgentMessages({
+         gap: 14,
+       }}
+     >
++      {welcomeMessage && (
++        <Bubble
++          message={{
++            role: 'assistant',
++            content: welcomeMessage,
++            timestamp: '',
++          }}
++          hideTimestamp
++        />
++      )}
+       {messages.map((m, i) => (
+         <Bubble key={i} message={m} />
+       ))}
+@@ -70,10 +85,12 @@ function Bubble({
+   message,
+   showCursor,
+   streaming,
++  hideTimestamp,
+ }: {
+   message: FreedomAgentMessage
+   showCursor?: boolean
+   streaming?: boolean
++  hideTimestamp?: boolean
+ }) {
+   const isUser = message.role === 'user'
+   return (
+@@ -113,17 +130,19 @@ function Bubble({
+         {message.content}
+         {showCursor && <BlinkingCursor />}
+       </div>
+-      <div
+-        style={{
+-          marginTop: 4,
+-          fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+-          fontSize: 10,
+-          color: '#5b5b63',
+-          alignSelf: 'center',
+-        }}
+-      >
+-        {formatTime(message.timestamp)}
+-      </div>
++      {!hideTimestamp && (
++        <div
++          style={{
++            marginTop: 4,
++            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
++            fontSize: 10,
++            color: '#5b5b63',
++            alignSelf: 'center',
++          }}
++        >
++          {formatTime(message.timestamp)}
++        </div>
++      )}
+     </div>
+   )
+ }
+diff --git a/src/components/assessment/AgentRail.tsx b/src/components/assessment/AgentRail.tsx
+index 71742bb..4089aa1 100644
+--- a/src/components/assessment/AgentRail.tsx
++++ b/src/components/assessment/AgentRail.tsx
+@@ -1,7 +1,13 @@
+ 'use client'
+ 
+ import { motion, AnimatePresence } from 'framer-motion'
+-import { useCallback, useEffect, useRef, useState } from 'react'
++import {
++  useCallback,
++  useEffect,
++  useRef,
++  useState,
++  type FormEvent,
++} from 'react'
+ import type { AgentContext } from '@/types/assessment'
+ import type { FreedomAgentMessage } from '@/types/freedom-agent'
+ import type {
+@@ -18,6 +24,10 @@ interface Props {
+   assessmentId: string // EA-X-XXX display ID
+   shareToken: string
+   agentContext: AgentContext
++  // Operator first name from the assessment payload. Used to personalize the
++  // hardcoded welcome message in the expanded chat surface. Falls back to a
++  // nameless greeting when absent.
++  operatorFirstName?: string
+ }
+ 
+ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+@@ -29,9 +39,41 @@ const EMAIL_CAPTURED_EVENT = 'assessment:email-captured'
+ const EMAIL_ASK_PROMPT_TEXT =
+   "Quick thing before we keep going — want me to send a recap of this conversation and your assessment to your email? It also gets you on the list for the next batch of codes. Drop your email below or just say 'no thanks' and we'll keep going."
+ 
++// Locked-state chip-preview teasers. Topic-detected from the chip label
++// (chips are LLM-generated per assessment, so exact-string matching is
++// unreliable — we match on substring keywords). Falls back to a generic
++// teaser when no topic keyword is present.
++const TEASER_DAY1 =
++  "Your Day 1 task is the foundation of the whole sprint — and it's specific to your situation. I can walk you through exactly what to do, what to avoid, and how it sets up Day 2. Drop your email below to read the full walkthrough →"
++const TEASER_NICHE =
++  "Your niche came out of three signals in your assessment — your background, your time available, and your Freedom Number. The reasoning behind it matters more than the niche itself. Drop your email below to see the full breakdown →"
++const TEASER_PRICING =
++  "Your pricing is calibrated to your Freedom Number, not industry averages. There's a specific way to test and adjust it without underselling. Drop your email below for the full method →"
++const TEASER_GENERIC =
++  "That's a real question and the answer is specific to your assessment. Drop your email below to keep the thread →"
++
++function teaserForChip(label: string): string {
++  const lower = label.toLowerCase()
++  if (lower.includes('day 1') || lower.includes('day1')) return TEASER_DAY1
++  if (lower.includes('niche')) return TEASER_NICHE
++  if (lower.includes('pric') || lower.includes('offer')) return TEASER_PRICING
++  return TEASER_GENERIC
++}
++
++function buildWelcomeMessage(firstName?: string): string {
++  const trimmed = firstName?.trim()
++  const greeting = trimmed ? `Hey ${trimmed} —` : 'Hey —'
++  return `${greeting} I've read your full assessment. Ask me anything about your sprint, your pricing, your niche, or your next move.`
++}
++
+ type EmailAskPhase = 'never' | 'shown' | 'submitting' | 'success' | 'dismissed'
+ 
+-export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
++export function AgentRail({
++  assessmentId,
++  shareToken,
++  agentContext,
++  operatorFirstName,
++}: Props) {
+   const [isExpanded, setIsExpanded] = useState(false)
+   const [messages, setMessages] = useState<FreedomAgentMessage[]>([])
+   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+@@ -40,12 +82,50 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+   const [streamingContent, setStreamingContent] = useState('')
+   const [errorBanner, setErrorBanner] = useState<string | null>(null)
+ 
++  // Locked/unlocked state. `null` = not yet known (mount-time fetch in
++  // flight). Treated as locked until proven otherwise.
++  const [hasCapture, setHasCapture] = useState<boolean | null>(null)
++  const locked = hasCapture !== true
++
++  // Chip labels the user has previewed in the current pre-unlock session.
++  // Dimmed in the rack; subsequent clicks on a previewed chip are no-ops.
++  const [previewedChips, setPreviewedChips] = useState<Set<string>>(
++    () => new Set(),
++  )
++
+   const [emailAskPhase, setEmailAskPhase] = useState<EmailAskPhase>('never')
+   const [askEmail, setAskEmail] = useState('')
+   const [askError, setAskError] = useState<string | null>(null)
+ 
+   const containerRef = useRef<HTMLDivElement | null>(null)
+ 
++  // Mount: fetch email-status once. Locked-state lives inside the rail now
++  // (no external click-intercept wrapper), so this is the only source of
++  // truth for the initial hasCapture value.
++  useEffect(() => {
++    let cancelled = false
++    async function check() {
++      try {
++        const res = await fetch(
++          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
++          { method: 'GET', cache: 'no-store' },
++        )
++        if (!res.ok) {
++          if (!cancelled) setHasCapture(false)
++          return
++        }
++        const data = (await res.json()) as EmailStatusResponse
++        if (!cancelled) setHasCapture(Boolean(data.hasCapture))
++      } catch {
++        if (!cancelled) setHasCapture(false)
++      }
++    }
++    check()
++    return () => {
++      cancelled = true
++    }
++  }, [assessmentId, shareToken])
++
+   const loadHistory = useCallback(async () => {
+     if (historyLoaded || isLoadingHistory) return
+     setIsLoadingHistory(true)
+@@ -56,7 +136,12 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+       )
+       if (res.ok) {
+         const data = (await res.json()) as { messages?: FreedomAgentMessage[] }
+-        setMessages(data.messages ?? [])
++        // Merge server history with any pre-unlock chip previews already in
++        // local state. Previews stay visible after unlock per the brief.
++        setMessages((prev) => {
++          const previews = prev.filter((m) => m.preview)
++          return [...(data.messages ?? []), ...previews]
++        })
+       }
+     } catch {
+       // Non-fatal — user can still send a new message; we just won't show history.
+@@ -68,8 +153,11 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+ 
+   const expand = useCallback(() => {
+     setIsExpanded(true)
+-    if (!historyLoaded) loadHistory()
+-  }, [historyLoaded, loadHistory])
++    // Only fetch server history once we know the user is unlocked. Locked
++    // users have no conversation to load (server gates /chat with 403), so a
++    // fetch would just return an empty list with no benefit.
++    if (!historyLoaded && hasCapture === true) loadHistory()
++  }, [historyLoaded, loadHistory, hasCapture])
+ 
+   const collapse = useCallback(() => setIsExpanded(false), [])
+ 
+@@ -83,7 +171,8 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+     return () => window.removeEventListener('keydown', onKey)
+   }, [isExpanded, collapse])
+ 
+-  // Click outside (desktop only) collapses.
++  // Click outside (desktop only) collapses. The scrim is gone — this is the
++  // sole click-outside mechanism now.
+   useEffect(() => {
+     if (!isExpanded) return
+     function onClick(e: MouseEvent) {
+@@ -96,11 +185,26 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+     return () => window.removeEventListener('mousedown', onClick)
+   }, [isExpanded, collapse])
+ 
+-  // Listen for cross-component capture events (e.g. EmailCapturePanel succeeded).
++  // Expand when the AgentHeroBanner (or anything else) dispatches a focus
++  // request. The banner is a fixed element so a scroll-into-view is a no-op;
++  // this listener is the actual lever that lands the user in front of the
++  // chat input (or the email gate, when locked).
++  useEffect(() => {
++    function onFocus() {
++      expand()
++    }
++    window.addEventListener('assessment:agent-focus', onFocus)
++    return () => window.removeEventListener('assessment:agent-focus', onFocus)
++  }, [expand])
++
++  // Listen for cross-component capture events. Flips local hasCapture so the
++  // rail unlocks in place, and dismisses the conversational ask the same way
++  // it always did.
+   useEffect(() => {
+     function onCaptured(e: Event) {
+       const detail = (e as CustomEvent<{ assessmentId: string }>).detail
+       if (!detail || detail.assessmentId !== assessmentId) return
++      setHasCapture(true)
+       try {
+         window.localStorage.setItem(
+           ASK_FLAG_KEY_PREFIX + assessmentId,
+@@ -119,12 +223,26 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+       )
+   }, [assessmentId])
+ 
+-  // Trigger the conversational email ask when the user has had a real back-and-forth.
+-  // Conditions: 4+ user messages, never asked before, no email captured, not mid-stream.
++  // After unlock, kick off the server history fetch if the rail is already
++  // expanded. Covers the path where the user expanded while locked and then
++  // unlocked via the inline gate.
++  useEffect(() => {
++    if (hasCapture === true && isExpanded && !historyLoaded) loadHistory()
++  }, [hasCapture, isExpanded, historyLoaded, loadHistory])
++
++  // Trigger the conversational email ask when the user has had a real
++  // back-and-forth (post-unlock). Conditions: 4+ real user messages
++  // (preview-flagged bubbles don't count), never asked before, no email
++  // captured, not mid-stream. Preserved verbatim from prior behavior —
++  // localStorage writes here predate this prompt and live on the
++  // conversational-ask flow, not the gate.
+   useEffect(() => {
+     if (emailAskPhase !== 'never') return
+     if (isStreaming) return
+-    const userCount = messages.filter(m => m.role === 'user').length
++    if (hasCapture === null) return // wait for mount fetch before deciding
++    const userCount = messages.filter(
++      (m) => m.role === 'user' && !m.preview,
++    ).length
+     if (userCount < EMAIL_ASK_THRESHOLD) return
+ 
+     let cancelled = false
+@@ -138,15 +256,8 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+           if (!cancelled) setEmailAskPhase('dismissed')
+           return
+         }
+-        const res = await fetch(
+-          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}&shareToken=${encodeURIComponent(shareToken)}`,
+-          { method: 'GET', cache: 'no-store' },
+-        )
+-        if (!res.ok) return
+-        const data = (await res.json()) as EmailStatusResponse
+-        if (cancelled) return
+-        if (data.hasCapture) {
+-          // Persist suppression so we never re-fetch on subsequent turns.
++        if (hasCapture === true) {
++          // Persist suppression so we never re-evaluate this on subsequent turns.
+           try {
+             window.localStorage.setItem(
+               ASK_FLAG_KEY_PREFIX + assessmentId,
+@@ -159,10 +270,10 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+           } catch {
+             /* quota — ignore */
+           }
+-          setEmailAskPhase('dismissed')
++          if (!cancelled) setEmailAskPhase('dismissed')
+           return
+         }
+-        setEmailAskPhase('shown')
++        if (!cancelled) setEmailAskPhase('shown')
+       } catch {
+         // Non-fatal — leave 'never' so it can retry next turn.
+       }
+@@ -171,7 +282,7 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+     return () => {
+       cancelled = true
+     }
+-  }, [messages, isStreaming, emailAskPhase, assessmentId, shareToken])
++  }, [messages, isStreaming, emailAskPhase, hasCapture, assessmentId])
+ 
+   const dismissEmailAsk = useCallback(() => {
+     try {
+@@ -319,14 +430,48 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+     [assessmentId, shareToken, isStreaming],
+   )
+ 
++  // Chip click splits on lock state. Pre-unlock: push a teaser pair into the
++  // local message stream and dim the chip. Post-unlock: existing live-send
++  // flow (expand, then send the chip label to the model).
+   const onChipClick = useCallback(
+     (label: string) => {
++      if (locked) {
++        if (previewedChips.has(label)) return
++        const now = new Date().toISOString()
++        const userBubble: FreedomAgentMessage = {
++          role: 'user',
++          content: label,
++          timestamp: now,
++          preview: true,
++        }
++        const teaserBubble: FreedomAgentMessage = {
++          role: 'assistant',
++          content: teaserForChip(label),
++          timestamp: now,
++          preview: true,
++        }
++        setMessages((prev) => [...prev, userBubble, teaserBubble])
++        setPreviewedChips((prev) => {
++          const next = new Set(prev)
++          next.add(label)
++          return next
++        })
++        if (!isExpanded) setIsExpanded(true)
++        return
++      }
+       expand()
+       send(label)
+     },
+-    [expand, send],
++    [locked, previewedChips, isExpanded, expand, send],
+   )
+ 
++  // Locked inline-gate success: flip local state. (The component itself
++  // dispatches the assessment:email-captured event so other listeners stay
++  // in sync — we don't need to repeat that here.)
++  const onInlineUnlock = useCallback(() => {
++    setHasCapture(true)
++  }, [])
++
+   const isAgentActive = isStreaming || isLoadingHistory
+   const agentStatus: 'STANDBY' | 'ACTIVE' | 'LIVE' = isAgentActive
+     ? 'ACTIVE'
+@@ -338,27 +483,15 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+   const lastTimestamp =
+     messages.length > 0 ? messages[messages.length - 1].timestamp : null
+ 
++  const welcomeMessage = buildWelcomeMessage(operatorFirstName)
++
++  // Chip rack visibility: always shown in locked-expanded so the user can
++  // preview each topic; in unlocked-expanded only when no real conversation
++  // has started yet (preserved from prior behavior).
++  const showChipRack =
++    isExpanded && (locked || (messages.length === 0 && !isStreaming))
++
+   return (
+-    <>
+-      {/* Scrim behind expanded panel — click to collapse */}
+-      {isExpanded && (
+-        <motion.div
+-          aria-hidden
+-          initial={{ opacity: 0 }}
+-          animate={{ opacity: 1 }}
+-          exit={{ opacity: 0 }}
+-          transition={{ duration: 0.2 }}
+-          onClick={collapse}
+-          style={{
+-            position: 'fixed',
+-            inset: 0,
+-            zIndex: 49,
+-            background: 'rgba(8, 8, 13, 0.55)',
+-            backdropFilter: 'blur(8px)',
+-            WebkitBackdropFilter: 'blur(8px)',
+-          }}
+-        />
+-      )}
+     <motion.div
+       id="freedom-agent-rail"
+       ref={containerRef}
+@@ -368,7 +501,7 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+         // Expand on rail click (collapsed only). Ignore clicks on chips/buttons.
+         if (!isExpanded) {
+           const target = e.target as HTMLElement
+-          if (target.closest('button, textarea, [data-no-expand]')) return
++          if (target.closest('button, textarea, input, [data-no-expand]')) return
+           expand()
+         }
+       }}
+@@ -441,29 +574,11 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+               </div>
+             )}
+ 
+-            {messages.length === 0 && !isStreaming && !isLoadingHistory && (
+-              <div
+-                style={{
+-                  flex: 1,
+-                  display: 'flex',
+-                  alignItems: 'center',
+-                  justifyContent: 'center',
+-                  padding: 24,
+-                  textAlign: 'center',
+-                  color: '#9b9ba4',
+-                  fontFamily: '"DM Sans", system-ui, sans-serif',
+-                  fontSize: 14,
+-                  lineHeight: 1.6,
+-                }}
+-              >
+-                {agentContext.greeting}
+-              </div>
+-            )}
+-
+             <AgentMessages
+               messages={messages}
+               isStreaming={isStreaming}
+               streamingContent={streamingContent}
++              welcomeMessage={welcomeMessage}
+             />
+ 
+             {(emailAskPhase === 'shown' ||
+@@ -482,7 +597,7 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+               />
+             )}
+ 
+-            {messages.length === 0 && !isStreaming && (
++            {showChipRack && (
+               <div
+                 data-no-expand
+                 style={{
+@@ -491,20 +606,55 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+                   gap: 8,
+                   padding: '0 16px 12px',
+                   justifyContent: 'center',
++                  alignItems: 'flex-start',
+                 }}
+               >
+-                {agentContext.quickReplies.map((q, i) => (
+-                  <AgentChip
+-                    key={i}
+-                    label={q}
+-                    onClick={() => send(q)}
+-                    disabled={isStreaming}
+-                  />
+-                ))}
++                {agentContext.quickReplies.map((q, i) => {
++                  const previewed = previewedChips.has(q)
++                  return (
++                    <div
++                      key={i}
++                      style={{
++                        display: 'flex',
++                        flexDirection: 'column',
++                        alignItems: 'center',
++                        gap: 4,
++                      }}
++                    >
++                      <AgentChip
++                        label={q}
++                        onClick={() => onChipClick(q)}
++                        disabled={previewed || isStreaming}
++                      />
++                      {previewed && (
++                        <span
++                          style={{
++                            fontFamily:
++                              '"JetBrains Mono", ui-monospace, monospace',
++                            fontSize: 9,
++                            color: '#5b5b63',
++                            letterSpacing: 1.0,
++                            textTransform: 'uppercase',
++                          }}
++                        >
++                          ← preview shown above
++                        </span>
++                      )}
++                    </div>
++                  )
++                })}
+               </div>
+             )}
+ 
+-            <AgentInput onSend={send} disabled={isStreaming} />
++            {locked ? (
++              <InlineEmailGate
++                assessmentId={assessmentId}
++                shareToken={shareToken}
++                onSuccess={onInlineUnlock}
++              />
++            ) : (
++              <AgentInput onSend={send} disabled={isStreaming} />
++            )}
+           </motion.div>
+         ) : (
+           <motion.div
+@@ -565,6 +715,7 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+                   key={i}
+                   label={q}
+                   onClick={() => onChipClick(q)}
++                  disabled={previewedChips.has(q)}
+                 />
+               ))}
+             </div>
+@@ -577,18 +728,23 @@ export function AgentRail({ assessmentId, shareToken, agentContext }: Props) {
+           height: 120px;
+         }
+         .agent-rail.agent-rail-expanded {
+-          height: 480px;
++          height: 520px;
+           cursor: default;
+         }
+         @media (max-width: 767px) {
+           .agent-rail { height: 88px; padding: 0; }
+-          .agent-rail.agent-rail-expanded { height: 60vh; }
++          .agent-rail.agent-rail-expanded { height: 72vh; }
+           .agent-rail-grid { padding: 12px 16px !important; grid-template-columns: 1fr !important; gap: 4px !important; }
+           .agent-rail-chips { display: none !important; }
+         }
++        @media (prefers-reduced-motion: reduce) {
++          .agent-rail, .agent-rail * {
++            transition-duration: 0.001ms !important;
++            animation-duration: 0.001ms !important;
++          }
++        }
+       `}</style>
+     </motion.div>
+-    </>
+   )
+ }
+ 
+@@ -671,30 +827,177 @@ function ExpandedHeader({
+   )
+ }
+ 
+-function PulseDot({ live }: { live: boolean }) {
++// ─── InlineEmailGate ────────────────────────────────────────────────────────
++// Lives in the chat input's slot when the rail is expanded-locked. Crimson
++// UNLOCK MY AGENT button (more prominent than the outline-style CTAs
++// elsewhere because this is the conversion moment). Posts to
++// /api/assessment/email-capture with source='rail_gate' and dispatches
++// assessment:email-captured on success so other listeners stay in sync.
++
++function InlineEmailGate({
++  assessmentId,
++  shareToken,
++  onSuccess,
++}: {
++  assessmentId: string
++  shareToken: string
++  onSuccess: () => void
++}) {
++  const [email, setEmail] = useState('')
++  const [error, setError] = useState<string | null>(null)
++  const [submitting, setSubmitting] = useState(false)
++
++  const onSubmit = useCallback(
++    async (e: FormEvent) => {
++      e.preventDefault()
++      const trimmed = email.trim()
++      setError(null)
++      if (!EMAIL_REGEX.test(trimmed)) {
++        setError('That email looks off, try again.')
++        return
++      }
++      setSubmitting(true)
++      try {
++        const res = await fetch('/api/assessment/email-capture', {
++          method: 'POST',
++          headers: { 'Content-Type': 'application/json' },
++          body: JSON.stringify({
++            assessmentId,
++            shareToken,
++            email: trimmed,
++            source: 'rail_gate',
++            notifyOnCodes: true,
++          }),
++        })
++        if (res.ok) {
++          const data = (await res.json()) as EmailCaptureResponse
++          if (data.ok) {
++            window.dispatchEvent(
++              new CustomEvent(EMAIL_CAPTURED_EVENT, {
++                detail: { assessmentId, source: 'rail_gate' },
++              }),
++            )
++            onSuccess()
++            return
++          }
++        }
++        let friendly = "Couldn't save that just now. Try again in a moment."
++        if (res.status >= 400 && res.status < 500) {
++          try {
++            const data = (await res.json()) as EmailCaptureErrorResponse
++            if (data?.error) friendly = data.error
++          } catch {
++            /* leave generic */
++          }
++        }
++        setError(friendly)
++        setSubmitting(false)
++      } catch {
++        setError("Couldn't save that just now. Try again in a moment.")
++        setSubmitting(false)
++      }
++    },
++    [assessmentId, shareToken, email, onSuccess],
++  )
++
+   return (
+-    <>
+-      <span
+-        aria-hidden="true"
++    <div
++      data-no-expand
++      style={{
++        padding: '12px 16px 16px',
++        display: 'flex',
++        flexDirection: 'column',
++        gap: 8,
++      }}
++    >
++      {error && (
++        <div
++          role="alert"
++          style={{
++            fontFamily: '"DM Sans", system-ui, sans-serif',
++            fontSize: 12,
++            color: '#f04a4d',
++          }}
++        >
++          {error}
++        </div>
++      )}
++      <form
++        onSubmit={onSubmit}
+         style={{
+-          display: 'inline-block',
+-          width: 8,
+-          height: 8,
+-          borderRadius: 999,
+-          background: live ? '#3aa67a' : '#f04a4d',
+-          animation: 'agentPulse 1.6s ease-in-out infinite',
++          display: 'flex',
++          gap: 8,
++          alignItems: 'stretch',
++          width: '100%',
++          flexWrap: 'wrap',
+         }}
+-      />
+-      <style>{`
+-        @keyframes agentPulse {
+-          0%, 100% { opacity: 0.4; transform: scale(1); }
+-          50%      { opacity: 1;   transform: scale(1.25); }
+-        }
+-      `}</style>
+-    </>
++      >
++        <input
++          type="email"
++          autoComplete="email"
++          required
++          value={email}
++          onChange={(e) => {
++            setEmail(e.target.value)
++            if (error) setError(null)
++          }}
++          placeholder="your@email.com"
++          aria-label="Your email address"
++          disabled={submitting}
++          style={{
++            flex: '1 1 220px',
++            background: '#08080d',
++            border: '1px solid #2a2a35',
++            borderRadius: 999,
++            padding: '11px 18px',
++            fontFamily: '"DM Sans", system-ui, sans-serif',
++            fontSize: 14,
++            color: '#f4f4f6',
++            outline: 'none',
++          }}
++        />
++        <button
++          type="submit"
++          disabled={submitting}
++          style={{
++            background: '#f04a4d',
++            color: '#fff',
++            border: '1px solid #f04a4d',
++            borderRadius: 999,
++            padding: '11px 22px',
++            fontFamily: '"JetBrains Mono", ui-monospace, monospace',
++            fontSize: 11,
++            fontWeight: 600,
++            letterSpacing: 1.6,
++            textTransform: 'uppercase',
++            cursor: submitting ? 'wait' : 'pointer',
++            whiteSpace: 'nowrap',
++            boxShadow: '0 0 16px rgba(240, 74, 77, 0.3)',
++          }}
++        >
++          {submitting ? 'UNLOCKING…' : 'UNLOCK MY AGENT'}
++        </button>
++      </form>
++      <div
++        style={{
++          fontFamily: '"DM Sans", system-ui, sans-serif',
++          fontSize: 12,
++          color: '#8a8a92',
++          lineHeight: 1.5,
++        }}
++      >
++        We&apos;ll email you sprint check-ins on day 3, 7, and 14. Unsubscribe
++        anytime.
++      </div>
++    </div>
+   )
+ }
+ 
++// ─── EmailAskBlock ──────────────────────────────────────────────────────────
++// Post-unlock conversational ask, triggered at msg 4+. Separate from the
++// inline rail gate above — this is the "send me a recap" flow and predates
++// this prompt. Preserved verbatim per the spec.
++
+ function EmailAskBlock({
+   phase,
+   email,
+diff --git a/src/components/assessment/AssessmentHUD.tsx b/src/components/assessment/AssessmentHUD.tsx
+index 25727de..2c4f941 100644
+--- a/src/components/assessment/AssessmentHUD.tsx
++++ b/src/components/assessment/AssessmentHUD.tsx
+@@ -16,7 +16,6 @@ import { AgentRail } from './AgentRail'
+ import { AgentHeroBanner } from './AgentHeroBanner'
+ import { DeliverablesHeader } from './DeliverablesHeader'
+ import { Day1Spotlight } from './Day1Spotlight'
+-import { RailClickGate } from './AgentGate'
+ import { Chassis } from './Chassis'
+ import { SaveYourLinkNotice } from './SaveYourLinkNotice'
+ import '@/styles/instrument.css'
+@@ -41,7 +40,6 @@ const TIMELINE = {
+   sprint: 2600,
+   roadmap: 3200,
+   leads: 3600,
+-  emailCapture: 4000,
+   rail: 4200,
+   done: 4600,
+ } as const
+@@ -258,16 +256,12 @@ export function AssessmentHUD({ assessmentId, shareToken, payload, sprintProgres
+ 
+       </div>
+ 
+-      <RailClickGate
++      <AgentRail
+         assessmentId={payload.assessmentId}
+         shareToken={shareToken}
+-      >
+-        <AgentRail
+-          assessmentId={payload.assessmentId}
+-          shareToken={shareToken}
+-          agentContext={payload.agentContext}
+-        />
+-      </RailClickGate>
++        agentContext={payload.agentContext}
++        operatorFirstName={payload.operator.firstName}
++      />
+ 
+       <style>{`
+         @media (max-width: 1023px) {
+diff --git a/src/components/assessment/EmailCapturePanel.tsx b/src/components/assessment/EmailCapturePanel.tsx
+deleted file mode 100644
+index dd1dc7f..0000000
+--- a/src/components/assessment/EmailCapturePanel.tsx
++++ /dev/null
+@@ -1,397 +0,0 @@
+-'use client'
+-
+-import { motion, AnimatePresence } from 'framer-motion'
+-import { useCallback, useEffect, useState } from 'react'
+-import type {
+-  EmailStatusResponse,
+-  EmailCaptureResponse,
+-  EmailCaptureErrorResponse,
+-} from '@/types/email-capture'
+-
+-interface Props {
+-  assessmentId: string
+-  reducedMotion: boolean
+-  delayMs: number
+-}
+-
+-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+-const DISMISS_KEY_PREFIX = 'assessmentEmailDismissed:'
+-const ASK_FLAG_KEY_PREFIX = 'agent_email_asked:'
+-const SUCCESS_AUTO_HIDE_MS = 3000
+-export const EMAIL_CAPTURED_EVENT = 'assessment:email-captured'
+-
+-type Phase = 'loading' | 'idle' | 'submitting' | 'success' | 'hidden'
+-
+-export function EmailCapturePanel({
+-  assessmentId,
+-  reducedMotion,
+-  delayMs,
+-}: Props) {
+-  const [phase, setPhase] = useState<Phase>('loading')
+-  const [email, setEmail] = useState('')
+-  const [error, setError] = useState<string | null>(null)
+-
+-  // On mount, check capture status + localStorage dismissal flag.
+-  useEffect(() => {
+-    let cancelled = false
+-    async function check() {
+-      try {
+-        const dismissed =
+-          typeof window !== 'undefined' &&
+-          window.localStorage.getItem(DISMISS_KEY_PREFIX + assessmentId) ===
+-            'true'
+-        if (dismissed) {
+-          if (!cancelled) setPhase('hidden')
+-          return
+-        }
+-        const res = await fetch(
+-          `/api/assessment/email-status?assessmentId=${encodeURIComponent(assessmentId)}`,
+-          { method: 'GET', cache: 'no-store' },
+-        )
+-        if (!res.ok) {
+-          if (!cancelled) setPhase('idle')
+-          return
+-        }
+-        const data = (await res.json()) as EmailStatusResponse
+-        if (!cancelled) setPhase(data.hasCapture ? 'hidden' : 'idle')
+-      } catch {
+-        if (!cancelled) setPhase('idle')
+-      }
+-    }
+-    check()
+-    return () => {
+-      cancelled = true
+-    }
+-  }, [assessmentId])
+-
+-  // Auto-hide after success.
+-  useEffect(() => {
+-    if (phase !== 'success') return
+-    const t = window.setTimeout(() => setPhase('hidden'), SUCCESS_AUTO_HIDE_MS)
+-    return () => window.clearTimeout(t)
+-  }, [phase])
+-
+-  // Hide instantly if the Agent captures during this session.
+-  useEffect(() => {
+-    function onCaptured(e: Event) {
+-      const detail = (e as CustomEvent<{ assessmentId: string }>).detail
+-      if (!detail || detail.assessmentId !== assessmentId) return
+-      setPhase('hidden')
+-    }
+-    window.addEventListener(EMAIL_CAPTURED_EVENT, onCaptured as EventListener)
+-    return () =>
+-      window.removeEventListener(
+-        EMAIL_CAPTURED_EVENT,
+-        onCaptured as EventListener,
+-      )
+-  }, [assessmentId])
+-
+-  const onDismiss = useCallback(() => {
+-    try {
+-      window.localStorage.setItem(DISMISS_KEY_PREFIX + assessmentId, 'true')
+-    } catch {
+-      /* quota — ignore */
+-    }
+-    setPhase('hidden')
+-  }, [assessmentId])
+-
+-  const onSubmit = useCallback(
+-    async (e: { preventDefault: () => void }) => {
+-      e.preventDefault()
+-      const trimmed = email.trim()
+-      setError(null)
+-      if (!EMAIL_REGEX.test(trimmed)) {
+-        setError('That email looks off, try again.')
+-        return
+-      }
+-      setPhase('submitting')
+-      try {
+-        const res = await fetch('/api/assessment/email-capture', {
+-          method: 'POST',
+-          headers: { 'Content-Type': 'application/json' },
+-          body: JSON.stringify({
+-            assessmentId,
+-            email: trimmed,
+-            source: 'hud_panel',
+-            notifyOnCodes: true,
+-          }),
+-        })
+-        if (res.ok) {
+-          const data = (await res.json()) as EmailCaptureResponse
+-          if (data.ok) {
+-            // Suppress the Agent's inline ask + remember dismissal for next mount.
+-            try {
+-              window.localStorage.setItem(
+-                ASK_FLAG_KEY_PREFIX + assessmentId,
+-                'true',
+-              )
+-              window.localStorage.setItem(
+-                DISMISS_KEY_PREFIX + assessmentId,
+-                'true',
+-              )
+-            } catch {
+-              /* quota — ignore */
+-            }
+-            window.dispatchEvent(
+-              new CustomEvent(EMAIL_CAPTURED_EVENT, {
+-                detail: { assessmentId, source: 'hud_panel' },
+-              }),
+-            )
+-            setPhase('success')
+-            return
+-          }
+-        }
+-        if (res.status >= 400 && res.status < 500) {
+-          let friendly = 'That email looks off, try again.'
+-          try {
+-            const data = (await res.json()) as EmailCaptureErrorResponse
+-            if (data?.error) friendly = data.error
+-          } catch {
+-            /* leave generic */
+-          }
+-          setError(friendly)
+-        } else {
+-          setError("Couldn't save that just now. Try again in a moment.")
+-        }
+-        setPhase('idle')
+-      } catch {
+-        setError("Couldn't save that just now. Try again in a moment.")
+-        setPhase('idle')
+-      }
+-    },
+-    [assessmentId, email],
+-  )
+-
+-  if (phase === 'loading' || phase === 'hidden') return null
+-
+-  return (
+-    <motion.div
+-      initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+-      animate={{ opacity: 1, y: 0 }}
+-      transition={
+-        reducedMotion
+-          ? { duration: 0 }
+-          : { duration: 0.35, delay: delayMs / 1000, ease: 'easeOut' }
+-      }
+-      role="region"
+-      aria-label="Save your assessment"
+-      style={{
+-        background: '#1c1c24',
+-        borderTop: '1px solid rgba(240, 74, 77, 0.35)',
+-        borderBottom: '1px solid rgba(240, 74, 77, 0.35)',
+-        padding: '14px 24px',
+-      }}
+-      className="email-capture-panel"
+-    >
+-      <AnimatePresence mode="wait" initial={false}>
+-        {phase === 'success' ? (
+-          <motion.div
+-            key="success"
+-            initial={{ opacity: 0 }}
+-            animate={{ opacity: 1 }}
+-            exit={{ opacity: 0 }}
+-            transition={{ duration: 0.18 }}
+-            style={{
+-              display: 'flex',
+-              alignItems: 'center',
+-              justifyContent: 'center',
+-              gap: 10,
+-              fontFamily: '"DM Sans", system-ui, sans-serif',
+-              fontSize: 14,
+-              color: '#3aa67a',
+-              minHeight: 36,
+-            }}
+-          >
+-            Got it — check your inbox shortly.
+-          </motion.div>
+-        ) : (
+-          <motion.form
+-            key="form"
+-            initial={{ opacity: 0 }}
+-            animate={{ opacity: 1 }}
+-            exit={{ opacity: 0 }}
+-            transition={{ duration: 0.18 }}
+-            onSubmit={onSubmit}
+-            style={{
+-              display: 'grid',
+-              gridTemplateColumns: 'auto 1fr auto auto',
+-              alignItems: 'center',
+-              gap: 16,
+-              maxWidth: 1280,
+-              margin: '0 auto',
+-            }}
+-            className="email-capture-grid"
+-          >
+-            <div
+-              style={{
+-                display: 'flex',
+-                alignItems: 'center',
+-                gap: 10,
+-                minWidth: 0,
+-              }}
+-            >
+-              <EnvelopeIcon />
+-              <div style={{ minWidth: 0 }}>
+-                <div
+-                  style={{
+-                    fontFamily: '"DM Sans", system-ui, sans-serif',
+-                    fontSize: 14,
+-                    color: '#f4f4f6',
+-                    fontWeight: 600,
+-                  }}
+-                >
+-                  Want this assessment in your inbox?
+-                </div>
+-                <div
+-                  style={{
+-                    fontFamily: '"DM Sans", system-ui, sans-serif',
+-                    fontSize: 12,
+-                    color: '#5b5b63',
+-                  }}
+-                >
+-                  We&apos;ll also notify you when the next batch of codes
+-                  drops.
+-                </div>
+-              </div>
+-            </div>
+-
+-            <div style={{ minWidth: 0 }}>
+-              <input
+-                type="email"
+-                autoComplete="email"
+-                value={email}
+-                onChange={e => {
+-                  setEmail(e.target.value)
+-                  if (error) setError(null)
+-                }}
+-                placeholder="your@email.com"
+-                aria-label="Your email"
+-                disabled={phase === 'submitting'}
+-                style={{
+-                  width: '100%',
+-                  background: '#08080d',
+-                  border: '1px solid #2a2a35',
+-                  borderRadius: 8,
+-                  padding: '8px 12px',
+-                  fontFamily: '"DM Sans", system-ui, sans-serif',
+-                  fontSize: 14,
+-                  color: '#f4f4f6',
+-                  outline: 'none',
+-                }}
+-              />
+-              {error && (
+-                <div
+-                  role="alert"
+-                  style={{
+-                    marginTop: 4,
+-                    fontFamily: '"DM Sans", system-ui, sans-serif',
+-                    fontSize: 12,
+-                    color: '#f04a4d',
+-                  }}
+-                >
+-                  {error}
+-                </div>
+-              )}
+-            </div>
+-
+-            <button
+-              type="submit"
+-              disabled={phase === 'submitting'}
+-              style={{
+-                background: '#f04a4d',
+-                color: '#fff',
+-                border: '1px solid #f04a4d',
+-                borderRadius: 8,
+-                padding: '8px 14px',
+-                fontFamily: '"JetBrains Mono", ui-monospace, monospace',
+-                fontSize: 13,
+-                fontWeight: 600,
+-                letterSpacing: 0.6,
+-                cursor: phase === 'submitting' ? 'wait' : 'pointer',
+-                whiteSpace: 'nowrap',
+-              }}
+-            >
+-              {phase === 'submitting' ? 'SAVING…' : 'SAVE MY ASSESSMENT'}
+-            </button>
+-
+-            <button
+-              type="button"
+-              onClick={onDismiss}
+-              aria-label="Dismiss email capture"
+-              style={{
+-                width: 24,
+-                height: 24,
+-                background: 'transparent',
+-                border: 'none',
+-                color: '#5b5b63',
+-                cursor: 'pointer',
+-                padding: 0,
+-                display: 'inline-flex',
+-                alignItems: 'center',
+-                justifyContent: 'center',
+-              }}
+-            >
+-              <CloseIcon />
+-            </button>
+-          </motion.form>
+-        )}
+-      </AnimatePresence>
+-
+-      <style>{`
+-        @media (max-width: 767px) {
+-          .email-capture-grid {
+-            grid-template-columns: 1fr auto !important;
+-            grid-template-areas:
+-              "copy close"
+-              "input input"
+-              "submit submit" !important;
+-            gap: 10px !important;
+-          }
+-          .email-capture-grid > :nth-child(1) { grid-area: copy; }
+-          .email-capture-grid > :nth-child(2) { grid-area: input; }
+-          .email-capture-grid > :nth-child(3) { grid-area: submit; }
+-          .email-capture-grid > :nth-child(4) { grid-area: close; align-self: flex-start; }
+-        }
+-      `}</style>
+-    </motion.div>
+-  )
+-}
+-
+-function EnvelopeIcon() {
+-  return (
+-    <svg
+-      aria-hidden
+-      width="20"
+-      height="20"
+-      viewBox="0 0 24 24"
+-      fill="none"
+-      stroke="#f04a4d"
+-      strokeWidth="2"
+-      strokeLinecap="round"
+-      strokeLinejoin="round"
+-      style={{ flexShrink: 0 }}
+-    >
+-      <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+-      <polyline points="22,6 12,13 2,6" />
+-    </svg>
+-  )
+-}
+-
+-function CloseIcon() {
+-  return (
+-    <svg
+-      aria-hidden
+-      width="14"
+-      height="14"
+-      viewBox="0 0 24 24"
+-      fill="none"
+-      stroke="currentColor"
+-      strokeWidth="2"
+-      strokeLinecap="round"
+-      strokeLinejoin="round"
+-    >
+-      <line x1="18" y1="6" x2="6" y2="18" />
+-      <line x1="6" y1="6" x2="18" y2="18" />
+-    </svg>
+-  )
+-}
+diff --git a/src/components/freedom-os/HamsterLoader.tsx b/src/components/freedom-os/HamsterLoader.tsx
+index a10e6d7..866a15b 100644
+--- a/src/components/freedom-os/HamsterLoader.tsx
++++ b/src/components/freedom-os/HamsterLoader.tsx
+@@ -44,7 +44,10 @@ export function HamsterLoader({
+ }: Props) {
+   const router = useRouter()
+   const [phraseIndex, setPhraseIndex] = useState(0)
+-  const [isAssessmentReady, setIsAssessmentReady] = useState(false)
++  // Pure derivation: a synced useState would just shadow the prop and could
++  // drift if a setter was missed. The render-prop consumer gets the same
++  // signal computed every render.
++  const isAssessmentReady = assessmentData !== null
+ 
+   useEffect(() => {
+     if (!visible) {
+@@ -58,15 +61,11 @@ export function HamsterLoader({
+     return () => window.clearInterval(id)
+   }, [visible])
+ 
+-  // When the parent reports a successful generation, flip the ready flag and
+-  // either hand off to the caller-supplied callback or perform the default
+-  // auto-route that previously lived in FreedomOSTool.submit().
++  // When the parent reports a successful generation, either hand off to the
++  // caller-supplied callback or perform the default auto-route that previously
++  // lived in FreedomOSTool.submit().
+   useEffect(() => {
+-    if (!assessmentData) {
+-      setIsAssessmentReady(false)
+-      return
+-    }
+-    setIsAssessmentReady(true)
++    if (!assessmentData) return
+     if (onAssessmentReady) {
+       onAssessmentReady(assessmentData)
+     } else {
+diff --git a/src/lib/assessment/validate-payload.ts b/src/lib/assessment/validate-payload.ts
+index 31154ce..2cc125b 100644
+--- a/src/lib/assessment/validate-payload.ts
++++ b/src/lib/assessment/validate-payload.ts
+@@ -25,6 +25,61 @@ const PLACEHOLDER_REGEX = /\{\{\s*SPRINT_START_DATE\s*\}\}/
+ // the placeholder by writing a relative phrase like "tomorrow".
+ const RESOLVED_YEAR_REGEX = /\b20\d{2}\b/
+ 
++// Day-1 sprint task must start with an active outreach verb. Anything else is
++// rejected — research/setup/preparation openers are HARD FAILURES on Day 1.
++const DAY1_OPENER_VERB_REGEX = /^\s*(send|post|dm|email|comment|call|reach\s+out|reply|message)\b/i
++
++// Days 1-10 banned verb+object combinations. The LLM cannot game the category
++// label by writing infrastructure tasks dressed as customer-facing — these
++// patterns are content-side and fire regardless of the category field.
++// Verbs that are otherwise fine (draft, write, outline) are NOT in this list
++// because they're valid when paired with customer-facing objects (DMs, emails,
++// scripts). The verbs here are setup/research/planning-flavored AND the object
++// list is strictly infrastructure-flavored.
++const INFRASTRUCTURE_TASK_REGEX = new RegExp(
++  '\\b(?:' +
++    // Branch 1: setup-verb + (articles)* + infrastructure noun.
++    '(?:set\\s*up|setup|build|create|design|research|prepare|develop|launch)\\s+' +
++    '(?:your\\s+|a\\s+|an\\s+|the\\s+|new\\s+)*' +
++    '(?:domain|website|web\\s*site|landing\\s*page|portfolio|logo|brand(?:ing)?|' +
++    'lead\\s*magnet|email\\s*list|email\\s*sequence|funnel|automation|' +
++    'bio|about\\s*page|home\\s*page|sales\\s*page|opt[-\\s]?in|signup\\s*form|' +
++    'sign[-\\s]?up\\s*form|newsletter\\s*platform|payment\\s*setup|payment\\s*processor|' +
++    'payment\\s*system|payment\\s*gateway|stripe\\s*account|subscription\\s*page)' +
++    '|' +
++    // Branch 2 (4.1): setup-verb within ~6 words of an acceptance verb +
++    // "payment". Catches loose phrasing like "set up a basic way to accept
++    // payment" without catching customer-facing payment tasks ("send payment
++    // link", "follow up on payment").
++    '(?:set\\s*up|setting\\s*up|create|creating|build|building)\\b' +
++    '(?:\\s+[\\w-]+){0,6}?\\s+' +
++    '(?:' +
++      '(?:accept|accepting|process|processing|collect|collecting|take|taking|receive|receiving)\\s+payments?' +
++      '|' +
++      'payments?\\s+(?:collection|processing|infrastructure|portal)' +
++    ')' +
++  ')\\b',
++  'i',
++)
++
++// Catches "outline your offer", "plan your email sequence" — outline/plan are
++// banned when followed by infrastructure-flavored offer/sequence/strategy
++// objects. Outline + customer object (questions, DMs) is fine — that's caught
++// by exclusion, not by this regex.
++const PLAN_OUTLINE_INFRASTRUCTURE_REGEX = new RegExp(
++  '\\b(outline|plan)\\s+' +
++    '(your\\s+|a\\s+|an\\s+|the\\s+|new\\s+)*' +
++    '(offer|email\\s*sequence|funnel|content\\s*strategy|launch\\s*strategy|' +
++    'marketing\\s*strategy|brand\\s*voice|pricing\\s*tier|business\\s*plan)\\b',
++  'i',
++)
++
++// Aspirational/invented group-size phrases that imply a community count
++// the generator has no source for. Catches "join 12,000 operators",
++// "with 5,000 members", "over 10,000 users".
++const FABRICATED_GROUP_COUNT_REGEX =
++  /\b(join|with|over|among|alongside)\s+\d[\d,]*\+?\s*(operators?|users?|members?|subscribers?|customers?|investors?|founders?|creators?|readers?)\b/i
++
+ function isObj(v: unknown): v is Record<string, unknown> {
+   return !!v && typeof v === 'object' && !Array.isArray(v)
+ }
+@@ -154,10 +209,25 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
+   // Sprint structural rules (Tomorrow-Morning Method)
+   if (sprintDays.length === 14) {
+     const cat = (i: number) => sprintDays[i]?.category as string | undefined
++    const task = (i: number) => typeof sprintDays[i]?.task === 'string'
++      ? (sprintDays[i].task as string)
++      : ''
+ 
+     if (cat(0) !== 'customer-facing') {
+       fail('sprint.days[0].category must be "customer-facing"')
+     }
++
++    // Day 1 task must open with an active outreach verb. Catches the LLM
++    // dressing setup as "customer-facing" by tagging the category correctly
++    // but writing a research/setup task underneath it.
++    const day1Task = task(0)
++    if (day1Task && !DAY1_OPENER_VERB_REGEX.test(day1Task)) {
++      fail(
++        'Day 1 task must start with an active outreach verb ' +
++        '(Send, Post, DM, Email, Comment, Call, Reach out, Reply, Message)',
++      )
++    }
++
+     const days1to3 = [0, 1, 2].map(cat)
+     if (!days1to3.includes('customer-facing')) {
+       fail('At least one of Days 1-3 must have category "customer-facing"')
+@@ -174,6 +244,59 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
+     days1to10.forEach((c, i) => {
+       if (c === 'infrastructure') fail(`Day ${i + 1} category cannot be "infrastructure" (must compress into Days 11-14 or sub-tasks)`)
+     })
++
++    // Days 1-10 task COPY may not be a setup/research/planning task even when
++    // tagged with a customer-facing category. Category-independent content
++    // check — banned verb+infrastructure-object combinations.
++    for (let i = 0; i < 10; i++) {
++      const t = task(i)
++      if (!t) continue
++      if (INFRASTRUCTURE_TASK_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task is a banned infrastructure setup/build/research/etc. ` +
++          `phrased to look customer-facing. Move infrastructure to Days 11-14 or ` +
++          `compress into a sub-task. Task: "${t.slice(0, 120)}"`,
++        )
++      }
++      if (PLAN_OUTLINE_INFRASTRUCTURE_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task uses outline/plan with an infrastructure-flavored ` +
++          `object (offer/sequence/strategy/brand voice/etc.). Replace with a ` +
++          `customer-facing action. Task: "${t.slice(0, 120)}"`,
++        )
++      }
++      if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task contains a fabricated group-size phrase ` +
++          `(e.g. "join 12,000 operators"). Task: "${t.slice(0, 120)}"`,
++        )
++      }
++      if (PARENTHETICAL_COUNT_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task contains a parenthetical member count. ` +
++          `Task: "${t.slice(0, 120)}"`,
++        )
++      }
++    }
++
++    // Days 11-14 still get the fabrication scan even though the
++    // verb/category rules relax.
++    for (let i = 10; i < 14; i++) {
++      const t = task(i)
++      if (!t) continue
++      if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task contains a fabricated group-size phrase ` +
++          `(e.g. "join 12,000 operators"). Task: "${t.slice(0, 120)}"`,
++        )
++      }
++      if (PARENTHETICAL_COUNT_REGEX.test(t)) {
++        fail(
++          `Day ${i + 1} task contains a parenthetical member count. ` +
++          `Task: "${t.slice(0, 120)}"`,
++        )
++      }
++    }
+   }
+ 
+   // roadmap
+@@ -260,6 +383,9 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
+     if (DECIMAL_PERCENT_REGEX.test(t)) {
+       fail(`leads.scripts[${i}].template contains a specific decimal percentage (prohibited fabrication)`)
+     }
++    if (FABRICATED_GROUP_COUNT_REGEX.test(t)) {
++      fail(`leads.scripts[${i}].template contains a fabricated group-size phrase (e.g. "join 12,000 operators")`)
++    }
+   })
+ 
+   // agentContext
+@@ -290,25 +416,41 @@ export function describeAssessmentPayload(payload: unknown): ValidationResult {
+     }
+   }
+ 
+-  // "Not sure" niche handling
++  // "Not sure" niche handling — niche-selection mode. The generator must NOT
++  // silently pick a niche. The greeting must acknowledge selection is pending
++  // and quickReplies must offer a niche-picking helper.
+   const nicheRaw = operatorInputs?.nicheSignal
+   if (typeof nicheRaw === 'string' && nicheRaw.trim().toLowerCase() === 'not sure') {
+-    const greetingLower = isNonEmptyString((ag as Record<string, unknown> | undefined)?.greeting)
+-      ? (((ag as Record<string, unknown>).greeting as string).toLowerCase())
++    const greetingText = isNonEmptyString((ag as Record<string, unknown> | undefined)?.greeting)
++      ? ((ag as Record<string, unknown>).greeting as string)
+       : ''
+-    const greetingHasMarker =
+-      greetingLower.includes('i picked') || greetingLower.includes('starter niche')
+-    if (!greetingHasMarker) {
+-      fail('Not sure niche input not handled explicitly: greeting missing "I picked" or "starter niche"')
++    // Apostrophe-tolerant: straight ('), curly (’), or omitted.
++    const greetingMarkerRegex = /let[’']?s\s+pick\s+your\s+niche/i
++    if (!greetingMarkerRegex.test(greetingText)) {
++      fail('Not sure niche input not handled explicitly: greeting missing required marker "let\'s pick your niche"')
+     }
+     const replies = Array.isArray((ag as Record<string, unknown> | undefined)?.quickReplies)
+       ? ((ag as Record<string, unknown>).quickReplies as unknown[])
+       : []
+     const replyMatch = replies.some(r =>
+-      typeof r === 'string' && /different niche|pick.*niche|change.*niche/i.test(r)
++      typeof r === 'string' && /pick\s+my\s+niche|help\s+me\s+pick|pick\s+(a|the)\s+niche/i.test(r)
+     )
+     if (!replyMatch) {
+-      fail('Not sure niche input not handled explicitly: quickReplies missing a niche-change option')
++      fail('Not sure niche input not handled explicitly: quickReplies missing a niche-picking helper option')
++    }
++    // businessMatch.businessName must be the canonical generic shape for the
++    // Not-sure path so the operator sees the niche is unsettled, not silently
++    // assumed.
++    const businessName = isNonEmptyString(
++      (payload.businessMatch as Record<string, unknown> | undefined)?.businessName,
++    )
++      ? ((payload.businessMatch as Record<string, unknown>).businessName as string)
++      : ''
++    if (businessName && businessName.trim() !== 'Your first paid niche test') {
++      fail(
++        'Not sure niche input requires businessMatch.businessName === "Your first paid niche test" ' +
++        `(got: "${businessName.slice(0, 80)}")`,
++      )
+     }
+   }
+ 
+diff --git a/src/lib/prompts/escape-assessment-prompt.ts b/src/lib/prompts/escape-assessment-prompt.ts
+index 9992143..e2e1d61 100644
+--- a/src/lib/prompts/escape-assessment-prompt.ts
++++ b/src/lib/prompts/escape-assessment-prompt.ts
+@@ -1,19 +1,33 @@
+ import type { AssessmentInput } from '@/types/assessment'
+ 
+-// Builds the system prompt for the Trendzo Personalization Engine.
++// Builds the system prompt for the Escape Assessment Generator.
+ // The returned string is fed to Claude Sonnet 4 as the `system` field.
+ // The user message is the JSON-serialized AssessmentInput.
+ 
+ export function buildEscapeAssessmentPrompt(input: AssessmentInput): string {
+   const monthlyTarget = Math.round(input.monthlyExpenses * input.freedomMultiplier)
+   const monthlyHoursBudget = input.hoursPerWeek * 4
++  const isNotSureNiche = input.nicheSignal.trim().toLowerCase() === 'not sure'
+ 
+-  return `You are the Trendzo Personalization Engine.
++  return `You are the Escape Assessment Generator.
+ 
+ You are NOT a generic assistant. You are a specialized engine that produces hyper-personalized
+ "Escape Assessments" for individual operators trying to leave a W2 job and reach financial freedom.
+ Every Assessment you produce MUST be specific to the operator below. Generic outputs are failures.
+ 
++# TOMORROW-MORNING METHOD — THE PROMISE YOUR OUTPUT MUST HONOR
++
++The product the operator signed up for is built on the Tomorrow-Morning Method, with this
++public-facing promise:
++
++  "You don't need to know everything before you start. You only need to know what to do
++   tomorrow morning. A sprint with one obvious next move every morning, sized to the
++   bandwidth you actually have."
++
++Every sprint day you generate must be ONE obvious next move the operator can execute
++tomorrow morning. Not a list of sub-tasks. Not a research phase. Not a setup project. ONE
++move, concrete enough to start without further reading, sized to their stated hours.
++
+ # OPERATOR INPUTS (the data you must personalize against)
+ 
+ - First name: ${JSON.stringify(input.firstName)}
+@@ -28,36 +42,67 @@ Every Assessment you produce MUST be specific to the operator below. Generic out
+ - Niche signal (free text or "Not sure"): ${JSON.stringify(input.nicheSignal)}
+ - Freedom multiplier: ${input.freedomMultiplier}
+ - Pre-calculated monthly Freedom Number: $${monthlyTarget}  (server-canonical; do not change)
++- Niche mode: ${isNotSureNiche ? '"Not sure" — niche-selection mode (see NICHE HANDLING)' : 'picked — operator stated a niche signal'}
+ 
+ # PROHIBITED FABRICATIONS (these will fail validation)
+ 
+-1. Platform member counts: NEVER include parenthetical member/user/subscriber counts on any
+-   platform name in leads.platforms or in any script.
+-   Wrong: "BiggerPockets Forums (3M+ investors)", "IndieHackers.com (500K members)"
+-   Right: "BiggerPockets Forums", "IndieHackers.com"
+-
+-2. Specific financial returns, yields, or percentages in scripts: NEVER invent specific
++1. Platform member/user/follower counts: NEVER include parenthetical or inline counts of
++   members, users, followers, subscribers, investors, or any group size for any platform,
++   community, or audience anywhere in the output — leads.platforms, scripts, rationale,
++   sprint tasks, anywhere.
++   Wrong: "BiggerPockets Forums (3M+ investors)", "IndieHackers.com (500K members)",
++          "join 12,000 operators", "with 5,000 LinkedIn followers in fintech"
++   Right: "BiggerPockets Forums", "IndieHackers.com", "the operator community there"
++
++   Exception: if the operator's own audienceAccess input states a number (e.g. "5,000
++   LinkedIn followers"), you MAY reference that exact stated number when referring to
++   THEIR audience. You may NOT invent numbers for any other audience.
++
++2. Named third-party tools, platforms, or products NOT in the operator's intake: NEVER
++   recommend or reference specific named software, SaaS tools, newsletter platforms,
++   payment processors, CRMs, schedulers, or any branded product unless the operator
++   explicitly named it in their input. Generic capability descriptions only.
++   Wrong: "Set up Beehiiv", "Use ConvertKit for the email list", "Schedule on Calendly",
++          "Track in Notion", "Run the sequence in ActiveCampaign"
++   Right: "Send a follow-up email", "Send the prospect a calendar link", "Track the
++          conversation in your notes"
++
++3. Specific financial returns, yields, or percentages in scripts: NEVER invent specific
+    performance numbers (returns, yields, conversion rates, growth percentages) in cold or
+    warm scripts unless they were provided in the input.
+    Wrong: "Austin showing 8.2% potential returns"
+    Right: "Austin's current rental market trends"
+ 
+-3. Specific months, dates, or named time periods in scripts: NEVER reference a specific
+-   month name (January, February, ...) or numeric date in any script content. Use relative
+-   time references only.
+-   Wrong: "January's Nashville analysis", "our October report"
+-   Right: "this month's Nashville analysis", "our latest report", "the recent analysis"
++4. Specific months, dates, or named time periods in scripts or tasks: NEVER reference a
++   specific month name (January, February, ...) or numeric calendar date in any script or
++   sprint task content. Use relative time references only ("this month", "this week",
++   "the latest analysis", "tomorrow morning").
++
++5. Industry statistics, market sizes, or unsourced data points: NEVER cite specific
++   percentages, dollar amounts, growth rates, or counts that were not given to you in the
++   input. If you don't know the number, don't write one.
++   Wrong: "the average newsletter creator earns $4,200/month", "47% of operators report..."
++   Right: omit the claim entirely
++
++6. Case studies, testimonials, quotes from real or fictional people: NEVER write quoted
++   statements attributed to named or unnamed third parties as social proof.
++   Wrong: "One operator told us: 'I made $5K my first month.'", "Sarah from Tampa wrote..."
++   Right: omit the construct entirely
+ 
+-4. Statistics not provided in input: NEVER cite specific statistics (percentages, dollar
+-   amounts, counts) that were not given to you in the input fields.
++7. Aspirational or invented operator counts: NEVER write phrases like "join thousands of
++   operators", "operators like you", "12,000 readers", or any other claim about a
++   community size you have no source for.
+ 
+ # DATE HANDLING — HARD RULES
+ 
++The server interpolates all calendar dates AFTER your output is produced. You produce
++day-relative content only. The server fills in the actual dates.
++
+ POSITIVE REQUIREMENT (mandatory):
+ Every agentContext.greeting MUST include the literal text {{SPRINT_START_DATE}} exactly once.
+-The character sequence is: two opening braces, the uppercase snake-case identifier, two closing
+-braces — nothing else. The server will replace this placeholder with the formatted sprint
+-start date (a string like "Monday, April 27, 2026") before the user sees the greeting.
++The character sequence is: two opening braces, the uppercase snake-case identifier, two
++closing braces — nothing else. The server will replace this placeholder with the formatted
++sprint start date (a string like "Monday, April 27, 2026") before the user sees the greeting.
+ 
+ PROHIBITIONS (any of these is a HARD FAILURE):
+ 1. Do NOT write a specific date, month name, or day number in agentContext.greeting.
+@@ -68,12 +113,15 @@ PROHIBITIONS (any of these is a HARD FAILURE):
+ 4. Do NOT use a different placeholder format. {{ sprint_start_date }}, {{StartDate}},
+    [SPRINT_START_DATE], <SPRINT_START_DATE> are all wrong.
+ 
+-Example correct greeting:
++Example correct greeting (picked-niche path):
+ "Your Escape Assessment is ready, Sarah. Your sprint starts {{SPRINT_START_DATE}} — we're aiming for $12,000/month."
+ 
+-For cold/warm scripts: the SAME date prohibitions apply. Use relative phrasing inside
+-scripts ("this month", "this week", "the latest analysis"). Scripts do NOT use the
+-placeholder — relative phrases only.
++For cold/warm scripts AND sprint tasks: the SAME date prohibitions apply. Use relative
++phrasing inside scripts and tasks ("this month", "this week", "tomorrow morning",
++"the latest analysis"). Scripts and sprint tasks do NOT use the placeholder — relative
++phrases only.
++
++For sprint.days[].date: omit or set to any ISO date — the server overwrites all 14 dates.
+ 
+ # OUTPUT CONTRACT
+ 
+@@ -182,6 +230,11 @@ businessMatch.businessName: MUST be a SPECIFIC NAMED business model, not a categ
+   RIGHT: "AI-Assisted Personal Finance Newsletter for Tech Workers"
+   WRONG: "A newsletter business"
+ 
++  EXCEPTION for "Not sure" niche mode: see NICHE HANDLING below — use the literal string
++  "Your first paid niche test" as the businessName, and use businessMatch.firstOffer to
++  describe the SHAPE of the offer the operator will make in whichever niche they pick on
++  Day 2.
++
+ businessMatch.firstOffer.name: MUST be a real product name.
+   RIGHT: "The Sunday Sweep", "Founder Pulse Weekly", "The Tax Edge Audit"
+   WRONG: "Your first offer", "Newsletter subscription"
+@@ -189,9 +242,16 @@ businessMatch.firstOffer.price: integer dollars.
+ businessMatch.firstOffer.cadence: "monthly" | "weekly" | "one-time".
+ businessMatch.firstOffer.description: 1-2 sentences describing what the buyer receives.
+ 
++  For "Not sure" niche mode: firstOffer.name may be a generic offer-shape label like
++  "First Paid Pilot" or "Discovery Pilot"; description must acknowledge the niche is
++  being selected on Day 2 and describe the offer shape (e.g. "A low-priced paid pilot
++  the operator structures in the niche selected by Day 2, sized around their
++  ${input.hoursPerWeek}-hour budget").
++
+ businessMatch.rationale: EXACTLY 3 strings. Each string MUST reference at least one specific
+   input value (a number, the niche, the skill, the risk tolerance, or the runway).
+-  Do not write generic motivation lines.
++  Do not write generic motivation lines. For "Not sure" niche mode, rationale strings
++  reference the inputs without naming a specific niche.
+ 
+ businessMatch.pathToFreedom: server will recompute these - but you MUST still emit a sensible
+   revenuePerSubscriber matching the cadence:
+@@ -208,9 +268,9 @@ by DOING, not by planning. Infrastructure is compressed; customer contact is fro
+ NON-NEGOTIABLE STRUCTURE:
+ 
+ - Day 1: MUST be a customer-facing action and category MUST equal "customer-facing".
+-  Examples: send 5 outreach DMs, post in a target community, comment on 10 prospect posts,
+-  send 3 cold emails. NEVER infrastructure (no domains, no portfolio, no logo, no email
+-  setup) on Day 1.
++  The task copy MUST start with one of these action verbs: Send, Post, DM, Email,
++  Comment, Call, Reach out, Reply, Message. NEVER infrastructure (no domains, no
++  portfolio, no logo, no email setup) on Day 1.
+ 
+ - By Day 3 (inclusive): operator must have made direct contact with at least one potential
+   customer (DM sent, comment posted, email sent, post published in target community). At
+@@ -226,8 +286,8 @@ NON-NEGOTIABLE STRUCTURE:
+   Days 1-10 has category === "offer-delivery".
+ 
+ - Days 11-14: refine offer based on real feedback, follow up with prospects, close first
+-  customer or schedule next conversations. Categories may be "refinement", "customer-conversation",
+-  or "offer-delivery".
++  customer or schedule next conversations. Categories may be "refinement",
++  "customer-conversation", or "offer-delivery".
+ 
+ INFRASTRUCTURE COMPRESSION:
+ Domain, portfolio site, lead magnet, email sequences, payment setup, branding - all of these
+@@ -236,16 +296,51 @@ task of any day in Days 1-10. If the operator needs payment setup to send an off
+ payment setup is a 30-minute sub-task on Day 9, not the day's main task. Days 1-10 may not
+ have category === "infrastructure".
+ 
++TASK-CONTENT RULES (these are CATEGORY-INDEPENDENT — the LLM cannot game the label):
++
++Days 1-10 task copy is BANNED from being a setup/research/planning task even when the
++LLM tags it with a customer-facing category. The following verb-object combinations are
++HARD FAILURES on any Day 1-10 task, regardless of the category label you assign:
++
++  BANNED VERBS (when paired with infrastructure objects below): set up, setup, build,
++  create, design, research, prepare, outline, plan, develop, launch.
++
++  INFRASTRUCTURE OBJECTS that trigger the ban: domain, website, web site, landing page,
++  portfolio, logo, brand, branding, lead magnet, email list, email sequence, funnel,
++  automation, bio, about page, home page, sales page, opt-in, signup form, sign-up
++  form, newsletter platform.
++
++  Examples that FAIL (Days 1-10):
++    "Set up your domain" — banned verb + infrastructure object
++    "Build a portfolio site" — banned
++    "Create your logo" — banned
++    "Design your landing page" — banned
++    "Research your niche" — banned (use the niche-selection rules below for "Not sure")
++    "Prepare your lead magnet" — banned
++    "Outline your offer" — banned (write the offer to a real prospect instead)
++    "Plan your email sequence" — banned
++    "Develop your brand voice" — banned
++
++  Examples that PASS (Days 1-10) — same verbs, but the OBJECT is a customer-facing action:
++    "Draft 5 outreach DMs and send them today" — draft + customer object is fine
++    "Write a cold email to 3 prospects" — write + customer object is fine
++    "Outline 3 questions to ask on tomorrow's discovery call" — outline + customer
++       conversation is fine
++    "Send 5 outreach DMs to investors who posted in BiggerPockets in the last 7 days"
++
++One task per day, max one sentence. No parenthetical sub-task lists. No "while you're at
++it" addendums. ONE move.
++
+ Each day's primary action must be a single, concrete, high-leverage move that an operator
+-can execute that morning. "Build out lead magnet" is wrong. "Send 5 outreach DMs to investors
+-who posted in BiggerPockets in the last 7 days" is right.
++can execute that morning. Sized to ${input.hoursPerWeek} hours/week.
+ 
+ estimatedMinutes is your HONEST best estimate of how long that single primary action takes
+ the operator. The server will adjust the displayed value; you produce a calibrated estimate
+ in your own units. Day 1's estimatedMinutes should reflect a realistic morning task for the
+ operator's hours/week budget.
+ 
+-date: sequential ISO dates starting from sprint.startDate.
++date: sequential ISO dates starting from sprint.startDate. The server overwrites all 14
++date values — you may emit any valid ISO string; do not invent calendar reasoning.
+ 
+ # 90-DAY ROADMAP — FEASIBILITY CONSTRAINT
+ 
+@@ -275,6 +370,10 @@ Other roadmap.months rules:
+   - title is short and motivating ("Foundation", "Traction", "Cashflow")
+   - keyMilestone is a single concrete outcome.
+ 
++  For "Not sure" niche mode: Month 1's title and keyMilestone should reflect niche
++  selection + first paid pilot ("Pick + Prove", "First paid customer in chosen niche").
++  Months 2-3 proceed as normal once the niche is settled.
++
+ # AUDIENCE-AWARE LEAD GENERATION
+ 
+ The operator's audienceAccess field tells you where they already have access to potential
+@@ -285,7 +384,9 @@ tailored to this access:
+   online community presence, podcast listeners, newsletter subscribers, etc.), the FIRST
+   script (the "warm" script) MUST be a direct outreach to that audience. Use the platform
+   they named. Example: if audienceAccess = "5,000 LinkedIn followers in fintech", the warm
+-  script is a LinkedIn DM template addressed to existing connections in that niche.
++  script is a LinkedIn DM template addressed to existing connections in that niche. You
++  may reference the operator's own stated number; you may NOT invent group sizes for any
++  other audience.
+ - If they list specific access ("coworkers at Acme", "active in r/personalfinance",
+   "members of the local real-estate investor meetup"), use those specific names in
+   leads.platforms and reference them in the scripts.
+@@ -311,8 +412,8 @@ leads.searchSignals: 4-6 specific quoted phrases people in this niche actually t
+ 
+ leads.scripts: EXACTLY 2 - one with type "cold", one with type "warm". Each "template" is
+   under 50 words and copy-paste ready. Templates MUST NOT contain specific month names,
+-  decimal percentages (e.g. "8.2%"), or any other prohibited fabrication listed at the top
+-  of this prompt.
++  decimal percentages (e.g. "8.2%"), invented group sizes, named third-party tools, or any
++  other prohibited fabrication listed at the top of this prompt.
+ 
+ # AGENT CONTEXT
+ 
+@@ -320,12 +421,21 @@ agentContext.greeting: Pre-generated welcome that references the operator's firs
+   the $${monthlyTarget}/month Freedom Number AND contains the literal placeholder
+   {{SPRINT_START_DATE}} exactly once for the sprint start. NEVER write a real date and NEVER
+   substitute relative phrases like "tomorrow" or "next week" for the placeholder. The
+-  placeholder is mandatory. Example pattern:
++  placeholder is mandatory. Example pattern (picked niche):
+   "Your Escape Assessment is ready, ${JSON.stringify(input.firstName)}. Your sprint starts
+   {{SPRINT_START_DATE}} - we're aiming for $${monthlyTarget}/month."
+ 
++  For "Not sure" niche mode: the greeting MUST contain the exact lowercase substring
++  "let's pick your niche" (apostrophe required). Example pattern:
++  "Your Escape Assessment is ready, ${JSON.stringify(input.firstName)}. Your sprint starts
++  {{SPRINT_START_DATE}} — let's pick your niche together over the next 48 hours, then we
++  aim for $${monthlyTarget}/month."
++
+ agentContext.quickReplies: EXACTLY 3 short chip-style suggestions relevant to a freshly
+-  generated Assessment. Example: "Walk me through Day 1", "Why this niche?", "Help me adjust the offer".
++  generated Assessment. Example (picked niche): "Walk me through Day 1", "Why this niche?",
++  "Help me adjust the offer". For "Not sure" niche mode: ONE of the three quickReplies MUST
++  match the pattern "pick my niche" / "help me pick" / "pick a niche" so the operator can
++  ask for niche-selection help.
+ 
+ agentContext.knownState.businessName: same string as businessMatch.businessName.
+ agentContext.knownState.freedomTarget: ${monthlyTarget}.
+@@ -334,23 +444,75 @@ agentContext.knownState.currentDay: 1.
+ 
+ # NICHE HANDLING
+ 
+-If inputs.nicheSignal === "Not sure" (exact string match), you MUST:
++${isNotSureNiche ? `THE OPERATOR'S nicheSignal IS "Not sure". You are in niche-selection mode.
++
++YOU DO NOT PICK A NICHE FOR THE OPERATOR. The operator picks their niche by the end of
++Day 2, as part of the sprint. Your job is to generate a niche-agnostic plan that USES the
++first 48 hours of the sprint to surface the right niche through real-world signal — not to
++assume one for them and hope it sticks.
++
++HARD RULES for the Not-sure path:
++
++1. businessMatch.businessName MUST equal the literal string "Your first paid niche test".
++
++2. businessMatch.firstOffer.name and description must describe the SHAPE of a small paid
++   pilot the operator will run in whichever niche they pick on Day 2. Acknowledge in the
++   description that the niche is being selected. Price should be a reasonable first-pilot
++   number given the operator's skillProfile (typically $50-300 for a one-time pilot, or
++   $25-75/month for a subscription cadence — judge based on skill).
++
++3. businessMatch.rationale (3 entries) references the operator's inputs without naming any
++   specific niche. Reference skillProfile, hoursPerWeek, risk tolerance, runway, audience
++   access — anything except a niche claim.
++
++4. Sprint Days 1-2 are niche-selection tasks framed as customer-facing actions. The
++   48-hour decision deadline must appear inside the Day 2 task copy.
+ 
+-1. Pick a starter niche based on inputs.skillProfile and inputs.monthlyIncome target.
+-   Choose the niche where the operator's stated skills give them the fastest path to the
+-   first paid customer.
++   Day 1 (category "customer-facing"): a customer-facing action that surfaces signal from
++   3 candidate niches. The task must start with one of the required Day-1 verbs (Send,
++   Post, DM, Email, Comment, Call, Reach out, Reply, Message). Example shape:
++     "Post a 1-sentence poll in 3 communities where your skill applies (one for each
++      candidate niche): 'Which of these would you pay $X to solve?' List 3 options."
+ 
+-2. In agentContext.greeting, explicitly state the choice using the exact phrase pattern
+-   "I picked {niche} as your starter niche based on your {specific skill}. We can revisit
+-   this together if it doesn't fit." (You may rephrase, but the substring "I picked" or
+-   "starter niche" MUST appear so the choice is explicit.)
++   Day 2 (category "customer-facing" or "customer-conversation"): direct outreach to 5
++   real people in the candidate niche that pulled the strongest signal on Day 1, with the
++   48-hour decision deadline inside the task. Example shape:
++     "DM 5 people in your top-pulling candidate niche from Day 1 — ask them what they'd
++      pay to solve [their problem]. Lock in your niche by end of day 2."
+ 
+-3. Add to agentContext.quickReplies an option matching one of:
+-   "Help me pick a different niche", "Pick a different niche", "Change my niche".
+-   This option MUST be present.
++5. Days 3-14 proceed under the assumption that the niche is settled. They follow all the
++   normal Sprint structural requirements (Day 3 customer contact, Day 7 customer
++   conversation, Day 10 paid offer). The task copy from Day 3 onwards may reference "the
++   niche you picked" or "your chosen niche" — do NOT name a specific niche.
+ 
+-4. NEVER silently assume the operator chose a niche when they explicitly said they weren't
+-   sure. The choice must be visible and reversible in the greeting.
++6. leads.platforms: 5-7 platforms that span the operator's likely candidate niches given
++   their skillProfile. Generic-but-skill-aligned communities (e.g. for an Analytical
++   skillProfile: r/Entrepreneur, IndieHackers.com, LinkedIn skill-tagged groups, Hacker
++   News Who Is Hiring, etc.). NOT niche-specific until the niche is chosen.
++
++7. leads.searchSignals: 4-6 niche-validation questions the operator can use to identify
++   which candidate niche has the strongest pull. Examples: "looking for help with [X]",
++   "would pay for [X]", "tried [X] but it didn't work for me".
++
++8. leads.scripts: cold script is niche-validation outreach (asking real humans which of
++   3 candidate problems they'd pay to solve); warm script is a poll to existing audience
++   asking the same question.
++
++9. agentContext.greeting MUST contain the lowercase substring "let's pick your niche"
++   (apostrophe required).
++
++10. agentContext.quickReplies MUST include one matching "pick my niche" / "help me pick" /
++    "pick a niche".
++
++11. roadmap Month 1's title and keyMilestone reflect niche selection + first paid pilot.
++    Months 2-3 proceed as normal.
++` : `THE OPERATOR STATED A NICHE SIGNAL. You proceed in normal mode — pick a specific
++business model aligned to their nicheSignal, skillProfile, and inputs. Do NOT use the
++"Your first paid niche test" generic shape; that is reserved for Not-sure mode.
++
++The greeting follows the picked-niche example pattern (no "let's pick your niche" marker
++required). quickReplies follow the picked-niche pattern (no niche-picking option
++required).`}
+ 
+ # ANTI-FALLBACK DIRECTIVE
+ 
+@@ -359,6 +521,10 @@ customer", "leverage your skills", "build a strong foundation", or any other gen
+ - STOP and infer something specific from the inputs. The operator chose to enter their data;
+ returning generic copy is a failure.
+ 
++EXCEPTION for Not-sure niche mode: phrases like "the niche you pick", "your chosen niche",
++"the candidate niche that pulled strongest signal" are appropriate and required — you must
++NOT silently assume a niche when the operator said they weren't sure.
++
+ # FORMAT REMINDER
+ 
+ Output ONLY valid JSON. No preamble. No markdown fences. No explanation. Just the JSON object.`
+diff --git a/src/lib/prompts/freedom-agent-prompt.ts b/src/lib/prompts/freedom-agent-prompt.ts
+index ebed354..dcf0ed1 100644
+--- a/src/lib/prompts/freedom-agent-prompt.ts
++++ b/src/lib/prompts/freedom-agent-prompt.ts
+@@ -3,7 +3,7 @@
+ // payload itself supplies the bulk of context. Tokens wrapped in {{ }} are
+ // replaced at request time by build-system-prompt.ts.
+ 
+-export const FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE = `You are the Freedom Agent — a personal advisor inside the user's Escape Assessment. You have full context on their plan and you reference their actual numbers, tasks, and timeline in every response.
++export const FREEDOM_AGENT_SYSTEM_PROMPT_TEMPLATE = `You are the Freedom Agent — a personal advisor inside the user's Operator's Assessment. You have full context on their plan and you reference their actual numbers, tasks, and timeline in every response.
+ 
+ YOU ARE NOT A GENERIC AI ASSISTANT. You are an advisor who already knows this person. Speak as if you've already read their assessment because you have. Do not introduce yourself unless asked. Do not say "based on your assessment" — just answer.
+ 
+@@ -23,6 +23,26 @@ HOW TO RESPOND:
+ - If they're behind schedule, do not lecture — give them the smallest possible next action that gets them moving.
+ - If they ask something the assessment doesn't cover, say so honestly and give your best advice anyway, flagged as your opinion not their plan.
+ 
++OPERATIONAL GAPS:
++When an operator describes hitting an operational limit — lead tracking, content volume, client management, outreach scale, anything where the way they're working today won't carry them through the next stage — name the limit honestly as a stage most operators hit. Use concrete thresholds when you know them: spreadsheets usually break around 30 leads, manual outreach caps out around 50 DMs/week before quality drops, solo content production tends to ceiling around 4 long-form pieces a month, client work without a CRM starts losing thread around the 5th active relationship. Frame the limit as an observation about where the operator's trajectory is heading — not as a setup for a recommendation.
++
++Naming the gap is the primary move. If one of the soft-sell moments described below is active, you may let one of the unnamed references land as the thing being built to handle that operational layer — one to two sentences, embedded in a useful answer. Outside those moments, leave the conclusion to the operator: name the gap, do not gesture at what fills it, and return to the immediate question they asked.
++
++SOFT-SELL MOMENTS:
++Your primary job is advising the operator on their assessment. The soft-sell is a secondary motion that activates at specific moments — never the lead behavior of any message, never replacing useful advice. When you reference what's being built, use one of two unnamed names interchangeably, picking whichever reads cleaner in the sentence: "AI Agency In A Box" or "Done-For-You AI Business." Both refer to the same thing. No other phrasing for it.
++
++Four moments warrant a soft mention. Each lands in one to two sentences, embedded inside a useful answer — never as the answer itself.
++
++When the operator surfaces operational pain at scale — they describe a wall around lead tracking, content volume, outreach, or client load, anywhere their current way of working won't carry the next stage — name the gap honestly per the rule above, then let one of the unnamed references land as the thing being built to handle that operational layer. Deliver the manual version of the advice anyway. They will not have the system today; they need to manage the gap now. The soft mention is one sentence inside a useful answer.
++
++When the operator asks how you work, what's powering this conversation, who built this, or whether something exists beyond the assessment — give a direct answer. Tell them they're talking to the Freedom Agent, which is one piece of an AI Agency In A Box (or a Done-For-You AI Business — pick whichever fits) being built for operators like them, and that the assessment is a slice of what's coming. One mention, then return to whatever they actually wanted.
++
++When the operator expresses readiness for more — phrases like wanting to scale this, needing help running the whole thing, not wanting to do it manually, asking what comes after the assessment — these are buying signals. Acknowledge briefly that what they're describing is what the AI Agency In A Box is being built for, and offer to flag them as interested for early access. Then handle their immediate question. Do not pivot the conversation into a sales discussion.
++
++When the operator has shown durable engagement — three or more substantive questions, expressed appreciation, said something helped, returned to a topic, or asked you to go deeper — you may land one organic mention of the Done-For-You AI Business in honest founder-voice. Frame it as something that exists and is being built, not something they need yet. Make it a beat, not a pitch. Then go back to their question. Do not count messages or use a fixed threshold; read the engagement pattern.
++
++Never mention the reference more than once per conversation unless the operator brings it up first. Never use any phrasing for what's being built outside the two approved names — no "the platform we're building," no "a new tool," nothing else. Never promise features, pricing, or launch timelines. Never push if the operator does not engage with the mention — drop it and stay on advice. Never replace useful advice with a soft-sell sentence; every reference lives inside an answer that would have been useful on its own.
++
+ TONE:
+ - Direct. No corporate energy. No "I'm here to help you on your journey" language.
+ - Confident. You know their plan. You don't hedge.
+@@ -41,22 +61,4 @@ REFUSALS:
+ QUICK REPLY CONTEXT:
+ The user may click pre-suggested quick-reply chips. When they do, the message you receive will be the chip's text verbatim. Treat it as if they typed it. Do not acknowledge it as a chip click.
+ 
+-If the user's first message is one of the chips from agentContext.quickReplies, respond as if continuing the conversation the assessment greeting started.
+-
+-ABOUT THE TECHNOLOGY YOU'RE BUILT ON
+-
+-You are powered by Trendzo, an agency-management and creator-analytics platform currently in development as a full product. The Escape Assessment — the system that produced this user's plan — is one capability of the larger Trendzo system.
+-
+-Your job is NOT to sell Trendzo. Your job is to be the most useful advisor this user has ever spoken to about their specific assessment. Stay focused on their Freedom Number, their Day 1 task, their sprint, their leads, their actual life.
+-
+-However: you do not hide that Trendzo exists. If any of the following happen, you may mention Trendzo briefly and offer to note their interest:
+-
+-1. The user asks what you are, what's powering this conversation, who built this, or whether something like this exists for broader needs.
+-2. The user hits a problem the assessment cannot solve in its current form — for example: "I need to scale this faster than the sprint allows," "I don't have time to do this manually," "Can you help me run the whole agency side of this?" These are signals that they're ready for the full product.
+-3. The user is at message 6 or later AND is showing strong engagement — deep follow-up questions, energy about the plan, asking what comes after the sprint, talking about scaling. In this case, a single brief mention is appropriate, framed as "by the way, the technology powering this conversation is becoming a full product when you're ready for that level."
+-
+-You NEVER pivot a coaching conversation into a sales conversation. You NEVER bring up Trendzo before message 6 unless the user has explicitly asked. You NEVER pressure, never use scarcity tactics, never promise launch dates.
+-
+-When you do mention Trendzo, keep it to 1-2 sentences. Say something like: "This conversation is running on Trendzo, the agency-in-a-box system we're building. If you ever want the full thing — not just the assessment but the ongoing operations layer — let me know and I'll flag it for the team." Then return to whatever the user was actually working on.
+-
+-Trendzo is for the user when they're ready to operate at scale. The assessment is for them right now. Your loyalty is to the right tool for where they are.`
++If the user's first message is one of the chips from agentContext.quickReplies, respond as if continuing the conversation the assessment greeting started.`
+diff --git a/src/types/email-capture.ts b/src/types/email-capture.ts
+index 6e4cf32..4f6af24 100644
+--- a/src/types/email-capture.ts
++++ b/src/types/email-capture.ts
+@@ -1,4 +1,4 @@
+-export type EmailCaptureSource = 'hud_panel' | 'agent_conversation'
++export type EmailCaptureSource = 'hud_panel' | 'agent_conversation' | 'rail_gate'
+ 
+ export interface EmailCaptureRequest {
+   assessmentId: string
+diff --git a/src/types/freedom-agent.ts b/src/types/freedom-agent.ts
+index fea1576..72d3d06 100644
+--- a/src/types/freedom-agent.ts
++++ b/src/types/freedom-agent.ts
+@@ -4,6 +4,10 @@ export interface FreedomAgentMessage {
+   role: FreedomAgentMessageRole
+   content: string
+   timestamp: string // ISO 8601
++  // Local-only marker: true when the bubble was inserted client-side as a
++  // chip-preview (pre-unlock teaser) and never sent to or stored on the
++  // server. Real conversation history never has this flag.
++  preview?: boolean
+ }
+ 
+ export interface FreedomAgentConversation {

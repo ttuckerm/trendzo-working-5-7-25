@@ -1,0 +1,321 @@
+/* StepOffGame — scoped styles for the mini-game overlay layered inside
+ * .fos-loader. The game container is absolutely bottom-anchored so opening
+ * the canvas never reflows the wheel/phrase layout above it.
+ *
+ * The :global :has() rules at the bottom dim the existing wheel + phrases
+ * when the game is active, without touching HamsterLoader internals. */
+
+.container {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none; /* children opt in */
+}
+
+/* ---------- Play button ---------- */
+.playButtonSlot {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 400ms ease, transform 400ms ease;
+  pointer-events: auto;
+}
+.playButtonSlot.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.playButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  /* 16px vertical padding × 2 + ~19px line-height ≈ 51px tap target (≥ 48px). */
+  padding: 16px 32px;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.85);
+  background: linear-gradient(180deg, rgba(28, 28, 36, 0.95), rgba(20, 20, 28, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+  /* Resting box-shadow lives in the keyframes' 0%/100% stops so the pulse
+   * animates between the two states. */
+  animation: stepoffPlayPulse 2s ease-in-out infinite;
+  transition: color 180ms ease, border-color 180ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+.playButton:hover {
+  /* Pause the loop and pin to the bright state. transition smooths the handoff
+   * out of the animated frame. */
+  animation: none;
+  color: #fff;
+  border-color: rgba(240, 74, 77, 0.6);
+  transform: scale(1.03);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    0 0 24px rgba(240, 74, 77, 0.45);
+}
+.playButton:active {
+  /* Combine with the scale so the down-press doesn't reset the animation's
+   * size in the middle of a tap. */
+  transform: scale(1.02) translateY(1px);
+}
+.playButtonArrow {
+  color: #f04a4d;
+  font-weight: 700;
+  transition: transform 180ms ease;
+}
+.playButton:hover .playButtonArrow {
+  transform: translateX(3px);
+}
+
+@keyframes stepoffPlayPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 1px 2px rgba(0, 0, 0, 0.5),
+      0 6px 18px rgba(0, 0, 0, 0.35),
+      0 0 0 rgba(240, 74, 77, 0);
+  }
+  50% {
+    transform: scale(1.03);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.10),
+      0 1px 2px rgba(0, 0, 0, 0.5),
+      0 6px 18px rgba(0, 0, 0, 0.35),
+      0 0 24px rgba(240, 74, 77, 0.35);
+  }
+}
+
+/* ---------- Canvas ---------- */
+.canvasWrap {
+  position: relative;
+  width: clamp(280px, 60vw, 720px);
+  height: 300px;
+  max-height: 30vh;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #08080d;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 12px 36px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: auto;
+}
+.canvasWrap.visible {
+  opacity: 1;
+}
+.canvasWrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- DOM sprite overlay (obstacles, collectibles, decorations) ---------- */
+.spriteLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  /* Sit above the canvas. Wrapper handles input via pointerdown so we don't
+   * need pointer-events here. */
+}
+.sprite {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  /* translate3d set imperatively each frame by the rAF loop. */
+  transform: translate3d(0, 0, 0);
+  /* The translate3d transform from JS would be clobbered by a CSS transition,
+   * so we don't transition transform here. Opacity is fine. */
+  transition: opacity 200ms ease;
+}
+.sprite svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* z-tiers: decorations behind obstacles behind collectibles. */
+.decorationSprite { z-index: 1; }
+.obstacleSprite   { z-index: 2; }
+.collectibleSprite {
+  z-index: 3;
+  /* Bob (vertical float) is computed in the rAF loop and folded into the
+   * imperative translate3d — a CSS animation on transform would fight the JS
+   * write and lose every frame. Only static visual properties belong here. */
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.35));
+}
+.sprite.collected {
+  animation: stepoffSpriteCollected 420ms ease-out forwards;
+  pointer-events: none;
+}
+.sprite.collected::before,
+.sprite.collected::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff5b0;
+  box-shadow: 0 0 6px #ffd700;
+  pointer-events: none;
+  animation: stepoffSparkle 420ms ease-out forwards;
+}
+.sprite.collected::after {
+  animation-delay: 80ms;
+  width: 4px;
+  height: 4px;
+}
+
+@keyframes stepoffSpriteCollected {
+  0% { opacity: 1; }
+  40% { opacity: 1; filter: brightness(1.6) drop-shadow(0 0 14px #fff5b0); }
+  100% { opacity: 0; filter: brightness(2) drop-shadow(0 0 22px #fff5b0); }
+}
+@keyframes stepoffSparkle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + 18px), calc(-50% - 14px)) scale(1.4);
+  }
+}
+.controlsHint {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  color: rgba(255, 255, 255, 0.32);
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+@media (max-width: 640px) {
+  .canvasWrap {
+    width: calc(100vw - 32px);
+    height: 240px;
+  }
+  .controlsHint {
+    font-size: 8px;
+  }
+}
+
+/* ---------- End modal ---------- */
+.endBackdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 8, 13, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: stepoffEndFadeIn 280ms ease forwards;
+  z-index: 3;
+}
+.endModal {
+  width: min(360px, calc(100% - 32px));
+  padding: 22px 22px 20px;
+  background: rgba(20, 20, 30, 0.72);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 16px 48px rgba(0, 0, 0, 0.55);
+  text-align: center;
+  transform: translateY(8px);
+  opacity: 0;
+  animation: stepoffEndRise 360ms cubic-bezier(0.22, 0.61, 0.36, 1) 80ms forwards;
+}
+.endHeadline {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 22px;
+  line-height: 1.18;
+  color: #fff;
+  margin: 0 0 8px;
+  letter-spacing: -0.2px;
+}
+.endSubhead {
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: 0 0 14px;
+}
+.endScore {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px;
+  color: #ffd700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  margin: 0 0 18px;
+}
+.endCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 22px;
+  font-family: "DM Sans", system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #e50914, #ff1744);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 20px rgba(229, 9, 20, 0.45),
+    0 0 16px rgba(240, 74, 77, 0.30);
+  transition: box-shadow 180ms ease, transform 120ms ease;
+}
+.endCta:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 6px 26px rgba(229, 9, 20, 0.55),
+    0 0 24px rgba(240, 74, 77, 0.45);
+}
+.endCta:active {
+  transform: translateY(1px);
+}
+
+@keyframes stepoffEndFadeIn {
+  from { opacity: 0 }
+  to   { opacity: 1 }
+}
+@keyframes stepoffEndRise {
+  from { opacity: 0; transform: translateY(8px) }
+  to   { opacity: 1; transform: translateY(0) }
+}
+@media (prefers-reduced-motion: reduce) {
+  .playButtonSlot,
+  .canvasWrap { transition: none !important }
+  .playButton { animation: none !important; transform: none !important }
+  .endBackdrop,
+  .endModal { animation: none !important; opacity: 1 !important; transform: none !important }
+}
+
+/* The wheel/phrase dimming rules live in StepOffGame.global.css because they
+ * target siblings of this component, which CSS Modules' pure-selector rule
+ * doesn't allow from a module file. */
