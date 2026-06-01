@@ -14,6 +14,7 @@ import { existsSync } from 'fs';
 import { runVpsPipelineV2 } from '@/lib/prediction/run-vps-pipeline-v2';
 import { getVpsTier } from '@/lib/prediction/system-registry';
 import { cacheRunCulturalFeatures } from '@/lib/training/cache-run-features';
+import { runTranscriptionPipeline } from '@/lib/services/transcription-pipeline';
 
 // Phase 1.6: forced dynamic to prevent Vercel build-phase static generation OOM
 export const dynamic = 'force-dynamic'
@@ -163,12 +164,42 @@ export async function POST(request: NextRequest) {
 
     const runId = runRecord.id;
 
+    // Resolve transcript before prediction (Fix B-2 — parity with upload-test).
+    // Priority: existing item.transcript > Whisper auto-transcription of the
+    // downloaded video. Without this, ~30 text/hook/strategy features stay null
+    // whenever the bulk-download item has no captured subtitles.
+    let resolvedTranscript: string | undefined = item.transcript || undefined;
+    let transcriptSource = item.transcript ? 'item' : 'none';
+    if (!resolvedTranscript && item.local_path && existsSync(item.local_path)) {
+      try {
+        const transcription = await runTranscriptionPipeline({ videoPath: item.local_path });
+        if (transcription.transcript && transcription.transcript.trim().length > 0) {
+          resolvedTranscript = transcription.transcript;
+          transcriptSource = transcription.source;
+          console.log(
+            `[Bulk Predict] Auto-transcribed (${transcription.source}): ` +
+            `${transcription.transcript.length} chars, confidence=${transcription.confidence}`,
+          );
+        } else {
+          console.log(
+            `[Bulk Predict] Auto-transcription produced no usable transcript ` +
+            `(${transcription.skipped_reason || 'none'})`,
+          );
+        }
+      } catch (transcribeErr: any) {
+        console.warn(`[Bulk Predict] Auto-transcription failed (non-fatal): ${transcribeErr.message}`);
+      }
+    }
+    console.log(
+      `[Bulk Predict] Transcript source=${transcriptSource}, length=${resolvedTranscript?.length || 0}`,
+    );
+
     // Run VPS v2 pipeline (pure compute — no DB writes)
     let v2Result;
     try {
       v2Result = await runVpsPipelineV2({
         videoFilePath: item.local_path,
-        transcript: item.transcript || undefined,
+        transcript: resolvedTranscript,
         niche: body.niche || undefined,
         followerCount,
       });
