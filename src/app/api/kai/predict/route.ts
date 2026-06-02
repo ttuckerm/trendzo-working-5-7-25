@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
     let videoPath: string | null = null;
     let apifyTranscript: string | null = null;
     let apifyRawItem: any = null; // Preserved for post-prediction labeling
+    let resolvedCaption: string | undefined = undefined; // Phase 1: caption/hashtags for feature extraction
 
     // Step 1: Save MP4 file (if uploaded)
     if (videoFile) {
@@ -111,6 +112,19 @@ export async function POST(request: NextRequest) {
             apifyRawItem = items[0]; // Preserve raw item for post-prediction labeling
             const normalized = normalizeApifyItem(items[0]);
             const cdnUrl = normalized.videoUrl || normalized.downloadAddr;
+
+            // Phase 1: capture caption/hashtags so hashtag-derived features
+            // (hashtag_count, has_fyp_hashtag, meta_has_viral_hashtag) populate.
+            // Posted descriptions usually carry hashtags inline in `text`; if not,
+            // append the structured `hashtags` array so the regex still finds them.
+            {
+              const txt = normalized.text || '';
+              const tags = (normalized.hashtags || []).map((h: string) => `#${h}`);
+              resolvedCaption =
+                tags.length && !/#/.test(txt)
+                  ? `${txt} ${tags.join(' ')}`.trim()
+                  : txt || undefined;
+            }
 
             if (cdnUrl) {
               const videoDir = join(process.cwd(), 'data', 'raw_videos');
@@ -271,6 +285,9 @@ export async function POST(request: NextRequest) {
       transcript: resolvedTranscript,
       niche: niche || undefined,
       followerCount,
+      // Phase 1: forward the captured caption/description (Apify scrape path) so
+      // hashtag/caption-derived features populate instead of defaulting to 0/false.
+      caption: resolvedCaption,
     });
 
     const totalLatency = Date.now() - startTime;

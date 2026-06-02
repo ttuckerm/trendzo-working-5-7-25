@@ -26,7 +26,10 @@ export interface DownloadResult {
   fileSizeBytes?: number;
   durationSeconds?: number;
   error?: string;
-  // NO metadata field - we don't want views, likes, etc.
+  // Caption/description ONLY — pre-publication content used for hashtag/caption
+  // features (v15 uses hashtags by design). This is NOT a performance metric;
+  // we still never save views/likes/comments/shares.
+  description?: string;
 }
 
 export interface DownloadProgress {
@@ -223,11 +226,27 @@ export class TikTokDownloader {
       // Get file stats only
       const stats = await stat(localPath);
 
-      // Return RAW file info only - NO metrics
+      // Best-effort, non-fatal caption/description fetch (separate --print call
+      // so the proven download command above is untouched). Caption/hashtags are
+      // pre-publication content, NOT a performance metric. Failure is ignored.
+      let description: string | undefined;
+      try {
+        const { stdout } = await execAsync(
+          `yt-dlp --skip-download --print "%(description)s" "${url}"`,
+          { timeout: 15000, maxBuffer: 1024 * 1024 },
+        );
+        const text = (stdout || '').trim();
+        if (text && text !== 'NA') description = text;
+      } catch (metaErr: any) {
+        console.warn('[TikTok Downloader] caption fetch skipped (non-fatal):', metaErr.message);
+      }
+
+      // Return RAW file info only - NO metrics (caption is content, not a metric)
       return {
         success: true,
         localPath,
-        fileSizeBytes: stats.size
+        fileSizeBytes: stats.size,
+        description
         // NO metadata, views, likes, etc.
       };
 
@@ -283,12 +302,20 @@ export class TikTokDownloader {
 
       const stats = await stat(localPath);
 
+      // Caption/description only (TikWM exposes it as `title`). Already in scope —
+      // no extra request. NOT a performance metric.
+      const description =
+        typeof data.data.title === 'string' && data.data.title.trim().length > 0
+          ? data.data.title.trim()
+          : undefined;
+
       // Return RAW file info only - NO metrics (ignore data.data.play_count, etc.)
       return {
         success: true,
         localPath,
         fileSizeBytes: stats.size,
-        durationSeconds: data.data.duration || undefined
+        durationSeconds: data.data.duration || undefined,
+        description
         // NO: views, likes, comments, shares, author info
       };
 
