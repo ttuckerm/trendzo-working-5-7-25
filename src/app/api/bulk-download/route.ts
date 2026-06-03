@@ -327,21 +327,34 @@ async function processDownloadJob(jobId: string) {
         const result = await TikTokDownloader.downloadVideo(item.tiktok_url);
 
         if (result.success) {
-          // Update with success - ONLY file info, NO metrics
+          // Update with success - ONLY file info, NO performance metrics
+          const itemUpdate: Record<string, any> = {
+            status: 'completed',
+            local_path: result.localPath,
+            file_size_bytes: result.fileSizeBytes,
+            duration_seconds: result.durationSeconds,
+            // Caption/description ONLY — pre-publication content for hashtag/caption
+            // features (Phase 1 forwarding reads item.description). NOT a metric.
+            description: result.description ?? null,
+            downloaded_at: new Date().toISOString()
+            // NO: author_username, views, likes, comments, shares
+            // Those would contaminate prediction testing
+          };
+
+          // Auto-fill follower count from yt-dlp when available. Follower count is a
+          // pre-publication CREATOR attribute / existing model input, NOT a metric.
+          // Never overwrite a value the user already entered for this item.
+          if (
+            result.followerCount &&
+            result.followerCount > 0 &&
+            (item.follower_count === null || item.follower_count === undefined)
+          ) {
+            itemUpdate.follower_count = result.followerCount;
+          }
+
           await supabase
             .from('bulk_download_items')
-            .update({
-              status: 'completed',
-              local_path: result.localPath,
-              file_size_bytes: result.fileSizeBytes,
-              duration_seconds: result.durationSeconds,
-              // Caption/description ONLY — pre-publication content for hashtag/caption
-              // features (Phase 1 forwarding reads item.description). NOT a metric.
-              description: result.description ?? null,
-              downloaded_at: new Date().toISOString()
-              // NO: author_username, views, likes, comments, shares
-              // Those would contaminate prediction testing
-            })
+            .update(itemUpdate)
             .eq('id', item.id);
 
           // =====================================================
