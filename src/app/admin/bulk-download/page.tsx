@@ -728,7 +728,7 @@ https://www.tiktok.com/t/XXXXXX/`}
                           {item.predicted_dps !== null ? (
                             <div className="flex flex-col items-center gap-1">
                               <span className="text-green-400 font-mono font-bold">
-                                {item.predicted_dps.toFixed(1)} DPS
+                                {item.predicted_dps.toFixed(1)} VPS
                               </span>
                               {item.viral_potential && (
                                 <span className={`px-2 py-0.5 rounded text-xs ${getViralPotentialColor(item.viral_potential)}`}>
@@ -802,8 +802,8 @@ https://www.tiktok.com/t/XXXXXX/`}
                                   <h5 className="text-sm font-semibold text-white mb-3">Prediction Details</h5>
                                   <div className="grid grid-cols-4 gap-4 text-sm">
                                     <div>
-                                      <span className="text-gray-400">Predicted:</span>
-                                      <div className="font-bold text-green-400">{item.predicted_dps?.toFixed(1)} DPS</div>
+                                      <span className="text-gray-400">Predicted VPS:</span>
+                                      <div className="font-bold text-green-400">{item.predicted_dps?.toFixed(1)} VPS</div>
                                     </div>
                                     <div>
                                       <span className="text-gray-400">Range:</span>
