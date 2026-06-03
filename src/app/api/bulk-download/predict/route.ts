@@ -202,6 +202,10 @@ export async function POST(request: NextRequest) {
         transcript: resolvedTranscript,
         niche: body.niche || undefined,
         followerCount,
+        // Phase 1: forward the captured caption/description so hashtag-derived
+        // features (hashtag_count, has_fyp_hashtag, meta_has_viral_hashtag) and
+        // caption emoji/text features populate instead of always defaulting to 0/false.
+        caption: item.description || undefined,
       });
     } catch (pipelineErr: any) {
       // Mark run as failed

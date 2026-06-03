@@ -335,6 +335,9 @@ async function processDownloadJob(jobId: string) {
               local_path: result.localPath,
               file_size_bytes: result.fileSizeBytes,
               duration_seconds: result.durationSeconds,
+              // Caption/description ONLY — pre-publication content for hashtag/caption
+              // features (Phase 1 forwarding reads item.description). NOT a metric.
+              description: result.description ?? null,
               downloaded_at: new Date().toISOString()
               // NO: author_username, views, likes, comments, shares
               // Those would contaminate prediction testing
