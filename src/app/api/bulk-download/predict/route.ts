@@ -234,6 +234,11 @@ export async function POST(request: NextRequest) {
         components_used: ['xgboost-virality-ml'],
         latency_ms_total: v2Result.extraction_time_ms + v2Result.inference_time_ms,
         score_version: 'vps-v2-xgboost-sole',
+        // Telemetry only — persist transcript provenance so audits read the
+        // real transcript state instead of the unwritten legacy default.
+        // Does not affect prediction logic, scoring, or extracted features.
+        transcription_source: transcriptSource,
+        resolved_transcript_length: resolvedTranscript?.length || 0,
         raw_result: {
           vps: v2Result.vps,
           raw_prediction: v2Result.raw_prediction,
