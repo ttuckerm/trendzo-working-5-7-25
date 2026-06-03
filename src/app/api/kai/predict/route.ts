@@ -169,6 +169,12 @@ export async function POST(request: NextRequest) {
             videoPath = downloadResult.localPath;
             storagePath = downloadResult.localPath.replace(process.cwd() + '\\', '').replace(process.cwd() + '/', '');
 
+            // Phase 1B parity: use the downloader-captured caption/description for
+            // hashtag/caption features when no higher-priority caption (Apify) is set.
+            if (!resolvedCaption && downloadResult.description) {
+              resolvedCaption = downloadResult.description;
+            }
+
             console.log(`✅ TikTok video downloaded successfully: ${videoPath}`);
           } else {
             console.error(`❌ TikTok download FAILED: ${downloadResult.error}`);
