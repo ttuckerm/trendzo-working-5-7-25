@@ -30,6 +30,10 @@ export interface DownloadResult {
   // features (v15 uses hashtags by design). This is NOT a performance metric;
   // we still never save views/likes/comments/shares.
   description?: string;
+  // Creator follower count — a pre-publication CREATOR attribute and existing
+  // model input (becomes creator_followers_log). NOT a video performance metric;
+  // we still never save views/likes/comments/shares/saves.
+  followerCount?: number;
 }
 
 export interface DownloadProgress {
@@ -72,6 +76,16 @@ export class TikTokDownloader {
     }
 
     return null;
+  }
+
+  /**
+   * Extract the creator handle (without the leading @) from a standard TikTok
+   * URL, e.g. https://www.tiktok.com/@mrbeast/video/123 → "mrbeast".
+   * Short URLs (vm.tiktok.com/…, /t/…) don't contain the handle → returns null.
+   */
+  static extractHandle(url: string): string | null {
+    const match = url.match(/tiktok\.com\/@([\w.-]+)/i);
+    return match ? match[1] : null;
   }
 
   /**
@@ -160,31 +174,19 @@ export class TikTokDownloader {
       // Try Method 1: yt-dlp (most reliable)
       const result = await this.downloadWithYtDlp(url, localPath);
       if (result.success) {
-        return {
-          ...result,
-          videoId,
-          localPath
-        };
+        return await this.enrichFollowerCount({ ...result, videoId, localPath }, url);
       }
 
       // Try Method 2: Direct API approach
       const apiResult = await this.downloadWithAPI(url, localPath);
       if (apiResult.success) {
-        return {
-          ...apiResult,
-          videoId,
-          localPath
-        };
+        return await this.enrichFollowerCount({ ...apiResult, videoId, localPath }, url);
       }
 
       // Try Method 3: Fallback scraper
       const scraperResult = await this.downloadWithScraper(url, localPath);
       if (scraperResult.success) {
-        return {
-          ...scraperResult,
-          videoId,
-          localPath
-        };
+        return await this.enrichFollowerCount({ ...scraperResult, videoId, localPath }, url);
       }
 
       return { 
@@ -194,11 +196,65 @@ export class TikTokDownloader {
       };
 
     } catch (error: any) {
-      return { 
-        success: false, 
+      return {
+        success: false,
         videoId,
-        error: error.message || 'Download failed' 
+        error: error.message || 'Download failed'
       };
+    }
+  }
+
+  /**
+   * Best-effort: resolve creator follower count via TikWM's user-info endpoint
+   * when the primary (yt-dlp) path didn't already provide it. yt-dlp's
+   * single-video extractor returns NA for channel_follower_count, so this is the
+   * working source. Follower count is a pre-publication CREATOR attribute and an
+   * existing model input (becomes creator_followers_log) — NOT a video
+   * performance metric; we still never fetch views/likes/comments/shares/saves.
+   * Fully non-fatal: leaves followerCount untouched on any failure.
+   */
+  private static async enrichFollowerCount(result: DownloadResult, url: string): Promise<DownloadResult> {
+    if (result.followerCount && result.followerCount > 0) return result;
+    const handle = this.extractHandle(url);
+    if (!handle) return result;
+    const followerCount = await this.fetchTikWmFollowerCount(handle);
+    return followerCount ? { ...result, followerCount } : result;
+  }
+
+  /**
+   * Fetch a creator's follower count from TikWM user-info. Returns undefined on
+   * any non-success (network error, non-zero code, missing/invalid field).
+   * ONLY reads data.stats.followerCount — no other stats are returned.
+   */
+  private static async fetchTikWmFollowerCount(handle: string): Promise<number | undefined> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10000);
+    try {
+      const res = await fetch(
+        `https://www.tikwm.com/api/user/info?unique_id=${encodeURIComponent(handle)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          },
+          signal: controller.signal,
+        },
+      );
+      if (!res.ok) return undefined;
+
+      const data = await res.json();
+      if (data?.code !== 0) return undefined;
+
+      const raw = data?.data?.stats?.followerCount;
+      const n = typeof raw === 'number' ? raw : parseInt(raw, 10);
+      if (Number.isFinite(n) && n > 0) return n;
+      return undefined;
+    } catch (err: any) {
+      console.warn('[TikTok Downloader] TikWM follower fetch skipped (non-fatal):', err.message);
+      return undefined;
+    } finally {
+      clearTimeout(timer);
     }
   }
 
@@ -226,28 +282,49 @@ export class TikTokDownloader {
       // Get file stats only
       const stats = await stat(localPath);
 
-      // Best-effort, non-fatal caption/description fetch (separate --print call
-      // so the proven download command above is untouched). Caption/hashtags are
-      // pre-publication content, NOT a performance metric. Failure is ignored.
+      // Best-effort, non-fatal metadata fetch (separate --print call so the proven
+      // download command above is untouched). We fetch ONLY:
+      //   - channel_follower_count: a pre-publication CREATOR attribute and existing
+      //     model input (becomes creator_followers_log), NOT a performance metric.
+      //   - description: pre-publication caption/hashtag content, NOT a metric.
+      // We still never fetch views/likes/comments/shares/saves. Failure is ignored.
+      // follower count is printed first (single token); description after (can span
+      // multiple lines), so line 0 = followers and the remainder = description.
       let description: string | undefined;
+      let followerCount: number | undefined;
       try {
         const { stdout } = await execAsync(
-          `yt-dlp --skip-download --print "%(description)s" "${url}"`,
+          `yt-dlp --skip-download --print "%(channel_follower_count)s" --print "%(description)s" "${url}"`,
           { timeout: 15000, maxBuffer: 1024 * 1024 },
         );
-        const text = (stdout || '').trim();
-        if (text && text !== 'NA') description = text;
+        const lines = (stdout || '').split('\n');
+        const followerRaw = (lines[0] || '').trim();
+        const descRaw = lines.slice(1).join('\n').trim();
+
+        const parsedFollowers = parseInt(followerRaw, 10);
+        if (
+          followerRaw &&
+          followerRaw !== 'NA' &&
+          Number.isFinite(parsedFollowers) &&
+          parsedFollowers > 0
+        ) {
+          followerCount = parsedFollowers;
+        }
+
+        if (descRaw && descRaw !== 'NA') description = descRaw;
       } catch (metaErr: any) {
-        console.warn('[TikTok Downloader] caption fetch skipped (non-fatal):', metaErr.message);
+        console.warn('[TikTok Downloader] metadata fetch skipped (non-fatal):', metaErr.message);
       }
 
-      // Return RAW file info only - NO metrics (caption is content, not a metric)
+      // Return RAW file info only - NO performance metrics. Caption is content and
+      // followerCount is a creator attribute (model input); neither is a metric.
       return {
         success: true,
         localPath,
         fileSizeBytes: stats.size,
-        description
-        // NO metadata, views, likes, etc.
+        description,
+        followerCount
+        // NO views, likes, comments, shares
       };
 
     } catch (error: any) {
