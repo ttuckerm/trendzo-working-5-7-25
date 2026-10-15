@@ -28,7 +28,7 @@ export function MethodSection() {
             The Escape Assessment closes that gap.
           </p>
           <p>
-            You answer five questions. The system calibrates a 14-day sprint to your income, your runway, your hours, your niche, your freedom number. Not a generic playbook. Not a course you&apos;ll never finish. A sprint with one obvious next move every morning, sized to the bandwidth you actually have.
+            You answer ten questions. The system calibrates a 14-day sprint to your income, your runway, your hours, your niche, your freedom number. Not a generic playbook. Not a course you&apos;ll never finish. A sprint with one obvious next move every morning, sized to the bandwidth you actually have.
           </p>
           <p>
             You are no longer a person trying to figure out an escape. You are an operator running a sprint.

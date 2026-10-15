@@ -34,7 +34,7 @@ export function PromiseSection() {
           </ul>
 
           <p>
-            You enter the code. You answer five questions. You receive the assessment. That is the entire transaction.
+            You enter the code. You answer ten questions. You receive the assessment. That is the entire transaction.
           </p>
           <p>
             If you want to come back and tell us it helped, we&apos;d love to hear it. If you want to come back and tell us it didn&apos;t, we&apos;d love to hear that too. If you never come back at all, that is also fine — you got what we said you&apos;d get, and we got the only thing we wanted, which is the chance to be useful to you for three minutes.

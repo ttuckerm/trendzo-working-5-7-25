@@ -69,7 +69,7 @@ export function ReceiveSection() {
           What you receive
         </h2>
         <p className="text-center font-body text-instrument-secondary text-base sm:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
-          When you enter your code and answer the five questions, you receive — in roughly 90 seconds — a personalized assessment that includes:
+          When you enter your code and answer the ten questions, you receive — in roughly 90 seconds — a personalized assessment that includes:
         </p>
 
         <img
